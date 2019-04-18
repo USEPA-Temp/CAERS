@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>gov.epa.cef</groupId>
+	<artifactId>cef-web</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>cef-web</name>
+	<description>US EPA Common Emission Form</description>
+    <url></url>
+    <!-- =============================================================================================== -->
+    <!-- SCM -->
+    <!-- =============================================================================================== -->	
+	<scm>
+		<developerConnection>scm:git:ssh://git@alm.cgifederal.com/epacdx/cdx-oaqps-cef.git</developerConnection>
+		<connection>scm:git:ssh://git@alm.cgifederal.com/epacdx/cdx-oaqps-cef.git</connection>
+		<url>https://alm.cgifederal.com/scm/projects/EPACDX/repos/cdx-oaqps-cef/browse</url>
+	</scm>
+	<!-- =============================================================================================== -->
+    <!-- Distribution -->
+    <!-- =============================================================================================== -->
+	<distributionManagement>
+		<repository>
+			<id>cvsprime.gotdns.com</id>
+			<name>cdxmaven2repo</name>
+			<url>file:///F:/data/maven2</url>
+		</repository>
+	</distributionManagement>	
+
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+        <maven.version>3.0.0</maven.version>
+        <node.version>v10.15.0</node.version>
+        <npm.version>6.4.1</npm.version>
+		
+     <!-- Plugin versions -->
+        <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- ====================================================================== -->
+		<!-- DB -->
+		<!-- ====================================================================== -->
+		<!--
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>5.1.4</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+		<!-- using Tomcat pool instead of default Hikari pool -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-juli</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>	
+
+        <!-- ====================================================================== -->
+        <!-- Persistence  															-->
+        <!-- ====================================================================== -->
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>		
+
+		<!-- ====================================================================== -->
+		<!-- Testing -->
+		<!-- ====================================================================== -->		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>	
+			<build>
+				<plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>${start-class}</mainClass>
+                            <executable>true</executable>
+                            <fork>true</fork>
+                            <addResources>true</addResources>
+                            <!--
+                            Enable the line below to have remote debugging of your application on port 5005
+                            <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>
+                            -->
+                        </configuration>
+                    </plugin>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>${frontend-maven-plugin.version}</version>
+
+						<configuration>
+							<nodeVersion>${node.version}</nodeVersion>
+							<npmVersion>${npm.version}</npmVersion>
+							<workingDirectory>src/main/webapp</workingDirectory>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>install node and npm</id>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+							</execution>
+
+							<execution>
+								<id>npm install</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+							</execution>
+
+							<execution>
+								<id>npm run build</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+
+								<configuration>
+									<arguments>run build</arguments>
+								</configuration>
+							</execution>
+
+						</executions>
+					</plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                            <warSourceDirectory>target/www/</warSourceDirectory>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/webapp</directory>
+                                    <includes>
+                                        <include>WEB-INF/**</include>
+                                    </includes>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+					<plugin>
+					    <groupId>org.apache.maven.plugins</groupId>
+					    <artifactId>maven-resources-plugin</artifactId>
+					    <version>${maven-resources-plugin.version}</version>
+					    <executions>
+					        <execution>
+					            <id>default-resources</id>
+					            <phase>validate</phase>
+					            <goals>
+					                <goal>copy-resources</goal>
+					            </goals>
+					            <configuration>
+					                <outputDirectory>${project.build.directory}/classes</outputDirectory>
+					                <useDefaultDelimiters>false</useDefaultDelimiters>
+					                <delimiters>
+					                    <delimiter>#</delimiter>
+					                </delimiters>
+					                <resources>
+					                    <resource>
+					                        <directory>src/main/resources/</directory>
+					                        <filtering>false</filtering>
+					                        <excludes>
+					                            <exclude>*.yml</exclude>
+					                        </excludes>
+					                    </resource>
+					                </resources>
+					            </configuration>
+					        </execution>
+					        <execution>
+					            <id>jib-www-resources</id>
+					            <phase>verify</phase>
+					            <goals>
+					                <goal>copy-resources</goal>
+					            </goals>
+					            <configuration>
+					                <outputDirectory>${project.build.directory}/classes/static/</outputDirectory>
+					                <resources>
+					                    <resource>
+					                        <directory>${project.build.directory}/www</directory>
+					                        <filtering>false</filtering>
+					                    </resource>
+					                </resources>
+					            </configuration>
+					        </execution>
+					    </executions>
+					</plugin>                    					
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

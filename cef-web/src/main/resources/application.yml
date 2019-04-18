@@ -1,0 +1,22 @@
+server:
+  use-forward-headers: true
+  servlet:
+    context-path: /cef-web
+spring:
+  datasource:
+    driver-class-name: "org.postgresql.Driver"
+    url: "jdbc:postgresql://172.20.2.35:5432/CEF"
+    username: "cef"
+    password: "cef_fall2017"
+  jmx.enabled: false
+  jpa:
+    generate-ddl: false
+    hibernate.ddl-auto: none
+    show-sql: false
+    properties.hibernate:
+      # disables annoying non-error in logs from hibernate
+      jdbc.lob.non_contextual_creation: true
+      # register custom PostgreSQL dialect that supports jsonb
+      dialect: gov.epa.cef.web.hibernate.PostgreSQLDialectWithJsonSupport
+      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+  data.jpa.repositories.enabled: true
