@@ -1,10 +1,14 @@
 # CefWeb
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8. The generated code lives in `src/main/webapp`
+
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run mvn spring-boot:run. Navigate to `http://localhost:8080/cef-web`. The app will automatically reload if you change any of the source files.
+
+You need to open a command line and navigate to your project and to `src/main/webapp` and run `ng build --watch` to continuously build the Angular TypeScript code while developing and reloading it.
+
 
 ## Code scaffolding
 
@@ -12,7 +16,9 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `target/www/` directory. Use the `--prod` flag for a production build.
+This is automatically done by Maven frontend plugin in the pom.xml.
+
 
 ## Running unit tests
 
