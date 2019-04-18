@@ -5,7 +5,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run mvn spring-boot:run. Navigate to `http://localhost:8080/cef-web`. The app will automatically reload if you change any of the source files.
+Run `mvn spring-boot:run` Navigate to `http://localhost:8080/cef-web`. The app will automatically reload if you change any of the source files.
 
 You need to open a command line and navigate to your project and to `src/main/webapp` and run `ng build --watch` to continuously build the Angular TypeScript code while developing and reloading it.
 
