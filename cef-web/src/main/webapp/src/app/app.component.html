@@ -1,6 +1,25 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center;background: black;">
-  <h1 style="color:white;">
-    Hello {{ title }}!
-  </h1>
+<header>
+  <div class="d-flex flex-row justify-content-between border-bottom border-dark">
+    <div id="logo">
+      E-ENTERPRISE
+    </div>
+    <div>
+      CAER Common Emissions Form
+    </div>
+    <div id="userInfo">
+      ROLE - USERNAME
+    </div>
+  </div>
+</header>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Facility Dashboard</li>
+  </ol>
+</nav>
+
+<div class="container" style="height: 100%">
+  <router-outlet></router-outlet>
 </div>
+
+<!-- <app-dashboard></app-dashboard> -->
