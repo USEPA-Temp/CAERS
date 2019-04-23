@@ -45,6 +45,9 @@
      <!-- Plugin versions -->
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
 		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+    <cxf.version>3.3.1</cxf.version>
+    <jersey.version>2.27</jersey.version>
+    <jackson.version>2.9.8</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -107,6 +110,34 @@
 			<scope>provided</scope>
 		</dependency>	
 
+    <!-- ====================================================================== -->
+    <!-- misc -->
+    <!-- ====================================================================== -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.3</version>
+    </dependency>
+
+    <!-- ====================================================================== -->
+    <!-- SOAP clients  -->
+    <!-- ====================================================================== -->
+    <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        <version>${cxf.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-transports-http</artifactId>
+        <version>${cxf.version}</version>
+    </dependency>
+
         <!-- ====================================================================== -->
         <!-- Persistence  															-->
         <!-- ====================================================================== -->
@@ -118,7 +149,41 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
-        </dependency>		
+        </dependency>
+        
+        <!-- ====================================================================== -->
+        <!--                            Jersey                                      -->
+        <!-- ====================================================================== -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+        </dependency>
+        <!--using spring integration-->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-spring4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-hibernate5</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </dependency>
+        <!--bean validation -->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-bean-validation</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.glassfish.jersey.media</groupId>
+          <artifactId>jersey-media-multipart</artifactId>
+        </dependency>
 
 		<!-- ====================================================================== -->
 		<!-- Testing -->
@@ -257,7 +322,35 @@
 					            </configuration>
 					        </execution>
 					    </executions>
-					</plugin>                    					
+					</plugin>
+          <!-- ====================================================================== -->
+          <!-- Generate binding for WSDLs -->
+          <!-- ====================================================================== -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jaxws-maven-plugin</artifactId>
+            <configuration>
+              <vmArgs>
+                  <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+              </vmArgs>
+              <extension>true</extension>
+            </configuration>
+            <executions>
+              <execution>
+                <id>token-wsdl</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <wsdlDirectory>src/main/wsdl</wsdlDirectory>
+                  <wsdlFiles>
+                    <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
+                  </wsdlFiles>
+                </configuration>
+                <goals>
+                  <goal>wsimport</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
 				</plugins>
 			</build>
 		</profile>
