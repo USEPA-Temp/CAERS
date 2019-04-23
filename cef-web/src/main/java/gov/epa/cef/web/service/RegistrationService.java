@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gov.epa.cef.web.config.CefConfiguration;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.soap.RegisterFacilityClient;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -17,17 +18,19 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 public class RegistrationService {
 
   private static final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
-  
-  private static final String CDX_REGISTER_FACILITY_ENDPOINT = "https://devngn.epacdxnode.net/cdx-register-II/services/RegisterProgramFacilityService";
 
   @Autowired
   private RegisterFacilityClient registerFacilityClient;
+  
+  @Autowired
+  private CefConfiguration cefConfig;
 
   public List<ProgramFacility> retrieveFacilities(Long userRoleId) throws ApplicationException {
     try {
 
-      URL registerFacilityServiceUrl = new URL(CDX_REGISTER_FACILITY_ENDPOINT);
-      String token = authenticate("caer-cef-admin@epa.gov", "CDXcaercef01");
+      URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
+      String token = authenticate(cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorUser(),
+          cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorPassword());
       List<ProgramFacility> facilities = registerFacilityClient
           .getFacilitiesByUserRoleId(registerFacilityServiceUrl, token, userRoleId);
       if (CollectionUtils.isNotEmpty(facilities)) {
@@ -46,7 +49,7 @@ public class RegistrationService {
 
   private String authenticate(String user, String password) {
     try {
-      URL registerServiceUrl = new URL(CDX_REGISTER_FACILITY_ENDPOINT);
+      URL registerServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
       return registerFacilityClient.authenticate(registerServiceUrl, user, password);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

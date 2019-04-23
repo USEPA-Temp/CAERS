@@ -22,3 +22,12 @@ spring:
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   data.jpa.repositories.enabled: true
   jersey.application-path: /api
+cdx:
+  registerEndpointConfiguration:
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
+    operatorId: caer-cef-admin@epa.gov
+    operatorPassword: CDXcaercef01
+  registerProgramFacilityEndpointConfiguration:
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterProgramFacilityService
+    operatorId: caer-cef-admin@epa.gov
+    operatorPassword: CDXcaercef01

@@ -3,11 +3,11 @@ import { Facility } from '../model/facility';
 import { FacilityService } from '../services/facility.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-facility-dashboard',
+  templateUrl: './facility-dashboard.component.html',
+  styleUrls: ['./facility-dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class FacilityDashboardComponent implements OnInit {
   facilities: Facility[] = [];
 
   constructor(private facilityService: FacilityService) { }
@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
     this.getFacilities();
     console.log(this);
   }
-  
+
   getFacilities(): void {
     this.facilityService.getFacilities()
     .subscribe(facilities => this.facilities = facilities);

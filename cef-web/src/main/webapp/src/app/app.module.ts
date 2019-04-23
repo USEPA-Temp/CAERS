@@ -5,12 +5,12 @@ import { HttpClientModule }    from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { FacilityDashboardComponent } from './facility-dashboard/facility-dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent
+    FacilityDashboardComponent
   ],
   imports: [
     BrowserModule,

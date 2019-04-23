@@ -13,7 +13,7 @@ const httpOptions = {
 @Injectable({ providedIn: 'root' })
 export class FacilityService {
 
-  private facilitiesUrl = 'api/registration/user/88321/facilities';  // URL to web api
+  private facilitiesUrl = 'api/registration/user/220632/facilities';  // URL to web api
 
   constructor(private http: HttpClient) { }
 
