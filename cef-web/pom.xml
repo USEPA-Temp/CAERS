@@ -184,10 +184,40 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
+	
+	<!-- ====================================================================== -->
+    <!-- build -->
+    <!-- ====================================================================== -->
     <build>
+    	<finalName>cef-web</finalName>
+    	<extensions>
+    		<extension>
+    			<groupId>org.apache.maven.wagon</groupId>
+    			<artifactId>wagon-ssh</artifactId>
+    			<version>2.4</version>
+    		</extension>    		
+    	</extensions>    
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.3</version>
+				<executions>
+					<execution>
+						<id>bin</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/bin.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>        
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
