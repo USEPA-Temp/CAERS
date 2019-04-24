@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "cef", ignoreInvalidFields = true)
-public class CefConfiguration {
+public class CefConfig {
 
 	@Autowired
 	protected CdxConfig cdxConfig;

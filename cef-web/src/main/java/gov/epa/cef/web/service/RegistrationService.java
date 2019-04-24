@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gov.epa.cef.web.config.CefConfiguration;
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.soap.RegisterFacilityClient;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -23,7 +23,7 @@ public class RegistrationService {
   private RegisterFacilityClient registerFacilityClient;
   
   @Autowired
-  private CefConfiguration cefConfig;
+  private CefConfig cefConfig;
 
   public List<ProgramFacility> retrieveFacilities(Long userRoleId) throws ApplicationException {
     try {

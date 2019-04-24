@@ -2,7 +2,6 @@ server:
   use-forward-headers: true
   servlet:
     context-path: /cef-web
-    path: /
 spring:
   datasource:
     driver-class-name: "org.postgresql.Driver"
@@ -21,7 +20,6 @@ spring:
       dialect: gov.epa.cef.web.hibernate.PostgreSQLDialectWithJsonSupport
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   data.jpa.repositories.enabled: true
-  jersey.application-path: /api
 cdx:
   registerEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
