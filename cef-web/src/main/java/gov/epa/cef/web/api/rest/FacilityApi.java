@@ -18,15 +18,15 @@ import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
-@RequestMapping("/api/registration")
-public class RegistrationApi {
+@RequestMapping("/api/facility")
+public class FacilityApi {
 
-  private static final Logger logger = LoggerFactory.getLogger(RegistrationApi.class);
+  private static final Logger logger = LoggerFactory.getLogger(FacilityApi.class);
 
   @Autowired
   private RegistrationService registrationService;
 
-  @GetMapping(value = "/user/{userRoleId}/facilities")
+  @GetMapping(value = "/user/{userRoleId}")
   @ResponseBody
   public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForUser(@PathVariable Long userRoleId) {
 
