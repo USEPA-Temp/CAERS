@@ -1,6 +1,7 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center;background: black;">
-  <h1 style="color:white;">
-    Welcome to {{ title }}!
-  </h1>
+<app-header [title]="'Facility Dashboard'"></app-header>
+
+<div class="p-4">
+  <router-outlet></router-outlet>
 </div>
+
+<app-footer></app-footer>

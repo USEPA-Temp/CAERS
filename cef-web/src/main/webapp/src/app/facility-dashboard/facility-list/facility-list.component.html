@@ -1,0 +1,13 @@
+<div class="card">
+  <div class="card-header text-center">
+    <strong>My Facilities</strong>
+  </div>
+  <div class="list-group list-group-flush">
+    <div *ngFor="let facility of facilities" class="list-group-item">
+      <app-facility-list-item [facility]="facility"></app-facility-list-item>
+    </div>
+    <div class="text-right">
+      <button class="btn btn-primary m-3">Add Facility</button>
+    </div>
+  </div>
+</div>
