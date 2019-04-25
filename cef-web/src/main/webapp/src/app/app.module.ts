@@ -11,6 +11,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FacilityListComponent } from './facility-dashboard/facility-list/facility-list.component';
 import { NotificationListComponent } from './facility-dashboard/notification-list/notification-list.component';
+import { FacilityListItemComponent } from './facility-dashboard/facility-list/facility-list-item/facility-list-item.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { NotificationListComponent } from './facility-dashboard/notification-lis
     HeaderComponent,
     FooterComponent,
     FacilityListComponent,
-    NotificationListComponent
+    NotificationListComponent,
+    FacilityListItemComponent
   ],
   imports: [
     BrowserModule,

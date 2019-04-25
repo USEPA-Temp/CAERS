@@ -4,13 +4,7 @@
   </div>
   <div class="list-group list-group-flush">
     <div *ngFor="let facility of facilities" class="list-group-item">
-      <div class="d-flex flex-row justify-content-between">
-        <app-facility-info [facility]="facility"></app-facility-info>
-        <div>
-          <button class="btn btn-primary m-1">Emissions Report</button>
-          <button class="btn btn-primary m-1">Facility Information</button>
-        </div>
-      </div>
+      <app-facility-list-item [facility]="facility"></app-facility-list-item>
     </div>
     <div class="text-right">
       <button class="btn btn-primary m-3">Add Facility</button>
