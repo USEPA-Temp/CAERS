@@ -14,6 +14,11 @@ import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.soap.RegisterFacilityClient;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
+/**
+ * Service for invoking Register Webservice methods
+ * @author tfesperm
+ *
+ */
 @Service("registrationService")
 public class RegistrationService {
 
@@ -25,6 +30,12 @@ public class RegistrationService {
   @Autowired
   private CefConfig cefConfig;
 
+  /**
+   * Retrieve CDX facilities associated with the user
+   * @param userRoleId
+   * @return
+   * @throws ApplicationException
+   */
   public List<ProgramFacility> retrieveFacilities(Long userRoleId) throws ApplicationException {
     try {
 
@@ -47,6 +58,12 @@ public class RegistrationService {
     }
   }
 
+  /**
+   * Create NAAS token for authenticating into CDX Register services
+   * @param user
+   * @param password
+   * @return
+   */
   private String authenticate(String user, String password) {
     try {
       URL registerServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());

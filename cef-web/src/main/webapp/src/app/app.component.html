@@ -1,60 +1,7 @@
-<header>
-  <div class="d-flex flex-row justify-content-between border-bottom border-dark p-1">
-    <div id="logo">
-      <img src="assets/images/eenterprise_thumb.png" alt="E-ENTERPRISE for the environment" style="width: 150px;">
-    </div>
-    <div>
-      <strong>CAER Common Emissions Form</strong>
-    </div>
-    <div id="userInfo">
-      ROLE - USERNAME
-    </div>
-  </div>
-</header>
-
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active" aria-current="page">Facility Dashboard</li>
-  </ol>
-</nav>
+<app-header [title]="'Facility Dashboard'"></app-header>
 
 <div class="p-4">
   <router-outlet></router-outlet>
 </div>
 
-<footer>
-  <nav class="navbar navbar-expand-sm w-50 m-md-auto">
-    <button class="navbar-toggler" type="button"
-                 aria-controls="navbarToggleFooter" aria-expanded="false" aria-label="Toggle navigation"
-                 data-toggle="collapse" data-target="#navbarToggleFooter">
-            <span class="navbar-toggler-icon"></span>
-         </button>
-         <div id="navbarToggleFooter" class="collapse navbar-collapse justify-content-md-center">
-      <ul class="navbar-nav">
-               <li class="nav-item">
-                  <a class="nav-link p-0 pl-1" target="_blank"
-                     href="https://www.epa.gov">
-                     <span>EPA Home</span>
-                  </a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link p-0 pl-1" href="https://dev.epacdx.net/CDX/MyCDX">
-                     <span>MyCDX</span>
-                  </a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link p-0 pl-1" target="_blank"
-                     href="#">
-                     <span>Combined Air Emissions Reporting (CAER)</span>
-                  </a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link p-0 pl-1" target="_blank"
-                     href="#">
-                     <span>CAER Program Contacts</span>
-                  </a>
-               </li>
-            </ul>
-    </div>
-  </nav>
-</footer>
+<app-footer></app-footer>

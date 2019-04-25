@@ -6,7 +6,7 @@ import { FacilityDashboardComponent } from './facility-dashboard/facility-dashbo
 
 const routes: Routes = [
   { path: '', redirectTo: '/facilityDashboard', pathMatch: 'full' },
-  { path: 'facilityDashboard', component: FacilityDashboardComponent }
+  { path: 'facilityDashboard', component: FacilityDashboardComponent, data: { title: 'Facility Dashboard' } }
 ];
 
 @NgModule({

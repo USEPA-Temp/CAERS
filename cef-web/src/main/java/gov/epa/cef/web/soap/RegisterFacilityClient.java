@@ -24,11 +24,26 @@ public class RegisterFacilityClient extends AbstractClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(RegisterFacilityClient.class);
 
+	/**
+	 * Create a RegisterProgramFacilityService for invoking service methods
+	 * @param endpoint
+	 * @param mtom
+	 * @param chunking
+	 * @return
+	 */
 	protected RegisterProgramFacilityService getClient(URL endpoint, boolean mtom, boolean chunking) {
 		return (RegisterProgramFacilityService) this.getClient(endpoint.toString(),
 				RegisterProgramFacilityService.class, mtom, chunking);
 	}
 
+	/**
+	 * Create a NAAS token for authentication into Register services
+	 * @param endpoint
+	 * @param userId
+	 * @param password
+	 * @return
+	 * @throws ApplicationException
+	 */
 	public String authenticate(URL endpoint, String userId, String password) throws ApplicationException {
 		try {
 			return getClient(endpoint, false, true).authenticate(userId, password, domain, authMethod);
@@ -39,6 +54,14 @@ public class RegisterFacilityClient extends AbstractClient {
 		}
 	}
 
+	/**
+	 * Retrieve CDX facilities associated with the user
+	 * @param endpoint
+	 * @param token
+	 * @param userRoleId
+	 * @return
+	 * @throws ApplicationException
+	 */
 	public List<ProgramFacility> getFacilitiesByUserRoleId(URL endpoint, String token, Long userRoleId)
 			throws ApplicationException {
 		try {
@@ -50,6 +73,14 @@ public class RegisterFacilityClient extends AbstractClient {
 		}
 	}
 	
+	/**
+	 * Retrieve CDX facilities by id
+	 * @param endpoint
+	 * @param token
+	 * @param siteProgramId
+	 * @return
+	 * @throws ApplicationException
+	 */
 	public List<ProgramFacility> getFacilityByProgramId(URL endpoint, String token, String siteProgramId)
 			throws ApplicationException {
 		try {
@@ -61,6 +92,16 @@ public class RegisterFacilityClient extends AbstractClient {
 		}
 	}
 	
+	/**
+	 * Retrieve CDX facilities associated with the user
+	 * @param endpoint
+	 * @param token
+	 * @param user
+	 * @param org
+	 * @param roleType
+	 * @return
+	 * @throws ApplicationException
+	 */
 	public List<RegistrationFacility> getFacilities(URL endpoint, String token, RegistrationUser user, RegistrationOrganization  org, RegistrationRoleType roleType)
 			throws ApplicationException {
 		try {
@@ -72,10 +113,18 @@ public class RegisterFacilityClient extends AbstractClient {
 		}
 	}
 	
-	public List<RegistrationProgramFacilityNaicsCode> getNaicsCodes(URL endpoint, String token, String programAccronym)
+	/**
+	 * Retrieve NAICS codes for a program
+	 * @param endpoint
+	 * @param token
+	 * @param programAcronym
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public List<RegistrationProgramFacilityNaicsCode> getNaicsCodes(URL endpoint, String token, String programAcronym)
 			throws ApplicationException {
 		try {
-			return getClient(endpoint, false, true).retrieveNaicsCodesFromFrs(token, programAccronym);
+			return getClient(endpoint, false, true).retrieveNaicsCodesFromFrs(token, programAcronym);
 		} catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
 			throw this.handleException(convertFault(fault), logger);
 		} catch (Exception e) {
@@ -83,6 +132,11 @@ public class RegisterFacilityClient extends AbstractClient {
 		}
 	}
 
+	/**
+	 * Convert Register Service exceptions into application exceptions
+	 * @param fault
+	 * @return
+	 */
 	ApplicationException convertFault(net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
 		if (fault.getFaultInfo() == null) {
 			return new ApplicationException(ApplicationErrorCode.E_RemoteServiceError, fault.getMessage());
