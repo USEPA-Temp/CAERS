@@ -1,4 +1,4 @@
-package gov.epa.cef.web.rest.api;
+package gov.epa.cef.web.api.rest;
 
 import java.util.Collection;
 
@@ -19,9 +19,9 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
 @RequestMapping("/api/registration")
-public class RegistrationResource {
+public class RegistrationApi {
 
-  private static final Logger logger = LoggerFactory.getLogger(RegistrationResource.class);
+  private static final Logger logger = LoggerFactory.getLogger(RegistrationApi.class);
 
   @Autowired
   private RegistrationService registrationService;
