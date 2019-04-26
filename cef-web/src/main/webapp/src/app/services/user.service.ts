@@ -1,28 +1,25 @@
+import { User } from '../model/user';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
-import { Facility } from '../model/facility';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
-
-@Injectable({ providedIn: 'root' })
-export class FacilityService {
-
-  private facilitiesUrl = 'api/facility/user/220632';  // URL to web api
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+  
+  private userUrl = 'api/user';  // URL to web api
 
   constructor(private http: HttpClient) { }
-
-  /** GET facilities from the server */
-  getFacilities (): Observable<Facility[]> {
-    return this.http.get<Facility[]>(this.facilitiesUrl)
+  
+    /** GET the current user from the server */
+  getCurrentUser (): Observable<User> {
+    const url = `${this.userUrl}/me`;
+    return this.http.get<User>(url)
       .pipe(
-        tap(_ => this.log('fetched facilities')),
-        catchError(this.handleError<Facility[]>('getFacilities', []))
+        tap(_ => this.log('fetched user')),
+        catchError(this.handleError<User>('getCurrentUser'))
       );
   }
 
@@ -46,8 +43,8 @@ export class FacilityService {
     };
   }
 
-  /** Log a FacilityService message with the console */
+  /** Log a UserService message with the console */
   private log(message: string) {
-    console.log(`FacilityService: ${message}`);
+    console.log(`UserService: ${message}`);
   }
 }

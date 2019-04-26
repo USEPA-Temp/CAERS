@@ -3,6 +3,7 @@ server:
   servlet:
     context-path: /cef-web
 spring:
+  config.dir: E:/conf
   datasource:
     driver-class-name: "org.postgresql.Driver"
     url: "jdbc:postgresql://172.20.2.35:5432/CEF"
