@@ -13,16 +13,27 @@ const httpOptions = {
 @Injectable({ providedIn: 'root' })
 export class FacilityService {
 
-  private facilitiesUrl = 'api/facility/user/220632';  // URL to web api
+  private facilitiesUrl = 'api/facility';  // URL to web api
 
   constructor(private http: HttpClient) { }
 
   /** GET facilities from the server */
-  getFacilities (): Observable<Facility[]> {
-    return this.http.get<Facility[]>(this.facilitiesUrl)
+  getFacilities (userId: number): Observable<Facility[]> {
+    const url = `${this.facilitiesUrl}/user/${userId}`;
+    return this.http.get<Facility[]>(url)
       .pipe(
         tap(_ => this.log('fetched facilities')),
         catchError(this.handleError<Facility[]>('getFacilities', []))
+      );
+  }
+
+  /** GET facilities for current user from the server */
+  getMyFacilities (): Observable<Facility[]> {
+    const url = `${this.facilitiesUrl}/user/my`;
+    return this.http.get<Facility[]>(url)
+      .pipe(
+        tap(_ => this.log('fetched facilities')),
+        catchError(this.handleError<Facility[]>('getMyFacilities', []))
       );
   }
 

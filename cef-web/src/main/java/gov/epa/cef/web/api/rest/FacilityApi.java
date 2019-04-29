@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
@@ -21,17 +22,29 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 @RequestMapping("/api/facility")
 public class FacilityApi {
 
-  private static final Logger logger = LoggerFactory.getLogger(FacilityApi.class);
+	private static final Logger logger = LoggerFactory.getLogger(FacilityApi.class);
 
-  @Autowired
-  private RegistrationService registrationService;
+	@Autowired
+	private RegistrationService registrationService;
 
-  @GetMapping(value = "/user/{userRoleId}")
-  @ResponseBody
-  public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForUser(@PathVariable Long userRoleId) {
+	@Autowired
+	private ApplicationSecurityUtils applicationSecurityUtils;
 
-    Collection<ProgramFacility> result = registrationService.retrieveFacilities(userRoleId);
+	@GetMapping(value = "/user/{userRoleId}")
+	@ResponseBody
+	public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForUser(@PathVariable Long userRoleId) {
 
-    return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
-  }
+		Collection<ProgramFacility> result = registrationService.retrieveFacilities(userRoleId);
+
+		return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/user/my")
+	@ResponseBody
+	public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForCurrentUser() {
+
+		Collection<ProgramFacility> result = registrationService.retrieveFacilities(applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId());
+
+		return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
+	}
 }
