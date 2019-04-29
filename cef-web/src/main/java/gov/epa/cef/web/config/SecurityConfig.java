@@ -26,7 +26,7 @@ import gov.epa.cdx.shared.security.naas.LoginRedirectServlet;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.CefPreAuthenticationUserDetailsService;
 
-@Profile("prod")
+@Profile("!dev")
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = { "gov.epa.cdx.shared" })

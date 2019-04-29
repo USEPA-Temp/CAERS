@@ -4,6 +4,8 @@ server:
     context-path: /cef-web
 spring:
   config.dir: C:/my_data/cdx/conf
+  profiles:
+    active: "dev"
   datasource:
     driver-class-name: "org.postgresql.Driver"
     url: "jdbc:postgresql://172.20.2.35:5432/CEF"
