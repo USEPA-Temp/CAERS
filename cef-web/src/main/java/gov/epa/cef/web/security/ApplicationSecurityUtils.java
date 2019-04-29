@@ -29,10 +29,22 @@ public class ApplicationSecurityUtils {
         return getCurrentApplicationUser().getUsername();
     }
 
+    /**
+     * Add the provided user to the security context
+     * @param user
+     */
     public void asUser(ApplicationUser user){
         addUserToSecurityContext(user);
     }
 
+    /**
+     * Create a mock user with the provided information and add it to the security context
+     * @param userId
+     * @param email
+     * @param firstName
+     * @param lastName
+     * @param role
+     */
     public void mockApplicationUser(String userId, String email, String firstName, String lastName, AppRole.RoleType role) {
         ApplicationUser user = new ApplicationUser(userId, Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
         user.setEmail(email);
@@ -51,12 +63,20 @@ public class ApplicationSecurityUtils {
 
     }
 
+    /**
+     * Return the current security principal
+     * @return
+     */
     private Object getCurrentPrincipal() {
         // checking security context
         checkSecurityContext();
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    /**
+     * Check if the security context is empty
+     * @throws ApplicationException
+     */
     private void checkSecurityContext() throws ApplicationException {
         if (SecurityContextHolder.getContext() == null
                 || SecurityContextHolder.getContext().getAuthentication() == null
@@ -67,6 +87,10 @@ public class ApplicationSecurityUtils {
         }
     }
 
+    /**
+     * Add the provided user to the security context
+     * @param appUser
+     */
     public void addUserToSecurityContext(ApplicationUser appUser) {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
@@ -77,6 +101,11 @@ public class ApplicationSecurityUtils {
         
     }
 
+    /**
+     * Check if the current user has any of the provided roles
+     * @param roles
+     * @return
+     */
     public boolean hasRole(SimpleGrantedAuthority... roles) {
         for (SimpleGrantedAuthority role : roles) {
             if (getCurrentRoles().contains(role)) {
@@ -86,6 +115,10 @@ public class ApplicationSecurityUtils {
         return false;
     }
 
+    /**
+     * Get the security roles of the current user
+     * @return
+     */
     private Collection<? extends GrantedAuthority> getCurrentRoles() {
         checkSecurityContext();
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities();

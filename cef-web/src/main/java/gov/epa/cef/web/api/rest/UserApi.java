@@ -22,6 +22,10 @@ public class UserApi {
 	@Autowired
 	private ApplicationSecurityUtils applicationSecurityUtils;
 
+	/**
+	 * Retrieve the currently authenticated user
+	 * @return
+	 */
 	@GetMapping(value = "/me")
 	@ResponseBody
 	public ResponseEntity<ApplicationUser> retrieveCurrentUser() {

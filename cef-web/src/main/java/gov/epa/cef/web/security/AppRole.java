@@ -6,6 +6,11 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * 
+ * @author tfesperm
+ *
+ */
 public class AppRole {
 
 	public enum RoleType {
@@ -24,6 +29,11 @@ public class AppRole {
 			this.roleName = roleName;
 		}
 
+		/**
+		 * Get the role type for the given id
+		 * @param id
+		 * @return
+		 */
 		public static RoleType fromId(long id) {
 
 			RoleType result = null;
@@ -43,6 +53,11 @@ public class AppRole {
 			return result;
 		}
 
+		/**
+		 * Get the role type from the given name
+		 * @param roleName
+		 * @return
+		 */
 		public static RoleType fromRoleName(String roleName) {
 
 			RoleType result = RoleType.Unknown;
@@ -59,6 +74,10 @@ public class AppRole {
 			return result;
 		}
 
+		/**
+		 * Get this role as a RegistrationRoleType
+		 * @return
+		 */
 		public net.exchangenetwork.wsdl.register.program_facility._1.RegistrationRoleType facilityRole() {
 
 			net.exchangenetwork.wsdl.register.program_facility._1.RegistrationRoleType result = new net.exchangenetwork.wsdl.register.program_facility._1.RegistrationRoleType();
@@ -72,11 +91,21 @@ public class AppRole {
 			return this.id;
 		}
 
+		/**
+		 * Get this role's name with ROLE_ at the beginning
+		 * @return
+		 */
 		public String grantedRoleName() {
 
 			return this.roleName;
 		}
 
+		/**
+		 * Check if this role is one of the provided roles
+		 * @param primary
+		 * @param secondaries
+		 * @return
+		 */
 		public boolean isOneOf(RoleType primary, RoleType... secondaries) {
 
 			boolean result = equals(primary);
@@ -98,6 +127,10 @@ public class AppRole {
 			return this.roleName.substring(5).equals(role);
 		}
 
+		/**
+		 * Return all roles
+		 * @return
+		 */
 		public static Collection<RoleType> cdxRoles() {
 
 			return Stream.of(values())
@@ -105,6 +138,10 @@ public class AppRole {
 					.collect(Collectors.toList());
 		}
 
+		/**
+		 * Get this role's name without ROLE_ at the beginning
+		 * @return
+		 */
 		public String roleName() {
 
 			return this.roleName.substring(5);

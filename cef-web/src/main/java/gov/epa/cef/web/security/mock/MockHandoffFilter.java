@@ -24,6 +24,9 @@ public class MockHandoffFilter implements Filter {
         this.applicationSecurityUtils = applicationSecurityUtils;
     }
 
+    /**
+     * Create a mock user and add them to the security context
+     */
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
             ServletException {

@@ -39,6 +39,11 @@ public class FacilityApi {
 		return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
 	}
 
+	/**
+	 * Retrieve the currently authenticated user's facilities.
+	 * This can be called before the user is loaded into the app.
+	 * @return
+	 */
 	@GetMapping(value = "/user/my")
 	@ResponseBody
 	public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForCurrentUser() {
