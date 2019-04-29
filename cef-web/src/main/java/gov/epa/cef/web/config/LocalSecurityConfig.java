@@ -14,7 +14,7 @@ import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.security.mock.MockHandoffFilter;
 
-@Profile("!prod")
+@Profile("dev")
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = { "gov.epa.cdx.shared" })
