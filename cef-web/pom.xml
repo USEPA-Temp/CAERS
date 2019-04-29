@@ -87,6 +87,8 @@
     <cxf.version>3.3.1</cxf.version>
     <jersey.version>2.27</jersey.version>
     <jackson.version>2.9.8</jackson.version>
+    
+    <cdx.shared.version>1.0.4</cdx.shared.version>
 	</properties>
 
 	<dependencies>
@@ -161,6 +163,15 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
       <version>4.3</version>
+    </dependency>
+    
+    <!-- ====================================================================== -->
+    <!-- CDX Shared -->
+    <!-- ====================================================================== -->
+    <dependency>
+      <groupId>gov.epa.cdx.shared</groupId>
+      <artifactId>cdx-shared-app-util</artifactId>
+      <version>${cdx.shared.version}</version>
     </dependency>
 
     <!-- ====================================================================== -->

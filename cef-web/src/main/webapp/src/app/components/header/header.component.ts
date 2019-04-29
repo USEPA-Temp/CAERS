@@ -1,3 +1,4 @@
+import { UserContextService } from '../../services/user-context.service';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -10,7 +11,7 @@ export class HeaderComponent implements OnInit {
   //TODO: figure out how to pull breadcrumb path from route
   @Input() title;
 
-  constructor() { }
+  constructor(public userContext: UserContextService) { }
 
   ngOnInit() {}
 }
