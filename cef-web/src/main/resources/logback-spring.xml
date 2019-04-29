@@ -9,7 +9,7 @@
             <appender-ref ref="STDOUT"/>
         </root>
     </springProfile>
-    <springProfile name="prod">
+    <springProfile name="prod,default">
         <appender name="TIME_BASED_FILE"
                   class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${LOG_PATH}/cef-web/cef-web.log</file>
