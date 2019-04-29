@@ -5,10 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
+import gov.epa.cef.web.config.YamlPropertySourceFactory;
+
 @SpringBootApplication
 @PropertySources({
-	@PropertySource(value = "classpath:application.yml"),
-	@PropertySource(value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true),
+	@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:application.yml"),
+	@PropertySource(factory = YamlPropertySourceFactory.class, value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true),
 })
 public class CefWebApplication {
 

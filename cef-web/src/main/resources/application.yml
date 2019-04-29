@@ -3,9 +3,6 @@ server:
   servlet:
     context-path: /cef-web
 spring:
-  config.dir: C:/my_data/cdx/conf
-  profiles:
-    active: "dev"
   datasource:
     driver-class-name: "org.postgresql.Driver"
     url: "jdbc:postgresql://172.20.2.35:5432/CEF"
@@ -23,6 +20,8 @@ spring:
       dialect: gov.epa.cef.web.hibernate.PostgreSQLDialectWithJsonSupport
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   data.jpa.repositories.enabled: true
+logging:
+  path: ${log.home}
 cdx:
   registerEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
