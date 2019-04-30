@@ -40,8 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.csrf().disable()
 			.addFilter(cdxWebPreAuthFilter())
 			.authorizeRequests()
+			.antMatchers("/J2AHandoff*").permitAll()			
 			.antMatchers("/**")
-//			.permitAll()
 			.hasAnyRole(
 					AppRole.RoleType.Peparer.roleName(),
 					AppRole.RoleType.Certifier.roleName(),
