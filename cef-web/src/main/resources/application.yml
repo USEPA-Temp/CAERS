@@ -9,6 +9,8 @@ spring:
     username: "cef"
     password: "cef_fall2017"
   jmx.enabled: false
+  thymeleaf:
+      mode: HTML  
   jpa:
     generate-ddl: false
     hibernate.ddl-auto: none
