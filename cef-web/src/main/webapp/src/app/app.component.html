@@ -1,7 +1,13 @@
-<app-header [title]="'Facility Dashboard'"></app-header>
+<app-header></app-header>
 
-<div class="p-4">
-  <router-outlet></router-outlet>
+<div class="row">
+	<div></div>
+	<div class="col m-2">
+		<app-breadcrumb-nav [title]="'Facility Dashboard'"></app-breadcrumb-nav>
+		<div class="p-3">
+		  <router-outlet></router-outlet>
+		</div>
+	</div>
 </div>
 
 <app-footer></app-footer>
