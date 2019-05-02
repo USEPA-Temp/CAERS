@@ -2,6 +2,6 @@
   <app-facility-info [facility]="facility"></app-facility-info>
   <div>
     <button class="btn btn-primary m-1">Review <br> Facility Data</button>
-    <button class="btn btn-primary m-1">Begin /<br> Continue Reporting</button>
+    <button class="btn btn-primary m-1" [routerLink]="['/facility', facility.programId, 'reports']">Begin /<br> Continue Reporting</button>
   </div>
 </div>

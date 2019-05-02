@@ -1,11 +1,14 @@
 <app-header></app-header>
 
 <div class="row">
-	<div></div>
+	
+	<div class="col-2 bg-light" *ngIf="showSidebar">
+		<app-sidebar></app-sidebar>
+	</div>
 	<div class="col m-2">
 		<app-breadcrumb-nav [title]="'Facility Dashboard'"></app-breadcrumb-nav>
 		<div class="p-3">
-		  <router-outlet></router-outlet>
+			<router-outlet></router-outlet>
 		</div>
 	</div>
 </div>

@@ -1,15 +1,26 @@
+import { FacilityContextService } from './services/facility-context.service';
+import { RouteContextService } from './services/route-context.service';
 import { UserContextService } from './services/user-context.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'cef-web';
+  showSidebar: boolean;
 
-  constructor(public userContext: UserContextService) {
-    userContext.loadUser();
+  constructor(
+    private facilityContext: FacilityContextService, 
+    private userContext: UserContextService, 
+    private routeContext: RouteContextService
+  ) { }
+
+  ngOnInit(): void {
+    this.routeContext.route.subscribe(snap => {
+        this.showSidebar = snap.data.sidebar;
+      });
   }
 }

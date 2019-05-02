@@ -13,6 +13,8 @@ import { NotificationListComponent } from './facility-dashboard/notification-lis
 import { FacilityListItemComponent } from './facility-dashboard/facility-list/facility-list-item/facility-list-item.component';
 import { SharedModule } from './shared/shared.module';
 import { BreadcrumbNavComponent } from './components/breadcrumb-nav/breadcrumb-nav.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { CollapseNavComponent } from './components/sidebar/collapse-nav/collapse-nav.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { BreadcrumbNavComponent } from './components/breadcrumb-nav/breadcrumb-n
     FacilityListComponent,
     NotificationListComponent,
     FacilityListItemComponent,
-    BreadcrumbNavComponent
+    BreadcrumbNavComponent,
+    SidebarComponent,
+    CollapseNavComponent
   ],
   imports: [
     BrowserModule,

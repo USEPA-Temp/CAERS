@@ -77,14 +77,14 @@ public class RegisterFacilityClient extends AbstractClient {
 	 * Retrieve CDX facilities by id
 	 * @param endpoint
 	 * @param token
-	 * @param siteProgramId
+	 * @param programId
 	 * @return
 	 * @throws ApplicationException
 	 */
-	public List<ProgramFacility> getFacilityByProgramId(URL endpoint, String token, String siteProgramId)
+	public List<ProgramFacility> getFacilityByProgramId(URL endpoint, String token, String programId)
 			throws ApplicationException {
 		try {
-			return getClient(endpoint, false, true).retrieveProgramFacilitiesByProgramIds(token, Arrays.asList(new String[]{siteProgramId}));
+			return getClient(endpoint, false, true).retrieveProgramFacilitiesByProgramIds(token, Arrays.asList(new String[]{programId}));
 		} catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
 			throw this.handleException(convertFault(fault), logger);
 		} catch (Exception e) {
