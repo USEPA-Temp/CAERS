@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cdx.shared.security.ApplicationUser;
+import gov.epa.cef.web.dto.UserDto;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
+import gov.epa.cef.web.util.transforms.ApplicationUserTransforms;
 
 @RestController
 @RequestMapping("/api/user")
@@ -28,11 +29,11 @@ public class UserApi {
 	 */
 	@GetMapping(value = "/me")
 	@ResponseBody
-	public ResponseEntity<ApplicationUser> retrieveCurrentUser() {
+	public ResponseEntity<UserDto> retrieveCurrentUser() {
 
-		ApplicationUser result = applicationSecurityUtils.getCurrentApplicationUser();
+		UserDto result = ApplicationUserTransforms.toUserDto().apply(applicationSecurityUtils.getCurrentApplicationUser());
 
-		return new ResponseEntity<ApplicationUser>(result, HttpStatus.OK);
+		return new ResponseEntity<UserDto>(result, HttpStatus.OK);
 	}
 
 }
