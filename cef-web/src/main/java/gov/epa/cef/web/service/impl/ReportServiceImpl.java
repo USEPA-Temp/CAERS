@@ -7,19 +7,19 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.report.EmissionsReport;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.service.ReportService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @Service
-public class ReportService {
+public class ReportServiceImpl implements ReportService {
 	
 	@Autowired
 	private EmissionsReportRepository erRepo;
 	
-	/**
-	 * Find reports for a given facility
-	 * @param facilityId {@link ProgramFacility}'s programId
-	 * @return
+	/* (non-Javadoc)
+	 * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
 	 */
+	@Override
 	public List<EmissionsReport> findByFacilityId(String facilityId) {
 		
 		return erRepo.findByFacilityId(facilityId);

@@ -1,5 +1,5 @@
-import { FacilityContextService } from '../../services/facility-context.service';
-import { Component, OnInit } from '@angular/core';
+import { Facility } from '../../model/facility';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,8 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
+  @Input() facility: Facility;
 
-  constructor(public facilityContext: FacilityContextService) { }
+  constructor() { }
 
   ngOnInit() {
   }

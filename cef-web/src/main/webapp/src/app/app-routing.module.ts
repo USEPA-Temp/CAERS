@@ -24,7 +24,7 @@ const routes: Routes = [
       }, {
         path: '',
         component: FacilityDashboardComponent,
-        data: { title: 'Facility Dashboard', sidebar: false },
+        data: { title: 'Facility Dashboard' },
       }
     ]
   }

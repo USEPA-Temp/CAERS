@@ -1,3 +1,5 @@
+import { CollapseNavComponent } from './sidebar/collapse-nav/collapse-nav.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 import { SharedModule } from '../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -7,6 +9,7 @@ import { ReportsDashboardComponent } from './reports-dashboard/reports-dashboard
 import { ReportsComponent } from './reports/reports.component';
 import { ReportListItemComponent } from './reports-dashboard/report-list-item/report-list-item.component';
 import { ReportListButtonsComponent } from './reports-dashboard/report-list-item/report-list-buttons/report-list-buttons.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -14,11 +17,14 @@ import { ReportListButtonsComponent } from './reports-dashboard/report-list-item
     ReportsComponent,
     ReportListItemComponent,
     ReportListButtonsComponent,
+    SidebarComponent,
+    CollapseNavComponent
   ],
   imports: [
     CommonModule,
     ReportsRoutingModule,
-    SharedModule
+    SharedModule,
+    NgbModule
   ]
 })
 export class ReportsModule { }

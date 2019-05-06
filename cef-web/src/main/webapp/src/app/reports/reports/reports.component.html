@@ -1,2 +1,9 @@
-
-<router-outlet></router-outlet>
+<div class="row">
+	<div class="col-2 bg-light">
+		<app-sidebar [facility]="facility"></app-sidebar>
+	</div>
+	<div class="col">
+		<router-outlet></router-outlet>
+	</div>
+</div>
+	

@@ -7,7 +7,6 @@ const reportRoutes: Routes = [
   {
     path: '',
     component: ReportsComponent,
-    data: { sidebar: true },
     children: [
       {
         path: '',
