@@ -60,7 +60,7 @@
 
         <!-- Sonar properties -->
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>
-        <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/**/*.*</sonar.exclusions>
+        <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/db/**/*.*</sonar.exclusions>
         <sonar.issue.ignore.multicriteria>S3437,S4502,S4684,UndocumentedApi,BoldAndItalicTagsCheck</sonar.issue.ignore.multicriteria>
         <!-- Rule https://sonarcloud.io/coding_rules?open=Web%3ABoldAndItalicTagsCheck&rule_key=Web%3ABoldAndItalicTagsCheck is ignored. Even if we agree that using the "i" tag is an awful practice, this is what is recommended by http://fontawesome.io/examples/ -->
         <sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.resourceKey>src/main/webapp/src/app/**/*.*</sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.resourceKey>
