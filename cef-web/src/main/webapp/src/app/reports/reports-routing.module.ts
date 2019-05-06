@@ -1,5 +1,5 @@
 import { ReportsDashboardComponent } from './reports-dashboard/reports-dashboard.component';
-import { ReportsComponent } from './reports/reports.component';
+import { ReportsComponent } from './reports.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 

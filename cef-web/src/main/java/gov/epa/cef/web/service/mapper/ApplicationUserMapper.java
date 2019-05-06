@@ -1,16 +1,16 @@
-package gov.epa.cef.web.util.transforms;
+package gov.epa.cef.web.service.mapper;
 
 import java.util.function.Function;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
-import gov.epa.cef.web.dto.UserDto;
+import gov.epa.cef.web.service.dto.UserDto;
 
 /**
  * Class that contains transforms for {@link ApplicationUser}
  * @author tfesperm
  *
  */
-public class ApplicationUserTransforms {
+public class ApplicationUserMapper {
 
 	/**
 	 * Transform {@link ApplicationUser} into {@link UserDto}

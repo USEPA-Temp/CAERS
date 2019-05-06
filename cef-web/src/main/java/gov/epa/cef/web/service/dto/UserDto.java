@@ -1,4 +1,4 @@
-package gov.epa.cef.web.dto;
+package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 

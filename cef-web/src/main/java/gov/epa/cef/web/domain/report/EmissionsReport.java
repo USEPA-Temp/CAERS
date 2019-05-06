@@ -7,11 +7,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import gov.epa.cef.web.domain.common.BaseEntity;
+import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 @Entity
 @Table(name = "emissions_report")
-public class EmissionsReport extends BaseEntity {
+public class EmissionsReport extends BaseAuditEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,8 +53,8 @@ public class EmissionsReport extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "EmissionsReport [facilityId=" + facilityId + ", status=" + status + ", year=" + year + ", id=" + id
-				+ "]";
+		return "EmissionsReport [facilityId=" + facilityId + ", status=" + status + ", year=" + year + ", createdDate="
+				+ createdDate + ", lastModifiedDate=" + lastModifiedDate + ", id=" + id + "]";
 	}
 
 }
