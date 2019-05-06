@@ -1,19 +1,10 @@
 <div class="card">
-  <div class="card-header text-center">
-    <strong>Emissions Reports</strong>
-  </div>
-  <div class="list-group list-group-flush">
-    <div *ngFor="let report of reports" class="list-group-item">
-      <div class="d-flex flex-row justify-content-between">
-  <div>
-    {{report.year}} Report
-  </div>
-  <div>
-    <button class="btn btn-link text-dark font-weight-bold">Begin/Continue</button>
-    <button class="btn btn-link text-dark font-weight-bold">Run Quality Check</button>
-    <button class="btn btn-link text-dark font-weight-bold">Certify</button>
-  </div>
-</div>
-    </div>
-  </div>
+	<div class="card-header text-center">
+		<strong>Emissions Reports</strong>
+	</div>
+	<div class="list-group list-group-flush">
+		<div *ngFor="let report of reports" class="list-group-item">
+			<app-report-list-item [report]="report"></app-report-list-item>
+		</div>
+	</div>
 </div>

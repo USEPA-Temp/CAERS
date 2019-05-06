@@ -34,7 +34,7 @@ public class LocalSecurityConfig extends SecurityConfig {
 			.authorizeRequests()
 			.antMatchers("/**")
 			.hasAnyRole(
-					AppRole.RoleType.Peparer.roleName(),
+					AppRole.RoleType.Preparer.roleName(),
 					AppRole.RoleType.Certifier.roleName(),
 					AppRole.RoleType.Reviewer.roleName())
 			.anyRequest().denyAll();
