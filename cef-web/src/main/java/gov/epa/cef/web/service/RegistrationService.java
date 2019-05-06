@@ -14,5 +14,12 @@ public interface RegistrationService {
    * @throws ApplicationException
    */
   List<ProgramFacility> retrieveFacilities(Long userRoleId) throws ApplicationException;
+  
+  /**
+   * Retrieve CDX facility by id
+   * @param programId
+   * @return
+   */
+  ProgramFacility retrieveFacilityByProgramId(String programId);
 
 }

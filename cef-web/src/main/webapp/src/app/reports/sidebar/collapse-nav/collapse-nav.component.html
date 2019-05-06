@@ -1,0 +1,16 @@
+<button class="btn btn-link text-dark font-weight-bold" type="button"
+		(click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
+		[attr.aria-controls]="targetId">
+	{{desc}}
+</button>
+
+<div [attr.id]="targetId" [ngbCollapse]="collapsed">
+	<ul class="nav flex-column ml-2">
+		<li class="nav-item small">
+			<a class="nav-link text-dark" href="#">Placeholder 1</a>
+		</li>
+		<li class="nav-item small">
+			<a class="nav-link text-dark" href="#">Placeholder 2</a>
+		</li>
+	</ul>
+</div>

@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/J2AHandoff*").permitAll()			
 			.antMatchers("/**")
 			.hasAnyRole(
-					AppRole.RoleType.Peparer.roleName(),
+					AppRole.RoleType.Preparer.roleName(),
 					AppRole.RoleType.Certifier.roleName(),
 					AppRole.RoleType.Reviewer.roleName())
 			.anyRequest().denyAll();

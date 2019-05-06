@@ -1,10 +1,9 @@
 export class User {
+  cdxUserId: string;
   email: string;
   firstName: string;
   fullName: string;
-  idTypeText: string;
   lastName: string;
-  roleName: string;
-  username: string;
+  role: string;
   userRoleId: number;
 }

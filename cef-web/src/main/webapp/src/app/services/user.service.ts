@@ -8,11 +8,11 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-  
+
   private userUrl = 'api/user';  // URL to web api
 
   constructor(private http: HttpClient) { }
-  
+
     /** GET the current user from the server */
   getCurrentUser (): Observable<User> {
     const url = `${this.userUrl}/me`;
