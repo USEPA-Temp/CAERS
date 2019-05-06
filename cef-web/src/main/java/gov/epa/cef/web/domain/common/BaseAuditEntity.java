@@ -4,19 +4,33 @@ import java.util.Date;
 
 import javax.persistence.MappedSuperclass;
 
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @MappedSuperclass
 public abstract class BaseAuditEntity extends BaseEntity {
 	
+	@CreatedBy
+	protected String createdBy;
+	
 	@CreatedDate
 	protected Date createdDate;
 	
+	@LastModifiedBy
+	protected String lastModifiedBy;
+	
 	@LastModifiedDate
 	protected Date lastModifiedDate;
-	
-	//TODO: add created by and last updated by after user table has been created
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
 	public Date getCreatedDate() {
 		return createdDate;
@@ -24,6 +38,14 @@ public abstract class BaseAuditEntity extends BaseEntity {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
 	}
 
 	public Date getLastModifiedDate() {

@@ -53,8 +53,9 @@ public class EmissionsReport extends BaseAuditEntity {
 
 	@Override
 	public String toString() {
-		return "EmissionsReport [facilityId=" + facilityId + ", status=" + status + ", year=" + year + ", createdDate="
-				+ createdDate + ", lastModifiedDate=" + lastModifiedDate + ", id=" + id + "]";
+		return "EmissionsReport [facilityId=" + facilityId + ", status=" + status + ", year=" + year + ", createdBy="
+				+ createdBy + ", createdDate=" + createdDate + ", lastModifiedBy=" + lastModifiedBy
+				+ ", lastModifiedDate=" + lastModifiedDate + ", id=" + id + "]";
 	}
 
 }
