@@ -1,7 +1,7 @@
-<div class="d-flex flex-row justify-content-between">
-  <app-facility-info [facility]="facility"></app-facility-info>
+<div class="d-flex flex-row flex-wrap justify-content-between">
+  <app-facility-info [facility]="facility" class="ml-2"></app-facility-info>
   <div>
-    <button class="btn btn-primary m-1">Review <br> Facility Data</button>
-    <button class="btn btn-primary m-1" [routerLink]="['/facility', facility.programId, 'reports']">Begin /<br> Continue Reporting</button>
+    <button class="btn btn-success m-1">Review Facility Data</button>
+    <button class="btn btn-success m-1" [routerLink]="['/facility', facility.programId, 'reports']">Begin / Continue Reporting</button>
   </div>
 </div>
