@@ -1,6 +1,8 @@
 package gov.epa.cef.web.security;
 
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,9 +14,6 @@ import org.springframework.stereotype.Component;
 import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 @Component 
 public class ApplicationSecurityUtils {
@@ -35,32 +34,6 @@ public class ApplicationSecurityUtils {
      */
     public void asUser(ApplicationUser user){
         addUserToSecurityContext(user);
-    }
-
-    /**
-     * Create a mock user with the provided information and add it to the security context
-     * @param userId
-     * @param email
-     * @param firstName
-     * @param lastName
-     * @param role
-     */
-    public void mockApplicationUser(String userId, String email, String firstName, String lastName, AppRole.RoleType role) {
-        ApplicationUser user = new ApplicationUser(userId, Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setOrganization("CGI Federal");
-        user.setTitle("Mr.");
-        user.setPhoneNumber("7032276001");
-        user.setIdTypeCode((int)role.getId());
-        user.setIdTypeText(role.roleName());
-        user.setRoleId(role.getId());
-        user.setUserRoleId(220632L);
-        //60632 or 95092
-      	user.setUserOrganizationId(86819L);
-        addUserToSecurityContext(user);
-
     }
 
     /**
