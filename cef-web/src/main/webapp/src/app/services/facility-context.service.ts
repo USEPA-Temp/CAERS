@@ -1,6 +1,5 @@
 import { Facility } from '../model/facility';
 import { FacilityService } from './facility.service';
-import { RouteContextService } from './route-context.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -9,14 +8,23 @@ import { switchMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class FacilityContextService {
-  facility: Facility;
+  private facility$: Observable<Facility>;
+  private programId: string;
 
-  constructor(private facilityService: FacilityService, private routeContext: RouteContextService) {
-    this.routeContext.route
-      .subscribe(route  => {
-        this.facilityService.getFacility(route.paramMap.get('id'))
-          .subscribe(facility => this.facility =  facility);
-      }
-    );
-   }
+  constructor(private facilityService: FacilityService) {
+  }
+
+  getFacility (programId: string): Observable<Facility> {
+    if (this.programId === programId) {
+      return this.facility$;
+    } else {
+      this.programId = programId;
+      this.fetchFacility();
+      return this.facility$;
+    }
+  }
+
+  private fetchFacility () {
+    this.facility$ = this.facilityService.getFacility(this.programId);
+  }
 }
