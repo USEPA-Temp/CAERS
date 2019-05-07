@@ -94,9 +94,9 @@ public class ApplicationSecurityUtils {
     public void addUserToSecurityContext(ApplicationUser appUser) {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
-        logger.info(String.format("User %s explicitly added to security context.", appUser.getUsername()));
+        logger.debug(String.format("User %s explicitly added to security context.", appUser.getUsername()));
         for(GrantedAuthority a: appUser.getAuthorities()) {
-        	logger.info(String.format("Role %s explicitly added to security context.", a.getAuthority()));
+        	logger.debug(String.format("Role %s explicitly added to security context.", a.getAuthority()));
         }
         
     }

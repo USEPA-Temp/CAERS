@@ -6,3 +6,11 @@
 #navbarToggleFooter .nav-item:last-child .nav-link::after {
     content: "";
 }
+
+.pipe-list .pipe-item::after {
+    content: " | ";
+}
+
+.pipe-list .pipe-item:last-child::after {
+    content: "";
+}

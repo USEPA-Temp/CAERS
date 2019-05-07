@@ -30,6 +30,25 @@ public class FacilityApi {
 	@Autowired
 	private ApplicationSecurityUtils applicationSecurityUtils;
 
+	/**
+	 * Retrieve a facility by program ID
+	 * @param programId
+	 * @return
+	 */
+	@GetMapping(value = "/{programId}")
+	@ResponseBody
+	public ResponseEntity<ProgramFacility> retrieveFacility(@PathVariable String programId) {
+
+		ProgramFacility result = registrationService.retrieveFacilityByProgramId(programId);
+
+		return new ResponseEntity<ProgramFacility>(result, HttpStatus.OK);
+	}
+
+	/**
+	 * Retrieve the specified user's facilities.
+	 * @param userRoleId
+	 * @return
+	 */
 	@GetMapping(value = "/user/{userRoleId}")
 	@ResponseBody
 	public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForUser(@PathVariable Long userRoleId) {

@@ -1,3 +1,5 @@
+import { FacilityContextService } from './services/facility-context.service';
+import { RouteContextService } from './services/route-context.service';
 import { UserContextService } from './services/user-context.service';
 import { Component } from '@angular/core';
 
@@ -7,7 +9,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(public userContext: UserContextService) {
-    userContext.loadUser();
-  }
+
+  constructor(
+    private facilityContext: FacilityContextService,
+    private userContext: UserContextService,
+    private routeContext: RouteContextService
+  ) { }
+
 }

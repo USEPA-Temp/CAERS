@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 public class AppRole {
 
 	public enum RoleType {
-		Peparer(142710L, ROLE_PREPARER), 
+		Preparer(142710L, ROLE_PREPARER), 
 		Certifier(142720L, ROLE_CERTIFIER), 
 		Reviewer(142730L, ROLE_REVIEWER),
 		Unknown(-9999, "UNKNOWN");
