@@ -1,3 +1,7 @@
+@import "variables";
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import "../node_modules/bootswatch/dist/flatly/bootswatch";
+
 /* You can add global styles to this file, and also import other style files */
 #navbarToggleFooter .nav-item .nav-link::after {
     content: " | ";
