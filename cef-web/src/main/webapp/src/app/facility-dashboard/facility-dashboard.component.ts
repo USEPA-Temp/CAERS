@@ -6,7 +6,7 @@ import { UserContextService } from '../services/user-context.service';
 @Component({
   selector: 'app-facility-dashboard',
   templateUrl: './facility-dashboard.component.html',
-  styleUrls: ['./facility-dashboard.component.css']
+  styleUrls: ['./facility-dashboard.component.scss']
 })
 export class FacilityDashboardComponent implements OnInit {
   facilities: Facility[] = [];

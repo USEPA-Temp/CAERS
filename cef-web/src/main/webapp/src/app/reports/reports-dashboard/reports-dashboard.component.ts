@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-reports-dashboard',
   templateUrl: './reports-dashboard.component.html',
-  styleUrls: ['./reports-dashboard.component.css']
+  styleUrls: ['./reports-dashboard.component.scss']
 })
 export class ReportsDashboardComponent implements OnInit {
   facility: Facility;

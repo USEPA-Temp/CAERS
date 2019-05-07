@@ -5,7 +5,7 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'app-report-list-buttons',
   templateUrl: './report-list-buttons.component.html',
-  styleUrls: ['./report-list-buttons.component.css']
+  styleUrls: ['./report-list-buttons.component.scss']
 })
 export class ReportListButtonsComponent implements OnInit {
   @Input() report: EmissionsReport;
