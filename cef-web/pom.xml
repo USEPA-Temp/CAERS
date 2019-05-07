@@ -45,6 +45,10 @@
         <npm.version>6.4.1</npm.version>        
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
+        <cxf.version>3.3.1</cxf.version>
+    	<jersey.version>2.27</jersey.version>
+    	<jackson.version>2.9.8</jackson.version>
+    	<cdx.shared.version>1.0.4</cdx.shared.version>
 		
         <!-- Plugin versions -->
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
@@ -61,34 +65,15 @@
         <!-- Sonar properties -->
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>
         <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/db/**/*.*</sonar.exclusions>
-        <sonar.issue.ignore.multicriteria>S3437,S4502,S4684,UndocumentedApi,BoldAndItalicTagsCheck</sonar.issue.ignore.multicriteria>
-        <!-- Rule https://sonarcloud.io/coding_rules?open=Web%3ABoldAndItalicTagsCheck&rule_key=Web%3ABoldAndItalicTagsCheck is ignored. Even if we agree that using the "i" tag is an awful practice, this is what is recommended by http://fontawesome.io/examples/ -->
-        <sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.resourceKey>src/main/webapp/src/app/**/*.*</sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.resourceKey>
-        <sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.ruleKey>Web:BoldAndItalicTagsCheck</sonar.issue.ignore.multicriteria.BoldAndItalicTagsCheck.ruleKey>
-        <!-- Rule https://sonarcloud.io/coding_rules?open=squid%3AS3437&rule_key=squid%3AS3437 is ignored, as a JPA-managed field cannot be transient -->
-        <sonar.issue.ignore.multicriteria.S3437.resourceKey>src/main/java/**/*</sonar.issue.ignore.multicriteria.S3437.resourceKey>
-        <sonar.issue.ignore.multicriteria.S3437.ruleKey>squid:S3437</sonar.issue.ignore.multicriteria.S3437.ruleKey>
-        <!-- Rule https://sonarcloud.io/coding_rules?open=squid%3AUndocumentedApi&rule_key=squid%3AUndocumentedApi is ignored, as we want to follow "clean code" guidelines and classes, methods and arguments names should be self-explanatory -->
-        <sonar.issue.ignore.multicriteria.UndocumentedApi.resourceKey>src/main/java/**/*</sonar.issue.ignore.multicriteria.UndocumentedApi.resourceKey>
-        <sonar.issue.ignore.multicriteria.UndocumentedApi.ruleKey>squid:UndocumentedApi</sonar.issue.ignore.multicriteria.UndocumentedApi.ruleKey>
-        <!-- Rule https://sonarcloud.io/coding_rules?open=squid%3AS4502&rule_key=squid%3AS4502 is ignored, as for JWT tokens we are not subject to CSRF attack -->
-        <sonar.issue.ignore.multicriteria.S4502.resourceKey>src/main/java/**/*</sonar.issue.ignore.multicriteria.S4502.resourceKey>
-        <sonar.issue.ignore.multicriteria.S4502.ruleKey>squid:S4502</sonar.issue.ignore.multicriteria.S4502.ruleKey>
-        <!-- Rule https://sonarcloud.io/coding_rules?open=squid%3AS4684&rule_key=squid%3AS4684 -->
-        <sonar.issue.ignore.multicriteria.S4684.resourceKey>src/main/java/**/*</sonar.issue.ignore.multicriteria.S4684.resourceKey>
-        <sonar.issue.ignore.multicriteria.S4684.ruleKey>squid:S4684</sonar.issue.ignore.multicriteria.S4684.ruleKey>
         <sonar.jacoco.reportPaths>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPaths>
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
         <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/lcov.info</sonar.typescript.lcov.reportPaths>
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
-	        <sonar.junit.reportsPath>${project.testresult.directory}</sonar.junit.reportsPath>
+        <sonar.junit.reportsPath>${project.testresult.directory}</sonar.junit.reportsPath>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
+        <sonar.test.exclusions>src/test/resources/db/**/*.*</sonar.test.exclusions>
 		
-    <cxf.version>3.3.1</cxf.version>
-    <jersey.version>2.27</jersey.version>
-    <jackson.version>2.9.8</jackson.version>
-    
-    <cdx.shared.version>1.0.4</cdx.shared.version>
+
 	</properties>
 
 	<dependencies>
@@ -591,34 +576,34 @@
 					        </execution>
 					    </executions>
 					</plugin>
-          <!-- ====================================================================== -->
-          <!-- Generate binding for WSDLs -->
-          <!-- ====================================================================== -->
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jaxws-maven-plugin</artifactId>
-            <configuration>
-              <vmArgs>
-                  <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-              </vmArgs>
-              <extension>true</extension>
-            </configuration>
-            <executions>
-              <execution>
-                <id>token-wsdl</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <wsdlDirectory>src/main/wsdl</wsdlDirectory>
-                  <wsdlFiles>
-                    <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
-                  </wsdlFiles>
-                </configuration>
-                <goals>
-                  <goal>wsimport</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+					<!-- ====================================================================== -->
+					<!-- Generate binding for WSDLs -->
+					<!-- ====================================================================== -->
+					<plugin>
+					  <groupId>org.codehaus.mojo</groupId>
+					  <artifactId>jaxws-maven-plugin</artifactId>
+					  <configuration>
+					    <vmArgs>
+					        <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+					    </vmArgs>
+					    <extension>true</extension>
+					  </configuration>
+					  <executions>
+					    <execution>
+					      <id>token-wsdl</id>
+					      <phase>generate-sources</phase>
+					      <configuration>
+					        <wsdlDirectory>src/main/wsdl</wsdlDirectory>
+					        <wsdlFiles>
+					          <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
+					        </wsdlFiles>
+					      </configuration>
+					      <goals>
+					        <goal>wsimport</goal>
+					      </goals>
+					    </execution>
+					  </executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -729,33 +714,33 @@
                         <artifactId>git-commit-id-plugin</artifactId>
                     </plugin>
                     <!-- ====================================================================== -->
-          <!-- Generate binding for WSDLs -->
-          <!-- ====================================================================== -->
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jaxws-maven-plugin</artifactId>
-            <configuration>
-              <vmArgs>
-                  <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-              </vmArgs>
-              <extension>true</extension>
-            </configuration>
-            <executions>
-              <execution>
-                <id>token-wsdl</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <wsdlDirectory>src/main/wsdl</wsdlDirectory>
-                  <wsdlFiles>
-                    <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
-                  </wsdlFiles>
-                </configuration>
-                <goals>
-                  <goal>wsimport</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+					<!-- Generate binding for WSDLs -->
+					<!-- ====================================================================== -->
+					<plugin>
+					  <groupId>org.codehaus.mojo</groupId>
+					  <artifactId>jaxws-maven-plugin</artifactId>
+					  <configuration>
+					    <vmArgs>
+					        <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+					    </vmArgs>
+					    <extension>true</extension>
+					  </configuration>
+					  <executions>
+					    <execution>
+					      <id>token-wsdl</id>
+					      <phase>generate-sources</phase>
+					      <configuration>
+					        <wsdlDirectory>src/main/wsdl</wsdlDirectory>
+					        <wsdlFiles>
+					          <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
+					        </wsdlFiles>
+					      </configuration>
+					      <goals>
+					        <goal>wsimport</goal>
+					      </goals>
+					    </execution>
+					  </executions>
+					</plugin>
                 </plugins>
             </build>
         </profile>	
