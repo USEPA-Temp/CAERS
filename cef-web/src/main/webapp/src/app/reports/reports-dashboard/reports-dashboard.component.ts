@@ -18,10 +18,9 @@ export class ReportsDashboardComponent implements OnInit {
   ngOnInit() {
     this.route.data
     .subscribe((data: { facility: Facility }) => {
-      console.log(data.facility);
       this.facility = data.facility;
       this.reportService.getFacilityReports(this.facility.programId)
-        .subscribe(reports => this.reports = reports );
+        .subscribe(reports => this.reports = reports.sort((a, b) => b.year - a.year) );
     });
   }
 
