@@ -1,16 +1,12 @@
+spring:
+  config.dir:
 server:
   use-forward-headers: true
   servlet:
     context-path: /cef-web
-spring:
-  datasource:
-    driver-class-name: "org.postgresql.Driver"
-    url: "jdbc:postgresql://172.20.2.35:5432/CEF"
-    username: "cef"
-    password: "cef_fall2017"
   jmx.enabled: false
   thymeleaf:
-      mode: HTML  
+      mode: HTML
   jpa:
     generate-ddl: false
     hibernate.ddl-auto: none
@@ -22,14 +18,3 @@ spring:
       dialect: gov.epa.cef.web.hibernate.PostgreSQLDialectWithJsonSupport
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   data.jpa.repositories.enabled: true
-logging:
-  path: ${log.home}
-cdx:
-  registerEndpointConfiguration:
-    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
-    operatorId: caer-cef-admin@epa.gov
-    operatorPassword: CDXcaercef01
-  registerProgramFacilityEndpointConfiguration:
-    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterProgramFacilityService
-    operatorId: caer-cef-admin@epa.gov
-    operatorPassword: CDXcaercef01
