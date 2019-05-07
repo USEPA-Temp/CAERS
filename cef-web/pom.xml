@@ -138,42 +138,42 @@
 			<scope>provided</scope>
 		</dependency>	
 
-    <!-- ====================================================================== -->
-    <!-- misc -->
-    <!-- ====================================================================== -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.9</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <version>4.3</version>
-    </dependency>
-    
-    <!-- ====================================================================== -->
-    <!-- CDX Shared -->
-    <!-- ====================================================================== -->
-    <dependency>
-      <groupId>gov.epa.cdx.shared</groupId>
-      <artifactId>cdx-shared-app-util</artifactId>
-      <version>${cdx.shared.version}</version>
-    </dependency>
+		<!-- ====================================================================== -->
+		<!-- misc -->
+		<!-- ====================================================================== -->
+		<dependency>
+		  <groupId>org.apache.commons</groupId>
+		  <artifactId>commons-lang3</artifactId>
+		  <version>3.9</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.commons</groupId>
+		  <artifactId>commons-collections4</artifactId>
+		  <version>4.3</version>
+		</dependency>
+		
+		<!-- ====================================================================== -->
+		<!-- CDX Shared -->
+		<!-- ====================================================================== -->
+		<dependency>
+		  <groupId>gov.epa.cdx.shared</groupId>
+		  <artifactId>cdx-shared-app-util</artifactId>
+		  <version>${cdx.shared.version}</version>
+		</dependency>
 
-    <!-- ====================================================================== -->
-    <!-- SOAP clients  -->
-    <!-- ====================================================================== -->
-    <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-frontend-jaxws</artifactId>
-        <version>${cxf.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-transports-http</artifactId>
-        <version>${cxf.version}</version>
-    </dependency>
+		<!-- ====================================================================== -->
+		<!-- SOAP clients  -->
+		<!-- ====================================================================== -->
+		<dependency>
+		    <groupId>org.apache.cxf</groupId>
+		    <artifactId>cxf-rt-frontend-jaxws</artifactId>
+		    <version>${cxf.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.cxf</groupId>
+		    <artifactId>cxf-rt-transports-http</artifactId>
+		    <version>${cxf.version}</version>
+		</dependency>
 
         <!-- ====================================================================== -->
         <!-- Persistence  															-->
