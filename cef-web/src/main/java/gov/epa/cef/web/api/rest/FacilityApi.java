@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.epa.cef.web.domain.facility.Facility;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
+import gov.epa.cef.web.service.ReportService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
@@ -26,6 +28,9 @@ public class FacilityApi {
 
 	@Autowired
 	private RegistrationService registrationService;
+
+	@Autowired
+	private ReportService reportService;
 
 	@Autowired
 	private ApplicationSecurityUtils applicationSecurityUtils;
@@ -70,5 +75,13 @@ public class FacilityApi {
 		Collection<ProgramFacility> result = registrationService.retrieveFacilities(applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId());
 
 		return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value = "/state/{stateCode}")
+	@ResponseBody
+	public ResponseEntity<Collection<Facility>> retrieveFacilitiesByState(@PathVariable String stateCode) {
+		Collection<Facility> result = reportService.findByState(stateCode);
+		return new ResponseEntity<Collection<Facility>>(result, HttpStatus.OK);		
 	}
 }
