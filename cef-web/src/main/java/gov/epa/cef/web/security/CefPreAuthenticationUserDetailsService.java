@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cdx.shared.security.naas.CdxHandoffPreAuthenticationUserDetailsService;
 
+@Profile("prod")
 @Service
 public class CefPreAuthenticationUserDetailsService extends CdxHandoffPreAuthenticationUserDetailsService {
 
