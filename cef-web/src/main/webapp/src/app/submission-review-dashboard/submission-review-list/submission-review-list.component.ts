@@ -10,7 +10,7 @@ import {SortableHeader, SortEvent} from '../../sortable.directive';
 @Component({
   selector: 'app-submission-review-list',
   templateUrl: './submission-review-list.component.html',
-  styleUrls: ['./submission-review-list.component.css'],
+  styleUrls: ['./submission-review-list.component.scss'],
   providers: [SubmissionReviewService, DecimalPipe]})
 export class SubmissionReviewListComponent {
   submissionReviews$: Observable<SubmissionReview[]>;
