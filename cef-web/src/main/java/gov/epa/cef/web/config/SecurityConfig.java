@@ -26,7 +26,7 @@ import gov.epa.cdx.shared.security.naas.LoginRedirectServlet;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.CefPreAuthenticationUserDetailsService;
 
-@Profile("!dev")
+@Profile("prod")
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = { "gov.epa.cdx.shared" })
@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/J2AHandoff*").permitAll()			
 			.antMatchers("/**")
 			.hasAnyRole(
-					AppRole.RoleType.Peparer.roleName(),
+					AppRole.RoleType.Preparer.roleName(),
 					AppRole.RoleType.Certifier.roleName(),
 					AppRole.RoleType.Reviewer.roleName())
 			.anyRequest().denyAll();

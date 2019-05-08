@@ -18,6 +18,16 @@ export class FacilityService {
   constructor(private http: HttpClient) { }
 
   /** GET facilities from the server */
+  getFacility (programId: string): Observable<Facility> {
+    const url = `${this.facilitiesUrl}/${programId}`;
+    return this.http.get<Facility>(url)
+      .pipe(
+        tap(_ => this.log('fetched facility')),
+        catchError(this.handleError<Facility>('getFacility', ))
+      );
+  }
+
+  /** GET facilities from the server */
   getFacilities (userId: number): Observable<Facility[]> {
     const url = `${this.facilitiesUrl}/user/${userId}`;
     return this.http.get<Facility[]>(url)

@@ -8,7 +8,9 @@ import { Injectable } from '@angular/core';
 export class UserContextService {
   user: User;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) { 
+    this.loadUser();
+  }
 
   loadUser(): void {
     this.userService.getCurrentUser()
