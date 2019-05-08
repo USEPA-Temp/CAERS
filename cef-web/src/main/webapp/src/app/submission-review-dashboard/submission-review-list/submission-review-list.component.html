@@ -1,0 +1,45 @@
+<div class="pt-3 pb-3">
+  This is a more complete example with a service that simulates server calling:
+</div>
+
+<form>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">Select</th>
+      <th scope="col" sortable="facilityName" (sort)="onSort($event)">Facility Name</th>
+      <th scope="col" sortable="county" (sort)="onSort($event)">County</th>
+      <th scope="col" sortable="industry" (sort)="onSort($event)">Industry</th>
+      <th scope="col" sortable="eisId" (sort)="onSort($event)">EIS ID</th>
+      <th scope="col" sortable="currentTons" (sort)="onSort($event)">2019 Reported Tons</th>
+      <th scope="col" sortable="previousTons" (sort)="onSort($event)">2018 Reported Tons</th>
+      <th scope="col">View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let review of submissionReviews$ | async">
+      <th scope="row"><input type="checkbox"></th>
+      <td><ngb-highlight [result]="review.facilityName"></ngb-highlight></td>
+      <td><ngb-highlight [result]="review.county"></ngb-highlight></td>
+      <td><ngb-highlight [result]="review.industry"></ngb-highlight></td>
+      <td><ngb-highlight [result]="review.eisId"></ngb-highlight></td>
+      <td><ngb-highlight [result]="review.currentTons"></ngb-highlight></td>
+      <td><ngb-highlight [result]="review.previousTons"></ngb-highlight></td>
+      <td><button class="btn btn-primary">View</button></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+    </ngb-pagination>
+
+    <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+      <option [ngValue]="5" selected>5 items per page</option>
+      <option [ngValue]="10">10 items per page</option>
+      <option [ngValue]="25">25 items per page</option>
+    </select>
+  </div>
+
+</form>
