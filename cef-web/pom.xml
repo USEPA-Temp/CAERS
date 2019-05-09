@@ -683,6 +683,7 @@
                                     <arguments>install</arguments>
                                 </configuration>
                             </execution>
+                            <!-- 
                             <execution>
                                 <id>ng test</id>
                                 <goals>
@@ -694,6 +695,7 @@
                                     <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
                                 </configuration>
                             </execution>
+                             -->
                             <execution>
                                 <id>ng build prod</id>
                                 <goals>
