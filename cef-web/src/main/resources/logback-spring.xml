@@ -1,5 +1,5 @@
 <configuration debug="true">
-    <springProfile name="dev,unit_test">
+    <springProfile name="dev,unit_test,default">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
                 <pattern>%d{yyyy-MM-dd'T'HH:mm:ss,SSS} %-5p [%c] %m%n</pattern>
@@ -9,7 +9,7 @@
             <appender-ref ref="STDOUT"/>
         </root>
     </springProfile>
-    <springProfile name="prod,default">
+    <springProfile name="prod">
         <appender name="TIME_BASED_FILE"
                   class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${log.home}/cef-web/cef-web.log</file>

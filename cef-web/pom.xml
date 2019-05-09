@@ -69,10 +69,8 @@
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
         <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/lcov.info</sonar.typescript.lcov.reportPaths>
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
-        <sonar.junit.reportPaths>${project.testresult.directory}</sonar.junit.reportPaths>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <sonar.test.exclusions>src/test/resources/db/**/*.*</sonar.test.exclusions>
-		
 
 	</properties>
 
