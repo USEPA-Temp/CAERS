@@ -1,4 +1,6 @@
 import { Facility } from '../../model/facility';
+import { SideNavItem } from '../model/side-nav-item';
+import { EmissionUnitService } from '../services/emission-unit.service';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -8,10 +10,17 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SidebarComponent implements OnInit {
   @Input() facility: Facility;
+  navItems: SideNavItem[];
 
-  constructor() { }
+  constructor(private emissionUnitService: EmissionUnitService) { }
 
   ngOnInit() {
+
+    this.emissionUnitService.retrieveFacilityNavTree(this.facility.programId)
+      .subscribe(navItems => {
+        console.log('nav tree', navItems);
+        this.navItems = navItems;
+      });
   }
 
 }

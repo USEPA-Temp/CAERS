@@ -4,9 +4,9 @@
 			<app-facility-info [facility]="facility"></app-facility-info>
 		</div>
 	</div>
-	<div class="mt-2">
+	<div class="mt-2" *ngIf="navItems">
 		<app-collapse-nav [desc]="'Facility Information'" [targetId]="'facilityInfoCollapse'"></app-collapse-nav>
-		<app-collapse-nav [desc]="'Emission Units'" [targetId]="'emissionUnitCollapse'"></app-collapse-nav>
+		<app-collapse-nav [desc]="'Emission Units'" [targetId]="'emissionUnitCollapse'" [navItems]="navItems"></app-collapse-nav>
 		<app-collapse-nav [desc]="'Unit Processes'" [targetId]="'unitProcessCollapse'"></app-collapse-nav>
 		<app-collapse-nav [desc]="'Control Devices'" [targetId]="'controlDeviceCollapse'"></app-collapse-nav>
 		<app-collapse-nav [desc]="'Release Points'" [targetId]="'releasePointCollapse'"></app-collapse-nav>

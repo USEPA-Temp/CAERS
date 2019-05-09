@@ -13,6 +13,8 @@ import { NotificationListComponent } from './facility-dashboard/notification-lis
 import { FacilityListItemComponent } from './facility-dashboard/facility-list/facility-list-item/facility-list-item.component';
 import { SharedModule } from './shared/shared.module';
 import { BreadcrumbNavComponent } from './components/breadcrumb-nav/breadcrumb-nav.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { BreadcrumbNavComponent } from './components/breadcrumb-nav/breadcrumb-n
     AppRoutingModule,
     SharedModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

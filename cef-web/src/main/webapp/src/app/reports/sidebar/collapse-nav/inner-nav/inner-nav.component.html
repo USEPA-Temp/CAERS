@@ -1,0 +1,16 @@
+<div class="nav flex-column">
+	<div *ngFor="let navItem of navItems">
+		<div class="nav-item  d-flex flex-row justify-content-between" 
+				[routerLinkActive]="'active'" [routerLinkActiveOptions]="{exact: true}"  #rla="routerLinkActive">
+			<a class="nav-link text-primary font-weight-bold small" [routerLinkActive]="'active text-success'"
+					routerLink="{{baseUrl}}{{navItem.url}}" 
+					>
+				{{navItem.description}} 
+			</a>
+			<fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
+		</div>
+		<div *ngIf="navItem.children" class="ml-2" [attr.id]="navItem.baseUrl + navItem.id + 'children'">
+			<app-inner-nav [navItems]="navItem.children" [baseUrl]="baseUrl + navItem.url + '/'"></app-inner-nav>
+		</div>
+	</div>
+</div>
