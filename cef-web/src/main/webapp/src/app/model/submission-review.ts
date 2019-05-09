@@ -1,7 +1,8 @@
 export class SubmissionReview {
-  facilityName: string;
+  name: string;
+  state: string;
   county: string;
-  industry: string;
+  naics: string;
   eisId: number;
   currentTons: number;
   previousTons: number;

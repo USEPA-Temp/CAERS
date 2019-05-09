@@ -1,3 +1,6 @@
+TRUNCATE emissions_report;
+TRUNCATE facility;
+
 --cef-105 test data for emissions_report
 INSERT INTO emissions_report(facility_id, status, year, created_by, created_date, last_modified_by, last_modified_date) VALUES ('2774511', 'Certified', 2013, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(facility_id, status, year, created_by, created_date, last_modified_by, last_modified_date) VALUES ('2774511', 'Failed', 2014, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);

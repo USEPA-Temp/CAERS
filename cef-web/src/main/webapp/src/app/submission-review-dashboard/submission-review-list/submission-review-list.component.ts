@@ -1,7 +1,6 @@
-
-import {DecimalPipe} from '@angular/common';
-import {Component, QueryList, ViewChildren} from '@angular/core';
-import {Observable} from 'rxjs';
+import { DecimalPipe } from '@angular/common';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { SubmissionReview } from '../../model/submission-review';
 import { SubmissionReviewService } from '../../services/submission-review.service';
@@ -18,9 +17,12 @@ export class SubmissionReviewListComponent {
 
   @ViewChildren(SortableHeader) headers: QueryList<SortableHeader>;
 
-  constructor(public service: SubmissionReviewService) {
-    this.submissionReviews$ = service.submissionReviews$;
-    this.total$ = service.total$;
+  constructor(private submissionReviewService: SubmissionReviewService) {
+  }
+
+  ngOnInit() {
+    this.submissionReviews$ = this.submissionReviewService.submissionReviews$;
+    this.total$ = this.submissionReviewService.total$;
   }
 
   onSort({column, direction}: SortEvent) {
@@ -31,7 +33,7 @@ export class SubmissionReviewListComponent {
       }
     });
 
-    this.service.sortColumn = column;
-    this.service.sortDirection = direction;
+    this.submissionReviewService.sortColumn = column;
+    this.submissionReviewService.sortDirection = direction;
   }
 }

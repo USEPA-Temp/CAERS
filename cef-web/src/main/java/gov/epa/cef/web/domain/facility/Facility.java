@@ -27,13 +27,13 @@ public class Facility extends BaseAuditEntity {
 	@Column(name = "naics")
 	private String naics;
 	
-	@Column(name = "eisId")
+	@Column(name = "eis_id")
 	private Long eisId;
 	
-	@Column(name = "currentTons")
+	@Column(name = "current_tons")
 	private Long currentTons;
 	
-	@Column(name = "previousTons")
+	@Column(name = "previous_tons")
 	private Long previousTons;
 	
 	
@@ -42,6 +42,13 @@ public class Facility extends BaseAuditEntity {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 	public String getCounty() {
