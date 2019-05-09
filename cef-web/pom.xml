@@ -65,11 +65,11 @@
         <!-- Sonar properties -->
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>
         <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/db/**/*.*</sonar.exclusions>
-        <sonar.jacoco.reportPaths>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.jacoco.reportPath>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
         <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/lcov.info</sonar.typescript.lcov.reportPaths>
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
-        <sonar.junit.reportsPath>${project.testresult.directory}</sonar.junit.reportsPath>
+        <sonar.junit.reportPaths>${project.testresult.directory}</sonar.junit.reportPaths>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <sonar.test.exclusions>src/test/resources/db/**/*.*</sonar.test.exclusions>
 		
@@ -683,9 +683,8 @@
                                     <arguments>install</arguments>
                                 </configuration>
                             </execution>
-                            <!-- 
                             <execution>
-                                <id>ng build test</id>
+                                <id>ng test</id>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
@@ -695,7 +694,6 @@
                                     <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
                                 </configuration>
                             </execution>
-                             -->
                             <execution>
                                 <id>ng build prod</id>
                                 <goals>
