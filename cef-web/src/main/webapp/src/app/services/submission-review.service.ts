@@ -6,6 +6,7 @@ import { DecimalPipe } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { SortDirection } from '../sortable.directive';
 import { HttpClient } from '@angular/common/http';
+import { FacilityService } from './facility.service';
 
 
 interface SearchResult {
@@ -46,12 +47,12 @@ export class SubmissionReviewService {
 
   private _state: State = {
     page: 1,
-    pageSize: 4,
+    pageSize: 5,
     sortColumn: '',
     sortDirection: ''
   };
 
-  constructor(private pipe: DecimalPipe, private http: HttpClient) {
+  constructor(private facilityService: FacilityService, private pipe: DecimalPipe, private http: HttpClient) {
     this._search$.pipe(switchMap(() => this._search())
     ).subscribe(result => {
       this._submissionReviews$.next(result.submissionReviews);
@@ -80,7 +81,7 @@ export class SubmissionReviewService {
     const {sortColumn, sortDirection, pageSize, page} = this._state;
 
     let facilities: SubmissionReview[] = [];
-    this.getFacilities('GA').subscribe(function(result) {
+    this.facilityService.getFacilitiesByState('GA').subscribe(function(result) {
       facilities = result;
     });
 
@@ -93,9 +94,4 @@ export class SubmissionReviewService {
     submissionReviews = submissionReviews.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize);
     return of({submissionReviews, total});
   }
-  
-  getFacilities (stateCode: string): Observable<SubmissionReview[]> {
-    const url = `${this.baseUrl}/state/${stateCode}`;
-    return this.http.get<SubmissionReview[]>(url);
-  };
 }
