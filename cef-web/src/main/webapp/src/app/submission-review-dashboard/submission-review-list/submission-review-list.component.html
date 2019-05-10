@@ -5,7 +5,7 @@
 <form>
 
   <div style="max-height: 350px; overflow: scroll;">
-    <table class="table table-striped table-condensed">
+    <table class="table table-sm table-striped table-bordered">
       <thead>
       <tr>
         <th scope="col">Select</th>
@@ -15,7 +15,7 @@
         <th scope="col" sortable="eisId" (sort)="onSort($event)">EIS ID</th>
         <th scope="col" sortable="currentTons" (sort)="onSort($event)">2019 Reported Tons</th>
         <th scope="col" sortable="previousTons" (sort)="onSort($event)">2018 Reported Tons</th>
-        <th scope="col">View</th>
+        <th scope="col">Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -27,21 +27,10 @@
         <td><ngb-highlight [result]="cefFacility.eisId"></ngb-highlight></td>
         <td><ngb-highlight [result]="cefFacility.currentTons"></ngb-highlight></td>
         <td><ngb-highlight [result]="cefFacility.previousTons"></ngb-highlight></td>
-        <td><button class="btn btn-primary">View</button></td>
+        <td><button class="btn btn-primary btn-sm">Summary</button><span class="pr-2"> </span> <button class="btn btn-primary btn-sm">View Report</button></td>
       </tr>
       </tbody>
     </table>
-  </div>
-  
-  <div class="d-flex justify-content-between p-2">
-    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
-    </ngb-pagination>
-
-    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
-      <option [ngValue]="5">5 items per page</option>
-      <option [ngValue]="10">10 items per page</option>
-      <option [ngValue]="25">25 items per page</option>
-    </select>
   </div>
 
 </form>

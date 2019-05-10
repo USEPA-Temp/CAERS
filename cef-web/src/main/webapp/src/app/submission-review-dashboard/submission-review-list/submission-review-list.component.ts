@@ -12,9 +12,6 @@ export const compare = (v1, v2) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 export class SubmissionReviewListComponent {
 
   cefFacilities: CefFacility[] = [];
-  page = 1;
-  pageSize = 5;
-  collectionSize = 0;
 
   @ViewChildren(SortableHeader) headers: QueryList<SortableHeader>;
 
@@ -29,8 +26,6 @@ export class SubmissionReviewListComponent {
     this.facilityService.getFacilitiesByState('GA')
     .subscribe(result => {
       this.cefFacilities = result;
-      this.collectionSize = this.cefFacilities.length;
-      this.setPage();
     });
   }
 
@@ -46,21 +41,11 @@ export class SubmissionReviewListComponent {
     // sorting countries
     if (direction === '') {
       this.cefFacilities = this.cefFacilities;
-      this.setPage();
     } else {
       this.cefFacilities = [...this.cefFacilities].sort((a, b) => {
         const res = compare(a[column], b[column]);
         return direction === 'asc' ? res : -res;
       });
-      this.setPage();
     }
   }
-
-  
-  setPage({}: void) {
-    alert('page: ' + this.page + '; pageSize: ' + this.pageSize + '; collectionSize: ' + this.collectionSize);
-    return this.cefFacilities
-      .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
-  }
-  
 }
