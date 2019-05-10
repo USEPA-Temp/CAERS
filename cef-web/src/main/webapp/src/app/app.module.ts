@@ -18,6 +18,7 @@ import { BreadcrumbNavComponent } from './components/breadcrumb-nav/breadcrumb-n
 import { SubmissionReviewDashboardComponent } from './submission-review-dashboard/submission-review-dashboard.component';
 import { SubmissionReviewListComponent } from './submission-review-dashboard/submission-review-list/submission-review-list.component';
 import { SortableHeader } from './sortable.directive';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SortableHeader } from './sortable.directive';
     ReactiveFormsModule,
     NgbModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

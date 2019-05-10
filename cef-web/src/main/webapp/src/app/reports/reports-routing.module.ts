@@ -1,3 +1,4 @@
+import { EmissionUnitDashboardComponent } from './emission-unit-dashboard/emission-unit-dashboard.component';
 import { ReportsDashboardComponent } from './reports-dashboard/reports-dashboard.component';
 import { ReportsComponent } from './reports.component';
 import { NgModule } from '@angular/core';
@@ -9,6 +10,19 @@ const reportRoutes: Routes = [
     component: ReportsComponent,
     children: [
       {
+        path: 'emissionUnit/:unitId',
+        children: [
+          {
+            path: '',
+            component: EmissionUnitDashboardComponent,
+            data: { title: 'Emission Unit' }
+          }, {
+            path: '**',
+            component: EmissionUnitDashboardComponent,
+            data: { title: 'PLACEHOLDER' }
+          }
+        ]
+      }, {
         path: '',
         component: ReportsDashboardComponent,
         data: { title: 'Emission Reports Dashboard' }
