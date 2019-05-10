@@ -49,6 +49,8 @@
     	<jersey.version>2.27</jersey.version>
     	<jackson.version>2.9.8</jackson.version>
     	<cdx.shared.version>1.0.4</cdx.shared.version>
+    	<powermock.version>2.0.2</powermock.version>
+    	<postgresql-embedded.version>2.10</postgresql-embedded.version>
 		
         <!-- Plugin versions -->
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
@@ -65,14 +67,12 @@
         <!-- Sonar properties -->
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>
         <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/db/**/*.*</sonar.exclusions>
-        <sonar.jacoco.reportPaths>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.jacoco.reportPath>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
-        <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/lcov.info</sonar.typescript.lcov.reportPaths>
+        <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/coverage/lcov/lcov.info</sonar.typescript.lcov.reportPaths>
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
-        <sonar.junit.reportsPath>${project.testresult.directory}</sonar.junit.reportsPath>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <sonar.test.exclusions>src/test/resources/db/**/*.*</sonar.test.exclusions>
-		
 
 	</properties>
 
@@ -212,6 +212,24 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.embed</groupId>
+            <artifactId>postgresql-embedded</artifactId>
+            <version>${postgresql-embedded.version}</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4-legacy</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>  
 	</dependencies>
 	
 	<!-- ====================================================================== -->
@@ -417,6 +435,22 @@
                                 </resources>
                             </configuration>
                         </execution>
+                        <execution>
+                            <id>typescript-coverage</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.testresult.directory}/coverage/lcov</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>src/main/webapp/coverage/cef-web</directory>
+                                        <filtering>false</filtering>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>                        
                     </executions>
                 </plugin>
                 <plugin>
@@ -683,19 +717,17 @@
                                     <arguments>install</arguments>
                                 </configuration>
                             </execution>
-                            <!-- 
                             <execution>
-                                <id>ng build test</id>
+                                <id>ng test</id>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
                                 <phase>test</phase>
                                 <configuration>
-                                    <arguments>run test</arguments>
+                                    <arguments>run test-prod</arguments>
                                     <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
                                 </configuration>
                             </execution>
-                             -->
                             <execution>
                                 <id>ng build prod</id>
                                 <goals>
