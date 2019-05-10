@@ -3,6 +3,7 @@ import { Process } from './process';
 import { ReleasePointApportionment } from './release-point-apportionment';
 
 export class SideNavItem {
+  //TODO: change baseUrl into an enum on the backend and find the correct url serverside for decoupling
   baseUrl: string;
   id: number;
   description: string;
@@ -31,5 +32,10 @@ export class SideNavItem {
 
   static fromReleasePoint(release: ReleasePointApportionment): SideNavItem {
     return new SideNavItem(release.id, release.releasePoint.description, 'release', null);
+  }
+
+  static fromJson(item: SideNavItem): SideNavItem {
+    return new SideNavItem(item.id, item.description, item.baseUrl, 
+      (item.children != null ? item.children.map(child => this.fromJson(child)) : []));
   }
 }

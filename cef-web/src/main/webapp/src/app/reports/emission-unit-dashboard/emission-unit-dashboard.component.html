@@ -3,52 +3,5 @@
 <div *ngIf="emissionUnit">
 	<app-emission-unit-info [emissionUnit]="emissionUnit"></app-emission-unit-info>
 	
-	<div class="card mb-3">
-		<div class="card-header text-center">
-			<strong>Emission Unit Operating Details</strong>
-		</div>
-		<div class="card-body">
-			<div class="row">
-				<div class="col-sm-6 col-md-2"><strong>Hours Per Day:</strong></div>
-				<div class="col-sm-6 col-md-2"></div>
-				<div class="col-sm-6 col-md-2"><strong>Hours Per Year:</strong></div>
-				<div class="col-sm-6 col-md-2"></div>
-				<div class="col-sm-6 col-md-2"><strong>Inventory Year:</strong></div>
-				<div class="col-sm-6 col-md-2"></div>
-			</div>
-			
-			<div class="row">
-				<div class="col-sm-6 col-md-2"><strong>Days Per Week:</strong></div>
-				<div class="col-sm-6 col-md-2"></div>
-				<div class="col-sm-6 col-md-2"><strong>Summer Operating Days:</strong></div>
-				<div class="col-sm-6 col-md-2"></div>
-			</div>
-			
-			<div class="row">
-				<div class="col-sm-6 col-md-2"><strong>Weeks Per Year:</strong></div>
-				<div class="col-sm-6 col-md-2"></div>
-			</div>
-		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col-sm-12 col-md-6">
-			<app-emission-process-list [emissionUnit]="emissionUnit"></app-emission-process-list>
-		</div>
-		
-		<div class="col-sm-12 col-md-6">
-			<div class="card">
-				<div class="card-header text-center">
-					<strong>Release Points Associated with this Emission Unit</strong>
-				</div>
-				<div class="card-body">
-					<div class="row">
-						<div class="col-sm-6"><strong></strong></div>
-						<div class="col-sm-3"><strong>Release Type:</strong></div>
-						<div class="col-sm-3"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<app-emission-process-list [emissionUnit]="emissionUnit"></app-emission-process-list>
 </div>

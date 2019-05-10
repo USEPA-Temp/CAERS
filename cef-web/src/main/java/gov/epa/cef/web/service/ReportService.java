@@ -14,4 +14,11 @@ public interface ReportService {
 	 */
 	List<EmissionsReport> findByFacilityId(String facilityId);
 
+	/**
+	 * Find the most recent report for a given facility
+	 * @param facilityId {@link ProgramFacility}'s programId 
+	 * @return
+	 */
+	EmissionsReport findMostRecentByFacility(String facilityId);
+
 }

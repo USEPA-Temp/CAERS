@@ -14,22 +14,30 @@ export class EmissionUnitService {
 
   constructor(private http: HttpClient) { }
 
+  //TODO: implement on backend
   /** GET emission units for the specified facility from the server */
-  getCurrentEmissionUnits (facilityId: string): Observable<EmissionUnit[]> {
-    const url = `${this.baseUrl}`;
+  getEmissionUnitsForReport (reportId: number): Observable<EmissionUnit[]> {
+    const url = this.baseUrl;
+//    const url = `${this.baseUrl}/report/${reportId}`;
     return this.http.get<EmissionUnit[]>(url);
   }
 
-  //TODO: implement real method
+  //TODO: implement on backend
+  /** GET specified emission unit from the server */
   retrieve (id: number): Observable<EmissionUnit> {
-    const url = `${this.baseUrl}`;
+    const url = this.baseUrl;
+//    const url = `${this.baseUrl}/${id}`;
     return this.http.get<EmissionUnit[]>(url).pipe(
       map((units: EmissionUnit[]) => units.find(unit => unit.id === id))
     );
   }
 
-  retrieveFacilityNavTree (facilityId: string): Observable<SideNavItem[]> {
-    return this.getCurrentEmissionUnits(facilityId).pipe(
+  /**
+   * Not currently used, but generates a nav flow from data.
+   * This functionality should be moved to the backend, but I am leaving in place for reference.
+   */
+  retrieveReportNavTree (reportId: number): Observable<SideNavItem[]> {
+    return this.getEmissionUnitsForReport(reportId).pipe(
       map((units: EmissionUnit[]) => units.map(unit => SideNavItem.fromEmissionUnit(unit)))
     );
   }
