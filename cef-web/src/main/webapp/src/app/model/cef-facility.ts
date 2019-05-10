@@ -1,4 +1,4 @@
-export class SubmissionReview {
+export class CefFacility {
   name: string;
   state: string;
   county: string;

@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Facility } from '../model/facility';
-import { SubmissionReview } from '../model/submission-review';
+import { CefFacility } from '../model/cef-facility';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -49,12 +49,12 @@ export class FacilityService {
   }
 
   /** GET facilities by state from the server */
-  getFacilitiesByState (state: string): Observable<SubmissionReview[]> {
+  getFacilitiesByState (state: string): Observable<CefFacility[]> {
     const url = `${this.facilitiesUrl}/state/${state}`;
-    return this.http.get<SubmissionReview[]>(url)
+    return this.http.get<CefFacility[]>(url)
       .pipe(
         tap(_ => this.log('fetched facilities')),
-        catchError(this.handleError<SubmissionReview[]>('getFacilities', []))
+        catchError(this.handleError<CefFacility[]>('getFacilities', []))
       );
   }
 

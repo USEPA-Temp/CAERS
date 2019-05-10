@@ -1,5 +1,5 @@
 <div class="pt-3 pb-3">
-  This is a more complete example with a service that simulates server calling:
+  Instructional text will appear here.
 </div>
 
 <form>
@@ -19,14 +19,14 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let review of submissionReviews">
+      <tr *ngFor="let cefFacility of cefFacilities">
         <th scope="row"><input type="checkbox"></th>
-        <td><ngb-highlight [result]="review.name"></ngb-highlight></td>
-        <td><ngb-highlight [result]="review.county"></ngb-highlight></td>
-        <td><ngb-highlight [result]="review.naics"></ngb-highlight></td>
-        <td><ngb-highlight [result]="review.eisId"></ngb-highlight></td>
-        <td><ngb-highlight [result]="review.currentTons"></ngb-highlight></td>
-        <td><ngb-highlight [result]="review.previousTons"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.name"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.county"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.naics"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.eisId"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.currentTons"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.previousTons"></ngb-highlight></td>
         <td><button class="btn btn-primary">View</button></td>
       </tr>
       </tbody>
