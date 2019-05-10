@@ -16,6 +16,7 @@ import { StepProgressComponent } from './components/step-progress/step-progress.
 import { InnerNavComponent } from './sidebar/collapse-nav/inner-nav/inner-nav.component';
 import { EmissionUnitInfoComponent } from './emission-unit-dashboard/emission-unit-info/emission-unit-info.component';
 import { EmissionProcessListComponent } from './emission-unit-dashboard/emission-process-list/emission-process-list.component';
+import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-nav-item/inner-nav-item.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { EmissionProcessListComponent } from './emission-unit-dashboard/emission
     StepProgressComponent,
     InnerNavComponent,
     EmissionUnitInfoComponent,
-    EmissionProcessListComponent
+    EmissionProcessListComponent,
+    InnerNavItemComponent
   ],
   imports: [
     CommonModule,
