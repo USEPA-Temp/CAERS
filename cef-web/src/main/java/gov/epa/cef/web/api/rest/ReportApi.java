@@ -35,4 +35,18 @@ public class ReportApi {
 		
 		return new ResponseEntity<List<EmissionsReport>>(result, HttpStatus.OK);
 	}
+
+	/**
+	 * Retrieve current report for a given facility
+	 * @param facilityId {@link ProgramFacility}'s programId
+	 * @return
+	 */
+	@GetMapping(value = "/facility/{facilityId}/current")
+	@ResponseBody
+	public ResponseEntity<EmissionsReport> retrieveCurrentReportForFacility(@PathVariable String facilityId) {
+
+		EmissionsReport result = reportService.findMostRecentByFacility(facilityId);
+		
+		return new ResponseEntity<EmissionsReport>(result, HttpStatus.OK);
+	}
 }

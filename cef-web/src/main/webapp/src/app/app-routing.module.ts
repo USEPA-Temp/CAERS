@@ -11,7 +11,7 @@ const routes: Routes = [
     path: 'facility',
     children: [
       {
-        path: ':id',
+        path: ':facilityId',
         resolve: {
           facility: FacilityResolverService
         },
@@ -31,7 +31,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes, {useHash: true}) ],
+  //useHash is required for spring and inheritanceStrategy allows children to reference data from parents
+  imports: [ RouterModule.forRoot(routes, {useHash: true, paramsInheritanceStrategy: 'always'}) ],
   exports: [ RouterModule ]
 })
 export class AppRoutingModule {}

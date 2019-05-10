@@ -1,19 +1,12 @@
 <div class="row">
-	<button class="btn btn-link text-dark font-weight-bold text-left" type="button"
+	<button class="btn btn-link text-primary font-weight-bold text-left" type="button"
 			(click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
 			[attr.aria-controls]="targetId">
-		{{desc}}
+		<app-collapse-icon [collapsed]='collapsed'></app-collapse-icon> {{desc}}
 	</button>
 </div>
 <div class="row">
 	<div [attr.id]="targetId" [ngbCollapse]="collapsed">
-		<ul class="nav flex-column">
-			<li class="nav-item small">
-				<a class="nav-link text-dark" href="#">Placeholder 1</a>
-			</li>
-			<li class="nav-item small">
-				<a class="nav-link text-dark" href="#">Placeholder 2</a>
-			</li>
-		</ul>
+		<app-inner-nav [navItems]="navItems"></app-inner-nav>
 	</div>
 </div>
