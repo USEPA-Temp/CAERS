@@ -9,6 +9,8 @@ import { ReportListButtonsComponent } from "src/app/reports/reports-dashboard/re
 import { RouterTestingModule } from '@angular/router/testing';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { CollapseNavComponent } from './sidebar/collapse-nav/collapse-nav.component';
+import { InnerNavComponent } from './sidebar/collapse-nav/inner-nav/inner-nav.component';
+import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-nav-item/inner-nav-item.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from "src/app/shared/shared.module";
 
@@ -24,7 +26,9 @@ describe('ReportsComponent', () => {
                       ReportListItemComponent,
                       ReportListButtonsComponent,
                       SidebarComponent,
-                      CollapseNavComponent],
+                      CollapseNavComponent,
+                      InnerNavComponent,
+                      InnerNavItemComponent],
       imports: [HttpClientModule, 
                 RouterTestingModule,
                 NgbModule,

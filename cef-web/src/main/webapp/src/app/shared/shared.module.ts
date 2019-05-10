@@ -15,7 +15,8 @@ import { CollapseIconComponent } from './collapse-icon/collapse-icon.component';
   ],
   exports: [
     FacilityInfoComponent,
-    CollapseIconComponent
+    CollapseIconComponent,
+    FontAwesomeModule
   ],
   imports: [
     CommonModule,
