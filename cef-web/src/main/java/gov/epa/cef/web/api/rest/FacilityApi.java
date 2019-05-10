@@ -18,6 +18,7 @@ import gov.epa.cef.web.domain.facility.Facility;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
 import gov.epa.cef.web.service.ReportService;
+import gov.epa.cef.web.service.FacilityService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
@@ -31,6 +32,9 @@ public class FacilityApi {
 
 	@Autowired
 	private ReportService reportService;
+
+	@Autowired
+	private FacilityService facilityService;
 
 	@Autowired
 	private ApplicationSecurityUtils applicationSecurityUtils;
@@ -81,7 +85,7 @@ public class FacilityApi {
 	@GetMapping(value = "/state/{stateCode}")
 	@ResponseBody
 	public ResponseEntity<Collection<Facility>> retrieveFacilitiesByState(@PathVariable String stateCode) {
-		Collection<Facility> result = reportService.findByState(stateCode);
+		Collection<Facility> result = facilityService.findByState(stateCode);
 		return new ResponseEntity<Collection<Facility>>(result, HttpStatus.OK);		
 	}
 }
