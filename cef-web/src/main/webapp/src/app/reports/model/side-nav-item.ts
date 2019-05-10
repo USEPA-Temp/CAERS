@@ -34,7 +34,7 @@ export class SideNavItem {
     return new SideNavItem(release.id, release.releasePoint.description, 'release', null);
   }
 
-  static fromJson(item: SideNavItem): SideNavItem {
+  static fromJson(item): SideNavItem {
     return new SideNavItem(item.id, item.description, item.baseUrl, 
       (item.children != null ? item.children.map(child => this.fromJson(child)) : []));
   }
