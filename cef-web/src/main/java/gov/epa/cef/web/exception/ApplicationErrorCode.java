@@ -4,20 +4,20 @@ package gov.epa.cef.web.exception;
  * @author dfladung
  */
 public enum ApplicationErrorCode {
-  
+
   //This file was copied. Many of these may be unused
   //TODO: update with project requirements
-  
+
     //Register
-    E_UnknownUser, E_InvalidCredential, E_AccessDenied, E_InvalidToken, E_TokenExpired, E_AuthMethod, E_UserAlreadyExists,
-    E_InsufficientPrivileges, E_WeakPassword, E_InvalidArgument, E_InvalidAnswerResetCode, E_MaxNumberOfResetAttemptsReached,
-    E_AnswersAlreadyExist, E_RoleAlreadyExists, E_WrongUserId, E_ReachedMaxNumberOfAttempts, E_WrongAnswer,
-    E_DuplicateAssociation, E_InvalidSignature, E_InternalError,
+    E_UNKNOWN_USER, E_INVALID_CREDENTIAL, E_ACCESS_DENIED, E_INVALID_TOKEN, E_TOKEN_EXPIRED, E_AUTH_METHOD, E_USER_ALREADY_EXISTS,
+    E_INSUFFICIENT_PRIVILEGES, E_WEAK_PASSWORD, E_INVALID_ARGUMENT, E_INVALID_ANSWER_RESET_CODE, E_MAX_NUMBER_OF_RESET_ATTEMPTS_REACHED,
+    E_ANSWERS_ALREADY_EXIST, E_ROLE_ALREADY_EXISTS, E_WRONG_USERID, E_REACHED_MAX_NUMBER_OF_ATTEMPTS, E_WRONG_ANSWER,
+    E_DUPLICATE_ASSOCIATION, E_INVALID_SIGNATURE, E_INTERNAL_ERROR,
     //RegisterAuthErrorCode
-    E_WrongIdPassword, E_AccountLocked, E_AccountExpired,
+    E_WRONG_ID_PASSWORD, E_ACCOUNT_LOCKED, E_ACCOUNT_EXPIRED,
     // OECA
-    E_Messaging, E_RemoteServiceError, E_Verification, E_Ineligible, E_Security, E_Validation,
-    E_InvalidPermission, E_PermissionAlreadyExists, E_InvalidRequest, E_InvalidRequestStatus, E_RequestAlreadyExists,
-    
-    E_Authentication, E_Authorization, E_Persistence, E_NotFound, E_Encryption
+    E_MESSAGING, E_REMOTE_SERVICE_ERROR, E_VERIFICATION, E_INELIGIBLE, E_SECURITY, E_VALIDATION,
+    E_INVALID_PERMISSION, E_PERMISSION_ALREADY_EXISTS, E_INVALID_REQUEST, E_INVALID_REQUEST_STATUS, E_REQUEST_ALREADY_EXISTS,
+
+    E_AUTHENTICATION, E_AUTHORIZATION, E_PERSISTENCE, E_NOT_FOUND, E_ENCRYPTION
 }

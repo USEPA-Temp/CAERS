@@ -26,10 +26,10 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
 
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
     
-	@Override
-	public void onStartup(ServletContext servletContext) throws ServletException {
-		//
-	}
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        //
+    }
 
     /**
      * Customize the Servlet engine: Mime types, the document root, the cache.
@@ -64,6 +64,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         } catch (UnsupportedEncodingException e) {
             /* try without decoding if this ever happens */
             fullExecutablePath = this.getClass().getResource("").getPath();
+            log.error(e.getMessage());
         }
         String rootPath = Paths.get(".").toUri().normalize().getPath();
         String extractedPath = fullExecutablePath.replace(rootPath, "");

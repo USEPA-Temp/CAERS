@@ -50,12 +50,12 @@ public class ApplicationSecurityUtils {
      * Check if the security context is empty
      * @throws ApplicationException
      */
-    private void checkSecurityContext() throws ApplicationException {
+    private void checkSecurityContext() {
         if (SecurityContextHolder.getContext() == null
                 || SecurityContextHolder.getContext().getAuthentication() == null
                 || SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {
             throw new ApplicationException(
-                    ApplicationErrorCode.E_Authorization,
+                    ApplicationErrorCode.E_AUTHORIZATION,
                     "Security Context, authentication or principal is empty.");
         }
     }
@@ -69,7 +69,7 @@ public class ApplicationSecurityUtils {
                 new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
         logger.debug(String.format("User %s explicitly added to security context.", appUser.getUsername()));
         for(GrantedAuthority a: appUser.getAuthorities()) {
-        	logger.debug(String.format("Role %s explicitly added to security context.", a.getAuthority()));
+            logger.debug(String.format("Role %s explicitly added to security context.", a.getAuthority()));
         }
         
     }

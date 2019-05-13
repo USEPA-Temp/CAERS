@@ -12,19 +12,21 @@ import gov.epa.cef.web.service.dto.UserDto;
  */
 public class ApplicationUserMapper {
 
-	/**
-	 * Transform {@link ApplicationUser} into {@link UserDto}
-	 * @return
-	 */
-	public static Function<ApplicationUser, UserDto> toUserDto() {
+    private ApplicationUserMapper() {
+    }
 
-		return appUser -> new UserDto()
-				.withCdxUserId(appUser.getUserId())
-				.withEmail(appUser.getEmail())
-				.withFirstName(appUser.getFirstName())
-				.withLastName(appUser.getLastName())
-				.withRole(appUser.getIdTypeText())
-				.withUserRoleId(appUser.getUserRoleId());
-	}
-	
+    /**
+     * Transform {@link ApplicationUser} into {@link UserDto}
+     * @return
+     */
+    public static Function<ApplicationUser, UserDto> toUserDto() {
+        return appUser -> new UserDto()
+                .withCdxUserId(appUser.getUserId())
+                .withEmail(appUser.getEmail())
+                .withFirstName(appUser.getFirstName())
+                .withLastName(appUser.getLastName())
+                .withRole(appUser.getIdTypeText())
+                .withUserRoleId(appUser.getUserRoleId());
+    }
+    
 }

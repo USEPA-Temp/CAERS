@@ -15,9 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 @EnableConfigurationProperties
 public class HandoffLandingController {
 
-	@RequestMapping(path = "/handoffLanding", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView home() {
-		return new ModelAndView("home");
-	}
+    @RequestMapping(path = "/handoffLanding", method = { RequestMethod.GET, RequestMethod.POST })
+    public ModelAndView home() {
+        return new ModelAndView("home");
+    }
 
 }

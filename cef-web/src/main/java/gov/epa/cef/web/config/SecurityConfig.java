@@ -33,55 +33,55 @@ import gov.epa.cef.web.security.CefPreAuthenticationUserDetailsService;
 @ImportResource(locations = { "file:${spring.config.dir}/cdx-shared/cdx-shared-config.xml" })
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.antMatcher("/**")
-			.csrf().disable()
-			.addFilter(cdxWebPreAuthFilter())
-			.authorizeRequests()
-			.antMatchers("/J2AHandoff*").permitAll()			
-			.antMatchers("/**")
-			.hasAnyRole(
-					AppRole.RoleType.Preparer.roleName(),
-					AppRole.RoleType.Certifier.roleName(),
-					AppRole.RoleType.Reviewer.roleName())
-			.anyRequest().denyAll();
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .antMatcher("/**")
+            .csrf().disable()
+            .addFilter(cdxWebPreAuthFilter())
+            .authorizeRequests()
+            .antMatchers("/J2AHandoff*").permitAll()			
+            .antMatchers("/**")
+            .hasAnyRole(
+                AppRole.RoleType.PREPARER.roleName(),
+                AppRole.RoleType.CERTIFIER.roleName(),
+                AppRole.RoleType.REVIEWER.roleName())
+            .anyRequest().denyAll();
+    }
 
-	@Bean
-	public ServletRegistrationBean<HttpServlet> ngnToCdxWebHandoff() {
-		ServletRegistrationBean<HttpServlet> servRegBean = new ServletRegistrationBean<>();
-		servRegBean.setServlet(new HandoffToCdxServlet());
-		servRegBean.addUrlMappings("/J2AHandoff");
-		servRegBean.setLoadOnStartup(1);
-		return servRegBean;
-	}
+    @Bean
+    public ServletRegistrationBean<HttpServlet> ngnToCdxWebHandoff() {
+        ServletRegistrationBean<HttpServlet> servRegBean = new ServletRegistrationBean<>();
+        servRegBean.setServlet(new HandoffToCdxServlet());
+        servRegBean.addUrlMappings("/J2AHandoff");
+        servRegBean.setLoadOnStartup(1);
+        return servRegBean;
+    }
 
-	@Bean
-	public ServletRegistrationBean<HttpServlet> loginRedirect() {
-		ServletRegistrationBean<HttpServlet> servRegBean = new ServletRegistrationBean<>();
-		servRegBean.setServlet(new LoginRedirectServlet());
-		servRegBean.addUrlMappings("/LoginRedirect");
-		servRegBean.setLoadOnStartup(1);
-		return servRegBean;
-	}
+    @Bean
+    public ServletRegistrationBean<HttpServlet> loginRedirect() {
+        ServletRegistrationBean<HttpServlet> servRegBean = new ServletRegistrationBean<>();
+        servRegBean.setServlet(new LoginRedirectServlet());
+        servRegBean.addUrlMappings("/LoginRedirect");
+        servRegBean.setLoadOnStartup(1);
+        return servRegBean;
+    }
 
-	@Bean
-	public AbstractPreAuthenticatedProcessingFilter cdxWebPreAuthFilter() throws Exception {
-		CdxHandoffPreAuthenticationFilter result = new CdxHandoffPreAuthenticationFilter();
-		result.setAuthenticationManager(authenticationManager());
-		return result;
-	}
+    @Bean
+    public AbstractPreAuthenticatedProcessingFilter cdxWebPreAuthFilter() {
+        CdxHandoffPreAuthenticationFilter result = new CdxHandoffPreAuthenticationFilter();
+        result.setAuthenticationManager(authenticationManager());
+        return result;
+    }
 
-	@Bean
-	public AuthenticationManager authenticationManager() {
-		List<AuthenticationProvider> providers = new ArrayList<>();
-		PreAuthenticatedAuthenticationProvider cdxPreAuth = new PreAuthenticatedAuthenticationProvider();
-		CefPreAuthenticationUserDetailsService cefUserDetailService = getApplicationContext()
-				.getBean(CefPreAuthenticationUserDetailsService.class);
-		cdxPreAuth.setPreAuthenticatedUserDetailsService(cefUserDetailService);
-		providers.add(cdxPreAuth);
-		return new ProviderManager(providers);
-	}
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        List<AuthenticationProvider> providers = new ArrayList<>();
+        PreAuthenticatedAuthenticationProvider cdxPreAuth = new PreAuthenticatedAuthenticationProvider();
+        CefPreAuthenticationUserDetailsService cefUserDetailService = getApplicationContext()
+            .getBean(CefPreAuthenticationUserDetailsService.class);
+        cdxPreAuth.setPreAuthenticatedUserDetailsService(cefUserDetailService);
+        providers.add(cdxPreAuth);
+        return new ProviderManager(providers);
+    }
 }
