@@ -24,7 +24,7 @@ public class ReportServiceImpl implements ReportService {
 	public List<EmissionsReport> findByFacilityId(String facilityId) {
 		
 		return erRepo.findByFacilityId(facilityId);
-	};
+	}
 
 	/* (non-Javadoc)
 	 * @see gov.epa.cef.web.service.impl.ReportService#findMostRecentByFacility(java.lang.String)

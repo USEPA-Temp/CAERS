@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Facility } from '../model/facility';
+import { CefFacility } from '../model/cef-facility';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -44,6 +45,16 @@ export class FacilityService {
       .pipe(
         tap(_ => this.log('fetched facilities')),
         catchError(this.handleError<Facility[]>('getMyFacilities', []))
+      );
+  }
+
+  /** GET facilities by state from the server */
+  getFacilitiesByState (state: string): Observable<CefFacility[]> {
+    const url = `${this.facilitiesUrl}/state/${state}`;
+    return this.http.get<CefFacility[]>(url)
+      .pipe(
+        tap(_ => this.log('fetched facilities')),
+        catchError(this.handleError<CefFacility[]>('getFacilities', []))
       );
   }
 

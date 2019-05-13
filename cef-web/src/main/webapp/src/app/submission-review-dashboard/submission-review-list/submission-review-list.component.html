@@ -1,0 +1,36 @@
+<div class="pt-3 pb-3">
+  Instructional text will appear here.
+</div>
+
+<form>
+
+  <div class="mh-100 overflow-auto">
+    <table class="table table-sm table-striped table-bordered">
+      <thead>
+      <tr>
+        <th scope="col">Select</th>
+        <th scope="col" sortable="name" (sort)="onSort($event)">Facility Name</th>
+        <th scope="col" sortable="county" (sort)="onSort($event)">County</th>
+        <th scope="col" sortable="naics" (sort)="onSort($event)">Industry</th>
+        <th scope="col" sortable="eisId" (sort)="onSort($event)">EIS ID</th>
+        <th scope="col" sortable="currentTons" (sort)="onSort($event)">2019 Reported Tons</th>
+        <th scope="col" sortable="previousTons" (sort)="onSort($event)">2018 Reported Tons</th>
+        <th scope="col">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let cefFacility of cefFacilities">
+        <th scope="row"><input type="checkbox"></th>
+        <td><ngb-highlight [result]="cefFacility.name"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.county"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.naics"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.eisId"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.currentTons"></ngb-highlight></td>
+        <td><ngb-highlight [result]="cefFacility.previousTons"></ngb-highlight></td>
+        <td><button class="btn btn-primary btn-sm">Summary</button><span class="pr-2"> </span> <button class="btn btn-primary btn-sm">View Report</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</form>

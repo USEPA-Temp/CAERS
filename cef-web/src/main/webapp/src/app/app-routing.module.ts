@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { FacilityDashboardComponent } from './facility-dashboard/facility-dashboard.component';
+import { SubmissionReviewDashboardComponent } from './submission-review-dashboard/submission-review-dashboard.component';
 import { FacilityResolverService } from './services/facility-resolver.service';
 
 const routes: Routes = [
@@ -27,7 +28,8 @@ const routes: Routes = [
         data: { title: 'Facility Dashboard' },
       }
     ]
-  }
+  },
+  { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } }
 ];
 
 @NgModule({
