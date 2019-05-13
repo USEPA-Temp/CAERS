@@ -18,7 +18,7 @@ import gov.epa.cef.web.exception.ApplicationException;
 @Component 
 public class ApplicationSecurityUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApplicationSecurityUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationSecurityUtils.class);
 
     public ApplicationUser getCurrentApplicationUser() {
         return (ApplicationUser) getCurrentPrincipal();
@@ -65,11 +65,10 @@ public class ApplicationSecurityUtils {
      * @param appUser
      */
     public void addUserToSecurityContext(ApplicationUser appUser) {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
-        logger.debug(String.format("User %s explicitly added to security context.", appUser.getUsername()));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
+        LOGGER.debug(String.format("User %s explicitly added to security context.", appUser.getUsername()));
         for(GrantedAuthority a: appUser.getAuthorities()) {
-            logger.debug(String.format("Role %s explicitly added to security context.", a.getAuthority()));
+            LOGGER.debug(String.format("Role %s explicitly added to security context.", a.getAuthority()));
         }
         
     }

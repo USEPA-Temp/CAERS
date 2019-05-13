@@ -23,7 +23,7 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 @Service("registrationService")
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
     @Autowired
     private RegisterFacilityClient registerFacilityClient;
@@ -45,14 +45,14 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .getFacilitiesByUserRoleId(registerFacilityServiceUrl, token, userRoleId);
             if (CollectionUtils.isNotEmpty(facilities)) {
                 for (ProgramFacility facility : facilities) {
-                    logger.debug("Facility Name: " + facility.getFacilityName());
+                    LOGGER.debug("Facility Name: " + facility.getFacilityName());
                 }
             } else {
-                logger.debug("No Facility found for user role: " + userRoleId);
+                LOGGER.debug("No Facility found for user role: " + userRoleId);
             }
             return facilities;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
     }
@@ -71,14 +71,14 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .getFacilityByProgramId(registerFacilityServiceUrl, token, programId);
             if (CollectionUtils.isNotEmpty(facilities)) {
                 for (ProgramFacility facility : facilities) {
-                    logger.debug("Facility Name: " + facility.getFacilityName());
+                    LOGGER.debug("Facility Name: " + facility.getFacilityName());
                 }
             } else {
-                logger.debug("No Facility found for program : " + programId);
+                LOGGER.debug("No Facility found for program : " + programId);
             }
             return facilities.stream().findFirst().orElse(null);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
     }
@@ -94,7 +94,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             URL registerServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
             return registerFacilityClient.authenticate(registerServiceUrl, user, password);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
     }

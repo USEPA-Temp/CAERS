@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ import gov.epa.cdx.shared.security.naas.CdxHandoffPreAuthenticationUserDetailsSe
 @Service
 public class CefPreAuthenticationUserDetailsService extends CdxHandoffPreAuthenticationUserDetailsService {
 
-    private static final Log logger = LogFactory.getLog(CefPreAuthenticationUserDetailsService.class);
+    private static final Log LOGGER = LogFactory.getLog(CefPreAuthenticationUserDetailsService.class);
 
     @Override
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken) {
@@ -31,7 +30,7 @@ public class CefPreAuthenticationUserDetailsService extends CdxHandoffPreAuthent
             // Load user details from NAAS token via cdx-shared handoff code
             return (ApplicationUser) super.loadUserDetails(preAuthenticatedAuthenticationToken);
         } catch (Exception e) {
-            logger.error("unable to load user details: " + e.getMessage(), e);
+            LOGGER.error("unable to load user details: " + e.getMessage(), e);
             throw new AuthenticationServiceException("unable to load user details");
         }
     }
@@ -44,14 +43,14 @@ public class CefPreAuthenticationUserDetailsService extends CdxHandoffPreAuthent
             AppRole.RoleType appRole = AppRole.RoleType.fromId(roleId);
             roles.add(new SimpleGrantedAuthority(appRole.grantedRoleName()));
         } catch (IllegalArgumentException e) {
-            logger.warn(e.getMessage());
+            LOGGER.warn(e.getMessage());
         }
 
         // detailed logging of the roles from a handoff
         if (CollectionUtils.isNotEmpty(roles)) {
-            logger.info("Roles granted:");
+            LOGGER.info("Roles granted:");
             for (SimpleGrantedAuthority role : roles) {
-                logger.info(role.getAuthority());
+                LOGGER.info(role.getAuthority());
             }
         }
         return roles;

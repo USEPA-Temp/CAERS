@@ -45,9 +45,9 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Bean
     public AbstractPreAuthenticatedProcessingFilter mockCdxPreAuthFilter() {
-		MockHandoffFilter result = new MockHandoffFilter();
-		result.setAuthenticationManager(authenticationManager());
-		return result;
+        MockHandoffFilter result = new MockHandoffFilter();
+        result.setAuthenticationManager(authenticationManager());
+        return result;
     }
 
     @Bean

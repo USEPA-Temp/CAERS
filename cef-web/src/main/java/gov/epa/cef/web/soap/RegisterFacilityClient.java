@@ -22,7 +22,7 @@ import java.util.List;
 @Component
 public class RegisterFacilityClient extends AbstractClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegisterFacilityClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegisterFacilityClient.class);
 
     /**
      * Create a RegisterProgramFacilityService for invoking service methods
@@ -48,9 +48,9 @@ public class RegisterFacilityClient extends AbstractClient {
         try {
             return getClient(endpoint, false, true).authenticate(userId, password, DOMAIN, AUTH_METHOD);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
-            throw this.handleException(convertFault(fault), logger);
+            throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
-            throw this.handleException(e, logger);
+            throw this.handleException(e, LOGGER);
         }
     }
 
@@ -66,9 +66,9 @@ public class RegisterFacilityClient extends AbstractClient {
         try {
             return getClient(endpoint, false, true).retrieveFacilitiesByUserRoleId(token, userRoleId);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
-            throw this.handleException(convertFault(fault), logger);
+            throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
-            throw this.handleException(e, logger);
+            throw this.handleException(e, LOGGER);
         }
     }
     
@@ -84,9 +84,9 @@ public class RegisterFacilityClient extends AbstractClient {
         try {
             return getClient(endpoint, false, true).retrieveProgramFacilitiesByProgramIds(token, Arrays.asList(new String[]{programId}));
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
-            throw this.handleException(convertFault(fault), logger);
+            throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
-            throw this.handleException(e, logger);
+            throw this.handleException(e, LOGGER);
         }
     }
     
@@ -104,9 +104,9 @@ public class RegisterFacilityClient extends AbstractClient {
         try {
             return getClient(endpoint, false, true).retrieveFacilities(token, user, org, roleType);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
-            throw this.handleException(convertFault(fault), logger);
+            throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
-            throw this.handleException(e, logger);
+            throw this.handleException(e, LOGGER);
         }
     }
     
@@ -122,9 +122,9 @@ public class RegisterFacilityClient extends AbstractClient {
         try {
             return getClient(endpoint, false, true).retrieveNaicsCodesFromFrs(token, programAcronym);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
-            throw this.handleException(convertFault(fault), logger);
+            throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
-            throw this.handleException(e, logger);
+            throw this.handleException(e, LOGGER);
         }
     }
 
@@ -141,7 +141,7 @@ public class RegisterFacilityClient extends AbstractClient {
             try {
                 code = ApplicationErrorCode.valueOf(fault.getFaultInfo().getErrorCode().value());
             } catch (Exception e) {
-                logger.warn("Could not translate fault.");
+                LOGGER.warn("Could not translate fault.");
                 code = ApplicationErrorCode.E_REMOTE_SERVICE_ERROR;
             }
             return new ApplicationException(code, fault.getFaultInfo().getDescription());

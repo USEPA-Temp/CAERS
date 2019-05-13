@@ -1,7 +1,5 @@
 package gov.epa.cef.web.api.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +15,6 @@ import gov.epa.cef.web.service.mapper.ApplicationUserMapper;
 @RestController
 @RequestMapping("/api/user")
 public class UserApi {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserApi.class);
 
     @Autowired
     private ApplicationSecurityUtils applicationSecurityUtils;
