@@ -9,7 +9,7 @@ public class ApplicationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    ApplicationErrorCode errorCode;
+    final ApplicationErrorCode errorCode;
 
     @JsonCreator
     public ApplicationException(@JsonProperty("code") ApplicationErrorCode errorCode,
@@ -29,7 +29,7 @@ public class ApplicationException extends RuntimeException {
         if (e instanceof ApplicationException) {
             return ((ApplicationException) e);
         } else {
-            ApplicationErrorCode aec = (code == null) ? ApplicationErrorCode.E_InternalError : code;
+            ApplicationErrorCode aec = (code == null) ? ApplicationErrorCode.E_INTERNAL_ERROR : code;
             String msg = (StringUtils.isEmpty(message)) ? "An internal error occurred." : message;
             return new ApplicationException(aec, msg);
         }

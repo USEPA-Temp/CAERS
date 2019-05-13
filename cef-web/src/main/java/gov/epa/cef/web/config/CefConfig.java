@@ -10,24 +10,24 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "cef", ignoreInvalidFields = true)
 public class CefConfig {
 
-	@Autowired
-	protected CdxConfig cdxConfig;
+    @Autowired
+    protected CdxConfig cdxConfig;
 
-	protected Map<String, String> cefExternalUrls;
-	
-	public CdxConfig getCdxConfig() {
-		return cdxConfig;
-	}
+    protected Map<String, String> cefExternalUrls;
 
-	public void setCdxConfig(CdxConfig cdxConfig) {
-		this.cdxConfig = cdxConfig;
-	}
+    public CdxConfig getCdxConfig() {
+        return cdxConfig;
+    }
 
-	public Map<String, String> getCefExternalUrls() {
-		return cefExternalUrls;
-	}
+    public void setCdxConfig(CdxConfig cdxConfig) {
+        this.cdxConfig = cdxConfig;
+    }
 
-	public void setCefExternalUrls(Map<String, String> cefExternalUrls) {
-		this.cefExternalUrls = cefExternalUrls;
-	}
+    public Map<String, String> getCefExternalUrls() {
+        return cefExternalUrls;
+    }
+
+    public void setCefExternalUrls(Map<String, String> cefExternalUrls) {
+        this.cefExternalUrls = cefExternalUrls;
+    }
 }

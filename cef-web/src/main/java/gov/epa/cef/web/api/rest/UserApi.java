@@ -18,22 +18,22 @@ import gov.epa.cef.web.service.mapper.ApplicationUserMapper;
 @RequestMapping("/api/user")
 public class UserApi {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserApi.class);
-	
-	@Autowired
-	private ApplicationSecurityUtils applicationSecurityUtils;
+    private static final Logger logger = LoggerFactory.getLogger(UserApi.class);
 
-	/**
-	 * Retrieve the currently authenticated user
-	 * @return
-	 */
-	@GetMapping(value = "/me")
-	@ResponseBody
-	public ResponseEntity<UserDto> retrieveCurrentUser() {
+    @Autowired
+    private ApplicationSecurityUtils applicationSecurityUtils;
 
-		UserDto result = ApplicationUserMapper.toUserDto().apply(applicationSecurityUtils.getCurrentApplicationUser());
+    /**
+     * Retrieve the currently authenticated user
+     * @return
+     */
+    @GetMapping(value = "/me")
+    @ResponseBody
+    public ResponseEntity<UserDto> retrieveCurrentUser() {
 
-		return new ResponseEntity<UserDto>(result, HttpStatus.OK);
-	}
+        UserDto result = ApplicationUserMapper.toUserDto().apply(applicationSecurityUtils.getCurrentApplicationUser());
+
+        return new ResponseEntity<UserDto>(result, HttpStatus.OK);
+    }
 
 }

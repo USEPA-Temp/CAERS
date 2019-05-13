@@ -11,49 +11,49 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @MappedSuperclass
 public abstract class BaseAuditEntity extends BaseEntity {
-	
-	@CreatedBy
-	protected String createdBy;
-	
-	@CreatedDate
-	protected Date createdDate;
-	
-	@LastModifiedBy
-	protected String lastModifiedBy;
-	
-	@LastModifiedDate
-	protected Date lastModifiedDate;
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    @CreatedBy
+    protected String createdBy;
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    @CreatedDate
+    protected Date createdDate;
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    @LastModifiedBy
+    protected String lastModifiedBy;
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    @LastModifiedDate
+    protected Date lastModifiedDate;
 
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
 }

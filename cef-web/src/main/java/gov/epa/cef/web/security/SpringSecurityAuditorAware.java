@@ -10,14 +10,14 @@ import gov.epa.cdx.shared.security.ApplicationUser;
 
 class SpringSecurityAuditorAware implements AuditorAware<String> {
 
-	public Optional<String> getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		if (authentication == null || !authentication.isAuthenticated()) {
-			return null;
-		}
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
 
-		return Optional.of(((ApplicationUser) authentication.getPrincipal()).getUserId());
-	}
+        return Optional.of(((ApplicationUser) authentication.getPrincipal()).getUserId());
+    }
 }

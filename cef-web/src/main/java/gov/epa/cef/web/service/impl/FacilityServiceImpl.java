@@ -10,17 +10,17 @@ import gov.epa.cef.web.service.FacilityService;
 @Service
 public class FacilityServiceImpl implements FacilityService {
 
-	@Autowired
-	private FacilityRepository facRepo;
+    @Autowired
+    private FacilityRepository facRepo;
 
 
-	/**
-	 * Find common form facilities for a given state
-	 * @param state Two-character state code
-	 * @return
-	 */	
-	public List<Facility> findByState(String state) {
-		return facRepo.findByState(state);
-	}
+    /**
+     * Find common form facilities for a given state
+     * @param state Two-character state code
+     * @return
+     */	
+    public List<Facility> findByState(String state) {
+        return facRepo.findByState(state);
+    }
 
 }

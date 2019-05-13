@@ -28,36 +28,36 @@ import gov.epa.cef.web.security.mock.MockPreAuthenticationUserDetailsService;
 @EnableWebSecurity
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.antMatcher("/**")
-			.csrf().disable()
-			.addFilter(mockCdxPreAuthFilter())
-			.authorizeRequests()
-			.antMatchers("/**")
-			.hasAnyRole(
-					AppRole.RoleType.Preparer.roleName(),
-					AppRole.RoleType.Certifier.roleName(),
-					AppRole.RoleType.Reviewer.roleName())
-			.anyRequest().denyAll();
-	}
-	
-	@Bean
-	public AbstractPreAuthenticatedProcessingFilter mockCdxPreAuthFilter() throws Exception {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .antMatcher("/**")
+            .csrf().disable()
+            .addFilter(mockCdxPreAuthFilter())
+            .authorizeRequests()
+            .antMatchers("/**")
+            .hasAnyRole(
+                AppRole.RoleType.PREPARER.roleName(),
+                AppRole.RoleType.CERTIFIER.roleName(),
+                AppRole.RoleType.REVIEWER.roleName())
+            .anyRequest().denyAll();
+    }
+
+    @Bean
+    public AbstractPreAuthenticatedProcessingFilter mockCdxPreAuthFilter() {
 		MockHandoffFilter result = new MockHandoffFilter();
 		result.setAuthenticationManager(authenticationManager());
 		return result;
-	}
+    }
 
-	@Bean
-	public AuthenticationManager authenticationManager() {
-		List<AuthenticationProvider> providers = new ArrayList<>();
-		PreAuthenticatedAuthenticationProvider cdxPreAuth = new PreAuthenticatedAuthenticationProvider();
-		MockPreAuthenticationUserDetailsService mockCefUserDetailService = getApplicationContext()
-				.getBean(MockPreAuthenticationUserDetailsService.class);
-		cdxPreAuth.setPreAuthenticatedUserDetailsService(mockCefUserDetailService);
-		providers.add(cdxPreAuth);
-		return new ProviderManager(providers);
-	}
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        List<AuthenticationProvider> providers = new ArrayList<>();
+        PreAuthenticatedAuthenticationProvider cdxPreAuth = new PreAuthenticatedAuthenticationProvider();
+        MockPreAuthenticationUserDetailsService mockCefUserDetailService = getApplicationContext()
+            .getBean(MockPreAuthenticationUserDetailsService.class);
+            cdxPreAuth.setPreAuthenticatedUserDetailsService(mockCefUserDetailService);
+        providers.add(cdxPreAuth);
+        return new ProviderManager(providers);
+    }
 }

@@ -27,29 +27,31 @@ import gov.epa.cef.web.security.AppRole.RoleType;
 @Service
 public class MockPreAuthenticationUserDetailsService implements AuthenticationUserDetailsService{
 
-	private static final Log logger = LogFactory.getLog(MockPreAuthenticationUserDetailsService.class);
+    private static final Log logger = LogFactory.getLog(MockPreAuthenticationUserDetailsService.class);
+    private static final Long USER_ROLE_ID = 220632L;
+    private static final Long ORGANIZATION_ID = 86819L;
 
-	@Override
-	public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
-		try {
-			RoleType role=AppRole.RoleType.Certifier;
-	        ApplicationUser user = new ApplicationUser("THOMAS.FESPERMAN", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
-	        user.setEmail("thomas.fesperman@cgifederal.com");
-	        user.setFirstName("Thomas");
-	        user.setLastName("Fesperman");
-	        user.setOrganization("CGI Federal");
-	        user.setTitle("Mr.");
-	        user.setPhoneNumber("7032276001");
-	        user.setIdTypeCode((int)role.getId());
-	        user.setIdTypeText(role.roleName());
-	        user.setRoleId(role.getId());
-	        user.setUserRoleId(220632L);
-	        //60632 or 95092
-	      	user.setUserOrganizationId(86819L);
-	      	return user;
-		} catch (Exception e) {
-			logger.error("unable to load user details: " + e.getMessage(), e);
-			throw new AuthenticationServiceException("unable to load user details");
-		}
-	}
+    @Override
+    public UserDetails loadUserDetails(Authentication token) {
+        try {
+            RoleType role=AppRole.RoleType.CERTIFIER;
+            ApplicationUser user = new ApplicationUser("THOMAS.FESPERMAN", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
+            user.setEmail("thomas.fesperman@cgifederal.com");
+            user.setFirstName("Thomas");
+            user.setLastName("Fesperman");
+            user.setOrganization("CGI Federal");
+            user.setTitle("Mr.");
+            user.setPhoneNumber("7032276001");
+            user.setIdTypeCode((int)role.getId());
+            user.setIdTypeText(role.roleName());
+            user.setRoleId(role.getId());
+            user.setUserRoleId(USER_ROLE_ID);
+            //60632 or 95092
+              user.setUserOrganizationId(ORGANIZATION_ID);
+              return user;
+        } catch (Exception e) {
+            logger.error("unable to load user details: " + e.getMessage(), e);
+            throw new AuthenticationServiceException("unable to load user details");
+        }
+    }
 }

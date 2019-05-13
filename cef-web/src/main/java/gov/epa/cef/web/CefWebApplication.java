@@ -9,12 +9,12 @@ import gov.epa.cef.web.config.YamlPropertySourceFactory;
 
 @SpringBootApplication
 @PropertySources({
-	@PropertySource(factory = YamlPropertySourceFactory.class, value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true),
+    @PropertySource(factory = YamlPropertySourceFactory.class, value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true),
 })
 public class CefWebApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CefWebApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CefWebApplication.class, args);
+    }
 
 }

@@ -18,35 +18,35 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 @RestController
 @RequestMapping("/api/report")
 public class ReportApi {
-	
-	@Autowired
-	private ReportService reportService;
-	
-	/**
-	 * Retrieve reports for a given facility
-	 * @param facilityId {@link ProgramFacility}'s programId
-	 * @return
-	 */
-	@GetMapping(value = "/facility/{facilityId}")
-	@ResponseBody
-	public ResponseEntity<List<EmissionsReport>> retrieveReportsForFacility(@PathVariable String facilityId) {
 
-		List<EmissionsReport> result = reportService.findByFacilityId(facilityId);
-		
-		return new ResponseEntity<List<EmissionsReport>>(result, HttpStatus.OK);
-	}
+    @Autowired
+    private ReportService reportService;
 
-	/**
-	 * Retrieve current report for a given facility
-	 * @param facilityId {@link ProgramFacility}'s programId
-	 * @return
-	 */
-	@GetMapping(value = "/facility/{facilityId}/current")
-	@ResponseBody
-	public ResponseEntity<EmissionsReport> retrieveCurrentReportForFacility(@PathVariable String facilityId) {
+    /**
+     * Retrieve reports for a given facility
+     * @param facilityId {@link ProgramFacility}'s programId
+     * @return
+     */
+    @GetMapping(value = "/facility/{facilityId}")
+    @ResponseBody
+    public ResponseEntity<List<EmissionsReport>> retrieveReportsForFacility(@PathVariable String facilityId) {
 
-		EmissionsReport result = reportService.findMostRecentByFacility(facilityId);
-		
-		return new ResponseEntity<EmissionsReport>(result, HttpStatus.OK);
-	}
+        List<EmissionsReport> result = reportService.findByFacilityId(facilityId);
+
+        return new ResponseEntity<List<EmissionsReport>>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve current report for a given facility
+     * @param facilityId {@link ProgramFacility}'s programId
+     * @return
+     */
+    @GetMapping(value = "/facility/{facilityId}/current")
+    @ResponseBody
+    public ResponseEntity<EmissionsReport> retrieveCurrentReportForFacility(@PathVariable String facilityId) {
+
+        EmissionsReport result = reportService.findMostRecentByFacility(facilityId);
+
+        return new ResponseEntity<EmissionsReport>(result, HttpStatus.OK);
+    }
 }
