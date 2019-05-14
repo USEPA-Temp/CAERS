@@ -2,8 +2,6 @@ package gov.epa.cef.web.api.rest;
 
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +20,7 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 @RestController
 @RequestMapping("/api/facility")
 public class FacilityApi {
-
-    private static final Logger logger = LoggerFactory.getLogger(FacilityApi.class);
-
+    
     @Autowired
     private RegistrationService registrationService;
 

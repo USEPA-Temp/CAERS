@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 
-    private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebConfigurer.class);
     
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
@@ -43,7 +43,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
 
     private void setLocationForStaticAssets(WebServerFactory server) {
         if (server instanceof ConfigurableServletWebServerFactory) {
-        	log.info("Adding target/www/ as static resource.");
+            LOGGER.info("Adding target/www/ as static resource.");
             ConfigurableServletWebServerFactory servletWebServer = (ConfigurableServletWebServerFactory) server;
             File root;
             String prefixPath = resolvePathPrefix();
@@ -64,7 +64,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         } catch (UnsupportedEncodingException e) {
             /* try without decoding if this ever happens */
             fullExecutablePath = this.getClass().getResource("").getPath();
-            log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         String rootPath = Paths.get(".").toUri().normalize().getPath();
         String extractedPath = fullExecutablePath.replace(rootPath, "");

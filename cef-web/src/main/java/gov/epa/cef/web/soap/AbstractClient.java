@@ -28,7 +28,7 @@ public abstract class AbstractClient {
     public static final long CONN_TIMEOUT = READ_TIMEOUT;
     public static final String DOMAIN = "default";
     public static final String AUTH_METHOD = "password";
-    private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractClient.class);
 
     protected ApplicationException handleException(Exception e, Logger logger) {
         ApplicationException ae = null;
@@ -111,8 +111,8 @@ public abstract class AbstractClient {
             http.setTlsClientParameters(sslParams);
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format(
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format(
                     "AbstractClient.getClient(address=%s, service=%s, enableMtom=%s, "
                             + "enableChunking=%s, connectionTimeout=%s, receiveTimeout=%s)",
                     address, service.getName(), enableMtom, enableMtom, CONN_TIMEOUT, READ_TIMEOUT));

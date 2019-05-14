@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
@@ -27,7 +26,7 @@ import gov.epa.cef.web.security.AppRole.RoleType;
 @Service
 public class MockPreAuthenticationUserDetailsService implements AuthenticationUserDetailsService{
 
-    private static final Log logger = LogFactory.getLog(MockPreAuthenticationUserDetailsService.class);
+    private static final Log LOGGER = LogFactory.getLog(MockPreAuthenticationUserDetailsService.class);
     private static final Long USER_ROLE_ID = 220632L;
     private static final Long ORGANIZATION_ID = 86819L;
 
@@ -50,7 +49,7 @@ public class MockPreAuthenticationUserDetailsService implements AuthenticationUs
               user.setUserOrganizationId(ORGANIZATION_ID);
               return user;
         } catch (Exception e) {
-            logger.error("unable to load user details: " + e.getMessage(), e);
+            LOGGER.error("unable to load user details: " + e.getMessage(), e);
             throw new AuthenticationServiceException("unable to load user details");
         }
     }
