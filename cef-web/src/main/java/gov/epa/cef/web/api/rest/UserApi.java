@@ -39,7 +39,7 @@ public class UserApi {
     
     
     /**
-     * Retrieve the currently authenticated user
+     * Retrieve a new NAAS token for the currently authenticated user
      * @return
      */
     @GetMapping(value = "/token")
