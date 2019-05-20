@@ -11,6 +11,12 @@ import gov.epa.cdx.shared.generatedwsdl.securitytoken._3.DomainTypeCode;
 import gov.epa.cdx.shared.generatedwsdl.securitytoken._3.SecurityTokenPortType;
 import gov.epa.cdx.shared.generatedwsdl.securitytoken._3.TokenType;
 
+/**
+ * A client to consume the CDX SecurityToken service
+ * 
+ * @author ahmahfou
+ *
+ */
 @Component
 public class SecurityTokenClient extends AbstractClient {
     
