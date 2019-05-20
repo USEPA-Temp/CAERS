@@ -28,10 +28,7 @@ public class CefPreAuthenticationUserDetailsService extends CdxHandoffPreAuthent
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken) {
         try {
             // Load user details from NAAS token via cdx-shared handoff code
-            ApplicationUser applicationUser =(ApplicationUser) super.loadUserDetails(preAuthenticatedAuthenticationToken);
-            System.out.println("Password::"+applicationUser.getPassword());
-            System.out.println("Username::"+applicationUser.getUsername());
-            return applicationUser;
+            return (ApplicationUser) super.loadUserDetails(preAuthenticatedAuthenticationToken);
         } catch (Exception e) {
             LOGGER.error("unable to load user details: " + e.getMessage(), e);
             throw new AuthenticationServiceException("unable to load user details");
