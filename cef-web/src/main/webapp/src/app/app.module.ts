@@ -19,6 +19,7 @@ import { SubmissionReviewDashboardComponent } from './submission-review-dashboar
 import { SubmissionReviewListComponent } from './submission-review-dashboard/submission-review-list/submission-review-list.component';
 import { SortableHeader } from './sortable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RedirectComponent } from './redirect/redirect.component';
 import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-review/facility-data-review.component';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-
     AppComponent,
     FacilityDashboardComponent,
     SubmissionReviewDashboardComponent,
+    RedirectComponent,
     HeaderComponent,
     FooterComponent,
     FacilityListComponent,

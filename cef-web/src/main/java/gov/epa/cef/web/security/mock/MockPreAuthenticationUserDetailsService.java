@@ -33,20 +33,21 @@ public class MockPreAuthenticationUserDetailsService implements AuthenticationUs
     @Override
     public UserDetails loadUserDetails(Authentication token) {
         try {
-            RoleType role=AppRole.RoleType.CERTIFIER;
-            ApplicationUser user = new ApplicationUser("THOMAS.FESPERMAN", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
-            user.setEmail("thomas.fesperman@cgifederal.com");
-            user.setFirstName("Thomas");
-            user.setLastName("Fesperman");
-            user.setOrganization("CGI Federal");
+            RoleType role=AppRole.RoleType.PREPARER;
+            ApplicationUser user = new ApplicationUser("JOHN.DOE", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
+            user.setEmail("doe.john@dnr.ga.gov");
+            user.setFirstName("John");
+            user.setLastName("Doe");
+            user.setOrganization("Georgia Department of Natural Resources");
             user.setTitle("Mr.");
-            user.setPhoneNumber("7032276001");
+            user.setPhoneNumber("9195551234");
             user.setIdTypeCode((int)role.getId());
             user.setIdTypeText(role.roleName());
             user.setRoleId(role.getId());
             user.setUserRoleId(USER_ROLE_ID);
             //60632 or 95092
               user.setUserOrganizationId(ORGANIZATION_ID);
+              user.setClientId("GA");
               return user;
         } catch (Exception e) {
             LOGGER.error("unable to load user details: " + e.getMessage(), e);

@@ -6,9 +6,10 @@ import { FacilityDashboardComponent } from './facility-dashboard/facility-dashbo
 import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-review/facility-data-review.component';
 import { SubmissionReviewDashboardComponent } from './submission-review-dashboard/submission-review-dashboard.component';
 import { FacilityResolverService } from './services/facility-resolver.service';
+import { RedirectComponent } from './redirect/redirect.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/facility', pathMatch: 'full' },
+  { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
   {
     path: 'facility',
     children: [
@@ -34,7 +35,8 @@ const routes: Routes = [
       }     
     ]
   },
-  { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } }
+  { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } },
+  { path: '*', component: RedirectComponent, data: { title: 'Redirect Page' } }
 ];
 
 @NgModule({

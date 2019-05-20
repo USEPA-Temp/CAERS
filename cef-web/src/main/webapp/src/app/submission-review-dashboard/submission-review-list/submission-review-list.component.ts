@@ -2,6 +2,7 @@ import { Component, OnInit, Directive, EventEmitter, Input, Output, QueryList, V
 import { CefFacility } from '../../model/cef-facility';
 import {SortableHeader, SortEvent} from '../../sortable.directive';
 import { FacilityService } from '../../services/facility.service';
+import { UserContextService } from '../../services/user-context.service';
 
 export const compare = (v1, v2) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
@@ -12,10 +13,12 @@ export const compare = (v1, v2) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 export class SubmissionReviewListComponent {
 
   cefFacilities: CefFacility[] = [];
+  clientId: string = '';
 
   @ViewChildren(SortableHeader) headers: QueryList<SortableHeader>;
 
-  constructor(private facilityService: FacilityService) {
+  constructor(private facilityService: FacilityService, public userContext: UserContextService) {
+    this.clientId = userContext.user.agencyCode;
   }
 
   ngOnInit() {
@@ -23,7 +26,7 @@ export class SubmissionReviewListComponent {
   }
 
   getData({}: void) {
-    this.facilityService.getFacilitiesByState('GA')
+    this.facilityService.getFacilitiesByState(this.clientId)
     .subscribe(result => {
       this.cefFacilities = result;
     });

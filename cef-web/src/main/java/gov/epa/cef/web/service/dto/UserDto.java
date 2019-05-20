@@ -7,17 +7,13 @@ import gov.epa.cef.web.security.AppRole;
 public class UserDto implements Serializable {
     
     private String cdxUserId;
-
     private String email;
-
     private String firstName;
-
     private String lastName;
-    
     private AppRole.RoleType role = AppRole.RoleType.UNKNOWN;
-    
     private Long userRoleId;
-    
+    private String agencyCode;
+
     public String getCdxUserId() {
         return cdxUserId;
     }
@@ -70,6 +66,13 @@ public class UserDto implements Serializable {
     public void setUserRoleId(Long userRoleId) {
         this.userRoleId = userRoleId;
     }
+
+    public String getAgencyCode() {
+        return agencyCode;
+    }
+    public void setAgencyCode(String agencyCode) {
+        this.agencyCode = agencyCode;
+    }
     
     public UserDto withCdxUserId(String cdxUserId) {
         setCdxUserId(cdxUserId);
@@ -106,5 +109,8 @@ public class UserDto implements Serializable {
         return this;
     }
 
-    
+    public UserDto withAgencyCode(String agencyCode) {
+        setAgencyCode(agencyCode);
+        return this;
+    }
 }
