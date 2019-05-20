@@ -22,4 +22,11 @@ public interface RegistrationService {
    */
   ProgramFacility retrieveFacilityByProgramId(String programId);
 
+    /**
+     * Returns current user CDX NAAS Token
+     * 
+     * @return naasToken
+     */
+    String getCurrentUserNaasToken();
+
 }

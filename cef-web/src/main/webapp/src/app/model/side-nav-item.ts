@@ -1,6 +1,6 @@
-import { EmissionUnit } from './emission-unit';
-import { Process } from './process';
-import { ReleasePointApportionment } from './release-point-apportionment';
+import { EmissionUnit } from "src/app/reports/model/emission-unit";
+import { Process } from "src/app/reports/model/process";
+import { ReleasePointApportionment } from "src/app/reports/model/release-point-apportionment";
 
 export class SideNavItem {
   //TODO: change baseUrl into an enum on the backend and find the correct url serverside for decoupling

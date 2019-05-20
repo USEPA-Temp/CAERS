@@ -7,20 +7,39 @@ import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { CollapseIconComponent } from './collapse-icon/collapse-icon.component';
+import { FacilityWidgetComponent } from './facility-widget/facility-widget.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { CollapseNavComponent } from './sidebar/collapse-nav/collapse-nav.component';
+import { InnerNavComponent } from './sidebar/collapse-nav/inner-nav/inner-nav.component';
+import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-nav-item/inner-nav-item.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedRoutingModule } from "src/app/shared/shared-routing";
 
 @NgModule({
   declarations: [
     FacilityInfoComponent,
-    CollapseIconComponent
+    CollapseIconComponent,
+    FacilityWidgetComponent,
+    SidebarComponent,
+    CollapseNavComponent,
+    InnerNavComponent,
+    InnerNavItemComponent
   ],
   exports: [
     FacilityInfoComponent,
     CollapseIconComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    SidebarComponent,
+    CollapseNavComponent,
+    InnerNavComponent,
+    InnerNavItemComponent,
+    FacilityWidgetComponent
   ],
   imports: [
     CommonModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgbModule,
+    SharedRoutingModule
   ]
 })
 export class SharedModule {

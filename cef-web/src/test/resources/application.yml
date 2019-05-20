@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: "org.postgresql.Driver"
-    url: "jdbc:postgresql://172.20.2.35:5432/CEF"
-    username: "cef"
-    password: "cef_fall2017"
+    url: "jdbc:postgresql://localhost:5432/CEF"
+    username: cef
+    password: password
 cdx:
   registerEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService

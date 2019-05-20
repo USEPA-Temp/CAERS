@@ -1,18 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InnerNavItemComponent } from './inner-nav-item.component';
-import { InnerNavComponent } from '../inner-nav.component';
-
-import { SideNavItem } from "src/app/reports/model/side-nav-item";
+import { CollapseNavComponent } from './collapse-nav.component';
+import { InnerNavComponent } from './inner-nav/inner-nav.component';
+import { InnerNavItemComponent } from './inner-nav/inner-nav-item/inner-nav-item.component';
 
 import { SharedModule } from "src/app/shared/shared.module";
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-describe('InnerNavItemComponent', () => {
-  let component: InnerNavItemComponent;
-  let fixture: ComponentFixture<InnerNavItemComponent>;
+describe('CollapseNavComponent', () => {
+  let component: CollapseNavComponent;
+  let fixture: ComponentFixture<CollapseNavComponent>;
   let navItemJson = {
       "id": 1,
       "description": "Boiler 001",
@@ -33,12 +32,13 @@ describe('InnerNavItemComponent', () => {
           }
       ]
   };
-  let navItem: SideNavItem = SideNavItem.fromJson(navItemJson);
+  let navItems: SideNavItem[] = [SideNavItem.fromJson(navItemJson)];
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InnerNavItemComponent,
-                      InnerNavComponent ],
+      declarations: [ CollapseNavComponent,
+                      InnerNavComponent,
+                      InnerNavItemComponent ],
       imports: [NgbModule,
                 SharedModule,
                 RouterTestingModule]
@@ -47,9 +47,10 @@ describe('InnerNavItemComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InnerNavItemComponent);
+    fixture = TestBed.createComponent(CollapseNavComponent);
     component = fixture.componentInstance;
-    component.navItem = navItem;
+    component.collapsed=false;
+    component.navItems = navItems;
     fixture.detectChanges();
   });
 
