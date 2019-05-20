@@ -2,7 +2,7 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 
-public class FacilityWidgetTokenDto implements Serializable{
+public class TokenDto implements Serializable{
     
     /**
      * default version

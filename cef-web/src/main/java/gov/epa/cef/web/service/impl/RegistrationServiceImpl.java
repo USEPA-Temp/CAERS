@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
 import gov.epa.cef.web.soap.RegisterFacilityClient;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -32,9 +31,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private CefConfig cefConfig;
     
-    @Autowired
-    private ApplicationSecurityUtils applicationSecurityUtils;
-
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.RegisterService#retrieveFacilities(java.lang.Long)
      */
@@ -43,8 +39,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         try {
 
             URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
-            String token = authenticate(cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorUser(),
-                    cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorPassword());
+            String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),
+                    cefConfig.getCdxConfig().getNaasPassword());
             List<ProgramFacility> facilities = registerFacilityClient
                     .getFacilitiesByUserRoleId(registerFacilityServiceUrl, token, userRoleId);
             if (CollectionUtils.isNotEmpty(facilities)) {
@@ -69,8 +65,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         try {
 
             URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
-            String token = authenticate(cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorUser(),
-                    cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorPassword());
+            String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),
+                    cefConfig.getCdxConfig().getNaasPassword());
             List<ProgramFacility> facilities = registerFacilityClient
                     .getFacilityByProgramId(registerFacilityServiceUrl, token, programId);
             if (CollectionUtils.isNotEmpty(facilities)) {
@@ -103,20 +99,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    /**
-     * Create NAAS token for authenticating into CDX Register services
-     * @param user
-     * @param password
-     * @return
-     */
-    @Override
-    public String getCurrentUserNaasToken() {
-        try {
-            String token = authenticate(applicationSecurityUtils.getCurrentApplicationUser().getUsername() , applicationSecurityUtils.getCurrentApplicationUser().getPassword());
-            return token;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw ApplicationException.asApplicationException(e);
-        }
-    }
 }

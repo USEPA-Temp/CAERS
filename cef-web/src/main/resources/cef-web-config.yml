@@ -9,9 +9,9 @@ spring:
 cdx:
   registerEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
-    operatorId: caer-cef-admin@epa.gov
-    operatorPassword: CDXcaercef01
   registerProgramFacilityEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterProgramFacilityService
-    operatorId: caer-cef-admin@epa.gov
-    operatorPassword: CDXcaercef01
+  naas-token-url: https://naasdev.epacdxnode.net/xml/SecurityToken_v30.wsdl
+  naas-user: caer-cef-admin@epa.gov
+  naas-password: CDXcaercef01
+  naas-ip: 127.0.0.1

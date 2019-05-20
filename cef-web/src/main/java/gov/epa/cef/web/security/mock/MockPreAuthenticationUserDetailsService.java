@@ -34,17 +34,16 @@ public class MockPreAuthenticationUserDetailsService implements AuthenticationUs
     public UserDetails loadUserDetails(Authentication token) {
         try {
             RoleType role=AppRole.RoleType.CERTIFIER;
-            ApplicationUser user = new ApplicationUser("amahfouz", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
-            user.setEmail("ahmed.mahfouz@cgifederal.com");
-            user.setFirstName("Ahmed");
-            user.setLastName("Mahfouz");
+            ApplicationUser user = new ApplicationUser("THOMAS.FESPERMAN", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
+            user.setEmail("thomas.fesperman@cgifederal.com");
+            user.setFirstName("Thomas");
+            user.setLastName("Fesperman");
             user.setOrganization("CGI Federal");
             user.setTitle("Mr.");
             user.setPhoneNumber("7032276001");
             user.setIdTypeCode((int)role.getId());
             user.setIdTypeText(role.roleName());
             user.setRoleId(role.getId());
-            user.setPassword("Summer2019");
             user.setUserRoleId(USER_ROLE_ID);
             //60632 or 95092
               user.setUserOrganizationId(ORGANIZATION_ID);

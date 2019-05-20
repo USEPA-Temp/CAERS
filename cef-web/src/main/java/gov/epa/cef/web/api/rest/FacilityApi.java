@@ -2,8 +2,6 @@ package gov.epa.cef.web.api.rest;
 
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.domain.facility.Facility;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
-import gov.epa.cef.web.service.FacilityService;
 import gov.epa.cef.web.service.RegistrationService;
-import gov.epa.cef.web.service.dto.FacilityWidgetTokenDto;
+import gov.epa.cef.web.service.FacilityService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
@@ -81,16 +78,5 @@ public class FacilityApi {
     public ResponseEntity<Collection<Facility>> retrieveFacilitiesByState(@PathVariable String stateCode) {
         Collection<Facility> result = facilityService.findByState(stateCode);
         return new ResponseEntity<Collection<Facility>>(result, HttpStatus.OK);		
-    }
-    
-    @GetMapping(value = "/widget-token")
-    @ResponseBody
-    public ResponseEntity<FacilityWidgetTokenDto> retrieveWidgetToken(HttpServletRequest request) {
-        String token=registrationService.getCurrentUserNaasToken();
-        Long userRoleId=applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId();
-        FacilityWidgetTokenDto facilityWidgetToken=new FacilityWidgetTokenDto();
-        facilityWidgetToken.setToken(token);
-        facilityWidgetToken.setUserRoleId(userRoleId);
-        return new ResponseEntity<FacilityWidgetTokenDto>(facilityWidgetToken, HttpStatus.OK);     
     }
 }
