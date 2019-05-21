@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.domain.report.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.service.ReportService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 

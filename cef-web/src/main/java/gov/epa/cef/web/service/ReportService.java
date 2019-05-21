@@ -1,7 +1,7 @@
 package gov.epa.cef.web.service;
 
 import java.util.List;
-import gov.epa.cef.web.domain.report.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsReport;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 public interface ReportService {

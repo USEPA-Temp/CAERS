@@ -2,7 +2,7 @@ package gov.epa.cef.web.repository;
 
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
-import gov.epa.cef.web.domain.facility.Facility;
+import gov.epa.cef.web.domain.Facility;
 
 public interface FacilityRepository extends CrudRepository<Facility, Long> {
 
@@ -11,6 +11,6 @@ public interface FacilityRepository extends CrudRepository<Facility, Long> {
      * @param 2 character state code
      * @return
      */
-    List<Facility> findByState(String state);
+    List<Facility> findByStateCode(String stateCode);
 
 }
