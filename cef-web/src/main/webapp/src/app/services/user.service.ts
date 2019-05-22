@@ -24,7 +24,7 @@ export class UserService {
       );
   }
 
-  /** GET the current user from the server */
+  /** GET the current user new NAAS token from the server */
   getCurrentUserNaasToken (): Observable<UserToken> {
     const url = `${this.userUrl}/token`;
     return this.http.get<UserToken>(url)
