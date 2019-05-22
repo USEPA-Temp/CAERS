@@ -26,7 +26,8 @@ public class ApplicationUserMapper {
                 .withFirstName(appUser.getFirstName())
                 .withLastName(appUser.getLastName())
                 .withRole(appUser.getIdTypeText())
-                .withUserRoleId(appUser.getUserRoleId());
+                .withUserRoleId(appUser.getUserRoleId())
+                .withAgencyCode(appUser.getClientId());
     }
     
 }

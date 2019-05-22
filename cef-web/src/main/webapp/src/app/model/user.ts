@@ -6,4 +6,5 @@ export class User {
   lastName: string;
   role: string;
   userRoleId: number;
+  agencyCode: string;
 }
