@@ -17,6 +17,7 @@ public class CdxConfig {
     private String naasPassword;
     private String naasTokenUrl;
     private String naasIp;
+    private String frsBaseUrl;
 
     public Map<String, String> getRegisterProgramFacilityEndpointConfiguration() {
         return registerProgramFacilityEndpointConfiguration;
@@ -59,6 +60,14 @@ public class CdxConfig {
 
     public void setNaasIp(String naasIp) {
         this.naasIp = naasIp;
+    }
+
+    public String getFrsBaseUrl() {
+        return frsBaseUrl;
+    }
+
+    public void setFrsBaseUrl(String frsBaseUrl) {
+        this.frsBaseUrl = frsBaseUrl;
     }
 
 }

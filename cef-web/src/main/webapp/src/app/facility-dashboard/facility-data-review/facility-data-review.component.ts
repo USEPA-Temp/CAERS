@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Facility } from "src/app/model/facility";
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-facility-data-review',
@@ -10,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class FacilityDataReviewComponent implements OnInit {
   facility: Facility;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private _location: Location) { }
 
   ngOnInit() {
     this.route.data
@@ -20,4 +21,7 @@ export class FacilityDataReviewComponent implements OnInit {
       });
   }
 
+  back() {
+      this._location.back();
+    }
 }

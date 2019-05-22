@@ -12,6 +12,7 @@ public class TokenDto implements Serializable{
     
     private String token;
     private Long userRoleId;
+    private String baseServiceUrl;
     
     public String getToken() {
         return token;
@@ -25,7 +26,10 @@ public class TokenDto implements Serializable{
     public void setUserRoleId(Long userRoleId) {
         this.userRoleId = userRoleId;
     }
-    
-    
-
+    public String getBaseServiceUrl() {
+        return baseServiceUrl;
+    }
+    public void setBaseServiceUrl(String baseServiceUrl) {
+        this.baseServiceUrl = baseServiceUrl;
+    }
 }

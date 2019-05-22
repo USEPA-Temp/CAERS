@@ -23,6 +23,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CefConfig cefConfig;
 
+    /* (non-Javadoc)
+     * @see gov.epa.cef.web.service.UserService#createToken(java.lang.String)
+     */
     @Override
     public String createToken(String userId) {
         String token="";

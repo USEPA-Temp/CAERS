@@ -1,73 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>US EPA - CAER Common Emission Form</title>
-    <base href="/cef-web/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="utf-8">
+  <title>US EPA - CAER Common Emission Form</title>
+  <base href="/cef-web/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-    <app-root></app-root>
-	<!-- Site must incorporate these files to use FacilityWidget -->
-	<script type="text/javascript" src="https://dev.epacdx.net/Scripts/jquery-3.3.1.min.js"></script>
-	<script src="https://dev.epacdx.net/ContentFramework/v3/js/third-party/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js"> </script>
-	<script src="https://dev.epacdx.net/ContentFramework/v3/js/third-party/jquery.validate1.12.0.min.js"></script>
-	<script src="https://dev.epacdx.net/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.js"></script>
-	<script type="text/javascript" src="https://dev.epacdx.net/ContentFramework/v3/js/ElementGroupDisplay.js"></script>
-	<script type="text/javascript" src="https://dev.epacdx.net/ContentFramework/v3/js/third-party/jquery.blockUI.1.7.js"></script>
-	<script src="https://dev.epacdx.net/ContentFramework/v3/js/third-party/HandleBars/handlebars-v3.0.3.js"></script>
-	<script src="https://dev.epacdx.net//ContentFramework/v3/js/third-party/select2/select2.js"></script>
-	 
-	<!-- Mapping stuff -->
-	<script src="//js.arcgis.com/3.13/"> </script>
-	 
-	<!--[if IE 8]> <link rel="stylesheet" href="https://dev.epacdx.net/ContentFramework/FacilityManagementStyles-ie8.css"> <![endif]-->
-	<script src="https://dev.epacdx.net/ContentFramework/FRS%20Widget/FacilityManagementTemplates.min.js"> </script>
-	<script src="https://dev.epacdx.net/ContentFramework/FRS%20Widget/FacilityManagementWidget.min.js"></script>
-	<script>
-		var host=window.location.hostname;
-		 if(host=='localhost'){
-		 	baseUrl="https://dev.epacdx.net";
-		 }else{
-		 	baseUrl="";
-		 }
-         document.addEventListener("DOMNodeInserted", function(event) {
-            if($('#facility-widget').length){
-                if($('#facility-widget').children().length==0){
-                    var url=window.location.href.split("/");
-                    var facilityId=url[url.length-2];
-                     $.ajax({
-                            type: "GET",
-                            url: "/cef-web/api/user/token",
-                            contentType: "application/json",
-                            success: function(data){
-                                $.initFacilityManagementWidget({
-                                    widgetDisplayType: "Single Facility",
-                                    ImagesFolderPath: baseUrl+"/ContentFramework/FRS%20Widget/images/",
-                                    baseServiceUrl: baseUrl,
-                                    userRoleId: data.userRoleId,
-                                    isRegistration: false, //static
-                                    loadFromSession: false, //static
-                                    NASSToken: data.token,
-                                    NAASip: "127.0.0.1",
-                                    EditingFacilityIDType: 'ProgramSystemId',
-                                    EditingFacilityID: facilityId,
-                                    editFacilityButtonText: "Save",
-                                    onFacilityUpdated: function (facility) {
-                                       console.log(facility);
-                                       setLocationAddress(facility);
-                                       setMailingLocation(facility);
-                                    },
-                                    onServiceError: function (msg, location) {
-                                       $('#facility-widget').hide();
-                                    }
-                                 });
-                            }
-                        })
-                };
-            }
-        });
-    </script>   	
+  <app-root></app-root>
 </body>
 </html>

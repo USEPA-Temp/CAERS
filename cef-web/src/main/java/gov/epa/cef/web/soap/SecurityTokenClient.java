@@ -25,18 +25,25 @@ public class SecurityTokenClient extends AbstractClient {
     /**
      * Create a SecurityTokenPortType for invoking service methods
      * @param endpoint
-     * @param mtom
-     * @param chunking
      * @return
      */
-    protected SecurityTokenPortType getClient(URL endpoint, boolean mtom, boolean chunking) {
+    protected SecurityTokenPortType getClient(URL endpoint) {
         return (SecurityTokenPortType) this.getClient(endpoint.toString(),
-                SecurityTokenPortType.class, mtom, chunking);
+                SecurityTokenPortType.class, false, true);
     }
     
+    /**
+     * Creates a new NAAS toke for the user using the admin user credentials
+     * @param endpoint
+     * @param adminUserId
+     * @param adminPassword
+     * @param userId
+     * @param ip
+     * @return
+     */
     public String createSecurityToken(URL endpoint, String adminUserId, String adminPassword, String userId, String ip) {
         try {
-            String token= getClient(endpoint, false, true).createSecurityToken(adminUserId, adminPassword, DomainTypeCode.DEFAULT,
+            String token= getClient(endpoint).createSecurityToken(adminUserId, adminPassword, DomainTypeCode.DEFAULT,
                     TokenType.CSM, adminUserId, AuthMethod.PASSWORD, userId, "userId="+userId, ip);
             return token;
         } catch (Exception e) {
