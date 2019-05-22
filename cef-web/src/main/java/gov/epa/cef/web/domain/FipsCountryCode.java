@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * FipsCountryCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "fips_country_code", schema = "public")
+@Table(name = "fips_country_code")
 
 public class FipsCountryCode implements java.io.Serializable {
 

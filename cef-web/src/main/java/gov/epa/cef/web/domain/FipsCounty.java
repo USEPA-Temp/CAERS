@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * FipsCounty entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "fips_county", schema = "public")
+@Table(name = "fips_county")
 
 public class FipsCounty implements java.io.Serializable {
 

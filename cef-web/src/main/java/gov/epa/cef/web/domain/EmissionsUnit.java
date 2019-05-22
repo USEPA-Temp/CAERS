@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * EmissionsUnit entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "emissions_unit", schema = "public")
+@Table(name = "emissions_unit")
 
 public class EmissionsUnit implements java.io.Serializable {
 

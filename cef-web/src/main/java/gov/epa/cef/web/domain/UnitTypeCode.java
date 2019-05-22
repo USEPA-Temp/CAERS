@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * UnitTypeCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "unit_type_code", schema = "public")
+@Table(name = "unit_type_code")
 
 public class UnitTypeCode implements java.io.Serializable {
 

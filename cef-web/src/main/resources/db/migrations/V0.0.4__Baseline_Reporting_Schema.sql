@@ -1,10 +1,18 @@
-DROP TABLE public.emissions_report;
-DROP TABLE public.facility;
+DROP TABLE emissions_report;
+DROP TABLE facility;
 
-CREATE TABLE public.emissions_report
+--REFERENCE TABLES
+
+
+ALTER TABLE agency
+    ALTER COLUMN id TYPE integer ;
+
+
+CREATE TABLE emissions_report
 (
     id bigserial NOT NULL,
-    frs_facility_id character varying(22),
+    frs_facility_id character varying(22) NOT NULL,
+    eis_program_id character varying(22) NOT NULL,
     agency_code character varying(3) NOT NULL,
     year smallint NOT NULL,
     status character varying(255),
@@ -16,7 +24,7 @@ CREATE TABLE public.emissions_report
     CONSTRAINT emissions_report_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE public.facility
+CREATE TABLE facility
 (
     id bigserial NOT NULL,
     report_id bigint NOT NULL,
@@ -44,32 +52,32 @@ CREATE TABLE public.facility
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT facility_pkey PRIMARY KEY (id),
     CONSTRAINT report_id_fkey FOREIGN KEY (report_id)
-        REFERENCES public.emissions_report (id) MATCH SIMPLE
+        REFERENCES emissions_report (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT category_code_fkey FOREIGN KEY (category_code)
-        REFERENCES public.facility_category_code (code) MATCH SIMPLE
+        REFERENCES facility_category_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT source_code_fkey FOREIGN KEY (source_type_code)
-        REFERENCES public.facility_source_type_code (code) MATCH SIMPLE
+        REFERENCES facility_source_type_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT status_code_fkey FOREIGN KEY (status_code)
-        REFERENCES public.operating_status_code (code) MATCH SIMPLE
+        REFERENCES operating_status_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT program_system_code_fkey FOREIGN KEY (program_system_code)
-        REFERENCES public.program_system_code (code) MATCH SIMPLE
+        REFERENCES program_system_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT naics_code FOREIGN KEY (naics_code)
-        REFERENCES public.naics_code (code) MATCH SIMPLE
+        REFERENCES naics_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-CREATE TABLE public.release_point
+CREATE TABLE release_point
 (
     id bigserial NOT NULL,
     facility_id bigint NOT NULL,
@@ -96,20 +104,20 @@ CREATE TABLE public.release_point
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT release_point_pkey PRIMARY KEY (id),
     CONSTRAINT release_point_facility_fkey FOREIGN KEY (facility_id)
-        REFERENCES public.facility (id) MATCH SIMPLE
+        REFERENCES facility (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT rp_program_sys_fkey FOREIGN KEY (program_system_code)
-        REFERENCES public.program_system_code (code) MATCH SIMPLE
+        REFERENCES program_system_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT rp_operating_status_fkey FOREIGN KEY (status_code)
-        REFERENCES public.operating_status_code (code) MATCH SIMPLE
+        REFERENCES operating_status_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-CREATE TABLE public.emissions_unit
+CREATE TABLE emissions_unit
 (
     id bigserial NOT NULL,
     facility_id bigint NOT NULL,
@@ -126,20 +134,20 @@ CREATE TABLE public.emissions_unit
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT emissions_unit_pkey PRIMARY KEY (id),
     CONSTRAINT unit_type_code_fkey FOREIGN KEY (type_code)
-        REFERENCES public.unit_type_code (code) MATCH SIMPLE
+        REFERENCES unit_type_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT unit_status_code_fkey FOREIGN KEY (status_code)
-        REFERENCES public.operating_status_code (code) MATCH SIMPLE
+        REFERENCES operating_status_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT unit_facility_fkey FOREIGN KEY (facility_id)
-        REFERENCES public.facility (id) MATCH SIMPLE
+        REFERENCES facility (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-CREATE TABLE public.emissions_process
+CREATE TABLE emissions_process
 (
     id bigserial NOT NULL,
     emissions_unit_id bigint NOT NULL,
@@ -155,17 +163,17 @@ CREATE TABLE public.emissions_process
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT emissions_process_pkey PRIMARY KEY (id),
     CONSTRAINT emissions_process_unit_fkey FOREIGN KEY (emissions_unit_id)
-        REFERENCES public.emissions_unit (id) MATCH SIMPLE
+        REFERENCES emissions_unit (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT emissions_process_status_fkey FOREIGN KEY (status_code)
-        REFERENCES public.operating_status_code (code) MATCH SIMPLE
+        REFERENCES operating_status_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
 
-CREATE TABLE public.release_point_appt
+CREATE TABLE release_point_appt
 (
     id bigserial NOT NULL,
     release_point_id bigint NOT NULL,
@@ -177,16 +185,16 @@ CREATE TABLE public.release_point_appt
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT release_point_appt_pkey PRIMARY KEY (id),
     CONSTRAINT release_pt_appt_rp_fkey FOREIGN KEY (release_point_id)
-        REFERENCES public.release_point (id) MATCH SIMPLE
+        REFERENCES release_point (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT release_pt_appt_ep_fkey FOREIGN KEY (emissions_process_id)
-        REFERENCES public.emissions_process (id) MATCH SIMPLE
+        REFERENCES emissions_process (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION        
 );
 
-CREATE TABLE public.reporting_period
+CREATE TABLE reporting_period
 (
     id bigserial NOT NULL,
     emissions_process_id bigint NOT NULL,
@@ -202,12 +210,12 @@ CREATE TABLE public.reporting_period
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT reporting_period_pkey PRIMARY KEY (id),
     CONSTRAINT emissions_process_id FOREIGN KEY (emissions_process_id)
-        REFERENCES public.emissions_process (id) MATCH SIMPLE
+        REFERENCES emissions_process (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-CREATE TABLE public.operating_detail
+CREATE TABLE operating_detail
 (
     id bigserial NOT NULL,
     reporting_period_id bigint NOT NULL,
@@ -225,12 +233,12 @@ CREATE TABLE public.operating_detail
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT operating_detail_pkey PRIMARY KEY (id),
     CONSTRAINT operating_detail_reporting_fkey FOREIGN KEY (reporting_period_id)
-        REFERENCES public.reporting_period (id) MATCH SIMPLE
+        REFERENCES reporting_period (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-CREATE TABLE public.emission
+CREATE TABLE emission
 (
     id bigserial NOT NULL,
     reporting_period_id bigint NOT NULL,
@@ -247,7 +255,7 @@ CREATE TABLE public.emission
     last_modified_date timestamp without time zone NOT NULL DEFAULT NOW(),
     CONSTRAINT emission_pkey PRIMARY KEY (id),
     CONSTRAINT emission_reporting_period_fkey FOREIGN KEY (reporting_period_id)
-        REFERENCES public.reporting_period (id) MATCH SIMPLE
+        REFERENCES reporting_period (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );

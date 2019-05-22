@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * HorizontalReferenceDatumCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "horizontal_reference_datum_code", schema = "public")
+@Table(name = "horizontal_reference_datum_code")
 
 public class HorizontalReferenceDatumCode implements java.io.Serializable {
 

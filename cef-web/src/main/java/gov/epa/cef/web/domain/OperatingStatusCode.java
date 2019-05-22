@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * OperatingStatusCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "operating_status_code", schema = "public")
+@Table(name = "operating_status_code")
 
 public class OperatingStatusCode implements java.io.Serializable {
 

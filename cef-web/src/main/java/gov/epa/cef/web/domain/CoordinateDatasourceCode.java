@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * CoordinateDatasourceCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "coordinate_datasource_code", schema = "public")
+@Table(name = "coordinate_datasource_code")
 
 public class CoordinateDatasourceCode implements java.io.Serializable {
 

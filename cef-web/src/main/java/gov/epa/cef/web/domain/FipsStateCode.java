@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * FipsStateCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "fips_state_code", schema = "public")
+@Table(name = "fips_state_code")
 
 public class FipsStateCode implements java.io.Serializable {
 

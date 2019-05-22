@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * VerificationCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "verification_code", schema = "public")
+@Table(name = "verification_code")
 
 public class VerificationCode implements java.io.Serializable {
 

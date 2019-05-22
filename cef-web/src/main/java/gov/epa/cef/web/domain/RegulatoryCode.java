@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * RegulatoryCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "regulatory_code", schema = "public")
+@Table(name = "regulatory_code")
 
 public class RegulatoryCode implements java.io.Serializable {
 

@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * HorizontalCollectionMethodCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "horizontal_collection_method_code", schema = "public")
+@Table(name = "horizontal_collection_method_code")
 
 public class HorizontalCollectionMethodCode implements java.io.Serializable {
 

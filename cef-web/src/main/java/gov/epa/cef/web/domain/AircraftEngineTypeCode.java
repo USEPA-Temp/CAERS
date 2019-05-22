@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * AircraftEngineTypeCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "aircraft_engine_type_code", schema = "public")
+@Table(name = "aircraft_engine_type_code")
 
 public class AircraftEngineTypeCode implements java.io.Serializable {
 

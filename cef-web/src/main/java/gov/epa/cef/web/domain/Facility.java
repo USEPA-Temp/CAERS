@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * Facility entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "facility", schema = "public")
+@Table(name = "facility")
 
 public class Facility implements java.io.Serializable {
 

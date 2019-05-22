@@ -1,14 +1,9 @@
 package gov.epa.cef.web.domain;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -23,6 +18,7 @@ public class EmissionsReport implements java.io.Serializable {
 
     private Long id;
     private String frsFacilityId;
+    private String eisProgramId;
     private String agencyCode;
     private Short year;
     private String status;
@@ -31,7 +27,6 @@ public class EmissionsReport implements java.io.Serializable {
     private Timestamp createdDate;
     private String lastModifiedBy;
     private Timestamp lastModifiedDate;
-    private Set<Facility> facilities = new HashSet<Facility>(0);
 
     // Constructors
 
@@ -40,9 +35,11 @@ public class EmissionsReport implements java.io.Serializable {
     }
 
     /** minimal constructor */
-    public EmissionsReport(Long id, String agencyCode, Short year, String createdBy, Timestamp createdDate,
-            String lastModifiedBy, Timestamp lastModifiedDate) {
+    public EmissionsReport(Long id, String frsFacilityId, String eisProgramId, String agencyCode, Short year,
+            String createdBy, Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) {
         this.id = id;
+        this.frsFacilityId = frsFacilityId;
+        this.eisProgramId = eisProgramId;
         this.agencyCode = agencyCode;
         this.year = year;
         this.createdBy = createdBy;
@@ -52,11 +49,12 @@ public class EmissionsReport implements java.io.Serializable {
     }
 
     /** full constructor */
-    public EmissionsReport(Long id, String frsFacilityId, String agencyCode, Short year, String status,
-            String validationStatus, String createdBy, Timestamp createdDate, String lastModifiedBy,
-            Timestamp lastModifiedDate, Set<Facility> facilities) {
+    public EmissionsReport(Long id, String frsFacilityId, String eisProgramId, String agencyCode, Short year,
+            String status, String validationStatus, String createdBy, Timestamp createdDate, String lastModifiedBy,
+            Timestamp lastModifiedDate) {
         this.id = id;
         this.frsFacilityId = frsFacilityId;
+        this.eisProgramId = eisProgramId;
         this.agencyCode = agencyCode;
         this.year = year;
         this.status = status;
@@ -65,7 +63,6 @@ public class EmissionsReport implements java.io.Serializable {
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedDate = lastModifiedDate;
-        this.facilities = facilities;
     }
 
     // Property accessors
@@ -81,7 +78,7 @@ public class EmissionsReport implements java.io.Serializable {
         this.id = id;
     }
 
-    @Column(name = "frs_facility_id", length = 22)
+    @Column(name = "frs_facility_id", nullable = false, length = 22)
 
     public String getFrsFacilityId() {
         return this.frsFacilityId;
@@ -89,6 +86,16 @@ public class EmissionsReport implements java.io.Serializable {
 
     public void setFrsFacilityId(String frsFacilityId) {
         this.frsFacilityId = frsFacilityId;
+    }
+
+    @Column(name = "eis_program_id", nullable = false, length = 22)
+
+    public String getEisProgramId() {
+        return this.eisProgramId;
+    }
+
+    public void setEisProgramId(String eisProgramId) {
+        this.eisProgramId = eisProgramId;
     }
 
     @Column(name = "agency_code", nullable = false, length = 3)
@@ -169,16 +176,6 @@ public class EmissionsReport implements java.io.Serializable {
 
     public void setLastModifiedDate(Timestamp lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
-
-    public Set<Facility> getFacilities() {
-        return this.facilities;
-    }
-
-    public void setFacilities(Set<Facility> facilities) {
-        this.facilities = facilities;
     }
 
 }

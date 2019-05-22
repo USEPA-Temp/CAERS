@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * FacilitySourceTypeCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "facility_source_type_code", schema = "public")
+@Table(name = "facility_source_type_code")
 
 public class FacilitySourceTypeCode implements java.io.Serializable {
 

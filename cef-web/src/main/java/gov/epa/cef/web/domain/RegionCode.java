@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * RegionCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "region_code", schema = "public")
+@Table(name = "region_code")
 
 public class RegionCode implements java.io.Serializable {
 

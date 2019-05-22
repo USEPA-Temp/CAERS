@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * NaicsCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "naics_code", schema = "public")
+@Table(name = "naics_code")
 
 public class NaicsCode implements java.io.Serializable {
 

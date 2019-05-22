@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * ReportingPeriod entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "reporting_period", schema = "public")
+@Table(name = "reporting_period")
 
 public class ReportingPeriod implements java.io.Serializable {
 

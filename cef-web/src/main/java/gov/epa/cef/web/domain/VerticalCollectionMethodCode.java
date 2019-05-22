@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * VerticalCollectionMethodCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "vertical_collection_method_code", schema = "public")
+@Table(name = "vertical_collection_method_code")
 
 public class VerticalCollectionMethodCode implements java.io.Serializable {
 

@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * ProgramSystemCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "program_system_code", schema = "public")
+@Table(name = "program_system_code")
 
 public class ProgramSystemCode implements java.io.Serializable {
 

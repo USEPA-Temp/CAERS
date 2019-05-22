@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * HapFacilityCategoryCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "hap_facility_category_code", schema = "public")
+@Table(name = "hap_facility_category_code")
 
 public class HapFacilityCategoryCode implements java.io.Serializable {
 

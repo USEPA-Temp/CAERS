@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * UnitMeasureCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "unit_measure_code", schema = "public")
+@Table(name = "unit_measure_code")
 
 public class UnitMeasureCode implements java.io.Serializable {
 

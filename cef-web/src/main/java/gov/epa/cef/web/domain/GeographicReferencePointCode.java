@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * GeographicReferencePointCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "geographic_reference_point_code", schema = "public")
+@Table(name = "geographic_reference_point_code")
 
 public class GeographicReferencePointCode implements java.io.Serializable {
 

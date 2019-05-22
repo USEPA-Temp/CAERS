@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * OperatingDetail entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "operating_detail", schema = "public")
+@Table(name = "operating_detail")
 
 public class OperatingDetail implements java.io.Serializable {
 

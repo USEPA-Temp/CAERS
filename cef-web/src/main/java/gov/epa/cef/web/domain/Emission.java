@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * Emission entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "emission", schema = "public")
+@Table(name = "emission")
 
 public class Emission implements java.io.Serializable {
 

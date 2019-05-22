@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * ReleasePointAppt entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "release_point_appt", schema = "public")
+@Table(name = "release_point_appt")
 
 public class ReleasePointAppt implements java.io.Serializable {
 

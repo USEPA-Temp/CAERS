@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * GeometricTypeCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "geometric_type_code", schema = "public")
+@Table(name = "geometric_type_code")
 
 public class GeometricTypeCode implements java.io.Serializable {
 

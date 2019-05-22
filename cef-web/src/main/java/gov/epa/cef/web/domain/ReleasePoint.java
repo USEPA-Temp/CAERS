@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * ReleasePoint entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "release_point", schema = "public")
+@Table(name = "release_point")
 
 public class ReleasePoint implements java.io.Serializable {
 
