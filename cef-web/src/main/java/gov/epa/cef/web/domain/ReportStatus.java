@@ -1,4 +1,4 @@
-package gov.epa.cef.web.domain.report;
+package gov.epa.cef.web.domain;
 
 public enum ReportStatus {
     CERTIFIED("Certified"), 

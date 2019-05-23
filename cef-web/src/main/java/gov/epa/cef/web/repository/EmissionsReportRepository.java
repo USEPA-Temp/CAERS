@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 
-import gov.epa.cef.web.domain.report.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsReport;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 public interface EmissionsReportRepository extends CrudRepository<EmissionsReport, Long> {
@@ -15,7 +15,7 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @param facilityId {@link ProgramFacility}'s programId
      * @return
      */
-    List<EmissionsReport> findByFacilityId(String facilityId);
+    List<EmissionsReport> findByFrsFacilityId(String frsFacilityId);
     
     /**
      * Find reports for a given facility with the specified order
@@ -23,6 +23,6 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @param sort
      * @return
      */
-    List<EmissionsReport> findByFacilityId(String facilityId, Sort sort);
+    List<EmissionsReport> findByFrsFacilityId(String frsFacilityId, Sort sort);
 
 }

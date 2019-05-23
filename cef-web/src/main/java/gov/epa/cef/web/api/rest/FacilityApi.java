@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.domain.facility.Facility;
+import gov.epa.cef.web.domain.Facility;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
 import gov.epa.cef.web.service.FacilityService;

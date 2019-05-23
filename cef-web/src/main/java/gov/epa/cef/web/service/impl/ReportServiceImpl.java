@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import gov.epa.cef.web.domain.report.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.ReportService;
 
@@ -22,7 +22,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<EmissionsReport> findByFacilityId(String facilityId) {
         
-        return erRepo.findByFacilityId(facilityId);
+        return erRepo.findByFrsFacilityId(facilityId);
     }
 
     /* (non-Javadoc)
@@ -31,7 +31,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public EmissionsReport findMostRecentByFacility(String facilityId) {
         
-        return erRepo.findByFacilityId(facilityId, new Sort(Sort.Direction.DESC, "year"))
+        return erRepo.findByFrsFacilityId(facilityId, new Sort(Sort.Direction.DESC, "year"))
                 .stream().findFirst().orElse(null);
     }
 
