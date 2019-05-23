@@ -20,6 +20,7 @@ import { SubmissionReviewListComponent } from './submission-review-dashboard/sub
 import { SortableHeader } from './sortable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RedirectComponent } from './redirect/redirect.component';
+import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-review/facility-data-review.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { RedirectComponent } from './redirect/redirect.component';
     FacilityListItemComponent,
     BreadcrumbNavComponent,
     SubmissionReviewListComponent,
-    SortableHeader
+    SortableHeader,
+    FacilityDataReviewComponent
   ],
   imports: [
     BrowserModule,

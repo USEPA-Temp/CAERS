@@ -1,5 +1,6 @@
-import { SideNavItem } from '../../model/side-nav-item';
 import { Component, OnInit, Input } from '@angular/core';
+import { SideNavItem } from "src/app/model/side-nav-item";
+
 
 @Component({
   selector: 'app-collapse-nav',

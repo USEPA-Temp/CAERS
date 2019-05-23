@@ -3,12 +3,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { InnerNavComponent } from './inner-nav.component';
 import { InnerNavItemComponent } from './inner-nav-item/inner-nav-item.component';
 
-import { SideNavItem } from "src/app/reports/model/side-nav-item";
-
 import { SharedModule } from "src/app/shared/shared.module";
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SideNavItem } from "src/app/model/side-nav-item";
 
 describe('InnerNavComponent', () => {
   let component: InnerNavComponent;

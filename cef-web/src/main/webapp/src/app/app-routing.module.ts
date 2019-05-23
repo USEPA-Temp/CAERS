@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { FacilityDashboardComponent } from './facility-dashboard/facility-dashboard.component';
+import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-review/facility-data-review.component';
 import { SubmissionReviewDashboardComponent } from './submission-review-dashboard/submission-review-dashboard.component';
 import { FacilityResolverService } from './services/facility-resolver.service';
 import { RedirectComponent } from './redirect/redirect.component';
@@ -21,13 +22,17 @@ const routes: Routes = [
           {
             path: 'reports',
             loadChildren: './reports/reports.module#ReportsModule'
-          }
+          },
+          {
+              path: 'review',
+              component: FacilityDataReviewComponent
+            }          
         ]
       }, {
         path: '',
         component: FacilityDashboardComponent,
         data: { title: 'Facility Dashboard' },
-      }
+      }     
     ]
   },
   { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } },

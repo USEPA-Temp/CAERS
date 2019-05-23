@@ -46,8 +46,8 @@ public class RegistrationServiceTest {
 		String mockPassword="mock-password";
 		when(cefConfig.getCdxConfig()).thenReturn(cdxConfig);
 		when(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint()).thenReturn("http:\\mockurl");
-		when(cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorUser()).thenReturn("mock-user");
-		when(cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorPassword()).thenReturn("mock-password");
+		when(cefConfig.getCdxConfig().getNaasUser()).thenReturn("mock-user");
+		when(cefConfig.getCdxConfig().getNaasPassword()).thenReturn("mock-password");
 		when(registerFacilityClient.authenticate(new URL(mockCdxUrl), mockUser, mockPassword)).thenReturn("token");
 		when(registerFacilityClient.getFacilitiesByUserRoleId(new URL(mockCdxUrl), "token", 123L)).thenReturn(facilities);
 		when(registerFacilityClient.getFacilityByProgramId(new URL(mockCdxUrl), "token", "pId")).thenReturn(facilities);

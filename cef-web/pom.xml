@@ -229,7 +229,12 @@
 			<artifactId>powermock-api-mockito2</artifactId>
 			<version>${powermock.version}</version>
 			<scope>test</scope>
-		</dependency>  
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-configuration-processor</artifactId>
+		    <optional>true</optional>
+		</dependency>
 	</dependencies>
 	
 	<!-- ====================================================================== -->
@@ -630,6 +635,7 @@
 					        <wsdlDirectory>src/main/wsdl</wsdlDirectory>
 					        <wsdlFiles>
 					          <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
+                              <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
 					        </wsdlFiles>
 					      </configuration>
 					      <goals>
@@ -767,6 +773,7 @@
 					        <wsdlDirectory>src/main/wsdl</wsdlDirectory>
 					        <wsdlFiles>
 					          <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
+                              <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
 					        </wsdlFiles>
 					      </configuration>
 					      <goals>

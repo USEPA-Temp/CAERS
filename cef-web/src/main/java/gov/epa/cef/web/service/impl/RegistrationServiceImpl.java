@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     private CefConfig cefConfig;
-
+    
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.RegisterService#retrieveFacilities(java.lang.Long)
      */
@@ -39,8 +39,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         try {
 
             URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
-            String token = authenticate(cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorUser(),
-                    cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorPassword());
+            String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),
+                    cefConfig.getCdxConfig().getNaasPassword());
             List<ProgramFacility> facilities = registerFacilityClient
                     .getFacilitiesByUserRoleId(registerFacilityServiceUrl, token, userRoleId);
             if (CollectionUtils.isNotEmpty(facilities)) {
@@ -65,8 +65,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         try {
 
             URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
-            String token = authenticate(cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorUser(),
-                    cefConfig.getCdxConfig().getRegisterProgramFacilityOperatorPassword());
+            String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),
+                    cefConfig.getCdxConfig().getNaasPassword());
             List<ProgramFacility> facilities = registerFacilityClient
                     .getFacilityByProgramId(registerFacilityServiceUrl, token, programId);
             if (CollectionUtils.isNotEmpty(facilities)) {
