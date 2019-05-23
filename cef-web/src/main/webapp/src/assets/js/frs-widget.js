@@ -41,6 +41,11 @@ function initializeFacilityWidget(userRoleId, token, facilityId, baseServiceUrl)
         editFacilityButtonText: "Save",
         onServiceError: function (msg, location) {
            // Do something
+        },
+        onWidgetDataLoaded: function(){
+        	//adjusting the sub-facility exit button
+        	var el=document.getElementById("details-sub-facility-exit");
+        	el.style.left="25px";
         }
      });
 }
