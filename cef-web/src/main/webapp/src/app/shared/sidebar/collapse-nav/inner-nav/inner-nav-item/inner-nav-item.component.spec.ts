@@ -1,19 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollapseNavComponent } from './collapse-nav.component';
-import { InnerNavComponent } from './inner-nav/inner-nav.component';
-import { InnerNavItemComponent } from './inner-nav/inner-nav-item/inner-nav-item.component';
-
-import { SideNavItem } from "src/app/reports/model/side-nav-item";
+import { InnerNavItemComponent } from './inner-nav-item.component';
+import { InnerNavComponent } from '../inner-nav.component';
 
 import { SharedModule } from "src/app/shared/shared.module";
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SideNavItem } from "src/app/model/side-nav-item";
 
-describe('CollapseNavComponent', () => {
-  let component: CollapseNavComponent;
-  let fixture: ComponentFixture<CollapseNavComponent>;
+describe('InnerNavItemComponent', () => {
+  let component: InnerNavItemComponent;
+  let fixture: ComponentFixture<InnerNavItemComponent>;
   let navItemJson = {
       "id": 1,
       "description": "Boiler 001",
@@ -34,13 +32,12 @@ describe('CollapseNavComponent', () => {
           }
       ]
   };
-  let navItems: SideNavItem[] = [SideNavItem.fromJson(navItemJson)];
+  let navItem: SideNavItem = SideNavItem.fromJson(navItemJson);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CollapseNavComponent,
-                      InnerNavComponent,
-                      InnerNavItemComponent ],
+      declarations: [ InnerNavItemComponent,
+                      InnerNavComponent ],
       imports: [NgbModule,
                 SharedModule,
                 RouterTestingModule]
@@ -49,10 +46,9 @@ describe('CollapseNavComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CollapseNavComponent);
+    fixture = TestBed.createComponent(InnerNavItemComponent);
     component = fixture.componentInstance;
-    component.collapsed=false;
-    component.navItems = navItems;
+    component.navItem = navItem;
     fixture.detectChanges();
   });
 

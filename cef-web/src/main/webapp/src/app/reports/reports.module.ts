@@ -1,5 +1,3 @@
-import { CollapseNavComponent } from './sidebar/collapse-nav/collapse-nav.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { SharedModule } from '../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -13,10 +11,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionUnitDashboardComponent } from './emission-unit-dashboard/emission-unit-dashboard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StepProgressComponent } from './components/step-progress/step-progress.component';
-import { InnerNavComponent } from './sidebar/collapse-nav/inner-nav/inner-nav.component';
+
 import { EmissionUnitInfoComponent } from './emission-unit-dashboard/emission-unit-info/emission-unit-info.component';
 import { EmissionProcessListComponent } from './emission-unit-dashboard/emission-process-list/emission-process-list.component';
-import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-nav-item/inner-nav-item.component';
 
 @NgModule({
   declarations: [
@@ -24,14 +21,10 @@ import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-na
     ReportsComponent,
     ReportListItemComponent,
     ReportListButtonsComponent,
-    SidebarComponent,
-    CollapseNavComponent,
     EmissionUnitDashboardComponent,
     StepProgressComponent,
-    InnerNavComponent,
     EmissionUnitInfoComponent,
-    EmissionProcessListComponent,
-    InnerNavItemComponent
+    EmissionProcessListComponent
   ],
   imports: [
     CommonModule,

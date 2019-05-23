@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
+import gov.epa.cef.web.service.UserService;
+import gov.epa.cef.web.service.dto.TokenDto;
 import gov.epa.cef.web.service.dto.UserDto;
 import gov.epa.cef.web.service.mapper.ApplicationUserMapper;
 
@@ -18,6 +21,12 @@ public class UserApi {
 
     @Autowired
     private ApplicationSecurityUtils applicationSecurityUtils;
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private CefConfig cefConfig;
 
     /**
      * Retrieve the currently authenticated user
@@ -31,5 +40,22 @@ public class UserApi {
 
         return new ResponseEntity<UserDto>(result, HttpStatus.OK);
     }
+    
+    
+    /**
+     * Retrieve a new NAAS token for the currently authenticated user
+     * @return
+     */
+    @GetMapping(value = "/token")
+    @ResponseBody
+    public ResponseEntity<TokenDto> createToken() {
+            Long userRoleId=applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId();
+            String token = userService.createToken(applicationSecurityUtils.getCurrentApplicationUser().getUserId());
+            TokenDto tokenDto=new TokenDto();
+            tokenDto.setToken(token);
+            tokenDto.setUserRoleId(userRoleId);
+            tokenDto.setBaseServiceUrl(cefConfig.getCdxConfig().getFrsBaseUrl());
+            return new ResponseEntity<TokenDto>(tokenDto, HttpStatus.OK);     
+        }
 
 }
