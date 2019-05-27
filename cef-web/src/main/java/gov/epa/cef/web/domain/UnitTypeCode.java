@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -10,69 +11,51 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
- * UnitTypeCode entity. @author MyEclipse Persistence Tools
+ * UnitTypeCode entity
  */
 @Entity
 @Table(name = "unit_type_code")
+public class UnitTypeCode implements Serializable {
 
-public class UnitTypeCode implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
-    // Fields
-
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
-    private String description;
-    private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
 
-    // Constructors
+    @Column(name = "description", length = 200)
+    private String description;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unitTypeCode")
+    @JsonIgnore
+    private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
 
     /** default constructor */
     public UnitTypeCode() {
     }
-
-    /** minimal constructor */
-    public UnitTypeCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public UnitTypeCode(String code, String description, Set<EmissionsUnit> emissionsUnits) {
-        this.code = code;
-        this.description = description;
-        this.emissionsUnits = emissionsUnits;
-    }
-
-    // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
+    
 
     public String getCode() {
         return this.code;
     }
-
     public void setCode(String code) {
         this.code = code;
     }
 
-    @Column(name = "description", length = 200)
-
     public String getDescription() {
         return this.description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unitTypeCode")
-
     public Set<EmissionsUnit> getEmissionsUnits() {
         return this.emissionsUnits;
     }
-
     public void setEmissionsUnits(Set<EmissionsUnit> emissionsUnits) {
         this.emissionsUnits = emissionsUnits;
     }
-
 }

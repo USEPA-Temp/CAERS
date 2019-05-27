@@ -1,7 +1,15 @@
 <app-step-progress></app-step-progress>
 
 <div *ngIf="emissionUnit">
-	<app-emission-unit-info [emissionUnit]="emissionUnit"></app-emission-unit-info>
-	
-	<app-emission-process-list [emissionUnit]="emissionUnit"></app-emission-process-list>
+    <div class="row">
+        <div class="col-sm-12">
+	        <app-emission-unit-info [emissionUnit]="emissionUnit"></app-emission-unit-info>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <app-emission-process-list [emissionUnit]="emissionUnit"></app-emission-process-list>
+        </div>
+    </div>
 </div>

@@ -17,3 +17,4 @@ spring:
       dialect: gov.epa.cef.web.hibernate.PostgreSQLDialectWithJsonSupport
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   data.jpa.repositories.enabled: true
+  jackson.serialization.FAIL_ON_EMPTY_BEANS: false
