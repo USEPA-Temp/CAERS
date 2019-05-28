@@ -26,7 +26,7 @@ public class UnitApi {
      */
     @GetMapping(value = "/{unitId}")
     @ResponseBody
-    public ResponseEntity<EmissionsUnit> retrieveFacility(@PathVariable Long unitId) {
+    public ResponseEntity<EmissionsUnit> retrieveEmissionsUnit(@PathVariable Long unitId) {
 
         EmissionsUnit result = emissionsUnitService.retrieveUnitById(unitId);
 
