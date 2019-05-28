@@ -1,61 +1,56 @@
 package gov.epa.cef.web.domain;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
- * UnitMeasureCode entity. @author MyEclipse Persistence Tools
+ * UnitMeasureCode entity
  */
 @Entity
 @Table(name = "unit_measure_code")
+public class UnitMeasureCode implements Serializable {
 
-public class UnitMeasureCode implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
-    // Fields
-
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "description", length = 100)
     private String description;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unitOfMeasureCode")
+    @JsonIgnore
+    private Set<EmissionsUnit> emissionsunits = new HashSet<EmissionsUnit>(0);
 
-    // Constructors
 
     /** default constructor */
     public UnitMeasureCode() {
     }
 
-    /** minimal constructor */
-    public UnitMeasureCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public UnitMeasureCode(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
-
-    // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
 
     public String getCode() {
         return this.code;
     }
-
     public void setCode(String code) {
         this.code = code;
     }
 
-    @Column(name = "description", length = 100)
-
     public String getDescription() {
         return this.description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
-
 }

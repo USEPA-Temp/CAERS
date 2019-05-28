@@ -52,6 +52,10 @@ public class EmissionsUnit extends BaseAuditEntity {
     @Column(name = "status_year", nullable = false)
     private Short statusYear;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_measure_cd")
+    private UnitMeasureCode unitOfMeasureCode;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
     @JsonIgnore
     private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
@@ -115,6 +119,13 @@ public class EmissionsUnit extends BaseAuditEntity {
     }
     public void setStatusYear(Short statusYear) {
         this.statusYear = statusYear;
+    }
+
+    public UnitMeasureCode getUnitOfMeasureCode() {
+        return this.unitOfMeasureCode;
+    }
+    public void setUnitOfMeasureCode(UnitMeasureCode unitOfMeasureCode) {
+        this.unitOfMeasureCode = unitOfMeasureCode;
     }
 
     public Set<EmissionsProcess> getEmissionsProcesses() {
