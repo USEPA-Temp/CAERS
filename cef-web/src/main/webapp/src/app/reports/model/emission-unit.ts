@@ -1,10 +1,17 @@
 import { Process } from './process';
-import { UnitTypeCode } from './unit-type-code';
 
 export class EmissionUnit {
   id: number;
-  unitId: string;
+  facilityId: number;
+  unitIdentifier: string;
   description: string;
-  unitType: UnitTypeCode;
+  unitTypeCodeDescription: string;
+  operatingStatusCodeDescription: string;
+  programSystemCode: string;
+  typeCodeDescription: string;
+  statusYear: number;
+  unitOfMeasureCode: number;
+  unitOfMeasureDescription:number;
+
   processes: Process[];
 }

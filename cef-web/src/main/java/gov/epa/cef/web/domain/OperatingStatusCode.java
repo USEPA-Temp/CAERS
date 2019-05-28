@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 /**
  * OperatingStatusCode entity
@@ -31,19 +29,15 @@ public class OperatingStatusCode implements Serializable {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    @JsonIgnore
     private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    @JsonIgnore
     private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    @JsonIgnore
     private Set<Facility> facilities = new HashSet<Facility>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    @JsonIgnore
     private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
 
 

@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
@@ -34,7 +33,6 @@ public class EmissionsUnit extends BaseAuditEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_id", nullable = false)
-    @JsonIgnore
     private Facility facility;
 
     @Column(name = "unit_identifier", nullable = false, length = 20)
@@ -57,7 +55,6 @@ public class EmissionsUnit extends BaseAuditEntity {
     private UnitMeasureCode unitOfMeasureCode;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
-    @JsonIgnore
     private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
 
     /** default constructor */

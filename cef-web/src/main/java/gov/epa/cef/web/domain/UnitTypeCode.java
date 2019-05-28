@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * UnitTypeCode entity
  */
@@ -30,7 +28,6 @@ public class UnitTypeCode implements Serializable {
     private String description;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unitTypeCode")
-    @JsonIgnore
     private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
 
     /** default constructor */

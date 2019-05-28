@@ -11,7 +11,7 @@ import { SideNavItem } from "src/app/model/side-nav-item";
 export class EmissionUnitService {
 
     private staticJsonUrl = 'assets/json/emissionUnits.json';  // URL to web api
-    private baseUrl = 'api/unit';  // URL to web api
+    private baseUrl = 'api/emissionsUnit';  // URL to web api
 
   constructor(private http: HttpClient) { }
 

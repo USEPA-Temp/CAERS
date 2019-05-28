@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * UnitMeasureCode entity
  */
@@ -31,7 +29,6 @@ public class UnitMeasureCode implements Serializable {
     private String description;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unitOfMeasureCode")
-    @JsonIgnore
     private Set<EmissionsUnit> emissionsunits = new HashSet<EmissionsUnit>(0);
 
 

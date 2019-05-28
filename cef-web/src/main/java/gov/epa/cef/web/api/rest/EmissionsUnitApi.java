@@ -11,10 +11,12 @@ import org.springframework.http.HttpStatus;
 
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.service.EmissionsUnitService;
+import gov.epa.cef.web.service.dto.EmissionsUnitDto;
+import gov.epa.cef.web.service.mapper.EmissionsUnitMapper;
 
 @RestController
-@RequestMapping("/api/unit")
-public class UnitApi {
+@RequestMapping("/api/emissionsUnit")
+public class EmissionsUnitApi {
 
     @Autowired
     private EmissionsUnitService emissionsUnitService;
@@ -26,10 +28,10 @@ public class UnitApi {
      */
     @GetMapping(value = "/{unitId}")
     @ResponseBody
-    public ResponseEntity<EmissionsUnit> retrieveEmissionsUnit(@PathVariable Long unitId) {
+    public ResponseEntity<EmissionsUnitDto> retrieveEmissionsUnit(@PathVariable Long unitId) {
 
-        EmissionsUnit result = emissionsUnitService.retrieveUnitById(unitId);
-
-        return new ResponseEntity<EmissionsUnit>(result, HttpStatus.OK);
+        EmissionsUnit emissionsUnit = emissionsUnitService.retrieveUnitById(unitId);
+        EmissionsUnitDto result = EmissionsUnitMapper.INSTANCE.emissionsUnitToDto(emissionsUnit);
+        return new ResponseEntity<EmissionsUnitDto>(result, HttpStatus.OK);
     }
 }
