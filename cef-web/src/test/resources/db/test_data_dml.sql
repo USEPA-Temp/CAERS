@@ -29,17 +29,17 @@ INSERT INTO FACILITY (id, report_id, frs_facility_id, alt_site_identifier, categ
 	'173 PEACHTREE RD', 'Fitzgerald', '', 'GA' , '', '31750', '33.7490', '84.3880', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --EMISSION UNITS
-INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, 
+INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, unit_measure_cd,
 	created_by, created_date, last_modified_by, last_modified_date)
-	VALUES('9999991', '9999991', 'Boiler 001', '63JJJJ', 'Gas Boiler - Industrial Size', '206', 'Air Gas Furnace', 'OP', '1985', 'THOMAS.FESPERMAN', 
+	VALUES('9999991', '9999991', 'Boiler 001', '63JJJJ', 'Gas Boiler - Industrial Size', '206', 'Air Gas Furnace', 'OP', '1985', 'LB/DAY', 'THOMAS.FESPERMAN', 
 		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, 
+INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
 	created_by, created_date, last_modified_by, last_modified_date)
-	VALUES('9999992', '9999991', 'Boiler 002', '63JJJJ', 'Coal Boiler - Industrial Size', '100', 'Boiler', 'OP', '1985', 'THOMAS.FESPERMAN', 
+	VALUES('9999992', '9999991', 'Boiler 002', '63JJJJ', 'Coal Boiler - Industrial Size', '100', 'Boiler', 'OP', '1985', 'TON/HR', 'THOMAS.FESPERMAN', 
 		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, 
+INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
 	created_by, created_date, last_modified_by, last_modified_date)
-	VALUES('9999993', '9999991', 'Dryer 001', '63JJJJ', 'Big Dryer', '1252', 'Primary Tube Dryer', 'OP', '1985', 'THOMAS.FESPERMAN', 
+	VALUES('9999993', '9999991', 'Dryer 001', '63JJJJ', 'Big Dryer', '1252', 'Primary Tube Dryer', 'OP', '1985', 'TON', 'THOMAS.FESPERMAN', 
 		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
 
 --RELEASE POINTS
