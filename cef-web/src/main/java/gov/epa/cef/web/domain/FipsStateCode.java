@@ -31,9 +31,6 @@ public class FipsStateCode implements java.io.Serializable {
     
     @Column(name = "name", length = 200)
     private String name;
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fipsStateCode")
-    private Set<FipsCounty> fipsCounties = new HashSet<FipsCounty>(0);
 
     // Constructors
 
@@ -64,14 +61,6 @@ public class FipsStateCode implements java.io.Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<FipsCounty> getFipsCounties() {
-        return this.fipsCounties;
-    }
-
-    public void setFipsCounties(Set<FipsCounty> fipsCounties) {
-        this.fipsCounties = fipsCounties;
     }
 
 }

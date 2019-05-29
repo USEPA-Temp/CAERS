@@ -29,9 +29,6 @@ public class NaicsCode implements java.io.Serializable {
     @Column(name = "description", length = 200)
     private String description;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "naicsCode")
-    private Set<Facility> facilities = new HashSet<Facility>(0);
-
     // Constructors
 
     /** default constructor */
@@ -54,14 +51,6 @@ public class NaicsCode implements java.io.Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<Facility> getFacilities() {
-        return this.facilities;
-    }
-
-    public void setFacilities(Set<Facility> facilities) {
-        this.facilities = facilities;
     }
 
 }

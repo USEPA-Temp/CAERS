@@ -26,9 +26,6 @@ public class UnitTypeCode implements Serializable {
 
     @Column(name = "description", length = 200)
     private String description;
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unitTypeCode")
-    private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
 
     /** default constructor */
     public UnitTypeCode() {
@@ -48,11 +45,5 @@ public class UnitTypeCode implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public Set<EmissionsUnit> getEmissionsUnits() {
-        return this.emissionsUnits;
-    }
-    public void setEmissionsUnits(Set<EmissionsUnit> emissionsUnits) {
-        this.emissionsUnits = emissionsUnits;
-    }
+    
 }
