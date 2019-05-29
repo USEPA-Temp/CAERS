@@ -1,17 +1,18 @@
 package gov.epa.cef.web.domain;
 
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 /**
  * Facility entity. @author MyEclipse Persistence Tools
@@ -19,35 +20,79 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "facility")
 
-public class Facility implements java.io.Serializable {
+public class Facility extends BaseAuditEntity {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
-
-    private Long id;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_code")
     private FacilityCategoryCode facilityCategoryCode;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "source_type_code")
     private FacilitySourceTypeCode facilitySourceTypeCode;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "naics_code", nullable = false)
     private NaicsCode naicsCode;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "program_system_code", nullable = false)
     private ProgramSystemCode programSystemCode;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_code", nullable = false)
     private OperatingStatusCode operatingStatusCode;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_id", nullable = false)
     private EmissionsReport emissionsReport;
+    
+    @Column(name = "frs_facility_id", length = 22)
     private String frsFacilityId;
+    
+    @Column(name = "alt_site_identifier", length = 30)
     private String altSiteIdentifier;
+    
+    @Column(name = "name", nullable = false, length = 80)
     private String name;
+    
+    @Column(name = "description", length = 100)
     private String description;
+    
+    @Column(name = "status_year", nullable = false)
     private Short statusYear;
+    
+    @Column(name = "street_address", nullable = false, length = 100)
     private String streetAddress;
+    
+    @Column(name = "city", nullable = false, length = 60)
     private String city;
+    
+    @Column(name = "county", length = 43)
     private String county;
+    
+    @Column(name = "state_code", nullable = false, length = 5)
     private String stateCode;
+    
+    @Column(name = "country_code", length = 10)
     private String countryCode;
+    
+    @Column(name = "postal_code", length = 10)
     private String postalCode;
+    
+    @Column(name = "latitude", precision = 10, scale = 6)
     private Double latitude;
+    
+    @Column(name = "longitude", precision = 10, scale = 6)
     private Double longitude;
-    private String createdBy;
-    private Timestamp createdDate;
-    private String lastModifiedBy;
-    private Timestamp lastModifiedDate;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
     private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
     private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
 
     // Constructors
@@ -55,79 +100,6 @@ public class Facility implements java.io.Serializable {
     /** default constructor */
     public Facility() {
     }
-
-    /** minimal constructor */
-    public Facility(Long id, NaicsCode naicsCode, ProgramSystemCode programSystemCode,
-            OperatingStatusCode operatingStatusCode, EmissionsReport emissionsReport, String name, Short statusYear,
-            String streetAddress, String city, String stateCode, String createdBy, Timestamp createdDate,
-            String lastModifiedBy, Timestamp lastModifiedDate) {
-        this.id = id;
-        this.naicsCode = naicsCode;
-        this.programSystemCode = programSystemCode;
-        this.operatingStatusCode = operatingStatusCode;
-        this.emissionsReport = emissionsReport;
-        this.name = name;
-        this.statusYear = statusYear;
-        this.streetAddress = streetAddress;
-        this.city = city;
-        this.stateCode = stateCode;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.lastModifiedBy = lastModifiedBy;
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    /** full constructor */
-    public Facility(Long id, FacilityCategoryCode facilityCategoryCode, FacilitySourceTypeCode facilitySourceTypeCode,
-            NaicsCode naicsCode, ProgramSystemCode programSystemCode, OperatingStatusCode operatingStatusCode,
-            EmissionsReport emissionsReport, String frsFacilityId, String altSiteIdentifier, String name,
-            String description, Short statusYear, String streetAddress, String city, String county, String stateCode,
-            String countryCode, String postalCode, Double latitude, Double longitude, String createdBy,
-            Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate, Set<EmissionsUnit> emissionsUnits,
-            Set<ReleasePoint> releasePoints) {
-        this.id = id;
-        this.facilityCategoryCode = facilityCategoryCode;
-        this.facilitySourceTypeCode = facilitySourceTypeCode;
-        this.naicsCode = naicsCode;
-        this.programSystemCode = programSystemCode;
-        this.operatingStatusCode = operatingStatusCode;
-        this.emissionsReport = emissionsReport;
-        this.frsFacilityId = frsFacilityId;
-        this.altSiteIdentifier = altSiteIdentifier;
-        this.name = name;
-        this.description = description;
-        this.statusYear = statusYear;
-        this.streetAddress = streetAddress;
-        this.city = city;
-        this.county = county;
-        this.stateCode = stateCode;
-        this.countryCode = countryCode;
-        this.postalCode = postalCode;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.lastModifiedBy = lastModifiedBy;
-        this.lastModifiedDate = lastModifiedDate;
-        this.emissionsUnits = emissionsUnits;
-        this.releasePoints = releasePoints;
-    }
-
-    // Property accessors
-    @Id
-
-    @Column(name = "id", unique = true, nullable = false)
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_code")
 
     public FacilityCategoryCode getFacilityCategoryCode() {
         return this.facilityCategoryCode;
@@ -137,9 +109,6 @@ public class Facility implements java.io.Serializable {
         this.facilityCategoryCode = facilityCategoryCode;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "source_type_code")
-
     public FacilitySourceTypeCode getFacilitySourceTypeCode() {
         return this.facilitySourceTypeCode;
     }
@@ -147,9 +116,6 @@ public class Facility implements java.io.Serializable {
     public void setFacilitySourceTypeCode(FacilitySourceTypeCode facilitySourceTypeCode) {
         this.facilitySourceTypeCode = facilitySourceTypeCode;
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "naics_code", nullable = false)
 
     public NaicsCode getNaicsCode() {
         return this.naicsCode;
@@ -159,9 +125,6 @@ public class Facility implements java.io.Serializable {
         this.naicsCode = naicsCode;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "program_system_code", nullable = false)
-
     public ProgramSystemCode getProgramSystemCode() {
         return this.programSystemCode;
     }
@@ -169,9 +132,6 @@ public class Facility implements java.io.Serializable {
     public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
         this.programSystemCode = programSystemCode;
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_code", nullable = false)
 
     public OperatingStatusCode getOperatingStatusCode() {
         return this.operatingStatusCode;
@@ -181,9 +141,6 @@ public class Facility implements java.io.Serializable {
         this.operatingStatusCode = operatingStatusCode;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "report_id", nullable = false)
-
     public EmissionsReport getEmissionsReport() {
         return this.emissionsReport;
     }
@@ -191,8 +148,6 @@ public class Facility implements java.io.Serializable {
     public void setEmissionsReport(EmissionsReport emissionsReport) {
         this.emissionsReport = emissionsReport;
     }
-
-    @Column(name = "frs_facility_id", length = 22)
 
     public String getFrsFacilityId() {
         return this.frsFacilityId;
@@ -202,8 +157,6 @@ public class Facility implements java.io.Serializable {
         this.frsFacilityId = frsFacilityId;
     }
 
-    @Column(name = "alt_site_identifier", length = 30)
-
     public String getAltSiteIdentifier() {
         return this.altSiteIdentifier;
     }
@@ -211,8 +164,6 @@ public class Facility implements java.io.Serializable {
     public void setAltSiteIdentifier(String altSiteIdentifier) {
         this.altSiteIdentifier = altSiteIdentifier;
     }
-
-    @Column(name = "name", nullable = false, length = 80)
 
     public String getName() {
         return this.name;
@@ -222,8 +173,6 @@ public class Facility implements java.io.Serializable {
         this.name = name;
     }
 
-    @Column(name = "description", length = 100)
-
     public String getDescription() {
         return this.description;
     }
@@ -231,8 +180,6 @@ public class Facility implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @Column(name = "status_year", nullable = false)
 
     public Short getStatusYear() {
         return this.statusYear;
@@ -242,8 +189,6 @@ public class Facility implements java.io.Serializable {
         this.statusYear = statusYear;
     }
 
-    @Column(name = "street_address", nullable = false, length = 100)
-
     public String getStreetAddress() {
         return this.streetAddress;
     }
@@ -251,8 +196,6 @@ public class Facility implements java.io.Serializable {
     public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
-
-    @Column(name = "city", nullable = false, length = 60)
 
     public String getCity() {
         return this.city;
@@ -262,8 +205,6 @@ public class Facility implements java.io.Serializable {
         this.city = city;
     }
 
-    @Column(name = "county", length = 43)
-
     public String getCounty() {
         return this.county;
     }
@@ -271,8 +212,6 @@ public class Facility implements java.io.Serializable {
     public void setCounty(String county) {
         this.county = county;
     }
-
-    @Column(name = "state_code", nullable = false, length = 5)
 
     public String getStateCode() {
         return this.stateCode;
@@ -282,8 +221,6 @@ public class Facility implements java.io.Serializable {
         this.stateCode = stateCode;
     }
 
-    @Column(name = "country_code", length = 10)
-
     public String getCountryCode() {
         return this.countryCode;
     }
@@ -291,8 +228,6 @@ public class Facility implements java.io.Serializable {
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
-
-    @Column(name = "postal_code", length = 10)
 
     public String getPostalCode() {
         return this.postalCode;
@@ -302,8 +237,6 @@ public class Facility implements java.io.Serializable {
         this.postalCode = postalCode;
     }
 
-    @Column(name = "latitude", precision = 10, scale = 6)
-
     public Double getLatitude() {
         return this.latitude;
     }
@@ -311,8 +244,6 @@ public class Facility implements java.io.Serializable {
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
-
-    @Column(name = "longitude", precision = 10, scale = 6)
 
     public Double getLongitude() {
         return this.longitude;
@@ -322,48 +253,6 @@ public class Facility implements java.io.Serializable {
         this.longitude = longitude;
     }
 
-    @Column(name = "created_by", nullable = false)
-
-    public String getCreatedBy() {
-        return this.createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Column(name = "created_date", nullable = false, length = 29)
-
-    public Timestamp getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Column(name = "last_modified_by", nullable = false)
-
-    public String getLastModifiedBy() {
-        return this.lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    @Column(name = "last_modified_date", nullable = false, length = 29)
-
-    public Timestamp getLastModifiedDate() {
-        return this.lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Timestamp lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
-
     public Set<EmissionsUnit> getEmissionsUnits() {
         return this.emissionsUnits;
     }
@@ -371,8 +260,6 @@ public class Facility implements java.io.Serializable {
     public void setEmissionsUnits(Set<EmissionsUnit> emissionsUnits) {
         this.emissionsUnits = emissionsUnits;
     }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
 
     public Set<ReleasePoint> getReleasePoints() {
         return this.releasePoints;

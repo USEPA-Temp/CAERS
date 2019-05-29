@@ -17,11 +17,22 @@ import javax.persistence.Table;
 @Table(name = "fips_county")
 
 public class FipsCounty implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
-
+    
+    @EmbeddedId
+    @AttributeOverrides({
+            @AttributeOverride(name = "code", column = @Column(name = "code", nullable = false, length = 3)),
+            @AttributeOverride(name = "stateCode", column = @Column(name = "state_code", nullable = false, length = 2)) })
     private FipsCountyId id;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_code", nullable = false, insertable = false, updatable = false)
     private FipsStateCode fipsStateCode;
+    
+    @Column(name = "name", length = 43)
     private String name;
 
     // Constructors
@@ -30,26 +41,7 @@ public class FipsCounty implements java.io.Serializable {
     public FipsCounty() {
     }
 
-    /** minimal constructor */
-    public FipsCounty(FipsCountyId id, FipsStateCode fipsStateCode) {
-        this.id = id;
-        this.fipsStateCode = fipsStateCode;
-    }
-
-    /** full constructor */
-    public FipsCounty(FipsCountyId id, FipsStateCode fipsStateCode, String name) {
-        this.id = id;
-        this.fipsStateCode = fipsStateCode;
-        this.name = name;
-    }
-
     // Property accessors
-    @EmbeddedId
-
-    @AttributeOverrides({
-            @AttributeOverride(name = "code", column = @Column(name = "code", nullable = false, length = 3)),
-            @AttributeOverride(name = "stateCode", column = @Column(name = "state_code", nullable = false, length = 2)) })
-
     public FipsCountyId getId() {
         return this.id;
     }
@@ -58,9 +50,6 @@ public class FipsCounty implements java.io.Serializable {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_code", nullable = false, insertable = false, updatable = false)
-
     public FipsStateCode getFipsStateCode() {
         return this.fipsStateCode;
     }
@@ -68,8 +57,6 @@ public class FipsCounty implements java.io.Serializable {
     public void setFipsStateCode(FipsStateCode fipsStateCode) {
         this.fipsStateCode = fipsStateCode;
     }
-
-    @Column(name = "name", length = 43)
 
     public String getName() {
         return this.name;

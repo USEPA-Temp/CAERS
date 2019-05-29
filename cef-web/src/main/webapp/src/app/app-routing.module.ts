@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { AppComponent } from './app.component';
 import { FacilityDashboardComponent } from './facility-dashboard/facility-dashboard.component';
 import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-review/facility-data-review.component';
@@ -26,13 +25,13 @@ const routes: Routes = [
           {
               path: 'review',
               component: FacilityDataReviewComponent
-            }          
+            }
         ]
       }, {
         path: '',
         component: FacilityDashboardComponent,
         data: { title: 'Facility Dashboard' },
-      }     
+      }
     ]
   },
   { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } },
@@ -40,8 +39,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  //useHash is required for spring and inheritanceStrategy allows children to reference data from parents
+  // useHash is required for spring and inheritanceStrategy allows children to reference data from parents
   imports: [ RouterModule.forRoot(routes, {useHash: true, paramsInheritanceStrategy: 'always'}) ],
   exports: [ RouterModule ]
 })
+
 export class AppRoutingModule {}

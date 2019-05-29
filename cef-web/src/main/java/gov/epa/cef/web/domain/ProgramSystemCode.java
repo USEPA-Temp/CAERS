@@ -17,12 +17,21 @@ import javax.persistence.Table;
 @Table(name = "program_system_code")
 
 public class ProgramSystemCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
-
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "description", length = 200)
     private String description;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "programSystemCode")
     private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "programSystemCode")
     private Set<Facility> facilities = new HashSet<Facility>(0);
 
     // Constructors
@@ -31,24 +40,7 @@ public class ProgramSystemCode implements java.io.Serializable {
     public ProgramSystemCode() {
     }
 
-    /** minimal constructor */
-    public ProgramSystemCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public ProgramSystemCode(String code, String description, Set<ReleasePoint> releasePoints,
-            Set<Facility> facilities) {
-        this.code = code;
-        this.description = description;
-        this.releasePoints = releasePoints;
-        this.facilities = facilities;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
 
     public String getCode() {
         return this.code;
@@ -58,8 +50,6 @@ public class ProgramSystemCode implements java.io.Serializable {
         this.code = code;
     }
 
-    @Column(name = "description", length = 200)
-
     public String getDescription() {
         return this.description;
     }
@@ -68,8 +58,6 @@ public class ProgramSystemCode implements java.io.Serializable {
         this.description = description;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "programSystemCode")
-
     public Set<ReleasePoint> getReleasePoints() {
         return this.releasePoints;
     }
@@ -77,8 +65,6 @@ public class ProgramSystemCode implements java.io.Serializable {
     public void setReleasePoints(Set<ReleasePoint> releasePoints) {
         this.releasePoints = releasePoints;
     }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "programSystemCode")
 
     public Set<Facility> getFacilities() {
         return this.facilities;

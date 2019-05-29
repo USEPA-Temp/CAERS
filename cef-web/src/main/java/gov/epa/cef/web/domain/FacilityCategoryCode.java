@@ -17,12 +17,22 @@ import javax.persistence.Table;
 @Table(name = "facility_category_code")
 
 public class FacilityCategoryCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "name", length = 20)
     private String name;
+    
+    @Column(name = "description", length = 200)
     private String description;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilityCategoryCode")
     private Set<Facility> facilities = new HashSet<Facility>(0);
 
     // Constructors
@@ -30,24 +40,7 @@ public class FacilityCategoryCode implements java.io.Serializable {
     /** default constructor */
     public FacilityCategoryCode() {
     }
-
-    /** minimal constructor */
-    public FacilityCategoryCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public FacilityCategoryCode(String code, String name, String description, Set<Facility> facilities) {
-        this.code = code;
-        this.name = name;
-        this.description = description;
-        this.facilities = facilities;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
 
     public String getCode() {
         return this.code;
@@ -57,8 +50,6 @@ public class FacilityCategoryCode implements java.io.Serializable {
         this.code = code;
     }
 
-    @Column(name = "name", length = 20)
-
     public String getName() {
         return this.name;
     }
@@ -67,8 +58,6 @@ public class FacilityCategoryCode implements java.io.Serializable {
         this.name = name;
     }
 
-    @Column(name = "description", length = 200)
-
     public String getDescription() {
         return this.description;
     }
@@ -76,8 +65,6 @@ public class FacilityCategoryCode implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilityCategoryCode")
 
     public Set<Facility> getFacilities() {
         return this.facilities;

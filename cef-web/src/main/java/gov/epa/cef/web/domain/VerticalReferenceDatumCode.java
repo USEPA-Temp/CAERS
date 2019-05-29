@@ -12,10 +12,16 @@ import javax.persistence.Table;
 @Table(name = "vertical_reference_datum_code")
 
 public class VerticalReferenceDatumCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "description", length = 200)
     private String description;
 
     // Constructors
@@ -36,10 +42,6 @@ public class VerticalReferenceDatumCode implements java.io.Serializable {
     }
 
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
-
     public String getCode() {
         return this.code;
     }
@@ -47,8 +49,6 @@ public class VerticalReferenceDatumCode implements java.io.Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
-    @Column(name = "description", length = 200)
 
     public String getDescription() {
         return this.description;

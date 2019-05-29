@@ -11,7 +11,7 @@ export class EmissionUnit {
   typeCodeDescription: string;
   statusYear: number;
   unitOfMeasureCode: number;
-  unitOfMeasureDescription:number;
+  unitOfMeasureDescription: number;
 
   processes: Process[];
 }

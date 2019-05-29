@@ -12,13 +12,25 @@ import javax.persistence.Table;
 @Table(name = "regulatory_code")
 
 public class RegulatoryCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "code_type", length = 12)
     private String codeType;
+    
+    @Column(name = "description", length = 200)
     private String description;
+    
+    @Column(name = "subpart_description", length = 10)
     private String subpartDescription;
+    
+    @Column(name = "part_description", length = 2)
     private String partDescription;
 
     // Constructors
@@ -27,25 +39,7 @@ public class RegulatoryCode implements java.io.Serializable {
     public RegulatoryCode() {
     }
 
-    /** minimal constructor */
-    public RegulatoryCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public RegulatoryCode(String code, String codeType, String description, String subpartDescription,
-            String partDescription) {
-        this.code = code;
-        this.codeType = codeType;
-        this.description = description;
-        this.subpartDescription = subpartDescription;
-        this.partDescription = partDescription;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
 
     public String getCode() {
         return this.code;
@@ -55,8 +49,6 @@ public class RegulatoryCode implements java.io.Serializable {
         this.code = code;
     }
 
-    @Column(name = "code_type", length = 12)
-
     public String getCodeType() {
         return this.codeType;
     }
@@ -64,8 +56,6 @@ public class RegulatoryCode implements java.io.Serializable {
     public void setCodeType(String codeType) {
         this.codeType = codeType;
     }
-
-    @Column(name = "description", length = 200)
 
     public String getDescription() {
         return this.description;
@@ -75,8 +65,6 @@ public class RegulatoryCode implements java.io.Serializable {
         this.description = description;
     }
 
-    @Column(name = "subpart_description", length = 10)
-
     public String getSubpartDescription() {
         return this.subpartDescription;
     }
@@ -84,8 +72,6 @@ public class RegulatoryCode implements java.io.Serializable {
     public void setSubpartDescription(String subpartDescription) {
         this.subpartDescription = subpartDescription;
     }
-
-    @Column(name = "part_description", length = 2)
 
     public String getPartDescription() {
         return this.partDescription;

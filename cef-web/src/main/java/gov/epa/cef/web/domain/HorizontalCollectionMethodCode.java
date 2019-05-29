@@ -12,10 +12,16 @@ import javax.persistence.Table;
 @Table(name = "horizontal_collection_method_code")
 
 public class HorizontalCollectionMethodCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "description", length = 200)
     private String description;
 
     // Constructors
@@ -24,22 +30,7 @@ public class HorizontalCollectionMethodCode implements java.io.Serializable {
     public HorizontalCollectionMethodCode() {
     }
 
-    /** minimal constructor */
-    public HorizontalCollectionMethodCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public HorizontalCollectionMethodCode(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
-
     public String getCode() {
         return this.code;
     }
@@ -47,8 +38,6 @@ public class HorizontalCollectionMethodCode implements java.io.Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
-    @Column(name = "description", length = 200)
 
     public String getDescription() {
         return this.description;

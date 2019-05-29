@@ -22,7 +22,6 @@ export class FacilityResolverService implements Resolve<Facility> {
           return of(facility);
         } else { // id not found
           this.router.navigate(['/facility']);
-          console.log("facility not found");
           return EMPTY;
         }
       })

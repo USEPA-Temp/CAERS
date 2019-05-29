@@ -17,11 +17,19 @@ import javax.persistence.Table;
 @Table(name = "facility_source_type_code")
 
 public class FacilitySourceTypeCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "description", length = 200)
     private String description;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySourceTypeCode")
     private Set<Facility> facilities = new HashSet<Facility>(0);
 
     // Constructors
@@ -30,22 +38,7 @@ public class FacilitySourceTypeCode implements java.io.Serializable {
     public FacilitySourceTypeCode() {
     }
 
-    /** minimal constructor */
-    public FacilitySourceTypeCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public FacilitySourceTypeCode(String code, String description, Set<Facility> facilities) {
-        this.code = code;
-        this.description = description;
-        this.facilities = facilities;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
 
     public String getCode() {
         return this.code;
@@ -55,8 +48,6 @@ public class FacilitySourceTypeCode implements java.io.Serializable {
         this.code = code;
     }
 
-    @Column(name = "description", length = 200)
-
     public String getDescription() {
         return this.description;
     }
@@ -64,8 +55,6 @@ public class FacilitySourceTypeCode implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySourceTypeCode")
 
     public Set<Facility> getFacilities() {
         return this.facilities;

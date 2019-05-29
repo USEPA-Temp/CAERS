@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./breadcrumb-nav.component.scss']
 })
 export class BreadcrumbNavComponent implements OnInit {
-    //TODO: figure out how to pull breadcrumb path from route
+    // TODO: figure out how to pull breadcrumb path from route
   @Input() title;
 
   constructor() { }

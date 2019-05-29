@@ -12,11 +12,19 @@ import javax.persistence.Table;
 @Table(name = "agency")
 
 public class Agency implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "id", unique = true, nullable = false, scale = 0)
     private Long id;
+    
+    @Column(name = "type_code", length = 20)
     private String typeCode;
+    
+    @Column(name = "description", length = 200)
     private String description;
 
     // Constructors
@@ -25,23 +33,7 @@ public class Agency implements java.io.Serializable {
     public Agency() {
     }
 
-    /** minimal constructor */
-    public Agency(Long id) {
-        this.id = id;
-    }
-
-    /** full constructor */
-    public Agency(Long id, String typeCode, String description) {
-        this.id = id;
-        this.typeCode = typeCode;
-        this.description = description;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "id", unique = true, nullable = false, scale = 0)
-
     public Long getId() {
         return this.id;
     }
@@ -50,8 +42,6 @@ public class Agency implements java.io.Serializable {
         this.id = id;
     }
 
-    @Column(name = "type_code", length = 20)
-
     public String getTypeCode() {
         return this.typeCode;
     }
@@ -59,8 +49,6 @@ public class Agency implements java.io.Serializable {
     public void setTypeCode(String typeCode) {
         this.typeCode = typeCode;
     }
-
-    @Column(name = "description", length = 200)
 
     public String getDescription() {
         return this.description;

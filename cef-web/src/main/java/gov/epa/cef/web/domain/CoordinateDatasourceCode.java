@@ -12,10 +12,16 @@ import javax.persistence.Table;
 @Table(name = "coordinate_datasource_code")
 
 public class CoordinateDatasourceCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 20)
     private String code;
+    
+    @Column(name = "description", length = 200)
     private String description;
 
     // Constructors
@@ -24,21 +30,7 @@ public class CoordinateDatasourceCode implements java.io.Serializable {
     public CoordinateDatasourceCode() {
     }
 
-    /** minimal constructor */
-    public CoordinateDatasourceCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public CoordinateDatasourceCode(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 20)
 
     public String getCode() {
         return this.code;
@@ -47,8 +39,6 @@ public class CoordinateDatasourceCode implements java.io.Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
-    @Column(name = "description", length = 200)
 
     public String getDescription() {
         return this.description;
