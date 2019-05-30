@@ -2,6 +2,7 @@ package gov.epa.cef.web.domain.common;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -13,15 +14,19 @@ import org.springframework.data.annotation.LastModifiedDate;
 public abstract class BaseAuditEntity extends BaseEntity {
 
     @CreatedBy
+    @Column(name = "created_by", nullable = false)
     protected String createdBy;
 
     @CreatedDate
+    @Column(name = "created_date", nullable = false, length = 29)
     protected Date createdDate;
 
     @LastModifiedBy
+    @Column(name = "last_modified_by", nullable = false)
     protected String lastModifiedBy;
 
     @LastModifiedDate
+    @Column(name = "last_modified_date", nullable = false, length = 29)
     protected Date lastModifiedDate;
 
     public String getCreatedBy() {

@@ -19,7 +19,7 @@ export class FacilityService {
   constructor(private http: HttpClient) { }
 
   /** GET facilities from the server */
-  getFacility (programId: string): Observable<Facility> {
+  getFacility(programId: string): Observable<Facility> {
     const url = `${this.facilitiesUrl}/${programId}`;
     return this.http.get<Facility>(url)
       .pipe(
@@ -29,7 +29,7 @@ export class FacilityService {
   }
 
   /** GET facilities from the server */
-  getFacilities (userId: number): Observable<Facility[]> {
+  getFacilities(userId: number): Observable<Facility[]> {
     const url = `${this.facilitiesUrl}/user/${userId}`;
     return this.http.get<Facility[]>(url)
       .pipe(
@@ -39,7 +39,7 @@ export class FacilityService {
   }
 
   /** GET facilities for current user from the server */
-  getMyFacilities (): Observable<Facility[]> {
+  getMyFacilities(): Observable<Facility[]> {
     const url = `${this.facilitiesUrl}/user/my`;
     return this.http.get<Facility[]>(url)
       .pipe(
@@ -49,7 +49,7 @@ export class FacilityService {
   }
 
   /** GET facilities by state from the server */
-  getFacilitiesByState (state: string): Observable<CefFacility[]> {
+  getFacilitiesByState(state: string): Observable<CefFacility[]> {
     const url = `${this.facilitiesUrl}/state/${state}`;
     return this.http.get<CefFacility[]>(url)
       .pipe(
@@ -64,7 +64,7 @@ export class FacilityService {
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */
-  private handleError<T> (operation = 'operation', result?: T) {
+  private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure

@@ -1,6 +1,6 @@
 import { Component, OnInit, Directive, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { CefFacility } from '../../model/cef-facility';
-import {SortableHeader, SortEvent} from '../../sortable.directive';
+import {SortableHeaderDirective, SortEvent} from '../../sortable.directive';
 import { FacilityService } from '../../services/facility.service';
 import { UserContextService } from '../../services/user-context.service';
 
@@ -10,12 +10,13 @@ export const compare = (v1, v2) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
   selector: 'app-submission-review-list',
   templateUrl: './submission-review-list.component.html',
   styleUrls: ['./submission-review-list.component.scss']})
-export class SubmissionReviewListComponent {
+
+export class SubmissionReviewListComponent implements OnInit {
 
   cefFacilities: CefFacility[] = [];
-  clientId: string = '';
+  clientId = '';
 
-  @ViewChildren(SortableHeader) headers: QueryList<SortableHeader>;
+  @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
 
   constructor(private facilityService: FacilityService, public userContext: UserContextService) {
     this.clientId = userContext.user.agencyCode;
@@ -25,7 +26,7 @@ export class SubmissionReviewListComponent {
     this.getData();
   }
 
-  getData({}: void) {
+  getData() {
     this.facilityService.getFacilitiesByState(this.clientId)
     .subscribe(result => {
       this.cefFacilities = result;

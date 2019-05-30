@@ -27,10 +27,6 @@ public class UnitMeasureCode implements Serializable {
     
     @Column(name = "description", length = 100)
     private String description;
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unitOfMeasureCode")
-    private Set<EmissionsUnit> emissionsunits = new HashSet<EmissionsUnit>(0);
-
 
     /** default constructor */
     public UnitMeasureCode() {

@@ -13,7 +13,7 @@ import { CollapseNavComponent } from './sidebar/collapse-nav/collapse-nav.compon
 import { InnerNavComponent } from './sidebar/collapse-nav/inner-nav/inner-nav.component';
 import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-nav-item/inner-nav-item.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { SharedRoutingModule } from "src/app/shared/shared-routing";
+import { SharedRoutingModule } from 'src/app/shared/shared-routing';
 
 @NgModule({
   declarations: [

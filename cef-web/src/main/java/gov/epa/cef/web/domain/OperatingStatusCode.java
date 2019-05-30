@@ -28,18 +28,6 @@ public class OperatingStatusCode implements Serializable {
     @Column(name = "description", length = 200)
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    private Set<Facility> facilities = new HashSet<Facility>(0);
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "operatingStatusCode")
-    private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
-
 
     /** default constructor */
     public OperatingStatusCode() {
@@ -60,31 +48,4 @@ public class OperatingStatusCode implements Serializable {
         this.description = description;
     }
 
-    public Set<ReleasePoint> getReleasePoints() {
-        return this.releasePoints;
-    }
-    public void setReleasePoints(Set<ReleasePoint> releasePoints) {
-        this.releasePoints = releasePoints;
-    }
-
-    public Set<EmissionsUnit> getEmissionsUnits() {
-        return this.emissionsUnits;
-    }
-    public void setEmissionsUnits(Set<EmissionsUnit> emissionsUnits) {
-        this.emissionsUnits = emissionsUnits;
-    }
-
-    public Set<Facility> getFacilities() {
-        return this.facilities;
-    }
-    public void setFacilities(Set<Facility> facilities) {
-        this.facilities = facilities;
-    }
-
-    public Set<EmissionsProcess> getEmissionsProcesses() {
-        return this.emissionsProcesses;
-    }
-    public void setEmissionsProcesses(Set<EmissionsProcess> emissionsProcesses) {
-        this.emissionsProcesses = emissionsProcesses;
-    }
 }

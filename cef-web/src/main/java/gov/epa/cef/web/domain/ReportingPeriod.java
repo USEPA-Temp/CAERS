@@ -1,18 +1,19 @@
 package gov.epa.cef.web.domain;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 /**
  * ReportingPeriod entity. @author MyEclipse Persistence Tools
@@ -20,23 +21,38 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "reporting_period")
 
-public class ReportingPeriod implements java.io.Serializable {
+public class ReportingPeriod extends BaseAuditEntity {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
-    private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emissions_process_id", nullable = false)
     private EmissionsProcess emissionsProcess;
+    
+    @Column(name = "reporting_period_type_code", nullable = false, length = 20)
     private String reportingPeriodTypeCode;
+    
+    @Column(name = "emissions_operating_type_code", nullable = false, length = 20)
     private String emissionsOperatingTypeCode;
+    
+    @Column(name = "calculation_parameter_type_code", nullable = false, length = 20)
     private String calculationParameterTypeCode;
+    
+    @Column(name = "calculation_parameter_value", nullable = false, precision = 131089, scale = 0)
     private BigDecimal calculationParameterValue;
+    
+    @Column(name = "calculation_parameter_uom", nullable = false, length = 20)
     private String calculationParameterUom;
+    
+    @Column(name = "calculation_material_code", nullable = false, length = 20)
     private String calculationMaterialCode;
-    private String createdBy;
-    private Timestamp createdDate;
-    private String lastModifiedBy;
-    private Timestamp lastModifiedDate;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
     private Set<Emission> emissions = new HashSet<Emission>(0);
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
     private Set<OperatingDetail> operatingDetails = new HashSet<OperatingDetail>(0);
 
     // Constructors
@@ -44,63 +60,6 @@ public class ReportingPeriod implements java.io.Serializable {
     /** default constructor */
     public ReportingPeriod() {
     }
-
-    /** minimal constructor */
-    public ReportingPeriod(Long id, EmissionsProcess emissionsProcess, String reportingPeriodTypeCode,
-            String emissionsOperatingTypeCode, String calculationParameterTypeCode,
-            BigDecimal calculationParameterValue, String calculationParameterUom, String calculationMaterialCode,
-            String createdBy, Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) {
-        this.id = id;
-        this.emissionsProcess = emissionsProcess;
-        this.reportingPeriodTypeCode = reportingPeriodTypeCode;
-        this.emissionsOperatingTypeCode = emissionsOperatingTypeCode;
-        this.calculationParameterTypeCode = calculationParameterTypeCode;
-        this.calculationParameterValue = calculationParameterValue;
-        this.calculationParameterUom = calculationParameterUom;
-        this.calculationMaterialCode = calculationMaterialCode;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.lastModifiedBy = lastModifiedBy;
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    /** full constructor */
-    public ReportingPeriod(Long id, EmissionsProcess emissionsProcess, String reportingPeriodTypeCode,
-            String emissionsOperatingTypeCode, String calculationParameterTypeCode,
-            BigDecimal calculationParameterValue, String calculationParameterUom, String calculationMaterialCode,
-            String createdBy, Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate,
-            Set<Emission> emissions, Set<OperatingDetail> operatingDetails) {
-        this.id = id;
-        this.emissionsProcess = emissionsProcess;
-        this.reportingPeriodTypeCode = reportingPeriodTypeCode;
-        this.emissionsOperatingTypeCode = emissionsOperatingTypeCode;
-        this.calculationParameterTypeCode = calculationParameterTypeCode;
-        this.calculationParameterValue = calculationParameterValue;
-        this.calculationParameterUom = calculationParameterUom;
-        this.calculationMaterialCode = calculationMaterialCode;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.lastModifiedBy = lastModifiedBy;
-        this.lastModifiedDate = lastModifiedDate;
-        this.emissions = emissions;
-        this.operatingDetails = operatingDetails;
-    }
-
-    // Property accessors
-    @Id
-
-    @Column(name = "id", unique = true, nullable = false)
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "emissions_process_id", nullable = false)
 
     public EmissionsProcess getEmissionsProcess() {
         return this.emissionsProcess;
@@ -110,8 +69,6 @@ public class ReportingPeriod implements java.io.Serializable {
         this.emissionsProcess = emissionsProcess;
     }
 
-    @Column(name = "reporting_period_type_code", nullable = false, length = 20)
-
     public String getReportingPeriodTypeCode() {
         return this.reportingPeriodTypeCode;
     }
@@ -119,8 +76,6 @@ public class ReportingPeriod implements java.io.Serializable {
     public void setReportingPeriodTypeCode(String reportingPeriodTypeCode) {
         this.reportingPeriodTypeCode = reportingPeriodTypeCode;
     }
-
-    @Column(name = "emissions_operating_type_code", nullable = false, length = 20)
 
     public String getEmissionsOperatingTypeCode() {
         return this.emissionsOperatingTypeCode;
@@ -130,8 +85,6 @@ public class ReportingPeriod implements java.io.Serializable {
         this.emissionsOperatingTypeCode = emissionsOperatingTypeCode;
     }
 
-    @Column(name = "calculation_parameter_type_code", nullable = false, length = 20)
-
     public String getCalculationParameterTypeCode() {
         return this.calculationParameterTypeCode;
     }
@@ -139,8 +92,6 @@ public class ReportingPeriod implements java.io.Serializable {
     public void setCalculationParameterTypeCode(String calculationParameterTypeCode) {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
-
-    @Column(name = "calculation_parameter_value", nullable = false, precision = 131089, scale = 0)
 
     public BigDecimal getCalculationParameterValue() {
         return this.calculationParameterValue;
@@ -150,8 +101,6 @@ public class ReportingPeriod implements java.io.Serializable {
         this.calculationParameterValue = calculationParameterValue;
     }
 
-    @Column(name = "calculation_parameter_uom", nullable = false, length = 20)
-
     public String getCalculationParameterUom() {
         return this.calculationParameterUom;
     }
@@ -159,8 +108,6 @@ public class ReportingPeriod implements java.io.Serializable {
     public void setCalculationParameterUom(String calculationParameterUom) {
         this.calculationParameterUom = calculationParameterUom;
     }
-
-    @Column(name = "calculation_material_code", nullable = false, length = 20)
 
     public String getCalculationMaterialCode() {
         return this.calculationMaterialCode;
@@ -170,48 +117,6 @@ public class ReportingPeriod implements java.io.Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    @Column(name = "created_by", nullable = false)
-
-    public String getCreatedBy() {
-        return this.createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Column(name = "created_date", nullable = false, length = 29)
-
-    public Timestamp getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Column(name = "last_modified_by", nullable = false)
-
-    public String getLastModifiedBy() {
-        return this.lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    @Column(name = "last_modified_date", nullable = false, length = 29)
-
-    public Timestamp getLastModifiedDate() {
-        return this.lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Timestamp lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
-
     public Set<Emission> getEmissions() {
         return this.emissions;
     }
@@ -219,8 +124,6 @@ public class ReportingPeriod implements java.io.Serializable {
     public void setEmissions(Set<Emission> emissions) {
         this.emissions = emissions;
     }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
 
     public Set<OperatingDetail> getOperatingDetails() {
         return this.operatingDetails;

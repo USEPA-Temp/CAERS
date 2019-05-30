@@ -17,35 +17,25 @@ import javax.persistence.Table;
 @Table(name = "naics_code")
 
 public class NaicsCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
-
+    
+    @Id
+    @Column(name = "code", unique = true, nullable = false, precision = 6, scale = 0)
     private Integer code;
-    private String description;
-    private Set<Facility> facilities = new HashSet<Facility>(0);
 
+    @Column(name = "description", length = 200)
+    private String description;
+    
     // Constructors
 
     /** default constructor */
     public NaicsCode() {
     }
 
-    /** minimal constructor */
-    public NaicsCode(Integer code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public NaicsCode(Integer code, String description, Set<Facility> facilities) {
-        this.code = code;
-        this.description = description;
-        this.facilities = facilities;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, precision = 6, scale = 0)
 
     public Integer getCode() {
         return this.code;
@@ -55,24 +45,12 @@ public class NaicsCode implements java.io.Serializable {
         this.code = code;
     }
 
-    @Column(name = "description", length = 200)
-
     public String getDescription() {
         return this.description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "naicsCode")
-
-    public Set<Facility> getFacilities() {
-        return this.facilities;
-    }
-
-    public void setFacilities(Set<Facility> facilities) {
-        this.facilities = facilities;
     }
 
 }

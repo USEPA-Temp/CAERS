@@ -17,13 +17,20 @@ import javax.persistence.Table;
 @Table(name = "fips_state_code")
 
 public class FipsStateCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
 
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 2)
     private String code;
+    
+    @Column(name = "usps_code", length = 2)
     private String uspsCode;
+    
+    @Column(name = "name", length = 200)
     private String name;
-    private Set<FipsCounty> fipsCounties = new HashSet<FipsCounty>(0);
 
     // Constructors
 
@@ -31,24 +38,7 @@ public class FipsStateCode implements java.io.Serializable {
     public FipsStateCode() {
     }
 
-    /** minimal constructor */
-    public FipsStateCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public FipsStateCode(String code, String uspsCode, String name, Set<FipsCounty> fipsCounties) {
-        this.code = code;
-        this.uspsCode = uspsCode;
-        this.name = name;
-        this.fipsCounties = fipsCounties;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 2)
-
     public String getCode() {
         return this.code;
     }
@@ -56,8 +46,6 @@ public class FipsStateCode implements java.io.Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
-    @Column(name = "usps_code", length = 2)
 
     public String getUspsCode() {
         return this.uspsCode;
@@ -67,24 +55,12 @@ public class FipsStateCode implements java.io.Serializable {
         this.uspsCode = uspsCode;
     }
 
-    @Column(name = "name", length = 200)
-
     public String getName() {
         return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fipsStateCode")
-
-    public Set<FipsCounty> getFipsCounties() {
-        return this.fipsCounties;
-    }
-
-    public void setFipsCounties(Set<FipsCounty> fipsCounties) {
-        this.fipsCounties = fipsCounties;
     }
 
 }

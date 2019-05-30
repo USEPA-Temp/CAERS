@@ -2,7 +2,6 @@ import { Facility } from '../model/facility';
 import { FacilityService } from './facility.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +13,7 @@ export class FacilityContextService {
   constructor(private facilityService: FacilityService) {
   }
 
-  getFacility (programId: string): Observable<Facility> {
+  getFacility(programId: string): Observable<Facility> {
     if (this.programId === programId) {
       return this.facility$;
     } else {
@@ -24,7 +23,7 @@ export class FacilityContextService {
     }
   }
 
-  private fetchFacility () {
+  private fetchFacility() {
     this.facility$ = this.facilityService.getFacility(this.programId);
   }
 }

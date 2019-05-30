@@ -12,15 +12,31 @@ import javax.persistence.Table;
 @Table(name = "aircraft_engine_type_code")
 
 public class AircraftEngineTypeCode implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
-
+    
+    @Id
+    @Column(name = "code", unique = true, nullable = false, length = 10)
     private String code;
+    
+    @Column(name = "faa_aircraft_type", length = 50)
     private String faaAircraftType;
+    
+    @Column(name = "edms_accode", length = 15)
     private String edmsAccode;
+    
+    @Column(name = "engine_manufacturer")
     private String engineManufacturer;
+    
+    @Column(name = "engine", length = 70)
     private String engine;
+    
+    @Column(name = "edms_uid", length = 10)
     private String edmsUid;
+    
+    @Column(name = "scc", length = 10)
     private String scc;
 
     // Constructors
@@ -29,28 +45,7 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
     public AircraftEngineTypeCode() {
     }
 
-    /** minimal constructor */
-    public AircraftEngineTypeCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public AircraftEngineTypeCode(String code, String faaAircraftType, String edmsAccode, String engineManufacturer,
-            String engine, String edmsUid, String scc) {
-        this.code = code;
-        this.faaAircraftType = faaAircraftType;
-        this.edmsAccode = edmsAccode;
-        this.engineManufacturer = engineManufacturer;
-        this.engine = engine;
-        this.edmsUid = edmsUid;
-        this.scc = scc;
-    }
-
     // Property accessors
-    @Id
-
-    @Column(name = "code", unique = true, nullable = false, length = 10)
-
     public String getCode() {
         return this.code;
     }
@@ -58,8 +53,6 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
-    @Column(name = "faa_aircraft_type", length = 50)
 
     public String getFaaAircraftType() {
         return this.faaAircraftType;
@@ -69,8 +62,6 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
         this.faaAircraftType = faaAircraftType;
     }
 
-    @Column(name = "edms_accode", length = 15)
-
     public String getEdmsAccode() {
         return this.edmsAccode;
     }
@@ -78,8 +69,6 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
     public void setEdmsAccode(String edmsAccode) {
         this.edmsAccode = edmsAccode;
     }
-
-    @Column(name = "engine_manufacturer")
 
     public String getEngineManufacturer() {
         return this.engineManufacturer;
@@ -89,8 +78,6 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
         this.engineManufacturer = engineManufacturer;
     }
 
-    @Column(name = "engine", length = 70)
-
     public String getEngine() {
         return this.engine;
     }
@@ -99,8 +86,6 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
         this.engine = engine;
     }
 
-    @Column(name = "edms_uid", length = 10)
-
     public String getEdmsUid() {
         return this.edmsUid;
     }
@@ -108,8 +93,6 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
     public void setEdmsUid(String edmsUid) {
         this.edmsUid = edmsUid;
     }
-
-    @Column(name = "scc", length = 10)
 
     public String getScc() {
         return this.scc;

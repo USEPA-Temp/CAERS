@@ -9,10 +9,15 @@ import javax.persistence.Embeddable;
 @Embeddable
 
 public class FipsCountyId implements java.io.Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     // Fields
-
+    
+    @Column(name = "code", nullable = false, length = 3)
     private String code;
+    
+    @Column(name = "state_code", nullable = false, length = 2)
     private String stateCode;
 
     // Constructors
@@ -21,15 +26,7 @@ public class FipsCountyId implements java.io.Serializable {
     public FipsCountyId() {
     }
 
-    /** full constructor */
-    public FipsCountyId(String code, String stateCode) {
-        this.code = code;
-        this.stateCode = stateCode;
-    }
-
     // Property accessors
-
-    @Column(name = "code", nullable = false, length = 3)
 
     public String getCode() {
         return this.code;
@@ -38,8 +35,6 @@ public class FipsCountyId implements java.io.Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
-    @Column(name = "state_code", nullable = false, length = 2)
 
     public String getStateCode() {
         return this.stateCode;

@@ -10,14 +10,13 @@ export class RedirectComponent {
 
   constructor(public userService: UserService, public router: Router) {
     this.userService.getCurrentUser()
-    .subscribe(currentUser => 
-        {
-            if (currentUser.role === 'Reviewer') {
-                this.router.navigateByUrl('/submissionReviewDashboard');
-            } else {
-                this.router.navigateByUrl('/facility');
-            }
-        });
+    .subscribe(currentUser => {
+        if (currentUser.role === 'Reviewer') {
+            this.router.navigateByUrl('/submissionReviewDashboard');
+        } else {
+            this.router.navigateByUrl('/facility');
+        }
+    });
   }
 
 }

@@ -19,7 +19,7 @@ export class ReportsDashboardComponent implements OnInit {
     this.route.data
     .subscribe((data: { facility: Facility }) => {
       this.facility = data.facility;
-      if(this.facility){
+      if (this.facility) {
           this.reportService.getFacilityReports(this.facility.programId)
             .subscribe(reports => this.reports = reports.sort((a, b) => b.year - a.year) );
       }

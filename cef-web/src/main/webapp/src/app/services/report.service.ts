@@ -16,19 +16,19 @@ export class ReportService {
   constructor(private http: HttpClient) { }
 
   /** GET reports for specified facility from the server */
-  getFacilityReports (facilityId: string): Observable<EmissionsReport[]> {
+  getFacilityReports(facilityId: string): Observable<EmissionsReport[]> {
     const url = `${this.baseUrl}/facility/${facilityId}`;
     return this.http.get<EmissionsReport[]>(url);
   }
 
   /** GET most recent report for specified facility from the server */
-  getCurrentReport (facilityId: string): Observable<EmissionsReport> {
+  getCurrentReport(facilityId: string): Observable<EmissionsReport> {
     const url = `${this.baseUrl}/facility/${facilityId}/current`;
     return this.http.get<EmissionsReport>(url);
   }
 
-  /** 
-   * GET navigation flow for specified report. 
+  /**
+   * GET navigation flow for specified report.
    * Is currently static JSON, but should be generated on the backend so less data needs to be sent.
    */
   getNavigation(reportId: number): Observable<SideNavItem[]> {

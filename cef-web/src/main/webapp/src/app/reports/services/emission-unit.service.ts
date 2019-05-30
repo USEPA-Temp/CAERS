@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SideNavItem } from "src/app/model/side-nav-item";
+import { SideNavItem } from 'src/app/model/side-nav-item';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +15,14 @@ export class EmissionUnitService {
 
   constructor(private http: HttpClient) { }
 
-  //TODO: implement on backend
+  // TODO: implement on backend
   /** GET emission units for the specified facility from the server */
   getEmissionUnitsForReport(reportId: number): Observable<EmissionUnit[]> {
     const url = this.staticJsonUrl;
-//    const url = `${this.baseUrl}/report/${reportId}`;
+  // const url = `${this.baseUrl}/report/${reportId}`;
     return this.http.get<EmissionUnit[]>(url);
   }
 
-  
   /** GET specified emission unit from the server */
   retrieve(id: number): Observable<EmissionUnit> {
     const url = `${this.baseUrl}/${id}`;

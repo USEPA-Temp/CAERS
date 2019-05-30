@@ -1,7 +1,7 @@
 import {Directive, EventEmitter, Input, Output} from '@angular/core';
 
 export type SortDirection = 'asc' | 'desc' | '';
-const rotate: {[key: string]: SortDirection} = { 'asc': 'desc', 'desc': '', '': 'asc' };
+const rotate: {[key: string]: SortDirection} = { asc: 'desc', desc: '', '': 'asc' };
 
 export interface SortEvent {
   column: string;
@@ -16,7 +16,8 @@ export interface SortEvent {
     '(click)': 'rotate()'
   }
 })
-export class SortableHeader {
+
+export class SortableHeaderDirective {
 
   @Input() sortable: string;
   @Input() direction: SortDirection = '';

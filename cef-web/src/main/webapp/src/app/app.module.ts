@@ -17,7 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { BreadcrumbNavComponent } from './components/breadcrumb-nav/breadcrumb-nav.component';
 import { SubmissionReviewDashboardComponent } from './submission-review-dashboard/submission-review-dashboard.component';
 import { SubmissionReviewListComponent } from './submission-review-dashboard/submission-review-list/submission-review-list.component';
-import { SortableHeader } from './sortable.directive';
+import { SortableHeaderDirective } from './sortable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RedirectComponent } from './redirect/redirect.component';
 import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-review/facility-data-review.component';
@@ -35,7 +35,7 @@ import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-
     FacilityListItemComponent,
     BreadcrumbNavComponent,
     SubmissionReviewListComponent,
-    SortableHeader,
+    SortableHeaderDirective,
     FacilityDataReviewComponent
   ],
   imports: [
