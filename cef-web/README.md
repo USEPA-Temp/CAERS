@@ -9,6 +9,9 @@ Run `mvn spring-boot:run` Navigate to `http://localhost:8080/cef-web`. The app w
 
 You need to open a command line and navigate to your project and to `src/main/webapp` and run `ng build --watch` to continuously build the Angular TypeScript code while developing and reloading it.
 
+## Run locally on Tomcat
+Make sure to edit the Tomcat eclipse server and modify the launch configuration and add `-Dspring.profiles.active=dev` this helps the server set the right spring profile when starting the app.
+Make sure you have the Dynamic Web Module facet is enabled so it keeps synching your web resources to the server.
 
 ## Code scaffolding
 
