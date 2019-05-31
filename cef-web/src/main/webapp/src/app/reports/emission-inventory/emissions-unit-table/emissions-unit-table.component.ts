@@ -3,11 +3,11 @@ import { EmissionUnit } from '../../model/emission-unit';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-emission-unit-list',
-  templateUrl: './emission-unit-list.component.html',
-  styleUrls: ['./emission-unit-list.component.scss']
+  selector: 'app-emissions-unit-table',
+  templateUrl: './emissions-unit-table.component.html',
+  styleUrls: ['./emissions-unit-table.component.scss']
 })
-export class EmissionUnitListComponent extends BaseSortableTable implements OnInit {
+export class EmissionsUnitTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: EmissionUnit[];
 
   constructor() {
@@ -16,4 +16,5 @@ export class EmissionUnitListComponent extends BaseSortableTable implements OnIn
 
   ngOnInit() {
   }
+
 }

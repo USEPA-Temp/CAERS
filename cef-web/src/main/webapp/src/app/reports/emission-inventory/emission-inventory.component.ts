@@ -13,18 +13,18 @@ import { ActivatedRoute } from '@angular/router';
 export class EmissionInventoryComponent implements OnInit {
   facilitySite: FacilitySite;
 
-  constructor(
-    private facilityService: FacilityService,
-    private facilitySiteService: FacilitySiteService,
-    private route: ActivatedRoute) { }
+  constructor(private facilitySiteService: FacilitySiteService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    // get the url params
     this.route.paramMap
       .subscribe(map => {
-        this.facilityService.retrieveFacilitySite(map.get('facilityId'), +map.get('reportId'))
+        // retrieve the facility site for this url
+        this.facilitySiteService.retrieveForReport(map.get('facilityId'), +map.get('reportId'))
         .subscribe(site => {
           console.log('facilitySite', site);
           this.facilitySite = site;
+          // after facility site is loaded, retrieve emission units and release points for it
           this.facilitySiteService.retrieveEmissionUnits(this.facilitySite.id)
           .subscribe(units => {
             this.facilitySite.emissionsUnits = units;

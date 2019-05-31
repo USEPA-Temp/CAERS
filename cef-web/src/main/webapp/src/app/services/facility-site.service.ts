@@ -1,3 +1,4 @@
+import { CefFacility } from '../model/cef-facility';
 import { FacilitySite } from '../model/facility-site';
 import { EmissionUnit } from '../reports/model/emission-unit';
 import { ReleasePoint } from '../reports/model/release-point';
@@ -14,9 +15,21 @@ export class FacilitySiteService {
 
   constructor(private http: HttpClient) { }
 
-  /** GET specified emission unit from the server */
+  /** GET specified facility site from the server */
   retrieve(id: number): Observable<FacilitySite> {
     const url = `${this.baseUrl}/${id}`;
+    return this.http.get<FacilitySite>(url);
+  }
+
+    /** GET facilities by state from the server */
+  getByState(state: string): Observable<CefFacility[]> {
+    const url = `${this.baseUrl}/state/${state}`;
+    return this.http.get<CefFacility[]>(url);
+  }
+
+  /** GET facility site for facility and report */
+  retrieveForReport(programId: string, reportId: number): Observable<FacilitySite> {
+    const url = `${this.baseUrl}/report/${reportId}/facility/${programId}`;
     return this.http.get<FacilitySite>(url);
   }
 

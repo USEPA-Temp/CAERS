@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmissionUnitListComponent } from './emission-unit-list.component';
+import { EmissionsUnitTableComponent } from './emissions-unit-table.component';
 
-describe('EmissionUnitListComponent', () => {
-  let component: EmissionUnitListComponent;
-  let fixture: ComponentFixture<EmissionUnitListComponent>;
+describe('EmissionsUnitTableComponent', () => {
+  let component: EmissionsUnitTableComponent;
+  let fixture: ComponentFixture<EmissionsUnitTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EmissionUnitListComponent ]
+      declarations: [ EmissionsUnitTableComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EmissionUnitListComponent);
+    fixture = TestBed.createComponent(EmissionsUnitTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

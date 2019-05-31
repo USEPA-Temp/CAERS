@@ -11,23 +11,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.domain.Facility;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
-import gov.epa.cef.web.service.dto.FacilitySiteDto;
-import gov.epa.cef.web.service.mapper.FacilityMapper;
-import gov.epa.cef.web.service.FacilityService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
+/**
+ * API for retrieving facility information managed by CDX.
+ * @author tfesperm
+ *
+ */
 @RestController
-@RequestMapping("/api/facility")
-public class FacilityApi {
+@RequestMapping("/api/cdxFacility")
+public class CdxRegistrationFacilityApi {
 
     @Autowired
     private RegistrationService registrationService;
-
-    @Autowired
-    private FacilityService facilityService;
 
     @Autowired
     private ApplicationSecurityUtils applicationSecurityUtils;
@@ -44,21 +42,6 @@ public class FacilityApi {
         ProgramFacility result = registrationService.retrieveFacilityByProgramId(programId);
 
         return new ResponseEntity<ProgramFacility>(result, HttpStatus.OK);
-    }
-
-    /**
-     * Retrieve a facility site DTO by frs facility ID and report ID
-     * @param programId
-     * @param reportId
-     * @return
-     */
-    @GetMapping(value = "/{programId}/report/{reportId}")
-    @ResponseBody
-    public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable String programId, @PathVariable Long reportId) {
-
-        FacilitySiteDto result = FacilityMapper.INSTANCE.toDto(facilityService.findByFrsIdAndReportId(programId, reportId));
-
-        return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }
 
     /**
@@ -89,11 +72,4 @@ public class FacilityApi {
         return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
     }
 
-
-    @GetMapping(value = "/state/{stateCode}")
-    @ResponseBody
-    public ResponseEntity<Collection<Facility>> retrieveFacilitiesByState(@PathVariable String stateCode) {
-        Collection<Facility> result = facilityService.findByState(stateCode);
-        return new ResponseEntity<Collection<Facility>>(result, HttpStatus.OK);		
-    }
 }

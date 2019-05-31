@@ -26,6 +26,11 @@ import gov.epa.cef.web.service.mapper.EmissionsUnitMapper;
 import gov.epa.cef.web.service.mapper.FacilityMapper;
 import gov.epa.cef.web.service.mapper.ReleasePointMapper;
 
+/**
+ * API for retrieving facility site information related to reports.
+ * @author tfesperm
+ *
+ */
 @RestController
 @RequestMapping("/api/facilitySite")
 public class FacilitySiteApi {
@@ -50,6 +55,37 @@ public class FacilitySiteApi {
 
         Facility facility =  facilityService.findById(facilityId);
         FacilitySiteDto result = FacilityMapper.INSTANCE.toDto(facility);
+        return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve facility sites by state code
+     * @param stateCode
+     * @return
+     */
+    //TODO: add year to parameters
+    @GetMapping(value = "/state/{stateCode}")
+    @ResponseBody
+    public ResponseEntity<Collection<FacilitySiteDto>> retrieveFacilitiesByState(@PathVariable String stateCode) {
+        Collection<Facility> facilities = facilityService.findByState(stateCode);
+        Collection<FacilitySiteDto> result = facilities.stream()
+                .map(facility -> FacilityMapper.INSTANCE.toDto(facility))
+                .collect(Collectors.toList());
+        return new ResponseEntity<Collection<FacilitySiteDto>>(result, HttpStatus.OK);     
+    }
+
+    /**
+     * Retrieve a facility site by frs facility ID and report ID
+     * @param reportId
+     * @param frsFacilityId
+     * @return
+     */
+    @GetMapping(value = "/report/{reportId}/facility/{frsFacilityId}")
+    @ResponseBody
+    public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable Long reportId, @PathVariable String frsFacilityId) {
+
+        FacilitySiteDto result = FacilityMapper.INSTANCE.toDto(facilityService.findByFrsIdAndReportId(frsFacilityId, reportId));
+
         return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }
 
@@ -84,4 +120,6 @@ public class FacilitySiteApi {
                 .collect(Collectors.toList());
         return new ResponseEntity<Collection<ReleasePointDto>>(result, HttpStatus.OK);
     }
+    
+    
 }

@@ -15,13 +15,13 @@ const httpOptions = {
 @Injectable({ providedIn: 'root' })
 export class FacilityService {
 
-  private facilitiesUrl = 'api/facility';  // URL to web api
+  private baseUrl = 'api/cdxFacility';  // URL to web api
 
   constructor(private http: HttpClient) { }
 
   /** GET facilities from the server */
   getFacility(programId: string): Observable<Facility> {
-    const url = `${this.facilitiesUrl}/${programId}`;
+    const url = `${this.baseUrl}/${programId}`;
     return this.http.get<Facility>(url)
       .pipe(
         tap(_ => this.log('fetched facility')),
@@ -29,15 +29,9 @@ export class FacilityService {
       );
   }
 
-  /** GET facility site for facility and report */
-  retrieveFacilitySite(programId: string, reportId: number): Observable<FacilitySite> {
-    const url = `${this.facilitiesUrl}/${programId}/report/${reportId}`;
-    return this.http.get<FacilitySite>(url);
-  }
-
   /** GET facilities from the server */
   getFacilities(userId: number): Observable<Facility[]> {
-    const url = `${this.facilitiesUrl}/user/${userId}`;
+    const url = `${this.baseUrl}/user/${userId}`;
     return this.http.get<Facility[]>(url)
       .pipe(
         tap(_ => this.log('fetched facilities')),
@@ -47,21 +41,11 @@ export class FacilityService {
 
   /** GET facilities for current user from the server */
   getMyFacilities(): Observable<Facility[]> {
-    const url = `${this.facilitiesUrl}/user/my`;
+    const url = `${this.baseUrl}/user/my`;
     return this.http.get<Facility[]>(url)
       .pipe(
         tap(_ => this.log('fetched facilities')),
         catchError(this.handleError<Facility[]>('getMyFacilities', []))
-      );
-  }
-
-  /** GET facilities by state from the server */
-  getFacilitiesByState(state: string): Observable<CefFacility[]> {
-    const url = `${this.facilitiesUrl}/state/${state}`;
-    return this.http.get<CefFacility[]>(url)
-      .pipe(
-        tap(_ => this.log('fetched facilities')),
-        catchError(this.handleError<CefFacility[]>('getFacilities', []))
       );
   }
 
