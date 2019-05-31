@@ -3,6 +3,8 @@ server:
   servlet:
     context-path: /cef-web
 spring:
+  profiles:
+      active: #spring.profiles.active#
   jmx.enabled: false
   thymeleaf:
       mode: HTML  
