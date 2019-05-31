@@ -14,6 +14,9 @@ import { StepProgressComponent } from './components/step-progress/step-progress.
 
 import { EmissionUnitInfoComponent } from './emission-unit-dashboard/emission-unit-info/emission-unit-info.component';
 import { EmissionProcessListComponent } from './emission-unit-dashboard/emission-process-list/emission-process-list.component';
+import { EmissionInventoryComponent } from './emission-inventory/emission-inventory.component';
+import { EmissionUnitListComponent } from './emission-inventory/emission-unit-list/emission-unit-list.component';
+import { ReleasePointTableComponent } from './emission-inventory/release-point-table/release-point-table.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { EmissionProcessListComponent } from './emission-unit-dashboard/emission
     EmissionUnitDashboardComponent,
     StepProgressComponent,
     EmissionUnitInfoComponent,
-    EmissionProcessListComponent
+    EmissionProcessListComponent,
+    EmissionInventoryComponent,
+    EmissionUnitListComponent,
+    ReleasePointTableComponent
   ],
   imports: [
     CommonModule,

@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.epa.cef.web.domain.Facility;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
+import gov.epa.cef.web.service.dto.FacilitySiteDto;
+import gov.epa.cef.web.service.mapper.FacilityMapper;
 import gov.epa.cef.web.service.FacilityService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
 @RequestMapping("/api/facility")
 public class FacilityApi {
-    
+
     @Autowired
     private RegistrationService registrationService;
 
@@ -42,6 +44,21 @@ public class FacilityApi {
         ProgramFacility result = registrationService.retrieveFacilityByProgramId(programId);
 
         return new ResponseEntity<ProgramFacility>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve a facility site DTO by frs facility ID and report ID
+     * @param programId
+     * @param reportId
+     * @return
+     */
+    @GetMapping(value = "/{programId}/report/{reportId}")
+    @ResponseBody
+    public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable String programId, @PathVariable Long reportId) {
+
+        FacilitySiteDto result = FacilityMapper.INSTANCE.toDto(facilityService.findByFrsIdAndReportId(programId, reportId));
+
+        return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }
 
     /**

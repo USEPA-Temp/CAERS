@@ -1,10 +1,8 @@
 import { Component, OnInit, Directive, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { CefFacility } from '../../model/cef-facility';
-import {SortableHeaderDirective, SortEvent} from '../../sortable.directive';
+import {SortableHeaderDirective, SortEvent, compare} from '../../shared/sortable.directive';
 import { FacilityService } from '../../services/facility.service';
 import { UserContextService } from '../../services/user-context.service';
-
-export const compare = (v1, v2) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
 @Component({
   selector: 'app-submission-review-list',

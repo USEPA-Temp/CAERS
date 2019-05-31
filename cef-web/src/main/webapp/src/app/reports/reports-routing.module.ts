@@ -1,3 +1,4 @@
+import { EmissionInventoryComponent } from './emission-inventory/emission-inventory.component';
 import { EmissionUnitDashboardComponent } from './emission-unit-dashboard/emission-unit-dashboard.component';
 import { ReportsDashboardComponent } from './reports-dashboard/reports-dashboard.component';
 import { ReportsComponent } from './reports.component';
@@ -22,6 +23,10 @@ const reportRoutes: Routes = [
             data: { title: 'PLACEHOLDER' }
           }
         ]
+      }, {
+        path: ':reportId',
+        component: EmissionInventoryComponent,
+        data: { title: 'Emission Inventory' }
       }, {
         path: '',
         component: ReportsDashboardComponent,

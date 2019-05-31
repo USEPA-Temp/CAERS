@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Facility } from '../model/facility';
 import { CefFacility } from '../model/cef-facility';
+import { FacilitySite } from '../model/facility-site';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -26,6 +27,12 @@ export class FacilityService {
         tap(_ => this.log('fetched facility')),
         catchError(this.handleError<Facility>('getFacility', ))
       );
+  }
+
+  /** GET facility site for facility and report */
+  retrieveFacilitySite(programId: string, reportId: number): Observable<FacilitySite> {
+    const url = `${this.facilitiesUrl}/${programId}/report/${reportId}`;
+    return this.http.get<FacilitySite>(url);
   }
 
   /** GET facilities from the server */

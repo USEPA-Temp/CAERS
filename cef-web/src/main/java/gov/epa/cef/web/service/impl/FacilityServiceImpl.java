@@ -14,6 +14,22 @@ public class FacilityServiceImpl implements FacilityService {
     private FacilityRepository facRepo;
 
 
+    @Override
+    public Facility findById(Long id) {
+        return facRepo
+            .findById(id)
+            .orElse(null);
+    }
+
+
+    @Override
+    public Facility findByFrsIdAndReportId(String frsFacilityId, Long emissionsReportId) {
+        return facRepo.findByFrsFacilityIdAndEmissionsReportId(frsFacilityId, emissionsReportId)
+            .stream()
+            .findFirst()
+            .orElse(null);
+    }
+
     /**
      * Find common form facilities for a given state
      * @param state Two-character state code
@@ -22,5 +38,6 @@ public class FacilityServiceImpl implements FacilityService {
     public List<Facility> findByState(String stateCode) {
         return facRepo.findByStateCode(stateCode);
     }
+
 
 }
