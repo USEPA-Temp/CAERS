@@ -8,6 +8,8 @@ public class ReleasePointApptDto implements Serializable{
      * default version id
      */
     private static final long serialVersionUID = 1L;
+    
+    private Long id;
 
     private Long releasePointId;
     
@@ -15,7 +17,14 @@ public class ReleasePointApptDto implements Serializable{
     
     private Double percent;
 
-    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getReleasePointId() {
         return releasePointId;
     }
