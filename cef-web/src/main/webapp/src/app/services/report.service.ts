@@ -26,15 +26,4 @@ export class ReportService {
     const url = `${this.baseUrl}/facility/${facilityId}/current`;
     return this.http.get<EmissionsReport>(url);
   }
-
-  /**
-   * GET navigation flow for specified report.
-   * Is currently static JSON, but should be generated on the backend so less data needs to be sent.
-   */
-  getNavigation(reportId: number): Observable<SideNavItem[]> {
-    const url = 'assets/json/sideTreeNav.json';
-//    const url = `${this.baseUrl}/${reportId}/nav`;`
-    return this.http.get<SideNavItem[]>(url).pipe(
-      map((items: SideNavItem[]) => items.map(item => SideNavItem.fromJson(item))));
-  }
 }

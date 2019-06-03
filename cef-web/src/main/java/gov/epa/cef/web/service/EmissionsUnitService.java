@@ -1,6 +1,8 @@
 package gov.epa.cef.web.service;
 
-import gov.epa.cef.web.domain.EmissionsUnit;
+import java.util.List;
+
+import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 
 public interface EmissionsUnitService {
 
@@ -9,6 +11,13 @@ public interface EmissionsUnitService {
      * @param unitId 
      * @return
      */	
-    EmissionsUnit retrieveUnitById(Long unitId);
+    EmissionsUnitDto retrieveUnitById(Long unitId);
+
+    /**
+     * Retrieves Emissions Units for a facility
+     * @param facilityId
+     * @return
+     */
+    List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilityId);
 
 }

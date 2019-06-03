@@ -1,9 +1,4 @@
-import { EmissionUnit } from 'src/app/reports/model/emission-unit';
-import { Process } from 'src/app/reports/model/process';
-import { ReleasePointApportionment } from 'src/app/reports/model/release-point-apportionment';
-
 export class SideNavItem {
-  // TODO: change baseUrl into an enum on the backend and find the correct url serverside for decoupling
   baseUrl: string;
   id: number;
   description: string;
@@ -18,24 +13,5 @@ export class SideNavItem {
 
   get url(): string {
     return `${this.baseUrl}/${this.id}`;
-  }
-
-  static fromEmissionUnit(unit: EmissionUnit): SideNavItem {
-    return new SideNavItem(unit.id, unit.description, 'emissionUnit',
-      unit.processes.map(process => this.fromProcess(process)));
-  }
-
-  static fromProcess(process: Process): SideNavItem {
-    return new SideNavItem(process.id, process.description, 'process',
-      process.releasePoints.map(release => this.fromReleasePoint(release)));
-  }
-
-  static fromReleasePoint(release: ReleasePointApportionment): SideNavItem {
-    return new SideNavItem(release.id, release.releasePoint.description, 'release', null);
-  }
-
-  static fromJson(item): SideNavItem {
-    return new SideNavItem(item.id, item.description, item.baseUrl,
-      (item.children != null ? item.children.map(child => this.fromJson(child)) : []));
   }
 }
