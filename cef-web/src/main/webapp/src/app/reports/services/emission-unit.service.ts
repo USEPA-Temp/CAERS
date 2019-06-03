@@ -19,7 +19,7 @@ export class EmissionUnitService {
       this.emissionsUnitToSideNavPipe=new EmissionsUnitToSideNavPipe();
   }
 
-  getEmissionUnitsForFacility(facilityId: number): Observable<EmissionUnit[]> {
+  retrieveForFacility(facilityId: number): Observable<EmissionUnit[]> {
     const url = `${this.baseUrl}/facility/${facilityId}`;
     return this.http.get<EmissionUnit[]>(url);
   }
@@ -34,7 +34,7 @@ export class EmissionUnitService {
    * Retries the report emissions unit and transform them to side navigation tree items.
    */
   retrieveReportNavTree(facilityId: any): Observable<SideNavItem[]> {
-    return this.getEmissionUnitsForFacility(facilityId).pipe(
+    return this.retrieveForFacility(facilityId).pipe(
             map((items: EmissionUnit[]) => items.map(item => this.emissionsUnitToSideNavPipe.transform(item))));
   }
 }

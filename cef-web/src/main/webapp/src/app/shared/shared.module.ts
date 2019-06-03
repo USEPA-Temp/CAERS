@@ -12,6 +12,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { CollapseNavComponent } from './sidebar/collapse-nav/collapse-nav.component';
 import { InnerNavComponent } from './sidebar/collapse-nav/inner-nav/inner-nav.component';
 import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-nav-item/inner-nav-item.component';
+import { SortableHeaderDirective } from './sortable.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedRoutingModule } from 'src/app/shared/shared-routing';
 
@@ -23,7 +24,8 @@ import { SharedRoutingModule } from 'src/app/shared/shared-routing';
     SidebarComponent,
     CollapseNavComponent,
     InnerNavComponent,
-    InnerNavItemComponent
+    InnerNavItemComponent,
+    SortableHeaderDirective
   ],
   exports: [
     FacilityInfoComponent,
@@ -33,7 +35,8 @@ import { SharedRoutingModule } from 'src/app/shared/shared-routing';
     CollapseNavComponent,
     InnerNavComponent,
     InnerNavItemComponent,
-    FacilityWidgetComponent
+    FacilityWidgetComponent,
+    SortableHeaderDirective
   ],
   imports: [
     CommonModule,

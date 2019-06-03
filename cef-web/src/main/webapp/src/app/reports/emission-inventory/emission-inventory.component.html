@@ -1,0 +1,12 @@
+<app-step-progress></app-step-progress>
+
+<div *ngIf="facilitySite">
+    <div class="row">
+        <div class="col-sm-6" *ngIf="facilitySite.emissionsUnits">
+            <app-emissions-unit-table [tableData]="facilitySite.emissionsUnits"></app-emissions-unit-table>
+        </div>
+        <div class="col-sm-6" *ngIf="facilitySite.releasePoints">
+            <app-release-point-table [tableData]="facilitySite.releasePoints"></app-release-point-table>
+        </div>
+    </div>
+</div>

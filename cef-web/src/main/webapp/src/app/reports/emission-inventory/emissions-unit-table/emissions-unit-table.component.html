@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="card-header text-center">
+        <strong>Emission Units</strong>
+    </div>
+    <div class="card-body">
+        <div class="mh-100 overflow-auto">
+          <table class="table table-sm table-striped table-bordered">
+            <thead>
+            <tr>
+              <th scope="col" sortable="id" (sort)="onSort($event)">Unit ID</th>
+              <th scope="col" sortable="unitTypeCodeDescription" (sort)="onSort($event)">Unit Type</th>
+              <th scope="col" sortable="unitIdentifier" (sort)="onSort($event)">Unit Description</th>
+              <th scope="col" sortable="operatingStatusCodeDescription" (sort)="onSort($event)">Operating Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of tableData">
+              <td>{{item.id}}</td>
+              <td>{{item.unitTypeCodeDescription}}</td>
+              <td><a href="#">{{item.unitIdentifier}}</a></td>
+              <td>{{item.operatingStatusCodeDescription}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+</div>
+
