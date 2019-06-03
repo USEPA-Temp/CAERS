@@ -2,6 +2,8 @@ import { EmissionsReport } from '../../model/emissions-report';
 import { FacilitySite } from '../../model/facility-site';
 import { FacilityService } from '../../services/facility.service';
 import { FacilitySiteService } from '../../services/facility-site.service';
+import { EmissionUnitService } from '../services/emission-unit.service';
+import { ReleasePointService } from '../services/release-point.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -13,7 +15,11 @@ import { ActivatedRoute } from '@angular/router';
 export class EmissionInventoryComponent implements OnInit {
   facilitySite: FacilitySite;
 
-  constructor(private facilitySiteService: FacilitySiteService, private route: ActivatedRoute) { }
+  constructor(
+    private facilitySiteService: FacilitySiteService,
+    private emissionUnitsService: EmissionUnitService,
+    private releasePointService: ReleasePointService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     // get the url params
@@ -25,11 +31,11 @@ export class EmissionInventoryComponent implements OnInit {
           console.log('facilitySite', site);
           this.facilitySite = site;
           // after facility site is loaded, retrieve emission units and release points for it
-          this.facilitySiteService.retrieveEmissionUnits(this.facilitySite.id)
+          this.emissionUnitsService.retrieveForFacility(this.facilitySite.id)
           .subscribe(units => {
             this.facilitySite.emissionsUnits = units;
           });
-          this.facilitySiteService.retrieveReleasePoints(this.facilitySite.id)
+          this.releasePointService.retrieveForFacility(this.facilitySite.id)
           .subscribe(points => {
             this.facilitySite.releasePoints = points;
           });

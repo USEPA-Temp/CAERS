@@ -32,14 +32,4 @@ export class FacilitySiteService {
     const url = `${this.baseUrl}/report/${reportId}/facility/${programId}`;
     return this.http.get<FacilitySite>(url);
   }
-
-  retrieveEmissionUnits(id: number): Observable<EmissionUnit[]> {
-    const url = `${this.baseUrl}/${id}/emissionsUnits`;
-    return this.http.get<EmissionUnit[]>(url);
-  }
-
-  retrieveReleasePoints(id: number): Observable<ReleasePoint[]> {
-    const url = `${this.baseUrl}/${id}/releasePoints`;
-    return this.http.get<ReleasePoint[]>(url);
-  }
 }
