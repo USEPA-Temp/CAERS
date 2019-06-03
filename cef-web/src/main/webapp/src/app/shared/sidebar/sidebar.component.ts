@@ -23,8 +23,8 @@ export class SidebarComponent implements OnInit {
       }
   }
 
-  getReportNav(reportId: number) {
-    this.emissionsUnitService.retrieveReportNavTree(9999991)
+  getReportNav(facilityId: number) {
+    this.emissionsUnitService.retrieveReportNavTree(9999991) //TODO pass the facility id
       .subscribe(navItems => {
         console.log(JSON.stringify(navItems));
         this.navItems = navItems;
