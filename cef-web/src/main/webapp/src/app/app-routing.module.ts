@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-import { FacilityDashboardComponent } from './facility-dashboard/facility-dashboard.component';
-import { FacilityDataReviewComponent } from './facility-dashboard/facility-data-review/facility-data-review.component';
-import { SubmissionReviewDashboardComponent } from './submission-review-dashboard/submission-review-dashboard.component';
-import { FacilityResolverService } from './services/facility-resolver.service';
-import { RedirectComponent } from './redirect/redirect.component';
+import { AppComponent } from 'src/app/app.component';
+import { FacilityDashboardComponent } from 'src/app/modules/facility-dashboard/pages/facility-dashboard/facility-dashboard.component';
+import { FacilityDataReviewComponent } from 'src/app/modules/facility-dashboard/components/facility-data-review/facility-data-review.component';
+import { SubmissionReviewDashboardComponent } from 'src/app/modules/submission-review-dashboard/pages/submission-review-dashboard/submission-review-dashboard.component';
+import { FacilityResolverService } from 'src/app/core/services/facility-resolver.service';
+import { RedirectComponent } from 'src/app/modules/redirect/redirect.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -20,7 +20,7 @@ const routes: Routes = [
         children: [
           {
             path: 'reports',
-            loadChildren: './reports/reports.module#ReportsModule'
+            loadChildren: 'src/app/modules/reports/reports.module#ReportsModule'
           },
           {
               path: 'review',

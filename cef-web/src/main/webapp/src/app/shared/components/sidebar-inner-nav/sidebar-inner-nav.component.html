@@ -1,0 +1,5 @@
+<div class="nav flex-column">
+	<div *ngFor="let navItem of navItems">
+		<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+	</div>
+</div>

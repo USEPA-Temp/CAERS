@@ -1,4 +1,4 @@
-import { FacilityInfoComponent } from './facility-info/facility-info.component';
+import { FacilityInfoComponent } from 'src/app/shared/components/facility-info/facility-info.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -6,12 +6,12 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { CollapseIconComponent } from './collapse-icon/collapse-icon.component';
-import { FacilityWidgetComponent } from './facility-widget/facility-widget.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { CollapseNavComponent } from './sidebar/collapse-nav/collapse-nav.component';
-import { InnerNavComponent } from './sidebar/collapse-nav/inner-nav/inner-nav.component';
-import { InnerNavItemComponent } from './sidebar/collapse-nav/inner-nav/inner-nav-item/inner-nav-item.component';
+import { CollapseIconComponent } from 'src/app/shared/components/collapse-icon/collapse-icon.component';
+import { FacilityWidgetComponent } from 'src/app/shared/components/facility-widget/facility-widget.component';
+import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
+import { CollapseNavComponent } from 'src/app/shared/components/collapse-nav/collapse-nav.component';
+import { SidebarInnerNavComponent } from 'src/app/shared/components/sidebar-inner-nav/sidebar-inner-nav.component';
+import { SidebarInnerNavItemComponent } from 'src/app/shared/components/sidebar-inner-nav-item/sidebar-inner-nav-item.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedRoutingModule } from 'src/app/shared/shared-routing';
 
@@ -22,8 +22,8 @@ import { SharedRoutingModule } from 'src/app/shared/shared-routing';
     FacilityWidgetComponent,
     SidebarComponent,
     CollapseNavComponent,
-    InnerNavComponent,
-    InnerNavItemComponent
+    SidebarInnerNavComponent,
+    SidebarInnerNavItemComponent
   ],
   exports: [
     FacilityInfoComponent,
@@ -31,8 +31,8 @@ import { SharedRoutingModule } from 'src/app/shared/shared-routing';
     FontAwesomeModule,
     SidebarComponent,
     CollapseNavComponent,
-    InnerNavComponent,
-    InnerNavItemComponent,
+    SidebarInnerNavComponent,
+    SidebarInnerNavItemComponent,
     FacilityWidgetComponent
   ],
   imports: [
