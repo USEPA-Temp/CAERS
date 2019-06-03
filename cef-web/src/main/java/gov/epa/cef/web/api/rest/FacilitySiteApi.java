@@ -44,6 +44,15 @@ public class FacilitySiteApi {
     @Autowired
     private ReleasePointService releasePointService;
 
+    @Autowired
+    private EmissionsUnitMapper emissionsUnitMapper;
+
+    @Autowired
+    private FacilityMapper facilityMapper;
+
+    @Autowired
+    private ReleasePointMapper releasePointMapper;
+
     /**
      * Retrieve a facility site by ID
      * @param facilityId
@@ -54,7 +63,7 @@ public class FacilitySiteApi {
     public ResponseEntity<FacilitySiteDto> retrieveFacilitySite(@PathVariable Long facilityId) {
 
         Facility facility =  facilityService.findById(facilityId);
-        FacilitySiteDto result = FacilityMapper.INSTANCE.toDto(facility);
+        FacilitySiteDto result = facilityMapper.toDto(facility);
         return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }
 
@@ -69,7 +78,7 @@ public class FacilitySiteApi {
     public ResponseEntity<Collection<FacilitySiteDto>> retrieveFacilitiesByState(@PathVariable String stateCode) {
         Collection<Facility> facilities = facilityService.findByState(stateCode);
         Collection<FacilitySiteDto> result = facilities.stream()
-                .map(facility -> FacilityMapper.INSTANCE.toDto(facility))
+                .map(facility -> facilityMapper.toDto(facility))
                 .collect(Collectors.toList());
         return new ResponseEntity<Collection<FacilitySiteDto>>(result, HttpStatus.OK);     
     }
@@ -84,7 +93,7 @@ public class FacilitySiteApi {
     @ResponseBody
     public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable Long reportId, @PathVariable String frsFacilityId) {
 
-        FacilitySiteDto result = FacilityMapper.INSTANCE.toDto(facilityService.findByFrsIdAndReportId(frsFacilityId, reportId));
+        FacilitySiteDto result = facilityMapper.toDto(facilityService.findByFrsIdAndReportId(frsFacilityId, reportId));
 
         return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }
@@ -100,7 +109,7 @@ public class FacilitySiteApi {
 
         Collection<EmissionsUnit> units = emissionsUnitService.retrieveByFacilityId(facilityId);
         Collection<EmissionsUnitDto> result = units.stream()
-                .map(unit -> EmissionsUnitMapper.INSTANCE.emissionsUnitToDto(unit))
+                .map(unit -> emissionsUnitMapper.emissionsUnitToDto(unit))
                 .collect(Collectors.toList());
         return new ResponseEntity<Collection<EmissionsUnitDto>>(result, HttpStatus.OK);
     }
@@ -116,7 +125,7 @@ public class FacilitySiteApi {
 
         Collection<ReleasePoint> releasePoints = releasePointService.retrieveByFacilityId(facilityId);
         Collection<ReleasePointDto> result = releasePoints.stream()
-                .map(releasePoint -> ReleasePointMapper.INSTANCE.toDto(releasePoint))
+                .map(releasePoint -> releasePointMapper.toDto(releasePoint))
                 .collect(Collectors.toList());
         return new ResponseEntity<Collection<ReleasePointDto>>(result, HttpStatus.OK);
     }

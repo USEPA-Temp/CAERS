@@ -15,7 +15,7 @@ const httpOptions = {
 @Injectable({ providedIn: 'root' })
 export class FacilityService {
 
-  private baseUrl = 'api/cdxFacility';  // URL to web api
+  private baseUrl = 'api/facility/cdx';  // URL to web api
 
   constructor(private http: HttpClient) { }
 

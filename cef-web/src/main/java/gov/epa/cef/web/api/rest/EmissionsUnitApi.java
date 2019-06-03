@@ -21,6 +21,9 @@ public class EmissionsUnitApi {
     @Autowired
     private EmissionsUnitService emissionsUnitService;
 
+    @Autowired
+    private EmissionsUnitMapper emissionsUnitMapper;
+
     /**
      * Retrieve a unit by it's ID
      * @param unitId
@@ -31,7 +34,7 @@ public class EmissionsUnitApi {
     public ResponseEntity<EmissionsUnitDto> retrieveEmissionsUnit(@PathVariable Long unitId) {
 
         EmissionsUnit emissionsUnit = emissionsUnitService.retrieveUnitById(unitId);
-        EmissionsUnitDto result = EmissionsUnitMapper.INSTANCE.emissionsUnitToDto(emissionsUnit);
+        EmissionsUnitDto result = emissionsUnitMapper.emissionsUnitToDto(emissionsUnit);
         return new ResponseEntity<EmissionsUnitDto>(result, HttpStatus.OK);
     }
 }

@@ -21,8 +21,8 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
  *
  */
 @RestController
-@RequestMapping("/api/cdxFacility")
-public class CdxRegistrationFacilityApi {
+@RequestMapping("/api/facility/cdx")
+public class CdxFacilityApi {
 
     @Autowired
     private RegistrationService registrationService;
