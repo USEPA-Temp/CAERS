@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -22,6 +24,12 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
         return unitRepo
             .findById(unitId)
             .orElse(null);
+    }
+
+
+    @Override
+    public Collection<EmissionsUnit> retrieveByFacilityId(Long facilityId) {
+        return unitRepo.findByFacilityId(facilityId);
     }
 
 }

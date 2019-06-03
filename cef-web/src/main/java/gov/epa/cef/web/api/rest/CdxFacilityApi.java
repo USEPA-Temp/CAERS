@@ -11,21 +11,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.domain.Facility;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.RegistrationService;
-import gov.epa.cef.web.service.FacilityService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
+/**
+ * API for retrieving facility information managed by CDX.
+ * @author tfesperm
+ *
+ */
 @RestController
-@RequestMapping("/api/facility")
-public class FacilityApi {
-    
-    @Autowired
-    private RegistrationService registrationService;
+@RequestMapping("/api/facility/cdx")
+public class CdxFacilityApi {
 
     @Autowired
-    private FacilityService facilityService;
+    private RegistrationService registrationService;
 
     @Autowired
     private ApplicationSecurityUtils applicationSecurityUtils;
@@ -72,11 +72,4 @@ public class FacilityApi {
         return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
     }
 
-
-    @GetMapping(value = "/state/{stateCode}")
-    @ResponseBody
-    public ResponseEntity<Collection<Facility>> retrieveFacilitiesByState(@PathVariable String stateCode) {
-        Collection<Facility> result = facilityService.findByState(stateCode);
-        return new ResponseEntity<Collection<Facility>>(result, HttpStatus.OK);		
-    }
 }

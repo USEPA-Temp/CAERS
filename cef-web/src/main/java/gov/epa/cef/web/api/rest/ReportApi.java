@@ -23,6 +23,20 @@ public class ReportApi {
     private ReportService reportService;
 
     /**
+     * Retrieve report by ID
+     * @param reportId
+     * @return
+     */
+    @GetMapping(value = "/{reportId}")
+    @ResponseBody
+    public ResponseEntity<EmissionsReport> retrieveReport(@PathVariable Long reportId) {
+
+        EmissionsReport result = reportService.findById(reportId);
+
+        return new ResponseEntity<EmissionsReport>(result, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve reports for a given facility
      * @param facilityId {@link ProgramFacility}'s programId
      * @return

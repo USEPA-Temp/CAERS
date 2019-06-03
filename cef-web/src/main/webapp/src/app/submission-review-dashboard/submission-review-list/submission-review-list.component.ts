@@ -1,24 +1,22 @@
 import { Component, OnInit, Directive, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { CefFacility } from '../../model/cef-facility';
-import {SortableHeaderDirective, SortEvent} from '../../sortable.directive';
-import { FacilityService } from '../../services/facility.service';
+import { FacilitySiteService } from '../../services/facility-site.service';
+import {SortableHeaderDirective, SortEvent, compare} from '../../shared/sortable.directive';
 import { UserContextService } from '../../services/user-context.service';
-
-export const compare = (v1, v2) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
+import { BaseSortableTable } from '../../shared/sortable-table/base-sortable-table';
 
 @Component({
   selector: 'app-submission-review-list',
   templateUrl: './submission-review-list.component.html',
   styleUrls: ['./submission-review-list.component.scss']})
 
-export class SubmissionReviewListComponent implements OnInit {
+export class SubmissionReviewListComponent extends BaseSortableTable implements OnInit {
 
-  cefFacilities: CefFacility[] = [];
+  tableData: CefFacility[] = [];
   clientId = '';
 
-  @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
-
-  constructor(private facilityService: FacilityService, public userContext: UserContextService) {
+  constructor(private facilitySiteService: FacilitySiteService, public userContext: UserContextService) {
+    super();
     this.clientId = userContext.user.agencyCode;
   }
 
@@ -27,29 +25,10 @@ export class SubmissionReviewListComponent implements OnInit {
   }
 
   getData() {
-    this.facilityService.getFacilitiesByState(this.clientId)
+    this.facilitySiteService.getByState(this.clientId)
     .subscribe(result => {
-      this.cefFacilities = result;
+      this.tableData = result;
     });
   }
 
-  onSort({column, direction}: SortEvent) {
-
-    // resetting other headers
-    this.headers.forEach(header => {
-      if (header.sortable !== column) {
-        header.direction = '';
-      }
-    });
-
-    // sorting countries
-    if (direction === '') {
-      this.cefFacilities = this.cefFacilities;
-    } else {
-      this.cefFacilities = [...this.cefFacilities].sort((a, b) => {
-        const res = compare(a[column], b[column]);
-        return direction === 'asc' ? res : -res;
-      });
-    }
-  }
 }
