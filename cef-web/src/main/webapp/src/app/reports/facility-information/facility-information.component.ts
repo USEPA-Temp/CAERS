@@ -22,7 +22,6 @@ export class FacilityInformationComponent implements OnInit {
         // retrieve the facility site for this url
         this.facilitySiteService.retrieveForReport(map.get('facilityId'), +map.get('reportId'))
         .subscribe(site => {
-          console.log('facilitySite', site);
           this.facilitySite = site;
           // after facility site is loaded, retrieve emission units and release points for it
         });
