@@ -30,6 +30,10 @@ public class FacilitySiteDto implements Serializable {
     private String stateCode;
     private String countryCode;
     private String postalCode;
+    private String mailingStreetAddress;
+    private String mailingCity;
+    private String mailingStateCode;
+    private String mailingPostalCode;
     private Double latitude;
     private Double longitude;
 
@@ -191,6 +195,38 @@ public class FacilitySiteDto implements Serializable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getMailingStreetAddress() {
+        return mailingStreetAddress;
+    }
+
+    public void setMailingStreetAddress(String mailingStreetAddress) {
+        this.mailingStreetAddress = mailingStreetAddress;
+    }
+
+    public String getMailingCity() {
+        return mailingCity;
+    }
+
+    public void setMailingCity(String mailingCity) {
+        this.mailingCity = mailingCity;
+    }
+
+    public String getMailingStateCode() {
+        return mailingStateCode;
+    }
+
+    public void setMailingStateCode(String mailingStateCode) {
+        this.mailingStateCode = mailingStateCode;
+    }
+
+    public String getMailingPostalCode() {
+        return mailingPostalCode;
+    }
+
+    public void setMailingPostalCode(String mailingPostalCode) {
+        this.mailingPostalCode = mailingPostalCode;
     }
 
 }
