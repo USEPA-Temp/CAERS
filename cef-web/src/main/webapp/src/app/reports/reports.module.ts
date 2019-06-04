@@ -17,6 +17,7 @@ import { EmissionProcessListComponent } from './emission-unit-dashboard/emission
 import { EmissionInventoryComponent } from './emission-inventory/emission-inventory.component';
 import { ReleasePointTableComponent } from './emission-inventory/release-point-table/release-point-table.component';
 import { EmissionsUnitTableComponent } from './emission-inventory/emissions-unit-table/emissions-unit-table.component';
+import { FacilityInformationComponent } from './facility-information/facility-information.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { EmissionsUnitTableComponent } from './emission-inventory/emissions-unit
     EmissionProcessListComponent,
     EmissionInventoryComponent,
     ReleasePointTableComponent,
-    EmissionsUnitTableComponent
+    EmissionsUnitTableComponent,
+    FacilityInformationComponent
   ],
   imports: [
     CommonModule,

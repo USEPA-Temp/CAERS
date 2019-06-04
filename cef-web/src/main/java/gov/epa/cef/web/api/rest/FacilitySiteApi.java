@@ -72,8 +72,8 @@ public class FacilitySiteApi {
     @GetMapping(value = "/report/{reportId}/facility/{frsFacilityId}")
     @ResponseBody
     public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable Long reportId, @PathVariable String frsFacilityId) {
-
-        FacilitySiteDto result = facilityMapper.toDto(facilityService.findByFrsIdAndReportId(frsFacilityId, reportId));
+        Facility facility = facilityService.findByFrsIdAndReportId(frsFacilityId, reportId);
+        FacilitySiteDto result = facilityMapper.toDto(facility);
 
         return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }

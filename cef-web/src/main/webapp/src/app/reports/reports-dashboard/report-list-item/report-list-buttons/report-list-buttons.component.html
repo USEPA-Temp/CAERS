@@ -1,7 +1,7 @@
 <div class="pipe-list">
 	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['NotStarted'])">Begin</a>
 
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Failed', 'InProgress', 'Passed', 'PassedAlerts'])">Continue</a>
+	<a [routerLink]="['/facility', report.eisProgramId, 'reports', report.id, 'facilityInformation']" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Failed', 'InProgress', 'Passed', 'PassedAlerts'])">Continue</a>
 	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Failed', 'InProgress', 'Passed', 'PassedAlerts'])">Run Quality Check</a>
 	
 	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Passed', 'PassedAlerts'])  && userContext.user.role === 'Preparer'">Notify Certifier</a>

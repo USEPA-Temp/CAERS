@@ -83,6 +83,18 @@ public class Facility extends BaseAuditEntity {
     @Column(name = "postal_code", length = 10)
     private String postalCode;
     
+    @Column(name = "mailing_street_address", length = 100)
+    private String mailingStreetAddress;
+    
+    @Column(name = "mailing_city", length = 60)
+    private String mailingCity;
+    
+    @Column(name = "mailing_state_code", length = 5)
+    private String mailingStateCode;
+    
+    @Column(name = "mailing_postal_code", length = 10)
+    private String mailingPostalCode;
+    
     @Column(name = "latitude", precision = 10, scale = 6)
     private Double latitude;
     
@@ -235,6 +247,38 @@ public class Facility extends BaseAuditEntity {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public String getMailingStreetAddress() {
+        return mailingStreetAddress;
+    }
+
+    public void setMailingStreetAddress(String mailingStreetAddress) {
+        this.mailingStreetAddress = mailingStreetAddress;
+    }
+
+    public String getMailingCity() {
+        return mailingCity;
+    }
+
+    public void setMailingCity(String mailingCity) {
+        this.mailingCity = mailingCity;
+    }
+
+    public String getMailingStateCode() {
+        return mailingStateCode;
+    }
+
+    public void setMailingStateCode(String mailingStateCode) {
+        this.mailingStateCode = mailingStateCode;
+    }
+
+    public String getMailingPostalCode() {
+        return mailingPostalCode;
+    }
+
+    public void setMailingPostalCode(String mailingPostalCode) {
+        this.mailingPostalCode = mailingPostalCode;
     }
 
     public Double getLatitude() {
