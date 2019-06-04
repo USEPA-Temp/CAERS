@@ -19,7 +19,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let cefFacility of cefFacilities">
+      <tr *ngFor="let cefFacility of tableData">
         <th scope="row"><input type="checkbox"></th>
         <td><ngb-highlight [result]="cefFacility.name"></ngb-highlight></td>
         <td><ngb-highlight [result]="cefFacility.county"></ngb-highlight></td>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Facility } from 'src/app/shared/models/facility';
-import { FacilityService } from 'src/app/core/http/facility/facility.service';
+import { CdxFacility } from 'src/app/shared/models/cdx-facility';
+import { CdxFacilityService } from 'src/app/core/http/facility/cdx-facility.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
@@ -9,9 +9,9 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
   styleUrls: ['./facility-dashboard.component.scss']
 })
 export class FacilityDashboardComponent implements OnInit {
-  facilities: Facility[] = [];
+  facilities: CdxFacility[] = [];
 
-  constructor(private facilityService: FacilityService, private userContext: UserContextService) { }
+  constructor(private cdxFacilityService: CdxFacilityService, private userContext: UserContextService) { }
 
   ngOnInit() {
     this.getFacilities();
@@ -19,7 +19,7 @@ export class FacilityDashboardComponent implements OnInit {
   }
 
   getFacilities(): void {
-    this.facilityService.getMyFacilities()
+    this.cdxFacilityService.getMyFacilities()
     .subscribe(facilities => this.facilities = facilities);
   }
 

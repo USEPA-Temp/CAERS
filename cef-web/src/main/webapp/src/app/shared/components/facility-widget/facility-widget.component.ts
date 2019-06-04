@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/core/http/user/user.service';
 import { UserToken } from 'src/app/shared/models/user-token';
-import { Facility } from 'src/app/shared/models/facility';
+import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { ActivatedRoute } from '@angular/router';
 
 declare const initFrsWidget: any;
@@ -18,7 +18,7 @@ export class FacilityWidgetComponent implements OnInit {
 
   ngOnInit() {
       this.route.data
-      .subscribe((data: { facility: Facility }) => {
+      .subscribe((data: { facility: CdxFacility }) => {
             console.log(data.facility);
             this.userService.getCurrentUserNaasToken()
             .subscribe(userToken => initFrsWidget(userToken.userRoleId, userToken.token,

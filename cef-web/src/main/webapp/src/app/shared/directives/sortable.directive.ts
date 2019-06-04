@@ -1,5 +1,7 @@
 import {Directive, EventEmitter, Input, Output} from '@angular/core';
 
+export const compare = (v1, v2) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
+
 export type SortDirection = 'asc' | 'desc' | '';
 const rotate: {[key: string]: SortDirection} = { asc: 'desc', desc: '', '': 'asc' };
 

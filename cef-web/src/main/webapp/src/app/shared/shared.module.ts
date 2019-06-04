@@ -24,7 +24,8 @@ import { SharedRoutingModule } from 'src/app/shared/shared-routing';
     CollapseNavComponent,
     SidebarInnerNavComponent,
     SidebarInnerNavItemComponent
-  ],
+
+],
   exports: [
     FacilityInfoComponent,
     CollapseIconComponent,
@@ -34,7 +35,7 @@ import { SharedRoutingModule } from 'src/app/shared/shared-routing';
     SidebarInnerNavComponent,
     SidebarInnerNavItemComponent,
     FacilityWidgetComponent
-  ],
+],
   imports: [
     CommonModule,
     FontAwesomeModule,

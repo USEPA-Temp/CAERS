@@ -1,6 +1,6 @@
 import { EmissionsReport } from 'src/app/shared/models/emissions-report';
-import { Facility } from 'src/app/shared/models/facility';
-import { ReportService } from 'src/app/core/http/report/report.service';
+import { CdxFacility } from 'src/app/shared/models/cdx-facility';
+import { EmissionsReportingService } from 'src/app/core/http/emissions-reporting/emissions-reporting.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { SideNavItem } from 'src/app/shared/models/side-nav-item';
 
@@ -10,11 +10,11 @@ import { SideNavItem } from 'src/app/shared/models/side-nav-item';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  @Input() facility: Facility;
+  @Input() facility: CdxFacility;
   @Input() report: EmissionsReport;
   navItems: SideNavItem[];
 
-  constructor(private reportService: ReportService) { }
+  constructor(private reportService: EmissionsReportingService) { }
 
   ngOnInit() {
       if (this.report) {

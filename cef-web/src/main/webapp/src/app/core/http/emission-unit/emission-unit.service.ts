@@ -29,6 +29,11 @@ export class EmissionUnitService {
     return this.http.get<EmissionUnit>(url);
   }
 
+  retrieveForFacility(facilitySiteId: number): Observable<EmissionUnit[]> {
+    const url = `${this.baseUrl}/facility/${facilitySiteId}`;
+    return this.http.get<EmissionUnit[]>(url);
+  }
+
   /**
    * Not currently used, but generates a nav flow from data.
    * This functionality should be moved to the backend, but I am leaving in place for reference.

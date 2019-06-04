@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FacilityListComponent } from './facility-list.component';
 import { FacilityListItemComponent } from 'src/app/modules/facility-dashboard/components/facility-list-item/facility-list-item.component';
-import { Facility } from 'src/app/shared/models/facility';
+import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -21,7 +21,7 @@ describe('FacilityListComponent', () => {
         county: "US",
         zipCode: "22033"
   };
-  let facilities:Facility[]=[facility];
+  let facilities:CdxFacility[]=[facility];
   
   beforeEach(async(() => {
     TestBed.configureTestingModule({

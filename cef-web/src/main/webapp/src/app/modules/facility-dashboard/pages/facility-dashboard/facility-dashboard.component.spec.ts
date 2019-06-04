@@ -7,7 +7,7 @@ import { FacilityListItemComponent } from 'src/app/modules/facility-dashboard/co
 
 import { SharedModule } from 'src/app/shared/shared.module';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Facility } from 'src/app/shared/models/facility';
+import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -26,7 +26,7 @@ describe('FacilityDashboardComponent', () => {
       county: "US",
       zipCode: "22033"
   };
-  let facilities: Facility[] = [facility];
+  let facilities: CdxFacility[] = [facility];
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FacilityDashboardComponent,

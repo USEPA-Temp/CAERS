@@ -1,5 +1,5 @@
-import { Facility } from 'src/app/shared/models/facility';
-import { FacilityService } from 'src/app/core/http/facility/facility.service';
+import { CdxFacility } from 'src/app/shared/models/cdx-facility';
+import { CdxFacilityService } from 'src/app/core/http/facility/cdx-facility.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -7,13 +7,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FacilityContextService {
-  private facility$: Observable<Facility>;
+  private facility$: Observable<CdxFacility>;
   private programId: string;
 
-  constructor(private facilityService: FacilityService) {
+  constructor(private cdxFacilityService: CdxFacilityService) {
   }
 
-  getFacility(programId: string): Observable<Facility> {
+  getFacility(programId: string): Observable<CdxFacility> {
     if (this.programId === programId) {
       return this.facility$;
     } else {
@@ -24,6 +24,6 @@ export class FacilityContextService {
   }
 
   private fetchFacility() {
-    this.facility$ = this.facilityService.getFacility(this.programId);
+    this.facility$ = this.cdxFacilityService.getFacility(this.programId);
   }
 }

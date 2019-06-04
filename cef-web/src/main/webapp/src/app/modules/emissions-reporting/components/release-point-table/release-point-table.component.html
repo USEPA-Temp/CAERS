@@ -1,0 +1,27 @@
+<div class="card">
+    <div class="card-header text-center">
+        <strong>Release Points</strong>
+    </div>
+    <div class="card-body">
+        <div class="mh-100 overflow-auto">
+          <table class="table table-sm table-striped table-bordered">
+            <thead>
+            <tr>
+              <th scope="col" sortable="id" (sort)="onSort($event)">Release Point ID</th>
+              <th scope="col" sortable="typeCode" (sort)="onSort($event)">Release Point Type</th>
+              <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point Description</th>
+              <th scope="col" sortable="operatingStatusCode.description" (sort)="onSort($event)">Operating Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of tableData">
+              <td>{{item.id}}</td>
+              <td>{{item.typeCode}}</td>
+              <td><a href="#">{{item.releasePointIdentifier}}</a></td>
+              <td>{{item.operatingStatusCode.description}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+</div>
