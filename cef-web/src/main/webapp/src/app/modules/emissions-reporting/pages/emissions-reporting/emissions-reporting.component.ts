@@ -18,12 +18,12 @@ export class EmissionsReportingComponent implements OnInit {
   ngOnInit() {
     this.route.data
     .subscribe((data: { facility: CdxFacility }) => {
-      console.log(data.facility);
       this.facility = data.facility;
 
       this.reportService.getCurrentReport(this.facility.programId)
         .subscribe(report => this.report = report);
       });
   }
+
 
 }

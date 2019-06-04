@@ -1,0 +1,62 @@
+<app-step-progress></app-step-progress>
+
+<div class="card mb-3">
+    <div class="card-header text-center">
+        <strong>Facility Information</strong>
+    </div>
+    <div *ngIf="facilitySite" class="card-body">
+        <div class="row">
+            <div class="col-sm-6 col-md-2"><strong>Facility EIS ID:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.emissionsReport.eisProgramId}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Latitude:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.latitude}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.operatingStatusCode.description}}</div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-6 col-md-2"><strong>Facility Name:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.name}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Longitude:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.longitude}}</div>
+            <div class="col-sm-6 col-md-2"><strong>BIA Code:</strong></div>
+            <div class="col-sm-6 col-md-2"></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-6 col-md-2"><strong>Facility Address:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}</div>
+            <div class="col-sm-6 col-md-2"><strong>NAICS Code:</strong></div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.naicsCode.description}}</div>            
+        </div>
+    </div>
+</div>
+<div class="card mb-3" *ngIf="facilitySite" >
+    <div class="card-header text-center">
+        <strong>Facility Contact Information</strong>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6 col-md-2"><strong>Contact Type:</strong></div>
+            <div class="col-sm-6 col-md-2"></div>
+            <div class="col-sm-6 col-md-2"><strong>Phone Number:</strong></div>
+            <div class="col-sm-6 col-md-2"></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-6 col-md-2"><strong>Contact Name:</strong></div>
+            <div class="col-sm-6 col-md-2"></div>
+            <div class="col-sm-6 col-md-2"><strong>Email Address:</strong></div>
+            <div class="col-sm-6 col-md-2"></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
+            <div class="col-sm-6 col-md-2"></div>
+            <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
+            <div class="col-sm-6 col-md-2"></div>         
+        </div>
+    </div>
+</div>
