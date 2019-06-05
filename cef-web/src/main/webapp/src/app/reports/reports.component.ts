@@ -18,7 +18,6 @@ export class ReportsComponent implements OnInit {
   ngOnInit() {
     this.route.data
     .subscribe((data: { facility: Facility }) => {
-      console.log(data.facility);
       this.facility = data.facility;
 
       this.reportService.getCurrentReport(this.facility.programId)

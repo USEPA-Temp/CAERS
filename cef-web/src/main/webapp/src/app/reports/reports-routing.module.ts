@@ -1,5 +1,6 @@
 import { EmissionInventoryComponent } from './emission-inventory/emission-inventory.component';
 import { EmissionUnitDashboardComponent } from './emission-unit-dashboard/emission-unit-dashboard.component';
+import { FacilityInformationComponent } from './facility-information/facility-information.component';
 import { ReportsDashboardComponent } from './reports-dashboard/reports-dashboard.component';
 import { ReportsComponent } from './reports.component';
 import { NgModule } from '@angular/core';
@@ -25,8 +26,17 @@ const reportRoutes: Routes = [
         ]
       }, {
         path: ':reportId',
-        component: EmissionInventoryComponent,
-        data: { title: 'Emission Inventory' }
+        children: [
+          {
+            path: '',
+            component: EmissionInventoryComponent,
+            data: { title: 'Emission Inventory' }
+          }, {
+            path: 'facilityInformation',
+            component: FacilityInformationComponent,
+            data: { title: 'Facility Information' }
+          }
+        ]
       }, {
         path: '',
         component: ReportsDashboardComponent,

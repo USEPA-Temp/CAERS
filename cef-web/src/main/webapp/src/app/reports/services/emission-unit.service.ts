@@ -31,7 +31,7 @@ export class EmissionUnitService {
   }
 
   /**
-   * Retries the report emissions unit and transform them to side navigation tree items.
+   * Retrieves the report emissions units and transform them to side navigation tree items.
    */
   retrieveReportNavTree(facilityId: any): Observable<SideNavItem[]> {
     return this.retrieveForFacility(facilityId).pipe(

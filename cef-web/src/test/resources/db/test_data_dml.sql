@@ -24,9 +24,10 @@ INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, y
 
 --FACILITY
 INSERT INTO FACILITY (id, report_id, frs_facility_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
- 	naics_code, street_address, city, county, state_code, country_code, postal_code, latitude, longitude, created_by, created_date, last_modified_by, last_modified_date) 
-	VALUES ('9999991', '9999997', '9758611', '', 'CAP', '133', 'GILMAN BUILDING PRODUCTS LLC', 'Pulp and Paper Processing Plant', 'OP', '1985', '63JJJJ', '4241',
-	'173 PEACHTREE RD', 'Fitzgerald', '', 'GA' , '', '31750', '33.7490', '84.3880', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ 	naics_code, street_address, city, county, state_code, country_code, postal_code, latitude, longitude, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
+	VALUES ('9999991', '9999997', '9758611', '', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant', 'OP', '1985', '63JJJJ', '4241',
+	'173 Peachtree Rd', 'Fitzgerald', '', 'GA' , '', '31750', '33.7490', '84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+	'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --EMISSION UNITS
 INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, unit_measure_cd,
@@ -103,13 +104,13 @@ INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_co
 	VALUES ('9999993', '9999993', 'Annual', 'OP', 'TEST', '111', 'TEST', 'TEST', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 
-INSERT INTO OPERATING_DETAIL (id, reporting_period_id, avg_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
+INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
 	percent_fall, created_by, created_date, last_modified_by, last_modified_date)
 	VALUES ('9999991', '9999991', '8700', '24','7','25', '25', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO OPERATING_DETAIL (id, reporting_period_id, avg_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
+INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
 	percent_fall, created_by, created_date, last_modified_by, last_modified_date)
 	VALUES ('9999992', '9999992', '8700', '20','6','10', '10', '50', '30', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO OPERATING_DETAIL (id, reporting_period_id, avg_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
+INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
 	percent_fall, created_by, created_date, last_modified_by, last_modified_date)
 	VALUES ('9999993', '9999993', '8700', '18','5','45', '5', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
