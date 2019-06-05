@@ -1,6 +1,6 @@
 import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import { CdxFacility } from 'src/app/shared/models/cdx-facility';
-import { EmissionsReportingService } from 'src/app/core/http/emissions-reporting/emissions-reporting.service';
+import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 

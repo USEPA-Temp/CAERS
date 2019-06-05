@@ -20,11 +20,15 @@ public class ReleasePointDto implements Serializable {
     private Double stackDiameter;
     private String stackDiameterUomCode;
     private Double exitGasVelocity;
-    private String exitGasVelicityUomCode;
+    private String exitGasVelocityUomCode;
     private Short exitGasTemperature;
     private Double exitGasFlowRate;
     private String exitGasFlowUomCode;
     private Short statusYear;
+    private Double fugitiveLine1Latitude;
+    private Double fugitiveLine1Longitude;
+    private Double fugitiveLine2Latitude;
+    private Double fugitiveLine2Longitude;
     private Double latitude;
     private Double longitude;
 
@@ -116,12 +120,12 @@ public class ReleasePointDto implements Serializable {
         this.exitGasVelocity = exitGasVelocity;
     }
 
-    public String getExitGasVelicityUomCode() {
-        return exitGasVelicityUomCode;
+    public String getExitGasVelocityUomCode() {
+        return exitGasVelocityUomCode;
     }
 
-    public void setExitGasVelicityUomCode(String exitGasVelicityUomCode) {
-        this.exitGasVelicityUomCode = exitGasVelicityUomCode;
+    public void setExitGasVelocityUomCode(String exitGasVelicityUomCode) {
+        this.exitGasVelocityUomCode = exitGasVelicityUomCode;
     }
 
     public Short getExitGasTemperature() {
@@ -154,6 +158,38 @@ public class ReleasePointDto implements Serializable {
 
     public void setStatusYear(Short statusYear) {
         this.statusYear = statusYear;
+    }
+
+    public Double getFugitiveLine1Latitude() {
+        return fugitiveLine1Latitude;
+    }
+
+    public void setFugitiveLine1Latitude(Double fugitiveLine1Latitude) {
+        this.fugitiveLine1Latitude = fugitiveLine1Latitude;
+    }
+
+    public Double getFugitiveLine1Longitude() {
+        return fugitiveLine1Longitude;
+    }
+
+    public void setFugitiveLine1Longitude(Double fugitiveLine1Longitude) {
+        this.fugitiveLine1Longitude = fugitiveLine1Longitude;
+    }
+
+    public Double getFugitiveLine2Latitude() {
+        return fugitiveLine2Latitude;
+    }
+
+    public void setFugitiveLine2Latitude(Double fugitiveLine2Latitude) {
+        this.fugitiveLine2Latitude = fugitiveLine2Latitude;
+    }
+
+    public Double getFugitiveLine2Longitude() {
+        return fugitiveLine2Longitude;
+    }
+
+    public void setFugitiveLine2Longitude(Double fugitiveLine2Longitude) {
+        this.fugitiveLine2Longitude = fugitiveLine2Longitude;
     }
 
     public Double getLatitude() {

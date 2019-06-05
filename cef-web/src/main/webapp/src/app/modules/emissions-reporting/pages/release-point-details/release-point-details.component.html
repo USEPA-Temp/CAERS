@@ -1,0 +1,98 @@
+<app-step-progress></app-step-progress>
+
+<div *ngIf="releasePoint">
+    <div class="row">
+        <div class="col-sm-12">
+        
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Release Point Information</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Release Point ID:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.releasePointIdentifier}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Release Point Type Code:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.typeCode}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Release Point Status:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.operatingStatusCode.description}}</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Stack Height Measure:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.stackHeight}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Release Point Description:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.description}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Release Point Status Year:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.statusYear}}</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Stack Height Uom:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.stackHeightUomCode}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate Measure:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowRate}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Fugitive Line Point 1 Lat:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveLine1Latitude}}</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Stack Diameter Measure:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameter}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate UoM:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowUomCode}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Fugitive Line Point 1 Long:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveLine1Longitude}}</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Stack Diameter Uom:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameterUomCode}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Exit Gas Temp. Measure:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.exitGasTemperature}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Fugitive Line Point 2 Lat:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveLine2Latitude}}</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Gas Velocity Measure:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.exitGasVelocity}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Latitude Measure:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.latitude}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Fugitive Line Point 2 Long:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveLine2Longitude}}</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Gas Velocity UoM:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.exitGasVelocityUomCode}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Longitude Measure:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.longitude}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>RP Program System Code:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.programSystemCode.description}}</div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div *ngIf="processes">
+        <div class="row">
+            <div class="col-sm-6">
+            
+                <div class="card">
+                    <div class="card-header text-center">
+                        <strong>Processes Associated with this Release Point</strong>
+                    </div>
+                    <div class="card-body">
+                        <app-emissions-process-table [tableData]="processes"></app-emissions-process-table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+    </div>
+</div>

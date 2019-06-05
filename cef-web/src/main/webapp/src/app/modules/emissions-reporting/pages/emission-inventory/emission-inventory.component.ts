@@ -1,7 +1,7 @@
 import { FacilitySite } from 'src/app/shared/models/facility-site';
-import { FacilitySiteService } from 'src/app/core/http/facility/facility-site.service';
-import { EmissionUnitService } from 'src/app/core/http/emission-unit/emission-unit.service';
-import { ReleasePointService } from 'src/app/core/http/release-point/release-point.service';
+import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
+import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
+import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 

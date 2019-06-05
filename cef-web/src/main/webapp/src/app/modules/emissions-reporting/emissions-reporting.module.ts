@@ -1,4 +1,4 @@
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -19,6 +19,8 @@ import { ReleasePointTableComponent } from 'src/app/modules/emissions-reporting/
 import { EmissionsUnitTableComponent } from 'src/app/modules/emissions-reporting/components/emissions-unit-table/emissions-unit-table.component';
 import { FacilityInformationComponent } from 'src/app/modules/emissions-reporting/pages/facility-information/facility-information.component';
 import { EmissionsUnitToSideNavPipe } from 'src/app/shared/pipes/emissions-unit-to-side-nav.pipe';
+import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reporting/pages/release-point-details/release-point-details.component';
+import { EmissionsProcessTableComponent } from 'src/app/modules/emissions-reporting/components/emissions-process-table/emissions-process-table.component';
 
 
 @NgModule({
@@ -35,7 +37,10 @@ import { EmissionsUnitToSideNavPipe } from 'src/app/shared/pipes/emissions-unit-
     ReleasePointTableComponent,
     EmissionsUnitTableComponent,
     FacilityInformationComponent,
-    EmissionsUnitToSideNavPipe
+    EmissionsUnitToSideNavPipe,
+    ReleasePointDetailsComponent,
+    EmissionsProcessTableComponent
+
   ],
   imports: [
     CommonModule,

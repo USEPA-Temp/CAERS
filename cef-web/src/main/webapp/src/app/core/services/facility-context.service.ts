@@ -1,5 +1,5 @@
 import { CdxFacility } from 'src/app/shared/models/cdx-facility';
-import { CdxFacilityService } from 'src/app/core/http/facility/cdx-facility.service';
+import { CdxFacilityService } from 'src/app/core/services/cdx-facility.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 

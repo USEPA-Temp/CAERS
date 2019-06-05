@@ -1,5 +1,5 @@
 import { FacilitySite } from 'src/app/shared/models/facility-site';
-import { FacilitySiteService } from 'src/app/core/http/facility/facility-site.service';
+import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
