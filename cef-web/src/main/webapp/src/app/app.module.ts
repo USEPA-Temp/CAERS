@@ -17,10 +17,10 @@ import { SharedModule } from './shared/shared.module';
 import { BreadcrumbNavComponent } from 'src/app/shared/components/breadcrumb-nav/breadcrumb-nav.component';
 import { SubmissionReviewDashboardComponent } from 'src/app/modules/submission-review-dashboard/pages/submission-review-dashboard/submission-review-dashboard.component';
 import { SubmissionReviewListComponent } from 'src/app/modules/submission-review-dashboard/components/submission-review-list/submission-review-list.component';
-import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RedirectComponent } from 'src/app/modules/redirect/redirect.component';
 import { FacilityDataReviewComponent } from 'src/app/modules/facility-dashboard/components/facility-data-review/facility-data-review.component';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +35,6 @@ import { FacilityDataReviewComponent } from 'src/app/modules/facility-dashboard/
     FacilityListItemComponent,
     BreadcrumbNavComponent,
     SubmissionReviewListComponent,
-    SortableHeaderDirective,
     FacilityDataReviewComponent
   ],
   imports: [

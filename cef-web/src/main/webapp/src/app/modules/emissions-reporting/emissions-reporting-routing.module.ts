@@ -7,6 +7,7 @@ import { FacilityInformationComponent } from 'src/app/modules/emissions-reportin
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+
 const reportRoutes: Routes = [
   {
     path: '',

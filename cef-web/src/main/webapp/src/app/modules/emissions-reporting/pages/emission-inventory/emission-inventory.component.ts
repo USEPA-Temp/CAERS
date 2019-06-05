@@ -5,6 +5,7 @@ import { ReleasePointService } from 'src/app/core/http/release-point/release-poi
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+
 @Component({
   selector: 'app-emission-inventory',
   templateUrl: './emission-inventory.component.html',

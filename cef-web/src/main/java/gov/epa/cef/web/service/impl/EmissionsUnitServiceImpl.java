@@ -1,18 +1,24 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.service.EmissionsUnitService;
+import gov.epa.cef.web.service.dto.EmissionsUnitDto;
+import gov.epa.cef.web.service.mapper.EmissionsUnitMapper;
 
 @Service
 public class EmissionsUnitServiceImpl implements EmissionsUnitService {
 
     @Autowired
     private EmissionsUnitRepository unitRepo;
+    
+    @Autowired
+    private EmissionsUnitMapper emissionsUnitMapper;
 
 
     /**
@@ -20,16 +26,22 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
      * @param unitId 
      * @return
      */	
-    public EmissionsUnit retrieveUnitById(Long unitId) {
-        return unitRepo
+    public EmissionsUnitDto retrieveUnitById(Long unitId) {
+        EmissionsUnit emissionsUnit= unitRepo
             .findById(unitId)
             .orElse(null);
+        EmissionsUnitDto result = emissionsUnitMapper.emissionsUnitToDto(emissionsUnit);
+        return result;
     }
-
-
+    
+    /* (non-Javadoc)
+     * @see gov.epa.cef.web.service.EmissionsUnitService#retrieveEmissionUnitsForFacility(java.lang.Long)
+     */
     @Override
-    public Collection<EmissionsUnit> retrieveByFacilityId(Long facilityId) {
-        return unitRepo.findByFacilityId(facilityId);
+    public List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilityId) {
+        List<EmissionsUnit> emissionUnits= unitRepo.findByFacilityId(facilityId);
+        return emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(emissionUnits);
     }
+
 
 }

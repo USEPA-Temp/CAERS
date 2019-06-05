@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class EmissionsUnitDto implements Serializable {
     
@@ -17,6 +18,7 @@ public class EmissionsUnitDto implements Serializable {
     private Short statusYear;
     private String unitOfMeasureCode;
     private String unitOfMeasureDescription;
+    private List<EmissionsProcessDto> emissionsProcesses;
 
 
 
@@ -94,6 +96,12 @@ public class EmissionsUnitDto implements Serializable {
     }
     public void setUnitOfMeasureDescription(String unitOfMeasureDescription) {
         this.unitOfMeasureDescription = unitOfMeasureDescription;
+    }
+    public List<EmissionsProcessDto> getEmissionsProcesses() {
+        return emissionsProcesses;
+    }
+    public void setEmissionsProcesses(List<EmissionsProcessDto> emissionsProcesses) {
+        this.emissionsProcesses = emissionsProcesses;
     }
 
 }
