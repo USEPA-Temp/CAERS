@@ -62,8 +62,8 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "exit_gas_velocity", precision = 8, scale = 3)
     private Double exitGasVelocity;
     
-    @Column(name = "exit_gas_velicity_uom_code", length = 20)
-    private String exitGasVelicityUomCode;
+    @Column(name = "exit_gas_velocity_uom_code", length = 20)
+    private String exitGasVelocityUomCode;
     
     @Column(name = "exit_gas_temperature", precision = 4, scale = 0)
     private Short exitGasTemperature;
@@ -76,6 +76,18 @@ public class ReleasePoint extends BaseAuditEntity {
     
     @Column(name = "status_year")
     private Short statusYear;
+    
+    @Column(name = "fugitive_line_1_latitude", precision = 10, scale = 6)
+    private Double fugitiveLine1Latitude;
+    
+    @Column(name = "fugitive_line_1_longitude", precision = 10, scale = 6)
+    private Double fugitiveLine1Longitude;
+    
+    @Column(name = "fugitive_line_2_latitude", precision = 10, scale = 6)
+    private Double fugitiveLine2Latitude;
+    
+    @Column(name = "fugitive_line_2_longitude", precision = 10, scale = 6)
+    private Double fugitiveLine2Longitude;
     
     @Column(name = "latitude", nullable = false, precision = 10, scale = 6)
     private Double latitude;
@@ -182,12 +194,12 @@ public class ReleasePoint extends BaseAuditEntity {
         this.exitGasVelocity = exitGasVelocity;
     }
 
-    public String getExitGasVelicityUomCode() {
-        return this.exitGasVelicityUomCode;
+    public String getExitGasVelocityUomCode() {
+        return this.exitGasVelocityUomCode;
     }
 
-    public void setExitGasVelicityUomCode(String exitGasVelicityUomCode) {
-        this.exitGasVelicityUomCode = exitGasVelicityUomCode;
+    public void setExitGasVelocityUomCode(String exitGasVelicityUomCode) {
+        this.exitGasVelocityUomCode = exitGasVelicityUomCode;
     }
 
     public Short getExitGasTemperature() {
@@ -220,6 +232,38 @@ public class ReleasePoint extends BaseAuditEntity {
 
     public void setStatusYear(Short statusYear) {
         this.statusYear = statusYear;
+    }
+
+    public Double getFugitiveLine1Latitude() {
+        return fugitiveLine1Latitude;
+    }
+
+    public void setFugitiveLine1Latitude(Double fugitiveLine1Latitude) {
+        this.fugitiveLine1Latitude = fugitiveLine1Latitude;
+    }
+
+    public Double getFugitiveLine1Longitude() {
+        return fugitiveLine1Longitude;
+    }
+
+    public void setFugitiveLine1Longitude(Double fugitiveLine1Longitude) {
+        this.fugitiveLine1Longitude = fugitiveLine1Longitude;
+    }
+
+    public Double getFugitiveLine2Latitude() {
+        return fugitiveLine2Latitude;
+    }
+
+    public void setFugitiveLine2Latitude(Double fugitiveLine2Latitude) {
+        this.fugitiveLine2Latitude = fugitiveLine2Latitude;
+    }
+
+    public Double getFugitiveLine2Longitude() {
+        return fugitiveLine2Longitude;
+    }
+
+    public void setFugitiveLine2Longitude(Double fugitiveLine2Longitude) {
+        this.fugitiveLine2Longitude = fugitiveLine2Longitude;
     }
 
     public Double getLatitude() {

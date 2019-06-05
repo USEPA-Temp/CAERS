@@ -45,17 +45,19 @@ INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_cod
 
 --RELEASE POINTS
 INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
-	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velicity_uom_code, exit_gas_temperature, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
+	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, 
+	fugitive_line_1_latitude, fugitive_line_1_longitude, fugitive_line_2_latitude, fugitive_line_2_longitude, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
-	VALUES ('9999991', '9999991', 'Smokestack 1', '63JJJJ', 'STACK', 'A big smokestack', NULL, '', NULL, '', NULL, '', NULL, '', 'OP', '1985', '33.7490', '84.3880', 
+	VALUES ('9999991', '9999991', 'Smokestack 1', '63JJJJ', 'STACK', 'A big smokestack', 40, 'M', 7, 'M', 20, 'FT/MIN', 75, 25, 'YD3/HR', 'OP', '1985', 
+		'32.7490', '83.3880', '34.7490', '85.3880', '33.7490', '84.3880', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
-	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velicity_uom_code, exit_gas_temperature, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
+	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999992', '9999991', 'Smokestack 2', '63JJJJ', 'STACK', 'Another big smokestack', NULL, '', NULL, '', NULL, '', NULL, '', 'OP', '1985', '33.7490', '84.3880', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
-	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velicity_uom_code, exit_gas_temperature, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
+	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999993', '9999991', 'Vent 1', '63JJJJ', 'VENT', 'A big vent', NULL, '', NULL, '', NULL, '', NULL, '', 'OP', '1985', '33.7490', '84.3880', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);

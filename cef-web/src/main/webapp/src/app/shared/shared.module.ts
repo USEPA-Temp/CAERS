@@ -6,6 +6,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { CollapseIconComponent } from './collapse-icon/collapse-icon.component';
 import { FacilityWidgetComponent } from './facility-widget/facility-widget.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -51,5 +52,6 @@ export class SharedModule {
     library.add(faCaretRight);
     library.add(faCaretDown);
     library.add(faAngleLeft);
+    library.add(faTrashAlt);
   }
 }
