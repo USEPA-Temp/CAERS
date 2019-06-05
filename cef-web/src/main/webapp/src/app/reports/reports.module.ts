@@ -14,39 +14,6 @@ import { StepProgressComponent } from './components/step-progress/step-progress.
 
 import { EmissionUnitInfoComponent } from './emission-unit-dashboard/emission-unit-info/emission-unit-info.component';
 import { EmissionProcessListComponent } from './emission-unit-dashboard/emission-process-list/emission-process-list.component';
-al<<<<<<< Updated upstream
-import { EmissionInventoryComponent } from './emission-inventory/emission-inventory.component';
-import { ReleasePointTableComponent } from './emission-inventory/release-point-table/release-point-table.component';
-import { EmissionsUnitTableComponent } from './emission-inventory/emissions-unit-table/emissions-unit-table.component';
-import { EmissionsUnitToSideNavPipe } from './pipes/emissions-unit-to-side-nav.pipe';
-import { FacilityInformationComponent } from './facility-information/facility-information.component';
-
-@NgModule({
-  declarations: [
-    ReportsDashboardComponent,
-    ReportsComponent,
-    ReportListItemComponent,
-    ReportListButtonsComponent,
-    EmissionUnitDashboardComponent,
-    StepProgressComponent,
-    EmissionUnitInfoComponent,
-    EmissionProcessListComponent,
-    EmissionInventoryComponent,
-    ReleasePointTableComponent,
-    EmissionsUnitTableComponent,
-    EmissionsUnitToSideNavPipe
-    FacilityInformationComponent
-  ],
-  imports: [
-    CommonModule,
-    ReportsRoutingModule,
-    SharedModule,
-    NgbModule,
-    FontAwesomeModule
-  ]
-})
-export class ReportsModule { }
-=======
 import { EmissionInventoryComponent } from './emission-inventory/emission-inventory.component';
 import { ReleasePointTableComponent } from './emission-inventory/release-point-table/release-point-table.component';
 import { EmissionsUnitTableComponent } from './emission-inventory/emissions-unit-table/emissions-unit-table.component';
@@ -78,4 +45,3 @@ import { FacilityInformationComponent } from './facility-information/facility-in
   ]
 })
 export class ReportsModule { }
->>>>>>> Stashed changes
