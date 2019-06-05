@@ -50,4 +50,4 @@ import { EmissionsProcessTableComponent } from 'src/app/modules/emissions-report
     FontAwesomeModule
   ]
 })
-export class ReportsModule { }
+export class EmissionsReportingModule { }
