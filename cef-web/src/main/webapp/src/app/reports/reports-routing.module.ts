@@ -1,6 +1,7 @@
 import { EmissionInventoryComponent } from './emission-inventory/emission-inventory.component';
 import { EmissionUnitDashboardComponent } from './emission-unit-dashboard/emission-unit-dashboard.component';
 import { FacilityInformationComponent } from './facility-information/facility-information.component';
+import { ReleasePointDetailsComponent } from './release-point-details/release-point-details.component';
 import { ReportsDashboardComponent } from './reports-dashboard/reports-dashboard.component';
 import { ReportsComponent } from './reports.component';
 import { NgModule } from '@angular/core';
@@ -15,6 +16,10 @@ const reportRoutes: Routes = [
         path: 'emissionUnit/:unitId',
         children: [
           {
+            path: 'process/:processId/release/:releasePointId',
+            component: ReleasePointDetailsComponent,
+            data: { title: 'Release Point' }
+          }, {
             path: '',
             component: EmissionUnitDashboardComponent,
             data: { title: 'Emission Unit' }
