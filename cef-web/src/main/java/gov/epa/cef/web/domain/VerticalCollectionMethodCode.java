@@ -14,10 +14,4 @@ public class VerticalCollectionMethodCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
 
-    // Constructors
-
-    /** default constructor */
-    public VerticalCollectionMethodCode() {
-    }
-
 }

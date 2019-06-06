@@ -14,21 +14,4 @@ public class VerticalReferenceDatumCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
 
-    // Constructors
-
-    /** default constructor */
-    public VerticalReferenceDatumCode() {
-    }
-
-    /** minimal constructor */
-    public VerticalReferenceDatumCode(String code) {
-        this.code = code;
-    }
-
-    /** full constructor */
-    public VerticalReferenceDatumCode(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
-
 }

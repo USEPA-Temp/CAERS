@@ -14,8 +14,4 @@ public class UnitTypeCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /** default constructor */
-    public UnitTypeCode() {
-    }
-
 }

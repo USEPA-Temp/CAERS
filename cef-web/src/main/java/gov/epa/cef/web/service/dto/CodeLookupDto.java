@@ -6,8 +6,8 @@ public class CodeLookupDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String code;
-    private String description;
+    protected String code;
+    protected String description;
 
     public String getCode() {
         return code;

@@ -26,12 +26,6 @@ public class RegulatoryCode extends BaseLookupEntity {
     @Column(name = "part_description", length = 2)
     private String partDescription;
 
-    // Constructors
-
-    /** default constructor */
-    public RegulatoryCode() {
-    }
-
     // Property accessors
 
     public String getCodeType() {

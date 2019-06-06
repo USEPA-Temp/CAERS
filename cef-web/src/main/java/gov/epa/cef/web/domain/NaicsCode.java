@@ -17,23 +17,17 @@ import javax.persistence.Table;
 @Table(name = "naics_code")
 
 public class NaicsCode implements java.io.Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     // Fields
-    
+
     @Id
     @Column(name = "code", unique = true, nullable = false, precision = 6, scale = 0)
     private Integer code;
 
     @Column(name = "description", length = 200)
     private String description;
-    
-    // Constructors
-
-    /** default constructor */
-    public NaicsCode() {
-    }
 
     // Property accessors
 

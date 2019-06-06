@@ -20,11 +20,6 @@ public class FacilityCategoryCode extends BaseLookupEntity {
     @Column(name = "name", length = 20)
     private String name;
 
-    // Constructors
-
-    /** default constructor */
-    public FacilityCategoryCode() {
-    }
     // Property accessors
 
     public String getName() {
