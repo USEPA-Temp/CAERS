@@ -42,4 +42,15 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
     }
 
 
+    /**
+     * Retrieve Emissions Processes for an Emissions Unit
+     * @param emissionsUnitid
+     * @return
+     */
+    public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId) {
+        List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId);
+        return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
+    }
+
+
 }

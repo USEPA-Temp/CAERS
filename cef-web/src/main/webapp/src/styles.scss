@@ -40,3 +40,9 @@ th[sortable].desc:after {
     transform: rotate(180deg);
     -ms-transform: rotate(180deg);
 }
+
+thead.thead-cef-medium {
+    background-color: $gray-500;
+    color: $black;
+    border-color: $gray-300;
+}

@@ -1,7 +1,7 @@
 
 <div class="mh-100 overflow-auto">
   <table class="table table-sm table-striped table-bordered">
-    <thead>
+    <thead class="thead-cef-medium">
     <tr>
       <th scope="col" sortable="emissionsProcessIdentifier" (sort)="onSort($event)">Process Description</th>
       <th scope="col" sortable="sccCode" (sort)="onSort($event)">SCC</th>
@@ -13,6 +13,11 @@
       <td>{{item.emissionsProcessIdentifier}}</td>
       <td><a routerLink="{{baseUrl}}/emissionUnit/{{item.emissionsUnitId}}/process/{{item.id}}">{{item.sccCode}}</a></td>
       <td><a href="#"><fa-icon icon="trash-alt"></fa-icon></a></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td><a href="#"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
     </tr>
     </tbody>
   </table>
