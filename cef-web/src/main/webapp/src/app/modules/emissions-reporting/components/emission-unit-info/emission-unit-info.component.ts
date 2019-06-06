@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./emission-unit-info.component.scss']
 })
 export class EmissionUnitInfoComponent implements OnInit {
-  @Input() emissionUnit: EmissionUnit;
+  @Input() emissionsUnit: EmissionUnit;
 
   constructor() { }
 

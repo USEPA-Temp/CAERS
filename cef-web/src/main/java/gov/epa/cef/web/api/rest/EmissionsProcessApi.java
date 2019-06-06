@@ -33,5 +33,18 @@ public class EmissionsProcessApi {
         Collection<EmissionsProcessDto> result = processService.retrieveForReleasePoint(releasePointId);
         return new ResponseEntity<Collection<EmissionsProcessDto>>(result, HttpStatus.OK);
     }
+
+    /**
+     * Retrieve Emissions Processes for an emissions unit
+     * @param emissionsUnitid
+     * @return
+     */
+    @GetMapping(value = "/emissionsUnit/{emissionsUnitId}")
+    @ResponseBody
+    public ResponseEntity<Collection<EmissionsProcessDto>> retrieveEmissionsProcessesForEmissionsUnit(@PathVariable Long emissionsUnitId) {
+
+        Collection<EmissionsProcessDto> result = processService.retrieveForEmissionsUnit(emissionsUnitId);
+        return new ResponseEntity<Collection<EmissionsProcessDto>>(result, HttpStatus.OK);
+    }
     
 }

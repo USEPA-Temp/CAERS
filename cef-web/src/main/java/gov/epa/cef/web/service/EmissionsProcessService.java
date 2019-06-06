@@ -20,4 +20,11 @@ public interface EmissionsProcessService {
      */
     List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId);
 
+    /**
+     * Retrieve Emissions Processes for an Emissions Unit
+     * @param emissionsUnitid
+     * @return
+     */
+    List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId);
+
 }
