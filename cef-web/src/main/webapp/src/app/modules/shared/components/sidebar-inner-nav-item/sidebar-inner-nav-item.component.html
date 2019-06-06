@@ -1,7 +1,7 @@
-<div class="sidebar-nav-item  d-flex flex-row justify-content-between" [routerLinkActive]="'active'" 
+<div class="nav-item  d-flex flex-row justify-content-between" [routerLinkActive]="'active'" 
 		[routerLinkActiveOptions]="{exact: true}"  #rla="routerLinkActive">
 
-	<div class="sidebar-nav-link">
+	<div class="nav-link">
 		<button class="btn btn-link text-primary font-weight-bold text-left small p-0" type="button"
 				(click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
 				[attr.aria-controls]="targetId" *ngIf="navItem.children.length">

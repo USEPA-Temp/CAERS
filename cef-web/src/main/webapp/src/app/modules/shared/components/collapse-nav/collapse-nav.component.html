@@ -1,12 +1,22 @@
-<div class="row">
-	<button class="btn btn-link text-primary font-weight-bold text-left" type="button"
-			(click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
-			[attr.aria-controls]="targetId">
-		<app-collapse-icon [collapsed]='collapsed'></app-collapse-icon> {{desc}}
-	</button>
+<div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
+        [routerLinkActiveOptions]="{exact: true}" #rla="routerLinkActive">
+
+    <div class="nav-link pl-0 pr-0">
+        <button class="btn btn-link text-primary font-weight-bold text-left p-0" type="button"
+                (click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
+                [attr.aria-controls]="targetId">
+            <app-collapse-icon [collapsed]='collapsed'></app-collapse-icon>
+        </button>
+        <a class=" text-primary font-weight-bold" [routerLinkActive]="'active text-success'"
+                [routerLinkActiveOptions]="{exact: true}" routerLink="{{linkUrl}}" 
+                >
+            {{desc}} 
+        </a>
+    </div>
+    <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
 </div>
 <div class="row">
 	<div [attr.id]="targetId" [ngbCollapse]="collapsed">
-		<app-sidebar-inner-nav [navItems]="navItems"></app-sidebar-inner-nav>
+	    <app-sidebar-inner-nav [navItems]="navItems"></app-sidebar-inner-nav>
 	</div>
 </div>
