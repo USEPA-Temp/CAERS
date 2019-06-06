@@ -1,6 +1,6 @@
-import { FacilityContextService } from './services/facility-context.service';
-import { RouteContextService } from './services/route-context.service';
-import { UserContextService } from './services/user-context.service';
+import { FacilityContextService } from 'src/app/core/services/facility-context.service';
+import { RouteContextService } from 'src/app/core/services/route-context.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 import { Component } from '@angular/core';
 
 @Component({
