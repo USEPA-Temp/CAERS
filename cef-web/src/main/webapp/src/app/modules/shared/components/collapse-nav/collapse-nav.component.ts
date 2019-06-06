@@ -11,6 +11,7 @@ export class CollapseNavComponent implements OnInit {
   @Input() collapsed = true;
   @Input() desc: string;
   @Input() targetId: string;
+  @Input() linkUrl: string;
   @Input() navItems: SideNavItem[];
 
   constructor() { }
