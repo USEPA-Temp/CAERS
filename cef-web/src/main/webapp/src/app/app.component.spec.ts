@@ -1,10 +1,10 @@
 import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
-import { HeaderComponent} from './components/header/header.component';
-import {FooterComponent} from './components/footer/footer.component';
-import {BreadcrumbNavComponent} from './components/breadcrumb-nav/breadcrumb-nav.component';
+import { AppComponent } from 'src/app/app.component';
+import { HeaderComponent} from 'src/app/core/header/header.component';
+import {FooterComponent} from 'src/app/core/footer/footer.component';
+import {BreadcrumbNavComponent} from 'src/app/shared/components/breadcrumb-nav/breadcrumb-nav.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientModule }    from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
