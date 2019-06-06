@@ -2,22 +2,16 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 
-import gov.epa.cef.web.domain.FacilityCategoryCode;
-import gov.epa.cef.web.domain.FacilitySourceTypeCode;
-import gov.epa.cef.web.domain.NaicsCode;
-import gov.epa.cef.web.domain.OperatingStatusCode;
-import gov.epa.cef.web.domain.ProgramSystemCode;
-
 public class FacilitySiteDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private FacilityCategoryCode facilityCategoryCode;
-    private FacilitySourceTypeCode facilitySourceTypeCode;
-    private NaicsCode naicsCode;
-    private ProgramSystemCode programSystemCode;
-    private OperatingStatusCode operatingStatusCode;
+    private FacilityCategoryCodeDto facilityCategoryCode;
+    private CodeLookupDto facilitySourceTypeCode;
+    private CodeLookupDto naicsCode;
+    private CodeLookupDto programSystemCode;
+    private CodeLookupDto operatingStatusCode;
     private EmissionsReportDto emissionsReport;
     private String frsFacilityId;
     private String altSiteIdentifier;
@@ -45,43 +39,43 @@ public class FacilitySiteDto implements Serializable {
         this.id = id;
     }
 
-    public FacilityCategoryCode getFacilityCategoryCode() {
+    public FacilityCategoryCodeDto getFacilityCategoryCode() {
         return facilityCategoryCode;
     }
 
-    public void setFacilityCategoryCode(FacilityCategoryCode facilityCategoryCode) {
+    public void setFacilityCategoryCode(FacilityCategoryCodeDto facilityCategoryCode) {
         this.facilityCategoryCode = facilityCategoryCode;
     }
 
-    public FacilitySourceTypeCode getFacilitySourceTypeCode() {
+    public CodeLookupDto getFacilitySourceTypeCode() {
         return facilitySourceTypeCode;
     }
 
-    public void setFacilitySourceTypeCode(FacilitySourceTypeCode facilitySourceTypeCode) {
+    public void setFacilitySourceTypeCode(CodeLookupDto facilitySourceTypeCode) {
         this.facilitySourceTypeCode = facilitySourceTypeCode;
     }
 
-    public NaicsCode getNaicsCode() {
+    public CodeLookupDto getNaicsCode() {
         return naicsCode;
     }
 
-    public void setNaicsCode(NaicsCode naicsCode) {
+    public void setNaicsCode(CodeLookupDto naicsCode) {
         this.naicsCode = naicsCode;
     }
 
-    public ProgramSystemCode getProgramSystemCode() {
+    public CodeLookupDto getProgramSystemCode() {
         return programSystemCode;
     }
 
-    public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
+    public void setProgramSystemCode(CodeLookupDto programSystemCode) {
         this.programSystemCode = programSystemCode;
     }
 
-    public OperatingStatusCode getOperatingStatusCode() {
+    public CodeLookupDto getOperatingStatusCode() {
         return operatingStatusCode;
     }
 
-    public void setOperatingStatusCode(OperatingStatusCode operatingStatusCode) {
+    public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
         this.operatingStatusCode = operatingStatusCode;
     }
 
