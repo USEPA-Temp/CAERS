@@ -28,6 +28,27 @@ INSERT INTO FACILITY (id, report_id, frs_facility_id, alt_site_identifier, categ
 	VALUES ('9999991', '9999997', '9758611', '', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant', 'OP', '1985', '63JJJJ', '4241',
 	'173 Peachtree Rd', 'Fitzgerald', '', 'GA' , '', '31750', '33.7490', '84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
 	'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+	
+--FACILITY SITE CONTACT
+INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
+    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    created_by, created_date, last_modified_by, last_modified_date) 
+    VALUES ('9999991', '9999991', 'Responsible Official', '', 'John', 'Smith', 'johnsmith@gilmanbuilding.com', '3193193119', '001',
+    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
+    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    created_by, created_date, last_modified_by, last_modified_date) 
+    VALUES ('9999992', '9999991', 'Facility', '', 'Jane', 'Doe', 'janedoe@example.com', '5555555555', '',
+    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
+    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    created_by, created_date, last_modified_by, last_modified_date) 
+    VALUES ('9999993', '9999991', 'Technical', '', 'Jane', 'Doe', 'janedoe@example.com', '5555555555', '',
+    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+
 
 --EMISSION UNITS
 INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, unit_measure_cd,

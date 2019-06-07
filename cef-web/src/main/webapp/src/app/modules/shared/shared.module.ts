@@ -1,3 +1,4 @@
+import { PhoneNumberPipe } from 'src/app/modules/shared//pipes/phone-number.pipe';
 import { FacilityInfoComponent } from 'src/app/shared/components/facility-info/facility-info.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -28,7 +29,8 @@ import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.dire
     CollapseNavComponent,
     SidebarInnerNavComponent,
     SidebarInnerNavItemComponent,
-    SortableHeaderDirective
+    SortableHeaderDirective,
+    PhoneNumberPipe
 ],
   exports: [
     FacilityInfoComponent,
@@ -39,7 +41,8 @@ import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.dire
     SidebarInnerNavComponent,
     SidebarInnerNavItemComponent,
     FacilityWidgetComponent,
-    SortableHeaderDirective
+    SortableHeaderDirective,
+    PhoneNumberPipe
 ],
   imports: [
     CommonModule,
