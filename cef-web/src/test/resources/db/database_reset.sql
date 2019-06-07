@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS public.release_point_appt;
 DROP TABLE IF EXISTS public.release_point;
 DROP TABLE IF EXISTS public.emissions_process;
 DROP TABLE IF EXISTS public.emissions_unit;
+DROP TABLE IF EXISTS public.facility_site_contact;
 DROP TABLE IF EXISTS public.facility;
 DROP TABLE IF EXISTS public.emissions_report;
 

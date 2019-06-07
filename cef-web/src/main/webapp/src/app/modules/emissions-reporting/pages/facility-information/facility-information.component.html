@@ -27,36 +27,47 @@
             <div class="col-sm-6 col-md-2"><strong>Facility Address:</strong></div>
             <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
             <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}</div>
+            <div class="col-sm-6 col-md-2">
+                <span *ngIf="facilitySite.mailingStreetAddress">
+                    {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}
+                </span>
+            </div>
             <div class="col-sm-6 col-md-2"><strong>NAICS Code:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.naicsCode.description}}</div>            
+            <div class="col-sm-6 col-md-2">{{facilitySite.naicsCode.description}}</div>
         </div>
     </div>
 </div>
-<div class="card mb-3" *ngIf="facilitySite" >
-    <div class="card-header text-center">
-        <strong>Facility Contact Information</strong>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-sm-6 col-md-2"><strong>Contact Type:</strong></div>
-            <div class="col-sm-6 col-md-2"></div>
-            <div class="col-sm-6 col-md-2"><strong>Phone Number:</strong></div>
-            <div class="col-sm-6 col-md-2"></div>
+
+<div *ngIf="facilitySite">
+    <div class="card mb-3" *ngFor="let contact of facilitySite.contacts">
+        <div class="card-header text-center">
+            <strong>Facility Contact Information</strong>
         </div>
-        
-        <div class="row">
-            <div class="col-sm-6 col-md-2"><strong>Contact Name:</strong></div>
-            <div class="col-sm-6 col-md-2"></div>
-            <div class="col-sm-6 col-md-2"><strong>Email Address:</strong></div>
-            <div class="col-sm-6 col-md-2"></div>
-        </div>
-        
-        <div class="row">
-            <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
-            <div class="col-sm-6 col-md-2"></div>
-            <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
-            <div class="col-sm-6 col-md-2"></div>         
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 col-md-2"><strong>Contact Type:</strong></div>
+                <div class="col-sm-6 col-md-2">{{contact.type}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Phone Number:</strong></div>
+                <div class="col-sm-6 col-md-4">{{contact.phone | phoneNumber}}</div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-6 col-md-2"><strong>Contact Name:</strong></div>
+                <div class="col-sm-6 col-md-2">{{contact.firstName}} {{contact.lastName}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Email Address:</strong></div>
+                <div class="col-sm-6 col-md-4">{{contact.email}}</div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
+                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode}}&nbsp;{{contact.postalCode}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
+                <div class="col-sm-6 col-md-2">
+                    <span *ngIf="contact.mailingStreetAddress">
+                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode}}&nbsp;{{contact.mailingPostalCode}}
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

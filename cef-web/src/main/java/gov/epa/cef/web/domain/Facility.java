@@ -106,6 +106,9 @@ public class Facility extends BaseAuditEntity {
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
     private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
+    private Set<FacilitySiteContact> contacts = new HashSet<FacilitySiteContact>(0);
 
     // Constructors
 
@@ -311,6 +314,14 @@ public class Facility extends BaseAuditEntity {
 
     public void setReleasePoints(Set<ReleasePoint> releasePoints) {
         this.releasePoints = releasePoints;
+    }
+
+    public Set<FacilitySiteContact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Set<FacilitySiteContact> contacts) {
+        this.contacts = contacts;
     }
 
 }
