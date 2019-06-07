@@ -10,7 +10,7 @@ export class SidebarInnerNavItemComponent implements OnInit {
   @Input() navItem: SideNavItem;
   @Input() baseUrl: string;
   itemUrl: string;
-  collapsed = true;
+  collapsed = false;
   targetId: string;
 
   constructor() { }

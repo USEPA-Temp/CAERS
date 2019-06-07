@@ -2,6 +2,8 @@ import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from "src/app/core/services/shared.service";
+import { EmissionsReport } from "src/app/shared/models/emissions-report";
 
 @Component({
   selector: 'app-emission-unit-dashboard',
@@ -11,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class EmissionUnitDashboardComponent implements OnInit {
   emissionUnit: EmissionUnit;
 
-  constructor(private emissionUnitService: EmissionUnitService, private route: ActivatedRoute) { }
+  constructor(private emissionUnitService: EmissionUnitService, private route: ActivatedRoute, private  sharedService: SharedService) { }
 
   ngOnInit() {
     this.route.paramMap
@@ -22,6 +24,11 @@ export class EmissionUnitDashboardComponent implements OnInit {
           this.emissionUnit = unit;
         });
     });
+    //emits the report info to the sidebar
+    this.route.data
+    .subscribe((data: { emissionsReport: EmissionsReport }) => {
+        this.sharedService.emitChange(data.emissionsReport);
+      });
   }
 
 }

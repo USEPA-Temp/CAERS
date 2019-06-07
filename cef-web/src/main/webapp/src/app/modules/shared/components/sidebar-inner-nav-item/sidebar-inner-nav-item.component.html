@@ -9,12 +9,13 @@
 		</button>
 		<a class=" text-primary font-weight-bold small" [routerLinkActive]="'active text-success'"
 				routerLink="{{itemUrl}}" 
-				>
-			{{navItem.description}} 
+				title="{{navItem.description}}">
+			<span>{{navItem.description.length>30?(navItem.description | slice:0:25)+'...':navItem.description}}<fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon></span>
 		</a>
 	</div>
-	<fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
+	
+	
 </div>
-<div *ngIf="navItem.children.length" class="ml-2" [attr.id]="targetId" [ngbCollapse]="collapsed">
+<div *ngIf="navItem.children.length" class="ml-3" [attr.id]="targetId" [ngbCollapse]="collapsed">
 	<app-sidebar-inner-nav [navItems]="navItem.children" [baseUrl]="itemUrl + '/'"></app-sidebar-inner-nav>
 </div>
