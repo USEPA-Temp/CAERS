@@ -4,6 +4,8 @@ import { EmissionsProcessService } from 'src/app/core/services/emissions-process
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EmissionsReport } from "src/app/shared/models/emissions-report";
+import { SharedService } from "src/app/core/services/shared.service";
 
 @Component({
   selector: 'app-release-point-details',
@@ -17,7 +19,8 @@ export class ReleasePointDetailsComponent implements OnInit {
   constructor(
     private releasePointService: ReleasePointService,
     private processService: EmissionsProcessService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private sharedService: SharedService) { }
 
   ngOnInit() {
     this.route.paramMap
@@ -32,6 +35,12 @@ export class ReleasePointDetailsComponent implements OnInit {
           });
         });
     });
+    
+    //emits the report info to the sidebar
+    this.route.data
+    .subscribe((data: { emissionsReport: EmissionsReport }) => {
+        this.sharedService.emitChange(data.emissionsReport);
+      });
   }
 
 }

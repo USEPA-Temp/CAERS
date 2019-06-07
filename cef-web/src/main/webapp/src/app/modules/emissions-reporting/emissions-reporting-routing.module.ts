@@ -7,6 +7,7 @@ import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reportin
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { EmissionsReportResolverService } from "src/app/core/services/emissions-report-resolver.service";
 
 
 const reportRoutes: Routes = [
@@ -16,6 +17,9 @@ const reportRoutes: Routes = [
     children: [
       {
         path: 'emissionUnit/:unitId',
+        resolve:{
+            emissionsReport: EmissionsReportResolverService
+        },        
         children: [
           {
             path: 'process/:processId/release/:releasePointId',
@@ -33,6 +37,9 @@ const reportRoutes: Routes = [
         ]
       }, {
         path: ':reportId',
+        resolve:{
+            emissionsReport: EmissionsReportResolverService
+        },
         children: [
           {
             path: '',

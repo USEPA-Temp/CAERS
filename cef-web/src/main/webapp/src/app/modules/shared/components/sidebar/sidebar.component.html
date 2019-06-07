@@ -14,10 +14,11 @@
 			    <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
 		                [routerLinkActiveOptions]="{exact: true}" routerLink="{{report.id}}/facilityInformation" 
 		                >
-		            Facility Information
+		            <span>Facility Information
+		                  <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>        
+		            </span>
 		        </a>
 	        </div>
-	        <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
 		</div>
 		<app-collapse-nav [desc]="'Emissions Inventory'" [targetId]="'emissionUnitCollapse'" [linkUrl]="report.id" [navItems]="navItems"></app-collapse-nav>
 	</div>
