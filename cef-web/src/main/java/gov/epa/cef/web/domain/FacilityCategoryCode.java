@@ -1,51 +1,26 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import gov.epa.cef.web.domain.common.BaseLookupEntity;
 
 /**
  * FacilityCategoryCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
 @Table(name = "facility_category_code")
+public class FacilityCategoryCode extends BaseLookupEntity {
 
-public class FacilityCategoryCode implements java.io.Serializable {
-    
     private static final long serialVersionUID = 1L;
 
     // Fields
 
-    @Id
-    @Column(name = "code", unique = true, nullable = false, length = 20)
-    private String code;
-    
     @Column(name = "name", length = 20)
     private String name;
-    
-    @Column(name = "description", length = 200)
-    private String description;
 
-    // Constructors
-
-    /** default constructor */
-    public FacilityCategoryCode() {
-    }
     // Property accessors
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName() {
         return this.name;
@@ -53,14 +28,6 @@ public class FacilityCategoryCode implements java.io.Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
 }

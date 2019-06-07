@@ -8,9 +8,11 @@ import { SideNavItem } from 'src/app/shared/models/side-nav-item';
   styleUrls: ['./collapse-nav.component.scss']
 })
 export class CollapseNavComponent implements OnInit {
+
   @Input() collapsed = false;
   @Input() desc: string;
   @Input() targetId: string;
+  @Input() linkUrl: string;
   @Input() navItems: SideNavItem[];
 
   constructor() { }

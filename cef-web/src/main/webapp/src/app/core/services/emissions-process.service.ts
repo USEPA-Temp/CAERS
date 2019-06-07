@@ -22,4 +22,13 @@ export class EmissionsProcessService {
     const url = `${this.baseUrl}/releasePoint/${releasePointId}`;
     return this.http.get<Process[]>(url);
   }
+
+  /**
+   * GET all of the emissions processes for a specified emissions unit
+   * @param emissionsUnitId
+   */
+  retrieveForEmissionsUnit(emissionsUnitId: number): Observable<Process[]> {
+    const url = `${this.baseUrl}/emissionsUnit/${emissionsUnitId}`;
+    return this.http.get<Process[]>(url);
+  }
 }

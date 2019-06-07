@@ -2,16 +2,13 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 
-import gov.epa.cef.web.domain.OperatingStatusCode;
-import gov.epa.cef.web.domain.ProgramSystemCode;
-
 public class ReleasePointDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private ProgramSystemCode programSystemCode;
-    private OperatingStatusCode operatingStatusCode;
+    private CodeLookupDto programSystemCode;
+    private CodeLookupDto operatingStatusCode;
     private String releasePointIdentifier;
     private String typeCode;
     private String description;
@@ -40,19 +37,19 @@ public class ReleasePointDto implements Serializable {
         this.id = id;
     }
 
-    public ProgramSystemCode getProgramSystemCode() {
+    public CodeLookupDto getProgramSystemCode() {
         return programSystemCode;
     }
 
-    public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
+    public void setProgramSystemCode(CodeLookupDto programSystemCode) {
         this.programSystemCode = programSystemCode;
     }
 
-    public OperatingStatusCode getOperatingStatusCode() {
+    public CodeLookupDto getOperatingStatusCode() {
         return operatingStatusCode;
     }
 
-    public void setOperatingStatusCode(OperatingStatusCode operatingStatusCode) {
+    public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
         this.operatingStatusCode = operatingStatusCode;
     }
 
