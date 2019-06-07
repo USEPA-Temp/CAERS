@@ -10,12 +10,14 @@
         <a class=" text-primary font-weight-bold" [routerLinkActive]="'active text-success'"
                 [routerLinkActiveOptions]="{exact: true}" routerLink="{{linkUrl}}" 
                 >
-            {{desc}} 
+            <span>
+            {{desc}}<fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
+            </span> 
         </a>
     </div>
-    <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
+    
 </div>
-<div class="row">
+<div class="row ml-2">
 	<div [attr.id]="targetId" [ngbCollapse]="collapsed">
 	    <app-sidebar-inner-nav [navItems]="navItems"></app-sidebar-inner-nav>
 	</div>

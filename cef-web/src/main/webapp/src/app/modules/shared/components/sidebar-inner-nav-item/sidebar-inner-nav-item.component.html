@@ -1,7 +1,7 @@
 <div class="nav-item  d-flex flex-row justify-content-between" [routerLinkActive]="'active'" 
 		[routerLinkActiveOptions]="{exact: true}"  #rla="routerLinkActive">
 
-	<div class="nav-link">
+	<div class="nav-link p-0">
 		<button class="btn btn-link text-primary font-weight-bold text-left small p-0" type="button"
 				(click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
 				[attr.aria-controls]="targetId" *ngIf="navItem.children.length">
@@ -9,11 +9,12 @@
 		</button>
 		<a class=" text-primary font-weight-bold small" [routerLinkActive]="'active text-success'"
 				routerLink="{{itemUrl}}" 
-				>
-			{{navItem.description}} 
+				title="{{navItem.description}}">
+			<span>{{navItem.description.length>30?(navItem.description | slice:0:25)+'...':navItem.description}}<fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon></span>
 		</a>
 	</div>
-	<fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
+	
+	
 </div>
 <div *ngIf="navItem.children.length" class="ml-2" [attr.id]="targetId" [ngbCollapse]="collapsed">
 	<app-sidebar-inner-nav [navItems]="navItem.children" [baseUrl]="itemUrl + '/'"></app-sidebar-inner-nav>

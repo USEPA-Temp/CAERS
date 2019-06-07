@@ -4,6 +4,8 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from "src/app/core/services/shared.service";
+import { EmissionsReport } from "src/app/shared/models/emissions-report";
 
 
 @Component({
@@ -18,7 +20,9 @@ export class EmissionUnitDashboardComponent implements OnInit {
   constructor(
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+	private  sharedService: SharedService
+) { }
 
   ngOnInit() {
     this.route.paramMap
@@ -34,6 +38,11 @@ export class EmissionUnitDashboardComponent implements OnInit {
           });
         });
     });
+    //emits the report info to the sidebar
+    this.route.data
+    .subscribe((data: { emissionsReport: EmissionsReport }) => {
+        this.sharedService.emitChange(data.emissionsReport);
+      });
   }
 
 }

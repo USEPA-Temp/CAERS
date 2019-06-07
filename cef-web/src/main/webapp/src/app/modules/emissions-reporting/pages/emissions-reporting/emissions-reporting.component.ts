@@ -11,19 +11,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EmissionsReportingComponent implements OnInit {
   facility: CdxFacility;
-  report: EmissionsReport;
 
-  constructor(private route: ActivatedRoute, private reportService: EmissionsReportingService) { }
+  constructor(private route: ActivatedRoute, 
+          private reportService: EmissionsReportingService) {
+      
+  }
 
   ngOnInit() {
     this.route.data
     .subscribe((data: { facility: CdxFacility }) => {
       this.facility = data.facility;
-
-      this.reportService.getCurrentReport(this.facility.programId)
-        .subscribe(report => this.report = report);
       });
   }
-
 
 }
