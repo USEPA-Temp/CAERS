@@ -5,6 +5,7 @@ import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/componen
 import { SubmissionReviewDashboardComponent } from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
 import { FacilityResolverService } from 'src/app/core/services/facility-resolver.service';
 import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/redirect.component';
+import { ErrorComponent } from 'src/app/modules/shared/pages/error/error.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -34,6 +35,7 @@ const routes: Routes = [
     ]
   },
   { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } },
+  { path: 'error', component: ErrorComponent, data: { title: 'Error Page' } },
   { path: '*', component: RedirectComponent, data: { title: 'Redirect Page' } }
 ];
 

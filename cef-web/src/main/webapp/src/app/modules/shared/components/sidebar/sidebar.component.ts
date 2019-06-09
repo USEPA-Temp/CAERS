@@ -4,7 +4,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { SideNavItem } from 'src/app/shared/models/side-nav-item';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { SharedService } from "src/app/core/services/shared.service";
-import { ChangeDetectorRef } from "@angular/core";
 import { EmissionsReportContextService } from "src/app/core/services/emissions-report-context.service";
 
 

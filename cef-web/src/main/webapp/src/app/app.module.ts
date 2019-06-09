@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import { AppComponent } from 'src/app/app.component';
@@ -20,7 +20,8 @@ import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/compon
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/redirect.component';
 import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
-
+import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
+import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.interceptor';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,10 @@ import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/componen
     AppRoutingModule,
     FontAwesomeModule
   ],
-  providers: [],
+  providers: [
+      {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
+      {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
