@@ -8,10 +8,10 @@ export class NotificationService {
   constructor() { }
 
   showSuccess(message: string): void {
-    alert(`success notification: ${message}`);
+    console.log(`success notification: ${message}`);
   }
 
   showError(message: string): void {
-      alert(`error notification: ${message}`);
+      console.log(`error notification: ${message}`);
   }
 }
