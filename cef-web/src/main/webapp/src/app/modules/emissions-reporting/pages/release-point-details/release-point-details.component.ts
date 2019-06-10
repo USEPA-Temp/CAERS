@@ -1,3 +1,4 @@
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { Process } from 'src/app/shared/models/process';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
@@ -35,11 +36,11 @@ export class ReleasePointDetailsComponent implements OnInit {
           });
         });
     });
-    
-    //emits the report info to the sidebar
+
+    // emits the report info to the sidebar
     this.route.data
-    .subscribe((data: { emissionsReport: EmissionsReport }) => {
-        this.sharedService.emitChange(data.emissionsReport);
+    .subscribe((data: { facilitySite: FacilitySite }) => {
+        this.sharedService.emitChange(data.facilitySite);
       });
   }
 

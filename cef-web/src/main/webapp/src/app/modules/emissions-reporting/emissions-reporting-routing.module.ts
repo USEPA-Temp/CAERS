@@ -7,7 +7,7 @@ import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reportin
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { EmissionsReportResolverService } from "src/app/core/services/emissions-report-resolver.service";
+import { FacilitySiteResolverService } from 'src/app/core/services/facility-site-resolver.service';
 
 
 const reportRoutes: Routes = [
@@ -16,29 +16,9 @@ const reportRoutes: Routes = [
     component: EmissionsReportingComponent,
     children: [
       {
-        path: 'emissionUnit/:unitId',
-        resolve:{
-            emissionsReport: EmissionsReportResolverService
-        },        
-        children: [
-          {
-            path: 'process/:processId/release/:releasePointId',
-            component: ReleasePointDetailsComponent,
-            data: { title: 'Release Point' }
-          }, {
-            path: '',
-            component: EmissionUnitDashboardComponent,
-            data: { title: 'Emission Unit' }
-          }, {
-            path: '**',
-            component: EmissionUnitDashboardComponent,
-            data: { title: 'PLACEHOLDER' }
-          }
-        ]
-      }, {
         path: ':reportId',
         resolve:{
-            emissionsReport: EmissionsReportResolverService
+          facilitySite: FacilitySiteResolverService
         },
         children: [
           {
@@ -49,6 +29,18 @@ const reportRoutes: Routes = [
             path: 'facilityInformation',
             component: FacilityInformationComponent,
             data: { title: 'Facility Information' }
+          }, {
+            path: 'emissionUnit/:unitId',
+            component: EmissionUnitDashboardComponent,
+            data: { title: 'Emission Unit' }
+          }, {
+            path: 'release/:releasePointId',
+            component: ReleasePointDetailsComponent,
+            data: { title: 'Release Point' }
+          }, {
+            path: '**',
+            component: EmissionInventoryComponent,
+            data: { title: 'PLACEHOLDER' }
           }
         ]
       }, {
