@@ -29,6 +29,14 @@ public class FacilityServiceImpl implements FacilityService {
             .findFirst()
             .orElse(null);
     }
+    
+    @Override
+    public Facility findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId) {
+        return facRepo.findByEisProgramIdAndEmissionsReportId(eisProgramId, emissionsReportId)
+            .stream()
+            .findFirst()
+            .orElse(null);
+    }
 
     /**
      * Find common form facilities for a given state

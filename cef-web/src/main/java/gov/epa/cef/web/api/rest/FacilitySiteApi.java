@@ -64,16 +64,16 @@ public class FacilitySiteApi {
     }
 
     /**
-     * Retrieve a facility site by frs facility ID and report ID
+     * Retrieve a facility site by eis program ID and report ID
      * @param reportId
-     * @param frsFacilityId
+     * @param eisProgramId
      * @return
      */
-    @GetMapping(value = "/report/{reportId}/facility/{frsFacilityId}")
+    @GetMapping(value = "/report/{reportId}/facility/{eisProgramId}")
     @ResponseBody
-    public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable Long reportId, @PathVariable String frsFacilityId) {
+    public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable Long reportId, @PathVariable String eisProgramId) {
 
-        FacilitySiteDto result = facilityMapper.toDto(facilityService.findByFrsIdAndReportId(frsFacilityId, reportId));
+        FacilitySiteDto result = facilityMapper.toDto(facilityService.findByEisProgramIdAndReportId(eisProgramId, reportId));
 
         return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }

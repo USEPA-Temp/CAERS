@@ -24,5 +24,19 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @return
      */
     List<EmissionsReport> findByFrsFacilityId(String frsFacilityId, Sort sort);
+    
+    /**
+     * Find reports for a given eisProgramId
+     * @param eisProgramId {@link ProgramFacility}'s programId
+     * @return
+     */
+    List<EmissionsReport> findByEisProgramId(String eisProgramId);
+    
+    /**
+     * Find reports for a given eisProgramId  with the specified order
+     * @param eisProgramId {@link ProgramFacility}'s programId
+     * @return
+     */
+    List<EmissionsReport> findByEisProgramId(String eisProgramId, Sort sort);
 
 }

@@ -20,6 +20,14 @@ public interface FacilityService {
      * @return
      */
     Facility findByFrsIdAndReportId(String frsFacilityId, Long emissionsReportId);
+    
+    /**
+     * Retrieve facility by EIS program id and emissions report
+     * @param eisProgramId
+     * @param emissionsReportId
+     * @return
+     */
+    Facility findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId);
 
     /**
      * Find common form facilities for a given state

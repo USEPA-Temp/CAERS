@@ -22,7 +22,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<EmissionsReport> findByFacilityId(String facilityId) {
 
-        return erRepo.findByFrsFacilityId(facilityId);
+        return erRepo.findByEisProgramId(facilityId);
     }
 
     /* (non-Javadoc)
@@ -42,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public EmissionsReport findMostRecentByFacility(String facilityId) {
 
-        return erRepo.findByFrsFacilityId(facilityId, new Sort(Sort.Direction.DESC, "year"))
+        return erRepo.findByEisProgramId(facilityId, new Sort(Sort.Direction.DESC, "year"))
                 .stream().findFirst().orElse(null);
     }
 
