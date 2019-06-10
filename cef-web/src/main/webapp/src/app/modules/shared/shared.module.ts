@@ -18,6 +18,7 @@ import { SidebarInnerNavItemComponent } from 'src/app/modules/shared/components/
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedRoutingModule } from 'src/app/modules/shared/shared-routing';
 import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.directive';
+import { ErrorComponent } from './pages/error/error.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.dire
     SidebarInnerNavComponent,
     SidebarInnerNavItemComponent,
     SortableHeaderDirective,
-    PhoneNumberPipe
+    PhoneNumberPipe,
+    ErrorComponent
 ],
   exports: [
     FacilityInfoComponent,

@@ -17,7 +17,7 @@ export class EmissionUnitService {
     emissionsUnitToSideNavPipe: EmissionsUnitToSideNavPipe;
 
   constructor(private http: HttpClient) { 
-      this.emissionsUnitToSideNavPipe=new EmissionsUnitToSideNavPipe();
+      this.emissionsUnitToSideNavPipe = new EmissionsUnitToSideNavPipe();
   }
 
   retrieveForFacility(facilityId: number): Observable<EmissionUnit[]> {
