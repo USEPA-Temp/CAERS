@@ -17,5 +17,5 @@
 	
 </div>
 <div *ngIf="navItem.children.length" class="ml-2" [attr.id]="targetId" [ngbCollapse]="collapsed">
-	<app-sidebar-inner-nav [navItems]="navItem.children" [baseUrl]="itemUrl + '/'"></app-sidebar-inner-nav>
+	<app-sidebar-inner-nav [navItems]="navItem.children" [baseUrl]="baseUrl"></app-sidebar-inner-nav>
 </div>

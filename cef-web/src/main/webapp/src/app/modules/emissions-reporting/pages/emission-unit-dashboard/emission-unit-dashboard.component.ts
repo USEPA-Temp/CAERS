@@ -1,3 +1,4 @@
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { Process } from 'src/app/shared/models/process';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
@@ -21,8 +22,7 @@ export class EmissionUnitDashboardComponent implements OnInit {
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
     private route: ActivatedRoute,
-    private sharedService: SharedService
-) { }
+    private sharedService: SharedService) { }
 
   ngOnInit() {
     this.route.paramMap
@@ -40,8 +40,8 @@ export class EmissionUnitDashboardComponent implements OnInit {
     });
     // emits the report info to the sidebar
     this.route.data
-    .subscribe((data: { emissionsReport: EmissionsReport }) => {
-        this.sharedService.emitChange(data.emissionsReport);
+    .subscribe((data: { facilitySite: FacilitySite }) => {
+        this.sharedService.emitChange(data.facilitySite);
       });
   }
 

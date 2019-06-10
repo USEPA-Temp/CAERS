@@ -6,7 +6,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EmissionsReport } from "src/app/shared/models/emissions-report";
 import { SharedService } from "src/app/core/services/shared.service";
-import { EmissionsReportContextService } from "src/app/core/services/emissions-report-context.service";
 
 @Component({
   selector: 'app-facility-information',
@@ -20,15 +19,14 @@ export class FacilityInformationComponent implements OnInit {
     private facilitySiteService: FacilitySiteService,
     private contactService: FacilitySiteContactService,
     private sharedService: SharedService, 
-    private emissionsReportContextService: EmissionsReportContextService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.data
-    .subscribe((data: { emissionsReport: EmissionsReport }) => {
+    .subscribe((data: { facilitySite: FacilitySite }) => {
 
-      this.facilitySite = data.emissionsReport.facilitySite;
-      this.sharedService.emitChange(data.emissionsReport);
+      this.facilitySite = data.facilitySite;
+      this.sharedService.emitChange(data.facilitySite);
 
       this.contactService.retrieveForFacility(this.facilitySite.id)
       .subscribe(contacts => {
