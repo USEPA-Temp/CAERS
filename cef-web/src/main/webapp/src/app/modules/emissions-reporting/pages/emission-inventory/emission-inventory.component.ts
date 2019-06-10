@@ -3,6 +3,7 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 
 @Component({
@@ -16,7 +17,8 @@ export class EmissionInventoryComponent implements OnInit {
   constructor(
     private emissionUnitsService: EmissionUnitService,
     private releasePointService: ReleasePointService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private sharedService: SharedService) { }
 
   ngOnInit() {
     // get the resolved facilitySite
@@ -24,6 +26,8 @@ export class EmissionInventoryComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
 
       this.facilitySite = data.facilitySite;
+      this.sharedService.emitChange(data.facilitySite);
+
       // after facility site is loaded, retrieve emission units and release points for it
       this.emissionUnitsService.retrieveForFacility(this.facilitySite.id)
       .subscribe(units => {
