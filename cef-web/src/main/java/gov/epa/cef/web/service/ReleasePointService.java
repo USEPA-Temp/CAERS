@@ -18,6 +18,6 @@ public interface ReleasePointService {
      * @param facilityId
      * @return
      */
-    Collection<ReleasePoint> retrieveByFacilityId(Long facilityId);
+    Collection<ReleasePoint> retrieveByFacilitySiteId(Long facilitySiteId);
 
 }

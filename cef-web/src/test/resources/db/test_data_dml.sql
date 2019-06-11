@@ -23,14 +23,14 @@ INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, y
  VALUES ('9999911', '110024286002', '2774511', 'GA', '2017', 'Certified', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
-INSERT INTO FACILITY (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
+INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
  	naics_code, street_address, city, county, state_code, country_code, postal_code, latitude, longitude, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999991', '9999997', '110015680798', '9758611', '', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant', 'OP', '1985', '63JJJJ', '4241',
 	'173 Peachtree Rd', 'Fitzgerald', '', 'GA' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
 	'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
-INSERT INTO FACILITY (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
+INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
  	naics_code, street_address, city, county, state_code, country_code, postal_code, latitude, longitude, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999992', '9999999', '110024286002', '2774511', '', 'HAPCAP', '129', 'Tiarco Chemical', 'Petrochemical Plant', 'OP', '2005', '63FFFF', '325180',
 	'1350 Tiarco Dr.', 'Dalton', '', 'GA' , '', '30720', '34.68666', '-84.99333', '1350 Tiarco Dr.', 'Tiarco', 'GA', '30720', 
@@ -76,57 +76,57 @@ INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_nam
 
 
 --EMISSION UNITS
-INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, unit_measure_cd,
 	created_by, created_date, last_modified_by, last_modified_date)
 	VALUES('9999991', '9999991', 'Boiler 001', '63JJJJ', 'Gas Boiler - Industrial Size', '206', 'Air Gas Furnace', 'OP', '1985', 'LB/DAY', 'THOMAS.FESPERMAN', 
 		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
 	created_by, created_date, last_modified_by, last_modified_date)
 	VALUES('9999992', '9999991', 'Boiler 002', '63JJJJ', 'Coal Boiler - Industrial Size', '100', 'Boiler', 'OP', '1985', 'TON/HR', 'THOMAS.FESPERMAN', 
 		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
 	created_by, created_date, last_modified_by, last_modified_date)
 	VALUES('9999993', '9999991', 'Dryer 001', '63JJJJ', 'Big Dryer', '1252', 'Primary Tube Dryer', 'OP', '1985', 'TON', 'THOMAS.FESPERMAN', 
 		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO EMISSIONS_UNIT (id, facility_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
 	created_by, created_date, last_modified_by, last_modified_date)
 	VALUES('9999994', '9999992', 'PGM-530263', '63FFFF', 'Heater in Boiler Room', '180', 'Process Heater', 'OP', '1977', 'MMBTU/HR', 'THOMAS.FESPERMAN', 
 		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
 
 --RELEASE POINTS
-INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
+INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, 
 	fugitive_line_1_latitude, fugitive_line_1_longitude, fugitive_line_2_latitude, fugitive_line_2_longitude, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999991', '9999991', 'Smokestack 1', '63JJJJ', 'STACK', 'A big smokestack', 40, 'M', 7, 'M', 20, 'FT/MIN', 75, 25, 'YD3/HR', 'OP', '1985', 
 		'32.7490', '83.3880', '34.7490', '85.3880', '33.7490', '84.3880', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
+INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999992', '9999991', 'Smokestack 2', '63JJJJ', 'STACK', 'Another big smokestack', NULL, '', NULL, '', NULL, '', NULL, '', 'OP', '1985', '33.7490', '84.3880', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
+INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999993', '9999991', 'Vent 1', '63JJJJ', 'VENT', 'A big vent', NULL, '', NULL, '', NULL, '', NULL, '', 'OP', '1985', '33.7490', '84.3880', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
+INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999994', '9999992', 'PGM-530264', '63FFFF', 'FUGITIVE VENT', 'Fugitive Vent', 9, 'FT', 0.003, 'FT', 0.0003, 'FT/SEC', 88, NULL, '', 'OP', '1985', '34.686640', '-84.992865', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
+INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999995', '9999992', 'PGM-530265', '63FFFF', 'FUGITIVE 2D', 'Fugitive Two-Dimensional', 34, 'FT', 34, 'FT', 0, 'FT/SEC', NULL, NULL, '', 'OP', '1985', '34.68676', '-84.99323', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
+INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999996', '9999992', 'PGM-530266', '63FFFF', 'FUGITIVE 3D', 'Fugitive Three-Dimensional', 8, 'FT', 65, 'FT', 0, 'FT/SEC', NULL, NULL, '', 'OP', '1985', '34.686515', '34.686397', 
 		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT (id, facility_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
+INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
 	created_by, created_date, last_modified_by, last_modified_date) 
 	VALUES ('9999997', '9999992', 'PGM-530267', '63FFFF', 'VERTICAL STACK', 'Vertical Stack', 8, 'FT', 7, 'FT', 6, 'FT/SEC', 77, NULL, '', 'OP', '1985', '34.686397', '-84.992638', 

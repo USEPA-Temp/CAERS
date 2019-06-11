@@ -17,7 +17,7 @@ public class FacilitySiteContact extends BaseAuditEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
-    private Facility facility;
+    private FacilitySite facilitySite;
 
     @Column(name = "type", nullable = false, length = 150)
     private String type;
@@ -67,12 +67,12 @@ public class FacilitySiteContact extends BaseAuditEntity {
     @Column(name = "mailing_postal_code", length = 10)
     private String mailingPostalCode;
 
-    public Facility getFacility() {
-        return facility;
+    public FacilitySite getFacilitySite() {
+        return facilitySite;
     }
 
-    public void setFacility(Facility facility) {
-        this.facility = facility;
+    public void setFacilitySite(FacilitySite facilitySite) {
+        this.facilitySite = facilitySite;
     }
 
     public String getType() {

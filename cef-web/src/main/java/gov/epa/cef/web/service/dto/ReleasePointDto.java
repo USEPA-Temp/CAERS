@@ -7,6 +7,7 @@ public class ReleasePointDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    private Long facilitySiteId;
     private CodeLookupDto programSystemCode;
     private CodeLookupDto operatingStatusCode;
     private String releasePointIdentifier;
@@ -35,6 +36,14 @@ public class ReleasePointDto implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getFacilitySiteId() {
+        return facilitySiteId;
+    }
+
+    public void setFacilitySiteId(Long facilitySiteId) {
+        this.facilitySiteId = facilitySiteId;
     }
 
     public CodeLookupDto getProgramSystemCode() {

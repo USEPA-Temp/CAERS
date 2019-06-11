@@ -13,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
 
-import gov.epa.cef.web.domain.Facility;
-import gov.epa.cef.web.service.FacilityService;
+import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
-import gov.epa.cef.web.service.mapper.FacilityMapper;
+import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
 
 /**
  * API for retrieving facility site information related to reports.
@@ -28,10 +28,10 @@ import gov.epa.cef.web.service.mapper.FacilityMapper;
 public class FacilitySiteApi {
 
     @Autowired
-    private FacilityService facilityService;
+    private FacilitySiteService facilityService;
 
     @Autowired
-    private FacilityMapper facilityMapper;
+    private FacilitySiteMapper facilitySiteMapper;
 
     /**
      * Retrieve a facility site by ID
@@ -40,10 +40,10 @@ public class FacilitySiteApi {
      */
     @GetMapping(value = "/{facilityId}")
     @ResponseBody
-    public ResponseEntity<FacilitySiteDto> retrieveFacilitySite(@PathVariable Long facilityId) {
+    public ResponseEntity<FacilitySiteDto> retrieveFacilitySite(@PathVariable Long facilitySiteId) {
 
-        Facility facility =  facilityService.findById(facilityId);
-        FacilitySiteDto result = facilityMapper.toDto(facility);
+        FacilitySite facility =  facilityService.findById(facilitySiteId);
+        FacilitySiteDto result = facilitySiteMapper.toDto(facility);
         return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }
 
@@ -56,9 +56,9 @@ public class FacilitySiteApi {
     @GetMapping(value = "/state/{stateCode}")
     @ResponseBody
     public ResponseEntity<Collection<FacilitySiteDto>> retrieveFacilitiesByState(@PathVariable String stateCode) {
-        Collection<Facility> facilities = facilityService.findByState(stateCode);
+        Collection<FacilitySite> facilities = facilityService.findByState(stateCode);
         Collection<FacilitySiteDto> result = facilities.stream()
-                .map(facility -> facilityMapper.toDto(facility))
+                .map(facility -> facilitySiteMapper.toDto(facility))
                 .collect(Collectors.toList());
         return new ResponseEntity<Collection<FacilitySiteDto>>(result, HttpStatus.OK);     
     }
@@ -73,7 +73,7 @@ public class FacilitySiteApi {
     @ResponseBody
     public ResponseEntity<FacilitySiteDto> retrieveFacility(@PathVariable Long reportId, @PathVariable String eisProgramId) {
 
-        FacilitySiteDto result = facilityMapper.toDto(facilityService.findByEisProgramIdAndReportId(eisProgramId, reportId));
+        FacilitySiteDto result = facilitySiteMapper.toDto(facilityService.findByEisProgramIdAndReportId(eisProgramId, reportId));
 
         return new ResponseEntity<FacilitySiteDto>(result, HttpStatus.OK);
     }

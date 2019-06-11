@@ -13,6 +13,6 @@ public interface FacilitySiteContactRepository extends CrudRepository<FacilitySi
      * @param facilitySiteId
      * @return
      */
-    List<FacilitySiteContact> findByFacilityId(Long facilitySiteId);
+    List<FacilitySiteContact> findByFacilitySiteId(Long facilitySiteId);
 
 }

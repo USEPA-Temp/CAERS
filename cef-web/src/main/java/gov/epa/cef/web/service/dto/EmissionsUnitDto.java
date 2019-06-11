@@ -8,9 +8,9 @@ public class EmissionsUnitDto implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private Long id;
+    private Long facilitySiteId;
     private String unitTypeCodeDescription;
     private String operatingStatusCodeDescription;
-    private Long facilityId;
     private String unitIdentifier;
     private String programSystemCode;
     private String description;
@@ -42,11 +42,11 @@ public class EmissionsUnitDto implements Serializable {
         this.operatingStatusCodeDescription = operatingStatusCodeDescription;
     }
 
-    public Long getFacilityId() {
-        return this.facilityId;
+    public Long getFacilitySiteId() {
+        return this.facilitySiteId;
     }
-    public void setFacilityId(Long facilityId) {
-        this.facilityId = facilityId;
+    public void setFacilitySiteId(Long facilitySiteId) {
+        this.facilitySiteId = facilitySiteId;
     }
 
     public String getUnitIdentifier() {

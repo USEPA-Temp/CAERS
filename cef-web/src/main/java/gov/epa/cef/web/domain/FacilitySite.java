@@ -18,9 +18,9 @@ import gov.epa.cef.web.domain.common.BaseAuditEntity;
  * Facility entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "facility")
+@Table(name = "facility_site")
 
-public class Facility extends BaseAuditEntity {
+public class FacilitySite extends BaseAuditEntity {
     
     private static final long serialVersionUID = 1L;
 
@@ -104,19 +104,19 @@ public class Facility extends BaseAuditEntity {
     @Column(name = "longitude", precision = 10, scale = 6)
     private Double longitude;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<FacilitySiteContact> contacts = new HashSet<FacilitySiteContact>(0);
 
     // Constructors
 
     /** default constructor */
-    public Facility() {
+    public FacilitySite() {
     }
 
     public FacilityCategoryCode getFacilityCategoryCode() {
