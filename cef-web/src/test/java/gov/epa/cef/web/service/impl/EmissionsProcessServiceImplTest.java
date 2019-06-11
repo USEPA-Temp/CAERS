@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
@@ -61,43 +63,43 @@ public class EmissionsProcessServiceImplTest {
 	@Test
 	public void retrieveById_Should_ReturnEmissionProcessDtoObject_When_EmissionProcessExists(){
 	    EmissionsProcessDto emissionProcess=emissionsProcessServiceImpl.retrieveById(1L);
-	    assertNotNull(emissionProcess);
+	    assertNotEquals(emissionProcess, null);
 	}
     
 	@Test
     public void retrieveById_Should_ReturnNull_When_EmissionProcessNotExists(){
        EmissionsProcessDto emissionProcess=emissionsProcessServiceImpl.retrieveById(2L);
-       assertNull(emissionProcess);
+       assertEquals(emissionProcess, null);
     }
 	
     @Test
     public void retrieveById_Should_ReturnNull_When_IdIsNull() {
         EmissionsProcessDto emissionProcess = emissionsProcessServiceImpl.retrieveById(null);
-        assertNull(emissionProcess);
+        assertEquals(emissionProcess, null);
     }
     
     @Test
     public void retrieveForReleasePoint_Should_ReturnEmissionProcessDtosList_When_ValidReleasePointIdPassed(){
         List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForReleasePoint(1L);
-        assertNotNull(emissionsProcessDtosList);
+        assertNotEquals(emissionsProcessDtosList, null);
     }
     
     @Test
     public void retrieveForReleasePoint_Should_ReturnNull_When_InvalidReleasePointIdPassed(){
         List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForReleasePoint(2L);
-       assertNull(emissionsProcessDtosList);
+        assertEquals(emissionsProcessDtosList, null);
     }
     
     @Test
     public void retrieveForEmissionsUnit_Should_ReturnEmissionProcessDtosList_When_ValidEmissionsUnitIdPassed(){
         List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForEmissionsUnit(1L);
-        assertNotNull(emissionsProcessDtosList);
+        assertNotEquals(emissionsProcessDtosList, null);
     }
     
     @Test
     public void retrieveForEmissionsUnit_Should_ReturnNull_When_InvalidEmissionsUnitIdPassed(){
         List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForEmissionsUnit(2L);
-       assertNull(emissionsProcessDtosList);
+        assertEquals(emissionsProcessDtosList, null);
     }
     
 }

@@ -1,8 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.when;
 
 import java.net.MalformedURLException;
@@ -20,7 +19,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import gov.epa.cef.web.config.CdxConfig;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.service.impl.RegistrationServiceImpl;
 import gov.epa.cef.web.soap.RegisterFacilityClient;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
@@ -62,12 +60,12 @@ public class RegistrationServiceImplTest {
 		ProgramFacility programFacility=new ProgramFacility();
 		programFacility.setFacilityName("Test-Facility");
 		facilities.add(programFacility);
-		assert(registrationServiceImpl.retrieveFacilities(123L).size()==1);
+		assertEquals(registrationServiceImpl.retrieveFacilities(123L).size()==1, Boolean.TRUE);
 	}
 	
 	@Test
 	public void retrieveFacilities_Should_ReturnEmptyFacilitiesList_When_InvalidUserRoleIdPassed() {
-		assertTrue(registrationServiceImpl.retrieveFacilities(545L).size()==0);
+	    assertEquals(registrationServiceImpl.retrieveFacilities(545L).size()==0, Boolean.TRUE);
 	}
 	
 	@Test(expected = ApplicationException.class) 
@@ -78,7 +76,7 @@ public class RegistrationServiceImplTest {
 	
 	@Test
 	public void retrieveFacilityByProgramId_Should_ReturnNull_When_ProgramIdHasNoFacilities() {
-		assertNull(registrationServiceImpl.retrieveFacilityByProgramId("pId"));
+		assertEquals(registrationServiceImpl.retrieveFacilityByProgramId("pId"), null);
 	}
 	
 	@Test
@@ -86,7 +84,7 @@ public class RegistrationServiceImplTest {
 		ProgramFacility programFacility=new ProgramFacility();
 		programFacility.setFacilityName("Test-Facility");
 		facilities.add(programFacility);
-		assertNotNull(registrationServiceImpl.retrieveFacilityByProgramId("pId2"));
+		assertNotEquals(registrationServiceImpl.retrieveFacilityByProgramId("pId2"), null);
 	}
 
 	@Test(expected = ApplicationException.class) 
