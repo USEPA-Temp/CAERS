@@ -6,7 +6,7 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 
 @Mapper(componentModel = "spring", uses = {})
-public interface FacilityMapper {
+public interface FacilitySiteMapper {
 
     FacilitySiteDto toDto(FacilitySite facility);
 }
