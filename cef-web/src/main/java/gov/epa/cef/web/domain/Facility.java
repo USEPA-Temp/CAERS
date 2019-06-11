@@ -53,6 +53,9 @@ public class Facility extends BaseAuditEntity {
     @Column(name = "frs_facility_id", length = 22)
     private String frsFacilityId;
     
+    @Column(name = "eis_program_id", length = 22)
+    private String eisProgramId;
+    
     @Column(name = "alt_site_identifier", length = 30)
     private String altSiteIdentifier;
     
@@ -170,6 +173,14 @@ public class Facility extends BaseAuditEntity {
 
     public void setFrsFacilityId(String frsFacilityId) {
         this.frsFacilityId = frsFacilityId;
+    }
+
+    public String getEisProgramId() {
+        return eisProgramId;
+    }
+
+    public void setEisProgramId(String eisProgramId) {
+        this.eisProgramId = eisProgramId;
     }
 
     public String getAltSiteIdentifier() {

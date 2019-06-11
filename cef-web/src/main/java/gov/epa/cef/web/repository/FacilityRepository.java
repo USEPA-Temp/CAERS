@@ -13,6 +13,14 @@ public interface FacilityRepository extends CrudRepository<Facility, Long> {
      * @return
      */
     List<Facility> findByFrsFacilityIdAndEmissionsReportId(String frsFacilityId, Long emissionsReportId);
+    
+    /**
+     * Retrieve facilities by eis program and emissions report
+     * @param eisProgramId
+     * @param emissionsReportId
+     * @return
+     */
+    List<Facility> findByEisProgramIdAndEmissionsReportId(String eisProgramId, Long emissionsReportId);
 
     /***
      * Retrieve the common form facilities based on a given state code
