@@ -43,14 +43,14 @@ public class ReleasePointApi {
  
     /**
      * Retrieve Release Points for a facility
-     * @param facilityId
+     * @param facilitySiteId
      * @return
      */
-    @GetMapping(value = "/facility/{facilityId}")
+    @GetMapping(value = "/facility/{facilitySiteId}")
     @ResponseBody
-    public ResponseEntity<Collection<ReleasePointDto>> retrieveFacilityReleasePoints(@PathVariable Long facilityId) {
+    public ResponseEntity<Collection<ReleasePointDto>> retrieveFacilityReleasePoints(@PathVariable Long facilitySiteId) {
 
-        Collection<ReleasePoint> releasePoints = releasePointService.retrieveByFacilityId(facilityId);
+        Collection<ReleasePoint> releasePoints = releasePointService.retrieveByFacilitySiteId(facilitySiteId);
         Collection<ReleasePointDto> result = releasePoints.stream()
                 .map(releasePoint -> releasePointMapper.toDto(releasePoint))
                 .collect(Collectors.toList());

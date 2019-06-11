@@ -29,8 +29,8 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      * @see gov.epa.cef.web.service.impl.ReleasePointService#retrieveByFacilityId(java.lang.Long)
      */
     @Override
-    public Collection<ReleasePoint> retrieveByFacilityId(Long facilityId) {
-        return releasePointRepo.findByFacilityId(facilityId);
+    public Collection<ReleasePoint> retrieveByFacilitySiteId(Long facilitySiteId) {
+        return releasePointRepo.findByFacilitySiteId(facilitySiteId);
     }
 
 }

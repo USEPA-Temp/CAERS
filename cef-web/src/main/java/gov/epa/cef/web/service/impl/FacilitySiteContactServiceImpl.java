@@ -31,7 +31,7 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
 
     @Override
     public List<FacilitySiteContactDto> retrieveForFacilitySite(Long facilitySiteId) {
-        List<FacilitySiteContact> result = contactRepo.findByFacilityId(facilitySiteId);
+        List<FacilitySiteContact> result = contactRepo.findByFacilitySiteId(facilitySiteId);
         return result.stream()
                 .map(contact -> mapper.toDto(contact))
                 .collect(Collectors.toList());

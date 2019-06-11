@@ -1,11 +1,8 @@
 import { FacilitySite } from 'src/app/shared/models/facility-site';
-import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
-import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
 import { FacilitySiteContactService } from 'src/app/core/services/facility-site-contact.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EmissionsReport } from "src/app/shared/models/emissions-report";
-import { SharedService } from "src/app/core/services/shared.service";
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-facility-information',
@@ -16,9 +13,8 @@ export class FacilityInformationComponent implements OnInit {
   facilitySite: FacilitySite;
 
   constructor(
-    private facilitySiteService: FacilitySiteService,
     private contactService: FacilitySiteContactService,
-    private sharedService: SharedService, 
+    private sharedService: SharedService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {

@@ -9,6 +9,6 @@ import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 @Mapper(componentModel = "spring", uses = {})
 public interface FacilitySiteContactMapper {
 
-    @Mapping(source="facility.id", target="facilitySiteId")
+    @Mapping(source="facilitySite.id", target="facilitySiteId")
     FacilitySiteContactDto toDto(FacilitySiteContact contact);
 }

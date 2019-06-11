@@ -6,6 +6,9 @@ import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact
 
 export class FacilitySite {
   id: number;
+  name: string;
+  eisProgramId: string;
+  frsFacilityId: string;
   latitude: number;
   longitude: number;
   streetAddress: string;

@@ -18,6 +18,6 @@ public interface EmissionsUnitService {
      * @param facilityId
      * @return
      */
-    List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilityId);
+    List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId);
 
 }

@@ -35,13 +35,13 @@ public class EmissionsUnitApi {
     
     /**
      * Retrieve emissions unit of a facility
-     * @param facilityId
+     * @param facilitySiteId
      * @return list of emissions unit
      */
-    @GetMapping(value = "/facility/{facilityId}")
+    @GetMapping(value = "/facility/{facilitySiteId}")
     @ResponseBody
-    public ResponseEntity<List<EmissionsUnitDto>> retrieveEmissionsUnitsOfFacility(@PathVariable Long facilityId) {
-        List<EmissionsUnitDto> emissionsUnits = emissionsUnitService.retrieveEmissionUnitsForFacility(facilityId);
+    public ResponseEntity<List<EmissionsUnitDto>> retrieveEmissionsUnitsOfFacility(@PathVariable Long facilitySiteId) {
+        List<EmissionsUnitDto> emissionsUnits = emissionsUnitService.retrieveEmissionUnitsForFacility(facilitySiteId);
         return new ResponseEntity<List<EmissionsUnitDto>>(emissionsUnits, HttpStatus.OK);
     }
 }

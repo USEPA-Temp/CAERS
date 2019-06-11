@@ -35,8 +35,8 @@ public class ReleasePoint extends BaseAuditEntity {
     private OperatingStatusCode operatingStatusCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "facility_id", nullable = false)
-    private Facility facility;
+    @JoinColumn(name = "facility_site_id", nullable = false)
+    private FacilitySite facilitySite;
     
     @Column(name = "release_point_identifier", nullable = false, length = 20)
     private String releasePointIdentifier;
@@ -122,12 +122,12 @@ public class ReleasePoint extends BaseAuditEntity {
         this.operatingStatusCode = operatingStatusCode;
     }
 
-    public Facility getFacility() {
-        return this.facility;
+    public FacilitySite getFacilitySite() {
+        return this.facilitySite;
     }
 
-    public void setFacility(Facility facility) {
-        this.facility = facility;
+    public void setFacilitySite(FacilitySite facilitySite) {
+        this.facilitySite = facilitySite;
     }
 
     public String getReleasePointIdentifier() {
