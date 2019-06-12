@@ -359,14 +359,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco-maven-plugin.version}</version>
-                    <configuration>
-                        <includes>
-                            <include>gov/epa/cef/web/api/rest/**/*</include>
-                            <include>gov/epa/cef/web/service/impl/**/*</include>
-                            <include>gov/epa/cef/web/security/**/*</include>
-                        </includes>
-                    </configuration>                     
+                    <version>${jacoco-maven-plugin.version}</version>                   
                     <executions>
                         <execution>
                             <id>pre-unit-tests</id>
@@ -388,6 +381,11 @@
                             <configuration>
                                 <dataFile>${project.testresult.directory}/coverage/jacoco/jacoco.exec</dataFile>
                                 <outputDirectory>${project.testresult.directory}/coverage/jacoco</outputDirectory>
+                                <includes>
+                                    <include>gov/epa/cef/web/api/rest/**/*</include>
+                                    <include>gov/epa/cef/web/service/impl/**/*</include>
+                                    <include>gov/epa/cef/web/security/**/*</include>
+                                </includes>                                  
                             </configuration>
                         </execution>
                     </executions>
