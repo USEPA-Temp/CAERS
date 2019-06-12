@@ -12,14 +12,6 @@ public interface FacilitySiteService {
      * @return
      */
     FacilitySite findById(Long id);
-
-    /**
-     * Retrieve facility by frs facility and emissions report
-     * @param frsFacilityId
-     * @param emissionsReportId
-     * @return
-     */
-    FacilitySite findByFrsIdAndReportId(String frsFacilityId, Long emissionsReportId);
     
     /**
      * Retrieve facility by EIS program id and emissions report

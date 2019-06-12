@@ -76,7 +76,7 @@ public class RegistrationServiceImplTest {
 	
 	@Test
 	public void retrieveFacilityByProgramId_Should_ReturnNull_When_ProgramIdHasNoFacilities() {
-		assertEquals(registrationServiceImpl.retrieveFacilityByProgramId("pId"), null);
+		assertEquals(null, registrationServiceImpl.retrieveFacilityByProgramId("pId"));
 	}
 	
 	@Test
@@ -84,7 +84,7 @@ public class RegistrationServiceImplTest {
 		ProgramFacility programFacility=new ProgramFacility();
 		programFacility.setFacilityName("Test-Facility");
 		facilities.add(programFacility);
-		assertNotEquals(registrationServiceImpl.retrieveFacilityByProgramId("pId2"), null);
+		assertNotEquals(null, registrationServiceImpl.retrieveFacilityByProgramId("pId2"));
 	}
 
 	@Test(expected = ApplicationException.class) 
