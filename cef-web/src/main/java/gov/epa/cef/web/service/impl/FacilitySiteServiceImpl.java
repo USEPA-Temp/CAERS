@@ -20,15 +20,6 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             .findById(id)
             .orElse(null);
     }
-
-
-    @Override
-    public FacilitySite findByFrsIdAndReportId(String frsFacilityId, Long emissionsReportId) {
-        return facSiteRepo.findByFrsFacilityIdAndEmissionsReportId(frsFacilityId, emissionsReportId)
-            .stream()
-            .findFirst()
-            .orElse(null);
-    }
     
     @Override
     public FacilitySite findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId) {
