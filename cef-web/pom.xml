@@ -69,6 +69,7 @@
         <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/db/**/*.*, src/main/webapp/coverage/**/*.*</sonar.exclusions>
         <sonar.jacoco.reportPath>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
+        <sonar.coverage.exclusions>gov/epa/cef/web/config/**/*, gov/epa/cef/web/controller/**/*, gov/epa/cef/web/domain/**/*, gov/epa/cef/web/exception/**/*, gov/epa/cef/web/exception/**/*, gov/epa/cef/web/repository/**/*, gov/epa/cef/web/service/dto/**/*, gov/epa/cef/web/service/mapper/**/*, gov/epa/cef/web/soap/**/*, gov/epa/cef/web/CefWebApplication.*, gov/epa/cef/web/ServletInitializer.*</sonar.coverage.exclusions>
         <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/coverage/lcov/lcov.info</sonar.typescript.lcov.reportPaths>
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
