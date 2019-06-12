@@ -71,7 +71,7 @@ public class FacilitySiteContactServiceImplTest {
     }
     
     @Test
-    public void retrieveForFacilitySite_Should_Return_Null_WhenContactsDoNotExist() {
+    public void retrieveForFacilitySite_Should_Return_Empty_WhenContactsDoNotExist() {
         List<FacilitySiteContactDto> facilitySiteContactList = facilitySiteContactServiceImpl.retrieveForFacilitySite(2L);
         assertEquals(new ArrayList<FacilitySiteContactDto>(), facilitySiteContactList);
     }
