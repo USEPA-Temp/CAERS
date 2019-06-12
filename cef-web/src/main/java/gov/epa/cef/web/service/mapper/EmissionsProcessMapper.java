@@ -17,8 +17,8 @@ public interface EmissionsProcessMapper {
     ReleasePointApptMapper releasePointApptMapper= Mappers.getMapper( ReleasePointApptMapper.class );
     
     @Mapping(source="emissionsUnit.id", target="emissionsUnitId")
+    @Mapping(source="aircraftEngineTypeCode.code", target="aircraftEngineTypeCodeCode")
     @Mapping(source="operatingStatusCode.description", target="operatingStatusCodeDescription")
-    @Mapping(source="releasePointAppts", target="releasePoints")
     EmissionsProcessDto  emissionsProcessToEmissionsProcessDto(EmissionsProcess emissionsProcess);
     
     List<EmissionsProcessDto> emissionsProcessesToEmissionsProcessDtos(List<EmissionsProcess> emissionsProcesses);

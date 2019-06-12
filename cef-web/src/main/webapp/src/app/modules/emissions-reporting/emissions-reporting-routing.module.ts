@@ -4,11 +4,11 @@ import { EmissionsReportingComponent } from 'src/app/modules/emissions-reporting
 import { EmissionInventoryComponent } from 'src/app/modules/emissions-reporting/pages/emission-inventory/emission-inventory.component';
 import { FacilityInformationComponent } from 'src/app/modules/emissions-reporting/pages/facility-information/facility-information.component';
 import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reporting/pages/release-point-details/release-point-details.component';
+import { EmissionsProcessDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emissions-process-details/emissions-process-details.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FacilitySiteResolverService } from 'src/app/core/services/facility-site-resolver.service';
-
 
 const reportRoutes: Routes = [
   {
@@ -33,6 +33,10 @@ const reportRoutes: Routes = [
             path: 'emissionUnit/:unitId',
             component: EmissionUnitDashboardComponent,
             data: { title: 'Emission Unit' }
+          }, {
+            path: 'process/:processId',
+            component: EmissionsProcessDetailsComponent,
+            data: { title: 'Emissions Process Details' }
           }, {
             path: 'release/:releasePointId',
             component: ReleasePointDetailsComponent,

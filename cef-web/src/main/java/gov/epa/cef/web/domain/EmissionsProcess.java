@@ -27,6 +27,10 @@ public class EmissionsProcess extends BaseAuditEntity {
     private EmissionsUnit emissionsUnit;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "aircraft_engine_type_code")
+    private AircraftEngineTypeCode aircraftEngineTypeCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_code", nullable = false)
     private OperatingStatusCode operatingStatusCode;
 
@@ -61,6 +65,14 @@ public class EmissionsProcess extends BaseAuditEntity {
     }
     public void setEmissionsUnit(EmissionsUnit emissionsUnit) {
         this.emissionsUnit = emissionsUnit;
+    }
+
+    public AircraftEngineTypeCode getAircraftEngineTypeCode() {
+        return aircraftEngineTypeCode;
+    }
+
+    public void setAircraftEngineTypeCode(AircraftEngineTypeCode aircraftEngineTypeCode) {
+        this.aircraftEngineTypeCode = aircraftEngineTypeCode;
     }
 
     public OperatingStatusCode getOperatingStatusCode() {
