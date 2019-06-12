@@ -46,43 +46,49 @@ public class FacilitySiteServiceImplTest {
     @Test
     public void retrieveById_Should_Return_FacilitySiteObject_When_FacilitySiteExists(){
         FacilitySite facilitySite = facilitySiteServiceImpl.findById(1L);
-        assertNotEquals(facilitySite, null);
+        assertNotEquals(null, facilitySite);
     }
     
     @Test
     public void retrieveById_Should_Return_Null_When_FacilitySiteDoesNotExist(){
         FacilitySite facilitySite = facilitySiteServiceImpl.findById(2L);
-        assertEquals(facilitySite, null);
+        assertEquals(null, facilitySite);
+    }
+    
+    @Test
+    public void retrieveById_Should_Return_Null_When_IDisNull(){
+        FacilitySite facilitySite = facilitySiteServiceImpl.findById(null);
+        assertEquals(null, facilitySite);
     }
     
     @Test
     public void retrieveById_Should_Return_Null_When_FacilitySiteIDisNull(){
         FacilitySite facilitySite = facilitySiteServiceImpl.findById(null);
-        assertEquals(facilitySite, null);
+        assertEquals(null, facilitySite);
     }
     
     @Test
     public void retrieveByEisProgramIdAndReportId_Should_Return_FacilitySiteObject_When_FacilitySiteExists(){
         FacilitySite facilitySite = facilitySiteServiceImpl.findByEisProgramIdAndReportId("XXXX", 1L);
-        assertNotEquals(facilitySite, null);
+        assertNotEquals(null, facilitySite);
     }
     
     @Test
     public void retrieveByEisProgramIdAndReportId_Should_Return_Null_When_FacilitySiteDoesNotExist(){
         FacilitySite facilitySite = facilitySiteServiceImpl.findByEisProgramIdAndReportId("XXXX", 2L);
-        assertEquals(facilitySite, null);
+        assertEquals(null, facilitySite);
     }
     
     @Test
     public void retrieveByState_Should_Return_FacilitySiteList_When_FacilitiesExist(){
         List<FacilitySite> facilitySiteList = facilitySiteServiceImpl.findByState("GA");
-        assertNotEquals(facilitySiteList, null);
+        assertNotEquals(null, facilitySiteList);
     }
     
     @Test
     public void retrieveByState_Should_Return_Null_When_NoFacilitySitesExist(){
         List<FacilitySite> facilitySiteList = facilitySiteServiceImpl.findByState("AK");
-        assertEquals(facilitySiteList, null);
+        assertEquals(null, facilitySiteList);
     }
 
 }
