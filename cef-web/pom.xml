@@ -68,7 +68,6 @@
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>
         <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/db/**/*.*, src/main/webapp/coverage/**/*.*</sonar.exclusions>
         <sonar.jacoco.reportPath>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPath>
-        <sonar.jacoco.includes>gov.epa.cef.web.api.rest.*:gov.epa.cef.web.service.impl.*:gov.epa.cef.web.security.*</sonar.jacoco.includes>
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
         <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/coverage/lcov/lcov.info</sonar.typescript.lcov.reportPaths>
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
@@ -370,6 +369,11 @@
                             <configuration>
                                 <!-- Sets the path to the file which contains the execution data. -->
                                 <destFile>${project.testresult.directory}/coverage/jacoco/jacoco.exec</destFile>
+                                <includes>
+                                    <include>gov.epa.cef.web.api.rest.*</include>
+                                    <include>gov.epa.cef.web.service.impl.*</include>
+                                    <include>gov.epa.cef.web.security.*</include>
+                                </includes>                                    
                             </configuration>
                         </execution>
                         <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
