@@ -74,6 +74,7 @@
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <sonar.test.exclusions>src/test/resources/db/**/*.*</sonar.test.exclusions>
+        <sonar.cpd.exclusions>src/main/java/gov/epa/cef/web/service/dto/**/*</sonar.cpd.exclusions>
 
     </properties>
 
