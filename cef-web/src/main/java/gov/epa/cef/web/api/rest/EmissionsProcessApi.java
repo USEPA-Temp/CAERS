@@ -22,6 +22,19 @@ public class EmissionsProcessApi {
     private EmissionsProcessService processService;
 
     /**
+     * Retrieve Emissions Process by id
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    public ResponseEntity<EmissionsProcessDto> retrieveEmissionsProcess(@PathVariable Long id) {
+
+        EmissionsProcessDto result = processService.retrieveById(id);
+        return new ResponseEntity<EmissionsProcessDto>(result, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve Emissions Processes for a release point
      * @param facilityId
      * @return

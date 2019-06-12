@@ -9,11 +9,13 @@ public class EmissionsProcessDto implements Serializable {
      * default version id
      */
     private static final long serialVersionUID = 1L;
-    
+
     private Long id;
 
     private Long emissionsUnitId;
-    
+
+    private String aircraftEngineTypeCodeCode;
+
     private String operatingStatusCodeDescription;
 
     private String emissionsProcessIdentifier;
@@ -26,7 +28,7 @@ public class EmissionsProcessDto implements Serializable {
 
     private String description;
 
-    private List<ReleasePointApptDto> releasePoints;
+    private List<ReleasePointApptDto> releasePointAppts;
     
 
     public Long getId() {
@@ -43,6 +45,14 @@ public class EmissionsProcessDto implements Serializable {
 
     public void setEmissionsUnitId(Long emissionsUnitId) {
         this.emissionsUnitId = emissionsUnitId;
+    }
+
+    public String getAircraftEngineTypeCodeCode() {
+        return aircraftEngineTypeCodeCode;
+    }
+
+    public void setAircraftEngineTypeCodeCode(String aircraftEngineTypeCodeCode) {
+        this.aircraftEngineTypeCodeCode = aircraftEngineTypeCodeCode;
     }
 
     public String getOperatingStatusCodeDescription() {
@@ -93,13 +103,12 @@ public class EmissionsProcessDto implements Serializable {
         this.description = description;
     }
 
-    public List<ReleasePointApptDto> getReleasePoints() {
-        return releasePoints;
+    public List<ReleasePointApptDto> getReleasePointAppts() {
+        return releasePointAppts;
     }
 
-    public void setReleasePoints(List<ReleasePointApptDto> releasePoints) {
-        this.releasePoints = releasePoints;
+    public void setReleasePointAppts(List<ReleasePointApptDto> releasePoints) {
+        this.releasePointAppts = releasePoints;
     }
-    
-    
+
 }

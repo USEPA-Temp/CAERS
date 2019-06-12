@@ -20,8 +20,8 @@ export class EmissionsUnitToSideNavPipe implements PipeTransform {
         if(value.emissionsProcesses){
             for(let emissionProcess of value.emissionsProcesses){
                 let processChildren: SideNavItem[]=[];
-                if(emissionProcess.releasePoints){
-                    for(let releasePoint of emissionProcess.releasePoints){
+                if(emissionProcess.releasePointAppts){
+                    for(let releasePoint of emissionProcess.releasePointAppts){
                         processChildren.push(new SideNavItem( releasePoint.id, releasePoint.releasePointDescription, BaseUrls.RELEASE_POINT, []));
                     }
                 }

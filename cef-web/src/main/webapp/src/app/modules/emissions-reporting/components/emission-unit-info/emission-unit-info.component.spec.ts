@@ -18,7 +18,7 @@ describe('EmissionUnitInfoComponent', () => {
         "id" : 1,
         "description" : "Process 007",
         "sourceClassificationCode" : "10320587",
-        "releasePoints" : [
+        "releasePointAppts" : [
           {
             "id" : 1,
             "percent" : 100,
