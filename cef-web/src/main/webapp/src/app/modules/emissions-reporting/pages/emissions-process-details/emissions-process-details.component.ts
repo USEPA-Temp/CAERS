@@ -4,6 +4,7 @@ import { EmissionsProcessService } from 'src/app/core/services/emissions-process
 import { Process } from 'src/app/shared/models/process';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -15,6 +16,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
   constructor(
     private processService: EmissionsProcessService,
+    private reportingPeriodService: ReportingPeriodService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -24,6 +26,10 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.processService.retrieve(+map.get('processId'))
       .subscribe(process => {
         this.process = process;
+        this.reportingPeriodService.retrieveForEmissionsProcess(this.process.id)
+        .subscribe(periods => {
+          this.process.reportingPeriods = periods;
+        });
       });
     });
 
