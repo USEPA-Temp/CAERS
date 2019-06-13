@@ -73,7 +73,6 @@
     </div>
     </ng-container>
 
-    
     <div class="row">
         <ng-container *ngFor="let period of process.reportingPeriods">
         <div class="col-sm-12 col-md-6">
@@ -94,7 +93,7 @@
                     <strong>Release Points Associated with this Process</strong>
                 </div>
                 <div class="card-body">
-                    
+                    <app-release-point-appt-table [tableData]="process.releasePointAppts"></app-release-point-appt-table>
                 </div>
             </div>
             

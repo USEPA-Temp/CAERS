@@ -13,7 +13,11 @@ public class ReleasePointApptDto implements Serializable{
 
     private Long releasePointId;
     
+    private String releasePointIdentifier;
+    
     private String releasePointDescription;
+    
+    private String releasePointTypeCode;
     
     private Double percent;
 
@@ -33,12 +37,28 @@ public class ReleasePointApptDto implements Serializable{
         this.releasePointId = releasePointId;
     }
 
+    public String getReleasePointIdentifier() {
+        return releasePointIdentifier;
+    }
+
+    public void setReleasePointIdentifier(String releasePointIdentifier) {
+        this.releasePointIdentifier = releasePointIdentifier;
+    }
+
     public String getReleasePointDescription() {
         return releasePointDescription;
     }
 
     public void setReleasePointDescription(String releasePointDescription) {
         this.releasePointDescription = releasePointDescription;
+    }
+
+    public String getReleasePointTypeCode() {
+        return releasePointTypeCode;
+    }
+
+    public void setReleasePointTypeCode(String releasePointTypeCode) {
+        this.releasePointTypeCode = releasePointTypeCode;
     }
 
     public Double getPercent() {
