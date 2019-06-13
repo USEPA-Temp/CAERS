@@ -5,14 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import gov.epa.cef.web.domain.FacilitySite;
 
 public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Long> {
-
-    /**
-     * Retrieve facilities by frs facility and emissions report
-     * @param frsFacilityId
-     * @param emissionsReportId
-     * @return
-     */
-    List<FacilitySite> findByFrsFacilityIdAndEmissionsReportId(String frsFacilityId, Long emissionsReportId);
     
     /**
      * Retrieve facilities by eis program and emissions report
