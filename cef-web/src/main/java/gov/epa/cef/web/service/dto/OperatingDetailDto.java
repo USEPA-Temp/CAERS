@@ -11,7 +11,7 @@ public class OperatingDetailDto implements Serializable {
     private Short actualHoursPerPeriod;
     private Double avgHoursPerDay;
     private Double avgDaysPerWeek;
-    private Byte avgWeeksPerPeriod;
+    private Short avgWeeksPerPeriod;
     private Double percentWinter;
     private Double percentSpring;
     private Double percentSummer;
@@ -57,11 +57,11 @@ public class OperatingDetailDto implements Serializable {
         this.avgDaysPerWeek = avgDaysPerWeek;
     }
 
-    public Byte getAvgWeeksPerPeriod() {
+    public Short getAvgWeeksPerPeriod() {
         return avgWeeksPerPeriod;
     }
 
-    public void setAvgWeeksPerPeriod(Byte avgWeeksPerPeriod) {
+    public void setAvgWeeksPerPeriod(Short avgWeeksPerPeriod) {
         this.avgWeeksPerPeriod = avgWeeksPerPeriod;
     }
 

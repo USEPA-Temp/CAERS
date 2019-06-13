@@ -20,8 +20,8 @@ import { FacilityInformationComponent } from 'src/app/modules/emissions-reportin
 import { EmissionsUnitToSideNavPipe } from 'src/app/shared/pipes/emissions-unit-to-side-nav.pipe';
 import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reporting/pages/release-point-details/release-point-details.component';
 import { EmissionsProcessTableComponent } from 'src/app/modules/emissions-reporting/components/emissions-process-table/emissions-process-table.component';
-import { EmissionsProcessDetailsComponent } from './pages/emissions-process-details/emissions-process-details.component';
-import { EmissionTableComponent } from './components/emission-table/emission-table.component';
+import { EmissionsProcessDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emissions-process-details/emissions-process-details.component';
+import { EmissionTableComponent } from 'src/app/modules/emissions-reporting/components/emission-table/emission-table.component';
 
 
 @NgModule({

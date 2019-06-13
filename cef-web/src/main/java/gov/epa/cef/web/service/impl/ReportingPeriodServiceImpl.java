@@ -1,7 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,9 +37,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
     @Override
     public List<ReportingPeriodDto> retrieveForReleasePoint(Long processId) {
         List<ReportingPeriod> result = repo.findByEmissionsProcessId(processId);
-        return result.stream()
-                .map(period -> mapper.toDto(period))
-                .collect(Collectors.toList());
+        return mapper.toDtoList(result);
     }
 
 }

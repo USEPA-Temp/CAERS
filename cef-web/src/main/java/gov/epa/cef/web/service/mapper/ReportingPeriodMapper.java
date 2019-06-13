@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,4 +14,6 @@ public interface ReportingPeriodMapper {
 
     @Mapping(source="emissionsProcess.id", target="emissionsProcessId")
     ReportingPeriodDto toDto(ReportingPeriod source);
+
+    List<ReportingPeriodDto> toDtoList(List<ReportingPeriod> source);
 }
