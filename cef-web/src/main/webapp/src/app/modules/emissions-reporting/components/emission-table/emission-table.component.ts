@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { Emission } from 'src/app/shared/models/emission';
-import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EmissionDetailsModalComponent } from 'src/app/modules/emissions-reporting/components/emission-details-modal/emission-details-modal.component';
+import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
+import { Process } from 'src/app/shared/models/process';
 
 @Component({
   selector: 'app-emission-table',
@@ -10,17 +13,21 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EmissionTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: Emission[];
-  baseUrl: string;
+  @Input() reportingPeriod: ReportingPeriod;
+  @Input() process: Process;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private modalService: NgbModal) {
     super();
   }
 
   ngOnInit() {
-    this.route.paramMap
-      .subscribe(map => {
-        this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
-    });
+  }
+
+  openEmissionModal(selectedEmission: Emission) {
+    const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg' });
+    modalRef.componentInstance.emission = selectedEmission;
+    modalRef.componentInstance.reportingPeriod = this.reportingPeriod;
+    modalRef.componentInstance.process = this.process;
   }
 
 }

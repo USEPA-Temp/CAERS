@@ -81,7 +81,7 @@
                     <strong>Emissions Associated with this Process</strong>
                 </div>
                 <div class="card-body">
-                    <app-emission-table [tableData]="period.emissions"></app-emission-table>
+                    <app-emission-table [tableData]="period.emissions" [reportingPeriod]="period" [process]="process"></app-emission-table>
                 </div>
             </div>
             
