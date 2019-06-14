@@ -22,6 +22,7 @@ import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reportin
 import { EmissionsProcessTableComponent } from 'src/app/modules/emissions-reporting/components/emissions-process-table/emissions-process-table.component';
 import { EmissionsProcessDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emissions-process-details/emissions-process-details.component';
 import { EmissionTableComponent } from 'src/app/modules/emissions-reporting/components/emission-table/emission-table.component';
+import { ReleasePointApptTableComponent } from 'src/app/modules/emissions-reporting/components/release-point-appt-table/release-point-appt-table.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { EmissionTableComponent } from 'src/app/modules/emissions-reporting/comp
     ReleasePointDetailsComponent,
     EmissionsProcessTableComponent,
     EmissionsProcessDetailsComponent,
-    EmissionTableComponent
+    EmissionTableComponent,
+    ReleasePointApptTableComponent
 
   ],
   imports: [
