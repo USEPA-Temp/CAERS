@@ -19,8 +19,9 @@ public class FacilitySiteContact extends BaseAuditEntity {
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
 
-    @Column(name = "type", nullable = false, length = 150)
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type", nullable = false)
+    private ContactTypeCode type;
 
     @Column(name = "prefix", length = 15)
     private String prefix;
@@ -75,11 +76,11 @@ public class FacilitySiteContact extends BaseAuditEntity {
         this.facilitySite = facilitySite;
     }
 
-    public String getType() {
+    public ContactTypeCode getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ContactTypeCode type) {
         this.type = type;
     }
 

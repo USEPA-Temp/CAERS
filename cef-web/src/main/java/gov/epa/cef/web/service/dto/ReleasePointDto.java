@@ -11,17 +11,17 @@ public class ReleasePointDto implements Serializable {
     private CodeLookupDto programSystemCode;
     private CodeLookupDto operatingStatusCode;
     private String releasePointIdentifier;
-    private String typeCode;
+    private CodeLookupDto typeCode;
     private String description;
     private Double stackHeight;
-    private String stackHeightUomCode;
+    private CodeLookupDto stackHeightUomCode;
     private Double stackDiameter;
-    private String stackDiameterUomCode;
+    private CodeLookupDto stackDiameterUomCode;
     private Double exitGasVelocity;
-    private String exitGasVelocityUomCode;
+    private CodeLookupDto exitGasVelocityUomCode;
     private Short exitGasTemperature;
     private Double exitGasFlowRate;
-    private String exitGasFlowUomCode;
+    private CodeLookupDto exitGasFlowUomCode;
     private Short statusYear;
     private Double fugitiveLine1Latitude;
     private Double fugitiveLine1Longitude;
@@ -70,11 +70,11 @@ public class ReleasePointDto implements Serializable {
         this.releasePointIdentifier = releasePointIdentifier;
     }
 
-    public String getTypeCode() {
+    public CodeLookupDto getTypeCode() {
         return typeCode;
     }
 
-    public void setTypeCode(String typeCode) {
+    public void setTypeCode(CodeLookupDto typeCode) {
         this.typeCode = typeCode;
     }
 
@@ -94,11 +94,11 @@ public class ReleasePointDto implements Serializable {
         this.stackHeight = stackHeight;
     }
 
-    public String getStackHeightUomCode() {
+    public CodeLookupDto getStackHeightUomCode() {
         return stackHeightUomCode;
     }
 
-    public void setStackHeightUomCode(String stackHeightUomCode) {
+    public void setStackHeightUomCode(CodeLookupDto stackHeightUomCode) {
         this.stackHeightUomCode = stackHeightUomCode;
     }
 
@@ -110,11 +110,11 @@ public class ReleasePointDto implements Serializable {
         this.stackDiameter = stackDiameter;
     }
 
-    public String getStackDiameterUomCode() {
+    public CodeLookupDto getStackDiameterUomCode() {
         return stackDiameterUomCode;
     }
 
-    public void setStackDiameterUomCode(String stackDiameterUomCode) {
+    public void setStackDiameterUomCode(CodeLookupDto stackDiameterUomCode) {
         this.stackDiameterUomCode = stackDiameterUomCode;
     }
 
@@ -126,11 +126,11 @@ public class ReleasePointDto implements Serializable {
         this.exitGasVelocity = exitGasVelocity;
     }
 
-    public String getExitGasVelocityUomCode() {
+    public CodeLookupDto getExitGasVelocityUomCode() {
         return exitGasVelocityUomCode;
     }
 
-    public void setExitGasVelocityUomCode(String exitGasVelicityUomCode) {
+    public void setExitGasVelocityUomCode(CodeLookupDto exitGasVelicityUomCode) {
         this.exitGasVelocityUomCode = exitGasVelicityUomCode;
     }
 
@@ -150,11 +150,11 @@ public class ReleasePointDto implements Serializable {
         this.exitGasFlowRate = exitGasFlowRate;
     }
 
-    public String getExitGasFlowUomCode() {
+    public CodeLookupDto getExitGasFlowUomCode() {
         return exitGasFlowUomCode;
     }
 
-    public void setExitGasFlowUomCode(String exitGasFlowUomCode) {
+    public void setExitGasFlowUomCode(CodeLookupDto exitGasFlowUomCode) {
         this.exitGasFlowUomCode = exitGasFlowUomCode;
     }
 

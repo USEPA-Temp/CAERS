@@ -35,8 +35,9 @@ public class Emission extends BaseAuditEntity {
     @Column(name = "total_emissions", nullable = false, precision = 6, scale = 0)
     private Integer totalEmissions;
     
-    @Column(name = "emissions_uom_code", nullable = false, length = 20)
-    private String emissionsUomCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emissions_uom_code", nullable = false)
+    private UnitMeasureCode emissionsUomCode;
     
     @Column(name = "emissions_factor", nullable = false, precision = 131089, scale = 0)
     private BigDecimal emissionsFactor;
@@ -44,8 +45,9 @@ public class Emission extends BaseAuditEntity {
     @Column(name = "emissions_factor_text", nullable = false, length = 100)
     private String emissionsFactorText;
     
-    @Column(name = "emissions_calc_method_code", nullable = false, length = 20)
-    private String emissionsCalcMethodCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emissions_calc_method_code", nullable = false)
+    CalculationMethodCode emissionsCalcMethodCode;
 
     // Constructors
 
@@ -85,11 +87,11 @@ public class Emission extends BaseAuditEntity {
         this.totalEmissions = totalEmissions;
     }
 
-    public String getEmissionsUomCode() {
+    public UnitMeasureCode getEmissionsUomCode() {
         return this.emissionsUomCode;
     }
 
-    public void setEmissionsUomCode(String emissionsUomCode) {
+    public void setEmissionsUomCode(UnitMeasureCode emissionsUomCode) {
         this.emissionsUomCode = emissionsUomCode;
     }
 
@@ -109,11 +111,11 @@ public class Emission extends BaseAuditEntity {
         this.emissionsFactorText = emissionsFactorText;
     }
 
-    public String getEmissionsCalcMethodCode() {
+    public CalculationMethodCode getEmissionsCalcMethodCode() {
         return this.emissionsCalcMethodCode;
     }
 
-    public void setEmissionsCalcMethodCode(String emissionsCalcMethodCode) {
+    public void setEmissionsCalcMethodCode(CalculationMethodCode emissionsCalcMethodCode) {
         this.emissionsCalcMethodCode = emissionsCalcMethodCode;
     }
 }

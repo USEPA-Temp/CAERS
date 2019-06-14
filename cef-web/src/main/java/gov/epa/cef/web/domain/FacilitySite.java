@@ -104,6 +104,10 @@ public class FacilitySite extends BaseAuditEntity {
     @Column(name = "longitude", precision = 10, scale = 6)
     private Double longitude;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tribal_code", nullable = false)
+    private TribalCode tribalCode;
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
     
@@ -309,6 +313,14 @@ public class FacilitySite extends BaseAuditEntity {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public TribalCode getTribalCode() {
+        return tribalCode;
+    }
+
+    public void setTribalCode(TribalCode tribalCode) {
+        this.tribalCode = tribalCode;
     }
 
     public Set<EmissionsUnit> getEmissionsUnits() {

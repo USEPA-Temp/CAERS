@@ -11,23 +11,14 @@ public class EmissionsProcessDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-
     private Long emissionsUnitId;
-
     private String aircraftEngineTypeCodeCode;
-
     private String operatingStatusCodeDescription;
-
     private String emissionsProcessIdentifier;
-
     private Short statusYear;
-
     private String sccCode;
-
     private String sccShortName;
-
     private String description;
-
     private List<ReleasePointApptDto> releasePointAppts;
     
 
