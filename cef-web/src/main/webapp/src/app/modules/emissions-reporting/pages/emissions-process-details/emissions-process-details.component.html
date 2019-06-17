@@ -3,7 +3,6 @@
 <div *ngIf="process">
     <div class="row">
         <div class="col-sm-12">
-        
             <div class="card mb-3">
                 <div class="card-header text-center">
                     <strong>Process Information</strong>
@@ -32,5 +31,74 @@
             
         </div>
     </div>
+
+    <ng-container *ngFor="let period of process.reportingPeriods">
+    <div class="row" *ngFor="let operatingDetail of period.operatingDetails">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Operating Details</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Avg. Days per Week:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.avgDaysPerWeek}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Hours per Period:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.actualHoursPerPeriod}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Inventory Year:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{process.statusYear}}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Avg. Hours per Day:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.avgHoursPerDay}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Winter Operating Percent:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentWinter}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Summer Operating Percent:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentSummer}}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Avg. Weeks per Year:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.avgWeeksPerPeriod}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Spring Operating Percent:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentSpring}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Fall Operating Percent:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentFall}}</div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </ng-container>
+
+    <div class="row">
+        <ng-container *ngFor="let period of process.reportingPeriods">
+        <div class="col-sm-12 col-md-6">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Emissions Associated with this Process</strong>
+                </div>
+                <div class="card-body">
+                    <app-emission-table [tableData]="period.emissions" [reportingPeriod]="period" [process]="process"></app-emission-table>
+                </div>
+            </div>
+            
+        </div>
+        </ng-container>
+        <div class="col-sm-12 col-md-6">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Release Points Associated with this Process</strong>
+                </div>
+                <div class="card-body">
+                    <app-release-point-appt-table [tableData]="process.releasePointAppts"></app-release-point-appt-table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
 
 </div>

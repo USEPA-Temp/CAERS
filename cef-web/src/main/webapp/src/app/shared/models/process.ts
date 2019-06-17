@@ -1,4 +1,5 @@
 import { ReleasePointApportionment } from './release-point-apportionment';
+import { ReportingPeriod } from './reporting-period';
 
 export class Process {
   id: number;
@@ -11,4 +12,5 @@ export class Process {
   sccShortName: string;
   description: string;
   releasePointAppts: ReleasePointApportionment[];
+  reportingPeriods: ReportingPeriod[];
 }

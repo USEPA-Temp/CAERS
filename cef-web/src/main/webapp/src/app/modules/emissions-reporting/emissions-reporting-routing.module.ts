@@ -43,7 +43,7 @@ const reportRoutes: Routes = [
             data: { title: 'Release Point' }
           }, {
             path: '**',
-            component: EmissionInventoryComponent,
+            component: FacilityInformationComponent,
             data: { title: 'PLACEHOLDER' }
           }
         ]

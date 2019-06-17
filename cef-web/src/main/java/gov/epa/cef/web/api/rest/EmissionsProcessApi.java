@@ -36,7 +36,7 @@ public class EmissionsProcessApi {
 
     /**
      * Retrieve Emissions Processes for a release point
-     * @param facilityId
+     * @param releasePointId
      * @return
      */
     @GetMapping(value = "/releasePoint/{releasePointId}")
