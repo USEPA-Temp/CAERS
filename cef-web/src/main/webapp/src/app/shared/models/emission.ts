@@ -1,11 +1,13 @@
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+
 export class Emission {
   id: number;
   reportingPeriodId: number;
   pollutantCode: string;
   pollutantName: string;
   totalEmissions: number;
-  emissionsUomCode: string;
+  emissionsUomCode: BaseCodeLookup;
   emissionsFactor: number;
   emissionsFactorText: string;
-  emissionsCalcMethodCode: string;
+  emissionsCalcMethodCode: BaseCodeLookup;
 }

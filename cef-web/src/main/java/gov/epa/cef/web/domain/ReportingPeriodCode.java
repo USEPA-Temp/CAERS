@@ -15,4 +15,12 @@ public class ReportingPeriodCode extends BaseLookupEntity {
     @Column(name = "short_name", nullable = false, length = 50)
     private String shortName;
 
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
 }

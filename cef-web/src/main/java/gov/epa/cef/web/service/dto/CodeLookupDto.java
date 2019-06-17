@@ -8,6 +8,7 @@ public class CodeLookupDto implements Serializable {
 
     protected String code;
     protected String description;
+    protected String shortName;
 
     public String getCode() {
         return code;
@@ -23,6 +24,14 @@ public class CodeLookupDto implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
 }

@@ -43,7 +43,7 @@ public class ReportingPeriodApi {
     @ResponseBody
     public ResponseEntity<Collection<ReportingPeriodDto>> retrieveReportingPeriodsForProcess(@PathVariable Long processId) {
 
-        Collection<ReportingPeriodDto> result = reportingPeriodService.retrieveForReleasePoint(processId);
+        Collection<ReportingPeriodDto> result = reportingPeriodService.retrieveForEmissionsProcess(processId);
         return new ResponseEntity<Collection<ReportingPeriodDto>>(result, HttpStatus.OK);
     }
 }

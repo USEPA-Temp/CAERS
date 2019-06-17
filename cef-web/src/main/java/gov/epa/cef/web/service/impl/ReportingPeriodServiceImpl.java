@@ -35,7 +35,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
      * @see gov.epa.cef.web.service.impl.ReportingPeriodService#retrieveForReleasePoint(java.lang.Long)
      */
     @Override
-    public List<ReportingPeriodDto> retrieveForReleasePoint(Long processId) {
+    public List<ReportingPeriodDto> retrieveForEmissionsProcess(Long processId) {
         List<ReportingPeriod> result = repo.findByEmissionsProcessId(processId);
         return mapper.toDtoList(result);
     }

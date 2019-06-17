@@ -12,10 +12,10 @@ public class EmissionDto implements Serializable {
     private String pollutantCode;
     private String pollutantName;
     private Integer totalEmissions;
-    private String emissionsUomCode;
+    private CodeLookupDto emissionsUomCode;
     private BigDecimal emissionsFactor;
     private String emissionsFactorText;
-    private String emissionsCalcMethodCode;
+    private CodeLookupDto emissionsCalcMethodCode;
 
     public Long getId() {
         return id;
@@ -57,11 +57,11 @@ public class EmissionDto implements Serializable {
         this.totalEmissions = totalEmissions;
     }
 
-    public String getEmissionsUomCode() {
+    public CodeLookupDto getEmissionsUomCode() {
         return emissionsUomCode;
     }
 
-    public void setEmissionsUomCode(String emissionsUomCode) {
+    public void setEmissionsUomCode(CodeLookupDto emissionsUomCode) {
         this.emissionsUomCode = emissionsUomCode;
     }
 
@@ -81,11 +81,11 @@ public class EmissionDto implements Serializable {
         this.emissionsFactorText = emissionsFactorText;
     }
 
-    public String getEmissionsCalcMethodCode() {
+    public CodeLookupDto getEmissionsCalcMethodCode() {
         return emissionsCalcMethodCode;
     }
 
-    public void setEmissionsCalcMethodCode(String emissionsCalcMethodCode) {
+    public void setEmissionsCalcMethodCode(CodeLookupDto emissionsCalcMethodCode) {
         this.emissionsCalcMethodCode = emissionsCalcMethodCode;
     }
 
