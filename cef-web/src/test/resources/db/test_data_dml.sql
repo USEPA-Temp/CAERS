@@ -187,18 +187,18 @@ INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_co
 	VALUES ('9999994', '9999994', 'A', 'OP', 'O', '35', 'LB', '115', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 
-INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
+INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, avg_weeks_per_period, percent_winter, percent_spring, percent_summer, 
 	percent_fall, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999991', '9999991', '8700', '24','7','25', '25', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
+	VALUES ('9999991', '9999991', '8700', '24','7', '52', '25', '25', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
+INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, avg_weeks_per_period, percent_winter, percent_spring, percent_summer, 
 	percent_fall, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999992', '9999992', '8700', '20','6','10', '10', '50', '30', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
-INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
+	VALUES ('9999992', '9999992', '8700', '20','6','52', '10', '10', '50', '30', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
+INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, avg_weeks_per_period, percent_winter, percent_spring, percent_summer, 
 	percent_fall, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999993', '9999993', '8700', '18','5','45', '5', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, percent_winter, percent_spring, percent_summer, 
+	VALUES ('9999993', '9999993', '8700', '18','5', '52','45', '5', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, avg_weeks_per_period, percent_winter, percent_spring, percent_summer, 
 	percent_fall, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999994', '9999994', '8700', '23','6','25', '25', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+	VALUES ('9999994', '9999994', '8700', '23','6','52', '25', '25', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
 	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
