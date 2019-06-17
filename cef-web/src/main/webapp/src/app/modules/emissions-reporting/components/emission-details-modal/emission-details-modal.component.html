@@ -10,7 +10,7 @@
       <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
       <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
       <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
-      <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode}}</div>
+      <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode.shortName}}</div>
       <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
       <div class="col-sm-6 col-md-2">{{process.operatingStatusCodeDescription}}</div>
     </div>
@@ -21,7 +21,7 @@
           <input type="text" class="form-control" id="pollutantNameInput" formControlName="pollutantName">
         </div>
         <label for="pollutantCodeInput" class="col-sm-4 col-lg-1 col-form-label"><strong>Code:</strong></label>
-        <div class="col-sm-8 col-lg-2">
+        <div class="col-sm-8 col-lg-3">
           <input type="text" class="form-control" id="pollutantCodeInput" formControlName="pollutantCode">
         </div>
       </div>
@@ -32,7 +32,7 @@
           <input type="number" class="form-control" id="emissionFactorInput" formControlName="emissionsFactor">
         </div>
         <label for="emissionsCalcMethodCodeInput" class="col-sm-4 col-lg-1 col-form-label"><strong>Code:</strong></label>
-        <div class="col-sm-8 col-lg-2">
+        <div class="col-sm-8 col-lg-3">
           <input type="text" class="form-control" id="emissionsCalcMethodCodeInput" formControlName="emissionsCalcMethodCode">
         </div>
       </div>
@@ -43,7 +43,7 @@
           <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions">
         </div>
         <label for="emissionsUomCodeInput" class="col-sm-4 col-lg-1 col-form-label"><strong>UoM:</strong></label>
-        <div class="col-sm-8 col-lg-2">
+        <div class="col-sm-8 col-lg-3">
           <input type="text" class="form-control" id="emissionsUomCodeInput" formControlName="emissionsUomCode">
         </div>
       </div>

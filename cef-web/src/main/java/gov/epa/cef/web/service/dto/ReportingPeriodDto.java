@@ -10,12 +10,12 @@ public class ReportingPeriodDto implements Serializable {
 
     private Long id;
     private Long emissionsProcessId;
-    private String reportingPeriodTypeCode;
-    private String emissionsOperatingTypeCode;
-    private String calculationParameterTypeCode;
+    private CodeLookupDto reportingPeriodTypeCode;
+    private CodeLookupDto emissionsOperatingTypeCode;
+    private CodeLookupDto calculationParameterTypeCode;
     private BigDecimal calculationParameterValue;
-    private String calculationParameterUom;
-    private String calculationMaterialCode;
+    private CodeLookupDto calculationParameterUom;
+    private CodeLookupDto calculationMaterialCode;
     private List<EmissionDto> emissions;
     private List<OperatingDetailDto> operatingDetails;
 
@@ -35,27 +35,27 @@ public class ReportingPeriodDto implements Serializable {
         this.emissionsProcessId = emissionsProcessId;
     }
 
-    public String getReportingPeriodTypeCode() {
+    public CodeLookupDto getReportingPeriodTypeCode() {
         return reportingPeriodTypeCode;
     }
 
-    public void setReportingPeriodTypeCode(String reportingPeriodTypeCode) {
+    public void setReportingPeriodTypeCode(CodeLookupDto reportingPeriodTypeCode) {
         this.reportingPeriodTypeCode = reportingPeriodTypeCode;
     }
 
-    public String getEmissionsOperatingTypeCode() {
+    public CodeLookupDto getEmissionsOperatingTypeCode() {
         return emissionsOperatingTypeCode;
     }
 
-    public void setEmissionsOperatingTypeCode(String emissionsOperatingTypeCode) {
+    public void setEmissionsOperatingTypeCode(CodeLookupDto emissionsOperatingTypeCode) {
         this.emissionsOperatingTypeCode = emissionsOperatingTypeCode;
     }
 
-    public String getCalculationParameterTypeCode() {
+    public CodeLookupDto getCalculationParameterTypeCode() {
         return calculationParameterTypeCode;
     }
 
-    public void setCalculationParameterTypeCode(String calculationParameterTypeCode) {
+    public void setCalculationParameterTypeCode(CodeLookupDto calculationParameterTypeCode) {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
@@ -67,19 +67,19 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationParameterValue = calculationParameterValue;
     }
 
-    public String getCalculationParameterUom() {
+    public CodeLookupDto getCalculationParameterUom() {
         return calculationParameterUom;
     }
 
-    public void setCalculationParameterUom(String calculationParameterUom) {
+    public void setCalculationParameterUom(CodeLookupDto calculationParameterUom) {
         this.calculationParameterUom = calculationParameterUom;
     }
 
-    public String getCalculationMaterialCode() {
+    public CodeLookupDto getCalculationMaterialCode() {
         return calculationMaterialCode;
     }
 
-    public void setCalculationMaterialCode(String calculationMaterialCode) {
+    public void setCalculationMaterialCode(CodeLookupDto calculationMaterialCode) {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 

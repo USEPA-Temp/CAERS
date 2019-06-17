@@ -8,7 +8,7 @@ public class FacilitySiteContactDto implements Serializable {
 
     private Long id;
     private Long facilitySiteId;
-    private String type;
+    private CodeLookupDto type;
     private String prefix;
     private String firstName;
     private String lastName;
@@ -42,11 +42,11 @@ public class FacilitySiteContactDto implements Serializable {
         this.facilitySiteId = facilitySiteId;
     }
 
-    public String getType() {
+    public CodeLookupDto getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CodeLookupDto type) {
         this.type = type;
     }
 

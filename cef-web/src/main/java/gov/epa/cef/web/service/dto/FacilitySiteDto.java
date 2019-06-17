@@ -12,6 +12,7 @@ public class FacilitySiteDto implements Serializable {
     private CodeLookupDto naicsCode;
     private CodeLookupDto programSystemCode;
     private CodeLookupDto operatingStatusCode;
+    private CodeLookupDto tribalCode;
     private EmissionsReportDto emissionsReport;
     private String frsFacilityId;
     private String eisProgramId;
@@ -31,6 +32,7 @@ public class FacilitySiteDto implements Serializable {
     private String mailingPostalCode;
     private Double latitude;
     private Double longitude;
+    private String tribalCodeDesc;
 
     public Long getId() {
         return id;
@@ -78,6 +80,14 @@ public class FacilitySiteDto implements Serializable {
 
     public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
         this.operatingStatusCode = operatingStatusCode;
+    }
+
+    public CodeLookupDto getTribalCode() {
+        return tribalCode;
+    }
+
+    public void setTribalCode(CodeLookupDto tribalCode) {
+        this.tribalCode = tribalCode;
     }
 
     public EmissionsReportDto getEmissionsReport() {
@@ -230,6 +240,14 @@ public class FacilitySiteDto implements Serializable {
 
     public void setMailingPostalCode(String mailingPostalCode) {
         this.mailingPostalCode = mailingPostalCode;
+    }
+
+    public String getTribalCodeDesc() {
+        return tribalCodeDesc;
+    }
+
+    public void setTribalCodeDesc(String tribalCodeDesc) {
+        this.tribalCodeDesc = tribalCodeDesc;
     }
 
 }

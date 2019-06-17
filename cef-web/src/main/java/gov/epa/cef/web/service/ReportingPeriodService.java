@@ -18,6 +18,6 @@ public interface ReportingPeriodService {
      * @param processId
      * @return
      */
-    List<ReportingPeriodDto> retrieveForReleasePoint(Long processId);
+    List<ReportingPeriodDto> retrieveForEmissionsProcess(Long processId);
 
 }

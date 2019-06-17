@@ -1,4 +1,5 @@
 import { ReleasePoint } from './release-point';
+import { BaseCodeLookup } from './base-code-lookup';
 
 export class ReleasePointApportionment {
   id: number;
@@ -6,6 +7,6 @@ export class ReleasePointApportionment {
   releasePointId: number;
   releasePointIdentifier: string;
   releasePointDescription: string;
-  releasePointTypeCode: string;
+  releasePointTypeCode: BaseCodeLookup;
   releasePoint: ReleasePoint;
 }

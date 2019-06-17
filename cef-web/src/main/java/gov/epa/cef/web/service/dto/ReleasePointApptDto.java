@@ -17,7 +17,7 @@ public class ReleasePointApptDto implements Serializable{
     
     private String releasePointDescription;
     
-    private String releasePointTypeCode;
+    private CodeLookupDto releasePointTypeCode;
     
     private Double percent;
 
@@ -53,11 +53,11 @@ public class ReleasePointApptDto implements Serializable{
         this.releasePointDescription = releasePointDescription;
     }
 
-    public String getReleasePointTypeCode() {
+    public CodeLookupDto getReleasePointTypeCode() {
         return releasePointTypeCode;
     }
 
-    public void setReleasePointTypeCode(String releasePointTypeCode) {
+    public void setReleasePointTypeCode(CodeLookupDto releasePointTypeCode) {
         this.releasePointTypeCode = releasePointTypeCode;
     }
 

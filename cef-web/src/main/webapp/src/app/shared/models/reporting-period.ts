@@ -1,15 +1,16 @@
 import { OperatingDetail } from './operating-detail';
 import { Emission } from './emission';
+import { BaseCodeLookup } from './base-code-lookup';
 
 export class ReportingPeriod {
   id: number;
   emissionsProcessId: number;
-  reportingPeriodTypeCode: string;
+  reportingPeriodTypeCode: BaseCodeLookup;
   emissionsOperatingTypeCode: string;
-  calculationParameterTypeCode: string;
+  calculationParameterTypeCode: BaseCodeLookup;
   calculationParameterValue: number;
-  calculationParameterUom: string;
-  calculationMaterialCode: string;
+  calculationParameterUom: BaseCodeLookup;
+  calculationMaterialCode: BaseCodeLookup;
   emissions: Emission[];
   operatingDetails: OperatingDetail[];
 }
