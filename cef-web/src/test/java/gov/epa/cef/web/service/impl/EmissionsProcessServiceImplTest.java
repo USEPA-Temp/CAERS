@@ -19,6 +19,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.mapper.EmissionsProcessMapper;
+import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EmissionsProcessServiceImplTest {
@@ -30,12 +31,16 @@ public class EmissionsProcessServiceImplTest {
     
     @Mock
     private EmissionsProcessMapper emissionsProcessMapper;
+    
+    @Mock
+    private ReleasePointApptMapper releasePointApptMapper;
 	
 	@InjectMocks
 	private EmissionsProcessServiceImpl emissionsProcessServiceImpl;
 	
 	@Before
 	public void init(){
+	    
 	    emissionProcess=new EmissionsProcess();
         when(emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(null)).thenReturn(null);
         when(emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(emissionProcess)).thenReturn(new EmissionsProcessDto());

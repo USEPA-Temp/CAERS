@@ -3,6 +3,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.service.dto.FacilitySiteDto;
 
 public interface FacilitySiteService {
 
@@ -11,7 +12,7 @@ public interface FacilitySiteService {
      * @param id
      * @return
      */
-    FacilitySite findById(Long id);
+    FacilitySiteDto findById(Long id);
     
     /**
      * Retrieve facility by EIS program id and emissions report
@@ -19,13 +20,13 @@ public interface FacilitySiteService {
      * @param emissionsReportId
      * @return
      */
-    FacilitySite findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId);
+    FacilitySiteDto findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId);
 
     /**
      * Find common form facilities for a given state
      * @param state Two-character state code
      * @return
      */	
-    List<FacilitySite> findByState(String state);
+    List<FacilitySiteDto> findByState(String state);
 
 }

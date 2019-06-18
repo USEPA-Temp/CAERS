@@ -1,5 +1,8 @@
 package gov.epa.cef.web.service;
 
+import gov.epa.cef.web.service.dto.TokenDto;
+import gov.epa.cef.web.service.dto.UserDto;
+
 public interface UserService {
     
     /**
@@ -8,6 +11,12 @@ public interface UserService {
      * @param userId
      * @return NAAS token
      */
-    String createToken(String userId);
+    TokenDto createToken();
+
+    /**
+     * Returns current authenticated user
+     * @return
+     */
+    UserDto getCurrentUser();
 
 }

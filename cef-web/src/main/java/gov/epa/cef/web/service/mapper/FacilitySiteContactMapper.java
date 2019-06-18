@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,4 +13,6 @@ public interface FacilitySiteContactMapper {
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
     FacilitySiteContactDto toDto(FacilitySiteContact contact);
+    
+    List<FacilitySiteContactDto> toDtoList(List<FacilitySiteContact> facilitySiteContacts);
 }
