@@ -1,7 +1,9 @@
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+
 export class FacilitySiteContact {
   id: number;
   facilitySiteId: number;
-  type: string;
+  type: BaseCodeLookup;
   prefix: string;
   firstName: string;
   lastName: string;

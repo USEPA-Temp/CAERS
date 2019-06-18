@@ -14,8 +14,6 @@ public interface EmissionsUnitMapper {
     @Mapping(source = "unitTypeCode.description", target = "unitTypeCodeDescription")
     @Mapping(source = "operatingStatusCode.description", target = "operatingStatusCodeDescription")
     @Mapping(source = "facilitySite.id", target = "facilitySiteId")
-    @Mapping(source = "unitOfMeasureCode.code", target = "unitOfMeasureCode")
-    @Mapping(source = "unitOfMeasureCode.description", target = "unitOfMeasureDescription")
     @Mapping(source = "emissionsProcesses", target = "emissionsProcesses")
     EmissionsUnitDto emissionsUnitToDto(EmissionsUnit emissionsUnit);
     

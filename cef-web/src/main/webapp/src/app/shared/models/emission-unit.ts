@@ -1,4 +1,5 @@
 import { Process } from './process';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 
 export class EmissionUnit {
   id: number;
@@ -10,7 +11,7 @@ export class EmissionUnit {
   programSystemCode: string;
   typeCodeDescription: string;
   statusYear: number;
-  unitOfMeasureCode: number;
+  unitOfMeasureCode: BaseCodeLookup;
   unitOfMeasureDescription: number;
 
   processes: Process[];

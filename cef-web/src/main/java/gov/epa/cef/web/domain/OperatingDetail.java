@@ -35,7 +35,7 @@ public class OperatingDetail extends BaseAuditEntity {
     private Double avgDaysPerWeek;
     
     @Column(name = "avg_weeks_per_period", precision = 2, scale = 0)
-    private Byte avgWeeksPerPeriod;
+    private Short avgWeeksPerPeriod;
     
     @Column(name = "percent_winter", precision = 4, scale = 1)    
     private Double percentWinter;
@@ -87,11 +87,11 @@ public class OperatingDetail extends BaseAuditEntity {
         this.avgDaysPerWeek = avgDaysPerWeek;
     }
 
-    public Byte getAvgWeeksPerPeriod() {
+    public Short getAvgWeeksPerPeriod() {
         return this.avgWeeksPerPeriod;
     }
 
-    public void setAvgWeeksPerPeriod(Byte avgWeeksPerPeriod) {
+    public void setAvgWeeksPerPeriod(Short avgWeeksPerPeriod) {
         this.avgWeeksPerPeriod = avgWeeksPerPeriod;
     }
 

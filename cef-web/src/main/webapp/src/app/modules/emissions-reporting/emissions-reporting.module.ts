@@ -1,6 +1,7 @@
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ReportsRoutingModule } from './emissions-reporting-routing.module';
 import { EmissionsReportingDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting-dashboard/emissions-reporting-dashboard.component';
@@ -20,7 +21,10 @@ import { FacilityInformationComponent } from 'src/app/modules/emissions-reportin
 import { EmissionsUnitToSideNavPipe } from 'src/app/shared/pipes/emissions-unit-to-side-nav.pipe';
 import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reporting/pages/release-point-details/release-point-details.component';
 import { EmissionsProcessTableComponent } from 'src/app/modules/emissions-reporting/components/emissions-process-table/emissions-process-table.component';
-import { EmissionsProcessDetailsComponent } from './pages/emissions-process-details/emissions-process-details.component';
+import { EmissionsProcessDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emissions-process-details/emissions-process-details.component';
+import { EmissionTableComponent } from 'src/app/modules/emissions-reporting/components/emission-table/emission-table.component';
+import { ReleasePointApptTableComponent } from 'src/app/modules/emissions-reporting/components/release-point-appt-table/release-point-appt-table.component';
+import { EmissionDetailsModalComponent } from 'src/app/modules/emissions-reporting/components/emission-details-modal/emission-details-modal.component';
 
 
 @NgModule({
@@ -39,15 +43,22 @@ import { EmissionsProcessDetailsComponent } from './pages/emissions-process-deta
     EmissionsUnitToSideNavPipe,
     ReleasePointDetailsComponent,
     EmissionsProcessTableComponent,
-    EmissionsProcessDetailsComponent
+    EmissionsProcessDetailsComponent,
+    EmissionTableComponent,
+    ReleasePointApptTableComponent,
+    EmissionDetailsModalComponent
 
   ],
   imports: [
     CommonModule,
     ReportsRoutingModule,
+    ReactiveFormsModule,
     SharedModule,
     NgbModule,
     FontAwesomeModule
+  ],
+  entryComponents: [
+    EmissionDetailsModalComponent
   ]
 })
 export class EmissionsReportingModule { }

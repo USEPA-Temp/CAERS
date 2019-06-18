@@ -31,23 +31,28 @@ public class ReportingPeriod extends BaseAuditEntity {
     @JoinColumn(name = "emissions_process_id", nullable = false)
     private EmissionsProcess emissionsProcess;
     
-    @Column(name = "reporting_period_type_code", nullable = false, length = 20)
-    private String reportingPeriodTypeCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reporting_period_type_code", nullable = false)
+    private ReportingPeriodCode reportingPeriodTypeCode;
     
-    @Column(name = "emissions_operating_type_code", nullable = false, length = 20)
-    private String emissionsOperatingTypeCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emissions_operating_type_code", nullable = false)
+    private OperatingStatusCode emissionsOperatingTypeCode;
     
-    @Column(name = "calculation_parameter_type_code", nullable = false, length = 20)
-    private String calculationParameterTypeCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "calculation_parameter_type_code", nullable = false)
+    private CalculationParameterTypeCode calculationParameterTypeCode;
     
     @Column(name = "calculation_parameter_value", nullable = false, precision = 131089, scale = 0)
     private BigDecimal calculationParameterValue;
     
-    @Column(name = "calculation_parameter_uom", nullable = false, length = 20)
-    private String calculationParameterUom;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "calculation_parameter_uom", nullable = false)
+    private UnitMeasureCode calculationParameterUom;
     
-    @Column(name = "calculation_material_code", nullable = false, length = 20)
-    private String calculationMaterialCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "calculation_material_code", nullable = false)
+    private CalculationMaterialCode calculationMaterialCode;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
     private Set<Emission> emissions = new HashSet<Emission>(0);
@@ -69,27 +74,27 @@ public class ReportingPeriod extends BaseAuditEntity {
         this.emissionsProcess = emissionsProcess;
     }
 
-    public String getReportingPeriodTypeCode() {
+    public ReportingPeriodCode getReportingPeriodTypeCode() {
         return this.reportingPeriodTypeCode;
     }
 
-    public void setReportingPeriodTypeCode(String reportingPeriodTypeCode) {
+    public void setReportingPeriodTypeCode(ReportingPeriodCode reportingPeriodTypeCode) {
         this.reportingPeriodTypeCode = reportingPeriodTypeCode;
     }
 
-    public String getEmissionsOperatingTypeCode() {
+    public OperatingStatusCode getEmissionsOperatingTypeCode() {
         return this.emissionsOperatingTypeCode;
     }
 
-    public void setEmissionsOperatingTypeCode(String emissionsOperatingTypeCode) {
+    public void setEmissionsOperatingTypeCode(OperatingStatusCode emissionsOperatingTypeCode) {
         this.emissionsOperatingTypeCode = emissionsOperatingTypeCode;
     }
 
-    public String getCalculationParameterTypeCode() {
+    public CalculationParameterTypeCode getCalculationParameterTypeCode() {
         return this.calculationParameterTypeCode;
     }
 
-    public void setCalculationParameterTypeCode(String calculationParameterTypeCode) {
+    public void setCalculationParameterTypeCode(CalculationParameterTypeCode calculationParameterTypeCode) {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
@@ -101,19 +106,19 @@ public class ReportingPeriod extends BaseAuditEntity {
         this.calculationParameterValue = calculationParameterValue;
     }
 
-    public String getCalculationParameterUom() {
+    public UnitMeasureCode getCalculationParameterUom() {
         return this.calculationParameterUom;
     }
 
-    public void setCalculationParameterUom(String calculationParameterUom) {
+    public void setCalculationParameterUom(UnitMeasureCode calculationParameterUom) {
         this.calculationParameterUom = calculationParameterUom;
     }
 
-    public String getCalculationMaterialCode() {
+    public CalculationMaterialCode getCalculationMaterialCode() {
         return this.calculationMaterialCode;
     }
 
-    public void setCalculationMaterialCode(String calculationMaterialCode) {
+    public void setCalculationMaterialCode(CalculationMaterialCode calculationMaterialCode) {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 

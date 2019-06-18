@@ -19,7 +19,7 @@ const routes: Routes = [
         },
         children: [
           {
-            path: 'reports',
+            path: 'report',
             loadChildren: 'src/app/modules/emissions-reporting/emissions-reporting.module#EmissionsReportingModule'
           },
           {

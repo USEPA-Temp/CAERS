@@ -11,8 +11,10 @@ import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 @Mapper(componentModel = "spring", uses = {})   
 public interface ReleasePointApptMapper {
     
-    @Mapping(source = "releasePoint.description", target = "releasePointDescription")
     @Mapping(source = "releasePoint.id", target = "releasePointId")
+    @Mapping(source = "releasePoint.releasePointIdentifier", target = "releasePointIdentifier")
+    @Mapping(source = "releasePoint.description", target = "releasePointDescription")
+    @Mapping(source = "releasePoint.typeCode", target = "releasePointTypeCode")
     ReleasePointApptDto releasePointApptToReleasePointApptDto(ReleasePointAppt releasePointAppt);
     
     List<ReleasePointApptDto> releasePointApptsToReleasePointApptDtos(List<ReleasePointAppt> releasePointAppts);

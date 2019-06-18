@@ -41,8 +41,9 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "release_point_identifier", nullable = false, length = 20)
     private String releasePointIdentifier;
     
-    @Column(name = "type_code", nullable = false, length = 20)
-    private String typeCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_code", nullable = false)
+    private ReleasePointTypeCode typeCode;
 
     @Column(name = "description", nullable = false, length = 200)
     private String description;
@@ -50,20 +51,23 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "stack_height", precision = 6, scale = 3)
     private Double stackHeight;
     
-    @Column(name = "stack_height_uom_code", length = 20)
-    private String stackHeightUomCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stack_height_uom_code", nullable = false)
+    private UnitMeasureCode stackHeightUomCode;
     
     @Column(name = "stack_diameter", precision = 6, scale = 3)
     private Double stackDiameter;
     
-    @Column(name = "stack_diameter_uom_code", length = 20)
-    private String stackDiameterUomCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stack_diameter_uom_code", nullable = false)
+    private UnitMeasureCode stackDiameterUomCode;
     
     @Column(name = "exit_gas_velocity", precision = 8, scale = 3)
     private Double exitGasVelocity;
     
-    @Column(name = "exit_gas_velocity_uom_code", length = 20)
-    private String exitGasVelocityUomCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exit_gas_velocity_uom_code", nullable = false)
+    private UnitMeasureCode exitGasVelocityUomCode;
     
     @Column(name = "exit_gas_temperature", precision = 4, scale = 0)
     private Short exitGasTemperature;
@@ -71,8 +75,9 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "exit_gas_flow_rate", precision = 16, scale = 8)
     private Double exitGasFlowRate;
     
-    @Column(name = "exit_gas_flow_uom_code", length = 20)
-    private String exitGasFlowUomCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exit_gas_flow_uom_code", nullable = false)
+    private UnitMeasureCode exitGasFlowUomCode;
     
     @Column(name = "status_year")
     private Short statusYear;
@@ -138,11 +143,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.releasePointIdentifier = releasePointIdentifier;
     }
 
-    public String getTypeCode() {
+    public ReleasePointTypeCode getTypeCode() {
         return this.typeCode;
     }
 
-    public void setTypeCode(String typeCode) {
+    public void setTypeCode(ReleasePointTypeCode typeCode) {
         this.typeCode = typeCode;
     }
 
@@ -162,11 +167,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.stackHeight = stackHeight;
     }
 
-    public String getStackHeightUomCode() {
+    public UnitMeasureCode getStackHeightUomCode() {
         return this.stackHeightUomCode;
     }
 
-    public void setStackHeightUomCode(String stackHeightUomCode) {
+    public void setStackHeightUomCode(UnitMeasureCode stackHeightUomCode) {
         this.stackHeightUomCode = stackHeightUomCode;
     }
 
@@ -178,11 +183,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.stackDiameter = stackDiameter;
     }
 
-    public String getStackDiameterUomCode() {
+    public UnitMeasureCode getStackDiameterUomCode() {
         return this.stackDiameterUomCode;
     }
 
-    public void setStackDiameterUomCode(String stackDiameterUomCode) {
+    public void setStackDiameterUomCode(UnitMeasureCode stackDiameterUomCode) {
         this.stackDiameterUomCode = stackDiameterUomCode;
     }
 
@@ -194,11 +199,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.exitGasVelocity = exitGasVelocity;
     }
 
-    public String getExitGasVelocityUomCode() {
+    public UnitMeasureCode getExitGasVelocityUomCode() {
         return this.exitGasVelocityUomCode;
     }
 
-    public void setExitGasVelocityUomCode(String exitGasVelicityUomCode) {
+    public void setExitGasVelocityUomCode(UnitMeasureCode exitGasVelicityUomCode) {
         this.exitGasVelocityUomCode = exitGasVelicityUomCode;
     }
 
@@ -218,11 +223,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.exitGasFlowRate = exitGasFlowRate;
     }
 
-    public String getExitGasFlowUomCode() {
+    public UnitMeasureCode getExitGasFlowUomCode() {
         return this.exitGasFlowUomCode;
     }
 
-    public void setExitGasFlowUomCode(String exitGasFlowUomCode) {
+    public void setExitGasFlowUomCode(UnitMeasureCode exitGasFlowUomCode) {
         this.exitGasFlowUomCode = exitGasFlowUomCode;
     }
 
