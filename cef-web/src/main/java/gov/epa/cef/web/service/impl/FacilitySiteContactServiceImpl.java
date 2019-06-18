@@ -1,7 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +31,7 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     @Override
     public List<FacilitySiteContactDto> retrieveForFacilitySite(Long facilitySiteId) {
         List<FacilitySiteContact> result = contactRepo.findByFacilitySiteId(facilitySiteId);
-        return result.stream()
-                .map(contact -> mapper.toDto(contact))
-                .collect(Collectors.toList());
+        return mapper.toDtoList(result);
     }
 
 

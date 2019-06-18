@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
 
-class SpringSecurityAuditorAware implements AuditorAware<String> {
+public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
     public Optional<String> getCurrentAuditor() {
 
