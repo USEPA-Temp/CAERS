@@ -1,5 +1,8 @@
 --REPORTING TABLES
 DROP TABLE IF EXISTS emission;
+DROP TABLE IF EXISTS control_assignment;
+DROP TABLE IF EXISTS control_path;
+DROP TABLE IF EXISTS control;
 DROP TABLE IF EXISTS operating_detail;
 DROP TABLE IF EXISTS reporting_period;
 DROP TABLE IF EXISTS release_point_appt;
@@ -17,6 +20,8 @@ DROP TABLE IF EXISTS calculation_parameter_type_code;
 DROP TABLE IF EXISTS calculation_material_code;
 DROP TABLE IF EXISTS calculation_method_code;
 DROP TABLE IF EXISTS contact_type_code;
+DROP TABLE IF EXISTS control_type_code;
+DROP TABLE IF EXISTS control_pollutant;
 DROP TABLE IF EXISTS coordinate_datasource_code;
 DROP TABLE IF EXISTS facility_category_code;
 DROP TABLE IF EXISTS facility_source_type_code;
