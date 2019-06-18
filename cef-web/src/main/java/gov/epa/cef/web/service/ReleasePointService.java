@@ -1,8 +1,10 @@
 package gov.epa.cef.web.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.service.dto.ReleasePointDto;
 
 public interface ReleasePointService {
 
@@ -11,13 +13,13 @@ public interface ReleasePointService {
      * @param releasePointId 
      * @return
      */
-    ReleasePoint retrieveById(Long releasePointId);
+    ReleasePointDto retrieveById(Long releasePointId);
 
     /**
      * Retrieve Release Points by facility id
      * @param facilityId
      * @return
      */
-    Collection<ReleasePoint> retrieveByFacilitySiteId(Long facilitySiteId);
+    List<ReleasePointDto> retrieveByFacilitySiteId(Long facilitySiteId);
 
 }

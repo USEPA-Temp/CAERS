@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.mapper;
 
-import java.util.function.Function;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.service.dto.UserDto;
@@ -10,24 +11,12 @@ import gov.epa.cef.web.service.dto.UserDto;
  * @author tfesperm
  *
  */
-public class ApplicationUserMapper {
+@Mapper(componentModel = "spring", uses = {})   
+public interface ApplicationUserMapper {
 
-    private ApplicationUserMapper() {
-    }
-
-    /**
-     * Transform {@link ApplicationUser} into {@link UserDto}
-     * @return
-     */
-    public static Function<ApplicationUser, UserDto> toUserDto() {
-        return appUser -> new UserDto()
-                .withCdxUserId(appUser.getUserId())
-                .withEmail(appUser.getEmail())
-                .withFirstName(appUser.getFirstName())
-                .withLastName(appUser.getLastName())
-                .withRole(appUser.getIdTypeText())
-                .withUserRoleId(appUser.getUserRoleId())
-                .withAgencyCode(appUser.getClientId());
-    }
+    @Mapping(source="userId", target="cdxUserId")
+    @Mapping(source="idTypeText", target="role")
+    @Mapping(source="clientId", target="agencyCode")
+    UserDto toUserDto(ApplicationUser applicationUser);
     
 }

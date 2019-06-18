@@ -6,6 +6,11 @@ import gov.epa.cef.web.security.AppRole;
 
 public class UserDto implements Serializable {
     
+    /**
+     * default version
+     */
+    private static final long serialVersionUID = 1L;
+    
     private String cdxUserId;
     private String email;
     private String firstName;

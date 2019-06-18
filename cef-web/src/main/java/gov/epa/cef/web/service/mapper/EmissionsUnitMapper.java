@@ -4,18 +4,13 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
-import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
-import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 
-@Mapper(componentModel = "spring", uses = {})   
+@Mapper(componentModel = "spring", uses = {EmissionsProcessMapper.class})   
 public interface EmissionsUnitMapper {
 
-    EmissionsProcessMapper emissionsProcessMapper= Mappers.getMapper( EmissionsProcessMapper.class );
-    
     @Mapping(source = "unitTypeCode.description", target = "unitTypeCodeDescription")
     @Mapping(source = "operatingStatusCode.description", target = "operatingStatusCodeDescription")
     @Mapping(source = "facilitySite.id", target = "facilitySiteId")
@@ -26,10 +21,4 @@ public interface EmissionsUnitMapper {
     
     List<EmissionsUnitDto> emissionsUnitsToEmissionUnitsDtos(List<EmissionsUnit> emissionUnits);
     
-    default EmissionsProcessDto emissionsProcessToEmissionsProcessDto(EmissionsProcess emissionsProcess) {
-        if (emissionsProcess == null) {
-            return null;
-        }
-        return emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(emissionsProcess);
-    }
 }
