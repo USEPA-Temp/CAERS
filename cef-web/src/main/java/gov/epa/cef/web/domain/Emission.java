@@ -48,6 +48,12 @@ public class Emission extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emissions_calc_method_code", nullable = false)
     CalculationMethodCode emissionsCalcMethodCode;
+    
+    @Column(name = "pollutant_cas_id", length = 100)
+    private String pollutantCasId;
+    
+    @Column(name = "comments", length = 200)
+    private String comments;
 
     // Constructors
 
@@ -117,5 +123,21 @@ public class Emission extends BaseAuditEntity {
 
     public void setEmissionsCalcMethodCode(CalculationMethodCode emissionsCalcMethodCode) {
         this.emissionsCalcMethodCode = emissionsCalcMethodCode;
+    }
+
+    public String getPollutantCasId() {
+        return pollutantCasId;
+    }
+
+    public void setPollutantCasId(String pollutantCasId) {
+        this.pollutantCasId = pollutantCasId;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

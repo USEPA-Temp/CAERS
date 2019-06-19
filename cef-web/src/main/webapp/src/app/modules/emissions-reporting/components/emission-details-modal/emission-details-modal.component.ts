@@ -18,10 +18,13 @@ export class EmissionDetailsModalComponent implements OnInit {
   emissionForm = this.fb.group({
     pollutantName: [''],
     pollutantCode: [''],
+    pollutantCasId: [''],
     emissionsFactor: [''],
+    emissionsFactorText: [''],
     emissionsCalcMethodCode: [''],
     totalEmissions: [''],
-    emissionsUomCode: ['']
+    emissionsUomCode: [''],
+    comments: ['']
   });
 
   constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) { }

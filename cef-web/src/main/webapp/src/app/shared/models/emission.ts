@@ -5,9 +5,11 @@ export class Emission {
   reportingPeriodId: number;
   pollutantCode: string;
   pollutantName: string;
+  pollutantCasId: string;
   totalEmissions: number;
   emissionsUomCode: BaseCodeLookup;
   emissionsFactor: number;
   emissionsFactorText: string;
   emissionsCalcMethodCode: BaseCodeLookup;
+  comments: string;
 }

@@ -201,30 +201,30 @@ INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, 
 	VALUES ('9999994', '9999994', '8700', '23','6','52', '25', '25', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
+	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
 	VALUES ('9999991', '9999991', '5280', 'Acetaldehyde', '1000', 'TON', '0.6200', '6.200E-2 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced', 
-		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '75-07-0', 'Sample comments for Acetaldehyde');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999992', '9999991', '17298852', 'Acetone', '1007.75', 'TON', '0.5920', '5.900E-2 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced', 
-		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+	VALUES ('9999992', '9999991', '40717', 'Acenaphthylene', '1007.75', 'TON', '0.5920', '5.900E-2 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced', 
+		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '208-96-8', 'Sample comments for Acenaphthylene');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
+	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
 	VALUES ('9999993', '9999991', '4754', 'Benzene', '2015.6', 'TON', '0.5700', '5.700E-3 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced', 
-		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '71-43-2', 'Sample comments for Benzene');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
+	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
 	VALUES ('9999994', '9999994', '65052', 'Carbon monoxide', '138575', 'TON', '0.0020', '20.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '630-08-0', 'Sample comments for Carbon monoxide');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
+	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
 	VALUES ('9999995', '9999994', '761346', 'Volatile Organic Compounds', '87615', 'TON', '0.0053', '5.300000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '', 'Sample comments for Volatile Organic Compounds');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
+	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
 	VALUES ('9999996', '9999994', '17134115', 'Sulfur Oxides', '76155.6', 'TON', '0.006', '0.600000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '', 'Sample comments for Sulfur Oxides');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date)
+	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
 	VALUES ('9999997', '9999994', '173203', 'Nitrogen oxides', '55151.9', 'TON', '0.001', '100.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '11104-93-1', 'Sample comments for Nitrogen Oxides');
