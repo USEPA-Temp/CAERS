@@ -50,6 +50,9 @@ export class EmissionDetailsModalComponent implements OnInit {
     this.editable = !this.editable;
 
     this.emissionForm.reset(this.emission);
+    this.emissionForm.patchValue({
+        emissionsUomCode: this.emission.emissionsUomCode.description,
+        emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description});
     if (this.editable) {
       this.emissionForm.enable();
     } else {
