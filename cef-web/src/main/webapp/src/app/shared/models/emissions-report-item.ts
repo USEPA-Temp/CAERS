@@ -1,6 +1,6 @@
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
-export class ControlAssignmentAssociation {
+export class EmissionsReportItem {
   id: number;
   identifier: string;
   description: string;

@@ -2,7 +2,7 @@ import { ControlPath } from 'src/app/shared/models/control-path';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { Process } from 'src/app/shared/models/process';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
-import { ControlAssignmentAssociation } from 'src/app/shared/models/control-assignment-association';
+import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item';
 
 export class ControlAssignment {
   id: number;
@@ -11,5 +11,5 @@ export class ControlAssignment {
   emissionsUnit: EmissionUnit;
   emissionsProcess: Process;
   releasePoint: ReleasePoint;
-  association: ControlAssignmentAssociation;
+  association: EmissionsReportItem;
 }
