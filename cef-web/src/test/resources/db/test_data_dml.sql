@@ -1,6 +1,7 @@
 
 
 TRUNCATE TABLE EMISSIONS_REPORT CASCADE;
+TRUNCATE TABLE CONTROL_PATH CASCADE;
 
 --EMISSION REPORTS
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
@@ -228,3 +229,41 @@ INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, t
 	emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
 	VALUES ('9999997', '9999994', '173203', 'Nitrogen oxides', '55151.9', 'TON', '0.001', '100.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
 		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '11104-93-1', 'Sample comments for Nitrogen Oxides');
+		
+INSERT INTO CONTROL (id, facility_site_id, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999991', '9999991', 'Control 001', 'Control 001', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO CONTROL (id, facility_site_id, identifier,description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999992', '9999991', 'Control 002', 'Control 002', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+
+INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999991', '9999991', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999992', '9999991', '4754', 'Benzene', '71-43-2', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999993', '9999992', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+
+INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999991', 'Path Description', '1', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999992', 'Path Description', '2', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999993', 'Path Description', '1', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999994', 'Path Description', '1', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+
+INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
+    created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999991', '9999991', '9999991', null, '9999991', null, 'Assignment Description', 
+        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
+    created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999992', '9999991', '9999992', null, null, '9999991', 'Assignment Description', 
+        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
+    created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999993', '9999991', '9999993', '9999991', null, null, 'Assignment Description', 
+        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
+    created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999994', '9999992', '9999994', null, null, '9999991', 'Assignment Description', 
+        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);

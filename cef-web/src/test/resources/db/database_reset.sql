@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS emission;
 DROP TABLE IF EXISTS control_assignment;
 DROP TABLE IF EXISTS control_path;
+DROP TABLE IF EXISTS control_pollutant;
 DROP TABLE IF EXISTS control;
 DROP TABLE IF EXISTS operating_detail;
 DROP TABLE IF EXISTS reporting_period;
