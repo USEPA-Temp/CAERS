@@ -1,0 +1,56 @@
+<app-step-progress></app-step-progress>
+
+<div *ngIf="control">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Control Device Information</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Control ID:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{control.id}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Percent Capture:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{control.percentCapture}}%</div>
+                        <div class="col-sm-6 col-md-2"><strong>Percent Control:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{control.percentControl}}%</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Control Description:</strong></div>
+                        <div class="col-sm-6 col-md-10">{{control.description}}</div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Control Device Assignment</strong>
+                </div>
+                <div class="card-body">
+                    <app-control-assignment-table [tableData]="control.assignments"></app-control-assignment-table>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Control Pollutants</strong>
+                </div>
+                <div class="card-body">
+                    <app-control-pollutant-table [tableData]="control.pollutants"></app-control-pollutant-table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>

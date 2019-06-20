@@ -19,7 +19,14 @@ export abstract class BaseSortableTable {
       this.tableData = this.tableData;
     } else {
       this.tableData = [...this.tableData].sort((a, b) => {
-        const res = compare(a[column], b[column]);
+        let aVal = a;
+        let bVal = b;
+        // flatten out nested references
+        for (const colName of column.split('.')) {
+          aVal = aVal[colName];
+          bVal = bVal[colName];
+        }
+        const res = compare(aVal, bVal);
         return direction === 'asc' ? res : -res;
       });
     }
