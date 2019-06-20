@@ -4,7 +4,8 @@
     <thead class="thead-cef-medium">
     <tr>
       <th scope="col" sortable="pollutantName" (sort)="onSort($event)">Pollutant Name</th>
-      <th scope="col" sortable="pollutantCode" (sort)="onSort($event)">CAS Number</th>
+      <th scope="col" sortable="pollutantCode" (sort)="onSort($event)">Code</th>
+      <th scope="col" sortable="pollutantCasId" (sort)="onSort($event)">CAS ID</th>
       <th scope="col"></th>
     </tr>
     </thead>
@@ -12,9 +13,11 @@
     <tr *ngFor="let item of tableData">
       <td><a routerLink="." (click)="openEmissionModal(item)">{{item.pollutantName}}</a></td>
       <td>{{item.pollutantCode}}</td>
+      <td>{{item.pollutantCasId}}</td>
       <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
     </tr>
     <tr>
+      <td></td>
       <td></td>
       <td></td>
       <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
