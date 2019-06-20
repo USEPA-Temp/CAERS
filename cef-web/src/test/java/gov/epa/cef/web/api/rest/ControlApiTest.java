@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.Before;
@@ -54,7 +53,7 @@ public class ControlApiTest {
 
     @Test
     public void retrieveControlsForFacilitySitet_Should_ReturnControlListWithStatusOk_When_ValidFacilitySiteIdPassed() {
-        ResponseEntity<Collection<ControlDto>> result = controlApi.retrieveControlsForFacilitySite(1L);
+        ResponseEntity<List<ControlDto>> result = controlApi.retrieveControlsForFacilitySite(1L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(controlList, result.getBody());
     }
