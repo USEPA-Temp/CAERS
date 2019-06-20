@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,9 +41,9 @@ public class ControlApi {
      */
     @GetMapping(value = "/facilitySite/{facilitySiteId}")
     @ResponseBody
-    public ResponseEntity<Collection<ControlDto>> retrieveControlsForFacilitySite(@PathVariable Long facilitySiteId) {
+    public ResponseEntity<List<ControlDto>> retrieveControlsForFacilitySite(@PathVariable Long facilitySiteId) {
 
-        Collection<ControlDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
-        return new ResponseEntity<Collection<ControlDto>>(result, HttpStatus.OK);
+        List<ControlDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
+        return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
     }
 }
