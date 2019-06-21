@@ -3,16 +3,14 @@
   <table class="table table-sm table-striped table-bordered">
     <thead>
     <tr>
-      <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point ID</th>
-      <th scope="col" sortable="typeCode" (sort)="onSort($event)">Release Point Type</th>
-      <th scope="col" sortable="description" (sort)="onSort($event)">Release Point Description</th>
+      <th scope="col" sortable="identifier" (sort)="onSort($event)">Control ID</th>
+      <th scope="col" sortable="description" (sort)="onSort($event)">Control Description</th>
       <th scope="col" sortable="operatingStatusCode.description" (sort)="onSort($event)">Operating Status</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td><a routerLink="release/{{item.id}}">{{item.releasePointIdentifier}}</a></td>
-      <td>{{item.typeCode.description}}</td>
+      <td><a routerLink="{{baseUrl}}/{{item.id}}">{{item.identifier}}</a></td>
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCode.description}}</td>
     </tr>

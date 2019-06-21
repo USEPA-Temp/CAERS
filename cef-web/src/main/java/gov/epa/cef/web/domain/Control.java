@@ -23,7 +23,11 @@ public class Control extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_code")
+    private OperatingStatusCode operatingStatusCode;
+
     @Column(name = "identifier", nullable = false, length = 20)
     private String identifier;
 
@@ -48,6 +52,14 @@ public class Control extends BaseAuditEntity {
 
     public void setFacilitySite(FacilitySite facilitySite) {
         this.facilitySite = facilitySite;
+    }
+
+    public OperatingStatusCode getOperatingStatusCode() {
+        return operatingStatusCode;
+    }
+
+    public void setOperatingStatusCode(OperatingStatusCode operatingStatusCode) {
+        this.operatingStatusCode = operatingStatusCode;
     }
 
     public String getIdentifier() {

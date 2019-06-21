@@ -230,10 +230,10 @@ INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, t
 	VALUES ('9999997', '9999994', '173203', 'Nitrogen oxides', '55151.9', 'TON', '0.001', '100.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
 		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '11104-93-1', 'Sample comments for Nitrogen Oxides');
 		
-INSERT INTO CONTROL (id, facility_site_id, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999991', '9999991', 'Control 001', 'Control 001', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO CONTROL (id, facility_site_id, identifier,description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999992', '9999991', 'Control 002', 'Control 002', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999991', '9999991', 'OP', 'Control 001', 'Acetaldehyde and Benzene Control', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
+    VALUES ('9999992', '9999991', 'OP', 'Control 002', 'Acetaldehyde Control', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
     VALUES ('9999991', '9999991', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);

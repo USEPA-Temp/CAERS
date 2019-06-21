@@ -9,6 +9,7 @@ public class ControlDto implements Serializable {
 
     private Long id;
     private Long facilitySiteId;
+    private CodeLookupDto operatingStatusCode;
     private String identifier;
     private String description;
     private Double percentCapture;
@@ -30,6 +31,14 @@ public class ControlDto implements Serializable {
 
     public void setFacilitySiteId(Long facilitySiteId) {
         this.facilitySiteId = facilitySiteId;
+    }
+
+    public CodeLookupDto getOperatingStatusCode() {
+        return operatingStatusCode;
+    }
+
+    public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
+        this.operatingStatusCode = operatingStatusCode;
     }
 
     public String getIdentifier() {

@@ -1,28 +1,22 @@
-<div class="card">
-    <div class="card-header text-center">
-        <strong>Emissions Units</strong>
-    </div>
-    <div class="card-body">
-        <div class="mh-100 overflow-auto">
-          <table class="table table-sm table-striped table-bordered">
-            <thead>
-            <tr>
-              <th scope="col" sortable="unitIdentifier" (sort)="onSort($event)">Unit ID</th>
-              <th scope="col" sortable="unitTypeCodeDescription" (sort)="onSort($event)">Unit Type</th>
-              <th scope="col" sortable="description" (sort)="onSort($event)">Unit Description</th>
-              <th scope="col" sortable="operatingStatusCodeDescription" (sort)="onSort($event)">Operating Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let item of tableData">
-              <td><a routerLink="emissionUnit/{{item.id}}">{{item.unitIdentifier}}</a></td>
-              <td>{{item.unitTypeCodeDescription}}</td>
-              <td>{{item.description}}</td>
-              <td>{{item.operatingStatusCodeDescription}}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-    </div>
+
+<div class="mh-100 overflow-auto">
+  <table class="table table-sm table-striped table-bordered">
+    <thead>
+    <tr>
+      <th scope="col" sortable="unitIdentifier" (sort)="onSort($event)">Unit ID</th>
+      <th scope="col" sortable="unitTypeCodeDescription" (sort)="onSort($event)">Unit Type</th>
+      <th scope="col" sortable="description" (sort)="onSort($event)">Unit Description</th>
+      <th scope="col" sortable="operatingStatusCodeDescription" (sort)="onSort($event)">Operating Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of tableData">
+      <td><a routerLink="emissionUnit/{{item.id}}">{{item.unitIdentifier}}</a></td>
+      <td>{{item.unitTypeCodeDescription}}</td>
+      <td>{{item.description}}</td>
+      <td>{{item.operatingStatusCodeDescription}}</td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 
