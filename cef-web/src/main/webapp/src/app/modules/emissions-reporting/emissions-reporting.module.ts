@@ -28,6 +28,7 @@ import { EmissionDetailsModalComponent } from 'src/app/modules/emissions-reporti
 import { ControlDeviceDetailsComponent } from 'src/app/modules/emissions-reporting/pages/control-device-details/control-device-details.component';
 import { ControlAssignmentTableComponent } from 'src/app/modules/emissions-reporting/components/control-assignment-table/control-assignment-table.component';
 import { ControlPollutantTableComponent } from 'src/app/modules/emissions-reporting/components/control-pollutant-table/control-pollutant-table.component';
+import { InventoryControlTableComponent } from './components/inventory-control-table/inventory-control-table.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { ControlPollutantTableComponent } from 'src/app/modules/emissions-report
     EmissionDetailsModalComponent,
     ControlDeviceDetailsComponent,
     ControlAssignmentTableComponent,
-    ControlPollutantTableComponent
+    ControlPollutantTableComponent,
+    InventoryControlTableComponent
 
   ],
   imports: [

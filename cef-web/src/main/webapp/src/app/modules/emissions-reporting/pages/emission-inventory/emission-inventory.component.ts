@@ -4,6 +4,7 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ControlService } from 'src/app/core/services/control.service';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class EmissionInventoryComponent implements OnInit {
   constructor(
     private emissionUnitsService: EmissionUnitService,
     private releasePointService: ReleasePointService,
+    private controlService: ControlService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -36,6 +38,10 @@ export class EmissionInventoryComponent implements OnInit {
       this.releasePointService.retrieveForFacility(this.facilitySite.id)
       .subscribe(points => {
         this.facilitySite.releasePoints = points;
+      });
+      this.controlService.retrieveForFacilitySite(this.facilitySite.id)
+      .subscribe(controls => {
+        this.facilitySite.controls = controls;
       });
     });
   }
