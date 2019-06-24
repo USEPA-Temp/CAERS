@@ -50,6 +50,9 @@ public class EmissionsUnit extends BaseAuditEntity {
 
     @Column(name = "status_year", nullable = false)
     private Short statusYear;
+    
+    @Column(name = "design_capacity", precision = 3)
+    private Double designCapacity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_measure_cd")
@@ -128,6 +131,16 @@ public class EmissionsUnit extends BaseAuditEntity {
     public void setUnitOfMeasureCode(UnitMeasureCode unitOfMeasureCode) {
         this.unitOfMeasureCode = unitOfMeasureCode;
     }
+
+    public Double getDesignCapacity() {
+        return designCapacity;
+    }
+
+
+    public void setDesignCapacity(Double designCapacity) {
+        this.designCapacity = designCapacity;
+    }
+
 
     public String getComments() {
         return comments;
