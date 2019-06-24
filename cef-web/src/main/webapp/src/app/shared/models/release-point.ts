@@ -23,4 +23,5 @@ export class ReleasePoint {
   fugitiveLine2Longitude: number;
   latitude: number;
   longitude: number;
+  comments: string;
 }

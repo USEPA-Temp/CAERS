@@ -54,6 +54,9 @@ public class EmissionsUnit extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_measure_cd")
     private UnitMeasureCode unitOfMeasureCode;
+    
+    @Column(name = "comments", length = 200)
+    private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
     private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
@@ -125,6 +128,16 @@ public class EmissionsUnit extends BaseAuditEntity {
     public void setUnitOfMeasureCode(UnitMeasureCode unitOfMeasureCode) {
         this.unitOfMeasureCode = unitOfMeasureCode;
     }
+
+    public String getComments() {
+        return comments;
+    }
+
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
 
     public Set<EmissionsProcess> getEmissionsProcesses() {
         return this.emissionsProcesses;

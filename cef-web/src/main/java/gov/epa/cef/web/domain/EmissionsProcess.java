@@ -48,6 +48,9 @@ public class EmissionsProcess extends BaseAuditEntity {
 
     @Column(name = "description", length = 200)
     private String description;
+    
+    @Column(name = "comments", length = 200)
+    private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
     private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
@@ -115,6 +118,14 @@ public class EmissionsProcess extends BaseAuditEntity {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public Set<ReleasePointAppt> getReleasePointAppts() {

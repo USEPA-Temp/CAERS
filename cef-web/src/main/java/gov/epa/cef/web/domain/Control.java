@@ -39,6 +39,9 @@ public class Control extends BaseAuditEntity {
 
     @Column(name = "percent_control", precision = 4, scale = 1)
     private Double percentControl;
+    
+    @Column(name = "comments", length = 200)
+    private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
     private Set<ControlAssignment> assignments = new HashSet<ControlAssignment>(0);
@@ -92,6 +95,14 @@ public class Control extends BaseAuditEntity {
 
     public void setPercentControl(Double percentControl) {
         this.percentControl = percentControl;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public Set<ControlAssignment> getAssignments() {

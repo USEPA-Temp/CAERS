@@ -100,6 +100,9 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "longitude", nullable = false, precision = 10, scale = 6)
     private Double longitude;
     
+    @Column(name = "comments", length = 200)
+    private String comments;
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")
     private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
 
@@ -285,6 +288,14 @@ public class ReleasePoint extends BaseAuditEntity {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public Set<ReleasePointAppt> getReleasePointAppts() {

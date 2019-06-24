@@ -11,6 +11,7 @@ export class Process {
   sccCode: string;
   sccShortName: string;
   description: string;
+  comments: string;
   releasePointAppts: ReleasePointApportionment[];
   reportingPeriods: ReportingPeriod[];
 }

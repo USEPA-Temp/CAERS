@@ -29,6 +29,7 @@ public class ReleasePointDto implements Serializable {
     private Double fugitiveLine2Longitude;
     private Double latitude;
     private Double longitude;
+    private String comments;
 
     public Long getId() {
         return id;
@@ -212,6 +213,14 @@ public class ReleasePointDto implements Serializable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
 }
