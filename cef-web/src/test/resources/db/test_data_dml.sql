@@ -237,12 +237,12 @@ INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description,
     VALUES ('9999992', '9999991', 'OP', 'Control 002', 'Acetaldehyde Control', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 
     'Sample comments for Control 002');
 
-INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999991', '9999991', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999992', '9999991', '4754', 'Benzene', '71-43-2', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999993', '9999992', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
+    VALUES ('9999991', '9999991', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 100.0);
+INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
+    VALUES ('9999992', '9999991', '4754', 'Benzene', '71-43-2', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 99.9);
+INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
+    VALUES ('9999993', '9999992', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 1.3);
 
 INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
     VALUES ('9999991', 'Path Description', '1', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
