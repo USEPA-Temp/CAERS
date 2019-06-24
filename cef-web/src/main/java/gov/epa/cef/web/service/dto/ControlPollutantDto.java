@@ -10,6 +10,7 @@ public class ControlPollutantDto implements Serializable {
     private String pollutantCode;
     private String pollutantName;
     private String pollutantCasId;
+    private Double percentReduction;
 
     public Long getId() {
         return id;
@@ -41,6 +42,14 @@ public class ControlPollutantDto implements Serializable {
 
     public void setPollutantCasId(String pollutantCasId) {
         this.pollutantCasId = pollutantCasId;
+    }
+
+    public Double getPercentReduction() {
+        return percentReduction;
+    }
+
+    public void setPercentReduction(Double percentReduction) {
+        this.percentReduction = percentReduction;
     }
 
 }

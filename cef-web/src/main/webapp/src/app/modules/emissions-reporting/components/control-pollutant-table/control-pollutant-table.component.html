@@ -6,6 +6,7 @@
       <th scope="col" sortable="pollutantName" (sort)="onSort($event)">Pollutant Name</th>
       <th scope="col" sortable="pollutantCode" (sort)="onSort($event)">Code</th>
       <th scope="col" sortable="pollutantCasId" (sort)="onSort($event)">CAS ID</th>
+      <th scope="col" sortable="percentReudction" (sort)="onSort($event)">% Reduction</th>
       <th scope="col"></th>
     </tr>
     </thead>
@@ -14,9 +15,11 @@
       <td>{{item.pollutantName}}</td>
       <td>{{item.pollutantCode}}</td>
       <td>{{item.pollutantCasId}}</td>
+      <td>{{item.percentReduction}}</td>
       <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
     </tr>
     <tr>
+      <td></td>
       <td></td>
       <td></td>
       <td></td>

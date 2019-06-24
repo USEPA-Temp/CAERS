@@ -27,6 +27,9 @@ public class ControlPollutant extends BaseAuditEntity {
 
     @Column(name = "pollutant_cas_id", length = 100)
     private String pollutantCasId;
+    
+    @Column(name = "percent_reduction", precision = 4, scale = 1)
+    private Double percentReduction;
 
     public Control getControl() {
         return control;
@@ -58,6 +61,14 @@ public class ControlPollutant extends BaseAuditEntity {
 
     public void setPollutantCasId(String pollutantCasId) {
         this.pollutantCasId = pollutantCasId;
+    }
+
+    public Double getPercentReduction() {
+        return percentReduction;
+    }
+
+    public void setPercentReduction(Double percentReduction) {
+        this.percentReduction = percentReduction;
     }
 
 }

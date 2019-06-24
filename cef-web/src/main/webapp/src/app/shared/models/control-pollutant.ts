@@ -3,4 +3,5 @@ export class ControlPollutant {
   pollutantCode: string;
   pollutantName: string;
   pollutantCasId: string;
+  percentReduction: number;
 }
