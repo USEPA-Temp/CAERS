@@ -12,4 +12,5 @@ export class Control {
   percentControl: number;
   assignments: ControlAssignment[];
   pollutants: ControlPollutant[];
+  comments: string;
 }

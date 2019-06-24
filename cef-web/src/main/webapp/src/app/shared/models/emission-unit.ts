@@ -13,6 +13,6 @@ export class EmissionUnit {
   statusYear: number;
   unitOfMeasureCode: BaseCodeLookup;
   unitOfMeasureDescription: number;
-
+  comments: string;
   processes: Process[];
 }

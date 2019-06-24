@@ -78,82 +78,82 @@ INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_nam
 
 --EMISSION UNITS
 INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, unit_measure_cd,
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES('9999991', '9999991', 'Boiler 001', '63JJJJ', 'Gas Boiler - Industrial Size', '206', 'Air Gas Furnace', 'OP', '1985', 'LB/DAY', 'THOMAS.FESPERMAN', 
-		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
+		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Boiler 001'); 
 INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES('9999992', '9999991', 'Boiler 002', '63JJJJ', 'Coal Boiler - Industrial Size', '100', 'Boiler', 'OP', '1985', 'TON/HR', 'THOMAS.FESPERMAN', 
-		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
+		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Boiler 002'); 
 INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES('9999993', '9999991', 'Dryer 001', '63JJJJ', 'Big Dryer', '1252', 'Primary Tube Dryer', 'OP', '1985', 'TON', 'THOMAS.FESPERMAN', 
-		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Dryer 001');
 INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES('9999994', '9999992', 'PGM-530263', '63FFFF', 'Heater in Boiler Room', '180', 'Process Heater', 'OP', '1977', 'MMBTU/HR', 'THOMAS.FESPERMAN', 
-		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp); 
+		current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  'Sample Comments for PGM-530263'); 
 
 --RELEASE POINTS
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, 
 	fugitive_line_1_latitude, fugitive_line_1_longitude, fugitive_line_2_latitude, fugitive_line_2_longitude, latitude, longitude, 
-	created_by, created_date, last_modified_by, last_modified_date) 
+	created_by, created_date, last_modified_by, last_modified_date, comments) 
 	VALUES ('9999991', '9999991', 'Smokestack 1', '63JJJJ', '1', 'A big smokestack', 40, 'M', 7, 'M', 20, 'FT/MIN', 75, 25, 'YD3/HR', 'OP', '1985', 
 		'32.7490', '83.3880', '34.7490', '85.3880', '33.7490', '84.3880', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Smokestack 1');
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
-	created_by, created_date, last_modified_by, last_modified_date) 
+	created_by, created_date, last_modified_by, last_modified_date, comments) 
 	VALUES ('9999992', '9999991', 'Smokestack 2', '63JJJJ', '2', 'Another big smokestack', 7, 'FT', 14, 'FT', 154, 'FT/MIN', 100, 35, 'YD3/HR', 'OP', '1985', '33.7490', '84.3880', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Smokestack 2');
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
-	created_by, created_date, last_modified_by, last_modified_date) 
+	created_by, created_date, last_modified_by, last_modified_date, comments) 
 	VALUES ('9999993', '9999991', 'Vent 1', '63JJJJ', '5', 'A big vent', 25, 'M', 25, 'M', 627, 'FT/HR', 123, 76, 'TON/HR', 'OP', '1985', '33.7490', '84.3880', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Vent 1');
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
-	created_by, created_date, last_modified_by, last_modified_date) 
+	created_by, created_date, last_modified_by, last_modified_date, comments) 
 	VALUES ('9999994', '9999992', 'PGM-530264', '63FFFF', '99', 'Fugitive Vent', 9, 'FT', 0.003, 'FT', 0.0003, 'ACFS', 88, 400, 'E6FT3/DAY', 'OP', '1985', '34.686640', '-84.992865', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for PGM-530264');
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
-	created_by, created_date, last_modified_by, last_modified_date) 
+	created_by, created_date, last_modified_by, last_modified_date, comments) 
 	VALUES ('9999995', '9999992', 'PGM-530265', '63FFFF', '1', 'Fugitive Two-Dimensional', 34, 'FT', 34, 'FT', 0, 'ACFM', 212, 125, 'E6FT3S/DAY', 'OP', '1985', '34.68676', '-84.99323', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for PGM-530265');
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
-	created_by, created_date, last_modified_by, last_modified_date) 
+	created_by, created_date, last_modified_by, last_modified_date, comments) 
 	VALUES ('9999996', '9999992', 'PGM-530266', '63FFFF', '1', 'Fugitive Three-Dimensional', 8, 'FT', 65, 'FT', 0, 'FT/MIN', 40, 867, 'E6LB/DAY', 'OP', '1985', '34.686515', '34.686397', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for PGM-530266');
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, program_system_code, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
 	stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 
-	created_by, created_date, last_modified_by, last_modified_date) 
+	created_by, created_date, last_modified_by, last_modified_date, comments) 
 	VALUES ('9999997', '9999992', 'PGM-530267', '63FFFF', '2', 'Vertical Stack', 8, 'FT', 7, 'FT', 6, 'FT/HR', 77, 32, 'FT3/HR', 'OP', '1985', '34.686397', '-84.992638', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for PGM-530267');
 
 --EMISSION PROCESS
 INSERT INTO EMISSIONS_PROCESS (id, emissions_unit_id, emissions_process_identifier, status_code, status_year, scc_code, scc_short_name, description, aircraft_engine_type_code,
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES ('9999991', '9999991', 'Drying Process', 'OP', '1985', '30700752', '', 'Softwood Veneer Dryer: Direct Natural Gas-fired: Heated Zones', '2258', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Drying Process');
 INSERT INTO EMISSIONS_PROCESS (id, emissions_unit_id, emissions_process_identifier, status_code, status_year, scc_code, scc_short_name, description, 
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES ('9999992', '9999991', 'Disposal Process', 'OP', '1985', '50300106', '', 'Air Curtain Combustor: Wood', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Disposal Process');
 INSERT INTO EMISSIONS_PROCESS (id, emissions_unit_id, emissions_process_identifier, status_code, status_year, scc_code, scc_short_name, description, 
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES ('9999993', '9999991', 'Storage Process', 'OP', '1985', '30700828', '', 'Chip Storage Piles: Hardwood', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Storage Process');
 INSERT INTO EMISSIONS_PROCESS (id, emissions_unit_id, emissions_process_identifier, status_code, status_year, scc_code, scc_short_name, description, 
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES ('9999994', '9999994', 'PROC2', 'OP', '1977', '40702802', '', 'CHEMICAL EVAPORATION - ORGANIC CHEMICAL STORAGE - FIXED ROOF TANKS - AMIDES - DIMETHYLFORMAMIDE: WORKING LOSS', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for PROC2');
 INSERT INTO EMISSIONS_PROCESS (id, emissions_unit_id, emissions_process_identifier, status_code, status_year, scc_code, scc_short_name, description, 
-	created_by, created_date, last_modified_by, last_modified_date)
+	created_by, created_date, last_modified_by, last_modified_date, comments)
 	VALUES ('9999995', '9999994', 'PROC1', 'OP', '1977', '10500106', '', 'EXTERNAL COMBUSTION - SPACE HEATERS - INDUSTRIAL - NATURAL GAS', 
-		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+		'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for PROC1');
 
 --RELEASE POINT APPORTIONMENT
 INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
@@ -230,10 +230,12 @@ INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, t
 	VALUES ('9999997', '9999994', '173203', 'Nitrogen oxides', '55151.9', 'TON', '0.001', '100.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
 		'1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '11104-93-1', 'Sample comments for Nitrogen Oxides');
 		
-INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999991', '9999991', 'OP', 'Control 001', 'Acetaldehyde and Benzene Control', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999992', '9999991', 'OP', 'Control 002', 'Acetaldehyde Control', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date, comments)
+    VALUES ('9999991', '9999991', 'OP', 'Control 001', 'Acetaldehyde and Benzene Control', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 
+    'Sample comments for Control 001');
+INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date, comments)
+    VALUES ('9999992', '9999991', 'OP', 'Control 002', 'Acetaldehyde Control', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 
+    'Sample comments for Control 002');
 
 INSERT INTO control_pollutant(id, control_id, pollutant_code, pollutant_name, pollutant_cas_id, created_by, created_date, last_modified_by, last_modified_date)
     VALUES ('9999991', '9999991', '5280', 'Acetaldehyde', '75-07-0', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);

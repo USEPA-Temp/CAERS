@@ -19,6 +19,7 @@ public class EmissionsProcessDto implements Serializable {
     private String sccCode;
     private String sccShortName;
     private String description;
+    private String comments;
     private List<ReleasePointApptDto> releasePointAppts;
     
 
@@ -92,6 +93,14 @@ public class EmissionsProcessDto implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public List<ReleasePointApptDto> getReleasePointAppts() {
