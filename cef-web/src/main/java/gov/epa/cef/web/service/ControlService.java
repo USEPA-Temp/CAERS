@@ -20,25 +20,4 @@ public interface ControlService {
      */
     List<ControlDto> retrieveForFacilitySite(Long facilitySiteId);
 
-    /**
-     * Retrieve Controls for an emissions process
-     * @param processId
-     * @return
-     */
-    List<ControlDto> retrieveForEmissionsProcess(Long processId);
-
-    /**
-     * Retrieve Controls for an emissions unit
-     * @param unitId
-     * @return
-     */
-    List<ControlDto> retrieveForEmissionsUnit(Long unitId);
-
-    /**
-     * Retrieve Controls for a release point
-     * @param pointId
-     * @return
-     */
-    List<ControlDto> retrieveForReleasePoint(Long pointId);
-
 }

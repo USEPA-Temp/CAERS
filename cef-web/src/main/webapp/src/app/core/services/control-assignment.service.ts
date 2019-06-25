@@ -18,11 +18,6 @@ export class ControlAssignmentService {
     return this.http.get<ControlAssignment>(url);
   }
 
-  retrieveForFacilitySite(facilitySiteId: number): Observable<ControlAssignment[]> {
-    const url = `${this.baseUrl}/facilitySite/${facilitySiteId}`;
-    return this.http.get<ControlAssignment[]>(url);
-  }
-
   retrieveForEmissionsProcess(processId: number): Observable<ControlAssignment[]> {
     const url = `${this.baseUrl}/process/${processId}`;
     return this.http.get<ControlAssignment[]>(url);

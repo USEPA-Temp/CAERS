@@ -44,8 +44,6 @@ public class ControlAssignmentServiceImplTest {
         controlList.add(control);
         when(repo.findById(1L)).thenReturn(Optional.of(control));
         when(repo.findById(2L)).thenReturn(Optional.empty());
-        when(repo.findByControlFacilitySiteId(1L)).thenReturn(controlList);
-        when(repo.findByControlFacilitySiteId(2L)).thenReturn(emptyControlList);
         when(repo.findByEmissionsProcessId(3L)).thenReturn(controlList);
         when(repo.findByEmissionsProcessId(4L)).thenReturn(emptyControlList);
         when(repo.findByEmissionsUnitId(5L)).thenReturn(controlList);
@@ -75,18 +73,6 @@ public class ControlAssignmentServiceImplTest {
     public void retrieveById_Should_Return_Null_When_IDisNull(){
         ControlAssignmentDto controlAssignment = serviceImpl.retrieveById(null);
         assertEquals(null, controlAssignment);
-    }
-    
-    @Test
-    public void retrieveForFacilitySite_Should_Return_ControlList_When_ControlAssignmentsExist() {
-        Collection<ControlAssignmentDto> controlAssignmentList = serviceImpl.retrieveForFacilitySite(1L);
-        assertNotEquals(null, controlAssignmentList);
-    }
-    
-    @Test
-    public void retrieveForFacilitySite_Should_Return_Empty_When_ControlAssignmentsDoNotExist() {
-        Collection<ControlAssignmentDto> controlAssignmentList = serviceImpl.retrieveForFacilitySite(2L);
-        assertEquals(new ArrayList<ControlAssignment>(), controlAssignmentList);
     }
     
     @Test

@@ -35,19 +35,6 @@ public class ControlAssignmentApi {
     }
 
     /**
-     * Retrieve Control Assignments for a facility site
-     * @param facilitySiteId
-     * @return
-     */
-    @GetMapping(value = "/facilitySite/{facilitySiteId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlAssignmentDto>> retrieveControlAssignmentsForFacilitySite(@PathVariable Long facilitySiteId) {
-
-        List<ControlAssignmentDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
-        return new ResponseEntity<List<ControlAssignmentDto>>(result, HttpStatus.OK);
-    }
-
-    /**
      * Retrieve Control Assignments for an emissions process
      * @param processId
      * @return

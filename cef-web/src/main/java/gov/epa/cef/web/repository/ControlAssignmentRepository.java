@@ -9,13 +9,6 @@ import gov.epa.cef.web.domain.ControlAssignment;
 public interface ControlAssignmentRepository extends CrudRepository<ControlAssignment, Long> {
 
     /**
-     * Retrieve Control Assignments for a facility site
-     * @param facilitySiteId
-     * @return
-     */
-    List<ControlAssignment> findByControlFacilitySiteId(Long facilitySiteId);
-
-    /**
      * Retrieve Control Assignments for an emissions process
      * @param processId
      * @return

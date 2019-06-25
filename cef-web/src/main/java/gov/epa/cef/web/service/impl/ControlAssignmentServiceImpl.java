@@ -29,12 +29,6 @@ public class ControlAssignmentServiceImpl implements ControlAssignmentService {
     }
 
     @Override
-    public List<ControlAssignmentDto> retrieveForFacilitySite(Long facilitySiteId) {
-        List<ControlAssignment> result = repo.findByControlFacilitySiteId(facilitySiteId);
-        return mapper.toDtoList(result);
-    }
-
-    @Override
     public List<ControlAssignmentDto> retrieveForEmissionsProcess(Long processId) {
         List<ControlAssignment> result = repo.findByEmissionsProcessId(processId);
         return mapper.toDtoList(result);

@@ -14,13 +14,6 @@ public interface ControlAssignmentService {
     ControlAssignmentDto retrieveById(Long id);
 
     /**
-     * Retrieve Control Assignments for a facility site
-     * @param facilitySiteId
-     * @return
-     */
-    List<ControlAssignmentDto> retrieveForFacilitySite(Long facilitySiteId);
-
-    /**
      * Retrieve Control Assignments for an emissions process
      * @param processId
      * @return

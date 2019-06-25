@@ -47,42 +47,4 @@ public class ControlApi {
         return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
     }
 
-    /**
-     * Retrieve Controls for an emissions process
-     * @param processId
-     * @return
-     */
-    @GetMapping(value = "/process/{processId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlDto>> retrieveControlsForEmissionsProcess(@PathVariable Long processId) {
-
-        List<ControlDto> result = controlService.retrieveForEmissionsProcess(processId);
-        return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
-    }
-
-    /**
-     * Retrieve Controls for an emissions unit
-     * @param unitId
-     * @return
-     */
-    @GetMapping(value = "/unit/{unitId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlDto>> retrieveControlsForEmissionsUnit(@PathVariable Long unitId) {
-
-        List<ControlDto> result = controlService.retrieveForEmissionsUnit(unitId);
-        return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
-    }
-
-    /**
-     * Retrieve Controls for an release point
-     * @param pointId
-     * @return
-     */
-    @GetMapping(value = "/releasePoint/{pointId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlDto>> retrieveControlsForReleasePoint(@PathVariable Long pointId) {
-
-        List<ControlDto> result = controlService.retrieveForReleasePoint(pointId);
-        return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
-    }
 }
