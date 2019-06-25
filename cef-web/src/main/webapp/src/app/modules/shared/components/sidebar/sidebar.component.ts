@@ -21,8 +21,13 @@ export class SidebarComponent{
       sharedService: SharedService) {
     sharedService.changeEmitted$
     .subscribe(facilitySite => {
-      this.facilitySite = facilitySite;
-      this.getReportNav(this.facilitySite.id);
+      if(facilitySite!=null){
+          this.facilitySite = facilitySite;
+          this.getReportNav(this.facilitySite.id);
+      }else{
+          this.navItems=null;
+          this.facilitySite=null;
+      }
     });
   }
 

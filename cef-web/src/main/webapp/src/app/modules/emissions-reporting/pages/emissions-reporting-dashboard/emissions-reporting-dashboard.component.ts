@@ -3,6 +3,7 @@ import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from "src/app/core/services/shared.service";
 
 @Component({
   selector: 'app-emissions-reporting-dashboard',
@@ -13,7 +14,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
   facility: CdxFacility;
   reports: EmissionsReport[];
 
-  constructor(private reportService: EmissionsReportingService, private route: ActivatedRoute) { }
+  constructor(private reportService: EmissionsReportingService, private route: ActivatedRoute, private sharedService: SharedService) { }
 
   ngOnInit() {
     this.route.data
@@ -24,6 +25,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             .subscribe(reports => this.reports = reports.sort((a, b) => b.year - a.year) );
       }
     });
+    this.sharedService.emitChange(null);
   }
 
 }
