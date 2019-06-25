@@ -15,6 +15,7 @@ const reportRoutes: Routes = [
   {
     path: '',
     component: EmissionsReportingComponent,
+    data :{breadcrumb: 'Emissions Reports'}, 
     children: [
       {
         path: ':reportId',
@@ -25,37 +26,37 @@ const reportRoutes: Routes = [
           {
             path: '',
             component: EmissionInventoryComponent,
-            data: { title: 'Emission Inventory' }
+            data: { title: 'Emission Inventory', breadcrumb: '&year Emissions Report'}
           }, {
             path: 'facilityInformation',
             component: FacilityInformationComponent,
-            data: { title: 'Facility Information' }
+            data: { title: 'Facility Information', breadcrumb: '&year Emissions Report'}
           }, {
             path: 'control/:controlId',
             component: ControlDeviceDetailsComponent,
-            data: { title: 'Control Device Details' }
+            data: { title: 'Control Device Details', breadcrumb: '&year Emissions Report'}
           }, {
             path: 'emissionUnit/:unitId',
             component: EmissionUnitDashboardComponent,
-            data: { title: 'Emission Unit' }
+            data: { title: 'Emission Unit', breadcrumb: '&year Emissions Report'}
           }, {
             path: 'process/:processId',
             component: EmissionsProcessDetailsComponent,
-            data: { title: 'Emissions Process Details' }
+            data: { title: 'Emissions Process Details', breadcrumb: '&year Emissions Report'}
           }, {
             path: 'release/:releasePointId',
             component: ReleasePointDetailsComponent,
-            data: { title: 'Release Point' }
+            data: { title: 'Release Point', breadcrumb: '&year Emissions Report'}
           }, {
             path: '**',
             component: FacilityInformationComponent,
-            data: { title: 'PLACEHOLDER' }
+            data: { title: 'PLACEHOLDER', breadcrumb: '&year Emissions Report'}
           }
         ]
       }, {
         path: '',
         component: EmissionsReportingDashboardComponent,
-        data: { title: 'Emission Reports Dashboard' }
+        data: { title: 'Emission Reports Dashboard'}
       }
     ]
   }
@@ -65,4 +66,4 @@ const reportRoutes: Routes = [
   imports: [RouterModule.forChild(reportRoutes)],
   exports: [RouterModule]
 })
-export class ReportsRoutingModule { }
+export class ReportsRoutingModule {}
