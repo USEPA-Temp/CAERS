@@ -46,6 +46,12 @@ public class ControlServiceImplTest {
         when(controlRepo.findById(2L)).thenReturn(Optional.empty());
         when(controlRepo.findByFacilitySiteId(1L)).thenReturn(controlList);
         when(controlRepo.findByFacilitySiteId(2L)).thenReturn(emptyControlList);
+        when(controlRepo.findByAssignmentsEmissionsProcessId(3L)).thenReturn(controlList);
+        when(controlRepo.findByAssignmentsEmissionsProcessId(4L)).thenReturn(emptyControlList);
+        when(controlRepo.findByAssignmentsEmissionsUnitId(5L)).thenReturn(controlList);
+        when(controlRepo.findByAssignmentsEmissionsUnitId(6L)).thenReturn(emptyControlList);
+        when(controlRepo.findByAssignmentsReleasePointId(7L)).thenReturn(controlList);
+        when(controlRepo.findByAssignmentsReleasePointId(8L)).thenReturn(emptyControlList);
         
         controlDto = new ControlDto();
         controlDtoList=new ArrayList<>();
@@ -80,6 +86,42 @@ public class ControlServiceImplTest {
     @Test
     public void retrieveForFacilitySite_Should_Return_Empty_When_ControlsDoNotExist() {
         Collection<ControlDto> controlList = controlServiceImpl.retrieveForFacilitySite(2L);
+        assertEquals(new ArrayList<Control>(), controlList);
+    }
+    
+    @Test
+    public void retrieveForEmissionsProcess_Should_Return_ControlList_When_ControlsExist() {
+        Collection<ControlDto> controlList = controlServiceImpl.retrieveForEmissionsProcess(3L);
+        assertNotEquals(null, controlList);
+    }
+    
+    @Test
+    public void retrieveForEmissionsProcess_Should_Return_Empty_When_ControlsDoNotExist() {
+        Collection<ControlDto> controlList = controlServiceImpl.retrieveForEmissionsProcess(4L);
+        assertEquals(new ArrayList<Control>(), controlList);
+    }
+    
+    @Test
+    public void retrieveForEmissionsUnit_Should_Return_ControlList_When_ControlsExist() {
+        Collection<ControlDto> controlList = controlServiceImpl.retrieveForEmissionsUnit(5L);
+        assertNotEquals(null, controlList);
+    }
+    
+    @Test
+    public void retrieveForEmissionsUnit_Should_Return_Empty_When_ControlsDoNotExist() {
+        Collection<ControlDto> controlList = controlServiceImpl.retrieveForEmissionsUnit(6L);
+        assertEquals(new ArrayList<Control>(), controlList);
+    }
+    
+    @Test
+    public void retrieveForReleasePoint_Should_Return_ControlList_When_ControlsExist() {
+        Collection<ControlDto> controlList = controlServiceImpl.retrieveForReleasePoint(7L);
+        assertNotEquals(null, controlList);
+    }
+    
+    @Test
+    public void retrieveForReleasePoint_Should_Return_Empty_When_ControlsDoNotExist() {
+        Collection<ControlDto> controlList = controlServiceImpl.retrieveForReleasePoint(8L);
         assertEquals(new ArrayList<Control>(), controlList);
     }
     
