@@ -18,7 +18,7 @@ import { ControlAssignmentService } from 'src/app/core/services/control-assignme
 export class EmissionUnitDashboardComponent implements OnInit {
   emissionsUnit: EmissionUnit;
   processes: Process[];
-  controls: ControlAssignment[];
+  controlAssignments: ControlAssignment[];
 
   constructor(
     private emissionUnitService: EmissionUnitService,
@@ -42,8 +42,8 @@ export class EmissionUnitDashboardComponent implements OnInit {
         });
 
         this.controlAssignmentService.retrieveForEmissionsUnit(+map.get('unitId'))
-        .subscribe(controls => {
-          this.controls = controls;
+        .subscribe(controlAssignments => {
+          this.controlAssignments = controlAssignments;
         });
     });
     // emits the report info to the sidebar

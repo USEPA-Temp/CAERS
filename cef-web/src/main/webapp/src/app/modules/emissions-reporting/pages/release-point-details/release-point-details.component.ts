@@ -17,7 +17,7 @@ import { ControlAssignmentService } from 'src/app/core/services/control-assignme
 export class ReleasePointDetailsComponent implements OnInit {
   releasePoint: ReleasePoint;
   processes: Process[];
-  controls: ControlAssignment[];
+  controlAssignments: ControlAssignment[];
 
   constructor(
     private releasePointService: ReleasePointService,
@@ -40,8 +40,8 @@ export class ReleasePointDetailsComponent implements OnInit {
         });
 
         this.controlAssignmentService.retrieveForReleasePoint(+map.get('releasePointId'))
-        .subscribe(controls => {
-          this.controls = controls;
+        .subscribe(controlAssignments => {
+          this.controlAssignments = controlAssignments;
         });
     });
 

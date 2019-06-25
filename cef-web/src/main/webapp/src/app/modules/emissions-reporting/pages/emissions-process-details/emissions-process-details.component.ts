@@ -15,7 +15,7 @@ import { ControlAssignmentService } from 'src/app/core/services/control-assignme
 })
 export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
-  controls: ControlAssignment[];
+  controlAssignments: ControlAssignment[];
 
   constructor(
     private processService: EmissionsProcessService,
@@ -37,8 +37,8 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       });
 
       this.controlAssignmentService.retrieveForEmissionsProcess(+map.get('processId'))
-      .subscribe(controls => {
-        this.controls = controls;
+      .subscribe(controlAssignments => {
+        this.controlAssignments = controlAssignments;
       });
     });
 
