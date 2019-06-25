@@ -6,6 +6,8 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ControlAssignment } from 'src/app/shared/models/control-assignment';
+import { ControlService } from 'src/app/core/services/control.service';
 
 @Component({
   selector: 'app-release-point-details',
@@ -15,10 +17,12 @@ import { SharedService } from 'src/app/core/services/shared.service';
 export class ReleasePointDetailsComponent implements OnInit {
   releasePoint: ReleasePoint;
   processes: Process[];
+  controls: ControlAssignment[];
 
   constructor(
     private releasePointService: ReleasePointService,
     private processService: EmissionsProcessService,
+    private controlService: ControlService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -33,6 +37,20 @@ export class ReleasePointDetailsComponent implements OnInit {
           .subscribe(processes => {
             this.processes = processes;
           });
+        });
+
+        this.controlService.retrieveForEmissionsProcess(+map.get('releasePointId'))
+        .subscribe(controls => {
+          const assignments = [];
+          controls.forEach(control => {
+            control.assignments.forEach(assignment => {
+              if (assignment.releasePoint && assignment.releasePoint.id === +map.get('releasePointId')) {
+                assignment.control = control;
+                assignments.push(assignment);
+              }
+            });
+          });
+          this.controls = assignments;
         });
     });
 

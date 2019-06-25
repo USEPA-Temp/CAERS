@@ -5,6 +5,8 @@ import { Process } from 'src/app/shared/models/process';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
+import { ControlService } from 'src/app/core/services/control.service';
+import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -13,10 +15,12 @@ import { ReportingPeriodService } from 'src/app/core/services/reporting-period.s
 })
 export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
+  controls: ControlAssignment[];
 
   constructor(
     private processService: EmissionsProcessService,
     private reportingPeriodService: ReportingPeriodService,
+    private controlService: ControlService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -30,6 +34,20 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         .subscribe(periods => {
           this.process.reportingPeriods = periods;
         });
+      });
+
+      this.controlService.retrieveForEmissionsProcess(+map.get('processId'))
+      .subscribe(controls => {
+        const assignments = [];
+        controls.forEach(control => {
+          control.assignments.forEach(assignment => {
+            if (assignment.emissionsProcess && assignment.emissionsProcess.id === +map.get('processId')) {
+              assignment.control = control;
+              assignments.push(assignment);
+            }
+          });
+        });
+        this.controls = assignments;
       });
     });
 

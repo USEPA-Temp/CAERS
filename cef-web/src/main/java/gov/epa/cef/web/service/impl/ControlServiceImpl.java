@@ -40,4 +40,22 @@ public class ControlServiceImpl implements ControlService {
         return mapper.toDtoList(result);
     }
 
+    @Override
+    public List<ControlDto> retrieveForEmissionsProcess(Long processId) {
+        List<Control> result = repo.findByAssignmentsEmissionsProcessId(processId);
+        return mapper.toDtoList(result);
+    }
+
+    @Override
+    public List<ControlDto> retrieveForEmissionsUnit(Long unitId) {
+        List<Control> result = repo.findByAssignmentsEmissionsUnitId(unitId);
+        return mapper.toDtoList(result);
+    }
+
+    @Override
+    public List<ControlDto> retrieveForReleasePoint(Long pointId) {
+        List<Control> result = repo.findByAssignmentsReleasePointId(pointId);
+        return mapper.toDtoList(result);
+    }
+
 }

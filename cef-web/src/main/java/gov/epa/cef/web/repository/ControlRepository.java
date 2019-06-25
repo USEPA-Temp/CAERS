@@ -15,4 +15,25 @@ public interface ControlRepository extends CrudRepository<Control, Long> {
      */
     List<Control> findByFacilitySiteId(Long facilitySiteId);
 
+    /**
+     * Retrieve Controls for an emissions process
+     * @param processId
+     * @return
+     */
+    List<Control> findByAssignmentsEmissionsProcessId(Long processId);
+
+    /**
+     * Retrieve Controls for an emissions unit
+     * @param unitId
+     * @return
+     */
+    List<Control> findByAssignmentsEmissionsUnitId(Long unitId);
+
+    /**
+     * Retrieve Controls for a release point
+     * @param pointId
+     * @return
+     */
+    List<Control> findByAssignmentsReleasePointId(Long pointId);
+
 }

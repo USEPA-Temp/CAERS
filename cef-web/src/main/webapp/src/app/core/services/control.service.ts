@@ -22,4 +22,19 @@ export class ControlService {
     const url = `${this.baseUrl}/facilitySite/${facilitySiteId}`;
     return this.http.get<Control[]>(url);
   }
+
+  retrieveForEmissionsProcess(processId: number): Observable<Control[]> {
+    const url = `${this.baseUrl}/process/${processId}`;
+    return this.http.get<Control[]>(url);
+  }
+
+  retrieveForEmissionsUnit(unitId: number): Observable<Control[]> {
+    const url = `${this.baseUrl}/unit/${unitId}`;
+    return this.http.get<Control[]>(url);
+  }
+
+  retrieveForReleasePoint(pointId: number): Observable<Control[]> {
+    const url = `${this.baseUrl}/releasePoint/${pointId}`;
+    return this.http.get<Control[]>(url);
+  }
 }
