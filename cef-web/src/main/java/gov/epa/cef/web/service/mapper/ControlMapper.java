@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.service.dto.ControlDto;
+import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 
 @Mapper(componentModel = "spring", uses = {})
 public interface ControlMapper {
@@ -15,4 +16,6 @@ public interface ControlMapper {
     ControlDto toDto(Control source);
 
     List<ControlDto> toDtoList(List<Control> source);
+
+    EmissionsReportItemDto toReportItemDto(Control source);
 }
