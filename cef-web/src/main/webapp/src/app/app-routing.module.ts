@@ -24,7 +24,8 @@ const routes: Routes = [
           },
           {
               path: 'review',
-              component: FacilityDataReviewComponent
+              component: FacilityDataReviewComponent,
+              data: { breadcrumb: 'Facility Information' },
             }
         ]
       }, {
