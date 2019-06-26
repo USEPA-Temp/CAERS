@@ -1,14 +1,14 @@
 package gov.epa.cef.web.domain;
 
-public enum ReportStatus {
-    APPROVED("Approved"),
-    IN_PROGRESS("In Progress"),
-    SUBMITTED("Submitted"),
-    VALIDATED("Validated");
+public enum ValidationStatus {
+    FAILED("Failed Validation"), 
+    PASSED("Passed Validaton"),
+    PASSED_WARNINGS("Passed Validaton with Warnings"),
+    UNVALIDATED("Not Validated");
 
     private final String label;
 
-    ReportStatus(String label) {
+    ValidationStatus(String label) {
         this.label = label;
     }
 
@@ -19,4 +19,5 @@ public enum ReportStatus {
     public String label() {
         return this.label;
     }
+
 }

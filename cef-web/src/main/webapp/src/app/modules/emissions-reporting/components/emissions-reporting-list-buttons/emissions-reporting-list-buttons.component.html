@@ -1,15 +1,13 @@
 <div class="pipe-list">
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['NotStarted'])">Begin</a>
+	<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'facilityInformation']" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['IN_PROGRESS'])">Run Quality Check</a>
+	
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED'])  && userContext.user.role === 'Preparer'">Notify Certifier</a>
 
-	<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'facilityInformation']" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Failed', 'InProgress', 'Passed', 'PassedAlerts'])">Continue</a>
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Failed', 'InProgress', 'Passed', 'PassedAlerts'])">Run Quality Check</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 	
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Passed', 'PassedAlerts'])  && userContext.user.role === 'Preparer'">Notify Certifier</a>
-
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Certified', 'Pending'])">View</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED']) && userContext.user.role === 'Certifier'">Certify</a>
 	
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Passed', 'PassedAlerts', 'Pending']) && userContext.user.role === 'Certifier'">Certify</a>
-	
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Pending']) && userContext.user.role === 'Certifier'">Return to Preparer</a>
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['Pending']) && userContext.user.role === 'Preparer'">Cancel Nomination</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED']) && userContext.user.role === 'Certifier'">Return to Preparer</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED']) && userContext.user.role === 'Preparer'">Cancel Nomination</a>
 </div>

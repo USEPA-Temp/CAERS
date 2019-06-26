@@ -2,6 +2,8 @@ package gov.epa.cef.web.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
@@ -29,11 +31,13 @@ public class EmissionsReport extends BaseAuditEntity {
     @Column(name = "year", nullable = false)
     private Short year;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private ReportStatus status;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "validation_status")
-    private String validationStatus;
+    private ValidationStatus validationStatus;
 
     // Constructors
 
@@ -75,19 +79,19 @@ public class EmissionsReport extends BaseAuditEntity {
         this.year = year;
     }
 
-    public String getStatus() {
+    public ReportStatus getStatus() {
         return this.status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ReportStatus status) {
         this.status = status;
     }
 
-    public String getValidationStatus() {
+    public ValidationStatus getValidationStatus() {
         return this.validationStatus;
     }
 
-    public void setValidationStatus(String validationStatus) {
+    public void setValidationStatus(ValidationStatus validationStatus) {
         this.validationStatus = validationStatus;
     }
 }
