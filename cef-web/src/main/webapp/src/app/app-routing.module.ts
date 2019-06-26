@@ -25,7 +25,7 @@ const routes: Routes = [
           {
               path: 'review',
               component: FacilityDataReviewComponent,
-              data: { breadcrumb: 'Facility Information' },
+              data: { breadcrumb: 'Facility Information' }
             }
         ]
       }, {
