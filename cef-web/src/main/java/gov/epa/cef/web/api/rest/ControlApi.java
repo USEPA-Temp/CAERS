@@ -46,4 +46,5 @@ public class ControlApi {
         List<ControlDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
         return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
     }
+
 }

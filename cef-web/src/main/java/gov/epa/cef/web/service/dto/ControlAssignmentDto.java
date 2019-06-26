@@ -7,6 +7,7 @@ public class ControlAssignmentDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    private EmissionsReportItemDto control;
     private ControlPathDto controlPath;
     private EmissionsProcessDto emissionsProcess;
     private EmissionsUnitDto emissionsUnit;
@@ -19,6 +20,14 @@ public class ControlAssignmentDto implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public EmissionsReportItemDto getControl() {
+        return control;
+    }
+
+    public void setControl(EmissionsReportItemDto control) {
+        this.control = control;
     }
 
     public ControlPathDto getControlPath() {

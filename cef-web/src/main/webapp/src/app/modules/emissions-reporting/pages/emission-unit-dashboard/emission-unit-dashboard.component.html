@@ -9,13 +9,24 @@
    
     <div *ngIf="processes">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-header text-center">
                         <strong>Processes Associated with this Emissions Unit</strong>
                     </div>
                     <div class="card-body">
                         <app-emissions-process-table [tableData]="processes"></app-emissions-process-table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header text-center">
+                        <strong>Controls Associated with this Emissions Unit</strong>
+                    </div>
+                    <div class="card-body">
+                        <app-control-devices-table [tableData]="controlAssignments"></app-control-devices-table>
                     </div>
                 </div>
             </div>

@@ -22,4 +22,5 @@ export class ControlService {
     const url = `${this.baseUrl}/facilitySite/${facilitySiteId}`;
     return this.http.get<Control[]>(url);
   }
+
 }

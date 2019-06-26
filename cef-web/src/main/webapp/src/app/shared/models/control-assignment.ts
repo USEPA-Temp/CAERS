@@ -6,10 +6,11 @@ import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item
 
 export class ControlAssignment {
   id: number;
-  description: string;
+  control: EmissionsReportItem;
   controlPath: ControlPath;
   emissionsUnit: EmissionUnit;
   emissionsProcess: Process;
   releasePoint: ReleasePoint;
   association: EmissionsReportItem;
+  description: string;
 }
