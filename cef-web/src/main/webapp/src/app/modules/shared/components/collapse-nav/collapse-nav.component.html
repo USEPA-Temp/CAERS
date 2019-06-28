@@ -5,15 +5,8 @@
         <button class="btn btn-link text-primary font-weight-bold text-left p-0" type="button"
                 (click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
                 [attr.aria-controls]="targetId">
-            <app-collapse-icon [collapsed]='collapsed'></app-collapse-icon>
+            <app-collapse-icon [collapsed]='collapsed'></app-collapse-icon>{{desc}}
         </button>
-        <a class=" text-primary font-weight-bold" [routerLinkActive]="'active text-success'"
-                [routerLinkActiveOptions]="{exact: true}" routerLink="{{linkUrl}}" 
-                >
-            <span>
-            {{desc}}<fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
-            </span> 
-        </a>
     </div>
     
 </div>

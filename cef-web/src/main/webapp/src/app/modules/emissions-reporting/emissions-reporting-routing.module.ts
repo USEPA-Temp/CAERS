@@ -10,16 +10,17 @@ import { ControlDeviceDetailsComponent } from 'src/app/modules/emissions-reporti
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FacilitySiteResolverService } from 'src/app/core/services/facility-site-resolver.service';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
 const reportRoutes: Routes = [
   {
     path: '',
     component: EmissionsReportingComponent,
-    data :{breadcrumb: 'Emissions Reports'}, 
+    data: {breadcrumb: 'Emissions Reports'},
     children: [
       {
         path: ':reportId',
-        resolve:{
+        resolve: {
           facilitySite: FacilitySiteResolverService
         },
         children: [
@@ -28,25 +29,37 @@ const reportRoutes: Routes = [
             component: EmissionInventoryComponent,
             data: { title: 'Emission Inventory', breadcrumb: '&year Emissions Report'}
           }, {
-            path: 'facilityInformation',
+            path: `${BaseReportUrl.FACILITY_INFO}`,
             component: FacilityInformationComponent,
             data: { title: 'Facility Information', breadcrumb: '&year Emissions Report'}
           }, {
-            path: 'control/:controlId',
+            path: `${BaseReportUrl.CONTROL_DEVICE}/:controlId`,
             component: ControlDeviceDetailsComponent,
             data: { title: 'Control Device Details', breadcrumb: '&year Emissions Report'}
           }, {
-            path: 'emissionUnit/:unitId',
-            component: EmissionUnitDashboardComponent,
-            data: { title: 'Emission Unit', breadcrumb: '&year Emissions Report'}
+            path: `${BaseReportUrl.CONTROL_DEVICE}`,
+            component: EmissionInventoryComponent,
+            data: { title: 'Control Device Dashboard', breadcrumb: '&year Emissions Report'}
           }, {
-            path: 'process/:processId',
+            path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId`,
+            component: EmissionUnitDashboardComponent,
+            data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.EMISSIONS_UNIT}`,
+            component: EmissionInventoryComponent,
+            data: { title: 'Emissions Unit Dashboard', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.EMISSIONS_PROCESS}/:processId`,
             component: EmissionsProcessDetailsComponent,
             data: { title: 'Emissions Process Details', breadcrumb: '&year Emissions Report'}
           }, {
-            path: 'release/:releasePointId',
+            path: `${BaseReportUrl.RELEASE_POINT}/:releasePointId`,
             component: ReleasePointDetailsComponent,
             data: { title: 'Release Point', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.RELEASE_POINT}`,
+            component: EmissionInventoryComponent,
+            data: { title: 'Release Point Dashboard', breadcrumb: '&year Emissions Report'}
           }, {
             path: '**',
             component: FacilityInformationComponent,
