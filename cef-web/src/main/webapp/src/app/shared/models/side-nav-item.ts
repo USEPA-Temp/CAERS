@@ -12,6 +12,9 @@ export class SideNavItem {
   }
 
   get url(): string {
-    return `${this.baseUrl}/${this.id}`;
+    if (this.id) {
+      return `${this.baseUrl}/${this.id}`;
+    }
+    return this.baseUrl;
   }
 }
