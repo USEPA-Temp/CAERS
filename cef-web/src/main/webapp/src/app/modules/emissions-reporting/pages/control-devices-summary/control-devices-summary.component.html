@@ -1,0 +1,16 @@
+<app-step-progress></app-step-progress>
+
+<div *ngIf="facilitySite">
+    <div class="row">
+        <div class="col-sm-12" *ngIf="controls">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Control Devices</strong>
+                </div>
+                <div class="card-body">
+                    <app-inventory-control-table [tableData]="controls"></app-inventory-control-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

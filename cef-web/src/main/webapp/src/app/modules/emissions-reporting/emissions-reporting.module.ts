@@ -30,6 +30,9 @@ import { ControlAssignmentTableComponent } from 'src/app/modules/emissions-repor
 import { ControlPollutantTableComponent } from 'src/app/modules/emissions-reporting/components/control-pollutant-table/control-pollutant-table.component';
 import { InventoryControlTableComponent } from 'src/app/modules/emissions-reporting/components/inventory-control-table/inventory-control-table.component';
 import { ControlDevicesTableComponent } from 'src/app/modules/emissions-reporting/components/control-devices-table/control-devices-table.component';
+import { EmissionsUnitsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/emissions-units-summary/emissions-units-summary.component';
+import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/release-points-summary/release-points-summary.component';
+import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
 
 
 @NgModule({
@@ -56,7 +59,10 @@ import { ControlDevicesTableComponent } from 'src/app/modules/emissions-reportin
     ControlAssignmentTableComponent,
     ControlPollutantTableComponent,
     InventoryControlTableComponent,
-    ControlDevicesTableComponent
+    ControlDevicesTableComponent,
+    EmissionsUnitsSummaryComponent,
+    ReleasePointsSummaryComponent,
+    ControlDevicesSummaryComponent
 
   ],
   imports: [

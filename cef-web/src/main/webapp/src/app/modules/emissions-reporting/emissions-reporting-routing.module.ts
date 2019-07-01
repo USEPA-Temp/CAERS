@@ -6,6 +6,9 @@ import { FacilityInformationComponent } from 'src/app/modules/emissions-reportin
 import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reporting/pages/release-point-details/release-point-details.component';
 import { EmissionsProcessDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emissions-process-details/emissions-process-details.component';
 import { ControlDeviceDetailsComponent } from 'src/app/modules/emissions-reporting/pages/control-device-details/control-device-details.component';
+import { EmissionsUnitsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/emissions-units-summary/emissions-units-summary.component';
+import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/release-points-summary/release-points-summary.component';
+import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -38,16 +41,16 @@ const reportRoutes: Routes = [
             data: { title: 'Control Device Details', breadcrumb: '&year Emissions Report'}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}`,
-            component: EmissionInventoryComponent,
-            data: { title: 'Control Device Dashboard', breadcrumb: '&year Emissions Report'}
+            component: ControlDevicesSummaryComponent,
+            data: { title: 'Control Devices Summary', breadcrumb: '&year Emissions Report'}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId`,
             component: EmissionUnitDashboardComponent,
             data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}`,
-            component: EmissionInventoryComponent,
-            data: { title: 'Emissions Unit Dashboard', breadcrumb: '&year Emissions Report'}
+            component: EmissionsUnitsSummaryComponent,
+            data: { title: 'Emissions Units Summary', breadcrumb: '&year Emissions Report'}
           }, {
             path: `${BaseReportUrl.EMISSIONS_PROCESS}/:processId`,
             component: EmissionsProcessDetailsComponent,
@@ -58,8 +61,8 @@ const reportRoutes: Routes = [
             data: { title: 'Release Point', breadcrumb: '&year Emissions Report'}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}`,
-            component: EmissionInventoryComponent,
-            data: { title: 'Release Point Dashboard', breadcrumb: '&year Emissions Report'}
+            component: ReleasePointsSummaryComponent,
+            data: { title: 'Release Points Summary', breadcrumb: '&year Emissions Report'}
           }, {
             path: '**',
             component: FacilityInformationComponent,

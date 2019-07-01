@@ -11,7 +11,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td><a routerLink="emissionUnit/{{item.id}}">{{item.unitIdentifier}}</a></td>
+      <td><a routerLink="{{baseUrl}}/{{item.id}}">{{item.unitIdentifier}}</a></td>
       <td>{{item.unitTypeCodeDescription}}</td>
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCodeDescription}}</td>
