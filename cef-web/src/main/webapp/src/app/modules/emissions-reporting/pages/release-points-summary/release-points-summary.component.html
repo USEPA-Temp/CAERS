@@ -1,0 +1,16 @@
+<app-step-progress></app-step-progress>
+
+<div *ngIf="facilitySite">
+    <div class="row">
+        <div class="col-sm-12" *ngIf="releasePoints">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Release Points</strong>
+                </div>
+                <div class="card-body">
+                    <app-release-point-table [tableData]="releasePoints"></app-release-point-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
