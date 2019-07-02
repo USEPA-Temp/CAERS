@@ -14,7 +14,7 @@ import gov.epa.cef.web.service.SubmissionsReviewDasboardService;
 import gov.epa.cef.web.service.dto.SubmissionsReviewDashboardDto;
 
 @RestController
-@RequestMapping("/api/submissions-review")
+@RequestMapping("/api/submissionsReview")
 public class SubmissionsReviewDashboardApi {
 
     

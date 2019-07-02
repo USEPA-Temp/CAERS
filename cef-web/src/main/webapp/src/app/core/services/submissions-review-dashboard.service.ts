@@ -11,7 +11,7 @@ import { SubmissionUnderReview } from "src/app/shared/models/submission-under-re
 } )
 export class SubmissionsReviewDashboardService {
 
-    private baseUrl = 'api/submissions-review';  // URL to web api
+    private baseUrl = 'api/submissionsReview';  // URL to web api
 
     constructor( private http: HttpClient ) {
     }
