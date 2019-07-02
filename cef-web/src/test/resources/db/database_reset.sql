@@ -1,3 +1,6 @@
+--VIEWS
+DROP VIEW IF EXISTS vw_submissions_review_dashboard;
+
 --REPORTING TABLES
 DROP TABLE IF EXISTS emission;
 DROP TABLE IF EXISTS control_assignment;
@@ -46,6 +49,7 @@ DROP TABLE IF EXISTS verification_code;
 DROP TABLE IF EXISTS vertical_collection_method_code;
 DROP TABLE IF EXISTS vertical_reference_datum_code;
 DROP TABLE IF EXISTS schema_version_cef;
+DROP TABLE IF EXISTS naics_code_industry;
 
 --SEQUENCES
 DROP SEQUENCE IF EXISTS emission_id_seq;
