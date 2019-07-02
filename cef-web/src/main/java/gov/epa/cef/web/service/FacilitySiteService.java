@@ -2,7 +2,6 @@ package gov.epa.cef.web.service;
 
 import java.util.List;
 
-import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 
 public interface FacilitySiteService {

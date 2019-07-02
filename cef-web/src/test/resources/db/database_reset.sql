@@ -1,3 +1,6 @@
+--VIEWS
+DROP VIEW IF EXISTS v_emissions_by_facility_and_cas;
+
 --REPORTING TABLES
 DROP TABLE IF EXISTS emission;
 DROP TABLE IF EXISTS control_assignment;

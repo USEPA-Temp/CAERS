@@ -1,9 +1,7 @@
 package gov.epa.cef.web.service;
 
-import java.util.Collection;
 import java.util.List;
 
-import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
 
 public interface ReleasePointService {
