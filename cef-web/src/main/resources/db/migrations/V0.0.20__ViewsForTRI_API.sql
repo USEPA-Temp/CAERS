@@ -26,5 +26,4 @@ SELECT concat(e.id, rpa.id) AS id,
   
   CREATE INDEX "i_emissions_report_frsFacilityId"
     ON emissions_report USING btree
-    (frs_facility_id ASC NULLS LAST)
-    TABLESPACE pg_default;
+    (frs_facility_id ASC NULLS LAST);
