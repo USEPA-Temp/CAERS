@@ -3,6 +3,8 @@ import { CefFacility } from 'src/app/shared/models/cef-facility';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
+import { Input } from "@angular/core";
+import { SubmissionUnderReview } from "src/app/shared/models/submission-under-review";
 
 
 @Component({
@@ -12,7 +14,7 @@ import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base
 
 export class SubmissionReviewListComponent extends BaseSortableTable implements OnInit {
 
-  tableData: CefFacility[] = [];
+  @Input() tableData: SubmissionUnderReview[];
   clientId = '';
 
   constructor(private facilitySiteService: FacilitySiteService, public userContext: UserContextService) {
@@ -21,14 +23,6 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
   }
 
   ngOnInit() {
-    this.getData();
-  }
-
-  getData() {
-    this.facilitySiteService.getByState(this.clientId)
-    .subscribe(result => {
-      this.tableData = result;
-    });
   }
 
 }
