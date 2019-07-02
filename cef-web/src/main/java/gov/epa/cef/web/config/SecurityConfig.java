@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()
+            .antMatchers("/api/public**").permitAll()
             .antMatchers("/J2AHandoff*").permitAll()			
             .antMatchers("/**")
             .hasAnyRole(

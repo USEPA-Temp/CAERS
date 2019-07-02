@@ -13,7 +13,7 @@ import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 
 @RestController
-@RequestMapping("/api/emissionsByFacilityAndCAS")
+@RequestMapping("/api/public/emissionsByFacilityAndCAS")
 public class EmissionsByFacilityAndCASApi {
 
     @Autowired
