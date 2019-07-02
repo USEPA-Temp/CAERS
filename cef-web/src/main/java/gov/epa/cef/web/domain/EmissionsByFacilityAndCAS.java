@@ -15,7 +15,7 @@ import gov.epa.cef.web.domain.common.BaseEntity;
  */
 @Entity
 @Immutable
-@Table(name = "v_emissions_by_facility_and_cas")
+@Table(name = "vw_emissions_by_facility_and_cas")
 public class EmissionsByFacilityAndCAS extends BaseEntity {
     
     private static final long serialVersionUID = 1L;

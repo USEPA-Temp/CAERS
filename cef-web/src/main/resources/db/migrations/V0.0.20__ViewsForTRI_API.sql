@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW v_emissions_by_facility_and_cas
+CREATE OR REPLACE VIEW vw_emissions_by_facility_and_cas
 AS
 SELECT concat(e.id, rpa.id) AS id,
     fs.frs_facility_id AS frs_facility_id,
@@ -8,7 +8,7 @@ SELECT concat(e.id, rpa.id) AS id,
     e.pollutant_cas_id AS pollutant_cas_id,
     e.total_emissions * rpa.percent * 0.01 AS apportioned_emissions,
     rpt.release_point_identifier AS release_point_identifier,
-    CASE WHEN LOWER(rptc.description) = 'fugitive' THEN 'point' ELSE 'non-point' END AS release_point_type,
+    CASE WHEN rptc.description = 'Fugitive' THEN 'point' ELSE 'non-point' END AS release_point_type,
     e.emissions_uom_code AS emissions_uom_code
    FROM emission e,
     reporting_period rp,
@@ -23,3 +23,8 @@ SELECT concat(e.id, rpa.id) AS id,
   AND ep.emissions_unit_id = eu.id AND eu.facility_site_id = fs.id AND fs.report_id = er.id
   AND ep.id = rpa.emissions_process_id AND rpa.release_point_id = rpt.id 
   AND rpt.type_code = rptc.code;
+  
+  CREATE INDEX "i_emissions_report_frsFacilityId"
+    ON emissions_report USING btree
+    (frs_facility_id ASC NULLS LAST)
+    TABLESPACE pg_default;
