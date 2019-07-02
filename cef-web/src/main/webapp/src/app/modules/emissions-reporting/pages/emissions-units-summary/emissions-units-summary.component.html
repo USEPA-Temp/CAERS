@@ -1,0 +1,16 @@
+<app-step-progress></app-step-progress>
+
+<div *ngIf="facilitySite">
+    <div class="row">
+        <div class="col-sm-12" *ngIf="emissionsUnits">
+            <div class="card  mb-3">
+                <div class="card-header text-center">
+                    <strong>Emissions Units</strong>
+                </div>
+                <div class="card-body">
+                    <app-emissions-unit-table [tableData]="emissionsUnits"></app-emissions-unit-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
