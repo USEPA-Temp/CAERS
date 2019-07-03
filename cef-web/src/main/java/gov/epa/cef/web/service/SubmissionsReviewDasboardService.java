@@ -10,6 +10,6 @@ public interface SubmissionsReviewDasboardService {
      * Retrieves all the facilities reports for review 
      * 
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReports();
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear();
 
 }
