@@ -32,9 +32,14 @@ public class SubmissionsReviewDashboardView implements Serializable{
     @Column(name = "industry", length = 200)
     private String industry;
     
-    @Column(name = "last_submittal_year", nullable = false)
+    @Column(name = "last_submittal_year")
     private Short lastSubmittalYear;
     
+    @Column(name = "year", nullable = false)
+    private Short year;
+    
+    @Column(name = "agency_code", nullable = false, length = 3)
+    private String agencyCode;    
     
     public Long getEmissionsReportId() {
         return emissionsReportId;
@@ -71,6 +76,18 @@ public class SubmissionsReviewDashboardView implements Serializable{
     }
     public void setLastSubmittalYear(Short lastSubmittalYear) {
         this.lastSubmittalYear = lastSubmittalYear;
+    }
+    public Short getYear() {
+        return year;
+    }
+    public void setYear(Short year) {
+        this.year = year;
+    }
+    public String getAgencyCode() {
+        return agencyCode;
+    }
+    public void setAgencyCode(String agencyCode) {
+        this.agencyCode = agencyCode;
     }
     
 }
