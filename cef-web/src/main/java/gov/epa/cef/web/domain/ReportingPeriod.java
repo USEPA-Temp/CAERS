@@ -54,6 +54,9 @@ public class ReportingPeriod extends BaseAuditEntity {
     @JoinColumn(name = "calculation_material_code", nullable = false)
     private CalculationMaterialCode calculationMaterialCode;
     
+    @Column(name = "comments", length = 200)
+    private String comments;
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
     private Set<Emission> emissions = new HashSet<Emission>(0);
     
@@ -120,6 +123,14 @@ public class ReportingPeriod extends BaseAuditEntity {
 
     public void setCalculationMaterialCode(CalculationMaterialCode calculationMaterialCode) {
         this.calculationMaterialCode = calculationMaterialCode;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public Set<Emission> getEmissions() {

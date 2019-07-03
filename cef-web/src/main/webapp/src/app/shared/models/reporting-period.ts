@@ -6,11 +6,12 @@ export class ReportingPeriod {
   id: number;
   emissionsProcessId: number;
   reportingPeriodTypeCode: BaseCodeLookup;
-  emissionsOperatingTypeCode: string;
+  emissionsOperatingTypeCode: BaseCodeLookup;
   calculationParameterTypeCode: BaseCodeLookup;
   calculationParameterValue: number;
   calculationParameterUom: BaseCodeLookup;
   calculationMaterialCode: BaseCodeLookup;
+  comments: string;
   emissions: Emission[];
   operatingDetails: OperatingDetail[];
 }
