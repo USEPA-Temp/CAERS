@@ -3,6 +3,7 @@ import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
+import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { Control } from 'src/app/shared/models/control';
 
 export class FacilitySite {
@@ -21,7 +22,7 @@ export class FacilitySite {
   mailingStateCode: string;
   mailingPostalCode: string;
   operatingStatusCode: BaseCodeLookup;
-  naicsCode: BaseCodeLookup;
+  facilityNAICS: FacilityNaicsCode[];
   emissionsReport: EmissionsReport;
   emissionsUnits: EmissionUnit[];
   releasePoints: ReleasePoint[];

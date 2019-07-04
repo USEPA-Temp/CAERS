@@ -35,10 +35,6 @@ public class FacilitySite extends BaseAuditEntity {
     private FacilitySourceTypeCode facilitySourceTypeCode;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "naics_code", nullable = false)
-    private NaicsCode naicsCode;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_system_code", nullable = false)
     private ProgramSystemCode programSystemCode;
     
@@ -109,6 +105,9 @@ public class FacilitySite extends BaseAuditEntity {
     private TribalCode tribalCode;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
+    private Set<FacilityNAICSXref> facilityNAICS = new HashSet<FacilityNAICSXref>(0);
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
@@ -137,14 +136,6 @@ public class FacilitySite extends BaseAuditEntity {
 
     public void setFacilitySourceTypeCode(FacilitySourceTypeCode facilitySourceTypeCode) {
         this.facilitySourceTypeCode = facilitySourceTypeCode;
-    }
-
-    public NaicsCode getNaicsCode() {
-        return this.naicsCode;
-    }
-
-    public void setNaicsCode(NaicsCode naicsCode) {
-        this.naicsCode = naicsCode;
     }
 
     public ProgramSystemCode getProgramSystemCode() {
@@ -321,6 +312,14 @@ public class FacilitySite extends BaseAuditEntity {
 
     public void setTribalCode(TribalCode tribalCode) {
         this.tribalCode = tribalCode;
+    }
+
+    public Set<FacilityNAICSXref> getFacilityNAICS() {
+        return facilityNAICS;
+    }
+
+    public void setFacilityNAICS(Set<FacilityNAICSXref> facilityNAICS) {
+        this.facilityNAICS = facilityNAICS;
     }
 
     public Set<EmissionsUnit> getEmissionsUnits() {

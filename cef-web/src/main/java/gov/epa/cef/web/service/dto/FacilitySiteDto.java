@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class FacilitySiteDto implements Serializable {
 
@@ -9,7 +10,6 @@ public class FacilitySiteDto implements Serializable {
     private Long id;
     private FacilityCategoryCodeDto facilityCategoryCode;
     private CodeLookupDto facilitySourceTypeCode;
-    private CodeLookupDto naicsCode;
     private CodeLookupDto programSystemCode;
     private CodeLookupDto operatingStatusCode;
     private CodeLookupDto tribalCode;
@@ -33,6 +33,7 @@ public class FacilitySiteDto implements Serializable {
     private Double latitude;
     private Double longitude;
     private String tribalCodeDesc;
+    private Set<FacilityNAICSDto> facilityNAICS;
 
     public Long getId() {
         return id;
@@ -56,14 +57,6 @@ public class FacilitySiteDto implements Serializable {
 
     public void setFacilitySourceTypeCode(CodeLookupDto facilitySourceTypeCode) {
         this.facilitySourceTypeCode = facilitySourceTypeCode;
-    }
-
-    public CodeLookupDto getNaicsCode() {
-        return naicsCode;
-    }
-
-    public void setNaicsCode(CodeLookupDto naicsCode) {
-        this.naicsCode = naicsCode;
     }
 
     public CodeLookupDto getProgramSystemCode() {
@@ -248,6 +241,14 @@ public class FacilitySiteDto implements Serializable {
 
     public void setTribalCodeDesc(String tribalCodeDesc) {
         this.tribalCodeDesc = tribalCodeDesc;
+    }
+
+    public Set<FacilityNAICSDto> getFacilityNAICS() {
+        return facilityNAICS;
+    }
+
+    public void setFacilityNAICS(Set<FacilityNAICSDto> facilityNAICS) {
+        this.facilityNAICS = facilityNAICS;
     }
 
 }
