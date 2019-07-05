@@ -32,7 +32,7 @@ export class FacilityInformationComponent implements OnInit {
       });
 
       this.naicsCodes = this.facilitySite.facilityNAICS;
-      this.naicsCodes.sort((a,b) => b.primaryFlag - a.primaryFlag);
+      this.naicsCodes.sort((a, b) => a.primaryFlag && !b.primaryFlag ? -1 : !a.primaryFlag && b.primaryFlag ? 1 : 0);
     });
   }
 
