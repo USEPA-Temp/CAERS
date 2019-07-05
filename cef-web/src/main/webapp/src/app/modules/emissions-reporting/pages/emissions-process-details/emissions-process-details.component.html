@@ -76,6 +76,40 @@
             
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Reporting Period</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.reportingPeriodTypeCode.shortName}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Operating Type:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.emissionsOperatingTypeCode.description}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Calcuation Param.:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationParameterTypeCode.description}}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Calculation Material:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationMaterialCode.description}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Calculation Value:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationParameterValue}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Calculation UoM:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationParameterUom.description}}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
+                        <div class="col-sm-6 col-md-10">{{period.comments}}</div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
     </ng-container>
 
     <div class="row">

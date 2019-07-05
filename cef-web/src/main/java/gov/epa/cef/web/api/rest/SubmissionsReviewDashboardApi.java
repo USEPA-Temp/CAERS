@@ -22,13 +22,13 @@ public class SubmissionsReviewDashboardApi {
     private SubmissionsReviewDasboardService submissionsReviewDasboardService;
     
     /**
-     * Retrieve the currently authenticated user
+     * Retrieve the submissions under review for the reviewer agency and for the current fiscal year
      * @return
      */
     @GetMapping(value = "/dashboard")
     @ResponseBody
     public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview() {
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReports();
+        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear();
         return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
     }
     
