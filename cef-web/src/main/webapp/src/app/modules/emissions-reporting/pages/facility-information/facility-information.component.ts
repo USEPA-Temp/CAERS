@@ -3,6 +3,7 @@ import { FacilitySiteContactService } from 'src/app/core/services/facility-site-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 
 @Component({
   selector: 'app-facility-information',
@@ -11,6 +12,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 })
 export class FacilityInformationComponent implements OnInit {
   facilitySite: FacilitySite;
+  naicsCodes: FacilityNaicsCode[];
 
   constructor(
     private contactService: FacilitySiteContactService,
@@ -28,6 +30,9 @@ export class FacilityInformationComponent implements OnInit {
       .subscribe(contacts => {
         this.facilitySite.contacts = contacts;
       });
+
+      this.naicsCodes = this.facilitySite.facilityNAICS;
+      this.naicsCodes.sort((a, b) => a.primaryFlag && !b.primaryFlag ? -1 : !a.primaryFlag && b.primaryFlag ? 1 : 0);
     });
   }
 

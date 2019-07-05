@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {FacilityNAICSMapper.class})
 public interface FacilitySiteMapper {
 
     FacilitySiteDto toDto(FacilitySite facility);

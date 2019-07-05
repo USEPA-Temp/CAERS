@@ -5,7 +5,7 @@
         <strong>Facility Information</strong>
     </div>
     <div *ngIf="facilitySite" class="card-body">
-        <div class="row">
+        <div class="row  pb-2">
             <div class="col-sm-6 col-md-2"><strong>Facility EIS ID:</strong></div>
             <div class="col-sm-6 col-md-2">{{facilitySite.eisProgramId}}</div>
             <div class="col-sm-6 col-md-2"><strong>Latitude:</strong></div>
@@ -14,7 +14,7 @@
             <div class="col-sm-6 col-md-2">{{facilitySite.operatingStatusCode.description}}</div>
         </div>
         
-        <div class="row">
+        <div class="row  pb-2">
             <div class="col-sm-6 col-md-2"><strong>Facility Name:</strong></div>
             <div class="col-sm-6 col-md-2">{{facilitySite.name}}</div>
             <div class="col-sm-6 col-md-2"><strong>Longitude:</strong></div>
@@ -23,7 +23,7 @@
             <div class="col-sm-6 col-md-2"></div>
         </div>
         
-        <div class="row">
+        <div class="row  pb-2">
             <div class="col-sm-6 col-md-2"><strong>Facility Address:</strong></div>
             <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
             <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
@@ -32,9 +32,17 @@
                     {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}
                 </span>
             </div>
-            <div class="col-sm-6 col-md-2"><strong>NAICS Code:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.naicsCode.description}}</div>
         </div>
+
+        <div class="row">
+            <div class="col-sm-6 col-md-2"><strong>NAICS Code:</strong></div>
+            <div class="col-sm-6 col-md-10">
+                <span *ngFor="let naics of naicsCodes">
+                        {{naics.code}}&nbsp;-&nbsp;{{naics.description}}<span *ngIf="naics.primaryFlag">&nbsp;-&nbsp;<em>Primary</em></span><br/>
+                </span>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -44,21 +52,21 @@
             <strong>Facility Contact Information</strong>
         </div>
         <div class="card-body">
-            <div class="row">
+            <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Type:</strong></div>
                 <div class="col-sm-6 col-md-2">{{contact.type.description}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Phone Number:</strong></div>
                 <div class="col-sm-6 col-md-4">{{contact.phone | phoneNumber}}</div>
             </div>
             
-            <div class="row">
+            <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Name:</strong></div>
                 <div class="col-sm-6 col-md-2">{{contact.firstName}} {{contact.lastName}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Email Address:</strong></div>
                 <div class="col-sm-6 col-md-4">{{contact.email}}</div>
             </div>
             
-            <div class="row">
+            <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
                 <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode}}&nbsp;{{contact.postalCode}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
