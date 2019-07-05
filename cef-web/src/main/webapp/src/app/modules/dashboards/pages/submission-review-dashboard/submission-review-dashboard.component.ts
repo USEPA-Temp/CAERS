@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SubmissionsReviewDashboardService } from "src/app/core/services/submissions-review-dashboard.service";
-import { SubmissionUnderReview } from "src/app/shared/models/submission-under-review";
+import { SubmissionsReviewDashboardService } from 'src/app/core/services/submissions-review-dashboard.service';
+import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
 
 @Component( {
     selector: 'app-submission-review-dashboard',

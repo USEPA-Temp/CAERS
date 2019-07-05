@@ -1,7 +1,8 @@
-export class SubmissionUnderReview{
+export class SubmissionUnderReview {
     emissionsReportId: number;
+    eisProgramId: string;
     facilityName: string;
-    airsId: string;
+    altFacilityId: string;
     operatingStatus: string;
     industry: string;
     lastSubmittalYear: number;
