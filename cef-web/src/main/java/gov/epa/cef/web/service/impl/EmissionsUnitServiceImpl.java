@@ -30,7 +30,8 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
         EmissionsUnit emissionsUnit= unitRepo
             .findById(unitId)
             .orElse(null);
-        return emissionsUnitMapper.emissionsUnitToDto(emissionsUnit);
+        EmissionsUnitDto result = emissionsUnitMapper.emissionsUnitToDto(emissionsUnit);
+        return result;
     }
     
     /* (non-Javadoc)
