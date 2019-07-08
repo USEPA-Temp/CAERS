@@ -35,12 +35,6 @@ public class FipsCounty implements java.io.Serializable {
     @Column(name = "name", length = 43)
     private String name;
 
-    // Constructors
-
-    /** default constructor */
-    public FipsCounty() {
-    }
-
     // Property accessors
     public FipsCountyId getId() {
         return this.id;

@@ -39,12 +39,6 @@ public class EmissionsReport extends BaseAuditEntity {
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
 
-    // Constructors
-
-    /** default constructor */
-    public EmissionsReport() {
-    }
-
     // Property accessors
     
     public String getFrsFacilityId() {

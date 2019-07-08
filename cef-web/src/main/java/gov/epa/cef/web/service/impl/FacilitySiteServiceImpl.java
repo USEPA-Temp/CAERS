@@ -1,7 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +32,5 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             .findFirst()
             .orElse(null);
         return facilitySiteMapper.toDto(facilitySite);
-    }
-
-    /**
-     * Find common form facilities for a given state
-     * @param state Two-character state code
-     * @return
-     */	
-    public List<FacilitySiteDto> findByState(String stateCode) {
-        List<FacilitySite> facilitySites= facSiteRepo.findByStateCode(stateCode);
-        return facilitySiteMapper.toDtoList(facilitySites);
     }
 }

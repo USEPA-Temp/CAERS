@@ -25,13 +25,12 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
      * Retrieve Emissions Unit by its id
      * @param unitId 
      * @return
-     */	
+     */
     public EmissionsUnitDto retrieveUnitById(Long unitId) {
         EmissionsUnit emissionsUnit= unitRepo
             .findById(unitId)
             .orElse(null);
-        EmissionsUnitDto result = emissionsUnitMapper.emissionsUnitToDto(emissionsUnit);
-        return result;
+        return emissionsUnitMapper.emissionsUnitToDto(emissionsUnit);
     }
     
     /* (non-Javadoc)
@@ -42,6 +41,5 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
         List<EmissionsUnit> emissionUnits= unitRepo.findByFacilitySiteId(facilitySiteId);
         return emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(emissionUnits);
     }
-
 
 }

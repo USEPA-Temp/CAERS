@@ -27,12 +27,6 @@ public class FipsStateCode implements java.io.Serializable {
     @Column(name = "name", length = 200)
     private String name;
 
-    // Constructors
-
-    /** default constructor */
-    public FipsStateCode() {
-    }
-
     // Property accessors
     public String getCode() {
         return this.code;

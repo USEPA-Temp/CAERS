@@ -1,7 +1,5 @@
 package gov.epa.cef.web.service;
 
-import java.util.List;
-
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 
 public interface FacilitySiteService {
@@ -20,12 +18,5 @@ public interface FacilitySiteService {
      * @return
      */
     FacilitySiteDto findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId);
-
-    /**
-     * Find common form facilities for a given state
-     * @param state Two-character state code
-     * @return
-     */	
-    List<FacilitySiteDto> findByState(String state);
 
 }

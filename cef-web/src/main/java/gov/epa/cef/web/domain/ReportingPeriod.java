@@ -63,12 +63,6 @@ public class ReportingPeriod extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
     private Set<OperatingDetail> operatingDetails = new HashSet<OperatingDetail>(0);
 
-    // Constructors
-
-    /** default constructor */
-    public ReportingPeriod() {
-    }
-
     public EmissionsProcess getEmissionsProcess() {
         return this.emissionsProcess;
     }

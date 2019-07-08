@@ -20,14 +20,6 @@ public class FipsCountyId implements java.io.Serializable {
     @Column(name = "state_code", nullable = false, length = 2)
     private String stateCode;
 
-    // Constructors
-
-    /** default constructor */
-    public FipsCountyId() {
-    }
-
-    // Property accessors
-
     public String getCode() {
         return this.code;
     }
@@ -45,12 +37,16 @@ public class FipsCountyId implements java.io.Serializable {
     }
 
     public boolean equals(Object other) {
-        if ((this == other))
+        if ((this == other)) {
             return true;
-        if ((other == null))
+        }
+        if ((other == null)) {
             return false;
-        if (!(other instanceof FipsCountyId))
+        }
+        if (!(other instanceof FipsCountyId)) {
             return false;
+        }
+        
         FipsCountyId castOther = (FipsCountyId) other;
 
         return ((this.getCode() == castOther.getCode()) || (this.getCode() != null && castOther.getCode() != null

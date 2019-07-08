@@ -23,7 +23,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.EmissionsProcessService#retrieveById(java.lang.Long)
-     */	
+     */
     @Override
     public EmissionsProcessDto retrieveById(Long id) {
         EmissionsProcess result = processRepo

@@ -49,12 +49,6 @@ public class OperatingDetail extends BaseAuditEntity {
     @Column(name = "percent_fall", precision = 4, scale = 1)
     private Double percentFall;
 
-    // Constructors
-
-    /** default constructor */
-    public OperatingDetail() {
-    }
-
     public ReportingPeriod getReportingPeriod() {
         return this.reportingPeriod;
     }

@@ -80,17 +80,4 @@ public class FacilitySiteServiceImplTest {
         FacilitySiteDto facilitySite = facilitySiteServiceImpl.findByEisProgramIdAndReportId("XXXX", 2L);
         assertEquals(null, facilitySite);
     }
-
-    @Test
-    public void retrieveByState_Should_Return_FacilitySiteList_When_FacilitiesExist(){
-        List<FacilitySiteDto> facilitySiteList = facilitySiteServiceImpl.findByState("GA");
-        assertNotEquals(null, facilitySiteList);
-    }
-
-    @Test
-    public void retrieveByState_Should_Return_Null_When_NoFacilitySitesExist(){
-        List<FacilitySiteDto> facilitySiteList = facilitySiteServiceImpl.findByState("AK");
-        assertEquals(null, facilitySiteList);
-    }
-
 }

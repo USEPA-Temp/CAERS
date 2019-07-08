@@ -116,12 +116,6 @@ public class FacilitySite extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<FacilitySiteContact> contacts = new HashSet<FacilitySiteContact>(0);
 
-    // Constructors
-
-    /** default constructor */
-    public FacilitySite() {
-    }
-
     public FacilityCategoryCode getFacilityCategoryCode() {
         return this.facilityCategoryCode;
     }

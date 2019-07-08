@@ -106,12 +106,6 @@ public class ReleasePoint extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")
     private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
 
-    // Constructors
-
-    /** default constructor */
-    public ReleasePoint() {
-    }
-
     // Property accessors
 
     public ProgramSystemCode getProgramSystemCode() {

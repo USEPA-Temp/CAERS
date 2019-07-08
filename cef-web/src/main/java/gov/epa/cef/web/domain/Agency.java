@@ -27,12 +27,6 @@ public class Agency implements java.io.Serializable {
     @Column(name = "description", length = 200)
     private String description;
 
-    // Constructors
-
-    /** default constructor */
-    public Agency() {
-    }
-
     // Property accessors
     public Long getId() {
         return this.id;
