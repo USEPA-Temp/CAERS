@@ -7,7 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.Immutable;
+
 @Entity
+@Immutable
 @Table(name = "vw_submissions_review_dashboard")
 public class SubmissionsReviewDashboardView implements Serializable{
 
@@ -20,11 +23,14 @@ public class SubmissionsReviewDashboardView implements Serializable{
     @Column(name = "emissions_report_id", unique = true, nullable = false)
     private Long emissionsReportId;
     
+    @Column(name = "eis_program_id", nullable = false, length = 22)
+    private String eisProgramId;
+    
     @Column(name = "facility_name", nullable = false, length = 80)
     private String facilityName;
     
-    @Column(name = "airs_id", length = 30)
-    private String airsId;
+    @Column(name = "alt_facility_id", length = 30)
+    private String altFacilityId;
     
     @Column(name = "operating_status", length = 200)
     private String operatingStatus;
@@ -47,17 +53,23 @@ public class SubmissionsReviewDashboardView implements Serializable{
     public void setEmissionsReportId(Long emissionsReportId) {
         this.emissionsReportId = emissionsReportId;
     }
+    public String getEisProgramId() {
+        return eisProgramId;
+    }
+    public void setEisProgramId(String eisProgramId) {
+        this.eisProgramId = eisProgramId;
+    }
     public String getFacilityName() {
         return facilityName;
     }
     public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;
     }
-    public String getAirsId() {
-        return airsId;
+    public String getAltFacilityId() {
+        return altFacilityId;
     }
-    public void setAirsId(String airsId) {
-        this.airsId = airsId;
+    public void setAltFacilityId(String altFacilityId) {
+        this.altFacilityId = altFacilityId;
     }
     public String getOperatingStatus() {
         return operatingStatus;

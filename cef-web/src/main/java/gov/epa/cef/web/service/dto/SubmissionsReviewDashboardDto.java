@@ -15,8 +15,9 @@ public class SubmissionsReviewDashboardDto implements Serializable{
     
     
     private Long emissionsReportId;
+    private String eisProgramId;
     private String facilityName;
-    private String airsId;
+    private String altFacilityId;
     private String operatingStatus;
     private String industry;
     private Short lastSubmittalYear;
@@ -28,17 +29,23 @@ public class SubmissionsReviewDashboardDto implements Serializable{
     public void setEmissionsReportId(Long emissionsReportId) {
         this.emissionsReportId = emissionsReportId;
     }
+    public String getEisProgramId() {
+        return eisProgramId;
+    }
+    public void setEisProgramId(String eisProgramId) {
+        this.eisProgramId = eisProgramId;
+    }
     public String getFacilityName() {
         return facilityName;
     }
     public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;
     }
-    public String getAirsId() {
-        return airsId;
+    public String getAltFacilityId() {
+        return altFacilityId;
     }
-    public void setAirsId(String airsId) {
-        this.airsId = airsId;
+    public void setAltFacilityId(String altFacilityId) {
+        this.altFacilityId = altFacilityId;
     }
     public String getOperatingStatus() {
         return operatingStatus;

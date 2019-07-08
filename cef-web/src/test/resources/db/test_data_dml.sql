@@ -26,14 +26,14 @@ INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, y
 --FACILITY
 INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
     street_address, city, county, state_code, country_code, postal_code, latitude, longitude, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
-    VALUES ('9999991', '9999997', '110015680798', '9758611', '', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant', 'OP', '1985', '63JJJJ',
+    VALUES ('9999991', '9999997', '110015680798', '9758611', '1301700008', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant', 'OP', '1985', '63JJJJ',
     '173 Peachtree Rd', 'Fitzgerald', '', 'GA' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
 INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
     street_address, city, county, state_code, country_code, postal_code, latitude, longitude, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
-    VALUES ('9999992', '9999999', '110024286002', '2774511', '', 'HAPCAP', '129', 'Tiarco Chemical', 'Petrochemical Plant', 'OP', '2005', '63FFFF',
+    VALUES ('9999992', '9999999', '110024286002', '2774511', '1331300097', 'HAPCAP', '129', 'Tiarco Chemical', 'Petrochemical Plant', 'OP', '2005', '63FFFF',
     '1350 Tiarco Dr.', 'Dalton', '', 'GA' , '', '30720', '34.68666', '-84.99333', '1350 Tiarco Dr.', 'Tiarco', 'GA', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     

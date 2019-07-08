@@ -2,8 +2,8 @@
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
       <li *ngFor="let breadcrumb of breadcrumbs; index as i" class="nav-item">
-         <a *ngIf="i<breadcrumbs.length-1" class="nav-link"  [routerLink]="[breadcrumb.url]"><span *ngIf="i!=0">>&nbsp;&nbsp;&nbsp;&nbsp;</span><u>{{ breadcrumb.label }}</u></a>
-         <span *ngIf="i==breadcrumbs.length-1" class="nav-link"><span *ngIf="i!=0">>&nbsp;&nbsp;&nbsp;&nbsp;</span>{{ breadcrumb.label }}</span>
+         <a *ngIf="i<breadcrumbs.length-1" class="nav-link"  [routerLink]="[breadcrumb.url]"><span *ngIf="i!=0">&gt;&nbsp;&nbsp;&nbsp;&nbsp;</span><u>{{ breadcrumb.label }}</u></a>
+         <span *ngIf="i==breadcrumbs.length-1" class="nav-link"><span *ngIf="i!=0">&gt;&nbsp;&nbsp;&nbsp;&nbsp;</span>{{ breadcrumb.label }}</span>
       </li>
     </ul>
     <ul class="navbar-nav pull-right">
