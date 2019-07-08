@@ -55,12 +55,6 @@ public class Emission extends BaseAuditEntity {
     @Column(name = "comments", length = 200)
     private String comments;
 
-    // Constructors
-
-    /** default constructor */
-    public Emission() {
-    }
-
     public ReportingPeriod getReportingPeriod() {
         return this.reportingPeriod;
     }

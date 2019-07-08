@@ -32,8 +32,6 @@ public class ReleasePointAppt extends BaseAuditEntity {
     @Column(name = "percent", nullable = false, precision = 4, scale = 1)
     private Double percent;
 
-    // Constructors
-
     public ReleasePoint getReleasePoint() {
         return this.releasePoint;
     }

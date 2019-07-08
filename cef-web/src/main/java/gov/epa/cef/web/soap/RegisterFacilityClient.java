@@ -141,7 +141,7 @@ public class RegisterFacilityClient extends AbstractClient {
             try {
                 code = ApplicationErrorCode.valueOf(fault.getFaultInfo().getErrorCode().value());
             } catch (Exception e) {
-                LOGGER.warn("Could not translate fault.");
+                LOGGER.warn("Could not translate fault.", e);
                 code = ApplicationErrorCode.E_REMOTE_SERVICE_ERROR;
             }
             return new ApplicationException(code, fault.getFaultInfo().getDescription());

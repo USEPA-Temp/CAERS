@@ -3,10 +3,6 @@ package gov.epa.cef.web.api.rest;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,14 +30,10 @@ public class FacilitySiteApiTest {
     
     private FacilitySiteDto facilitSiteDto;
     
-    private List<FacilitySiteDto> facilitySites;
-    
     @Before
     public void init() {
         facilitSiteDto=new FacilitySiteDto();
         when(facilityService.findById(123L)).thenReturn(facilitSiteDto);
-        facilitySites=new ArrayList<>();
-        when(facilityService.findByState("GA")).thenReturn(facilitySites);
         when(facilityService.findByEisProgramIdAndReportId("p-id", 1L)).thenReturn(facilitSiteDto);
     }
     
@@ -50,13 +42,6 @@ public class FacilitySiteApiTest {
         ResponseEntity<FacilitySiteDto> result=facilitySiteApi.retrieveFacilitySite(123L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(facilitSiteDto, result.getBody());
-    }
-
-    @Test
-    public void retrieveFacilitiesByState_Should_ReturnFacilitySiteDtoList_When_ValidStateCodePassedssAnFacilitySitesExist() {
-        ResponseEntity<Collection<FacilitySiteDto>> result=facilitySiteApi.retrieveFacilitiesByState("GA");
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(facilitySites, result.getBody());
     }
 
     @Test

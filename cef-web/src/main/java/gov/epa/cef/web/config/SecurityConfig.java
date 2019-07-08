@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()
             .antMatchers("/api/public/**").permitAll()
-            .antMatchers("/J2AHandoff*").permitAll()			
+            .antMatchers("/J2AHandoff*").permitAll()
             .antMatchers("/**")
             .hasAnyRole(
                 AppRole.RoleType.PREPARER.roleName(),

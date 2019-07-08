@@ -40,19 +40,6 @@ public class FacilitySiteApi {
     }
 
     /**
-     * Retrieve facility sites by state code
-     * @param stateCode
-     * @return
-     */
-    //TODO: add year to parameters
-    @GetMapping(value = "/state/{stateCode}")
-    @ResponseBody
-    public ResponseEntity<Collection<FacilitySiteDto>> retrieveFacilitiesByState(@PathVariable String stateCode) {
-        List<FacilitySiteDto> facilities = facilityService.findByState(stateCode);
-        return new ResponseEntity<Collection<FacilitySiteDto>>(facilities, HttpStatus.OK);     
-    }
-
-    /**
      * Retrieve a facility site by eis program ID and report ID
      * @param reportId
      * @param eisProgramId

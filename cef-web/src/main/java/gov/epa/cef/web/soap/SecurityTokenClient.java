@@ -43,7 +43,7 @@ public class SecurityTokenClient extends AbstractClient {
      */
     public String createSecurityToken(URL endpoint, String adminUserId, String adminPassword, String userId, String ip) {
         try {
-            String token= getClient(endpoint).createSecurityToken(adminUserId, adminPassword, DomainTypeCode.DEFAULT,
+            String token = getClient(endpoint).createSecurityToken(adminUserId, adminPassword, DomainTypeCode.DEFAULT,
                     TokenType.CSM, adminUserId, AuthMethod.PASSWORD, userId, "userId="+userId, ip);
             return token;
         } catch (Exception e) {

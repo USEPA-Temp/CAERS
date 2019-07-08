@@ -64,11 +64,6 @@ public class EmissionsUnit extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
     private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
 
-    /** default constructor */
-    public EmissionsUnit() {
-    }
-
-
     public UnitTypeCode getUnitTypeCode() {
         return this.unitTypeCode;
     }

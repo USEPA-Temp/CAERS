@@ -20,12 +20,6 @@ export class FacilitySiteService {
     return this.http.get<FacilitySite>(url);
   }
 
-    /** GET facilities by state from the server */
-  getByState(state: string): Observable<CefFacility[]> {
-    const url = `${this.baseUrl}/state/${state}`;
-    return this.http.get<CefFacility[]>(url);
-  }
-
   /** GET facility site for facility and report */
   retrieveForReport(programId: string, reportId: number): Observable<FacilitySite> {
     const url = `${this.baseUrl}/report/${reportId}/facility/${programId}`;

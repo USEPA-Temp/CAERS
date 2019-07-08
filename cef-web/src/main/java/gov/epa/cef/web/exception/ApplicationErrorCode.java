@@ -6,7 +6,6 @@ package gov.epa.cef.web.exception;
 public enum ApplicationErrorCode {
 
   //This file was copied. Many of these may be unused
-  //TODO: update with project requirements
 
     //Register
     E_UNKNOWN_USER, E_INVALID_CREDENTIAL, E_ACCESS_DENIED, E_INVALID_TOKEN, E_TOKEN_EXPIRED, E_AUTH_METHOD, E_USER_ALREADY_EXISTS,

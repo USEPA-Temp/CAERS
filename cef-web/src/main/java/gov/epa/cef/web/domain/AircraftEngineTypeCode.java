@@ -39,12 +39,6 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
     @Column(name = "scc", length = 10)
     private String scc;
 
-    // Constructors
-
-    /** default constructor */
-    public AircraftEngineTypeCode() {
-    }
-
     // Property accessors
     public String getCode() {
         return this.code;

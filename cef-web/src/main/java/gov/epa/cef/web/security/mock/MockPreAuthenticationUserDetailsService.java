@@ -45,6 +45,7 @@ public class MockPreAuthenticationUserDetailsService implements AuthenticationUs
             user.setIdTypeText(role.roleName());
             user.setRoleId(role.getId());
             user.setUserRoleId(USER_ROLE_ID);
+            user.setClientId("GA");
             //60632 or 95092
               user.setUserOrganizationId(ORGANIZATION_ID);
               return user;
