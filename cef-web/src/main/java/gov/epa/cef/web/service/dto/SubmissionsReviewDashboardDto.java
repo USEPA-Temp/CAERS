@@ -21,6 +21,7 @@ public class SubmissionsReviewDashboardDto implements Serializable{
     private String operatingStatus;
     private String industry;
     private Short lastSubmittalYear;
+    private Short year;
     
     
     public Long getEmissionsReportId() {
@@ -64,6 +65,12 @@ public class SubmissionsReviewDashboardDto implements Serializable{
     }
     public void setLastSubmittalYear(Short lastSubmittalYear) {
         this.lastSubmittalYear = lastSubmittalYear;
+    }
+    public Short getYear() {
+        return year;
+    }
+    public void setYear(Short year) {
+        this.year = year;
     }
     
 }

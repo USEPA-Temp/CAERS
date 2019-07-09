@@ -13,11 +13,9 @@ import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-re
 export class SubmissionReviewListComponent extends BaseSortableTable implements OnInit {
 
   @Input() tableData: SubmissionUnderReview[];
-  clientId = '';
 
   constructor(public userContext: UserContextService) {
     super();
-    this.clientId = userContext.user.agencyCode;
   }
 
   ngOnInit() {
