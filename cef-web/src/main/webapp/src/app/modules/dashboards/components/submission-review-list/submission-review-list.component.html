@@ -1,5 +1,5 @@
-<div class="pt-3 pb-3">
-  Instructional text will appear here. My agency code is '{{ userContext.user.agencyCode }}'.
+<div class="pt-3 pb-3"  *ngIf="userContext.user">
+    The following table shows industry submissions of the Combined Air Emissions Report for your agency (&nbsp;{{ userContext.user.agencyCode }}&nbsp;) that are awaiting review.
 </div>
 
 <form>
@@ -13,6 +13,7 @@
         <th scope="col" sortable="altFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
         <th scope="col" sortable="operatingStatus" (sort)="onSort($event)">Operating Status</th>
         <th scope="col" sortable="industry" (sort)="onSort($event)">Industry</th>
+        <th scope="col" sortable="year" (sort)="onSort($event)">Submittal Year</th>
         <th scope="col" sortable="lastSubmittalYear" (sort)="onSort($event)">Last Submittal Year</th>
         <th scope="col">Actions</th>
       </tr>
@@ -24,7 +25,8 @@
         <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.industry"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.lastSubmittalYear"></ngb-highlight></td>
+        <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
+        <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None'"></ngb-highlight></td>
         <td><button class="btn btn-primary btn-sm">Summary</button><span class="pr-2"></span> 
             <button class="btn btn-primary btn-sm" 
                 [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'facilityInformation']">View Report</button>

@@ -6,4 +6,5 @@ export class SubmissionUnderReview {
     operatingStatus: string;
     industry: string;
     lastSubmittalYear: number;
+    year: number;
 }
