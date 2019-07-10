@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserToken } from 'src/app/shared/models/user-token';
+import { HttpHeaders } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -24,4 +25,11 @@ export class UserService {
     const url = `${this.userUrl}/token`;
     return this.http.get<UserToken>(url);
   }
+  
+  /** Initiate Logout for a user */
+  initLogout(): Observable<any> {
+    const url = 'J2AHandoff?URL=/CDX/Logout';
+    return this.http.post(url,'', {responseType: 'text'});
+  }
+  
 }
