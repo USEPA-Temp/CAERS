@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
             this.logoutLink=logoutInfo.split('?')[0];
             const params=logoutInfo.split('?')[1].split('&');
             for (let param of params) {
-                const paramArray=param.split("=");
+                const paramArray=param.split(/=(.+)/);
                 if(paramArray[0]=='ssoToken'){
                     this.ssoToken=paramArray[1].trim();
                 }else if(paramArray[0]=='returnUrl'){
