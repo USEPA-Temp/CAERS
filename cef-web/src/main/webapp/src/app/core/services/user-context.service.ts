@@ -1,6 +1,7 @@
 import { User } from 'src/app/shared/models/user';
 import { UserService } from 'src/app/core/services/user.service';
 import { Injectable } from '@angular/core';
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -16,4 +17,9 @@ export class UserContextService {
     this.userService.getCurrentUser()
     .subscribe(currentUser => this.user = currentUser);
   }
+  
+  logoutUser(): Observable<any> {
+      this.user=null;
+      return this.userService.initLogout();
+    }
 }
