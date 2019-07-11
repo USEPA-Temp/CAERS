@@ -19,7 +19,6 @@ export class UserContextService {
   }
   
   logoutUser(): Observable<any> {
-      this.user=null;
       return this.userService.initLogout();
     }
 }
