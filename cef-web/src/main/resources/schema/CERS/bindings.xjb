@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings
+        version="2.1"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb">
+    <jaxb:bindings xmlns:tns="http://www.exchangenetwork.net/schema/cer/1" if-exists="true" scd="x-schema::tns">
+        <jaxb:schemaBindings>
+            <jaxb:package name="net.exchangenetwork.schema.cer._1._2"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+</jaxb:bindings>

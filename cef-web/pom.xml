@@ -683,6 +683,49 @@
                         </execution>
                       </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.jvnet.jaxb2.maven2</groupId>
+                        <artifactId>maven-jaxb2-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>cers_1_2</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <schemaDirectory>src/main/resources/schema/CERS</schemaDirectory>
+                                    <generateDirectory>${project.build.directory}/generated-sources/xjc/cers_1_2
+                                    </generateDirectory>
+                                    <extension>true</extension>
+                                    <verbose>false</verbose>
+                                    <debug>false</debug>
+                                    <strict>true</strict>
+                                    <forceRegenerate>false</forceRegenerate>
+                                    <schemaLanguage>XMLSCHEMA</schemaLanguage>
+                                    <removeOldOutput>true</removeOldOutput>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add-source</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${project.build.directory}/generated-sources/xjc/cers_1_2</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -823,6 +866,49 @@
                           </goals>
                         </execution>
                       </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jvnet.jaxb2.maven2</groupId>
+                        <artifactId>maven-jaxb2-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>cers_1_2</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <schemaDirectory>src/main/resources/schema/CERS</schemaDirectory>
+                                    <generateDirectory>${project.build.directory}/generated-sources/xjc/cers_1_2
+                                    </generateDirectory>
+                                    <extension>true</extension>
+                                    <verbose>false</verbose>
+                                    <debug>false</debug>
+                                    <strict>true</strict>
+                                    <forceRegenerate>false</forceRegenerate>
+                                    <schemaLanguage>XMLSCHEMA</schemaLanguage>
+                                    <removeOldOutput>true</removeOldOutput>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add-source</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${project.build.directory}/generated-sources/xjc/cers_1_2</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
