@@ -26,7 +26,7 @@
         <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.industry"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None'"></ngb-highlight></td>
+        <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
         <td><button class="btn btn-primary btn-sm">Summary</button><span class="pr-2"></span> 
             <button class="btn btn-primary btn-sm" 
                 [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'facilityInformation']">View Report</button>

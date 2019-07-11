@@ -38,7 +38,7 @@
             <div class="col-sm-6 col-md-2"><strong>NAICS Code:</strong></div>
             <div class="col-sm-6 col-md-10">
                 <span *ngFor="let naics of naicsCodes">
-                        {{naics.code}}&nbsp;-&nbsp;{{naics.description}}<span *ngIf="naics.primaryFlag">&nbsp;-&nbsp;<em>Primary</em></span><br/>
+                        {{naics.code}}&nbsp;-&nbsp;{{naics.description}}<span *ngIf="naics.primaryFlag">&nbsp;(<strong>Primary</strong>)</span><br/>
                 </span>
             </div>
         </div>
