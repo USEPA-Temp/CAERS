@@ -3,8 +3,8 @@
  */
 function initFrsWidget(userRoleId, token, facilityId, baseServiceUrl){
 
-	var frsJS="/PreDev/FacilityManagement/FacilityWidget/src/FacilityManagementWidget.js";
-	var frsCSS="/PreDev/FacilityManagement/FacilityWidget/FacilityManagementStyles.css";
+	var frsJS="/FacilityManagement/FacilityWidget/src/FacilityManagementWidget.js";
+	var frsCSS="/FacilityManagement/FacilityWidget/FacilityManagementStyles.css";
 	
 	if(checkIfScriptExists(baseServiceUrl+frsJS)){
 		initializeFacilityWidget(userRoleId, token, facilityId, baseServiceUrl);
