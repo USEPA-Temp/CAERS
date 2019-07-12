@@ -11,17 +11,16 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 export class StepProgressComponent implements OnInit {
   facilitySite: FacilitySite;
 
-  constructor(private sharedService: SharedService, private route: ActivatedRoute) { }
-
-  ngOnInit() {
-    this.route.data
-    .subscribe((data: { facilitySite: FacilitySite }) => {
-
-      this.facilitySite = data.facilitySite;
-      this.sharedService.emitChange(data.facilitySite);
-    });
+  constructor(private sharedService: SharedService) { 
+      sharedService.changeEmitted$
+      .subscribe(facilitySite => {
+          this.facilitySite = facilitySite;
+      }); 
+      
   }
-
+  ngOnInit() {
+     
+  }
   isOneOf(baseValue: string, testValues: string[]): boolean {
     for (const value of testValues) {
       if (baseValue === value) {
