@@ -3,6 +3,7 @@
 		<app-sidebar [facility]="facility"></app-sidebar>
 	</div>
 	<div class="col-sm-12 col-md-10">
+	    <app-step-progress *ngIf="showProgressBar"></app-step-progress>
 		<router-outlet></router-outlet>
 	</div>
 </div>
