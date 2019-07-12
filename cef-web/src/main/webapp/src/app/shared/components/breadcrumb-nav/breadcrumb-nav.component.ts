@@ -7,6 +7,8 @@ import { filter } from 'rxjs/operators';
 import { NavigationEnd } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { User } from "src/app/shared/models/user";
+import { UserContextService } from "src/app/core/services/user-context.service";
 
 @Component( {
     selector: 'app-breadcrumb-nav',
@@ -18,22 +20,21 @@ export class BreadcrumbNavComponent implements OnInit {
     public breadcrumbs: BreadCrumb[];
     year: number;
     baseLabel: string;
+    user:User;
 
     constructor( private router: Router, private activeRoute: ActivatedRoute,
-                 private sharedService: SharedService, private userService: UserService ) { }
+                 private sharedService: SharedService, private userContext: UserContextService ) { }
 
     ngOnInit() {
-
-        this.userService.getCurrentUser()
+        this.userContext.getUser()
         .subscribe(currentUser => {
+            this.user=currentUser;
             if (currentUser.role === 'Reviewer') {
                 this.baseLabel = 'Submission Review Dashboard';
             } else {
                 this.baseLabel = 'My Facilities';
             }
-        });
-
-        this.sharedService.changeEmitted$
+            this.sharedService.changeEmitted$
             .subscribe( facilitySite => {
                 if ( facilitySite != null ) {
                     this.year = facilitySite.emissionsReport.year;
@@ -43,10 +44,11 @@ export class BreadcrumbNavComponent implements OnInit {
                 }
             } );
 
-        this.router.events.pipe( filter( event => event instanceof NavigationEnd ) ).subscribe( event => {
-            // set breadcrumbs
-            this.setNavBreadcrumbs();
-        } );
+            this.router.events.pipe( filter( event => event instanceof NavigationEnd ) ).subscribe( event => {
+                // set breadcrumbs
+                this.setNavBreadcrumbs();
+            } );
+        });
     }
 
     private setNavBreadcrumbs() {
@@ -66,6 +68,11 @@ export class BreadcrumbNavComponent implements OnInit {
             };
 
         this.breadcrumbs = this.getBreadcrumbs( root );
+        if(this.user.role=='Reviewer'){
+            if(this.breadcrumbs.length>1){
+                this.breadcrumbs.splice(0, 1);
+            }
+        }
         this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];
     }
 
