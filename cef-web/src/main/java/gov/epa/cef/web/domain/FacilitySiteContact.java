@@ -55,6 +55,9 @@ public class FacilitySiteContact extends BaseAuditEntity {
 
     @Column(name = "postal_code", length = 10)
     private String postalCode;
+    
+    @Column(name = "county", length = 43)
+    private String county;
 
     @Column(name = "mailing_street_address", length = 100)
     private String mailingStreetAddress;
@@ -170,6 +173,14 @@ public class FacilitySiteContact extends BaseAuditEntity {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
     }
 
     public String getMailingStreetAddress() {
