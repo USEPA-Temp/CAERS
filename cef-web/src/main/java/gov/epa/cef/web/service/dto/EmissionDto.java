@@ -18,6 +18,9 @@ public class EmissionDto implements Serializable {
     private CodeLookupDto emissionsCalcMethodCode;
     private String pollutantCasId;
     private String comments;
+    private BigDecimal calculatedEmissionsTons;
+    private CodeLookupDto emissionsNumeratorUom;
+    private CodeLookupDto emissionsDenominatorUom;
 
     public Long getId() {
         return id;
@@ -105,6 +108,30 @@ public class EmissionDto implements Serializable {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public BigDecimal getCalculatedEmissionsTons() {
+        return calculatedEmissionsTons;
+    }
+
+    public CodeLookupDto getEmissionsNumeratorUom() {
+        return emissionsNumeratorUom;
+    }
+
+    public CodeLookupDto getEmissionsDenominatorUom() {
+        return emissionsDenominatorUom;
+    }
+
+    public void setCalculatedEmissionsTons(BigDecimal calculatedEmissionsTons) {
+        this.calculatedEmissionsTons = calculatedEmissionsTons;
+    }
+
+    public void setEmissionsNumeratorUom(CodeLookupDto emissionsNumeratorUom) {
+        this.emissionsNumeratorUom = emissionsNumeratorUom;
+    }
+
+    public void setEmissionsDenominatorUom(CodeLookupDto emissionsDenominatorUom) {
+        this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 
 }

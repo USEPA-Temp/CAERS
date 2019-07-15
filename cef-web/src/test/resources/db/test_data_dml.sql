@@ -24,55 +24,57 @@ INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, y
  VALUES ('9999911', '110024286002', '2774511', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
-INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
-    street_address, city, county, state_code, country_code, postal_code, latitude, longitude, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
-    VALUES ('9999991', '9999997', '110015680798', '9758611', '1301700008', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant', 'OP', '1985', '63JJJJ',
-    '173 Peachtree Rd', 'Fitzgerald', '', 'GA' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
+ program_system_code, street_address, city, county, state_code, country_code, postal_code, latitude, longitude, 
+ mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
+    VALUES ('9999991', '9999997', '110015680798', '9758611', '1301700008', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant',
+     'OP', '1985', '63JJJJ', '173 Peachtree Rd', 'Fitzgerald', 'Whitfield', 'GA' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
-INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year, program_system_code, 
-    street_address, city, county, state_code, country_code, postal_code, latitude, longitude, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
+INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
+ program_system_code, street_address, city, county, state_code, country_code, postal_code, latitude, longitude, 
+ mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999992', '9999999', '110024286002', '2774511', '1331300097', 'HAPCAP', '129', 'Tiarco Chemical', 'Petrochemical Plant', 'OP', '2005', '63FFFF',
-    '1350 Tiarco Dr.', 'Dalton', '', 'GA' , '', '30720', '34.68666', '-84.99333', '1350 Tiarco Dr.', 'Tiarco', 'GA', '30720', 
+    '1350 Tiarco Dr.', 'Dalton', 'Whitfield', 'GA', '', '30720', '34.68666', '-84.99333', '1350 Tiarco Dr.', 'Tiarco', 'GA', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     
 --FACILITY SITE CONTACT
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
-    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    street_address, city, state_code, country_code, postal_code, county, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999991', '9999991', 'RO', '', 'John', 'Smith', 'johnsmith@gilmanbuilding.com', '3193193119', '001',
-    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', 'Whitfield', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
-    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    street_address, city, state_code, country_code, postal_code, county, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999992', '9999991', 'FAC', '', 'Jane', 'Doe', 'janedoe@example.com', '5555555555', '',
-    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', 'Whitfield', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
-    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    street_address, city, state_code, country_code, postal_code, county, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999993', '9999991', 'TECH', '', 'Jane', 'Doe', 'janedoe@example.com', '5555555555', '',
-    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', 'Whitfield', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
-    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    street_address, city, state_code, country_code, postal_code, county, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999994', '9999992', 'RO', '', 'Joan', 'Smyth', 'joan.smyth@tiarcochemical.com', '3195555555', '001',
-    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
+    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', 'Whitfield', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
-    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    street_address, city, state_code, country_code, postal_code, county, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999995', '9999992', 'FAC', '', 'Jim', 'Smythe', 'jim.smythe@tiarcochemical.com', '3195555555', '001',
-    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
+    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', 'Whitfield', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
-    street_address, city, state_code, country_code, postal_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
+    street_address, city, state_code, country_code, postal_code, county, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999996', '9999992', 'TECH', '', 'Janie', 'Zmith', 'janie.zmith@tiarcochemical.com', '3195555555', '001',
-    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
+    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', 'Whitfield', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 
@@ -202,33 +204,40 @@ INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, 
     VALUES ('9999994', '9999994', '8700', '23','6','52', '25', '25', '25', '25', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-    emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+    emissions_numerator_uom, emissions_denominator_uom, emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments,
+    calculated_emissions_tons)
     VALUES ('9999991', '9999991', '5280', 'Acetaldehyde', '1000', 'TON', '0.6200', '6.200E-2 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced', 
-        '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '75-07-0', 'Sample comments for Acetaldehyde');
+        'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '75-07-0', 'Sample comments for Acetaldehyde', '1000');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-    emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+    emissions_numerator_uom, emissions_denominator_uom, emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments,
+    calculated_emissions_tons)
     VALUES ('9999992', '9999991', '40717', 'Acenaphthylene', '1007.75', 'TON', '0.5920', '5.900E-2 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced', 
-        '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '208-96-8', 'Sample comments for Acenaphthylene');
+        'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '208-96-8', 'Sample comments for Acenaphthylene', '1007.75');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-    emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+    emissions_numerator_uom, emissions_denominator_uom, emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments,
+    calculated_emissions_tons)
     VALUES ('9999993', '9999991', '4754', 'Benzene', '2015.6', 'TON', '0.5700', '5.700E-3 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced', 
-        '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '71-43-2', 'Sample comments for Benzene');
+        'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '71-43-2', 'Sample comments for Benzene', '2015.6');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-    emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+    emissions_numerator_uom, emissions_denominator_uom, emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments,
+    calculated_emissions_tons)
     VALUES ('9999994', '9999994', '65052', 'Carbon monoxide', '138575', 'TON', '0.0020', '20.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-        '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '630-08-0', 'Sample comments for Carbon monoxide');
+        'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '630-08-0', 'Sample comments for Carbon monoxide', '138575');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-    emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+    emissions_numerator_uom, emissions_denominator_uom, emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments,
+    calculated_emissions_tons)
     VALUES ('9999995', '9999994', '761346', 'Volatile Organic Compounds', '87615', 'TON', '0.0053', '5.300000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-        '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '', 'Sample comments for Volatile Organic Compounds');
+        'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '', 'Sample comments for Volatile Organic Compounds', '87615');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-    emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+    emissions_numerator_uom, emissions_denominator_uom, emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments,
+    calculated_emissions_tons)
     VALUES ('9999996', '9999994', '17134115', 'Sulfur Oxides', '76155.6', 'TON', '0.006', '0.600000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-        '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '', 'Sample comments for Sulfur Oxides');
+        'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '', 'Sample comments for Sulfur Oxides', '76155.6');
 INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, pollutant_name, total_emissions, emissions_uom_code, emissions_factor, emissions_factor_text, 
-    emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments)
+    emissions_numerator_uom, emissions_denominator_uom, emissions_calc_method_code, created_by, created_date, last_modified_by, last_modified_date, pollutant_cas_id, comments,
+    calculated_emissions_tons)
     VALUES ('9999997', '9999994', '173203', 'Nitrogen oxides', '55151.9', 'TON', '0.001', '100.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
-        '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '11104-93-1', 'Sample comments for Nitrogen Oxides');
+        'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '11104-93-1', 'Sample comments for Nitrogen Oxides', '55151.9');
         
 INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date, comments)
     VALUES ('9999991', '9999991', 'OP', 'Control 001', 'Acetaldehyde and Benzene Control', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 

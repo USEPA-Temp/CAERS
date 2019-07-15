@@ -24,16 +24,24 @@ export class EmissionDetailsModalComponent implements OnInit {
     emissionsCalcMethodCode: [''],
     totalEmissions: [''],
     emissionsUomCode: [''],
-    comments: ['']
+    comments: [''],
+    emissionsNumeratorUom: [''],
+    emissionsDenominatorUom: [''],
   });
 
   constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.emissionForm.reset(this.emission);
-    this.emissionForm.patchValue({
-        emissionsUomCode: this.emission.emissionsUomCode.description,
-        emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description});
+
+    if (this.emission.emissionsUomCode) {this.emissionForm.patchValue({emissionsUomCode: this.emission.emissionsUomCode.description}); }
+    if (this.emission.emissionsNumeratorUom) {
+        this.emissionForm.patchValue({emissionsNumeratorUom: this.emission.emissionsNumeratorUom.description}); }
+    if (this.emission.emissionsDenominatorUom) {
+        this.emissionForm.patchValue({emissionsDenominatorUom: this.emission.emissionsDenominatorUom.description}); }
+    if (this.emission.emissionsCalcMethodCode) {
+        this.emissionForm.patchValue({emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description}); }
+
     if (this.editable) {
       this.emissionForm.enable();
     } else {
@@ -50,9 +58,14 @@ export class EmissionDetailsModalComponent implements OnInit {
     this.editable = !this.editable;
 
     this.emissionForm.reset(this.emission);
-    this.emissionForm.patchValue({
-        emissionsUomCode: this.emission.emissionsUomCode.description,
-        emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description});
+    if (this.emission.emissionsUomCode) {this.emissionForm.patchValue({emissionsUomCode: this.emission.emissionsUomCode.description}); }
+    if (this.emission.emissionsNumeratorUom) {
+        this.emissionForm.patchValue({emissionsNumeratorUom: this.emission.emissionsNumeratorUom.description}); }
+    if (this.emission.emissionsDenominatorUom) {
+        this.emissionForm.patchValue({emissionsDenominatorUom: this.emission.emissionsDenominatorUom.description}); }
+    if (this.emission.emissionsCalcMethodCode) {
+        this.emissionForm.patchValue({emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description}); }
+
     if (this.editable) {
       this.emissionForm.enable();
     } else {
@@ -60,9 +73,8 @@ export class EmissionDetailsModalComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+                                         onSubmit() {
     // TODO: rest call to save will be invoked here
-    console.log(this.emissionForm.value);
     Object.assign(this.emission, this.emissionForm.value);
     this.activeModal.close();
   }

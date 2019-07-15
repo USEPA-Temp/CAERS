@@ -12,4 +12,7 @@ export class Emission {
   emissionsFactorText: string;
   emissionsCalcMethodCode: BaseCodeLookup;
   comments: string;
+  emissionsNumeratorUom: BaseCodeLookup;
+  emissionsDenominatorUom: BaseCodeLookup;
+  calculatedEmissionsTons: number;
 }

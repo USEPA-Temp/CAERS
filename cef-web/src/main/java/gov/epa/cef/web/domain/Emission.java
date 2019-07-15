@@ -39,7 +39,7 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "emissions_uom_code", nullable = false)
     private UnitMeasureCode emissionsUomCode;
     
-    @Column(name = "emissions_factor", nullable = false, precision = 131089, scale = 0)
+    @Column(name = "emissions_factor", nullable = false)
     private BigDecimal emissionsFactor;
     
     @Column(name = "emissions_factor_text", nullable = false, length = 100)
@@ -54,6 +54,17 @@ public class Emission extends BaseAuditEntity {
     
     @Column(name = "comments", length = 200)
     private String comments;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emissions_numerator_uom")
+    private UnitMeasureCode emissionsNumeratorUom;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emissions_denominator_uom")
+    private UnitMeasureCode emissionsDenominatorUom;
+    
+    @Column(name = "calculated_emissions_tons")
+    private BigDecimal calculatedEmissionsTons;
 
     public ReportingPeriod getReportingPeriod() {
         return this.reportingPeriod;
@@ -134,4 +145,29 @@ public class Emission extends BaseAuditEntity {
     public void setComments(String comments) {
         this.comments = comments;
     }
+
+    public BigDecimal getCalculatedEmissionsTons() {
+        return calculatedEmissionsTons;
+    }
+
+    public void setCalculatedEmissionsTons(BigDecimal calculatedEmissionsTons) {
+        this.calculatedEmissionsTons = calculatedEmissionsTons;
+    }
+
+    public UnitMeasureCode getEmissionsNumeratorUom() {
+        return emissionsNumeratorUom;
+    }
+
+    public void setEmissionsNumeratorUom(UnitMeasureCode emissionsNumeratorUom) {
+        this.emissionsNumeratorUom = emissionsNumeratorUom;
+    }
+
+    public UnitMeasureCode getEmissionsDenominatorUom() {
+        return emissionsDenominatorUom;
+    }
+
+    public void setEmissionsDenominatorUom(UnitMeasureCode emissionsDenominatorUom) {
+        this.emissionsDenominatorUom = emissionsDenominatorUom;
+    }
+
 }

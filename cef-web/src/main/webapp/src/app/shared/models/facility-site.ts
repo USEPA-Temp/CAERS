@@ -17,6 +17,7 @@ export class FacilitySite {
   city: string;
   stateCode: string;
   postalCode: string;
+  county: string;
   mailingStreetAddress: string;
   mailingCity: string;
   mailingStateCode: string;
