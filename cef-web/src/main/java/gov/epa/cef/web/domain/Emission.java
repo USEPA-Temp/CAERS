@@ -39,7 +39,7 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "emissions_uom_code", nullable = false)
     private UnitMeasureCode emissionsUomCode;
     
-    @Column(name = "emissions_factor", nullable = false, precision = 131089, scale = 0)
+    @Column(name = "emissions_factor", nullable = false)
     private BigDecimal emissionsFactor;
     
     @Column(name = "emissions_factor_text", nullable = false, length = 100)
@@ -63,7 +63,7 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "emissions_denominator_uom")
     private UnitMeasureCode emissionsDenominatorUom;
     
-    @Column(name = "calculated_emissions_tons", precision = 131089, scale = 0)
+    @Column(name = "calculated_emissions_tons")
     private BigDecimal calculatedEmissionsTons;
 
     public ReportingPeriod getReportingPeriod() {
