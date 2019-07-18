@@ -19,14 +19,14 @@ public class CersApi {
     private CersXmlService cersXmlService;
 
     /**
-     * Retrieve XML report for a Facility Site
-     * @param siteId
+     * Retrieve XML report for an Emissions Report
+     * @param reportId
      * @return
      */
-    @GetMapping(value = "/facilitySite/{siteId}/xml")
+    @GetMapping(value = "/emissionsReport/{reportId}/xml")
     @ResponseBody
-    public ResponseEntity<String> retrieveReportXml(@PathVariable Long siteId) {
-        String result = cersXmlService.retrieveCersXml(siteId);
+    public ResponseEntity<String> retrieveReportXml(@PathVariable Long reportId) {
+        String result = cersXmlService.retrieveCersXml(reportId);
         return new ResponseEntity<String>(result, HttpStatus.OK);
     }
 

@@ -1,9 +1,15 @@
 package gov.epa.cef.web.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
@@ -38,6 +44,9 @@ public class EmissionsReport extends BaseAuditEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
+    private Set<FacilitySite> facilitySites = new HashSet<FacilitySite>(0);
 
     // Property accessors
     
@@ -87,5 +96,13 @@ public class EmissionsReport extends BaseAuditEntity {
 
     public void setValidationStatus(ValidationStatus validationStatus) {
         this.validationStatus = validationStatus;
+    }
+
+    public Set<FacilitySite> getFacilitySites() {
+        return this.facilitySites;
+    }
+
+    public void setFacilitySites(Set<FacilitySite> facilitySites) {
+        this.facilitySites = facilitySites;
     }
 }

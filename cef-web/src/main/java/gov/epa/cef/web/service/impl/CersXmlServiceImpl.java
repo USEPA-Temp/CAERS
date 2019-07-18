@@ -11,15 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.repository.FacilitySiteRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapper;
-import gov.epa.cef.web.service.mapper.cers.CersFacilitySiteMapper;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
-import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 import net.exchangenetwork.schema.cer._1._2.ObjectFactory;
 
 @Service
@@ -28,7 +26,7 @@ public class CersXmlServiceImpl implements CersXmlService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CersXmlServiceImpl.class);
 
     @Autowired
-    private FacilitySiteRepository facSiteRepo;
+    private EmissionsReportRepository reportRepo;
 
     @Autowired
     private UserService userService;
@@ -36,20 +34,20 @@ public class CersXmlServiceImpl implements CersXmlService {
     @Autowired
     private CersDataTypeMapper cersMapper;
 
-    @Autowired
-    private CersFacilitySiteMapper siteMapper;
-
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.CersXmlService#generateCersData(java.lang.Long)
      */
     @Override
-    public CERSDataType generateCersData(Long facilitySiteId) {
+    public CERSDataType generateCersData(Long reportId) {
 
-        FacilitySite source = facSiteRepo.findById(facilitySiteId).orElse(null);
+        EmissionsReport source = reportRepo.findById(reportId).orElse(null);
 
-        CERSDataType cers = cersMapper.fromFacilitySite(source);
-        FacilitySiteDataType site = siteMapper.fromFacilitySite(source);
-        cers.getFacilitySite().add(site);
+        CERSDataType cers = cersMapper.fromEmissionsReport(source);
+        // TODO: find out if programSystemCode should always be the same at the facilitySite and report level
+        // and if this needs to be added at the report level or moved there instead
+        if (!cers.getFacilitySite().isEmpty()) {
+            cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
+        }
 
         cers.setUserIdentifier(userService.getCurrentUser().getEmail());
 
@@ -60,9 +58,9 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @see gov.epa.cef.web.service.impl.CersXmlService#retrieveCersXml(java.lang.Long)
      */
     @Override
-    public String retrieveCersXml(Long facilitySiteId) {
+    public String retrieveCersXml(Long reportId) {
 
-        CERSDataType cers = generateCersData(facilitySiteId);
+        CERSDataType cers = generateCersData(reportId);
 
         try {
             ObjectFactory objectFactory = new ObjectFactory();
