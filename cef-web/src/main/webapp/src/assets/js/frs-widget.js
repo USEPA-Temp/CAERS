@@ -57,3 +57,7 @@ function checkIfScriptExists(url){
     }
     return false;
 }
+
+function destroyFrsWidget(){
+	location.reload();
+}
