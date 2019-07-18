@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class ReportSummaryDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private Long id;
     private String casId;
     private String pollutantName;
     private String pollutantType;
@@ -12,10 +13,17 @@ public class ReportSummaryDto implements Serializable {
     private Double stackTotal;
     private String uom;
     private Double emissionsTonsTotal;
-    private Double previousYearTotal ;
+    private Double previousYearTotal;
     private Short reportYear;
-    private Long facilitySiteId ;
+    private Long facilitySiteId;
 
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCasId() {
         return this.casId;
@@ -62,7 +70,7 @@ public class ReportSummaryDto implements Serializable {
     public Double getEmissionsTonsTotal() {
         return this.emissionsTonsTotal;
     }
-    public void setEmissionsTotal(Double emissionsTonsTotal) {
+    public void setEmissionsTonsTotal(Double emissionsTonsTotal) {
         this.emissionsTonsTotal = emissionsTonsTotal;
     }
     
@@ -83,8 +91,8 @@ public class ReportSummaryDto implements Serializable {
     public Long getFacilitySiteId() {
         return this.facilitySiteId;
     }
-    public void setFacilitySiteId(Long facilityId) {
-        this.facilitySiteId = facilityId;
+    public void setFacilitySiteId(Long facilitySiteId) {
+        this.facilitySiteId = facilitySiteId;
     }
 
 

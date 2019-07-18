@@ -91,7 +91,7 @@ public class ReportSummary extends BaseEntity {
     public Double getEmissionsTonsTotal() {
         return this.emissionsTonsTotal;
     }
-    public void setEmissionsTotal(Double emissionsTonsTotal) {
+    public void setEmissionsTonsTotal(Double emissionsTonsTotal) {
         this.emissionsTonsTotal = emissionsTonsTotal;
     }
     
