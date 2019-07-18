@@ -64,7 +64,7 @@ export class BreadcrumbNavComponent implements OnInit {
         */
         const breadcrumb: BreadCrumb = {
                 label,
-                url: ''
+                url: '#'
             };
 
         this.breadcrumbs = this.getBreadcrumbs( root );
@@ -76,7 +76,7 @@ export class BreadcrumbNavComponent implements OnInit {
         this.breadcrumbs = [breadcrumb, ...this.breadcrumbs];
     }
 
-    private getBreadcrumbs( route: ActivatedRoute, url: string = '', breadcrumbs: BreadCrumb[] = [] ): BreadCrumb[] {
+    private getBreadcrumbs( route: ActivatedRoute, url: string = '#', breadcrumbs: BreadCrumb[] = [] ): BreadCrumb[] {
         const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
         // get the child routes
         let child = route;
