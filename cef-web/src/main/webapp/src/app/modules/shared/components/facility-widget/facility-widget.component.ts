@@ -3,15 +3,17 @@ import { UserService } from 'src/app/core/services/user.service';
 import { UserToken } from 'src/app/shared/models/user-token';
 import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { ActivatedRoute } from '@angular/router';
+import { OnDestroy } from "@angular/core";
 
 declare const initFrsWidget: any;
+declare const destroyFrsWidget: any;
 
 @Component({
   selector: 'app-facility-widget',
   templateUrl: './facility-widget.component.html',
   styleUrls: ['./facility-widget.component.scss']
 })
-export class FacilityWidgetComponent implements OnInit {
+export class FacilityWidgetComponent implements OnInit, OnDestroy {
    userToken: UserToken;
 
   constructor(private userService: UserService, private route: ActivatedRoute) { }
@@ -24,6 +26,10 @@ export class FacilityWidgetComponent implements OnInit {
             .subscribe(userToken => initFrsWidget(userToken.userRoleId, userToken.token,
               data.facility.programId, userToken.baseServiceUrl));
         });
+  }
+  
+  ngOnDestroy(): void {
+      destroyFrsWidget();
   }
 
 }
