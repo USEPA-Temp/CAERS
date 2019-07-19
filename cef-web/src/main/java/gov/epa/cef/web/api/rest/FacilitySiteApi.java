@@ -26,10 +26,10 @@ public class FacilitySiteApi {
 
     /**
      * Retrieve a facility site by ID
-     * @param facilityId
+     * @param facilitySiteId
      * @return
      */
-    @GetMapping(value = "/{facilityId}")
+    @GetMapping(value = "/{facilitySiteId}")
     @ResponseBody
     public ResponseEntity<FacilitySiteDto> retrieveFacilitySite(@PathVariable Long facilitySiteId) {
         FacilitySiteDto  facilitySiteDto= facilityService.findById(facilitySiteId);
