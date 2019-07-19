@@ -32,4 +32,32 @@ export class ReportSummaryComponent implements OnInit {
         });
     }
 
+
+    /***
+     * Calculate the total number of tons for all pollutants
+     */
+    getPollutantTonsTotal(): number {
+        let pollutantTonsTotal = 0;
+
+        for(let reportSummary of this.reportSummaryList) {
+            pollutantTonsTotal += reportSummary.emissionsTonsTotal;
+        }
+
+        return pollutantTonsTotal;
+    }
+
+
+    /***
+     * Calculate the total number of tons for all pollutants from the previous year
+     */
+    getPreviousPollutantTonsTotal(): number {
+        let previousPollutantTonsTotal = 0;
+
+        for(let reportSummary of this.reportSummaryList) {
+            previousPollutantTonsTotal += reportSummary.previousYearTotal;
+        }
+
+        return previousPollutantTonsTotal;
+    }
+
 }
