@@ -1,0 +1,55 @@
+<div *ngIf="facilitySite">
+    <div class="row">
+        <div class="col-sm-12" *ngIf="reportSummaryList">
+            <div class="card  mb-3">
+                <div class="card-header text-center">
+                    <strong>Report Summary</strong>
+                </div>
+                <div class="card-body">
+                    <div class="mh-100 overflow-auto">
+                        <table class="table table-sm table-striped table-bordered">
+                            <thead class="thead-cef-medium">
+                                <tr>
+                                    <th scope="col" sortable="pollutantName" (sort)="onSort($event)">Pollutant</th>
+                                    <th scope="col" sortable="pollutantType" (sort)="onSort($event)">Type</th>
+                                    <th scope="col" sortable="fugitiveTotal" (sort)="onSort($event)">Fugitive Amount</th>
+                                    <th scope="col" sortable="stackTotal" (sort)="onSort($event)">Stack Amount</th>
+                                    <th scope="col" sortable="uom" (sort)="onSort($event)">Units of Measure</th>
+                                    <th scope="col" sortable="emissionsTonsTotal" (sort)="onSort($event)">{{facilitySite.emissionsReport.year}} Reported Tons</th>
+                                    <th scope="col" sortable="previousYearTotal" (sort)="onSort($event)">{{facilitySite.emissionsReport.year - 1}} Reported Tons</th>
+                                    <th scope="col" sortable="reportYear" (sort)="onSort($event)">Last Submittal Year</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let report of reportSummaryList">
+                                    <td>{{report.pollutantName}}</td>
+                                    <td>{{report.pollutantType}}</td>
+                                    <td>{{report.fugitiveTotal}}</td>
+                                    <td>{{report.stackTotal}}</td>
+                                    <td>{{report.uom}}</td>
+                                    <td>{{report.emissionsTonsTotal}}</td>
+                                    <td>{{report.previousYearTotal}}</td>
+                                    <td>{{report.reportYear}}</td>
+                                </tr>
+                                <tr class="font-weight-bold">
+                                    <td>Total Emissions</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>{{ getPollutantTonsTotal() }}</td>
+                                    <td>{{ getPreviousPollutantTonsTotal() }}</td>
+                                    <td>--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="float-right">
+                        <button class="btn btn-primary btn-md m-3">Run Error Check</button>
+                        <button class="btn btn-success btn-md m-3">Certify and Submit to SLT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

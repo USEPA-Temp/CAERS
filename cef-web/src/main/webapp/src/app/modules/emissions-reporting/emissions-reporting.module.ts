@@ -33,6 +33,7 @@ import { ControlDevicesTableComponent } from 'src/app/modules/emissions-reportin
 import { EmissionsUnitsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/emissions-units-summary/emissions-units-summary.component';
 import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/release-points-summary/release-points-summary.component';
 import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
+import { ReportSummaryComponent } from './pages/report-summary/report-summary.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-report
     ControlDevicesTableComponent,
     EmissionsUnitsSummaryComponent,
     ReleasePointsSummaryComponent,
-    ControlDevicesSummaryComponent
+    ControlDevicesSummaryComponent,
+    ReportSummaryComponent
 
   ],
   imports: [

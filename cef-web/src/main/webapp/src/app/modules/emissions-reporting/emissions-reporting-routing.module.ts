@@ -9,6 +9,7 @@ import { ControlDeviceDetailsComponent } from 'src/app/modules/emissions-reporti
 import { EmissionsUnitsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/emissions-units-summary/emissions-units-summary.component';
 import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/release-points-summary/release-points-summary.component';
 import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
+import { ReportSummaryComponent } from 'src/app/modules/emissions-reporting/pages/report-summary/report-summary.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -63,6 +64,10 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.RELEASE_POINT}`,
             component: ReleasePointsSummaryComponent,
             data: { title: 'Release Points Summary', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.REPORT_SUMMARY}`,
+            component: ReportSummaryComponent,
+            data: { title: 'Report Summary', breadcrumb: '&year Emissions Report'}
           }, {
             path: '**',
             component: FacilityInformationComponent,
