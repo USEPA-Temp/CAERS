@@ -112,8 +112,8 @@ public class ReportSummary extends BaseEntity {
     public Long getFacilitySiteId() {
         return this.facilitySiteId;
     }
-    public void setFacilitySiteId(Long facilityId) {
-        this.facilitySiteId = facilityId;
+    public void setFacilitySiteId(Long facilitySiteId) {
+        this.facilitySiteId = facilitySiteId;
     }
 
 

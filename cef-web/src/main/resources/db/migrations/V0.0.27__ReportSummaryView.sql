@@ -1,10 +1,10 @@
 ALTER TABLE emission ADD COLUMN pollutant_type VARCHAR(10) NOT NULL DEFAULT 'HAP'; 
 
 CREATE OR REPLACE VIEW vw_report_summary AS 
-SELECT CONCAT(fs.id, er.year) AS id, e.pollutant_cas_id AS pollutant_cas_id, e.pollutant_name AS pollutant_name, e.pollutant_type AS pollutant_type, 
+SELECT ROW_NUMBER() OVER (ORDER BY e.pollutant_cas_id) AS id, e.pollutant_cas_id AS pollutant_cas_id, e.pollutant_name AS pollutant_name, e.pollutant_type AS pollutant_type, 
     COALESCE(fugitive_amount.calculated_emissions_tons, 0) AS fugitive_total, 
-    COALESCE(stack_amount.calculated_emissions_tons, 0) AS stack_total, 
-    'tons' as uom, sum(e.calculated_emissions_tons) AS emissions_tons_total, 
+    COALESCE(stack_amount.calculated_emissions_tons, 0) AS stack_total, 'tons' as uom, 
+    COALESCE(SUM(e.calculated_emissions_tons), 0) AS emissions_tons_total, 
     COALESCE(previous_year_total.calculated_emissions_tons, 0) AS previous_year_total, er.year AS report_year, fs.id AS facility_site_id
 FROM emission e
     INNER JOIN reporting_period repPer ON repPer.id = e.reporting_period_id
