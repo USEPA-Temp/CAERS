@@ -23,12 +23,8 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
   }
 
   openSummaryModal(submission: SubmissionUnderReview) {
-    console.log('entering openSummaryModal');
-
     const modalWindow = this.modalService.open(ReportSummaryModalComponent, { size: 'lg' });
     modalWindow.componentInstance.submission = submission;
-
-    console.log('leaving openSummaryModal');
   }
 
 }

@@ -18,8 +18,6 @@ export class ReportSummaryModalComponent implements OnInit {
 
 
     ngOnInit() {
-        console.log('entering ReportSummaryModalComponent ngOnInit');
-
         if (this.submission.facilitySiteId) {
             this.reportService.retrieve(this.submission.year, this.submission.facilitySiteId)
             .subscribe(report => {
@@ -27,8 +25,6 @@ export class ReportSummaryModalComponent implements OnInit {
                 this.reportSummaryList = report;
             });
         }
-
-        console.log('leaving ReportSummaryModalComponent ngOnInit');
     }
 
     onClose() {
