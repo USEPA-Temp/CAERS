@@ -19,6 +19,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedRoutingModule } from 'src/app/modules/shared/shared-routing';
 import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.directive';
 import { ErrorComponent } from './pages/error/error.component';
+import { ReportSummaryTableComponent } from 'src/app/modules/shared/components/report-summary-table/report-summary-table.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { ErrorComponent } from './pages/error/error.component';
     SidebarInnerNavItemComponent,
     SortableHeaderDirective,
     PhoneNumberPipe,
-    ErrorComponent
+    ErrorComponent,
+    ReportSummaryTableComponent
 ],
   exports: [
     FacilityInfoComponent,
@@ -44,7 +46,8 @@ import { ErrorComponent } from './pages/error/error.component';
     SidebarInnerNavItemComponent,
     FacilityWidgetComponent,
     SortableHeaderDirective,
-    PhoneNumberPipe
+    PhoneNumberPipe,
+    ReportSummaryTableComponent
 ],
   imports: [
     CommonModule,

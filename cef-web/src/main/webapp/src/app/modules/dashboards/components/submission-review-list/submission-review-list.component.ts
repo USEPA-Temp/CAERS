@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
-import { Input } from '@angular/core';
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ReportSummaryModalComponent } from 'src/app/modules/emissions-reporting/components/report-summary-modal/report-summary-modal.component';
 
 
 @Component({
@@ -14,11 +15,20 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
 
   @Input() tableData: SubmissionUnderReview[];
 
-  constructor(public userContext: UserContextService) {
+  constructor(public userContext: UserContextService, private modalService: NgbModal) {
     super();
   }
 
   ngOnInit() {
+  }
+
+  openSummaryModal(submission: SubmissionUnderReview) {
+    console.log('entering openSummaryModal');
+
+    const modalWindow = this.modalService.open(ReportSummaryModalComponent, { size: 'lg' });
+    modalWindow.componentInstance.submission = submission;
+
+    console.log('leaving openSummaryModal');
   }
 
 }

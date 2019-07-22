@@ -4,7 +4,6 @@ import { ReportSummary } from 'src/app/shared/models/report-summary';
 import { ReportService } from 'src/app/core/services/report.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 
-
 @Component({
   selector: 'app-report-summary',
   templateUrl: './report-summary.component.html',
@@ -13,6 +12,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 export class ReportSummaryComponent implements OnInit {
     facilitySite: FacilitySite;
     reportSummaryList: ReportSummary[];
+    emissionsReportYear: number;
 
     constructor(private reportService: ReportService, private route: ActivatedRoute) { }
 
@@ -23,6 +23,7 @@ export class ReportSummaryComponent implements OnInit {
             this.facilitySite = data.facilitySite;
 
             if (this.facilitySite.id) {
+                this.emissionsReportYear = this.facilitySite.emissionsReport.year;
                 this.reportService.retrieve(this.facilitySite.emissionsReport.year, this.facilitySite.id)
                 .subscribe(report => {
                     console.log(report);
@@ -30,34 +31,6 @@ export class ReportSummaryComponent implements OnInit {
                 });
             }
         });
-    }
-
-
-    /***
-     * Calculate the total number of tons for all pollutants
-     */
-    getPollutantTonsTotal(): number {
-        let pollutantTonsTotal = 0;
-
-        for(let reportSummary of this.reportSummaryList) {
-            pollutantTonsTotal += reportSummary.emissionsTonsTotal;
-        }
-
-        return pollutantTonsTotal;
-    }
-
-
-    /***
-     * Calculate the total number of tons for all pollutants from the previous year
-     */
-    getPreviousPollutantTonsTotal(): number {
-        let previousPollutantTonsTotal = 0;
-
-        for(let reportSummary of this.reportSummaryList) {
-            previousPollutantTonsTotal += reportSummary.previousYearTotal;
-        }
-
-        return previousPollutantTonsTotal;
     }
 
 }

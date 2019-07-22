@@ -33,7 +33,7 @@ public class MockPreAuthenticationUserDetailsService implements AuthenticationUs
     @Override
     public UserDetails loadUserDetails(Authentication token) {
         try {
-            RoleType role=AppRole.RoleType.CERTIFIER;
+            RoleType role=AppRole.RoleType.REVIEWER;
             ApplicationUser user = new ApplicationUser("thomas.fesperman", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
             user.setEmail("thomas.fesperman@cgifederal.com");
             user.setFirstName("Thomas");

@@ -1,3 +1,4 @@
+import { SharedModule } from './modules/shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -13,7 +14,6 @@ import { FooterComponent } from 'src/app/core/footer/footer.component';
 import { FacilityListComponent } from 'src/app/modules/dashboards/components/facility-list/facility-list.component';
 import { NotificationListComponent } from 'src/app/shared/components/notification-list/notification-list.component';
 import { FacilityListItemComponent } from 'src/app/modules/dashboards/components/facility-list-item/facility-list-item.component';
-import { SharedModule } from './modules/shared/shared.module';
 import { BreadcrumbNavComponent } from 'src/app/shared/components/breadcrumb-nav/breadcrumb-nav.component';
 import { SubmissionReviewDashboardComponent } from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
 import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/components/submission-review-list/submission-review-list.component';
@@ -24,6 +24,7 @@ import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/red
 import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
 import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
 import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.interceptor';
+import { ReportSummaryModalComponent } from 'src/app/modules/emissions-reporting/components/report-summary-modal/report-summary-modal.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.inter
     FacilityListItemComponent,
     BreadcrumbNavComponent,
     SubmissionReviewListComponent,
-    FacilityDataReviewComponent
+    FacilityDataReviewComponent,
+    ReportSummaryModalComponent
   ],
   imports: [
     BrowserModule,
@@ -51,13 +53,16 @@ import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.inter
     AppRoutingModule,
     FontAwesomeModule
   ],
+  entryComponents: [
+    ReportSummaryModalComponent
+  ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
       {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
     ],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
+export class AppModule {
     constructor() {
         library.add(faUserCircle);
       }
