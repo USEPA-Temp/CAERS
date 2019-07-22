@@ -27,14 +27,14 @@ import gov.epa.cef.web.security.AppRole.RoleType;
 public class MockPreAuthenticationUserDetailsService implements AuthenticationUserDetailsService{
 
     private static final Log LOGGER = LogFactory.getLog(MockPreAuthenticationUserDetailsService.class);
-    private static final Long USER_ROLE_ID = 221042L;
+    private static final Long USER_ROLE_ID = 220632L;
     private static final Long ORGANIZATION_ID = 86819L;
 
     @Override
     public UserDetails loadUserDetails(Authentication token) {
         try {
             RoleType role=AppRole.RoleType.CERTIFIER;
-            ApplicationUser user = new ApplicationUser("amahfouz", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
+            ApplicationUser user = new ApplicationUser("thomas.fesperman", Arrays.asList(new SimpleGrantedAuthority(role.grantedRoleName())));
             user.setEmail("thomas.fesperman@cgifederal.com");
             user.setFirstName("Thomas");
             user.setLastName("Fesperman");
