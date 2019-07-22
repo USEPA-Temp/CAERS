@@ -1,17 +1,20 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ReportSummary } from 'src/app/shared/models/report-summary';
+import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 
 @Component({
   selector: 'app-report-summary-table',
   templateUrl: './report-summary-table.component.html',
   styleUrls: ['./report-summary-table.component.scss']
 })
-export class ReportSummaryTableComponent implements OnInit {
+export class ReportSummaryTableComponent extends BaseSortableTable implements OnInit {
 
     @Input() emissionsReportYear: number;
-    @Input() reportSummaryList: ReportSummary[];
+    @Input() tableData: ReportSummary[];
 
-    constructor() { }
+    constructor() {
+        super();
+     }
 
     ngOnInit() {
     }
@@ -23,8 +26,8 @@ export class ReportSummaryTableComponent implements OnInit {
     getPollutantTonsTotal(): number {
         let pollutantTonsTotal = 0;
 
-        if (this.reportSummaryList) {
-            this.reportSummaryList.forEach(reportSummary => {
+        if (this.tableData) {
+            this.tableData.forEach(reportSummary => {
                 pollutantTonsTotal += reportSummary.emissionsTonsTotal;
             });
         }
@@ -39,8 +42,8 @@ export class ReportSummaryTableComponent implements OnInit {
     getPreviousPollutantTonsTotal(): number {
         let previousPollutantTonsTotal = 0;
 
-        if (this.reportSummaryList) {
-            this.reportSummaryList.forEach(reportSummary => {
+        if (this.tableData) {
+            this.tableData.forEach(reportSummary => {
                 previousPollutantTonsTotal += reportSummary.previousYearTotal;
             });
         }

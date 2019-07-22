@@ -13,15 +13,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let report of reportSummaryList">
-                    <td>{{report.pollutantName}}</td>
-                    <td>{{report.pollutantType}}</td>
-                    <td>{{report.fugitiveTotal}}</td>
-                    <td>{{report.stackTotal}}</td>
-                    <td>{{report.uom}}</td>
-                    <td>{{report.emissionsTonsTotal}}</td>
-                    <td>{{report.previousYearTotal}}</td>
-                    <td>{{report.reportYear}}</td>
+                <tr *ngFor="let report of tableData">
+                    <td>{{ report.pollutantName }}</td>
+                    <td>{{ report.pollutantType }}</td>
+                    <td>{{ report.fugitiveTotal | number }}</td>
+                    <td>{{ report.stackTotal | number }}</td>
+                    <td>{{ report.uom }}</td>
+                    <td>{{ report.emissionsTonsTotal | number }}</td>
+                    <td>{{ report.previousYearTotal | number }}</td>
+                    <td>{{ report.reportYear }}</td>
                 </tr>
                 <tr class="font-weight-bold">
                     <td>Total Emissions</td>
@@ -29,8 +29,8 @@
                     <td>--</td>
                     <td>--</td>
                     <td>--</td>
-                    <td>{{ getPollutantTonsTotal() }}</td>
-                    <td>{{ getPreviousPollutantTonsTotal() }}</td>
+                    <td>{{ getPollutantTonsTotal() | number }}</td>
+                    <td>{{ getPreviousPollutantTonsTotal() | number }}</td>
                     <td>--</td>
                 </tr>
             </tbody>

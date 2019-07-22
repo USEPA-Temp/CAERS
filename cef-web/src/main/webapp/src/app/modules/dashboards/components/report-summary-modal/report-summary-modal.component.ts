@@ -12,17 +12,19 @@ import { ReportService } from 'src/app/core/services/report.service';
 export class ReportSummaryModalComponent implements OnInit {
 
     @Input() submission: SubmissionUnderReview;
-    reportSummaryList: ReportSummary[];
+    tableData: ReportSummary[];
+    emissionsReportYear: number;
 
     constructor(public activeModal: NgbActiveModal, private reportService: ReportService) { }
 
 
     ngOnInit() {
         if (this.submission.facilitySiteId) {
+            this.emissionsReportYear = this.submission.year;
             this.reportService.retrieve(this.submission.year, this.submission.facilitySiteId)
             .subscribe(report => {
                 console.log(report);
-                this.reportSummaryList = report;
+                this.tableData = report;
             });
         }
     }

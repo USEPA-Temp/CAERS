@@ -1,12 +1,12 @@
 <div *ngIf="facilitySite">
     <div class="row">
-        <div class="col-sm-12" *ngIf="reportSummaryList">
+        <div class="col-sm-12" *ngIf="tableData">
             <div class="card  mb-3">
                 <div class="card-header text-center">
                     <strong>Report Summary</strong>
                 </div>
                 <div class="card-body">
-                    <app-report-summary-table [reportSummaryList]='reportSummaryList' [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
+                    <app-report-summary-table [tableData]='tableData' [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
                     <div class="float-right">
                         <button class="btn btn-primary btn-md m-3">Run Error Check</button>
                         <button *ngIf="showCertify" id="certifyAndSubmit" class="btn btn-success btn-md m-3">Certify and Submit to SLT</button>

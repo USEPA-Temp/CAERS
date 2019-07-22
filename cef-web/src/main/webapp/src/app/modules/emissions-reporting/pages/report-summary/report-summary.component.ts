@@ -15,7 +15,7 @@ declare const initCromerrWidget: any;
 })
 export class ReportSummaryComponent implements OnInit {
     facilitySite: FacilitySite;
-    reportSummaryList: ReportSummary[];
+    tableData: ReportSummary[];
     emissionsReportYear: number;
     showCertify: boolean = false;
 
@@ -44,7 +44,7 @@ export class ReportSummaryComponent implements OnInit {
                 this.emissionsReportYear = this.facilitySite.emissionsReport.year;
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                 .subscribe(report => {
-                    this.reportSummaryList = report;
+                    this.tableData = report;
                 });
             }
         });
