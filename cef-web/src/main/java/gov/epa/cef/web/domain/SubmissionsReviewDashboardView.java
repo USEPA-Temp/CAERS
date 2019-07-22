@@ -18,7 +18,7 @@ public class SubmissionsReviewDashboardView implements Serializable{
      * default version
      */
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @Column(name = "emissions_report_id", unique = true, nullable = false)
     private Long emissionsReportId;
@@ -28,6 +28,9 @@ public class SubmissionsReviewDashboardView implements Serializable{
     
     @Column(name = "facility_name", nullable = false, length = 80)
     private String facilityName;
+
+    @Column(name = "facility_site_id")
+    private Long facilitySiteId;
     
     @Column(name = "alt_facility_id", length = 30)
     private String altFacilityId;
@@ -64,6 +67,12 @@ public class SubmissionsReviewDashboardView implements Serializable{
     }
     public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;
+    }
+    public Long getFacilitySiteId() {
+        return facilitySiteId;
+    }
+    public void setFacilitySiteId(Long facilitySiteId) {
+        this.facilitySiteId = facilitySiteId;
     }
     public String getAltFacilityId() {
         return altFacilityId;

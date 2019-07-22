@@ -12,7 +12,7 @@
         <th scope="col" sortable="facilityName" (sort)="onSort($event)">Facility Name</th>
         <th scope="col" sortable="altFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
         <th scope="col" sortable="operatingStatus" (sort)="onSort($event)">Operating Status</th>
-        <th scope="col" sortable="industry" (sort)="onSort($event)">Industry</th>
+        <th scope="col" sortable="industry" (sort)="onSort($event)">Industry Sector</th>
         <th scope="col" sortable="year" (sort)="onSort($event)">Submittal Year</th>
         <th scope="col" sortable="lastSubmittalYear" (sort)="onSort($event)">Last Submittal Year</th>
         <th scope="col">Actions</th>
@@ -27,7 +27,7 @@
         <td><ngb-highlight [result]="submission.industry"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
-        <td><button class="btn btn-primary btn-sm">Summary</button><span class="pr-2"></span> 
+        <td><button class="btn btn-primary btn-sm" (click)="openSummaryModal(submission)">Summary</button><span class="pr-2"></span> 
             <button class="btn btn-primary btn-sm" 
                 [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'facilityInformation']">View Report</button>
         </td>

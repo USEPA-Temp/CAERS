@@ -1,0 +1,38 @@
+<div class="mh-100 overflow-auto">
+        <table class="table table-sm table-striped table-bordered">
+            <thead class="thead-cef-medium">
+                <tr>
+                    <th scope="col" sortable="pollutantName" (sort)="onSort($event)">Pollutant</th>
+                    <th scope="col" sortable="pollutantType" (sort)="onSort($event)">Type</th>
+                    <th scope="col" sortable="fugitiveTotal" (sort)="onSort($event)">Fugitive Amount</th>
+                    <th scope="col" sortable="stackTotal" (sort)="onSort($event)">Stack Amount</th>
+                    <th scope="col" sortable="uom" (sort)="onSort($event)">Units of Measure</th>
+                    <th scope="col" sortable="emissionsTonsTotal" (sort)="onSort($event)">{{emissionsReportYear}} Reported Tons</th>
+                    <th scope="col" sortable="previousYearTotal" (sort)="onSort($event)">{{emissionsReportYear - 1}} Reported Tons</th>
+                    <th scope="col" sortable="reportYear" (sort)="onSort($event)">Last Submittal Year</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let report of tableData">
+                    <td>{{ report.pollutantName }}</td>
+                    <td>{{ report.pollutantType }}</td>
+                    <td>{{ report.fugitiveTotal | number }}</td>
+                    <td>{{ report.stackTotal | number }}</td>
+                    <td>{{ report.uom }}</td>
+                    <td>{{ report.emissionsTonsTotal | number }}</td>
+                    <td>{{ report.previousYearTotal | number }}</td>
+                    <td>{{ report.reportYear }}</td>
+                </tr>
+                <tr class="font-weight-bold">
+                    <td>Total Emissions</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>{{ getPollutantTonsTotal() | number }}</td>
+                    <td>{{ getPreviousPollutantTonsTotal() | number }}</td>
+                    <td>--</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
