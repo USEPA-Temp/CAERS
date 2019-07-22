@@ -14,7 +14,7 @@ import net.exchangenetwork.schema.cer._1._2.FacilityIdentificationDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilityNAICSDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {CersEmissionsUnitMapper.class})
 public interface CersFacilitySiteMapper {
 
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
@@ -25,12 +25,13 @@ public interface CersFacilitySiteMapper {
     @Mapping(source="facilityNAICS", target="facilityNAICS")
     @Mapping(source=".", target="facilityIdentification")
     @Mapping(source=".", target="facilitySiteAddress")
+    @Mapping(source="emissionsUnits", target="emissionsUnit")
     FacilitySiteDataType fromFacilitySite(FacilitySite source);
 
     @Mapping(source="naicsCode.code", target="NAICSCode")
     @Mapping(source="primaryFlag", target="NAICSPrimaryIndicator")
     FacilityNAICSDataType cersNaicsFromFacilityNAICSXref(FacilityNAICSXref source);
-    
+
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="eisProgramId", target="facilitySiteIdentifier")
     @Mapping(source="programSystemCode.code", target="programSystemCode")
