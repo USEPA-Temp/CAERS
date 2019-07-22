@@ -9,7 +9,7 @@
                     <app-report-summary-table [reportSummaryList]='reportSummaryList' [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
                     <div class="float-right">
                         <button class="btn btn-primary btn-md m-3">Run Error Check</button>
-                        <button class="btn btn-success btn-md m-3">Certify and Submit to SLT</button>
+                        <button *ngIf="showCertify" id="certifyAndSubmit" class="btn btn-success btn-md m-3">Certify and Submit to SLT</button>
                     </div>
                 </div>
             </div>

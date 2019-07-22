@@ -24,7 +24,7 @@ import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/red
 import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
 import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
 import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.interceptor';
-import { ReportSummaryModalComponent } from 'src/app/modules/emissions-reporting/components/report-summary-modal/report-summary-modal.component';
+import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
 
 @NgModule({
   declarations: [
