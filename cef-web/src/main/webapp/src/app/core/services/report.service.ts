@@ -8,7 +8,7 @@ import { ReportSummary } from 'src/app/shared/models/report-summary';
 })
 export class ReportService {
 
-  private baseUrl = 'api/reportSummary';  // URL to web api
+  private baseUrl = 'api/report';  // URL to web api
 
   constructor(private http: HttpClient) { }
 

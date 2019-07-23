@@ -11,7 +11,7 @@ import { SideNavItem } from 'src/app/shared/models/side-nav-item';
 })
 export class EmissionsReportingService {
 
-  private baseUrl = 'api/report';  // URL to web api
+  private baseUrl = 'api/emissionsReport';  // URL to web api
 
   constructor(private http: HttpClient) { }
 
