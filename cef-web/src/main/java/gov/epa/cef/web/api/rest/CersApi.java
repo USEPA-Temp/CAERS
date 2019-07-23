@@ -2,6 +2,7 @@ package gov.epa.cef.web.api.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ public class CersApi {
      * @param reportId
      * @return
      */
-    @GetMapping(value = "/emissionsReport/{reportId}/xml")
+    @GetMapping(value = "/emissionsReport/{reportId}/xml", produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public ResponseEntity<String> retrieveReportXml(@PathVariable Long reportId) {
         String result = cersXmlService.retrieveCersXml(reportId);
