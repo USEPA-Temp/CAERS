@@ -14,7 +14,7 @@ import net.exchangenetwork.schema.cer._1._2.FacilityIdentificationDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilityNAICSDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 
-@Mapper(componentModel = "spring", uses = {CersEmissionsUnitMapper.class})
+@Mapper(componentModel = "spring", uses = {CersEmissionsUnitMapper.class, CersReleasePointMapper.class})
 public interface CersFacilitySiteMapper {
 
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
@@ -26,6 +26,7 @@ public interface CersFacilitySiteMapper {
     @Mapping(source=".", target="facilityIdentification")
     @Mapping(source=".", target="facilitySiteAddress")
     @Mapping(source="emissionsUnits", target="emissionsUnit")
+    @Mapping(source="releasePoints", target="releasePoint")
     FacilitySiteDataType fromFacilitySite(FacilitySite source);
 
     @Mapping(source="naicsCode.code", target="NAICSCode")
