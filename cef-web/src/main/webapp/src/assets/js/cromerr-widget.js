@@ -1,7 +1,7 @@
 /*
  * Custom JS function to load the Cromerr Widget
  */
-function initCromerrWidget(userRoleId, token, baseServiceUrl){
+function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId){
 
 	var fancyboxJS="/ContentFramework/Cromerr/js/fancybox/jquery.fancybox-1.3.4.js";
 	var fancyboxCSS="/ContentFramework/Cromerr/js/fancybox/jquery.fancybox-1.3.4.css";
@@ -11,7 +11,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl){
 	var jqueryJS="assets/js/jquery-1.6.4.min.js"
 	
 	if(checkIfScriptExists(baseServiceUrl+cromerrJS)){
-		initializeCromerrWidget(userRoleId, token, baseServiceUrl);
+		initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId);
 	}else{
 		var jqueryScript=loadScript(jqueryJS);
 		jqueryScript.onload=function(){
@@ -22,14 +22,14 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl){
 		        cssLink.type = 'text/css'; 
 		        document.head.prepend(cssLink);
 		        cssLink.href=baseServiceUrl+fancyboxCSS;
+				loadScript(baseServiceUrl+jqueryValidate);
+				loadScript(baseServiceUrl+jqueryBlockUI);
+				var cromerrScript=loadScript(baseServiceUrl+cromerrJS);
+				cromerrScript.onload=function(){
+			    	initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId);
+			    }
+				cromerrScript.setAttribute('id', "cromerrServerSign");
 		    }
-			loadScript(baseServiceUrl+jqueryValidate);
-			loadScript(baseServiceUrl+jqueryBlockUI);
-			var cromerrScript=loadScript(baseServiceUrl+cromerrJS);
-			cromerrScript.onload=function(){
-		    	initializeCromerrWidget(userRoleId, token, baseServiceUrl);
-		    }
-			cromerrScript.setAttribute('id', "cromerrServerSign");
 		}
 	}
 }
@@ -42,7 +42,7 @@ function loadScript(srciptUrl){
     return script;
 }
 
-function initializeCromerrWidget(userId, userRoleId, baseServiceUrl){
+function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId){
 	$( document ).ready(function() {
 	    $.cromerrWidget({
 	        esignButtonId : "certifyAndSubmit",
@@ -55,10 +55,24 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl){
 	            }
 	        },
 	        success : function(event) {
-	        	alert("Submission successful.");
+	        	$.ajax({
+	        		  url: "api/report/submitToCromerr",
+	        		  type: "get", //send it through get method
+	        		  data: { 
+	        			activityId: event.activityId, 
+	        		    reportId: emissionsReportId
+	        		  },
+	        		  success: function(response) {
+	        			  alert("Submission successful."+response);
+	        		  },
+	        		  error: function(xhr) {
+	        			  alert("Submission error.");
+	        		  }
+	        		});
 	        },
 	        error : function(error) {
 	        	alert("Submission error.");
+	        	console.log(error);
 	        },
 	        cancel : function() {
 	        	alert("Submission cancelled.");

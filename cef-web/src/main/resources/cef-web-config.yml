@@ -11,6 +11,8 @@ cdx:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
   registerProgramFacilityEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterProgramFacilityService
+  registerSignEndpointConfiguration:
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterSignService    
   naas-token-url: https://naasdev.epacdxnode.net/xml/SecurityToken_v30.wsdl
   naas-user: caer-cef-admin@epa.gov
   naas-password: CDXcaercef01

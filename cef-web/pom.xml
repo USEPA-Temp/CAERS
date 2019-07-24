@@ -153,6 +153,11 @@
           <artifactId>commons-collections4</artifactId>
           <version>4.3</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>        
         
         <!-- ====================================================================== -->
         <!-- CDX Shared -->
@@ -718,6 +723,7 @@
                             <wsdlFiles>
                               <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
                               <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
+                              <wsdlFile>RegisterSignService.wsdl</wsdlFile>
                             </wsdlFiles>
                           </configuration>
                           <goals>

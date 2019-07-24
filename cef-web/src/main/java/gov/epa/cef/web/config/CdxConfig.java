@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 public class CdxConfig {
 
     private Map<String, String> registerProgramFacilityEndpointConfiguration;
+    private Map<String, String> registerSignEndpointConfiguration;
     
     private String naasUser;
     private String naasPassword;
@@ -30,6 +31,17 @@ public class CdxConfig {
         return getRegisterProgramFacilityEndpointConfiguration().get("serviceUrl");
     }
     
+    public Map<String, String> getRegisterSignEndpointConfiguration() {
+        return registerSignEndpointConfiguration;
+    }
+
+    public void setRegisterSignEndpointConfiguration(Map<String, String> registerSignEndpointConfiguration) {
+        this.registerSignEndpointConfiguration = registerSignEndpointConfiguration;
+    }
+    public String getRegisterSignServiceEndpoint() {
+        return getRegisterSignEndpointConfiguration().get("serviceUrl");
+    }
+
     public String getNaasUser() {
         return naasUser;
     }

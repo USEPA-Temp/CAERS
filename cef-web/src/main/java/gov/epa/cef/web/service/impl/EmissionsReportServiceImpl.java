@@ -1,16 +1,33 @@
 package gov.epa.cef.web.service.impl;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
+import javax.activation.DataHandler;
+
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.ReportStatus;
+import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.soap.DocumentDataSource;
+import gov.epa.cef.web.soap.SignatureServiceClient;
+import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
+import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
 
 @Service
 public class EmissionsReportServiceImpl implements EmissionsReportService {
@@ -20,6 +37,19 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
+    
+    @Autowired
+    private CefConfig cefConfig;
+    
+    @Autowired
+    private SignatureServiceClient signatureServiceClient;
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private CersXmlService cersXmlService;
+    
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -51,6 +81,34 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         EmissionsReport emissionsReport=erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
                 .stream().findFirst().orElse(null);
         return emissionsReportMapper.toDto(emissionsReport);
+    }
+    
+    
+    @Override
+    public String submitToCromerr(Long emissionsReportId, String activityId) throws ApplicationException {
+        String cromerrDocumentId=null;
+        try {
+            Optional<EmissionsReport> emissionsReportOptional=erRepo.findById(emissionsReportId);
+            if(emissionsReportOptional.isPresent()) {
+                EmissionsReport emissionsReport=emissionsReportOptional.get();
+                URL signatureServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterSignServiceEndpoint());
+                String signatureToken = signatureServiceClient.authenticate(signatureServiceUrl, cefConfig.getCdxConfig().getNaasUser(), cefConfig.getCdxConfig().getNaasPassword());
+                String xmlData=cersXmlService.retrieveCersXml(emissionsReportId);
+                SignatureDocumentType sigDoc = new SignatureDocumentType();
+                sigDoc.setName("emissionsReport.xml");
+                sigDoc.setFormat(SignatureDocumentFormatType.XML);
+                File tmp = File.createTempFile("Attachment", ".xml");
+                FileUtils.writeStringToFile(tmp, xmlData, StandardCharsets.UTF_8);// copy so original is not automatically deleted
+                sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/xml")));
+                cromerrDocumentId = signatureServiceClient.sign(signatureServiceUrl, signatureToken,
+                        activityId, sigDoc);
+                emissionsReport.setStatus(ReportStatus.SUBMITTED);
+                erRepo.save(emissionsReport);
+            }
+            return cromerrDocumentId;
+        }catch(Exception e) {
+            throw ApplicationException.asApplicationException(e);
+        }
     }
 
 }
