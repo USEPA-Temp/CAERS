@@ -15,7 +15,7 @@ import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
 
 @RestController
-@RequestMapping("/api/reportSummary")
+@RequestMapping("/api/report")
 public class ReportApi {
 
     @Autowired

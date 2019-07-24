@@ -17,7 +17,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
-@RequestMapping("/api/report")
+@RequestMapping("/api/emissionsReport")
 public class EmissionsReportApi {
 
     @Autowired
