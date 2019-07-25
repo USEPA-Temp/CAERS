@@ -2,7 +2,6 @@ package gov.epa.cef.web.service.impl;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -87,6 +86,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Override
     public String submitToCromerr(Long emissionsReportId, String activityId) throws ApplicationException {
         String cromerrDocumentId=null;
+        File tmp = null;
         try {
             Optional<EmissionsReport> emissionsReportOptional=erRepo.findById(emissionsReportId);
             if(emissionsReportOptional.isPresent()) {
@@ -97,7 +97,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 SignatureDocumentType sigDoc = new SignatureDocumentType();
                 sigDoc.setName("emissionsReport.xml");
                 sigDoc.setFormat(SignatureDocumentFormatType.XML);
-                File tmp = File.createTempFile("Attachment", ".xml");
+                tmp = File.createTempFile("Attachment", ".xml");
                 FileUtils.writeStringToFile(tmp, xmlData, StandardCharsets.UTF_8);
                 sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
                 cromerrDocumentId = signatureServiceClient.sign(signatureServiceUrl, signatureToken,
@@ -110,6 +110,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             return cromerrDocumentId;
         }catch(Exception e) {
             throw ApplicationException.asApplicationException(e);
+        }finally {
+            if(tmp!=null) {
+                FileUtils.deleteQuietly(tmp);
+            }
         }
     }
 

@@ -55,14 +55,14 @@ public class SignatureServiceClient extends AbstractClient {
 
     ApplicationException convertFault(RegisterException fault) {
         if (fault.getFaultInfo() == null) {
-            return new ApplicationException(ApplicationErrorCode.E_RemoteServiceError, fault.getMessage());
+            return new ApplicationException(ApplicationErrorCode.E_REMOTE_SERVICE_ERROR, fault.getMessage());
         } else {
             ApplicationErrorCode code;
             try {
                 code = ApplicationErrorCode.valueOf(fault.getFaultInfo().getErrorCode().value());
             } catch (Exception e) {
                 logger.warn("Could not translate fault.");
-                code = ApplicationErrorCode.E_RemoteServiceError;
+                code = ApplicationErrorCode.E_REMOTE_SERVICE_ERROR;
             }
             return new ApplicationException(code, fault.getFaultInfo().getDescription());
         }
