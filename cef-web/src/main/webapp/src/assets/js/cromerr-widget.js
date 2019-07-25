@@ -1,7 +1,7 @@
 /*
  * Custom JS function to load the Cromerr Widget
  */
-function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId){
+function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId){
 
 	var fancyboxJS="/ContentFramework/Cromerr/js/fancybox/jquery.fancybox-1.3.4.js";
 	var fancyboxCSS="/ContentFramework/Cromerr/js/fancybox/jquery.fancybox-1.3.4.css";
@@ -11,7 +11,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId)
 	var jqueryJS="assets/js/jquery-1.6.4.min.js"
 	
 	if(checkIfScriptExists(baseServiceUrl+cromerrJS)){
-		initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId);
+		initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId);
 	}else{
 		var jqueryScript=loadScript(jqueryJS);
 		jqueryScript.onload=function(){
@@ -26,7 +26,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId)
 				loadScript(baseServiceUrl+jqueryBlockUI);
 				var cromerrScript=loadScript(baseServiceUrl+cromerrJS);
 				cromerrScript.onload=function(){
-			    	initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId);
+			    	initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId);
 			    }
 				cromerrScript.setAttribute('id', "cromerrServerSign");
 		    }
@@ -42,7 +42,7 @@ function loadScript(srciptUrl){
     return script;
 }
 
-function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId){
+function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId){
 	$( document ).ready(function() {
 	    $.cromerrWidget({
 	        esignButtonId : "certifyAndSubmit",
@@ -55,17 +55,21 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
 	            }
 	        },
 	        success : function(event) {
+	        	event.blockUI();
 	        	$.ajax({
-	        		  url: "api/report/submitToCromerr",
+	        		  url: "api/emissionsReport/submitToCromerr",
 	        		  type: "get", //send it through get method
 	        		  data: { 
 	        			activityId: event.activityId, 
 	        		    reportId: emissionsReportId
 	        		  },
 	        		  success: function(response) {
-	        			  alert("Submission successful."+response);
+	        			  alert("Submission successful.");
+	        			  event.unblockUI();
+	        			  window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report";
 	        		  },
 	        		  error: function(xhr) {
+	        			  event.unblockUI();
 	        			  alert("Submission error.");
 	        		  }
 	        		});

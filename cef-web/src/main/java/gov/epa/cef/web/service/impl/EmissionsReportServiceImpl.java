@@ -98,11 +98,13 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 sigDoc.setName("emissionsReport.xml");
                 sigDoc.setFormat(SignatureDocumentFormatType.XML);
                 File tmp = File.createTempFile("Attachment", ".xml");
-                FileUtils.writeStringToFile(tmp, xmlData, StandardCharsets.UTF_8);// copy so original is not automatically deleted
-                sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/xml")));
+                FileUtils.writeStringToFile(tmp, xmlData, StandardCharsets.UTF_8);
+                sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
                 cromerrDocumentId = signatureServiceClient.sign(signatureServiceUrl, signatureToken,
                         activityId, sigDoc);
                 emissionsReport.setStatus(ReportStatus.SUBMITTED);
+                emissionsReport.setCromerrActivityId(activityId);
+                emissionsReport.setCromerrDocumentId(cromerrDocumentId);
                 erRepo.save(emissionsReport);
             }
             return cromerrDocumentId;
