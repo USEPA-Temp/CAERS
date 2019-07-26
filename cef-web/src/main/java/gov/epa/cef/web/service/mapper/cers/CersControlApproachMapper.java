@@ -22,7 +22,7 @@ public interface CersControlApproachMapper {
     @Mapping(source="control.pollutants", target="controlPollutant")
     ControlApproachDataType fromControlAssignment(ControlAssignment source);
 
-    @Mapping(source="pollutantCode", target="pollutantCode")
+    @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
     @Mapping(source="percentReduction", target="percentControlMeasuresReductionEfficiency")
     ControlPollutantDataType pollutantFromControlPollutant(ControlPollutant source);
 }

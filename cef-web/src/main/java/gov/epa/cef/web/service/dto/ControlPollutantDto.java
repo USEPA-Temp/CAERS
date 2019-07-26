@@ -7,9 +7,7 @@ public class ControlPollutantDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String pollutantCode;
-    private String pollutantName;
-    private String pollutantCasId;
+    private PollutantDto pollutant;
     private Double percentReduction;
 
     public Long getId() {
@@ -19,29 +17,13 @@ public class ControlPollutantDto implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPollutantCode() {
-        return pollutantCode;
+    
+    public PollutantDto getPollutant() {
+        return pollutant;
     }
 
-    public void setPollutantCode(String pollutantCode) {
-        this.pollutantCode = pollutantCode;
-    }
-
-    public String getPollutantName() {
-        return pollutantName;
-    }
-
-    public void setPollutantName(String pollutantName) {
-        this.pollutantName = pollutantName;
-    }
-
-    public String getPollutantCasId() {
-        return pollutantCasId;
-    }
-
-    public void setPollutantCasId(String pollutantCasId) {
-        this.pollutantCasId = pollutantCasId;
+    public void setPollutant(PollutantDto pollutant) {
+        this.pollutant = pollutant;
     }
 
     public Double getPercentReduction() {
@@ -51,5 +33,4 @@ public class ControlPollutantDto implements Serializable {
     public void setPercentReduction(Double percentReduction) {
         this.percentReduction = percentReduction;
     }
-
 }

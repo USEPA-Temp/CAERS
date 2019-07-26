@@ -9,14 +9,12 @@ public class EmissionDto implements Serializable {
 
     private Long id;
     private Long reportingPeriodId;
-    private String pollutantCode;
-    private String pollutantName;
+    private PollutantDto pollutant;
     private Integer totalEmissions;
     private CodeLookupDto emissionsUomCode;
     private BigDecimal emissionsFactor;
     private String emissionsFactorText;
     private CodeLookupDto emissionsCalcMethodCode;
-    private String pollutantCasId;
     private String comments;
     private BigDecimal calculatedEmissionsTons;
     private CodeLookupDto emissionsNumeratorUom;
@@ -38,20 +36,12 @@ public class EmissionDto implements Serializable {
         this.reportingPeriodId = reportingPeriodId;
     }
 
-    public String getPollutantCode() {
-        return pollutantCode;
+    public PollutantDto getPollutant() {
+        return pollutant;
     }
 
-    public void setPollutantCode(String pollutantCode) {
-        this.pollutantCode = pollutantCode;
-    }
-
-    public String getPollutantName() {
-        return pollutantName;
-    }
-
-    public void setPollutantName(String pollutantName) {
-        this.pollutantName = pollutantName;
+    public void setPollutant(PollutantDto pollutant) {
+        this.pollutant = pollutant;
     }
 
     public Integer getTotalEmissions() {
@@ -92,14 +82,6 @@ public class EmissionDto implements Serializable {
 
     public void setEmissionsCalcMethodCode(CodeLookupDto emissionsCalcMethodCode) {
         this.emissionsCalcMethodCode = emissionsCalcMethodCode;
-    }
-
-    public String getPollutantCasId() {
-        return pollutantCasId;
-    }
-
-    public void setPollutantCasId(String pollutantCasId) {
-        this.pollutantCasId = pollutantCasId;
     }
 
     public String getComments() {

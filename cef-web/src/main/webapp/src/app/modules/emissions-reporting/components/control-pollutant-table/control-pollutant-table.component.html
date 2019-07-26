@@ -12,9 +12,9 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td>{{item.pollutantName}}</td>
-      <td>{{item.pollutantCode}}</td>
-      <td>{{item.pollutantCasId}}</td>
+      <td>{{item.pollutant.pollutantName}}</td>
+      <td>{{item.pollutant.pollutantCode}}</td>
+      <td>{{item.pollutant.pollutantCasId}}</td>
       <td>{{item.percentReduction}}</td>
       <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
     </tr>

@@ -26,11 +26,9 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "reporting_period_id", nullable = false)
     private ReportingPeriod reportingPeriod;
     
-    @Column(name = "pollutant_code", nullable = false, length = 20)
-    private String pollutantCode;
-    
-    @Column(name = "pollutant_name", nullable = false, length = 100)
-    private String pollutantName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pollutant_code")
+    private Pollutant pollutant;
     
     @Column(name = "total_emissions", nullable = false, precision = 6, scale = 0)
     private Integer totalEmissions;
@@ -48,10 +46,7 @@ public class Emission extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emissions_calc_method_code", nullable = false)
     CalculationMethodCode emissionsCalcMethodCode;
-    
-    @Column(name = "pollutant_cas_id", length = 100)
-    private String pollutantCasId;
-    
+
     @Column(name = "comments", length = 200)
     private String comments;
     
@@ -74,20 +69,12 @@ public class Emission extends BaseAuditEntity {
         this.reportingPeriod = reportingPeriod;
     }
 
-    public String getPollutantCode() {
-        return this.pollutantCode;
+    public Pollutant getPollutant() {
+        return pollutant;
     }
 
-    public void setPollutantCode(String pollutantCode) {
-        this.pollutantCode = pollutantCode;
-    }
-
-    public String getPollutantName() {
-        return this.pollutantName;
-    }
-
-    public void setPollutantName(String pollutantName) {
-        this.pollutantName = pollutantName;
+    public void setPollutant(Pollutant pollutant) {
+        this.pollutant = pollutant;
     }
 
     public Integer getTotalEmissions() {
@@ -129,15 +116,7 @@ public class Emission extends BaseAuditEntity {
     public void setEmissionsCalcMethodCode(CalculationMethodCode emissionsCalcMethodCode) {
         this.emissionsCalcMethodCode = emissionsCalcMethodCode;
     }
-
-    public String getPollutantCasId() {
-        return pollutantCasId;
-    }
-
-    public void setPollutantCasId(String pollutantCasId) {
-        this.pollutantCasId = pollutantCasId;
-    }
-
+    
     public String getComments() {
         return comments;
     }
