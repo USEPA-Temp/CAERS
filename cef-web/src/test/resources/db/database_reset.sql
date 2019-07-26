@@ -53,6 +53,7 @@ DROP TABLE IF EXISTS vertical_collection_method_code;
 DROP TABLE IF EXISTS vertical_reference_datum_code;
 DROP TABLE IF EXISTS schema_version_cef;
 DROP TABLE IF EXISTS naics_code_industry;
+DROP TABLE IS EXISTS pollutant;
 
 --SEQUENCES
 DROP SEQUENCE IF EXISTS emission_id_seq;
