@@ -33,7 +33,7 @@ public class EmissionServiceImpl implements EmissionService {
     @Autowired
     EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
     
-    private static final String POINT_EMISSION_RELEASE_POINT = "point";
+    private static final String POINT_EMISSION_RELEASE_POINT = "stack";
     private static final int TWO_DECIMAL_POINTS = 2;
     
     private static enum RETURN_CODE {NO_EMISSIONS_REPORT, NO_EMISSIONS_REPORTED_FOR_CAS, EMISSIONS_FOUND}
@@ -84,25 +84,25 @@ public class EmissionServiceImpl implements EmissionService {
             //since we're matching on facility and CAS, all of these fields should be the same for each instance of the list
             emissionsByFacilityDto = emissionsByFacilityAndCASMapper.toDto(emissionsByFacilityAndCAS.get(0));
             
-            BigDecimal pointEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
-            BigDecimal nonPointEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
+            BigDecimal stackEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
+            BigDecimal fugitiveEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
                
             for (EmissionsByFacilityAndCAS currentEmissions :emissionsByFacilityAndCAS) {
-                //if the release point type is fugitive - add it to the "non-point" emissions. Otherwise add the amount
-                //to the point release emissions
+                //if the release point type is fugitive - add it to the "fugitive" emissions. Otherwise add the amount
+                //to the stack release emissions
                 if (StringUtils.equalsIgnoreCase(POINT_EMISSION_RELEASE_POINT, currentEmissions.getReleasePointType())) { 
-                    pointEmissions = pointEmissions.add(currentEmissions.getApportionedEmissions());
+                    stackEmissions = stackEmissions.add(currentEmissions.getApportionedEmissions());
                 } else {
-                    nonPointEmissions = nonPointEmissions.add(currentEmissions.getApportionedEmissions());
+                    fugitiveEmissions = fugitiveEmissions.add(currentEmissions.getApportionedEmissions());
                 }
             }
             
             //Round both of the values to the nearest hundredth
-            emissionsByFacilityDto.setPointEmissions(pointEmissions);
-            emissionsByFacilityDto.setNonPointEmissions(nonPointEmissions);
-            String totalEmissionsMessage = new String("Found ").concat(pointEmissions.toPlainString()).
-                    concat(" point emissions and ").concat(nonPointEmissions.toPlainString()).
-                    concat(" non-point emissions for CAS number = ").concat(pollutantCasId).
+            emissionsByFacilityDto.setStackEmissions(stackEmissions);
+            emissionsByFacilityDto.setFugitiveEmissions(fugitiveEmissions);
+            String totalEmissionsMessage = new String("Found ").concat(stackEmissions.toPlainString()).
+                    concat(" stack emissions and ").concat(fugitiveEmissions.toPlainString()).
+                    concat(" fugitive emissions for CAS number = ").concat(pollutantCasId).
                     concat(" on the most recent emissions report for FRS Facility ID = ").concat(frsFacilityId);
             emissionsByFacilityDto.setMessage(totalEmissionsMessage);
             emissionsByFacilityDto.setCode(RETURN_CODE.EMISSIONS_FOUND.toString());
