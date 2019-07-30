@@ -41,6 +41,12 @@ public class EmissionsReport extends BaseAuditEntity {
     @Column(name = "status")
     private ReportStatus status;
     
+    @Column(name = "cromerr_activity_id", length = 37)
+    String cromerrActivityId;
+
+    @Column(name = "cromerr_document_id", length = 36)
+    String cromerrDocumentId;
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
@@ -105,4 +111,21 @@ public class EmissionsReport extends BaseAuditEntity {
     public void setFacilitySites(Set<FacilitySite> facilitySites) {
         this.facilitySites = facilitySites;
     }
+
+    public String getCromerrActivityId() {
+        return cromerrActivityId;
+    }
+
+    public void setCromerrActivityId(String cromerrActivityId) {
+        this.cromerrActivityId = cromerrActivityId;
+    }
+
+    public String getCromerrDocumentId() {
+        return cromerrDocumentId;
+    }
+
+    public void setCromerrDocumentId(String cromerrDocumentId) {
+        this.cromerrDocumentId = cromerrDocumentId;
+    }
+    
 }

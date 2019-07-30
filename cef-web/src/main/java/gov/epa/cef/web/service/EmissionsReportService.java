@@ -2,6 +2,7 @@ package gov.epa.cef.web.service;
 
 import java.util.List;
 
+import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
@@ -27,5 +28,7 @@ public interface EmissionsReportService {
      * @return
      */
     EmissionsReportDto findMostRecentByFacilityEisProgramId(String facilityEisProgramId);
+
+    String submitToCromerr(Long emissionsReportId, String activityId) throws ApplicationException;
 
 }

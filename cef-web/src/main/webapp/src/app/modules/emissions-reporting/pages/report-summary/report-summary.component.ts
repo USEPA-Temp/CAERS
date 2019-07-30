@@ -26,22 +26,21 @@ export class ReportSummaryComponent implements OnInit {
         private userContextService: UserContextService) { }
 
     ngOnInit() {
-        this.userService.getCurrentUserNaasToken()
-        .subscribe(userToken =>{
-            this.userContextService.getUser().subscribe( user => {
-                    if (user.role == 'Certifier') {
-                        this.showCertify = true;
-                        initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl);
-                    }
-                });
-            }
-        );
-
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
             this.facilitySite = data.facilitySite;
 
             if (this.facilitySite.id) {
                 this.emissionsReportYear = this.facilitySite.emissionsReport.year;
+                this.userService.getCurrentUserNaasToken()
+                .subscribe(userToken =>{
+                    this.userContextService.getUser().subscribe( user => {
+                            if (user.role == 'Certifier' && this.facilitySite.emissionsReport.status!='SUBMITTED') {
+                                this.showCertify = true;
+                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl, this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId);
+                            }
+                        });
+                    }
+                );
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                 .subscribe(report => {
                     this.tableData = report;

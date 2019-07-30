@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,5 +63,20 @@ public class EmissionsReportApi {
         EmissionsReportDto result = emissionsReportService.findMostRecentByFacilityEisProgramId(facilityEisProgramId);
 
         return new ResponseEntity<EmissionsReportDto>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Submits a report to CROMERR after the user authenticates through the widgets and generates and activityId
+     * @param activityId CROMERR Activity ID
+     * @param reportId Emissions Report Id
+     * @return
+     */
+    @GetMapping(value = "/submitToCromerr")
+    @ResponseBody
+    public ResponseEntity<String> submitToCromerr(@RequestParam String activityId, @RequestParam Long reportId) {
+
+        String documentId= emissionsReportService.submitToCromerr(reportId, activityId);
+
+        return new ResponseEntity<String>(documentId, HttpStatus.OK);
     }
 }
