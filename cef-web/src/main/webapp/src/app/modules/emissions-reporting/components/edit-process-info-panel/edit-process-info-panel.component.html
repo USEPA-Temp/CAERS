@@ -1,0 +1,41 @@
+<form [formGroup]="processForm" (ngSubmit)="onSubmit()">
+    <div class="row pb-1">
+        <label for="processIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process ID:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier">
+        </div>
+        <label for="processSccInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode">
+        </div>
+        <label for="processStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Process Status:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="processStatusCodeSelect" formControlName="operatingStatusCode">
+                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row pb-1">
+        <label for="processDescriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Description:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
+        </div>
+        <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Aircraft Engine Code:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCodeCode">
+        </div>
+        <label for="processStatusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Status Year:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="processCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
+        <div class="col-sm-6 col-md-10">
+            <textarea rows="3" class="form-control" style="height:100%;" id="processCommentsInput" formControlName="comments"></textarea>
+        </div>
+    </div>
+
+</form>
