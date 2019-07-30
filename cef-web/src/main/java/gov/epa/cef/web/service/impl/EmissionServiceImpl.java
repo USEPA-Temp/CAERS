@@ -100,10 +100,9 @@ public class EmissionServiceImpl implements EmissionService {
             //Round both of the values to the nearest hundredth
             emissionsByFacilityDto.setStackEmissions(stackEmissions);
             emissionsByFacilityDto.setFugitiveEmissions(fugitiveEmissions);
-            String totalEmissionsMessage = new String("Found ").concat(stackEmissions.toPlainString()).
-                    concat(" stack emissions and ").concat(fugitiveEmissions.toPlainString()).
-                    concat(" fugitive emissions for CAS number = ").concat(pollutantCasId).
-                    concat(" on the most recent emissions report for FRS Facility ID = ").concat(frsFacilityId);
+            String totalEmissionsMessage = "Found %s stack emissions and %s fugitive emissions for CAS number = %s on"
+                    + " the most recent emissions report for FRS Facility ID = %s";
+            totalEmissionsMessage = String.format(totalEmissionsMessage, stackEmissions.toPlainString(), fugitiveEmissions.toPlainString(), pollutantCasId, frsFacilityId);
             emissionsByFacilityDto.setMessage(totalEmissionsMessage);
             emissionsByFacilityDto.setCode(RETURN_CODE.EMISSIONS_FOUND.toString());
         }
