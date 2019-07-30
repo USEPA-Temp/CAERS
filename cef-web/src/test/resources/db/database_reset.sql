@@ -1,6 +1,7 @@
 --VIEWS
 DROP VIEW IF EXISTS vw_emissions_by_facility_and_cas;
 DROP VIEW IF EXISTS vw_submissions_review_dashboard;
+DROP VIEW IF EXISTS vw_report_summary;
 
 --REPORTING TABLES
 DROP TABLE IF EXISTS emission;
@@ -52,6 +53,7 @@ DROP TABLE IF EXISTS vertical_collection_method_code;
 DROP TABLE IF EXISTS vertical_reference_datum_code;
 DROP TABLE IF EXISTS schema_version_cef;
 DROP TABLE IF EXISTS naics_code_industry;
+DROP TABLE IF EXISTS pollutant;
 
 --SEQUENCES
 DROP SEQUENCE IF EXISTS emission_id_seq;

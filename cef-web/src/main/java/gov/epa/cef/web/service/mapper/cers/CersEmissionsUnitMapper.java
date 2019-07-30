@@ -72,7 +72,7 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="percentFall", target="percentFallActivity")
     OperatingDetailsDataType operatingDetailsFromOperatingDetail(OperatingDetail source);
 
-    @Mapping(source="pollutantCode", target="pollutantCode")
+    @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
     @Mapping(source="totalEmissions", target="totalEmissions")
     @Mapping(source="emissionsUomCode.code", target="emissionsUnitofMeasureCode")
     @Mapping(source="emissionsFactor", target="emissionFactor")

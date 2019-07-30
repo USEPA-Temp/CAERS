@@ -18,15 +18,10 @@ public class ControlPollutant extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_id", nullable = false)
     private Control control;
-
-    @Column(name = "pollutant_code", nullable = false, length = 20)
-    private String pollutantCode;
-
-    @Column(name = "pollutant_name", nullable = false, length = 200)
-    private String pollutantName;
-
-    @Column(name = "pollutant_cas_id", length = 100)
-    private String pollutantCasId;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pollutant_code")
+    private Pollutant pollutant;
     
     @Column(name = "percent_reduction", precision = 4, scale = 1)
     private Double percentReduction;
@@ -39,28 +34,12 @@ public class ControlPollutant extends BaseAuditEntity {
         this.control = control;
     }
 
-    public String getPollutantCode() {
-        return pollutantCode;
+    public Pollutant getPollutant() {
+        return pollutant;
     }
 
-    public void setPollutantCode(String pollutantCode) {
-        this.pollutantCode = pollutantCode;
-    }
-
-    public String getPollutantName() {
-        return pollutantName;
-    }
-
-    public void setPollutantName(String pollutantName) {
-        this.pollutantName = pollutantName;
-    }
-
-    public String getPollutantCasId() {
-        return pollutantCasId;
-    }
-
-    public void setPollutantCasId(String pollutantCasId) {
-        this.pollutantCasId = pollutantCasId;
+    public void setPollutant(Pollutant pollutant) {
+        this.pollutant = pollutant;
     }
 
     public Double getPercentReduction() {

@@ -56,7 +56,7 @@ public class EmissionServiceImplTest {
         emission1.setPollutantName("Benzene");
         emission1.setYear(new Short("2019"));
         emission1.setReleasePointIdentifier("RP-1234");
-        emission1.setReleasePointType("point");
+        emission1.setReleasePointType("stack");
         emission1.setApportionedEmissions(new BigDecimal("51.75"));
         emission1.setEmissionsUomCode("TON");
         
@@ -68,7 +68,7 @@ public class EmissionServiceImplTest {
         emission2.setPollutantName("Benzene");
         emission2.setYear(new Short("2019"));
         emission2.setReleasePointIdentifier("RP-3456");
-        emission2.setReleasePointType("point");
+        emission2.setReleasePointType("stack");
         emission2.setApportionedEmissions(new BigDecimal("765.15"));
         emission2.setEmissionsUomCode("TON");
         
@@ -80,7 +80,7 @@ public class EmissionServiceImplTest {
         emission3.setPollutantName("Benzene");
         emission3.setYear(new Short("2019"));
         emission3.setReleasePointIdentifier("RP-2345");
-        emission3.setReleasePointType("non-point");
+        emission3.setReleasePointType("fugitive");
         emission3.setApportionedEmissions(new BigDecimal("276.25"));
         emission3.setEmissionsUomCode("TON");
         
@@ -92,7 +92,7 @@ public class EmissionServiceImplTest {
         emission4.setPollutantName("Benzene");
         emission4.setYear(new Short("2019"));
         emission4.setReleasePointIdentifier("RP-2345");
-        emission4.setReleasePointType("non-point");
+        emission4.setReleasePointType("fugitive");
         emission4.setApportionedEmissions(new BigDecimal("114.86"));
         emission4.setEmissionsUomCode("TON");
         
@@ -127,8 +127,8 @@ public class EmissionServiceImplTest {
         assertNull(emissions.getCasNumber());
         assertNull(emissions.getYear());
         assertNull(emissions.getChemical());
-        assertNull(emissions.getPointEmissions());
-        assertNull(emissions.getNonPointEmissions());
+        assertNull(emissions.getStackEmissions());
+        assertNull(emissions.getFugitiveEmissions());
         assertNull(emissions.getUom());
     }
     
@@ -142,8 +142,8 @@ public class EmissionServiceImplTest {
         assertNull(emissions.getCasNumber());
         assertNull(emissions.getYear());
         assertNull(emissions.getChemical());
-        assertNull(emissions.getPointEmissions());
-        assertNull(emissions.getNonPointEmissions());
+        assertNull(emissions.getStackEmissions());
+        assertNull(emissions.getFugitiveEmissions());
         assertNull(emissions.getUom());
     }
     
@@ -151,14 +151,14 @@ public class EmissionServiceImplTest {
     public void findEmissionsByFacilityAndCAS_should_return_calculated_emissions_when_pollutant_was_reported() {
         EmissionsByFacilityAndCASDto emissions = emissionServiceImpl.findEmissionsByFacilityAndCAS("110015680799", "71-43-2");
         assertEquals("EMISSIONS_FOUND", emissions.getCode());
-        assertEquals("Found 816.90 point emissions and 391.11 non-point emissions for CAS number = 71-43-2 on the most recent "
+        assertEquals("Found 816.90 stack emissions and 391.11 fugitive emissions for CAS number = 71-43-2 on the most recent "
                 + "emissions report for FRS Facility ID = 110015680799", emissions.getMessage());
         assertEquals("110015680799", emissions.getFrsFacilityId());
         assertEquals("71-43-2", emissions.getCasNumber());
         assertEquals(new Short("2019"), emissions.getYear());
         assertEquals("Benzene", emissions.getChemical());
-        assertEquals(new BigDecimal("816.90"), emissions.getPointEmissions());
-        assertEquals(new BigDecimal("391.11"), emissions.getNonPointEmissions());
+        assertEquals(new BigDecimal("816.90"), emissions.getStackEmissions());
+        assertEquals(new BigDecimal("391.11"), emissions.getFugitiveEmissions());
         assertEquals("TON", emissions.getUom());
     }
 }

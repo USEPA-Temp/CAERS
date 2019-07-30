@@ -1,7 +1,7 @@
+import { Pollutant } from 'src/app/shared/models/pollutant';
+
 export class ControlPollutant {
   id: number;
-  pollutantCode: string;
-  pollutantName: string;
-  pollutantCasId: string;
+  pollutant: Pollutant;
   percentReduction: number;
 }

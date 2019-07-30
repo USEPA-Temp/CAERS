@@ -41,6 +41,13 @@ export class EmissionDetailsModalComponent implements OnInit {
         this.emissionForm.patchValue({emissionsDenominatorUom: this.emission.emissionsDenominatorUom.description}); }
     if (this.emission.emissionsCalcMethodCode) {
         this.emissionForm.patchValue({emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description}); }
+    if (this.emission.pollutant) {
+        this.emissionForm.patchValue({pollutantName: this.emission.pollutant.pollutantName});
+        this.emissionForm.patchValue({pollutantCode: this.emission.pollutant.pollutantCode});
+        this.emissionForm.patchValue({pollutantCasId: this.emission.pollutant.pollutantCasId});
+    }
+
+
 
     if (this.editable) {
       this.emissionForm.enable();
@@ -65,6 +72,11 @@ export class EmissionDetailsModalComponent implements OnInit {
         this.emissionForm.patchValue({emissionsDenominatorUom: this.emission.emissionsDenominatorUom.description}); }
     if (this.emission.emissionsCalcMethodCode) {
         this.emissionForm.patchValue({emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description}); }
+    if (this.emission.pollutant) {
+        this.emissionForm.patchValue({pollutantName: this.emission.pollutant.pollutantName});
+        this.emissionForm.patchValue({pollutantCode: this.emission.pollutant.pollutantCode});
+        this.emissionForm.patchValue({pollutantCasId: this.emission.pollutant.pollutantCasId});
+    }
 
     if (this.editable) {
       this.emissionForm.enable();
