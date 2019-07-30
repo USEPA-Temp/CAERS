@@ -1120,8 +1120,6 @@ ALTER TABLE control_pollutant DROP COLUMN pollutant_name;
 
 ALTER TABLE control_pollutant DROP COLUMN pollutant_cas_id;
 
-UPDATE control_pollutant set pollutant_code = '108952';
-
 ALTER TABLE control_pollutant
     ALTER COLUMN pollutant_code TYPE character varying (12);
 
@@ -1136,8 +1134,6 @@ ALTER TABLE emission DROP COLUMN pollutant_name;
 ALTER TABLE emission DROP COLUMN pollutant_cas_id;
 
 ALTER TABLE emission DROP COLUMN pollutant_type;
-
-UPDATE emission set pollutant_code = '108952';
 
 ALTER TABLE emission
     ADD CONSTRAINT emissions_pollutant_fkey FOREIGN KEY (pollutant_code)
