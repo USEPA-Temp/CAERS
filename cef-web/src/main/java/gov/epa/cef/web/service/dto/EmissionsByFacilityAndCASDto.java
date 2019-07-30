@@ -17,8 +17,8 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     private Short year;
     private String chemical;
     private String casNumber;
-    private BigDecimal pointEmissions;
-    private BigDecimal nonPointEmissions;
+    private BigDecimal stackEmissions;
+    private BigDecimal fugitiveEmissions;
     private String uom;
     
     public String getMessage() {
@@ -63,17 +63,17 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     public void setCasNumber(String casNumber) {
         this.casNumber = casNumber;
     }
-    public BigDecimal getPointEmissions() {
-        return pointEmissions;
+    public BigDecimal getStackEmissions() {
+        return stackEmissions;
     }
-    public void setPointEmissions(BigDecimal pointEmissions) {
-        this.pointEmissions = pointEmissions;
+    public void setStackEmissions(BigDecimal stackEmissions) {
+        this.stackEmissions = stackEmissions;
     }
-    public BigDecimal getNonPointEmissions() {
-        return nonPointEmissions;
+    public BigDecimal getFugitiveEmissions() {
+        return fugitiveEmissions;
     }
-    public void setNonPointEmissions(BigDecimal nonPointEmissions) {
-        this.nonPointEmissions = nonPointEmissions;
+    public void setFugitiveEmissions(BigDecimal fugitiveEmissions) {
+        this.fugitiveEmissions = fugitiveEmissions;
     }
     public String getUom() {
         return uom;
