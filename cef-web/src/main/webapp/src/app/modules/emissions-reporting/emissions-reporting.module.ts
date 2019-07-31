@@ -33,7 +33,11 @@ import { ControlDevicesTableComponent } from 'src/app/modules/emissions-reportin
 import { EmissionsUnitsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/emissions-units-summary/emissions-units-summary.component';
 import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/release-points-summary/release-points-summary.component';
 import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
-import { ReportSummaryComponent } from './pages/report-summary/report-summary.component';
+import { ReportSummaryComponent } from 'src/app/modules/emissions-reporting/pages/report-summary/report-summary.component';
+import { CreateEmissionsProcessComponent } from 'src/app/modules/emissions-reporting/pages/create-emissions-process/create-emissions-process.component';
+import { EditProcessInfoPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-info-panel/edit-process-info-panel.component';
+import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-operating-detail-panel/edit-process-operating-detail-panel.component';
+import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 
 
 @NgModule({
@@ -64,7 +68,11 @@ import { ReportSummaryComponent } from './pages/report-summary/report-summary.co
     EmissionsUnitsSummaryComponent,
     ReleasePointsSummaryComponent,
     ControlDevicesSummaryComponent,
-    ReportSummaryComponent
+    ReportSummaryComponent,
+    CreateEmissionsProcessComponent,
+    EditProcessInfoPanelComponent,
+    EditProcessOperatingDetailPanelComponent,
+    EditProcessReportingPeriodPanelComponent
 
   ],
   imports: [

@@ -1,0 +1,46 @@
+<form [formGroup]="operatingDetailsForm" (ngSubmit)="onSubmit()">
+    <div class="row pb-1">
+        <label for="odDaysPerWeekInput" class="col-sm-6 col-md-2 col-form-label"><strong>Avg. Days per Week:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odDaysPerWeekInput" formControlName="avgDaysPerWeek">
+        </div>
+        <label for="odHoursPerPeriodInput" class="col-sm-6 col-md-2 col-form-label"><strong>Hours per Period:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odHoursPerPeriodInput" formControlName="actualHoursPerPeriod">
+        </div>
+        <!-- <label for="" class="col-sm-6 col-md-2 col-form-label"><strong>Inventory Year:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="" formControlName="">
+        </div> -->
+    </div>
+
+    <div class="row pb-1">
+        <label for="odHoursPerDayInput" class="col-sm-6 col-md-2 col-form-label"><strong>Avg. Hours per Day:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odHoursPerDayInput" formControlName="avgHoursPerDay">
+        </div>
+        <label for="odPercentWinterInput" class="col-sm-6 col-md-2 col-form-label"><strong>Winter Operating Percent:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odPercentWinterInput" formControlName="percentWinter">
+        </div>
+        <label for="odPercentSummerInput" class="col-sm-6 col-md-2 col-form-label"><strong>Summer Operating Percent:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odPercentSummerInput" formControlName="percentSummer">
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="odWeeksPerPeriodInput" class="col-sm-6 col-md-2 col-form-label"><strong>Avg. Weeks per Year:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odWeeksPerPeriodInput" formControlName="avgWeeksPerPeriod">
+        </div>
+        <label for="odPercentSpringInput" class="col-sm-6 col-md-2 col-form-label"><strong>Spring Operating Percent:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odPercentSpringInput" formControlName="percentSpring">
+        </div>
+        <label for="odPercentFallInput" class="col-sm-6 col-md-2 col-form-label"><strong>Fall Operating Percent:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="odPercentFallInput" formControlName="percentFall">
+        </div>
+    </div>
+</form>
