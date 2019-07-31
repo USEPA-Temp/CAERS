@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EmissionsProcessTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: Process[];
+  @Input() createUrl = '.';
   baseUrl: string;
 
   constructor(private route: ActivatedRoute) {
