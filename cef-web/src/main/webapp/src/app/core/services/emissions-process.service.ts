@@ -12,6 +12,11 @@ export class EmissionsProcessService {
 
   constructor(private http: HttpClient) { }
 
+  create(process: Process): Observable<Process> {
+    const url = `${this.baseUrl}`;
+    return this.http.post<Process>(url, process);
+  }
+
   /** GET specified release point from the server */
   retrieve(id: number): Observable<Process> {
     const url = `${this.baseUrl}/${id}`;

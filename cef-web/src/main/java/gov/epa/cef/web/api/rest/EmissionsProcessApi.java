@@ -7,12 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.service.EmissionsProcessService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
+import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 
 @RestController
 @RequestMapping("/api/emissionsProcess")
@@ -20,6 +23,20 @@ public class EmissionsProcessApi {
 
     @Autowired
     private EmissionsProcessService processService;
+
+    /**
+     * Create a new Emissions Process
+     * @param process
+     * @return
+     */
+    @PostMapping
+    @ResponseBody
+    public ResponseEntity<EmissionsProcessDto> createEmissionsProcess(@RequestBody EmissionsProcessSaveDto process) {
+
+        EmissionsProcessDto result = processService.create(process);
+        
+        return new ResponseEntity<EmissionsProcessDto>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve Emissions Process by id
