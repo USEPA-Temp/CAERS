@@ -5,9 +5,11 @@ import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
 
+@Component
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
     public Optional<String> getCurrentAuditor() {

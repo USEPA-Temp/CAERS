@@ -57,6 +57,13 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    public CalculationMaterialCode retrieveCalcMaterialCodeEntityByCode(String code) {
+        CalculationMaterialCode result= materialCodeRepo
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveCalcParamTypeCodes()
      */
@@ -69,6 +76,13 @@ public class LookupServiceImpl implements LookupService {
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
         });
+        return result;
+    }
+
+    public CalculationParameterTypeCode retrieveCalcParamTypeCodeEntityByCode(String code) {
+        CalculationParameterTypeCode result= paramTypeCodeRepo
+            .findById(code)
+            .orElse(null);
         return result;
     }
 
@@ -87,6 +101,13 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    public OperatingStatusCode retrieveOperatingStatusCodeEntityByCode(String code) {
+        OperatingStatusCode result= operatingStatusRepo
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveReportingPeriodCodes()
      */
@@ -102,6 +123,13 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    public ReportingPeriodCode retrieveReportingPeriodCodeEntityByCode(String code) {
+        ReportingPeriodCode result= periodCodeRepo
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveUnitMeasureCodes()
      */
@@ -114,6 +142,13 @@ public class LookupServiceImpl implements LookupService {
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
         });
+        return result;
+    }
+
+    public UnitMeasureCode retrieveUnitMeasureCodeEntityByCode(String code) {
+        UnitMeasureCode result= uomRepo
+            .findById(code)
+            .orElse(null);
         return result;
     }
 

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.service.EmissionsProcessService;
+import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
+import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 import gov.epa.cef.web.service.mapper.EmissionsProcessMapper;
 
 @Service
@@ -16,10 +18,53 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
     @Autowired
     private EmissionsProcessRepository processRepo;
-    
+
+    @Autowired
+    private LookupService lookupService;
+
     @Autowired
     private EmissionsProcessMapper emissionsProcessMapper;
 
+
+    public EmissionsProcessDto create(EmissionsProcessSaveDto dto) {
+
+        EmissionsProcess process = emissionsProcessMapper.fromSaveDto(dto);
+
+        if (process.getOperatingStatusCode() != null) {
+            process.setOperatingStatusCode(lookupService.retrieveOperatingStatusCodeEntityByCode(process.getOperatingStatusCode().getCode()));
+        }
+
+        process.getReportingPeriods().forEach(period -> {
+            if (period.getCalculationMaterialCode() != null) {
+                period.setCalculationMaterialCode(lookupService.retrieveCalcMaterialCodeEntityByCode(period.getCalculationMaterialCode().getCode()));
+            }
+
+            if (period.getCalculationParameterTypeCode() != null) {
+                period.setCalculationParameterTypeCode(lookupService.retrieveCalcParamTypeCodeEntityByCode(period.getCalculationParameterTypeCode().getCode()));
+            }
+
+            if (period.getCalculationParameterUom() != null) {
+                period.setCalculationParameterUom(lookupService.retrieveUnitMeasureCodeEntityByCode(period.getCalculationParameterUom().getCode()));
+            }
+
+            if (period.getEmissionsOperatingTypeCode() != null) {
+                period.setEmissionsOperatingTypeCode(lookupService.retrieveOperatingStatusCodeEntityByCode(period.getEmissionsOperatingTypeCode().getCode()));
+            }
+
+            if (period.getReportingPeriodTypeCode() != null) {
+                period.setReportingPeriodTypeCode(lookupService.retrieveReportingPeriodCodeEntityByCode(period.getReportingPeriodTypeCode().getCode()));
+            }
+
+            period.setEmissionsProcess(process);
+
+            period.getOperatingDetails().forEach(od -> {
+                od.setReportingPeriod(period);
+            });
+        });
+
+        EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
+        return result;
+    }
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.EmissionsProcessService#retrieveById(java.lang.Long)
@@ -31,7 +76,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
             .orElse(null);
         return emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(result);
     }
-    
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.EmissionsProcessService#retrieveForReleasePoint(java.lang.Long)
      */

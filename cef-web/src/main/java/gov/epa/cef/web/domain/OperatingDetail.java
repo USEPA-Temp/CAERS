@@ -61,8 +61,8 @@ public class OperatingDetail extends BaseAuditEntity {
         return this.actualHoursPerPeriod;
     }
 
-    public void setAvgHoursPerPeriod(Short avgHoursPerPeriod) {
-        this.actualHoursPerPeriod = avgHoursPerPeriod;
+    public void setActualHoursPerPeriod(Short actualHoursPerPeriod) {
+        this.actualHoursPerPeriod = actualHoursPerPeriod;
     }
 
     public Double getAvgHoursPerDay() {

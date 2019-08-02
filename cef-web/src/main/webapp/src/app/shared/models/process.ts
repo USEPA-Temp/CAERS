@@ -1,11 +1,12 @@
 import { ReleasePointApportionment } from './release-point-apportionment';
 import { ReportingPeriod } from './reporting-period';
+import { BaseCodeLookup } from './base-code-lookup';
 
 export class Process {
   id: number;
   emissionsUnitId: number;
   aircraftEngineTypeCodeCode: string;
-  operatingStatusCodeDescription: string;
+  operatingStatusCode: BaseCodeLookup;
   emissionsProcessIdentifier: string;
   statusYear: number;
   sccCode: string;

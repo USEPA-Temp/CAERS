@@ -13,7 +13,7 @@ public class EmissionsProcessDto implements Serializable {
     private Long id;
     private Long emissionsUnitId;
     private String aircraftEngineTypeCodeCode;
-    private String operatingStatusCodeDescription;
+    private CodeLookupDto operatingStatusCode;
     private String emissionsProcessIdentifier;
     private Short statusYear;
     private String sccCode;
@@ -21,7 +21,6 @@ public class EmissionsProcessDto implements Serializable {
     private String description;
     private String comments;
     private List<ReleasePointApptDto> releasePointAppts;
-    
 
     public Long getId() {
         return id;
@@ -47,12 +46,12 @@ public class EmissionsProcessDto implements Serializable {
         this.aircraftEngineTypeCodeCode = aircraftEngineTypeCodeCode;
     }
 
-    public String getOperatingStatusCodeDescription() {
-        return operatingStatusCodeDescription;
+    public CodeLookupDto getOperatingStatusCode() {
+        return operatingStatusCode;
     }
 
-    public void setOperatingStatusCodeDescription(String operatingStatusCodeDescription) {
-        this.operatingStatusCodeDescription = operatingStatusCodeDescription;
+    public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
+        this.operatingStatusCode = operatingStatusCode;
     }
 
     public String getEmissionsProcessIdentifier() {

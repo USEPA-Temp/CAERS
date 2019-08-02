@@ -3,8 +3,16 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
+import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 
 public interface EmissionsProcessService {
+
+    /**
+     * Create a new Emissions Process
+     * @param dto
+     * @return
+     */
+    public EmissionsProcessDto create(EmissionsProcessSaveDto dto);
 
     /**
      * Retrieve Emissions Process by its id

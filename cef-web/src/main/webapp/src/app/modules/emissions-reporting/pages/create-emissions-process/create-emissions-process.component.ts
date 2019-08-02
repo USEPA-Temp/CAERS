@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Process } from 'src/app/shared/models/process';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
-import { FormBuilder } from '@angular/forms';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { EditProcessInfoPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-info-panel/edit-process-info-panel.component';
 import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-operating-detail-panel/edit-process-operating-detail-panel.component';
@@ -31,7 +30,8 @@ export class CreateEmissionsProcessComponent implements OnInit {
   constructor(
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -63,6 +63,14 @@ export class CreateEmissionsProcessComponent implements OnInit {
     process.emissionsUnitId = this.emissionsUnit.id;
 
     console.log(process);
+
+    console.log(JSON.stringify(process));
+
+    this.processService.create(process)
+    .subscribe(result => {
+      console.log(result);
+      this.router.navigate(['../..'], { relativeTo: this.route });
+    });
 
   }
 

@@ -11,12 +11,12 @@ import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 })
 export class EditProcessReportingPeriodPanelComponent implements OnInit {
   reportingPeriodForm = this.fb.group({
-    reportingPeriodTypeCode: [''],
-    emissionsOperatingTypeCode: [''],
-    calculationParameterTypeCode: [''],
+    reportingPeriodTypeCode: [null],
+    emissionsOperatingTypeCode: [null],
+    calculationParameterTypeCode: [null],
     calculationParameterValue: [''],
-    calculationParameterUom: [],
-    calculationMaterialCode: [''],
+    calculationParameterUom: [null],
+    calculationMaterialCode: [null],
     comments: ['']
   });
 
@@ -34,12 +34,12 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit {
 
     this.lookupService.retrieveCalcMaterial()
     .subscribe(result => {
-      this.parameterTypeValues = result;
+      this.materialValues = result;
     });
 
     this.lookupService.retrieveCalcParam()
     .subscribe(result => {
-      this.materialValues = result;
+      this.parameterTypeValues = result;
     });
 
     this.lookupService.retrieveOperatingStatus()
