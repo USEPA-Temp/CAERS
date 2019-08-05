@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
@@ -11,13 +11,17 @@ import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 })
 export class EditProcessReportingPeriodPanelComponent implements OnInit {
   reportingPeriodForm = this.fb.group({
-    reportingPeriodTypeCode: [null],
-    emissionsOperatingTypeCode: [null],
-    calculationParameterTypeCode: [null],
-    calculationParameterValue: [''],
-    calculationParameterUom: [null],
-    calculationMaterialCode: [null],
-    comments: ['']
+    reportingPeriodTypeCode: [null, Validators.required],
+    emissionsOperatingTypeCode: [null, Validators.required],
+    calculationParameterTypeCode: [null, Validators.required],
+    calculationParameterValue: ['', [
+      Validators.required,
+      Validators.min(0),
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+    ]],
+    calculationParameterUom: [null, Validators.required],
+    calculationMaterialCode: [null, Validators.required],
+    comments: ['', Validators.maxLength(2000)]
   });
 
   materialValues: BaseCodeLookup[];
@@ -60,11 +64,11 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit {
 
   onSubmit() {
 
-    console.log(this.reportingPeriodForm);
+    // console.log(this.reportingPeriodForm);
 
-    let period = new ReportingPeriod();
-    Object.assign(period, this.reportingPeriodForm.value);
-    console.log(period);
+    // let period = new ReportingPeriod();
+    // Object.assign(period, this.reportingPeriodForm.value);
+    // console.log(period);
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
 
@@ -12,12 +12,26 @@ import { Process } from 'src/app/shared/models/process';
 export class EditProcessInfoPanelComponent implements OnInit {
   processForm = this.fb.group({
     aircraftEngineTypeCodeCode: [''],
-    operatingStatusCode: [],
-    emissionsProcessIdentifier: [''],
-    statusYear: [''],
-    sccCode: [''],
-    description: [''],
-    comments: ['']
+    operatingStatusCode: [null, Validators.required],
+    emissionsProcessIdentifier: ['', [
+      Validators.required,
+      Validators.maxLength(20)
+    ]],
+    statusYear: ['', [
+      Validators.required,
+      Validators.min(1985),
+      Validators.max(2030),
+      Validators.pattern('[0-9]*')
+    ]],
+    sccCode: ['', [
+      Validators.required,
+      Validators.maxLength(20)
+    ]],
+    description: ['', [
+      Validators.required,
+      Validators.maxLength(200)
+    ]],
+    comments: ['', Validators.maxLength(2000)]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -36,11 +50,11 @@ export class EditProcessInfoPanelComponent implements OnInit {
 
   onSubmit() {
 
-    console.log(this.processForm);
+    // console.log(this.processForm);
 
-    let process = new Process();
-    Object.assign(process, this.processForm.value);
-    console.log(process);
+    // let process = new Process();
+    // Object.assign(process, this.processForm.value);
+    // console.log(process);
   }
 
 }

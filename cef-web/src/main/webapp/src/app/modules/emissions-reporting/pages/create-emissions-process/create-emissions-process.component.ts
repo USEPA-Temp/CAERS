@@ -44,11 +44,17 @@ export class CreateEmissionsProcessComponent implements OnInit {
     });
   }
 
+  isValid() {
+    return this.infoComponent.processForm.valid
+        && this.operatingDetailsComponent.operatingDetailsForm.valid
+        && this.reportingPeriodComponent.reportingPeriodForm.valid;
+  }
+
   onSubmit() {
 
-    console.log(this.infoComponent.processForm.value);
-    console.log(this.operatingDetailsComponent.operatingDetailsForm.value);
-    console.log(this.reportingPeriodComponent.reportingPeriodForm.value);
+    // console.log(this.infoComponent.processForm.value);
+    // console.log(this.operatingDetailsComponent.operatingDetailsForm.value);
+    // console.log(this.reportingPeriodComponent.reportingPeriodForm.value);
 
     const process = new Process();
     const operatingDetails = new OperatingDetail();
@@ -62,13 +68,13 @@ export class CreateEmissionsProcessComponent implements OnInit {
     process.reportingPeriods = [reportingPeriod];
     process.emissionsUnitId = this.emissionsUnit.id;
 
-    console.log(process);
+    // console.log(process);
 
-    console.log(JSON.stringify(process));
+    // console.log(JSON.stringify(process));
 
     this.processService.create(process)
     .subscribe(result => {
-      console.log(result);
+      // console.log(result);
       this.router.navigate(['../..'], { relativeTo: this.route });
     });
 
