@@ -46,3 +46,7 @@ thead.thead-cef-medium {
     color: $black;
     border-color: $gray-300;
 }
+
+.ng-dirty.ng-invalid {
+  border-color: #dc3545;
+}
