@@ -47,6 +47,11 @@ thead.thead-cef-medium {
     border-color: $gray-300;
 }
 
-.ng-dirty.ng-invalid {
+.ng-touched.ng-invalid {
   border-color: #dc3545;
+}
+
+.validation-message {
+  color: #dc3545;
+  font-size: 80%;
 }

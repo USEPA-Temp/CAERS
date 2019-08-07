@@ -17,6 +17,11 @@ public interface LookupService {
      */
     List<CodeLookupDto> retrieveCalcMaterialCodes();
 
+    /**
+     * Retrieve Calculation Material code database object by code
+     * @param code
+     * @return
+     */
     CalculationMaterialCode retrieveCalcMaterialCodeEntityByCode(String code);
 
     /**
@@ -25,6 +30,11 @@ public interface LookupService {
      */
     List<CodeLookupDto> retrieveCalcParamTypeCodes();
 
+    /**
+     * Retrieve Calculation Parameter Type code database object by code
+     * @param code
+     * @return
+     */
     CalculationParameterTypeCode retrieveCalcParamTypeCodeEntityByCode(String code);
 
     /**
@@ -33,6 +43,11 @@ public interface LookupService {
      */
     List<CodeLookupDto> retrieveOperatingStatusCodes();
 
+    /**
+     * Retrieve Operating Status code database object by code
+     * @param code
+     * @return
+     */
     OperatingStatusCode retrieveOperatingStatusCodeEntityByCode(String code);
 
     /**
@@ -41,6 +56,11 @@ public interface LookupService {
      */
     List<CodeLookupDto> retrieveReportingPeriodCodes();
 
+    /**
+     * Retrieve Reporting Period code database object by code
+     * @param code
+     * @return
+     */
     ReportingPeriodCode retrieveReportingPeriodCodeEntityByCode(String code);
 
     /**
@@ -49,6 +69,11 @@ public interface LookupService {
      */
     List<CodeLookupDto> retrieveUnitMeasureCodes();
 
+    /**
+     * Retrieve UoM code database object by code
+     * @param code
+     * @return
+     */
     UnitMeasureCode retrieveUnitMeasureCodeEntityByCode(String code);
 
 }

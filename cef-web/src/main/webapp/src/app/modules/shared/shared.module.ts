@@ -20,6 +20,7 @@ import { SharedRoutingModule } from 'src/app/modules/shared/shared-routing';
 import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.directive';
 import { ErrorComponent } from './pages/error/error.component';
 import { ReportSummaryTableComponent } from 'src/app/modules/shared/components/report-summary-table/report-summary-table.component';
+import { ValidationMessageComponent } from './components/validation-message/validation-message.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { ReportSummaryTableComponent } from 'src/app/modules/shared/components/r
     SortableHeaderDirective,
     PhoneNumberPipe,
     ErrorComponent,
-    ReportSummaryTableComponent
+    ReportSummaryTableComponent,
+    ValidationMessageComponent
 ],
   exports: [
     FacilityInfoComponent,
@@ -47,7 +49,8 @@ import { ReportSummaryTableComponent } from 'src/app/modules/shared/components/r
     FacilityWidgetComponent,
     SortableHeaderDirective,
     PhoneNumberPipe,
-    ReportSummaryTableComponent
+    ReportSummaryTableComponent,
+    ValidationMessageComponent
 ],
   imports: [
     CommonModule,
