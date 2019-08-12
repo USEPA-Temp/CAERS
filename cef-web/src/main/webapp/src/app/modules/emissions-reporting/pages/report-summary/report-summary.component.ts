@@ -4,6 +4,7 @@ import { ReportSummary } from 'src/app/shared/models/report-summary';
 import { ReportService } from 'src/app/core/services/report.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { UserService } from 'src/app/core/services/user.service';
+import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 
 declare const initCromerrWidget: any;
@@ -22,21 +23,24 @@ export class ReportSummaryComponent implements OnInit {
     constructor(
         private reportService: ReportService,
         private route: ActivatedRoute,
+        private sharedService: SharedService,
         private userService: UserService,
         private userContextService: UserContextService) { }
 
     ngOnInit() {
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
             this.facilitySite = data.facilitySite;
+            this.sharedService.emitChange(data.facilitySite);
 
             if (this.facilitySite.id) {
                 this.emissionsReportYear = this.facilitySite.emissionsReport.year;
                 this.userService.getCurrentUserNaasToken()
-                .subscribe(userToken =>{
+                .subscribe(userToken => {
                     this.userContextService.getUser().subscribe( user => {
-                            if (user.role == 'Certifier' && this.facilitySite.emissionsReport.status!='SUBMITTED') {
+                            if (user.role == 'Certifier' && this.facilitySite.emissionsReport.status!= 'SUBMITTED') {
                                 this.showCertify = true;
-                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl, this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId);
+                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
+                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId);
                             }
                         });
                     }
