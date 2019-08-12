@@ -29,7 +29,7 @@
         <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
         <td><button class="btn btn-primary btn-sm" (click)="openSummaryModal(submission)">Summary</button><span class="pr-2"></span> 
             <button class="btn btn-primary btn-sm" 
-                [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'facilityInformation']">View Report</button>
+                [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'summary']">View Report</button>
         </td>
       </tr>
       </tbody>
