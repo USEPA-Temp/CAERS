@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
@@ -9,7 +9,8 @@ import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
   templateUrl: './edit-process-reporting-period-panel.component.html',
   styleUrls: ['./edit-process-reporting-period-panel.component.scss']
 })
-export class EditProcessReportingPeriodPanelComponent implements OnInit {
+export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChanges {
+  @Input() reportingPeriod: ReportingPeriod;
   reportingPeriodForm = this.fb.group({
     reportingPeriodTypeCode: [null, Validators.required],
     emissionsOperatingTypeCode: [null, Validators.required],
@@ -62,6 +63,11 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit {
     });
   }
 
+  ngOnChanges() {
+
+    this.reportingPeriodForm.reset(this.reportingPeriod);
+  }
+
   onSubmit() {
 
     // console.log(this.reportingPeriodForm);
@@ -69,6 +75,10 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit {
     // let period = new ReportingPeriod();
     // Object.assign(period, this.reportingPeriodForm.value);
     // console.log(period);
+  }
+
+  compareCode(c1: BaseCodeLookup, c2: BaseCodeLookup) {
+    return c1 && c2 ? c1.code === c2.code : c1 === c2;
   }
 
 }

@@ -17,6 +17,11 @@ export class EmissionsProcessService {
     return this.http.post<Process>(url, process);
   }
 
+  update(process: Process): Observable<Process> {
+    const url = `${this.baseUrl}/${process.id}`;
+    return this.http.put<Process>(url, process);
+  }
+
   /** GET specified release point from the server */
   retrieve(id: number): Observable<Process> {
     const url = `${this.baseUrl}/${id}`;
