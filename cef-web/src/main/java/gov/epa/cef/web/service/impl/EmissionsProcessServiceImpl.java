@@ -66,6 +66,19 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
         return result;
     }
 
+    public EmissionsProcessDto update(EmissionsProcessSaveDto dto) {
+
+        EmissionsProcess process = processRepo.findById(dto.getId()).orElse(null);
+        emissionsProcessMapper.updateFromSaveDto(dto, process);
+
+        if (dto.getOperatingStatusCode() != null) {
+            process.setOperatingStatusCode(lookupService.retrieveOperatingStatusCodeEntityByCode(dto.getOperatingStatusCode().getCode()));
+        }
+
+        EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.EmissionsProcessService#retrieveById(java.lang.Long)
      */

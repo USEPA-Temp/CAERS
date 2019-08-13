@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 
@@ -7,11 +7,13 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
   templateUrl: './edit-process-operating-detail-panel.component.html',
   styleUrls: ['./edit-process-operating-detail-panel.component.scss']
 })
-export class EditProcessOperatingDetailPanelComponent implements OnInit {
+export class EditProcessOperatingDetailPanelComponent implements OnInit, OnChanges {
+  @Input() operatingDetails: OperatingDetail;
   operatingDetailsForm = this.fb.group({
     actualHoursPerPeriod: ['', [
       Validators.required,
       Validators.min(0),
+      Validators.max(8760),
       Validators.pattern('[0-9]*')
     ]],
     avgHoursPerDay: ['', [
@@ -61,6 +63,11 @@ export class EditProcessOperatingDetailPanelComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
+
+    this.operatingDetailsForm.reset(this.operatingDetails);
   }
 
   onSubmit() {

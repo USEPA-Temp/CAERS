@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
@@ -9,7 +9,8 @@ import { Process } from 'src/app/shared/models/process';
   templateUrl: './edit-process-info-panel.component.html',
   styleUrls: ['./edit-process-info-panel.component.scss']
 })
-export class EditProcessInfoPanelComponent implements OnInit {
+export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
+  @Input() process: Process;
   processForm = this.fb.group({
     aircraftEngineTypeCodeCode: [''],
     operatingStatusCode: [null, Validators.required],
@@ -19,8 +20,8 @@ export class EditProcessInfoPanelComponent implements OnInit {
     ]],
     statusYear: ['', [
       Validators.required,
-      Validators.min(1985),
-      Validators.max(2030),
+      Validators.min(1900),
+      Validators.max(2050),
       Validators.pattern('[0-9]*')
     ]],
     sccCode: ['', [
@@ -48,6 +49,11 @@ export class EditProcessInfoPanelComponent implements OnInit {
     });
   }
 
+  ngOnChanges() {
+
+    this.processForm.reset(this.process);
+  }
+
   onSubmit() {
 
     // console.log(this.processForm);
@@ -55,6 +61,10 @@ export class EditProcessInfoPanelComponent implements OnInit {
     // let process = new Process();
     // Object.assign(process, this.processForm.value);
     // console.log(process);
+  }
+
+  compareCode(c1: BaseCodeLookup, c2: BaseCodeLookup) {
+    return c1 && c2 ? c1.code === c2.code : c1 === c2;
   }
 
 }

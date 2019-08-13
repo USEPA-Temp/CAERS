@@ -12,6 +12,11 @@ export class ReportingPeriodService {
 
   constructor(private http: HttpClient) { }
 
+  update(period: ReportingPeriod): Observable<ReportingPeriod> {
+    const url = `${this.baseUrl}/${period.id}`;
+    return this.http.put<ReportingPeriod>(url, period);
+  }
+
   /** GET specified facility site contact from the server */
   retrieve(id: number): Observable<ReportingPeriod> {
     const url = `${this.baseUrl}/${id}`;

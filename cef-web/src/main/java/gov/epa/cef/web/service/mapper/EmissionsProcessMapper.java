@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
@@ -21,5 +22,10 @@ public interface EmissionsProcessMapper {
     @Mapping(source="emissionsUnitId", target="emissionsUnit.id")
 //    @Mapping(source="aircraftEngineTypeCodeCode", target="aircraftEngineTypeCode.code")
     EmissionsProcess fromSaveDto(EmissionsProcessSaveDto source);
+    
+    @Mapping(target = "operatingStatusCode", ignore = true)
+    @Mapping(target = "releasePointAppts", ignore = true)
+    @Mapping(target = "reportingPeriods", ignore = true)
+    void updateFromSaveDto(EmissionsProcessSaveDto source, @MappingTarget EmissionsProcess target);
 
 }
