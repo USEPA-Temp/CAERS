@@ -9,7 +9,8 @@
     "test": "ng test",
     "test-prod": "ng test --code-coverage --watch=false",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+	"dev-watch": "ng build --watch"
   },
   "private": true,
   "dependencies": {

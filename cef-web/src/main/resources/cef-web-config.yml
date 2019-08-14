@@ -6,13 +6,20 @@ spring:
     url: "jdbc:postgresql://172.20.2.35:5432/CEF"
     username: "cef"
     password: "cef_fall2017"
+    tomcat:
+      initial-size: 15
+      max-wait: 20000
+      max-active: 50
+      max-idle: 15
+      min-idle: 8
+      default-auto-commit: true
 cdx:
   registerEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
   registerProgramFacilityEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterProgramFacilityService
   registerSignEndpointConfiguration:
-    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterSignService    
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterSignService
   naas-token-url: https://naasdev.epacdxnode.net/xml/SecurityToken_v30.wsdl
   naas-user: caer-cef-admin@epa.gov
   naas-password: CDXcaercef01

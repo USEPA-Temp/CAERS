@@ -4,19 +4,24 @@ server:
     context-path: /cef-web
 spring:
   profiles:
-      active: #spring.profiles.active#
+    active: #spring.profiles.active#
   jmx.enabled: false
   thymeleaf:
-      mode: HTML  
+    mode: HTML
   jpa:
-    generate-ddl: false
-    hibernate.ddl-auto: none
+    #open-in-view: false
     show-sql: false
+    generate-ddl: false
+    data.jpa.repositories.enabled: true
     properties.hibernate:
       # disables annoying non-error in logs from hibernate
       jdbc.lob.non_contextual_creation: true
       # register custom PostgreSQL dialect that supports jsonb
       dialect: gov.epa.cef.web.hibernate.PostgreSQLDialectWithJsonSupport
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-  data.jpa.repositories.enabled: true
+      cache:
+        region:
+          factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
+        use_second_level_cache: true
+        use_minimal_puts: true
   jackson.serialization.FAIL_ON_EMPTY_BEANS: false
