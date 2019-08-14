@@ -45,7 +45,7 @@ public class Emission extends BaseAuditEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emissions_calc_method_code", nullable = false)
-    CalculationMethodCode emissionsCalcMethodCode;
+    private CalculationMethodCode emissionsCalcMethodCode;
 
     @Column(name = "comments", length = 200)
     private String comments;
@@ -60,6 +60,33 @@ public class Emission extends BaseAuditEntity {
     
     @Column(name = "calculated_emissions_tons")
     private BigDecimal calculatedEmissionsTons;
+
+    
+    /***
+     * Default constructor
+     */
+    public Emission() {}
+    
+    
+    /***
+     * Copy constructor 
+     * @param reportingPeriod The reporting period that the copied Emission object should be associated with
+     * @param originalEmission The emission object that is being copied
+     */
+    public Emission(ReportingPeriod reportingPeriod, Emission originalEmission) {
+		this.id = originalEmission.getId();
+        this.reportingPeriod = reportingPeriod;
+        this.pollutant = originalEmission.getPollutant();
+        this.totalEmissions = originalEmission.getTotalEmissions();
+        this.emissionsUomCode = originalEmission.getEmissionsUomCode();
+        this.emissionsFactor = originalEmission.getEmissionsFactor();
+        this.emissionsFactorText = originalEmission.getEmissionsFactorText();
+        this.emissionsCalcMethodCode = originalEmission.getEmissionsCalcMethodCode();
+        this.comments = originalEmission.getComments();
+        this.emissionsNumeratorUom = originalEmission.getEmissionsNumeratorUom();
+        this.emissionsDenominatorUom = originalEmission.getEmissionsDenominatorUom();
+        this.calculatedEmissionsTons = originalEmission.getCalculatedEmissionsTons();
+    }
 
     public ReportingPeriod getReportingPeriod() {
         return this.reportingPeriod;
@@ -147,6 +174,14 @@ public class Emission extends BaseAuditEntity {
 
     public void setEmissionsDenominatorUom(UnitMeasureCode emissionsDenominatorUom) {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
     }
 
 }

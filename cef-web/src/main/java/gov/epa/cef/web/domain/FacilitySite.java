@@ -115,7 +115,67 @@ public class FacilitySite extends BaseAuditEntity {
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<FacilitySiteContact> contacts = new HashSet<FacilitySiteContact>(0);
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
+    private Set<Control> controls = new HashSet<Control>(0);
 
+    
+    /***
+     * Default constructor
+     */
+    public FacilitySite() {}
+    
+    
+    /***
+     * Copy constructor
+     * @param emissionsReport The emissions report object that this facility site should be associated with
+     * @param originalFacilitySite The facility site object being copied
+     */
+    public FacilitySite(EmissionsReport emissionsReport, FacilitySite originalFacilitySite) {
+		this.id = originalFacilitySite.getId();
+        this.facilityCategoryCode = originalFacilitySite.getFacilityCategoryCode();
+        this.facilitySourceTypeCode = originalFacilitySite.getFacilitySourceTypeCode();
+        this.programSystemCode = originalFacilitySite.getProgramSystemCode();
+        this.operatingStatusCode = originalFacilitySite.getOperatingStatusCode();
+        this.emissionsReport = emissionsReport;
+        this.frsFacilityId = originalFacilitySite.getFrsFacilityId();
+        this.eisProgramId = originalFacilitySite.getEisProgramId();
+        this.altSiteIdentifier = originalFacilitySite.getAltSiteIdentifier();
+        this.name = originalFacilitySite.getName();
+        this.description = originalFacilitySite.getDescription();
+        this.statusYear = originalFacilitySite.getStatusYear();
+        this.streetAddress = originalFacilitySite.getStreetAddress();
+        this.city = originalFacilitySite.getCity();
+        this.county = originalFacilitySite.getCounty();
+        this.stateCode = originalFacilitySite.getStateCode();
+        this.countryCode = originalFacilitySite.getCountryCode();
+        this.postalCode = originalFacilitySite.getPostalCode();
+        this.mailingStreetAddress = originalFacilitySite.getMailingStreetAddress();
+        this.mailingCity = originalFacilitySite.getMailingCity();
+        this.mailingStateCode = originalFacilitySite.getMailingStateCode();
+        this.mailingPostalCode = originalFacilitySite.getMailingPostalCode();
+        this.latitude = originalFacilitySite.getLatitude();
+        this.longitude = originalFacilitySite.getLongitude();
+        this.tribalCode = originalFacilitySite.getTribalCode();
+
+        for (FacilityNAICSXref naicsXref : originalFacilitySite.getFacilityNAICS()) {
+        	this.facilityNAICS.add(new FacilityNAICSXref(this, naicsXref));
+        }
+        for (ReleasePoint releasePoint : originalFacilitySite.getReleasePoints()) {
+        	this.releasePoints.add(new ReleasePoint(this, releasePoint));
+        }
+        for (EmissionsUnit emissionsUnit : originalFacilitySite.getEmissionsUnits()) {
+        	this.emissionsUnits.add(new EmissionsUnit(this, emissionsUnit));
+        }
+        for (FacilitySiteContact siteContact : originalFacilitySite.getContacts()) {
+        	this.contacts.add(new FacilitySiteContact(this, siteContact));
+        }
+        for (Control control : originalFacilitySite.getControls()) {
+        	this.controls.add(new Control(this, control));
+        }
+    }
+    
+    
     public FacilityCategoryCode getFacilityCategoryCode() {
         return this.facilityCategoryCode;
     }
@@ -340,4 +400,35 @@ public class FacilitySite extends BaseAuditEntity {
         this.contacts = contacts;
     }
 
+    public Set<Control> getControls() {
+        return controls;
+    }
+
+    public void setControls(Set<Control> controls) {
+        this.controls = controls;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+
+        for (FacilityNAICSXref naicsXref : this.facilityNAICS) {
+        	naicsXref.clearId();
+        }
+		for (ReleasePoint releasePoint : this.releasePoints) {
+			releasePoint.clearId();
+		}
+		for (EmissionsUnit emissionsUnit : this.emissionsUnits) {
+			emissionsUnit.clearId();
+		}
+        for (FacilitySiteContact contact : this.contacts) {
+        	contact.clearId();
+        }
+		for (Control control : this.controls) {
+			control.clearId();
+		}
+    }
 }

@@ -49,6 +49,33 @@ public class Control extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
     private Set<ControlPollutant> pollutants = new HashSet<ControlPollutant>(0);
 
+    /**
+     * Default constructor
+     */
+    public Control() {}
+    
+    
+    /**
+     * Copy constructor
+     * @param originalControl
+     */
+    public Control(FacilitySite facilitySite, Control originalControl) {
+    	this.id = originalControl.getId();
+    	this.facilitySite = facilitySite;
+    	this.operatingStatusCode = originalControl.getOperatingStatusCode();
+    	this.identifier = originalControl.getIdentifier();
+    	this.description = originalControl.getDescription();
+    	this.percentCapture = originalControl.getPercentCapture();
+    	this.percentControl = originalControl.getPercentControl();
+    	this.comments = originalControl.getComments();
+    	for (ControlAssignment controlAssignment : originalControl.getAssignments()) {
+    		this.assignments.add(new ControlAssignment(this, controlAssignment));
+    	}
+    	for (ControlPollutant pollutant : originalControl.getPollutants()) {
+    		this.pollutants.add(new ControlPollutant(this, pollutant));
+    	}
+    }
+    
     public FacilitySite getFacilitySite() {
         return facilitySite;
     }
@@ -119,6 +146,22 @@ public class Control extends BaseAuditEntity {
 
     public void setPollutants(Set<ControlPollutant> controlPollutants) {
         this.pollutants = controlPollutants;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+
+    	for (ControlAssignment assignment : this.assignments) {
+    		assignment.clearId();
+    	}
+    	
+    	for (ControlPollutant pollutant : this.pollutants) {
+    		pollutant.clearId();
+    	}
     }
 
 }

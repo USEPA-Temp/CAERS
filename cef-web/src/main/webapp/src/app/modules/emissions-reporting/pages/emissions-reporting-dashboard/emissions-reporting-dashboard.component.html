@@ -1,10 +1,10 @@
 <div class="card">
 	<div class="card-header text-center">
-		<strong>Emissions Reports</strong>
+        <strong>Emissions Reports</strong>
 	</div>
 	<div class="list-group list-group-flush">
 		<div *ngFor="let report of reports" class="list-group-item">
-			<app-emissions-reporting-list-item [report]="report"></app-emissions-reporting-list-item>
+			<app-emissions-reporting-list-item [report]="report" [facility]="facility"></app-emissions-reporting-list-item>
 		</div>
 	</div>
 </div>

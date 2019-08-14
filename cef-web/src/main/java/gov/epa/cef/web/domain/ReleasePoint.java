@@ -106,8 +106,46 @@ public class ReleasePoint extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")
     private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
 
+    
+    /***
+     * Default constructor
+     */
+    public ReleasePoint() {}
+    
+    
+    /***
+     * Copy constructor (release point apportionment is not copied here, they are copied within the EmissionsProcess entity)
+     * @param facilitySite The facility site object that this release point should be associated with
+     * @param originalReleasePoint The release point object being copied
+     */
+    public ReleasePoint(FacilitySite facilitySite, ReleasePoint originalReleasePoint) {
+		this.id = originalReleasePoint.getId();
+        this.programSystemCode = originalReleasePoint.getProgramSystemCode();
+        this.operatingStatusCode = originalReleasePoint.getOperatingStatusCode();
+        this.facilitySite = facilitySite;
+        this.releasePointIdentifier = originalReleasePoint.getReleasePointIdentifier();
+        this.typeCode = originalReleasePoint.getTypeCode();
+        this.description = originalReleasePoint.getDescription();
+        this.stackHeight = originalReleasePoint.getStackHeight();
+        this.stackHeightUomCode = originalReleasePoint.getStackHeightUomCode();
+        this.stackDiameter = originalReleasePoint.getStackDiameter();
+        this.stackDiameterUomCode = originalReleasePoint.getStackDiameterUomCode();
+        this.exitGasVelocity = originalReleasePoint.getExitGasVelocity();
+        this.exitGasVelocityUomCode = originalReleasePoint.getExitGasVelocityUomCode();
+        this.exitGasTemperature = originalReleasePoint.getExitGasTemperature();
+        this.exitGasFlowRate = originalReleasePoint.getExitGasFlowRate();
+        this.exitGasFlowUomCode = originalReleasePoint.getExitGasFlowUomCode();
+        this.statusYear = originalReleasePoint.getStatusYear();
+        this.fugitiveLine1Latitude = originalReleasePoint.getFugitiveLine1Latitude();
+        this.fugitiveLine1Longitude = originalReleasePoint.getFugitiveLine1Longitude();
+        this.fugitiveLine2Latitude = originalReleasePoint.getFugitiveLine2Latitude();
+        this.fugitiveLine2Longitude = originalReleasePoint.getFugitiveLine2Longitude();
+        this.latitude = originalReleasePoint.getLatitude();
+        this.longitude = originalReleasePoint.getLongitude();
+        this.comments = originalReleasePoint.getComments();
+    }
+    
     // Property accessors
-
     public ProgramSystemCode getProgramSystemCode() {
         return this.programSystemCode;
     }
@@ -298,6 +336,14 @@ public class ReleasePoint extends BaseAuditEntity {
 
     public void setReleasePointAppts(Set<ReleasePointAppt> releasePointAppts) {
         this.releasePointAppts = releasePointAppts;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
     }
 
 }

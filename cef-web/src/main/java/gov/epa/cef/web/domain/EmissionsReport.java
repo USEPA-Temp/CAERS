@@ -54,6 +54,31 @@ public class EmissionsReport extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private Set<FacilitySite> facilitySites = new HashSet<FacilitySite>(0);
 
+    
+    /***
+     * Default constructor
+     */
+    public EmissionsReport() {}
+    
+    
+    /***
+     * Copy constructor
+     * @param originalEmissionsReport The emissions report object being copied
+     */
+    public EmissionsReport(EmissionsReport originalEmissionsReport) {
+		this.id = originalEmissionsReport.getId();
+    	this.frsFacilityId = originalEmissionsReport.frsFacilityId;
+    	this.eisProgramId = originalEmissionsReport.eisProgramId;
+    	this.agencyCode = originalEmissionsReport.agencyCode;
+    	this.year = originalEmissionsReport.year;
+    	this.status = originalEmissionsReport.status;
+    	this.validationStatus = originalEmissionsReport.validationStatus;
+    	for (FacilitySite facilitySite : originalEmissionsReport.facilitySites) {
+    		this.facilitySites.add(new FacilitySite(this, facilitySite));
+    	}
+    }
+    
+    
     // Property accessors
     
     public String getFrsFacilityId() {
@@ -128,4 +153,15 @@ public class EmissionsReport extends BaseAuditEntity {
         this.cromerrDocumentId = cromerrDocumentId;
     }
     
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+    	for (FacilitySite facilitySite : this.facilitySites) {
+    		facilitySite.clearId();
+    	}
+    }
+
 }

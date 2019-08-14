@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +21,7 @@ public class ControlAssignment extends BaseAuditEntity {
     @JoinColumn(name = "control_id", nullable = false)
     private Control control;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "control_path_id", nullable = false)
     private ControlPath controlPath;
 
@@ -39,6 +40,54 @@ public class ControlAssignment extends BaseAuditEntity {
     @Column(name = "description", length = 200)
     private String description;
 
+    
+    /**
+     * Default constructor
+     */
+    public ControlAssignment() {}
+    
+    
+    /**
+     * Copy constructor
+     * @param control
+     * @param controlAssignment
+     */
+    public ControlAssignment(Control control, ControlAssignment originalControlAssignment) {
+    	this.id = originalControlAssignment.getId();
+    	this.control = control;
+    	this.controlPath = new ControlPath(this, originalControlAssignment.getControlPath());
+    	this.description = originalControlAssignment.getDescription();
+
+    	if (originalControlAssignment.getReleasePoint() != null) {
+	    	for(ReleasePoint newReleasePoint : this.control.getFacilitySite().getReleasePoints()) {
+	    		if (newReleasePoint.getId().equals(originalControlAssignment.getReleasePoint().getId())) {
+	    			this.releasePoint = newReleasePoint;
+	    			break;
+	    		}
+	    	}
+    	}
+    	
+    	if (originalControlAssignment.getEmissionsUnit() != null) {
+	    	for(EmissionsUnit newEmissionsUnit : this.control.getFacilitySite().getEmissionsUnits()) {
+	    		if (newEmissionsUnit.getId().equals(originalControlAssignment.getEmissionsUnit().getId())) {
+	    			this.emissionsUnit = newEmissionsUnit;
+	    			break;
+	    		}
+	    	}
+    	}
+
+    	if (originalControlAssignment.getEmissionsProcess() != null) {
+	    	for(EmissionsUnit newEmissionsUnit : this.control.getFacilitySite().getEmissionsUnits()) {
+	    		for (EmissionsProcess newEmissionsProcess : newEmissionsUnit.getEmissionsProcesses()) {
+		    		if (newEmissionsProcess.getId().equals(originalControlAssignment.getEmissionsProcess().getId())) {
+		    			this.emissionsProcess = newEmissionsProcess;
+		    			break;
+		    		}
+	    		}
+	    	}
+    	}
+    }
+    
     public Control getControl() {
         return control;
     }
@@ -85,6 +134,17 @@ public class ControlAssignment extends BaseAuditEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+    	if (this.controlPath != null) {
+    		this.controlPath.clearId();
+    	}
     }
 
 }

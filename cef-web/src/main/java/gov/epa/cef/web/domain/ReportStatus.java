@@ -1,6 +1,7 @@
 package gov.epa.cef.web.domain;
 
 public enum ReportStatus {
+	NEW("New"),
     APPROVED("Approved"),
     IN_PROGRESS("In Progress"),
     SUBMITTED("Submitted"),

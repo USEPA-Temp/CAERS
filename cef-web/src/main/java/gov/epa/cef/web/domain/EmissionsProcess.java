@@ -58,6 +58,46 @@ public class EmissionsProcess extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
     private Set<ReportingPeriod> reportingPeriods = new HashSet<ReportingPeriod>(0);
 
+    
+    /***
+     * Default constructor
+     */
+    public EmissionsProcess() {}
+    
+    
+    /***
+     * Copy constructor
+     * @param unit The emissions unit object that this process should be associated with
+     * @param originalProcess The process object being copied
+     */
+    public EmissionsProcess(EmissionsUnit unit, EmissionsProcess originalProcess) {
+		this.id = originalProcess.getId();
+        this.emissionsUnit = unit;
+        this.aircraftEngineTypeCode = originalProcess.getAircraftEngineTypeCode();
+        this.operatingStatusCode = originalProcess.getOperatingStatusCode();
+        this.emissionsProcessIdentifier = originalProcess.getEmissionsProcessIdentifier();
+        this.statusYear = originalProcess.getStatusYear();
+        this.sccCode = originalProcess.getSccCode();
+        this.sccShortName = originalProcess.getSccShortName();
+        this.description = originalProcess.getDescription();
+        this.comments = originalProcess.getComments();
+
+        for (ReleasePointAppt originalApportionment : originalProcess.getReleasePointAppts()) {
+        	ReleasePoint rp = null;
+        	for(ReleasePoint newReleasePoint : this.emissionsUnit.getFacilitySite().getReleasePoints()) {
+        		if (newReleasePoint.getId().equals(originalApportionment.getReleasePoint().getId())) {
+        			rp = newReleasePoint;
+        			break;
+        		}
+        	}
+        	this.releasePointAppts.add(new ReleasePointAppt(rp, this, originalApportionment));
+        }
+
+        for (ReportingPeriod reportingPeriod : originalProcess.getReportingPeriods()) {
+        	this.reportingPeriods.add(new ReportingPeriod(this, reportingPeriod));
+        }        
+    }
+    
     public EmissionsUnit getEmissionsUnit() {
         return this.emissionsUnit;
     }
@@ -135,5 +175,20 @@ public class EmissionsProcess extends BaseAuditEntity {
     }
     public void setReportingPeriods(Set<ReportingPeriod> reportingPeriods) {
         this.reportingPeriods = reportingPeriods;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+
+		for (ReleasePointAppt releasePointAppt : this.releasePointAppts) {
+			releasePointAppt.clearId();
+		}
+		for (ReportingPeriod reportingPeriod : this.reportingPeriods) {
+			reportingPeriod.clearId();
+		}
     }
 }
