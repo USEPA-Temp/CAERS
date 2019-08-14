@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
+import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 
 @Component({
   selector: 'app-edit-process-reporting-period-panel',
@@ -33,6 +34,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
   constructor(
     private lookupService: LookupService,
+    public formUtils: FormUtilsService,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -75,10 +77,6 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     // let period = new ReportingPeriod();
     // Object.assign(period, this.reportingPeriodForm.value);
     // console.log(period);
-  }
-
-  compareCode(c1: BaseCodeLookup, c2: BaseCodeLookup) {
-    return c1 && c2 ? c1.code === c2.code : c1 === c2;
   }
 
 }
