@@ -1,15 +1,15 @@
 <div class="pipe-list">
-    <a class="underline-on-hover cursor-pointer text-dark font-weight-bold pipe-item" (click)="createNewReport()" *ngIf="isOneOf(report.status, ['NEW'])">Create New Report</a>
+    <a class="underline-on-hover cursor-pointer text-dark font-weight-bold pipe-item" (click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
 
     <a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['IN_PROGRESS'])">Run Quality Check</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="report.status === 'IN_PROGRESS'">Run Quality Check</a>
 	
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED'])  && userContext.user.role === 'Preparer'">Notify Certifier</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify Certifier</a>
 
 	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 	
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED']) && userContext.user.role === 'Certifier'">Certify</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Certifier'">Certify</a>
 	
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED']) && userContext.user.role === 'Certifier'">Return to Preparer</a>
-	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="isOneOf(report.status, ['VALIDATED']) && userContext.user.role === 'Preparer'">Cancel Nomination</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Certifier'">Return to Preparer</a>
+	<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
 </div>
