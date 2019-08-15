@@ -3,6 +3,7 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
+import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -39,6 +40,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
   constructor(
     private lookupService: LookupService,
+    public formUtils: FormUtilsService,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -61,10 +63,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     // let process = new Process();
     // Object.assign(process, this.processForm.value);
     // console.log(process);
-  }
-
-  compareCode(c1: BaseCodeLookup, c2: BaseCodeLookup) {
-    return c1 && c2 ? c1.code === c2.code : c1 === c2;
   }
 
 }
