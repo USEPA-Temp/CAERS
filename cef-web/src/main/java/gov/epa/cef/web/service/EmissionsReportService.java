@@ -2,6 +2,7 @@ package gov.epa.cef.web.service;
 
 import java.util.List;
 
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -14,6 +15,15 @@ public interface EmissionsReportService {
      * @return
      */
     List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId);
+    
+
+
+    /**
+     * Find reports for a given facility and add a new emissions report record in memory for the current year if addReportForCurrentYear is true
+     * @param facilityEisProgramId {@link ProgramFacility}'s programId
+     * @return
+     */
+    List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId, boolean addReportForCurrentYear);
 
     /**
      * Find report by ID
@@ -29,6 +39,23 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto findMostRecentByFacilityEisProgramId(String facilityEisProgramId);
 
+    
     String submitToCromerr(Long emissionsReportId, String activityId) throws ApplicationException;
 
+
+    /**
+     * Create a copy of the emissions report for the current year based on the specified facility and year.  The copy of the report is NOT saved to the database.
+     * @param facilitySiteId 
+     * @param currentReportYear The year of the report that is being created
+     * @return
+     */
+    EmissionsReport createEmissionReportCopy(String facilityEisProgramId, Integer currentReportYear);
+
+    
+    /**
+     * Save the emissions report to the database.
+     * @param emissionsReport
+     * @return
+     */
+    EmissionsReportDto saveEmissionReport(EmissionsReport emissionsReport);
 }

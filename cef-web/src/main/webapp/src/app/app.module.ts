@@ -25,6 +25,7 @@ import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/componen
 import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
 import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.interceptor';
 import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
+import { BusyModalComponent } from './shared/components/busy-modal/busy-modal.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/componen
     BreadcrumbNavComponent,
     SubmissionReviewListComponent,
     FacilityDataReviewComponent,
-    ReportSummaryModalComponent
+    ReportSummaryModalComponent,
+    BusyModalComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +56,8 @@ import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/componen
     FontAwesomeModule
   ],
   entryComponents: [
-    ReportSummaryModalComponent
+    ReportSummaryModalComponent,
+    BusyModalComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},

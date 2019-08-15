@@ -3,6 +3,8 @@ package gov.epa.cef.web.service.impl;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReportStatus;
+import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
@@ -54,12 +57,27 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
     @Override
-    public List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId) {
-        List<EmissionsReport> emissionReports= erRepo.findByEisProgramId(facilityEisProgramId);
-        return emissionsReportMapper.toDtoList(emissionReports);
+    public List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId) {        
+        return findByFacilityEisProgramId(facilityEisProgramId, false);
     }
+    
 
     /* (non-Javadoc)
+     * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
+     */
+    @Override
+    public List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId, boolean addReportForCurrentYear) {
+        List<EmissionsReport> emissionReports= erRepo.findByEisProgramId(facilityEisProgramId);
+        if (addReportForCurrentYear) {
+        	addCurrentYear(emissionReports, facilityEisProgramId);
+        }
+        
+        List<EmissionsReportDto> dtoList = emissionsReportMapper.toDtoList(emissionReports);
+        return dtoList;
+    }
+
+
+	/* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findById(java.lang.Long)
      */
     @Override
@@ -77,8 +95,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Override
     public EmissionsReportDto findMostRecentByFacilityEisProgramId(String facilityEisProgramId) {
 
-        EmissionsReport emissionsReport=erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
-                .stream().findFirst().orElse(null);
+        EmissionsReport emissionsReport = findMostRecentEmissionsReport(facilityEisProgramId);
         return emissionsReportMapper.toDto(emissionsReport);
     }
     
@@ -116,5 +133,92 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             }
         }
     }
+
+
+
+    /**
+     * Create a copy of the emissions report for the current year based on the specified facility and year.  The copy of the report is NOT saved to the database.
+     * @param facilitySiteId 
+     * @param currentReportYear The year of the report that is being created
+     * @return
+     */
+    @Override
+    public EmissionsReport createEmissionReportCopy(String facilityEisProgramId, Integer reportYear) {
+
+        EmissionsReport mostRecentReport = findMostRecentEmissionsReport(facilityEisProgramId);
+        if (mostRecentReport != null) {
+        	EmissionsReport reportCopy = new EmissionsReport(mostRecentReport);
+	    	reportCopy.setYear(reportYear.shortValue());
+	    	reportCopy.setStatus(ReportStatus.IN_PROGRESS);
+	    	reportCopy.setValidationStatus(ValidationStatus.UNVALIDATED);
+	    	reportCopy.clearId();
+	    	return reportCopy;
+        } else {
+        	return null;
+        }
+    }
+    
+    
+
+    /**
+     * Save the emissions report to the database.
+     * @param emissionsReport
+     * @return
+     */
+    @Override
+    public EmissionsReportDto saveEmissionReport(EmissionsReport emissionsReport) {
+	    	EmissionsReport savedReport = erRepo.save(emissionsReport);
+	    	return emissionsReportMapper.toDto(savedReport);
+    }
+    
+    
+    /**
+     * Find the most recent emissions report model object for the given facility
+     * @param facilityEisProgramId
+     * @return The EmissionsReport model object
+     */
+    private EmissionsReport findMostRecentEmissionsReport(String facilityEisProgramId) {
+        EmissionsReport mostRecentReport = erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
+                .stream().findFirst().orElse(null);
+        return mostRecentReport;
+    }
+    
+
+    /**
+     * Add an emissions report to the list if one does not exist for the current year
+     * @param emissionReports
+     */
+	private void addCurrentYear(List<EmissionsReport> emissionReports, String facilityEisProgramId) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        short currentYear = (short) calendar.get(Calendar.YEAR);
+        
+        if (!reportYearExists(currentYear, emissionReports)) {
+	        EmissionsReport newReport = new EmissionsReport();
+	        newReport.setEisProgramId(facilityEisProgramId);
+	        newReport.setStatus(ReportStatus.NEW);
+	        newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+	        newReport.setYear(currentYear);
+	        
+	        emissionReports.add(newReport);
+        }
+	}
+    
+
+
+    /**
+     * Determine whether an emissions report exists for the given year
+     * @param year
+     * @param emissionReports
+     * @return
+     */
+    private boolean reportYearExists(short year, List<EmissionsReport> emissionReports) {
+        for (EmissionsReport rpt : emissionReports) {
+	    	if (rpt.getYear() != null && rpt.getYear().shortValue() ==  year) {
+	    		return true;
+	    	}
+        }
+        return false;
+	}
 
 }

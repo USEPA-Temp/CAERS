@@ -32,6 +32,27 @@ public class ReleasePointAppt extends BaseAuditEntity {
     @Column(name = "percent", nullable = false, precision = 4, scale = 1)
     private Double percent;
 
+    
+    /***
+     * Default constructor
+     */
+    public ReleasePointAppt() {}
+
+    
+    /***
+     * Copy constructor
+     * @param newReleasePoint The release point that should be associated with this release point apportionment object
+     * @param newEmissionProcess The process that should be associated with this release point apportionment object
+     * @param originalReleasePointAppt The release point apportionment object that is being copied
+     */
+    public ReleasePointAppt(ReleasePoint newReleasePoint, EmissionsProcess newEmissionProcess, ReleasePointAppt originalReleasePointAppt) {
+		this.id = originalReleasePointAppt.getId();
+    	this.releasePoint = newReleasePoint;
+    	this.emissionsProcess = newEmissionProcess;
+    	this.percent = originalReleasePointAppt.getPercent();
+    }
+    
+    
     public ReleasePoint getReleasePoint() {
         return this.releasePoint;
     }
@@ -54,6 +75,14 @@ public class ReleasePointAppt extends BaseAuditEntity {
 
     public void setPercent(Double percent) {
         this.percent = percent;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
     }
 
 }

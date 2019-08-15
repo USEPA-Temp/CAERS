@@ -49,6 +49,31 @@ public class OperatingDetail extends BaseAuditEntity {
     @Column(name = "percent_fall", precision = 4, scale = 1)
     private Double percentFall;
 
+    
+    /***
+     * Default constructor
+     */
+    public OperatingDetail() {}
+    
+    
+    /***
+     * Copy constructor
+     * @param reportingPeriod The reporting period that this new operating detail should be associated with
+     * @param originalOperatingDetail The operating detail object that is being copied
+     */
+    public OperatingDetail(ReportingPeriod reportingPeriod, OperatingDetail originalOperatingDetail) {
+    	this.id = originalOperatingDetail.getId();
+        this.reportingPeriod = reportingPeriod;
+        this.actualHoursPerPeriod = originalOperatingDetail.getActualHoursPerPeriod();
+        this.avgHoursPerDay = originalOperatingDetail.getAvgHoursPerDay();
+        this.avgDaysPerWeek = originalOperatingDetail.getAvgDaysPerWeek();
+        this.avgWeeksPerPeriod = originalOperatingDetail.getAvgWeeksPerPeriod();
+        this.percentWinter = originalOperatingDetail.getPercentWinter();
+        this.percentSpring = originalOperatingDetail.getPercentSpring();
+        this.percentSummer = originalOperatingDetail.getPercentSummer();
+        this.percentFall = originalOperatingDetail.getPercentFall();
+    }
+    
     public ReportingPeriod getReportingPeriod() {
         return this.reportingPeriod;
     }
@@ -119,6 +144,14 @@ public class OperatingDetail extends BaseAuditEntity {
 
     public void setPercentFall(Double percentFall) {
         this.percentFall = percentFall;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
     }
 
 }
