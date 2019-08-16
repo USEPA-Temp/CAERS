@@ -1,6 +1,7 @@
 package gov.epa.cef.web.soap;
 
-import org.apache.cxf.configuration.jsse.TLSClientParameters;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -11,11 +12,6 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
-
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,27 +85,6 @@ public abstract class AbstractClient {
         httpClientPolicy.setAutoRedirect(true);
         // set the policy into the http conduit
         http.setClient(httpClientPolicy);
-
-        // provide ssl configuration
-        if (address.contains("https://")) {
-            TLSClientParameters sslParams = new TLSClientParameters();
-            sslParams.setDisableCNCheck(true);
-            sslParams.setTrustManagers(new TrustManager[] { new X509TrustManager() {
-
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                }
-
-                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                }
-            }
-
-            });
-            http.setTlsClientParameters(sslParams);
-        }
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format(
