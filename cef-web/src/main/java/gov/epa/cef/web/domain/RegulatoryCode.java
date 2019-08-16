@@ -1,16 +1,23 @@
 package gov.epa.cef.web.domain;
 
+import gov.epa.cef.web.domain.common.BaseLookupEntity;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import gov.epa.cef.web.domain.common.BaseLookupEntity;
 
 /**
  * RegulatoryCode entity. @author MyEclipse Persistence Tools
  */
 @Entity
 @Table(name = "regulatory_code")
+@Immutable
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class RegulatoryCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;

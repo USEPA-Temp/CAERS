@@ -17,7 +17,7 @@
     <url></url>
     <!-- =============================================================================================== -->
     <!-- SCM -->
-    <!-- =============================================================================================== -->    
+    <!-- =============================================================================================== -->
     <scm>
         <developerConnection>scm:git:ssh://git@alm.cgifederal.com/epacdx/cdx-oaqps-cef.git</developerConnection>
         <connection>scm:git:ssh://git@alm.cgifederal.com/epacdx/cdx-oaqps-cef.git</connection>
@@ -32,26 +32,33 @@
             <name>cdxmaven2repo</name>
             <url>file:///F:/data/maven2</url>
         </repository>
-    </distributionManagement>   
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
-        
+
+        <skip.node>false</skip.node>
+
         <java.version>1.8</java.version>
         <maven.version>3.0.0</maven.version>
         <node.version>v10.15.0</node.version>
-        <npm.version>6.4.1</npm.version>        
+        <npm.version>6.4.1</npm.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
         <cxf.version>3.3.1</cxf.version>
-        <jersey.version>2.27</jersey.version>
+        <hazelcast.version>3.12.2</hazelcast.version>
+        <hazelcast-hibernate.version>1.3.2</hazelcast-hibernate.version>
+        <hibernate.version>5.3.9.FINAL</hibernate.version>
         <jackson.version>2.9.8</jackson.version>
+        <jersey.version>2.27</jersey.version>
+        <logback.version>1.2.3</logback.version>
         <cdx.shared.version>1.0.4</cdx.shared.version>
         <powermock.version>2.0.2</powermock.version>
         <postgresql-embedded.version>2.10</postgresql-embedded.version>
-        
+        <slf4j.version>1.7.25</slf4j.version>
+
         <!-- Plugin versions -->
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -86,10 +93,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.zaxxer</groupId>
+                    <artifactId>HikariCP</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -105,6 +114,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
             <scope>runtime</scope>
@@ -114,11 +127,11 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- ====================================================================== -->
         <!-- DB -->
         <!-- ====================================================================== -->
-        
+
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
@@ -138,7 +151,7 @@
             <artifactId>tomcat-juli</artifactId>
             <version>${tomcat.version}</version>
             <scope>provided</scope>
-        </dependency>   
+        </dependency>
 
         <!-- ====================================================================== -->
         <!-- misc -->
@@ -157,8 +170,8 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
-        </dependency>        
-        
+        </dependency>
+
         <!-- ====================================================================== -->
         <!-- CDX Shared -->
         <!-- ====================================================================== -->
@@ -166,6 +179,20 @@
           <groupId>gov.epa.cdx.shared</groupId>
           <artifactId>cdx-shared-app-util</artifactId>
           <version>${cdx.shared.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-jcl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- ====================================================================== -->
@@ -189,10 +216,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -204,11 +233,65 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
             <scope>provided</scope>
-        </dependency>               
+        </dependency>
+
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>${hazelcast.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-hibernate53</artifactId>
+            <version>${hazelcast-hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-spring</artifactId>
+            <version>${hazelcast.version}</version>
+        </dependency>
+
+        <!-- ====================================================================== -->
+        <!--                             logging                                    -->
+        <!-- ====================================================================== -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-ext</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- ====================================================================== -->
         <!-- Testing -->
-        <!-- ====================================================================== -->     
+        <!-- ====================================================================== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -243,7 +326,7 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-    
+
     <!-- ====================================================================== -->
     <!-- build -->
     <!-- ====================================================================== -->
@@ -254,8 +337,8 @@
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh</artifactId>
                 <version>2.4</version>
-            </extension>            
-        </extensions>    
+            </extension>
+        </extensions>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
             <plugin>
@@ -276,7 +359,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>        
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -409,7 +492,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco-maven-plugin.version}</version>                   
+                    <version>${jacoco-maven-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>pre-unit-tests</id>
@@ -421,7 +504,7 @@
                                 <destFile>${project.testresult.directory}/coverage/jacoco/jacoco.exec</destFile>
                                 <excludes>
                                     <exclude>gov.epa.cef.web.security.mock.*</exclude>
-                                </excludes>                                   
+                                </excludes>
                                 <includes>
                                     <include>gov.epa.cef.web.api.rest.*</include>
                                     <include>gov.epa.cef.web.service.impl.*</include>
@@ -437,7 +520,7 @@
                                         <counter>BRANCH</counter>
                                         <value>COVEREDRATIO</value>
                                         <minimum>0.80</minimum>
-                                    </limit>                                                                    
+                                    </limit>
                             </configuration>
                         </execution>
                         <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
@@ -452,13 +535,13 @@
                                 <outputDirectory>${project.testresult.directory}/coverage/jacoco</outputDirectory>
                                 <excludes>
                                     <exclude>gov/epa/cef/web/security/mock/*</exclude>
-                                </excludes>                               
+                                </excludes>
                                 <includes>
                                     <include>gov/epa/cef/web/api/rest/**/*</include>
                                     <include>gov/epa/cef/web/service/impl/**/*</include>
                                     <include>gov/epa/cef/web/security/**/*</include>
                                     <include>gov/epa/cef/web/util/**/*</include>
-                                </includes>                                  
+                                </includes>
                             </configuration>
                         </execution>
                     </executions>
@@ -536,7 +619,7 @@
                                     </resource>
                                 </resources>
                             </configuration>
-                        </execution>                        
+                        </execution>
                     </executions>
                 </plugin>
                 <plugin>
@@ -561,24 +644,24 @@
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>${sonar-maven-plugin.version}</version>
-                </plugin>                
+                </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
                 </plugin>
             </plugins>
-        </pluginManagement>     
+        </pluginManagement>
     </build>
     <profiles>
         <profile>
             <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>   
+            </activation>
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
-            </properties>            
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -615,6 +698,9 @@
                                 <goals>
                                     <goal>install-node-and-npm</goal>
                                 </goals>
+                                <configuration>
+                                    <skip>${skip.node}</skip>
+                                </configuration>
                             </execution>
 
                             <execution>
@@ -622,6 +708,9 @@
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
+                                <configuration>
+                                    <skip>${skip.node}</skip>
+                                </configuration>
                             </execution>
 
                             <execution>
@@ -629,8 +718,8 @@
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
-
                                 <configuration>
+                                    <skip>${skip.node}</skip>
                                     <arguments>run build</arguments>
                                 </configuration>
                             </execution>
@@ -651,6 +740,9 @@
                                     </includes>
                                 </resource>
                             </webResources>
+                            <packagingExcludes>
+                                WEB-INF/classes/logback-test.xml
+                            </packagingExcludes>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -739,7 +831,7 @@
             <id>prod</id>
             <properties>
                 <spring.profiles.active>prod</spring.profiles.active>
-            </properties>            
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -766,6 +858,9 @@
                                     </includes>
                                 </resource>
                             </webResources>
+                            <packagingExcludes>
+                                WEB-INF/classes/logback-test.xml
+                            </packagingExcludes>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -793,7 +888,7 @@
                             <nodeVersion>${node.version}</nodeVersion>
                             <npmVersion>${npm.version}</npmVersion>
                             <workingDirectory>src/main/webapp</workingDirectory>
-                        </configuration>                        
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>install node and npm</id>
@@ -814,7 +909,7 @@
                                     <arguments>install</arguments>
                                 </configuration>
                             </execution>
-                            <!-- 
+                            <!--
                             <execution>
                                 <id>ng test</id>
                                 <goals>
@@ -876,7 +971,7 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>  
+        </profile>
     </profiles>
 
 </project>

@@ -1,10 +1,10 @@
 package gov.epa.cef.web.config;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 @ConfigurationProperties(prefix = "cef", ignoreInvalidFields = true)

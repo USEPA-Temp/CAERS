@@ -1,25 +1,32 @@
 package gov.epa.cef.web.domain;
 
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "pollutant")
+@Immutable
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Pollutant implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @Column(name = "pollutant_code", nullable = false, length = 12)
     private String pollutantCode;
-    
+
     @Column(name = "pollutant_name", nullable = false, length = 100)
     private String pollutantName;
-    
+
     @Column(name = "pollutant_cas_id", length = 100)
     private String pollutantCasId;
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hazelcast
+    xmlns="http://www.hazelcast.com/schema/config"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.hazelcast.com/schema/config
+        http://www.hazelcast.com/schema/config/hazelcast-config-3.12.xsd">
+
+    <instance-name>cef-hazelcast-cache</instance-name>
+
+    <map name="default">
+        <!--
+        Maximum number of seconds for each entry to stay in the map. Entries that are
+        older than <time-to-live-seconds> and not updated for <time-to-live-seconds>
+        will get automatically evicted from the map.
+        Any integer between 0 and Integer.MAX_VALUE. 0 means infinite. Default is 0.
+        -->
+        <time-to-live-seconds>5</time-to-live-seconds>
+
+        <!--
+        Valid values are:
+        NONE (no extra eviction, <time-to-live-seconds> may still apply),
+        LRU  (Least Recently Used),
+        LFU  (Least Frequently Used).
+        NONE is the default.
+        Regardless of the eviction policy used, <time-to-live-seconds> will still apply.
+        -->
+        <eviction-policy>LRU</eviction-policy>
+
+        <!--
+        Maximum size of the map. When max size is reached,
+        map is evicted based on the policy defined.
+        Any integer between 0 and Integer.MAX_VALUE. 0 means
+        Integer.MAX_VALUE. Default is 0.
+        -->
+        <max-size>5000</max-size>
+    </map>
+</hazelcast>
