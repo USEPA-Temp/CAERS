@@ -39,6 +39,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
 
+        <skip.node>false</skip.node>
+
         <java.version>1.8</java.version>
         <maven.version>3.0.0</maven.version>
         <node.version>v10.15.0</node.version>
@@ -68,8 +70,6 @@
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <sonar-maven-plugin.version>3.5.0.1254</sonar-maven-plugin.version>
         <git-commit-id-plugin.version>2.2.5</git-commit-id-plugin.version>
-
-        <skip.node>false</skip.node>
 
         <!-- Sonar properties -->
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>

@@ -1,5 +1,10 @@
 package gov.epa.cef.web.domain;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,9 +15,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "fips_state_code")
-
+@Immutable
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class FipsStateCode implements java.io.Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     // Fields
@@ -20,10 +27,10 @@ public class FipsStateCode implements java.io.Serializable {
     @Id
     @Column(name = "code", unique = true, nullable = false, length = 2)
     private String code;
-    
+
     @Column(name = "usps_code", length = 2)
     private String uspsCode;
-    
+
     @Column(name = "name", length = 200)
     private String name;
 

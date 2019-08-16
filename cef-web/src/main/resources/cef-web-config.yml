@@ -7,12 +7,17 @@ spring:
     username: "cef"
     password: "cef_fall2017"
     tomcat:
-      initial-size: 15
-      max-wait: 20000
-      max-active: 50
-      max-idle: 15
-      min-idle: 8
-      default-auto-commit: true
+      fairQueue: true
+      jmx-enabled: false
+      initialSize: 5
+      maxActive: 10
+      maxIdle: 10
+      testOnBorrow: true
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      validationQuery: "select 1"
+      validationQueryTimeout: 10
+      maxWait: 30000
 cdx:
   registerEndpointConfiguration:
     serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService

@@ -1,5 +1,10 @@
 package gov.epa.cef.web.domain;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,32 +15,34 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "aircraft_engine_type_code")
-
+@Immutable
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class AircraftEngineTypeCode implements java.io.Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     // Fields
-    
+
     @Id
     @Column(name = "code", unique = true, nullable = false, length = 10)
     private String code;
-    
+
     @Column(name = "faa_aircraft_type", length = 50)
     private String faaAircraftType;
-    
+
     @Column(name = "edms_accode", length = 15)
     private String edmsAccode;
-    
+
     @Column(name = "engine_manufacturer")
     private String engineManufacturer;
-    
+
     @Column(name = "engine", length = 70)
     private String engine;
-    
+
     @Column(name = "edms_uid", length = 10)
     private String edmsUid;
-    
+
     @Column(name = "scc", length = 10)
     private String scc;
 

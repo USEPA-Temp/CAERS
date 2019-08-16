@@ -6,6 +6,8 @@ spring:
   profiles:
     active: #spring.profiles.active#
   jmx.enabled: false
+  hazelcast:
+    config: classpath:cef-hazelcast-cache.xml
   thymeleaf:
     mode: HTML
   jpa:
@@ -20,8 +22,12 @@ spring:
       dialect: gov.epa.cef.web.hibernate.PostgreSQLDialectWithJsonSupport
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
       cache:
+        use_second_level_cache: true
+        use_query_cache: true
+        use_minimal_puts: true
         region:
           factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
-        use_second_level_cache: true
-        use_minimal_puts: true
+        hazelcast:
+          use_lite_member: true
+          instance_name: cef-hazelcast-cache
   jackson.serialization.FAIL_ON_EMPTY_BEANS: false
