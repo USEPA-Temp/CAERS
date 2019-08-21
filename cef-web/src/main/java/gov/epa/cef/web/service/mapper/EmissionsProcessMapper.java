@@ -10,7 +10,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 
-@Mapper(componentModel = "spring", uses = {ReleasePointApptMapper.class})   
+@Mapper(componentModel = "spring", uses = {ReleasePointApptMapper.class, ControlAssignmentMapper.class})   
 public interface EmissionsProcessMapper {
     
     @Mapping(source="emissionsUnit.id", target="emissionsUnitId")
@@ -26,6 +26,7 @@ public interface EmissionsProcessMapper {
     @Mapping(target = "operatingStatusCode", ignore = true)
     @Mapping(target = "releasePointAppts", ignore = true)
     @Mapping(target = "reportingPeriods", ignore = true)
+    @Mapping(target = "controlAssignments", ignore = true)
     void updateFromSaveDto(EmissionsProcessSaveDto source, @MappingTarget EmissionsProcess target);
 
 }

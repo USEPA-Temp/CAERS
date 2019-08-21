@@ -57,7 +57,9 @@ public class EmissionsProcess extends BaseAuditEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
     private Set<ReportingPeriod> reportingPeriods = new HashSet<ReportingPeriod>(0);
-
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
+    private Set<ControlAssignment> controlAssignments = new HashSet<ControlAssignment>(0);
     
     /***
      * Default constructor
@@ -178,6 +180,16 @@ public class EmissionsProcess extends BaseAuditEntity {
     }
     
     
+    public Set<ControlAssignment> getControlAssignments() {
+        return controlAssignments;
+    }
+
+
+    public void setControlAssignments(Set<ControlAssignment> controlAssignments) {
+        this.controlAssignments = controlAssignments;
+    }
+
+
     /***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */

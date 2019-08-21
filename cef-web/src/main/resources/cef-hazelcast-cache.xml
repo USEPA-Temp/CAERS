@@ -7,6 +7,10 @@
 
     <instance-name>cef-hazelcast-cache</instance-name>
 
+    <properties>
+        <property name="hazelcast.logging.type">slf4j</property>
+    </properties>
+
     <map name="default">
         <!--
         Maximum number of seconds for each entry to stay in the map. Entries that are
