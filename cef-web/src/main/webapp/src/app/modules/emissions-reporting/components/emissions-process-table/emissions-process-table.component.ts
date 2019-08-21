@@ -56,7 +56,6 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
             Emissions, Control Assignments, and Release Point Assignments associated with this Emissions Process.`;
         const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
-        modalRef.componentInstance.idToDelete = processId;
         modalRef.componentInstance.continue.subscribe((deleteDialogResponse) => {
             this.deleteProcess(processId, parentId);
         });
