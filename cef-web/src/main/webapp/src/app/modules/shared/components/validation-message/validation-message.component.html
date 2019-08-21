@@ -14,4 +14,12 @@
   <div *ngIf="control.errors?.pattern">
       Value is not in the correct format.
   </div>
+
+  <div *ngIf="control.errors?.wholeNumber">
+      Value must be a whole number.
+  </div>
+
+  <div *ngIf="control.errors?.number">
+      Value must be a number.
+  </div>
 </div>

@@ -23,11 +23,26 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
   ngOnInit() {
   }
 
-  openEmissionModal(selectedEmission: Emission) {
-    const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg' });
+  openEditEmissionModal(selectedEmission: Emission) {
+    const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.emission = selectedEmission;
     modalRef.componentInstance.reportingPeriod = this.reportingPeriod;
     modalRef.componentInstance.process = this.process;
+  }
+
+  openCreateEmissionModal() {
+    const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.reportingPeriod = this.reportingPeriod;
+    modalRef.componentInstance.process = this.process;
+    modalRef.componentInstance.createMode = true;
+
+    modalRef.result.then(result => {
+      if (result) {
+        this.tableData.push(result);
+      }
+    }, () => {
+      // needed for dismissing without errors
+    });
   }
 
 }

@@ -1,8 +1,23 @@
 package gov.epa.cef.web.service;
 
+import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 
 public interface EmissionService {
+    
+    /**
+     * Create a new Emission
+     * @param dto
+     * @return
+     */
+    public EmissionDto create(EmissionDto dto);
+    
+    /**
+     * Update an existing Emission
+     * @param dto
+     * @return
+     */
+    public EmissionDto update(EmissionDto dto);
     
     /**
      * Find Emission by Facility and CAS Number.

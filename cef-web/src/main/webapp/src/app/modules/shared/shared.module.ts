@@ -21,6 +21,8 @@ import { SortableHeaderDirective } from 'src/app/shared/directives/sortable.dire
 import { ErrorComponent } from './pages/error/error.component';
 import { ReportSummaryTableComponent } from 'src/app/modules/shared/components/report-summary-table/report-summary-table.component';
 import { ValidationMessageComponent } from './components/validation-message/validation-message.component';
+import { WholeNumberValidatorDirective } from './directives/whole-number-validator.directive';
+import { NumberValidatorDirective } from './directives/number-validator.directive';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import { ValidationMessageComponent } from './components/validation-message/vali
     PhoneNumberPipe,
     ErrorComponent,
     ReportSummaryTableComponent,
-    ValidationMessageComponent
+    ValidationMessageComponent,
+    WholeNumberValidatorDirective,
+    NumberValidatorDirective
 ],
   exports: [
     FacilityInfoComponent,

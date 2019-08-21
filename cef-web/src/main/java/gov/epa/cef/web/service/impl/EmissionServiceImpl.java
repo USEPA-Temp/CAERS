@@ -11,12 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.EmissionService;
+import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
+import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
 
 @Service
@@ -25,10 +29,16 @@ public class EmissionServiceImpl implements EmissionService {
     Logger LOGGER = LoggerFactory.getLogger(EmissionServiceImpl.class);
     
     @Autowired
+    private EmissionRepository emissionRepo;
+    
+    @Autowired
     private EmissionsByFacilityAndCASRepository emissionsByFacilityAndCASRepo;
     
     @Autowired
     private EmissionsReportRepository emissionsReportRepo;
+    
+    @Autowired
+    private EmissionMapper emissionMapper;
     
     @Autowired
     EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
@@ -37,6 +47,23 @@ public class EmissionServiceImpl implements EmissionService {
     private static final int TWO_DECIMAL_POINTS = 2;
     
     private static enum RETURN_CODE {NO_EMISSIONS_REPORT, NO_EMISSIONS_REPORTED_FOR_CAS, EMISSIONS_FOUND}
+    
+    public EmissionDto create(EmissionDto dto) {
+
+        Emission emission = emissionMapper.fromDto(dto);
+
+        EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
+        return result;
+    }
+    
+    public EmissionDto update(EmissionDto dto) {
+
+        Emission emission = emissionRepo.findById(dto.getId()).orElse(null);
+        emissionMapper.updateFromDto(dto, emission);
+
+        EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
+        return result;
+    }
     
     /**
      * Find Emissions by Facility and CAS Number.

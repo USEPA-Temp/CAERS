@@ -6,6 +6,7 @@ import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.PollutantDto;
 
 import java.util.List;
 
@@ -25,6 +26,12 @@ public interface LookupService {
     CalculationMaterialCode retrieveCalcMaterialCodeEntityByCode(String code);
 
     /**
+     * Retrieve Calculation Method codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveCalcMethodCodes();
+
+    /**
      * Retrieve Calculation Parameter Type codes
      * @return
      */
@@ -42,6 +49,12 @@ public interface LookupService {
      * @return
      */
     List<CodeLookupDto> retrieveOperatingStatusCodes();
+
+    /**
+     * Retrieve Pollutants
+     * @return
+     */
+    List<PollutantDto> retrievePollutants();
 
     /**
      * Retrieve Operating Status code database object by code

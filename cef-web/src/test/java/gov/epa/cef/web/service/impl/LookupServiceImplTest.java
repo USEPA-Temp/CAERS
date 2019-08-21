@@ -16,17 +16,21 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import gov.epa.cef.web.domain.CalculationMaterialCode;
+import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
+import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
+import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
-import gov.epa.cef.web.service.dto.ReleasePointDto;
+import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -36,10 +40,16 @@ public class LookupServiceImplTest {
     private CalculationMaterialCodeRepository materialCodeRepo;
 
     @Mock
+    private CalculationMethodCodeRepository methodCodeRepo;
+
+    @Mock
     private CalculationParameterTypeCodeRepository paramTypeCodeRepo;
 
     @Mock
     private OperatingStatusCodeRepository operatingStatusRepo;
+
+    @Mock
+    private PollutantRepository pollutantRepo;
 
     @Mock
     private ReportingPeriodCodeRepository periodCodeRepo;
@@ -55,6 +65,7 @@ public class LookupServiceImplTest {
     
     private CodeLookupDto codeLookupDto;
     private List<CodeLookupDto> codeLookupDtoList;
+    private PollutantDto pollutantDto;
     
     @Before
     public void init(){
@@ -64,6 +75,13 @@ public class LookupServiceImplTest {
         when(materialCodeRepo.findById("1")).thenReturn(Optional.of(materialCode));
         when(materialCodeRepo.findById("2")).thenReturn(Optional.empty());
         when(materialCodeRepo.findAll()).thenReturn(materialCodeList);
+        
+        CalculationMethodCode methodCode = new CalculationMethodCode();
+        List<CalculationMethodCode> methodCodeList = new ArrayList<CalculationMethodCode>();
+        methodCodeList.add(methodCode);
+        when(methodCodeRepo.findById("1")).thenReturn(Optional.of(methodCode));
+        when(methodCodeRepo.findById("2")).thenReturn(Optional.empty());
+        when(methodCodeRepo.findAll()).thenReturn(methodCodeList);
         
         CalculationParameterTypeCode paramTypeCode = new CalculationParameterTypeCode();
         List<CalculationParameterTypeCode> paramTypeCodeList = new ArrayList<CalculationParameterTypeCode>();
@@ -78,6 +96,13 @@ public class LookupServiceImplTest {
         when(operatingStatusRepo.findById("1")).thenReturn(Optional.of(operatingStatus));
         when(operatingStatusRepo.findById("2")).thenReturn(Optional.empty());
         when(operatingStatusRepo.findAll()).thenReturn(operatingStatusList);
+        
+        Pollutant pollutant = new Pollutant();
+        List<Pollutant> pollutantList = new ArrayList<Pollutant>();
+        pollutantList.add(pollutant);
+        when(pollutantRepo.findById("1")).thenReturn(Optional.of(pollutant));
+        when(pollutantRepo.findById("2")).thenReturn(Optional.empty());
+        when(pollutantRepo.findAll()).thenReturn(pollutantList);
         
         ReportingPeriodCode periodCode = new ReportingPeriodCode();
         List<ReportingPeriodCode> periodCodeList = new ArrayList<ReportingPeriodCode>();
@@ -95,9 +120,12 @@ public class LookupServiceImplTest {
         
         codeLookupDto = new CodeLookupDto();
         codeLookupDtoList = new ArrayList<>();
+        pollutantDto = new PollutantDto();
         when(lookupMapper.toDto(materialCode)).thenReturn(codeLookupDto);
+        when(lookupMapper.toDto(methodCode)).thenReturn(codeLookupDto);
         when(lookupMapper.toDto(paramTypeCode)).thenReturn(codeLookupDto);
         when(lookupMapper.toDto(operatingStatus)).thenReturn(codeLookupDto);
+        when(lookupMapper.pollutantToDto(pollutant)).thenReturn(pollutantDto);
         when(lookupMapper.reportingPeriodCodeToDto(periodCode)).thenReturn(codeLookupDto);
         when(lookupMapper.toDto(uom)).thenReturn(codeLookupDto);
     }
@@ -118,6 +146,12 @@ public class LookupServiceImplTest {
     public void retrieveCalcMaterialCodeEntityByCode_Should_Return_Null_When_CodeDoesNotExist(){
         CalculationMaterialCode result = lookupServiceImpl.retrieveCalcMaterialCodeEntityByCode("2");
         assertEquals(null, result);
+    }
+    
+    @Test
+    public void retrieveCalcMethodCodes_Should_Return_CodeLookupDtoList(){
+        List<CodeLookupDto> result = lookupServiceImpl.retrieveCalcMethodCodes();
+        assertNotEquals(null, result);
     }
     
     @Test
@@ -154,6 +188,12 @@ public class LookupServiceImplTest {
     public void retrieveOperatingStatusCodeEntityByCode_Should_Return_Null_When_CodeDoesNotExist(){
         OperatingStatusCode result = lookupServiceImpl.retrieveOperatingStatusCodeEntityByCode("2");
         assertEquals(null, result);
+    }
+    
+    @Test
+    public void retrievePollutants_Should_Return_PollutantDtoList(){
+        List<PollutantDto> result = lookupServiceImpl.retrievePollutants();
+        assertNotEquals(null, result);
     }
     
     @Test
