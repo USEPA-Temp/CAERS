@@ -3,16 +3,23 @@
   <table class="table table-sm table-striped table-bordered">
     <thead class="thead-cef-medium">
     <tr>
-      <th scope="col" sortable="emissionsProcessIdentifier" (sort)="onSort($event)">Process Description</th>
+      <th scope="col" sortable="emissionsProcessIdentifier" (sort)="onSort($event)">Process ID</th>
       <th scope="col" sortable="sccCode" (sort)="onSort($event)">SCC</th>
       <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td>{{item.emissionsProcessIdentifier}}</td>
-      <td><a routerLink="{{baseUrl}}/process/{{item.id}}">{{item.sccCode}}</a></td>
-      <td><a href="#"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      <td><a routerLink="{{baseUrl}}/process/{{item.id}}">{{item.emissionsProcessIdentifier}}</a></td>
+      <td>{{item.sccCode}}</td>
+      <td>
+          <div *ngIf="parentComponentType==='releasePointAppt'; else elseBlock">
+            <a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a>
+          </div>
+          <ng-template #elseBlock>
+            <a routerLink="." (click)="openDeleteModal(item.emissionsProcessIdentifier, item.id, item.emissionsUnitId)"><fa-icon icon="trash-alt"></fa-icon></a>
+          </ng-template>
+        </td>
     </tr>
     <tr>
       <td></td>
