@@ -109,6 +109,14 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
         List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
+    
+    /**
+     * Delete an Emissions Process for a given id
+     * @param id
+     */
+    public void delete(Long id) {
+        processRepo.deleteById(id);
+    }
 
 
 }

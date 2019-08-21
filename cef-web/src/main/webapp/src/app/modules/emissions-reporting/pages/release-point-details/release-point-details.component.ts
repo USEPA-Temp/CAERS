@@ -18,6 +18,7 @@ export class ReleasePointDetailsComponent implements OnInit {
   releasePoint: ReleasePoint;
   processes: Process[];
   controlAssignments: ControlAssignment[];
+  parentComponentType = 'releasePointAppt';
 
   constructor(
     private releasePointService: ReleasePointService,
