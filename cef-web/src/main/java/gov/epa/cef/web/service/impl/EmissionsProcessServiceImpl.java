@@ -30,10 +30,6 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
         EmissionsProcess process = emissionsProcessMapper.fromSaveDto(dto);
 
-        if (process.getOperatingStatusCode() != null) {
-            process.setOperatingStatusCode(lookupService.retrieveOperatingStatusCodeEntityByCode(process.getOperatingStatusCode().getCode()));
-        }
-
         process.getReportingPeriods().forEach(period -> {
             if (period.getCalculationMaterialCode() != null) {
                 period.setCalculationMaterialCode(lookupService.retrieveCalcMaterialCodeEntityByCode(period.getCalculationMaterialCode().getCode()));
@@ -70,10 +66,6 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
         EmissionsProcess process = processRepo.findById(dto.getId()).orElse(null);
         emissionsProcessMapper.updateFromSaveDto(dto, process);
-
-        if (dto.getOperatingStatusCode() != null) {
-            process.setOperatingStatusCode(lookupService.retrieveOperatingStatusCodeEntityByCode(dto.getOperatingStatusCode().getCode()));
-        }
 
         EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
         return result;

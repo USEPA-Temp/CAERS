@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.PollutantDto;
 
 @RestController
 @RequestMapping("/api/lookup")
@@ -33,10 +34,22 @@ public class LookupApi {
     }
 
     /**
+     * Retrieve Calculation Method codes
+     * @return
+     */
+    @GetMapping(value = "/calculation/method")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveCalcMethodCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveCalcMethodCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve Calculation Parameter Type codes
      * @return
      */
-    @GetMapping(value = "/calculaton/parameter")
+    @GetMapping(value = "/calculation/parameter")
     @ResponseBody
     public ResponseEntity<List<CodeLookupDto>> retrieveCalcParamTypeCodes() {
 
@@ -54,6 +67,18 @@ public class LookupApi {
 
         List<CodeLookupDto> result = lookupService.retrieveOperatingStatusCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve Pollutants
+     * @return
+     */
+    @GetMapping(value = "/pollutant")
+    @ResponseBody
+    public ResponseEntity<List<PollutantDto>> retrievePollutants() {
+
+        List<PollutantDto> result = lookupService.retrievePollutants();
+        return new ResponseEntity<List<PollutantDto>>(result, HttpStatus.OK);
     }
 
     /**
