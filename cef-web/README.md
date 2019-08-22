@@ -30,7 +30,7 @@ mvn -P allTests test
 ```
 Unit tests can be categorized using JUnit `@Category` annotation. 
 The categories and their hierarchy are in `TestCategories.java`. The categories are used
-in pom.xml in the Surefire plugin.
+in pom.xml in the Surefire plugin to segregate tests in maven profiles.
 
 Units test annotated with `@Category(TestCategories.FastTest.class)` 
 are run by default; `mvn test`.
@@ -38,8 +38,6 @@ are run by default; `mvn test`.
 All unit tests can be run by adding a profile, `-P allTests`.
 
 ### Embedded Database Tests
-
-Concepts can be found here `https://reflectoring.io/spring-boot-data-jpa-test/`
 
 Annotating the Test Class with the following will start up a postgres embedded database 
 and replace the dataSource created by Spring Boot with a datasource that points to the
@@ -54,12 +52,14 @@ embedded database.
 
 #### Test Preparation
 
+Concepts can be found here `https://reflectoring.io/spring-boot-data-jpa-test/`
+
 The embedded database is shared in the scope of the @SpringBootTest. This can cause
 test method conflicts or dependencies if the database is not "cleansed" before each 
 test method.
 
-The use of `@SqlGroup(value = {@Sql("classpath:db/test/controlRepositoryITCase-1.sql")})
-` to prepare the database before each @Test method is straight forward. 
+The use of `@SqlGroup(value = {@Sql("classpath:db/test/controlRepositoryITCase-1.sql")})` 
+to prepare the database before each @Test method is straight forward. 
 The annotation can be at the Class or Method level. The SQL is run before each @Test method.
 
 ### Angular
