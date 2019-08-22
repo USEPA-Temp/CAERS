@@ -14,7 +14,7 @@
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.emissionsOperatingTypeCode"></app-validation-message>
         </div>
-        <label for="rpParamSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Calcuation Param.:</strong></label>
+        <label for="rpParamSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Calculation Parameter:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="rpParamSelect" formControlName="calculationParameterTypeCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of parameterTypeValues" [ngValue]="opt">{{opt.description}}</option>

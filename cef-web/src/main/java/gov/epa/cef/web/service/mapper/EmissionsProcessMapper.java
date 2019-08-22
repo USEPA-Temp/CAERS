@@ -10,7 +10,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 
-@Mapper(componentModel = "spring", uses = {ReleasePointApptMapper.class, ControlAssignmentMapper.class, LookupEntityMapper.class})
+@Mapper(componentModel = "spring", uses = {ReleasePointApptMapper.class, LookupEntityMapper.class})
 public interface EmissionsProcessMapper {
     
     @Mapping(source="emissionsUnit.id", target="emissionsUnitId")

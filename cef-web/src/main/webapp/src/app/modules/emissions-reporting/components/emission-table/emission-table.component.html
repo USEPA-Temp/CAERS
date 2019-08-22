@@ -14,7 +14,7 @@
       <td><a routerLink="." (click)="openEditEmissionModal(item)">{{item.pollutant.pollutantName}}</a></td>
       <td>{{item.pollutant.pollutantCode}}</td>
       <td>{{item.pollutant.pollutantCasId}}</td>
-      <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+      <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
     </tr>
     <tr>
       <td></td>
