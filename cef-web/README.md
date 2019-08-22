@@ -41,7 +41,7 @@ All unit tests can be run by adding a profile, `-P allTests`.
 
 Annotating the Test Class with the following will start up a postgres embedded database 
 and replace the dataSource created by Spring Boot with a datasource that points to the
-embedded database. All the initialization that Spring Boot, including Flyway, will use the
+embedded database. All Spring Boot initialization, including Flyway, will use the
 embedded database. 
 ```
 @Category(TestCategories.EmbeddedDatabaseTest.class)
