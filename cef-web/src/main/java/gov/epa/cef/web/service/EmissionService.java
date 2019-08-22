@@ -29,6 +29,12 @@ public interface EmissionService {
      * @param casNumber
      * @return
      */
-    EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId);
+    public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId);
+    
+    /**
+     * Delete an Emission for a given id
+     * @param id
+     */
+    public void delete(Long id);
 
 }

@@ -17,7 +17,7 @@ export class ReportingPeriodService {
     return this.http.put<ReportingPeriod>(url, period);
   }
 
-  /** GET specified facility site contact from the server */
+  /** GET specified Reporting Period from the server */
   retrieve(id: number): Observable<ReportingPeriod> {
     const url = `${this.baseUrl}/${id}`;
     return this.http.get<ReportingPeriod>(url);

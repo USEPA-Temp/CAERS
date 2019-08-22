@@ -21,4 +21,11 @@ export class EmissionService {
     const url = `${this.baseUrl}/${emission.id}`;
     return this.http.put<Emission>(url, emission);
   }
+
+    /** Delete specified emissions process from the database */
+  delete(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
+  }
+
 }

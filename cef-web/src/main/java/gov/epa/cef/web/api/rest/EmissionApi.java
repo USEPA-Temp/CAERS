@@ -3,6 +3,7 @@ package gov.epa.cef.web.api.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,7 +29,7 @@ public class EmissionApi {
      */
     @PostMapping
     @ResponseBody
-    public ResponseEntity<EmissionDto> createEmissionsProcess(@RequestBody EmissionDto dto) {
+    public ResponseEntity<EmissionDto> createEmission(@RequestBody EmissionDto dto) {
 
         EmissionDto result = emissionService.create(dto);
 
@@ -43,11 +44,23 @@ public class EmissionApi {
      */
     @PutMapping(value = "/{id}")
     @ResponseBody
-    public ResponseEntity<EmissionDto> updateEmissionsProcess(@PathVariable Long id, @RequestBody EmissionDto dto) {
+    public ResponseEntity<EmissionDto> updateEmission(@PathVariable Long id, @RequestBody EmissionDto dto) {
 
         EmissionDto result = emissionService.update(dto);
 
         return new ResponseEntity<EmissionDto>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Delete an Emission for given id
+     * @param id
+     * @return
+     */
+    @DeleteMapping(value = "/{id}")
+    public void deleteEmission(@PathVariable Long id) {
+        emissionService.delete(id);
+    }
+    
+    
 
 }

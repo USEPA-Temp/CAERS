@@ -34,7 +34,7 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
     }
 
     deleteProcess(processId: number, emissionsUnitId: number) {
-        this.processService.delete(processId).subscribe(response => {
+        this.processService.delete(processId).subscribe(() => {
 
         // update the table with the list of processes
         this.processService.retrieveForEmissionsUnit(emissionsUnitId)
@@ -56,7 +56,7 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
             Emissions, Control Assignments, and Release Point Assignments associated with this Emissions Process.`;
         const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
-        modalRef.componentInstance.continue.subscribe((deleteDialogResponse) => {
+        modalRef.componentInstance.continue.subscribe(() => {
             this.deleteProcess(processId, parentId);
         });
     }

@@ -48,6 +48,9 @@ public class EmissionServiceImpl implements EmissionService {
     
     private static enum RETURN_CODE {NO_EMISSIONS_REPORT, NO_EMISSIONS_REPORTED_FOR_CAS, EMISSIONS_FOUND}
     
+    /**
+     * Create a new emission from a DTO object
+     */
     public EmissionDto create(EmissionDto dto) {
 
         Emission emission = emissionMapper.fromDto(dto);
@@ -56,6 +59,9 @@ public class EmissionServiceImpl implements EmissionService {
         return result;
     }
     
+    /**
+     * Update an existing emission from a DTO
+     */
     public EmissionDto update(EmissionDto dto) {
 
         Emission emission = emissionRepo.findById(dto.getId()).orElse(null);
@@ -63,6 +69,14 @@ public class EmissionServiceImpl implements EmissionService {
 
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
         return result;
+    }
+    
+    /**
+     * Delete an Emission for a given id
+     * @param id
+     */
+    public void delete(Long id) {
+        emissionRepo.deleteById(id);
     }
     
     /**

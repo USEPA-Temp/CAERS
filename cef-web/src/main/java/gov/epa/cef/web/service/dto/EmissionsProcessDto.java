@@ -21,7 +21,6 @@ public class EmissionsProcessDto implements Serializable {
     private String description;
     private String comments;
     private List<ReleasePointApptDto> releasePointAppts;
-    private List<ControlAssignmentDto> controlAssignments;
 
     public Long getId() {
         return id;
@@ -110,13 +109,5 @@ public class EmissionsProcessDto implements Serializable {
     public void setReleasePointAppts(List<ReleasePointApptDto> releasePoints) {
         this.releasePointAppts = releasePoints;
     }
-
-    public List<ControlAssignmentDto> getControlAssignments() {
-        return controlAssignments;
-    }
-
-    public void setControlAssignments(List<ControlAssignmentDto> controlAssignments) {
-        this.controlAssignments = controlAssignments;
-    }
-
 }
+
