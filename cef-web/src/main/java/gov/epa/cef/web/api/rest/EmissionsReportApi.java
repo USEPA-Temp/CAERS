@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -46,7 +47,7 @@ public class EmissionsReportApi {
     @ResponseBody
     public ResponseEntity<List<EmissionsReportDto>> retrieveReportsForFacility(@PathVariable String facilityEisProgramId) {
 
-        List<EmissionsReportDto> result = emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId);
+        List<EmissionsReportDto> result = emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId, true);
 
         return new ResponseEntity<List<EmissionsReportDto>>(result, HttpStatus.OK);
     }
@@ -64,6 +65,7 @@ public class EmissionsReportApi {
 
         return new ResponseEntity<EmissionsReportDto>(result, HttpStatus.OK);
     }
+
     
     /**
      * Submits a report to CROMERR after the user authenticates through the widgets and generates and activityId
@@ -78,5 +80,18 @@ public class EmissionsReportApi {
         String documentId= emissionsReportService.submitToCromerr(reportId, activityId);
 
         return new ResponseEntity<String>(documentId, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/create/{facilityEisProgramId}/{reportYear}")
+    public ResponseEntity<EmissionsReportDto> create(@PathVariable String facilityEisProgramId, @PathVariable Integer reportYear) {
+
+        EmissionsReport reportCopy = emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportYear);
+        EmissionsReportDto result = new EmissionsReportDto();
+        if (reportCopy != null) {
+        	result = emissionsReportService.saveEmissionReport(reportCopy);
+        }
+
+        return new ResponseEntity<EmissionsReportDto>(result, HttpStatus.OK);
     }
 }

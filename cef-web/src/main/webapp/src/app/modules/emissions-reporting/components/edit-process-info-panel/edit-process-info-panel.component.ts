@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
+import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 
 @Component({
   selector: 'app-edit-process-info-panel',
   templateUrl: './edit-process-info-panel.component.html',
   styleUrls: ['./edit-process-info-panel.component.scss']
 })
-export class EditProcessInfoPanelComponent implements OnInit {
+export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
+  @Input() process: Process;
   processForm = this.fb.group({
     aircraftEngineTypeCodeCode: [''],
     operatingStatusCode: [null, Validators.required],
@@ -19,8 +21,8 @@ export class EditProcessInfoPanelComponent implements OnInit {
     ]],
     statusYear: ['', [
       Validators.required,
-      Validators.min(1985),
-      Validators.max(2030),
+      Validators.min(1900),
+      Validators.max(2050),
       Validators.pattern('[0-9]*')
     ]],
     sccCode: ['', [
@@ -38,6 +40,7 @@ export class EditProcessInfoPanelComponent implements OnInit {
 
   constructor(
     private lookupService: LookupService,
+    public formUtils: FormUtilsService,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -46,6 +49,11 @@ export class EditProcessInfoPanelComponent implements OnInit {
     .subscribe(result => {
       this.operatingStatusValues = result;
     });
+  }
+
+  ngOnChanges() {
+
+    this.processForm.reset(this.process);
   }
 
   onSubmit() {

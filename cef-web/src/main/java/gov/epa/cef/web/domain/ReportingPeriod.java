@@ -63,6 +63,37 @@ public class ReportingPeriod extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
     private Set<OperatingDetail> operatingDetails = new HashSet<OperatingDetail>(0);
 
+    
+    /***
+     * Default constructor
+     */
+    public ReportingPeriod() {}
+    
+    
+    /***
+     * Copy constructor
+     * @param process
+     * @param originalReportingPeriod
+     */
+    public ReportingPeriod(EmissionsProcess process, ReportingPeriod originalReportingPeriod) {
+		this.id = originalReportingPeriod.getId();
+        this.emissionsProcess = process;
+        this.reportingPeriodTypeCode = originalReportingPeriod.getReportingPeriodTypeCode();
+        this.emissionsOperatingTypeCode = originalReportingPeriod.getEmissionsOperatingTypeCode();
+        this.calculationParameterTypeCode = originalReportingPeriod.getCalculationParameterTypeCode();
+        this.calculationParameterValue = originalReportingPeriod.getCalculationParameterValue();
+        this.calculationParameterUom = originalReportingPeriod.getCalculationParameterUom();
+        this.calculationMaterialCode = originalReportingPeriod.getCalculationMaterialCode();
+        this.comments = originalReportingPeriod.getComments();
+
+        for (Emission emission : originalReportingPeriod.getEmissions()) {
+        	this.emissions.add(new Emission(this, emission));
+        }
+        for (OperatingDetail operatingDetail : originalReportingPeriod.getOperatingDetails()) {
+        	this.operatingDetails.add(new OperatingDetail(this, operatingDetail));
+        }
+    }
+    
     public EmissionsProcess getEmissionsProcess() {
         return this.emissionsProcess;
     }
@@ -141,6 +172,21 @@ public class ReportingPeriod extends BaseAuditEntity {
 
     public void setOperatingDetails(Set<OperatingDetail> operatingDetails) {
         this.operatingDetails = operatingDetails;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+
+		for (Emission emission : this.emissions) {
+			emission.clearId();
+		}
+		for (OperatingDetail operatingDetail : this.operatingDetails) {
+			operatingDetail.clearId();
+		}
     }
 
 }

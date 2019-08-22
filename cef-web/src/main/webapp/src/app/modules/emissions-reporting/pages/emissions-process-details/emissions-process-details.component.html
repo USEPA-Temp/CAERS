@@ -4,31 +4,43 @@
             <div class="card mb-3">
                 <div class="card-header text-center">
                     <strong>Process Information</strong>
+                    <div class="float-right" *ngIf="!editInfo">
+                        <button type="button" class="btn btn-success" (click)="setEditInfo(true)">Edit</button>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>SCC:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{process.sccCode}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Process Status:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Process Description:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{process.description}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Aircraft Engine Code:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{process.aircraftEngineTypeCodeCode}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Process Status Year:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{process.statusYear}}</div>
-                    </div>
+                    <div *ngIf="!editInfo">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>SCC:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{process.sccCode}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Process Status:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Process Description:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{process.description}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Aircraft Engine Code:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{process.aircraftEngineTypeCodeCode}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Process Status Year:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{process.statusYear}}</div>
+                        </div>
 
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
-                        <div class="col-sm-6 col-md-10">{{process.comments}}</div>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
+                            <div class="col-sm-6 col-md-10">{{process.comments}}</div>
+                        </div>
                     </div>
                     
+                    <div *ngIf="editInfo">
+                        <app-edit-process-info-panel [process]="process"></app-edit-process-info-panel>
+                        <div class="float-right pb-3 pr-3" *ngIf="infoComponent">
+                            <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
+                            <button type="submit" class="btn btn-success" (click)="updateProcess()" [disabled]="!infoComponent.processForm.valid">Save</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -41,33 +53,47 @@
             <div class="card mb-3">
                 <div class="card-header text-center">
                     <strong>Operating Details</strong>
+                    <div class="float-right" *ngIf="!editDetails">
+                        <button type="button" class="btn btn-success" (click)="setEditDetails(true)">Edit</button>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Avg. Days per Week:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.avgDaysPerWeek}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Hours per Period:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.actualHoursPerPeriod}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Inventory Year:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{process.statusYear}}</div>
+                    <div *ngIf="!editDetails">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Avg. Days per Week:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.avgDaysPerWeek}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Hours per Period:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.actualHoursPerPeriod}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Inventory Year:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{process.statusYear}}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Avg. Hours per Day:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.avgHoursPerDay}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Winter Operating Percent:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.percentWinter}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Summer Operating Percent:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.percentSummer}}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Avg. Weeks per Year:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.avgWeeksPerPeriod}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Spring Operating Percent:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.percentSpring}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Fall Operating Percent:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{operatingDetail.percentFall}}</div>
+                        </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Avg. Hours per Day:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.avgHoursPerDay}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Winter Operating Percent:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentWinter}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Summer Operating Percent:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentSummer}}</div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Avg. Weeks per Year:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.avgWeeksPerPeriod}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Spring Operating Percent:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentSpring}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Fall Operating Percent:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{operatingDetail.percentFall}}</div>
+                    <div *ngIf="editDetails">
+                        <app-edit-process-operating-detail-panel [operatingDetails]="operatingDetail"></app-edit-process-operating-detail-panel>
+                        <div class="float-right pb-3 pr-3" *ngIf="operatingDetailsComponent">
+                            <button type="button" class="btn btn-primary mr-2" (click)="setEditDetails(false)">Cancel</button>
+                            <button type="submit" class="btn btn-success" (click)="updateOperatingDetail(operatingDetail)" 
+                                    [disabled]="!operatingDetailsComponent.operatingDetailsForm.valid">Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,8 +105,12 @@
             <div class="card mb-3">
                 <div class="card-header text-center">
                     <strong>Reporting Period</strong>
+                    <div class="float-right" *ngIf="!editPeriod">
+                        <button type="button" class="btn btn-success" (click)="setEditPeriod(true)">Edit</button>
+                    </div>
                 </div>
                 <div class="card-body">
+                    <div *ngIf="!editPeriod">
                     <div class="row">
                         <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
                         <div class="col-sm-6 col-md-2">{{period.reportingPeriodTypeCode.shortName}}</div>
@@ -102,6 +132,15 @@
                     <div class="row">
                         <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
                         <div class="col-sm-6 col-md-10">{{period.comments}}</div>
+                    </div>
+                    </div>
+
+                    <div *ngIf="editPeriod">
+                        <app-edit-process-reporting-period-panel [reportingPeriod]="period"></app-edit-process-reporting-period-panel>
+                        <div class="float-right pb-3 pr-3" *ngIf="reportingPeriodComponent">
+                            <button type="button" class="btn btn-primary mr-2" (click)="setEditPeriod(false)">Cancel</button>
+                            <button type="submit" class="btn btn-success" (click)="updateReportingPeriod(period)" [disabled]="!reportingPeriodComponent.reportingPeriodForm.valid">Save</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -12,7 +12,7 @@
         </div>
         <label for="processStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Process Status:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="processStatusCodeSelect" formControlName="operatingStatusCode">
+            <select type="text" class="form-control" id="processStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="processForm.controls.operatingStatusCode"></app-validation-message>

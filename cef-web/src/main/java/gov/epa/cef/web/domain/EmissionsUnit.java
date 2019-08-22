@@ -64,6 +64,37 @@ public class EmissionsUnit extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
     private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
 
+    
+    /***
+     * Default constructor
+     */
+    public EmissionsUnit() {}
+    
+    
+    /***
+     * Copy constructor
+     * @param facilitySite The facility site object that this unit should be associated with
+     * @param originalUnit The unit object that is being copied
+     */
+    public EmissionsUnit(FacilitySite facilitySite, EmissionsUnit originalUnit) {
+		this.id = originalUnit.getId();
+        this.facilitySite = facilitySite;
+        this.unitTypeCode = originalUnit.getUnitTypeCode();
+        this.operatingStatusCode = originalUnit.getOperatingStatusCode();
+        this.unitIdentifier = originalUnit.getUnitIdentifier();
+        this.programSystemCode = originalUnit.getProgramSystemCode();
+        this.description = originalUnit.getDescription();
+        this.typeCodeDescription = originalUnit.getTypeCodeDescription();
+        this.statusYear = originalUnit.getStatusYear();
+        this.designCapacity = originalUnit.getDesignCapacity();
+        this.unitOfMeasureCode = originalUnit.getUnitOfMeasureCode();
+        this.comments = originalUnit.getComments();
+
+        for (EmissionsProcess process : originalUnit.getEmissionsProcesses()) {
+        	this.emissionsProcesses.add(new EmissionsProcess(this, process));
+        }
+    }
+    
     public UnitTypeCode getUnitTypeCode() {
         return this.unitTypeCode;
     }
@@ -152,6 +183,18 @@ public class EmissionsUnit extends BaseAuditEntity {
     }
     public void setEmissionsProcesses(Set<EmissionsProcess> emissionsProcesses) {
         this.emissionsProcesses = emissionsProcesses;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+
+		for (EmissionsProcess process : this.emissionsProcesses) {
+			process.clearId();
+		}
     }
 
 }

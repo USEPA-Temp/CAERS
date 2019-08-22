@@ -30,10 +30,6 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
         EmissionsProcess process = emissionsProcessMapper.fromSaveDto(dto);
 
-        if (process.getOperatingStatusCode() != null) {
-            process.setOperatingStatusCode(lookupService.retrieveOperatingStatusCodeEntityByCode(process.getOperatingStatusCode().getCode()));
-        }
-
         process.getReportingPeriods().forEach(period -> {
             if (period.getCalculationMaterialCode() != null) {
                 period.setCalculationMaterialCode(lookupService.retrieveCalcMaterialCodeEntityByCode(period.getCalculationMaterialCode().getCode()));
@@ -61,6 +57,15 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
                 od.setReportingPeriod(period);
             });
         });
+
+        EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
+        return result;
+    }
+
+    public EmissionsProcessDto update(EmissionsProcessSaveDto dto) {
+
+        EmissionsProcess process = processRepo.findById(dto.getId()).orElse(null);
+        emissionsProcessMapper.updateFromSaveDto(dto, process);
 
         EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
         return result;
@@ -95,6 +100,14 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
     public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId) {
         List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
+    }
+    
+    /**
+     * Delete an Emissions Process for a given id
+     * @param id
+     */
+    public void delete(Long id) {
+        processRepo.deleteById(id);
     }
 
 

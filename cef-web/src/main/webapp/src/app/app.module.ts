@@ -5,7 +5,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
 import { AppComponent } from 'src/app/app.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { FacilityDashboardComponent } from 'src/app/modules/dashboards/pages/facility-dashboard/facility-dashboard.component';
@@ -25,6 +24,8 @@ import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/componen
 import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
 import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.interceptor';
 import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
+import { BusyModalComponent } from './shared/components/busy-modal/busy-modal.component';
+import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,9 @@ import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/componen
     BreadcrumbNavComponent,
     SubmissionReviewListComponent,
     FacilityDataReviewComponent,
-    ReportSummaryModalComponent
+    ReportSummaryModalComponent,
+    BusyModalComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,9 @@ import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/componen
     FontAwesomeModule
   ],
   entryComponents: [
-    ReportSummaryModalComponent
+    ReportSummaryModalComponent,
+    BusyModalComponent,
+    DeleteDialogComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},

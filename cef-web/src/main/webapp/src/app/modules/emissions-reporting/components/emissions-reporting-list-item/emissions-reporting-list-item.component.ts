@@ -1,5 +1,6 @@
 import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import { Component, OnInit, Input } from '@angular/core';
+import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 
 @Component({
   selector: 'app-emissions-reporting-list-item',
@@ -8,6 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class EmissionsReportingListItemComponent implements OnInit {
   @Input() report: EmissionsReport;
+  @Input() facility: CdxFacility;
 
   constructor() { }
 

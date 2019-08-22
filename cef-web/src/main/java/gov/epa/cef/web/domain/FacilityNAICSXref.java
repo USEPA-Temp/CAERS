@@ -26,6 +26,25 @@ public class FacilityNAICSXref extends BaseAuditEntity {
     @Column(name = "primary_flag", nullable = false)
     private boolean primaryFlag;
 
+
+    /**
+     * Default constructor
+     */
+    public FacilityNAICSXref() {}
+
+
+    /**
+     * Copy constructor
+     * @param facilitySite
+     * @param naicsXref
+     */
+    public FacilityNAICSXref(FacilitySite facilitySite, FacilityNAICSXref originalNaicsXref) {
+    	this.id = originalNaicsXref.getId();
+    	this.facilitySite = facilitySite;
+    	this.naicsCode = originalNaicsXref.getNaicsCode();
+    	this.primaryFlag = originalNaicsXref.isPrimaryFlag();
+    }
+    
     public FacilitySite getFacilitySite() {
         return facilitySite;
     }
@@ -48,6 +67,14 @@ public class FacilityNAICSXref extends BaseAuditEntity {
 
     public void setPrimaryFlag(boolean primaryFlag) {
         this.primaryFlag = primaryFlag;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
     }
 
 }

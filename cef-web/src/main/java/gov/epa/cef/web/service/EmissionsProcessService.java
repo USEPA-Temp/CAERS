@@ -15,6 +15,13 @@ public interface EmissionsProcessService {
     public EmissionsProcessDto create(EmissionsProcessSaveDto dto);
 
     /**
+     * Update an Emissions Process
+     * @param dto
+     * @return
+     */
+    public EmissionsProcessDto update(EmissionsProcessSaveDto dto);
+
+    /**
      * Retrieve Emissions Process by its id
      * @param id 
      * @return
@@ -34,5 +41,11 @@ public interface EmissionsProcessService {
      * @return
      */
     List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId);
+    
+    /**
+     * Delete an Emissions Process for a given id
+     * @param id
+     */
+    public void delete(Long id);
 
 }

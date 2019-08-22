@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
+import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 
 @Component({
   selector: 'app-edit-process-reporting-period-panel',
   templateUrl: './edit-process-reporting-period-panel.component.html',
   styleUrls: ['./edit-process-reporting-period-panel.component.scss']
 })
-export class EditProcessReportingPeriodPanelComponent implements OnInit {
+export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChanges {
+  @Input() reportingPeriod: ReportingPeriod;
   reportingPeriodForm = this.fb.group({
     reportingPeriodTypeCode: [null, Validators.required],
     emissionsOperatingTypeCode: [null, Validators.required],
@@ -32,6 +34,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit {
 
   constructor(
     private lookupService: LookupService,
+    public formUtils: FormUtilsService,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -60,6 +63,11 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit {
     .subscribe(result => {
       this.uomValues = result;
     });
+  }
+
+  ngOnChanges() {
+
+    this.reportingPeriodForm.reset(this.reportingPeriod);
   }
 
   onSubmit() {

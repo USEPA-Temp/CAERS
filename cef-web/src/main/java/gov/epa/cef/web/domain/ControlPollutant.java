@@ -26,6 +26,25 @@ public class ControlPollutant extends BaseAuditEntity {
     @Column(name = "percent_reduction", precision = 4, scale = 1)
     private Double percentReduction;
 
+    
+    /**
+     * Default constructor
+     */
+    public ControlPollutant() {}
+    
+    
+    /**
+     * Copy constructor
+     * @param control
+     * @param originalControlPollutant
+     */
+    public ControlPollutant(Control control, ControlPollutant originalControlPollutant) {
+    	this.id = originalControlPollutant.getId();
+    	this.control = control;
+    	this.pollutant = originalControlPollutant.getPollutant();
+    	this.percentReduction = originalControlPollutant.percentReduction;
+    }
+    
     public Control getControl() {
         return control;
     }
@@ -49,5 +68,12 @@ public class ControlPollutant extends BaseAuditEntity {
     public void setPercentReduction(Double percentReduction) {
         this.percentReduction = percentReduction;
     }
-
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+    }
 }

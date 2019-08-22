@@ -17,6 +17,11 @@ export class EmissionsProcessService {
     return this.http.post<Process>(url, process);
   }
 
+  update(process: Process): Observable<Process> {
+    const url = `${this.baseUrl}/${process.id}`;
+    return this.http.put<Process>(url, process);
+  }
+
   /** GET specified release point from the server */
   retrieve(id: number): Observable<Process> {
     const url = `${this.baseUrl}/${id}`;
@@ -30,10 +35,15 @@ export class EmissionsProcessService {
 
   /**
    * GET all of the emissions processes for a specified emissions unit
-   * @param emissionsUnitId
    */
   retrieveForEmissionsUnit(emissionsUnitId: number): Observable<Process[]> {
     const url = `${this.baseUrl}/emissionsUnit/${emissionsUnitId}`;
     return this.http.get<Process[]>(url);
+  }
+
+    /** Delete specified emissions process from the database */
+  delete(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
   }
 }

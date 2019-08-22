@@ -1,9 +1,17 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Emission } from 'src/app/shared/models/emission';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
+import { LookupService } from 'src/app/core/services/lookup.service';
+import { FormUtilsService } from 'src/app/core/services/form-utils.service';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { Pollutant } from 'src/app/shared/models/pollutant';
+import { EmissionService } from 'src/app/core/services/emission.service';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 
 @Component({
   selector: 'app-emission-details-modal',
@@ -15,80 +23,116 @@ export class EmissionDetailsModalComponent implements OnInit {
   @Input() reportingPeriod: ReportingPeriod;
   @Input() process: Process;
   @Input() editable = false;
+  @Input() createMode = false;
+
   emissionForm = this.fb.group({
-    pollutantName: [''],
-    pollutantCode: [''],
-    pollutantCasId: [''],
-    emissionsFactor: [''],
-    emissionsFactorText: [''],
-    emissionsCalcMethodCode: [''],
-    totalEmissions: [''],
-    emissionsUomCode: [''],
-    comments: [''],
-    emissionsNumeratorUom: [''],
-    emissionsDenominatorUom: [''],
+    pollutant: [null, Validators.required],
+    emissionsFactor: ['', [Validators.required, numberValidator()]],
+    emissionsFactorText: ['', [Validators.required, Validators.maxLength(100)]],
+    emissionsCalcMethodCode: ['', Validators.required],
+    totalEmissions: ['', [Validators.required, numberValidator()]],
+    emissionsUomCode: [null, Validators.required],
+    comments: ['', Validators.maxLength(200)],
+    emissionsNumeratorUom: [null],
+    emissionsDenominatorUom: [null]
   });
 
-  constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) { }
+  methodValues: BaseCodeLookup[];
+  pollutantValues: Pollutant[];
+  uomValues: BaseCodeLookup[];
+
+  constructor(
+    private emissionService: EmissionService,
+    private lookupService: LookupService,
+    public formUtils: FormUtilsService,
+    public activeModal: NgbActiveModal,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.emissionForm.reset(this.emission);
 
-    if (this.emission.emissionsUomCode) {this.emissionForm.patchValue({emissionsUomCode: this.emission.emissionsUomCode.description}); }
-    if (this.emission.emissionsNumeratorUom) {
-        this.emissionForm.patchValue({emissionsNumeratorUom: this.emission.emissionsNumeratorUom.description}); }
-    if (this.emission.emissionsDenominatorUom) {
-        this.emissionForm.patchValue({emissionsDenominatorUom: this.emission.emissionsDenominatorUom.description}); }
-    if (this.emission.emissionsCalcMethodCode) {
-        this.emissionForm.patchValue({emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description}); }
-    if (this.emission.pollutant) {
-        this.emissionForm.patchValue({pollutantName: this.emission.pollutant.pollutantName});
-        this.emissionForm.patchValue({pollutantCode: this.emission.pollutant.pollutantCode});
-        this.emissionForm.patchValue({pollutantCasId: this.emission.pollutant.pollutantCasId});
-    }
+    this.lookupService.retrieveCalcMethod()
+    .subscribe(result => {
+      this.methodValues = result;
+    });
 
+    this.lookupService.retrievePollutant()
+    .subscribe(result => {
+      this.pollutantValues = result;
+    });
 
+    this.lookupService.retrieveUom()
+    .subscribe(result => {
+      this.uomValues = result;
+    });
 
-    if (this.editable) {
+    if (this.createMode) {
       this.emissionForm.enable();
     } else {
+      this.emissionForm.reset(this.emission);
       this.emissionForm.disable();
+    }
+
+  }
+
+  onCancelEdit() {
+    this.emissionForm.enable();
+    if (!this.createMode) {
+      this.emissionForm.reset(this.emission);
     }
   }
 
   onClose() {
-    this.activeModal.close();
+    this.activeModal.dismiss();
   }
 
-  onReset() {
-    // for demo purposes only
-    this.editable = !this.editable;
+  onEdit() {
+    this.emissionForm.enable();
+  }
 
-    this.emissionForm.reset(this.emission);
-    if (this.emission.emissionsUomCode) {this.emissionForm.patchValue({emissionsUomCode: this.emission.emissionsUomCode.description}); }
-    if (this.emission.emissionsNumeratorUom) {
-        this.emissionForm.patchValue({emissionsNumeratorUom: this.emission.emissionsNumeratorUom.description}); }
-    if (this.emission.emissionsDenominatorUom) {
-        this.emissionForm.patchValue({emissionsDenominatorUom: this.emission.emissionsDenominatorUom.description}); }
-    if (this.emission.emissionsCalcMethodCode) {
-        this.emissionForm.patchValue({emissionsCalcMethodCode: this.emission.emissionsCalcMethodCode.description}); }
-    if (this.emission.pollutant) {
-        this.emissionForm.patchValue({pollutantName: this.emission.pollutant.pollutantName});
-        this.emissionForm.patchValue({pollutantCode: this.emission.pollutant.pollutantCode});
-        this.emissionForm.patchValue({pollutantCasId: this.emission.pollutant.pollutantCasId});
-    }
+  onSubmit() {
 
-    if (this.editable) {
-      this.emissionForm.enable();
+    if (!this.emissionForm.valid) {
+      // TODO: update to angular 8 to enable this function for showing all validation messages
+      // this.emissionForm.markAllAsTouched();
     } else {
-      this.emissionForm.disable();
+      if (this.createMode) {
+        const saveEmission = new Emission();
+        Object.assign(saveEmission, this.emissionForm.value);
+
+        saveEmission.reportingPeriodId = this.reportingPeriod.id;
+
+        this.emissionService.create(saveEmission)
+        .subscribe(result => {
+
+          // Object.assign(this.emission, result);
+          this.activeModal.close(result);
+        });
+      } else {
+        const updateEmission = new Emission();
+        Object.assign(updateEmission, this.emissionForm.value);
+
+        updateEmission.id = this.emission.id;
+
+        this.emissionService.update(updateEmission)
+        .subscribe(result => {
+
+          Object.assign(this.emission, result);
+          this.activeModal.close(result);
+        });
+      }
     }
   }
 
-                                         onSubmit() {
-    // TODO: rest call to save will be invoked here
-    Object.assign(this.emission, this.emissionForm.value);
-    this.activeModal.close();
-  }
+  searchPollutants = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term => this.pollutantValues.filter(v => v.pollutantName.toLowerCase().indexOf(term.toLowerCase()) > -1
+                                        || v.pollutantCode.toLowerCase().indexOf(term.toLowerCase()) > -1
+                                        || (v.pollutantCasId ? v.pollutantCasId.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
+                                        .slice(0, 20))
+    )
+
+  pollutantFormatter = (result: Pollutant) => `${result.pollutantName}  -  ${result.pollutantCode} ${result.pollutantCasId ? ' - ' + result.pollutantCasId : ''}`;
 
 }

@@ -3,25 +3,69 @@ package gov.epa.cef.web.service.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
+import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
+import gov.epa.cef.web.repository.LookupRepositories;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
+import gov.epa.cef.web.service.dto.PollutantDto;
 
 
 @Mapper(componentModel = "spring", uses = {})
-public interface LookupEntityMapper {
+public abstract class LookupEntityMapper {
+    
+    @Autowired
+    private LookupRepositories repos;
 
-    CodeLookupDto toDto(BaseLookupEntity source);
+    public abstract CodeLookupDto toDto(BaseLookupEntity source);
 
-    List<CodeLookupDto> toDtoList(List<BaseLookupEntity> source);
+    public abstract List<CodeLookupDto> toDtoList(List<BaseLookupEntity> source);
 
-    CodeLookupDto naicsCodeToDto(NaicsCode code);
+    public abstract CodeLookupDto naicsCodeToDto(NaicsCode code);
 
-    CodeLookupDto reportingPeriodCodeToDto(ReportingPeriodCode source);
+    public abstract CodeLookupDto reportingPeriodCodeToDto(ReportingPeriodCode source);
 
-    FacilityCategoryCodeDto facilityCategoryCodeToDto(FacilityCategoryCode code);
+    public abstract FacilityCategoryCodeDto facilityCategoryCodeToDto(FacilityCategoryCode code);
+
+    public abstract PollutantDto pollutantToDto(Pollutant source);
+    
+    @Named("CalculationMethodCode")
+    public CalculationMethodCode dtoToCalculationMethodCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.methodCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+
+    @Named("OperatingStatusCode")
+    public OperatingStatusCode dtoToOperatingStatusCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.operatingStatusRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+
+    public Pollutant pollutantDtoToPollutant(PollutantDto source) {
+        if (source != null) {
+            return repos.pollutantRepo().findById(source.getPollutantCode()).orElse(null);
+        }
+        return null;
+    }
+
+    @Named("UnitMeasureCode")
+    public UnitMeasureCode dtoToUnitMeasureCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.uomRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
 }

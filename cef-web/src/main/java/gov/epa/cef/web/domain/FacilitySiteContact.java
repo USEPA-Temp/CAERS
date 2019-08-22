@@ -71,6 +71,39 @@ public class FacilitySiteContact extends BaseAuditEntity {
     @Column(name = "mailing_postal_code", length = 10)
     private String mailingPostalCode;
 
+    /**
+     * Default constructor
+     */
+    public FacilitySiteContact() {}
+    
+    
+    /**
+     * Copy constructor
+     */
+    public FacilitySiteContact(FacilitySite facilitySite, FacilitySiteContact originalFacilitySiteContact) {
+    	this.id = originalFacilitySiteContact.getId();
+    	this.facilitySite = facilitySite;
+    	this.type = originalFacilitySiteContact.getType();
+    	this.prefix = originalFacilitySiteContact.getPrefix();
+    	this.firstName = originalFacilitySiteContact.getFirstName();
+    	this.lastName = originalFacilitySiteContact.getLastName();
+    	this.email = originalFacilitySiteContact.getEmail();
+    	this.phone = originalFacilitySiteContact.getPhone();
+    	this.phoneExt = originalFacilitySiteContact.getPhoneExt();
+    	this.streetAddress = originalFacilitySiteContact.getStreetAddress();
+    	this.city = originalFacilitySiteContact.getCity();
+    	this.stateCode = originalFacilitySiteContact.getStateCode();
+    	this.countryCode = originalFacilitySiteContact.getCountryCode();
+    	this.postalCode = originalFacilitySiteContact.getPostalCode();
+    	this.county = originalFacilitySiteContact.getCounty();
+    	this.mailingStreetAddress = originalFacilitySiteContact.getMailingStreetAddress();
+    	this.mailingCity = originalFacilitySiteContact.getMailingCity();
+    	this.mailingStateCode = originalFacilitySiteContact.getMailingStateCode();
+    	this.mailingPostalCode = originalFacilitySiteContact.getMailingPostalCode();
+    }
+    
+    
+    
     public FacilitySite getFacilitySite() {
         return facilitySite;
     }
@@ -213,6 +246,14 @@ public class FacilitySiteContact extends BaseAuditEntity {
 
     public void setMailingPostalCode(String mailingPostalCode) {
         this.mailingPostalCode = mailingPostalCode;
+    }
+    
+    
+    /***
+     * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
     }
 
 }
