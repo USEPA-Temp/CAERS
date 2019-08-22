@@ -12,6 +12,7 @@ import { EmissionService } from 'src/app/core/services/emission.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
+import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
 
 @Component({
   selector: 'app-emission-details-modal',
@@ -29,15 +30,15 @@ export class EmissionDetailsModalComponent implements OnInit {
     pollutant: [null, Validators.required],
     emissionsFactor: ['', [Validators.required, numberValidator()]],
     emissionsFactorText: ['', [Validators.required, Validators.maxLength(100)]],
+    emissionsNumeratorUom: [null, Validators.required],
+    emissionsDenominatorUom: [null, Validators.required],
     emissionsCalcMethodCode: ['', Validators.required],
     totalEmissions: ['', [Validators.required, numberValidator()]],
     emissionsUomCode: [null, Validators.required],
     comments: ['', Validators.maxLength(200)],
-    emissionsNumeratorUom: [null],
-    emissionsDenominatorUom: [null]
   });
 
-  methodValues: BaseCodeLookup[];
+  methodValues: CalculationMethodCode[];
   pollutantValues: Pollutant[];
   uomValues: BaseCodeLookup[];
 
@@ -72,6 +73,25 @@ export class EmissionDetailsModalComponent implements OnInit {
       this.emissionForm.disable();
     }
 
+    this.emissionForm.controls.emissionsCalcMethodCode.valueChanges
+    .subscribe(value => {
+      if (value && value.totalDirectEntry) {
+        this.emissionForm.get('emissionsFactor').disable();
+        this.emissionForm.get('emissionsFactorText').disable();
+        this.emissionForm.get('emissionsNumeratorUom').disable();
+        this.emissionForm.get('emissionsDenominatorUom').disable();
+        this.emissionForm.get('emissionsFactor').reset();
+        this.emissionForm.get('emissionsFactorText').reset();
+        this.emissionForm.get('emissionsNumeratorUom').reset();
+        this.emissionForm.get('emissionsDenominatorUom').reset();
+      } else {
+        this.emissionForm.get('emissionsFactor').enable();
+        this.emissionForm.get('emissionsFactorText').enable();
+        this.emissionForm.get('emissionsNumeratorUom').enable();
+        this.emissionForm.get('emissionsDenominatorUom').enable();
+      }
+    });
+
   }
 
   onCancelEdit() {
@@ -95,9 +115,11 @@ export class EmissionDetailsModalComponent implements OnInit {
       // TODO: update to angular 8 to enable this function for showing all validation messages
       // this.emissionForm.markAllAsTouched();
     } else {
+
+      const saveEmission = new Emission();
+      Object.assign(saveEmission, this.emissionForm.value);
+
       if (this.createMode) {
-        const saveEmission = new Emission();
-        Object.assign(saveEmission, this.emissionForm.value);
 
         saveEmission.reportingPeriodId = this.reportingPeriod.id;
 
@@ -108,12 +130,10 @@ export class EmissionDetailsModalComponent implements OnInit {
           this.activeModal.close(result);
         });
       } else {
-        const updateEmission = new Emission();
-        Object.assign(updateEmission, this.emissionForm.value);
 
-        updateEmission.id = this.emission.id;
+        saveEmission.id = this.emission.id;
 
-        this.emissionService.update(updateEmission)
+        this.emissionService.update(saveEmission)
         .subscribe(result => {
 
           Object.assign(this.emission, result);

@@ -27,7 +27,7 @@ public class Emission extends BaseAuditEntity {
     private ReportingPeriod reportingPeriod;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pollutant_code")
+    @JoinColumn(name = "pollutant_code", nullable = false)
     private Pollutant pollutant;
     
     @Column(name = "total_emissions", nullable = false, precision = 6, scale = 0)
@@ -37,10 +37,10 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "emissions_uom_code", nullable = false)
     private UnitMeasureCode emissionsUomCode;
     
-    @Column(name = "emissions_factor", nullable = false)
+    @Column(name = "emissions_factor")
     private BigDecimal emissionsFactor;
     
-    @Column(name = "emissions_factor_text", nullable = false, length = 100)
+    @Column(name = "emissions_factor_text", length = 100)
     private String emissionsFactorText;
     
     @ManyToOne(fetch = FetchType.LAZY)
