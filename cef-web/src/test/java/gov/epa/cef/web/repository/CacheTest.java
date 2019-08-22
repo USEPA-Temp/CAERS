@@ -6,28 +6,21 @@ import gov.epa.cef.web.service.dto.CodeLookupDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@ActiveProfiles(profiles = {"dev", "itcase"})
-public class CacheITCase {
+public class CacheTest extends BaseRepositoryTest {
 
     private static final String BARRELS = "BARRELS";
     private static final String BBL = "BBL";

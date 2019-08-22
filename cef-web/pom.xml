@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -40,6 +40,7 @@
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
 
         <skip.node>false</skip.node>
+        <prod.postgres.version>10.8.0</prod.postgres.version>
 
         <java.version>1.8</java.version>
         <maven.version>3.0.0</maven.version>
@@ -59,6 +60,7 @@
         <postgresql-embedded.version>2.10</postgresql-embedded.version>
         <slf4j.version>1.7.25</slf4j.version>
 
+
         <!-- Plugin versions -->
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -73,17 +75,40 @@
 
         <!-- Sonar properties -->
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>
-        <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*, src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*, src/test/resources/db/**/*.*, src/main/webapp/coverage/**/*.*</sonar.exclusions>
+        <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*,
+            src/main/webapp/node_modules/**/*.*, src/main/webapp/node/**/*.*, src/main/resources/db/migrations/**/*.*,
+            src/test/resources/db/**/*.*, src/main/webapp/coverage/**/*.*
+        </sonar.exclusions>
         <sonar.jacoco.reportPath>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
-        <sonar.coverage.exclusions>src/main/java/gov/epa/cef/web/config/**/*, src/main/java/gov/epa/cef/web/controller/**/*, src/main/java/gov/epa/cef/web/domain/**/*, src/main/java/gov/epa/cef/web/exception/**/*, src/main/java/gov/epa/cef/web/exception/**/*, src/main/java/gov/epa/cef/web/repository/**/*, src/main/java/gov/epa/cef/web/service/dto/**/*, src/main/java/gov/epa/cef/web/service/mapper/**/*, src/main/java/gov/epa/cef/web/soap/**/*, src/main/java/gov/epa/cef/web/CefWebApplication.*, src/main/java/gov/epa/cef/web/ServletInitializer.*, src/main/java/gov/epa/cef/web/security/mock/*</sonar.coverage.exclusions>
-        <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/coverage/lcov/lcov.info</sonar.typescript.lcov.reportPaths>
+        <sonar.coverage.exclusions>src/main/java/gov/epa/cef/web/config/**/*,
+            src/main/java/gov/epa/cef/web/controller/**/*, src/main/java/gov/epa/cef/web/domain/**/*,
+            src/main/java/gov/epa/cef/web/exception/**/*, src/main/java/gov/epa/cef/web/exception/**/*,
+            src/main/java/gov/epa/cef/web/repository/**/*, src/main/java/gov/epa/cef/web/service/dto/**/*,
+            src/main/java/gov/epa/cef/web/service/mapper/**/*, src/main/java/gov/epa/cef/web/soap/**/*,
+            src/main/java/gov/epa/cef/web/CefWebApplication.*, src/main/java/gov/epa/cef/web/ServletInitializer.*,
+            src/main/java/gov/epa/cef/web/security/mock/*
+        </sonar.coverage.exclusions>
+        <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/coverage/lcov/lcov.info
+        </sonar.typescript.lcov.reportPaths>
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <sonar.test.exclusions>src/test/resources/db/**/*.*</sonar.test.exclusions>
         <sonar.cpd.exclusions>src/main/java/gov/epa/cef/web/service/dto/**/*</sonar.cpd.exclusions>
 
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.zonky.test.postgres</groupId>
+                <artifactId>embedded-postgres-binaries-bom</artifactId>
+                <version>${prod.postgres.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -157,14 +182,14 @@
         <!-- misc -->
         <!-- ====================================================================== -->
         <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-          <version>3.9</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
         </dependency>
         <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-collections4</artifactId>
-          <version>4.3</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.3</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -176,9 +201,9 @@
         <!-- CDX Shared -->
         <!-- ====================================================================== -->
         <dependency>
-          <groupId>gov.epa.cdx.shared</groupId>
-          <artifactId>cdx-shared-app-util</artifactId>
-          <version>${cdx.shared.version}</version>
+            <groupId>gov.epa.cdx.shared</groupId>
+            <artifactId>cdx-shared-app-util</artifactId>
+            <version>${cdx.shared.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -303,9 +328,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ru.yandex.qatools.embed</groupId>
-            <artifactId>postgresql-embedded</artifactId>
-            <version>${postgresql-embedded.version}</version>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-postgres</artifactId>
+            <version>1.2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-database-spring-test</artifactId>
+            <version>1.5.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -455,6 +486,36 @@
                     -->
                 </configuration>
             </plugin>
+            <!-- ====================================================================== -->
+            <!-- Generate binding for WSDLs -->
+            <!-- ====================================================================== -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <configuration>
+                    <vmArgs>
+                        <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                    </vmArgs>
+                    <extension>true</extension>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>token-wsdl</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <wsdlDirectory>src/main/wsdl</wsdlDirectory>
+                            <wsdlFiles>
+                                <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
+                                <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
+                                <wsdlFile>RegisterSignService.wsdl</wsdlFile>
+                            </wsdlFiles>
+                        </configuration>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -511,16 +572,16 @@
                                     <include>gov.epa.cef.web.security.*</include>
                                     <include>gov.epa.cef.web.util.*</include>
                                 </includes>
-                                    <limit>
-                                        <counter>LINE</counter>
-                                        <value>COVEREDRATIO</value>
-                                        <minimum>0.80</minimum>
-                                    </limit>
-                                    <limit>
-                                        <counter>BRANCH</counter>
-                                        <value>COVEREDRATIO</value>
-                                        <minimum>0.80</minimum>
-                                    </limit>
+                                <limit>
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.80</minimum>
+                                </limit>
+                                <limit>
+                                    <counter>BRANCH</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.80</minimum>
+                                </limit>
                             </configuration>
                         </execution>
                         <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
@@ -627,6 +688,9 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
+                        <systemPropertyVariables>
+                            <spring.profiles.active>unit_test</spring.profiles.active>
+                        </systemPropertyVariables>
                         <!-- Force alphabetical order to have a reproducible build -->
                         <runOrder>alphabetical</runOrder>
                         <!-- Fixes a bug which will be solved in next version after 2.22.1 then this can be removed -->
@@ -655,6 +719,20 @@
     </build>
     <profiles>
         <profile>
+            <id>embeddedTests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <groups>gov.epa.cef.web.config.TestCategories$EmbeddedDatabaseTest</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -664,6 +742,13 @@
             </properties>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <excludedGroups>gov.epa.cef.web.config.TestCategories$EmbeddedDatabaseTest</excludedGroups>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -794,36 +879,6 @@
                             -->
                         </executions>
                     </plugin>
-                    <!-- ====================================================================== -->
-                    <!-- Generate binding for WSDLs -->
-                    <!-- ====================================================================== -->
-                    <plugin>
-                      <groupId>org.codehaus.mojo</groupId>
-                      <artifactId>jaxws-maven-plugin</artifactId>
-                      <configuration>
-                        <vmArgs>
-                            <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-                        </vmArgs>
-                        <extension>true</extension>
-                      </configuration>
-                      <executions>
-                        <execution>
-                          <id>token-wsdl</id>
-                          <phase>generate-sources</phase>
-                          <configuration>
-                            <wsdlDirectory>src/main/wsdl</wsdlDirectory>
-                            <wsdlFiles>
-                              <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
-                              <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
-                              <wsdlFile>RegisterSignService.wsdl</wsdlFile>
-                            </wsdlFiles>
-                          </configuration>
-                          <goals>
-                            <goal>wsimport</goal>
-                          </goals>
-                        </execution>
-                      </executions>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -938,36 +993,6 @@
                     <plugin>
                         <groupId>pl.project13.maven</groupId>
                         <artifactId>git-commit-id-plugin</artifactId>
-                    </plugin>
-                    <!-- ====================================================================== -->
-                    <!-- Generate binding for WSDLs -->
-                    <!-- ====================================================================== -->
-                    <plugin>
-                      <groupId>org.codehaus.mojo</groupId>
-                      <artifactId>jaxws-maven-plugin</artifactId>
-                      <configuration>
-                        <vmArgs>
-                            <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-                        </vmArgs>
-                        <extension>true</extension>
-                      </configuration>
-                      <executions>
-                        <execution>
-                          <id>token-wsdl</id>
-                          <phase>generate-sources</phase>
-                          <configuration>
-                            <wsdlDirectory>src/main/wsdl</wsdlDirectory>
-                            <wsdlFiles>
-                              <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
-                              <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
-                              <wsdlFile>RegisterSignService.wsdl</wsdlFile>
-                            </wsdlFiles>
-                          </configuration>
-                          <goals>
-                            <goal>wsimport</goal>
-                          </goals>
-                        </execution>
-                      </executions>
                     </plugin>
                 </plugins>
             </build>

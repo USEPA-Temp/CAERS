@@ -61,6 +61,12 @@ public class CacheConfig {
             throw new IllegalStateException(e);
         }
 
-        return HazelcastInstanceFactory.newHazelcastInstance(config);
+        HazelcastInstance result =
+            HazelcastInstanceFactory.getHazelcastInstance(config.getInstanceName());
+        if (result == null) {
+            result = HazelcastInstanceFactory.newHazelcastInstance(config);
+        }
+
+        return result;
     }
 }

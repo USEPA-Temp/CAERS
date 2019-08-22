@@ -1,23 +1,24 @@
 package gov.epa.cef.web.config;
 
 import org.flywaydb.core.Flyway;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 
 @Configuration
 @Component
 public class FlywayConfig {
 
-    @Value("${spring.datasource.url}")
-    private String dataSourceUrl;
+    private final DataSource dataSource;
 
-    @Value("${spring.datasource.username}")
-    private String dataSourceUserName;
+    @Autowired
+    FlywayConfig(DataSource dataSource) {
 
-    @Value("${spring.datasource.password}")
-    private String dataSourcePassword;
+        this.dataSource = dataSource;
+    }
 
     @Bean(initMethod = "migrate")
     public Flyway flyway() {
@@ -26,8 +27,8 @@ public class FlywayConfig {
             .table("schema_version_cef")
             .baselineOnMigrate(true)
             .baselineVersion("0.0.1")
-            .dataSource(dataSourceUrl, dataSourceUserName, dataSourcePassword)
+            .dataSource(this.dataSource)
             .load();
     }
-    
+
 }
