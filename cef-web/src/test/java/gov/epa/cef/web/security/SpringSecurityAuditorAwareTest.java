@@ -1,10 +1,6 @@
 package gov.epa.cef.web.security;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
+import gov.epa.cdx.shared.security.ApplicationUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,20 +12,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import gov.epa.cdx.shared.security.ApplicationUser;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SpringSecurityAuditorAwareTest{
+public class SpringSecurityAuditorAwareTest extends BaseSecurityTest {
 
     @Mock
     ApplicationUser applicationUser;
-    
+
     @Mock
     Authentication authentication;
-    
+
     @InjectMocks
     private SpringSecurityAuditorAware springSecurityAuditorAware;
-    
+
     @Before
     public void init() {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
@@ -39,14 +38,14 @@ public class SpringSecurityAuditorAwareTest{
         when(applicationUser.getUserId()).thenReturn("mock-user");
     }
 
-    
+
     @Test
     public void getCurrentAuditor_Should_ReturnCurrentAuthenticatedUser_When_AuthenticatedUserAlreadyExist() {
         when(authentication.isAuthenticated()).thenReturn(true);
         Optional<String> currentAuditor=springSecurityAuditorAware.getCurrentAuditor();
         assertEquals("mock-user", currentAuditor.get());
     }
-    
+
     @Test
     public void getCurrentAuditor_Should_ReturnNull_When_NoAuthenticatedUserAvailable() {
         when(authentication.isAuthenticated()).thenReturn(false);

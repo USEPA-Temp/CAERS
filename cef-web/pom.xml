@@ -719,14 +719,14 @@
     </build>
     <profiles>
         <profile>
-            <id>embeddedTests</id>
+            <id>allTests</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <groups>gov.epa.cef.web.config.TestCategories$EmbeddedDatabaseTest</groups>
+                            <groups>gov.epa.cef.web.config.TestCategories$UnitTest</groups>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -746,7 +746,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <excludedGroups>gov.epa.cef.web.config.TestCategories$EmbeddedDatabaseTest</excludedGroups>
+                            <groups>gov.epa.cef.web.config.TestCategories$FastTest</groups>
                         </configuration>
                     </plugin>
                     <plugin>

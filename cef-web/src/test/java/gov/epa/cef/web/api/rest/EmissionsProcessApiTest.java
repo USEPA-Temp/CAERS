@@ -1,12 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import gov.epa.cef.web.service.EmissionsProcessService;
+import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,36 +11,40 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import gov.epa.cef.web.service.EmissionsProcessService;
-import gov.epa.cef.web.service.dto.EmissionsProcessDto;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EmissionsProcessApiTest {
+public class EmissionsProcessApiTest extends BaseApiTest {
 
     @Mock
     private EmissionsProcessService processService;
 
     @InjectMocks
     private EmissionsProcessApi emissionsProcessApi;
-    
-    private 
+
+    private
     EmissionsProcessDto emissionProcess=new EmissionsProcessDto();
-    
-    private 
+
+    private
     List<EmissionsProcessDto> emissionProcessList;
-    
-    @Before 
+
+    @Before
     public void init() {
         emissionProcess=new EmissionsProcessDto();
         when(processService.retrieveById(123L)).thenReturn(emissionProcess);
-        
+
         emissionProcessList=new ArrayList<>();
         emissionProcessList.add(emissionProcess);
         when(processService.retrieveForReleasePoint(1L)).thenReturn(emissionProcessList);
         when(processService.retrieveForEmissionsUnit(1L)).thenReturn(emissionProcessList);
-        
+
     }
-    
+
     @Test
     public void retrieveEmissionsProcess_Should_ReturnEmissionProcessObjectWithOkStatusCode_When_ValidIdPassed() {
         ResponseEntity<EmissionsProcessDto> result=emissionsProcessApi.retrieveEmissionsProcess(123L);
@@ -66,5 +65,5 @@ public class EmissionsProcessApiTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(emissionProcessList, result.getBody());
     }
-    
+
 }

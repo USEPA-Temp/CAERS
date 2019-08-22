@@ -1,11 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import gov.epa.cef.web.service.ControlService;
+import gov.epa.cef.web.service.dto.ControlDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +11,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import gov.epa.cef.web.service.ControlService;
-import gov.epa.cef.web.service.dto.ControlDto;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class ControlApiTest {
+public class ControlApiTest extends BaseApiTest {
 
     @Mock
     private ControlService controlService;
@@ -28,13 +27,13 @@ public class ControlApiTest {
     @InjectMocks
     private ControlApi controlApi;
 
-    private 
+    private
     ControlDto control = new ControlDto();
 
-    private 
+    private
     List<ControlDto> controlList;
 
-    @Before 
+    @Before
     public void init() {
         control = new ControlDto();
         when(controlService.retrieveById(123L)).thenReturn(control);

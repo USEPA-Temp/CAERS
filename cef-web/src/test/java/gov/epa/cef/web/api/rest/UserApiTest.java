@@ -1,8 +1,8 @@
 package gov.epa.cef.web.api.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
+import gov.epa.cef.web.service.UserService;
+import gov.epa.cef.web.service.dto.TokenDto;
+import gov.epa.cef.web.service.dto.UserDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -11,20 +11,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import gov.epa.cef.web.service.UserService;
-import gov.epa.cef.web.service.dto.TokenDto;
-import gov.epa.cef.web.service.dto.UserDto;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserApiTest {
+public class UserApiTest extends BaseApiTest {
 
     @Mock
     private UserService userService;
-    
+
     @InjectMocks
     private UserApi userApi;
 
-    
+
     @Test
     public void retrieveCurrentUser_Should_ReturnUserDtoObject_WithStatusOk_WhenValidAuthenticatedUserExist() {
         UserDto userDto=new UserDto();
@@ -33,7 +32,7 @@ public class UserApiTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(userDto, result.getBody());
     }
-    
+
     @Test
     public void createToken_Should_ReturnNewGeneratedTokenWithStatusOk_WhenValidAuthenticatedUserExist() {
         TokenDto tokenDto=new TokenDto();
