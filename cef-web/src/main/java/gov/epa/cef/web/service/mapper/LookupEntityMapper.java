@@ -15,6 +15,7 @@ import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.repository.LookupRepositories;
+import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -33,6 +34,8 @@ public abstract class LookupEntityMapper {
     public abstract CodeLookupDto naicsCodeToDto(NaicsCode code);
 
     public abstract CodeLookupDto reportingPeriodCodeToDto(ReportingPeriodCode source);
+
+    public abstract CalculationMethodCodeDto calculationMethodCodeToDto(CalculationMethodCode source);
 
     public abstract FacilityCategoryCodeDto facilityCategoryCodeToDto(FacilityCategoryCode code);
 

@@ -5,6 +5,7 @@ import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 
@@ -29,7 +30,7 @@ public interface LookupService {
      * Retrieve Calculation Method codes
      * @return
      */
-    List<CodeLookupDto> retrieveCalcMethodCodes();
+    List<CalculationMethodCodeDto> retrieveCalcMethodCodes();
 
     /**
      * Retrieve Calculation Parameter Type codes

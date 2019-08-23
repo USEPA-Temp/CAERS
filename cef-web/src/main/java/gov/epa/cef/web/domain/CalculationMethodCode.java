@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -17,5 +18,16 @@ import javax.persistence.Table;
 public class CalculationMethodCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
+
+    @Column(name = "total_direct_entry", nullable = false)
+    private Boolean totalDirectEntry;
+
+    public Boolean getTotalDirectEntry() {
+        return totalDirectEntry;
+    }
+
+    public void setTotalDirectEntry(Boolean totalDirectEntry) {
+        this.totalDirectEntry = totalDirectEntry;
+    }
 
 }

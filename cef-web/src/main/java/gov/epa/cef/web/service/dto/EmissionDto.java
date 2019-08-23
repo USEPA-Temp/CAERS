@@ -14,7 +14,7 @@ public class EmissionDto implements Serializable {
     private CodeLookupDto emissionsUomCode;
     private BigDecimal emissionsFactor;
     private String emissionsFactorText;
-    private CodeLookupDto emissionsCalcMethodCode;
+    private CalculationMethodCodeDto emissionsCalcMethodCode;
     private String comments;
     private BigDecimal calculatedEmissionsTons;
     private CodeLookupDto emissionsNumeratorUom;
@@ -76,11 +76,11 @@ public class EmissionDto implements Serializable {
         this.emissionsFactorText = emissionsFactorText;
     }
 
-    public CodeLookupDto getEmissionsCalcMethodCode() {
+    public CalculationMethodCodeDto getEmissionsCalcMethodCode() {
         return emissionsCalcMethodCode;
     }
 
-    public void setEmissionsCalcMethodCode(CodeLookupDto emissionsCalcMethodCode) {
+    public void setEmissionsCalcMethodCode(CalculationMethodCodeDto emissionsCalcMethodCode) {
         this.emissionsCalcMethodCode = emissionsCalcMethodCode;
     }
 

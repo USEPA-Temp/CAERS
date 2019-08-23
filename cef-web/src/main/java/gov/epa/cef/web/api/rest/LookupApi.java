@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.service.LookupService;
+import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 
@@ -39,10 +40,10 @@ public class LookupApi {
      */
     @GetMapping(value = "/calculation/method")
     @ResponseBody
-    public ResponseEntity<List<CodeLookupDto>> retrieveCalcMethodCodes() {
+    public ResponseEntity<List<CalculationMethodCodeDto>> retrieveCalcMethodCodes() {
 
-        List<CodeLookupDto> result = lookupService.retrieveCalcMethodCodes();
-        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+        List<CalculationMethodCodeDto> result = lookupService.retrieveCalcMethodCodes();
+        return new ResponseEntity<List<CalculationMethodCodeDto>>(result, HttpStatus.OK);
     }
 
     /**

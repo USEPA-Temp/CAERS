@@ -3,6 +3,7 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Pollutant } from 'src/app/shared/models/pollutant';
+import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,9 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
-  retrieveCalcMethod(): Observable<BaseCodeLookup[]> {
+  retrieveCalcMethod(): Observable<CalculationMethodCode[]> {
     const url = `${this.baseUrl}/calculation/method`;
-    return this.http.get<BaseCodeLookup[]>(url);
+    return this.http.get<CalculationMethodCode[]>(url);
   }
 
   retrieveCalcParam(): Observable<BaseCodeLookup[]> {
