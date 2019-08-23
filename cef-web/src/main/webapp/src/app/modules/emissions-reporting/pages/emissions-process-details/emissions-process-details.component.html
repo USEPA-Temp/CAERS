@@ -38,7 +38,7 @@
                         <app-edit-process-info-panel [process]="process"></app-edit-process-info-panel>
                         <div class="float-right pb-3 pr-3" *ngIf="infoComponent">
                             <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
-                            <button type="submit" class="btn btn-success" (click)="updateProcess()" [disabled]="!infoComponent.processForm.valid">Save</button>
+                            <button type="submit" class="btn btn-success" (click)="updateProcess()">Save</button>
                         </div>
                     </div>
                 </div>
@@ -91,8 +91,7 @@
                         <app-edit-process-operating-detail-panel [operatingDetails]="operatingDetail"></app-edit-process-operating-detail-panel>
                         <div class="float-right pb-3 pr-3" *ngIf="operatingDetailsComponent">
                             <button type="button" class="btn btn-primary mr-2" (click)="setEditDetails(false)">Cancel</button>
-                            <button type="submit" class="btn btn-success" (click)="updateOperatingDetail(operatingDetail)" 
-                                    [disabled]="!operatingDetailsComponent.operatingDetailsForm.valid">Save</button>
+                            <button type="submit" class="btn btn-success" (click)="updateOperatingDetail(operatingDetail)">Save</button>
                         </div>
                     </div>
                 </div>
@@ -139,7 +138,7 @@
                         <app-edit-process-reporting-period-panel [reportingPeriod]="period"></app-edit-process-reporting-period-panel>
                         <div class="float-right pb-3 pr-3" *ngIf="reportingPeriodComponent">
                             <button type="button" class="btn btn-primary mr-2" (click)="setEditPeriod(false)">Cancel</button>
-                            <button type="submit" class="btn btn-success" (click)="updateReportingPeriod(period)" [disabled]="!reportingPeriodComponent.reportingPeriodForm.valid">Save</button>
+                            <button type="submit" class="btn btn-success" (click)="updateReportingPeriod(period)">Save</button>
                         </div>
                     </div>
                 </div>

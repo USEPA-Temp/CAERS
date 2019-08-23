@@ -112,8 +112,7 @@ export class EmissionDetailsModalComponent implements OnInit {
   onSubmit() {
 
     if (!this.emissionForm.valid) {
-      // TODO: update to angular 8 to enable this function for showing all validation messages
-      // this.emissionForm.markAllAsTouched();
+      this.emissionForm.markAllAsTouched();
     } else {
 
       const saveEmission = new Emission();

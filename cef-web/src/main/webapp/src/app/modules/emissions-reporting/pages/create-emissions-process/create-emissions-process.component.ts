@@ -18,13 +18,13 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 export class CreateEmissionsProcessComponent implements OnInit {
   emissionsUnit: EmissionUnit;
 
-  @ViewChild(EditProcessInfoPanelComponent)
+  @ViewChild(EditProcessInfoPanelComponent, { static: true })
   private infoComponent: EditProcessInfoPanelComponent;
 
-  @ViewChild(EditProcessOperatingDetailPanelComponent)
+  @ViewChild(EditProcessOperatingDetailPanelComponent, { static: true })
   private operatingDetailsComponent: EditProcessOperatingDetailPanelComponent;
 
-  @ViewChild(EditProcessReportingPeriodPanelComponent)
+  @ViewChild(EditProcessReportingPeriodPanelComponent, { static: true })
   private reportingPeriodComponent: EditProcessReportingPeriodPanelComponent;
 
   constructor(
@@ -56,27 +56,34 @@ export class CreateEmissionsProcessComponent implements OnInit {
     // console.log(this.operatingDetailsComponent.operatingDetailsForm.value);
     // console.log(this.reportingPeriodComponent.reportingPeriodForm.value);
 
-    const process = new Process();
-    const operatingDetails = new OperatingDetail();
-    const reportingPeriod = new ReportingPeriod();
+    if (!this.isValid()) {
+      this.infoComponent.processForm.markAllAsTouched();
+      this.operatingDetailsComponent.operatingDetailsForm.markAllAsTouched();
+      this.reportingPeriodComponent.reportingPeriodForm.markAllAsTouched();
+    } else {
 
-    Object.assign(process, this.infoComponent.processForm.value);
-    Object.assign(operatingDetails, this.operatingDetailsComponent.operatingDetailsForm.value);
-    Object.assign(reportingPeriod, this.reportingPeriodComponent.reportingPeriodForm.value);
+      const process = new Process();
+      const operatingDetails = new OperatingDetail();
+      const reportingPeriod = new ReportingPeriod();
 
-    reportingPeriod.operatingDetails = [operatingDetails];
-    process.reportingPeriods = [reportingPeriod];
-    process.emissionsUnitId = this.emissionsUnit.id;
+      Object.assign(process, this.infoComponent.processForm.value);
+      Object.assign(operatingDetails, this.operatingDetailsComponent.operatingDetailsForm.value);
+      Object.assign(reportingPeriod, this.reportingPeriodComponent.reportingPeriodForm.value);
 
-    // console.log(process);
+      reportingPeriod.operatingDetails = [operatingDetails];
+      process.reportingPeriods = [reportingPeriod];
+      process.emissionsUnitId = this.emissionsUnit.id;
 
-    // console.log(JSON.stringify(process));
+      // console.log(process);
 
-    this.processService.create(process)
-    .subscribe(result => {
-      // console.log(result);
-      this.router.navigate(['../..'], { relativeTo: this.route });
-    });
+      // console.log(JSON.stringify(process));
+
+      this.processService.create(process)
+      .subscribe(result => {
+        // console.log(result);
+        this.router.navigate(['../..'], { relativeTo: this.route });
+      });
+    }
 
   }
 
