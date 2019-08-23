@@ -29,6 +29,7 @@ import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
+import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
@@ -150,7 +151,7 @@ public class LookupServiceImplTest {
     
     @Test
     public void retrieveCalcMethodCodes_Should_Return_CodeLookupDtoList(){
-        List<CodeLookupDto> result = lookupServiceImpl.retrieveCalcMethodCodes();
+        List<CalculationMethodCodeDto> result = lookupServiceImpl.retrieveCalcMethodCodes();
         assertNotEquals(null, result);
     }
     
