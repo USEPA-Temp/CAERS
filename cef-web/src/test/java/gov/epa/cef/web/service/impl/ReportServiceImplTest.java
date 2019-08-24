@@ -1,11 +1,9 @@
 package gov.epa.cef.web.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import gov.epa.cef.web.domain.ReportSummary;
+import gov.epa.cef.web.repository.ReportSummaryRepository;
+import gov.epa.cef.web.service.dto.ReportSummaryDto;
+import gov.epa.cef.web.service.mapper.ReportSummaryMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,23 +11,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import gov.epa.cef.web.domain.ReportSummary;
-import gov.epa.cef.web.repository.ReportSummaryRepository;
-import gov.epa.cef.web.service.dto.ReportSummaryDto;
-import gov.epa.cef.web.service.mapper.ReportSummaryMapper;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ReportServiceImplTest {
-    
+public class ReportServiceImplTest extends BaseServiceTest {
+
     @Mock
     private ReportSummaryRepository reportSummaryRepo;
-    
+
     @Mock
     private ReportSummaryMapper reportSummaryMapper;
-    
+
     @InjectMocks
     private ReportServiceImpl reportServiceImpl;
-    
+
     @Before
     public void init() {
         List<ReportSummary> emptyReportSummaryList = new ArrayList<ReportSummary>();
@@ -70,7 +69,7 @@ public class ReportServiceImplTest {
         when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 1L)).thenReturn(fullReportSummaryList);
         when(reportSummaryMapper.toDtoList(fullReportSummaryList)).thenReturn(fullReportSummaryDtoList);
     }
-    
+
     @Test
     public void findByReportYearAndFacilitySiteId_should_return_total_emissions_when_year_and_facility_exist() {
         List<ReportSummaryDto> dtoList = reportServiceImpl.findByReportYearAndFacilitySiteId(new Short("2019"), 1L);
@@ -88,7 +87,7 @@ public class ReportServiceImplTest {
         ArrayList<ReportSummaryDto> emptyList = new ArrayList<ReportSummaryDto>();
         assertEquals(emptyList, dtoList);
     }
-    
+
     @Test
     public void findByReportYearAndFacilitySiteId_should_return_empty_when_facility_does_not_exist_for_year() {
         List<ReportSummaryDto> dtoList = reportServiceImpl.findByReportYearAndFacilitySiteId(new Short("2000"), 1L);

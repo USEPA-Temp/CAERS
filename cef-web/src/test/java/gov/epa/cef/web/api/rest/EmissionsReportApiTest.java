@@ -1,11 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,22 +11,25 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import gov.epa.cef.web.service.EmissionsReportService;
-import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EmissionsReportApiTest {
+public class EmissionsReportApiTest extends BaseApiTest {
 
     @Mock
     private EmissionsReportService emissionsReportService;
 
     @InjectMocks
     private EmissionsReportApi emissionsReportApi;
-    
+
     private EmissionsReportDto emissionsReportDto;
-    
+
     private List<EmissionsReportDto> emissionsReportDtoList;
-    
+
     @Before
     public void init() {
         emissionsReportDto=new EmissionsReportDto();
@@ -39,7 +38,7 @@ public class EmissionsReportApiTest {
         when(emissionsReportService.findByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDtoList);
         when(emissionsReportService.findMostRecentByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDto);
     }
-    
+
     @Test
     public void retrieveReport_Should_ReturnEmissionsReportObjectWithOkStatus_When_ValidIdPassed() {
         ResponseEntity<EmissionsReportDto> result=emissionsReportApi.retrieveReport(1L);

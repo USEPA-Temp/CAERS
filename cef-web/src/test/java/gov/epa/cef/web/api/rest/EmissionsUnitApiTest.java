@@ -1,11 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import gov.epa.cef.web.service.EmissionsUnitService;
+import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,40 +11,43 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import gov.epa.cef.web.service.EmissionsUnitService;
-import gov.epa.cef.web.service.dto.EmissionsUnitDto;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EmissionsUnitApiTest {
+public class EmissionsUnitApiTest extends BaseApiTest {
 
     @Mock
     private EmissionsUnitService emissionsUnitService;
 
     @InjectMocks
     private EmissionsUnitApi emissionsUnitApi;
-    
+
     private EmissionsUnitDto emissionsUnit;
-    
+
     private List<EmissionsUnitDto> emissionsUnitDtos;
-    
+
     @Before
     public void init() {
         emissionsUnit=new EmissionsUnitDto();
         when(emissionsUnitService.retrieveUnitById(123L)).thenReturn(emissionsUnit);
-        
+
         emissionsUnitDtos=new ArrayList<>();
         emissionsUnitDtos.add(emissionsUnit);
         when(emissionsUnitService.retrieveEmissionUnitsForFacility(1L)).thenReturn(emissionsUnitDtos);
-        
+
     }
-    
+
     @Test
     public void retrieveEmissionsUnit_Should_ReturnEmissionsUnitObectWithOkStatusCode_When_ValidIdPassed() {
         ResponseEntity<EmissionsUnitDto> result=emissionsUnitApi.retrieveEmissionsUnit(123L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(emissionsUnit, result.getBody());
     }
-    
+
     @Test
     public void retrieveEmissionsUnitsOfFacility_Should_ReturnEmissionsUnitListWithOkStatusCode_WhenValidFacilitIdPassed() {
         ResponseEntity<List<EmissionsUnitDto>> result=emissionsUnitApi.retrieveEmissionsUnitsOfFacility(1L);

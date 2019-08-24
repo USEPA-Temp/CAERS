@@ -1,13 +1,11 @@
 package gov.epa.cef.web.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
+import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
+import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
+import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,28 +14,29 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 
-import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
-import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
-import gov.epa.cef.web.repository.EmissionsReportRepository;
-import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
-import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EmissionServiceImplTest {
-    
+public class EmissionServiceImplTest extends BaseServiceTest {
+
     @Mock
     private EmissionsByFacilityAndCASRepository emissionsByFacilityAndCASRepo;
-    
+
     @Mock
     private EmissionsReportRepository emissionsReportRepo;
-    
+
     @Mock
     EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
-    
+
     @InjectMocks
     EmissionServiceImpl emissionServiceImpl;
-    
+
     @Before
     public void init(){
         List<EmissionsReport> emptyEmissionsReportList = new ArrayList<EmissionsReport>();
@@ -47,7 +46,7 @@ public class EmissionServiceImplTest {
         emissionsReportList2019.add(emissionsReport);
         List<EmissionsByFacilityAndCAS> emptyEmissions = new ArrayList<EmissionsByFacilityAndCAS>();
         List<EmissionsByFacilityAndCAS> emissionsList = new ArrayList<EmissionsByFacilityAndCAS>();
-        
+
         EmissionsByFacilityAndCAS emission1 = new EmissionsByFacilityAndCAS();
         emission1.setId(1L);
         emission1.setFacilityName("Test Facility 1");
@@ -59,7 +58,7 @@ public class EmissionServiceImplTest {
         emission1.setReleasePointType("stack");
         emission1.setApportionedEmissions(new BigDecimal("51.75"));
         emission1.setEmissionsUomCode("TON");
-        
+
         EmissionsByFacilityAndCAS emission2 = new EmissionsByFacilityAndCAS();
         emission2.setId(2L);
         emission2.setFacilityName("Test Facility 1");
@@ -71,7 +70,7 @@ public class EmissionServiceImplTest {
         emission2.setReleasePointType("stack");
         emission2.setApportionedEmissions(new BigDecimal("765.15"));
         emission2.setEmissionsUomCode("TON");
-        
+
         EmissionsByFacilityAndCAS emission3 = new EmissionsByFacilityAndCAS();
         emission3.setId(3L);
         emission3.setFacilityName("Test Facility 1");
@@ -83,7 +82,7 @@ public class EmissionServiceImplTest {
         emission3.setReleasePointType("fugitive");
         emission3.setApportionedEmissions(new BigDecimal("276.25"));
         emission3.setEmissionsUomCode("TON");
-        
+
         EmissionsByFacilityAndCAS emission4 = new EmissionsByFacilityAndCAS();
         emission4.setId(4L);
         emission4.setFacilityName("Test Facility 1");
@@ -95,20 +94,20 @@ public class EmissionServiceImplTest {
         emission4.setReleasePointType("fugitive");
         emission4.setApportionedEmissions(new BigDecimal("114.86"));
         emission4.setEmissionsUomCode("TON");
-        
+
         emissionsList.add(emission1);
         emissionsList.add(emission2);
         emissionsList.add(emission3);
         emissionsList.add(emission4);
-        
+
         EmissionsByFacilityAndCASDto emissionsByFacilityAndCASDto = new EmissionsByFacilityAndCASDto();
         emissionsByFacilityAndCASDto.setFrsFacilityId("110015680799");
-        emissionsByFacilityAndCASDto.setCasNumber("71-43-2");  
+        emissionsByFacilityAndCASDto.setCasNumber("71-43-2");
         emissionsByFacilityAndCASDto.setChemical("Benzene");
         emissionsByFacilityAndCASDto.setFacilityName("Test Facility 1");
         emissionsByFacilityAndCASDto.setYear(new Short("2019"));
         emissionsByFacilityAndCASDto.setUom("TON");
-        
+
         when(emissionsReportRepo.findByFrsFacilityId("12345", Sort.by(Sort.Direction.DESC, "year"))).thenReturn(emptyEmissionsReportList);
         when(emissionsReportRepo.findByFrsFacilityId("110015680799", Sort.by(Sort.Direction.DESC, "year"))).thenReturn(emissionsReportList2019);
         when(emissionsByFacilityAndCASRepo.findByFrsFacilityIdAndPollutantCasIdAndYear("110015680799", "71-43-1", new Short("2019")))
@@ -117,7 +116,7 @@ public class EmissionServiceImplTest {
         .thenReturn(emissionsList);
         when(emissionsByFacilityAndCASMapper.toDto(emission1)).thenReturn(emissionsByFacilityAndCASDto);
     }
-    
+
     @Test
     public void findEmissionsByFacilityAndCAS_should_return_no_emissions_report_when_none_exists() {
         EmissionsByFacilityAndCASDto emissions = emissionServiceImpl.findEmissionsByFacilityAndCAS("12345", "71-43-2");
@@ -131,7 +130,7 @@ public class EmissionServiceImplTest {
         assertNull(emissions.getFugitiveEmissions());
         assertNull(emissions.getUom());
     }
-    
+
     @Test
     public void findEmissionsByFacilityAndCAS_should_return_no_emissions_when_pollutant_was_not_reported() {
         EmissionsByFacilityAndCASDto emissions = emissionServiceImpl.findEmissionsByFacilityAndCAS("110015680799", "71-43-1");
@@ -146,7 +145,7 @@ public class EmissionServiceImplTest {
         assertNull(emissions.getFugitiveEmissions());
         assertNull(emissions.getUom());
     }
-    
+
     @Test
     public void findEmissionsByFacilityAndCAS_should_return_calculated_emissions_when_pollutant_was_reported() {
         EmissionsByFacilityAndCASDto emissions = emissionServiceImpl.findEmissionsByFacilityAndCAS("110015680799", "71-43-2");

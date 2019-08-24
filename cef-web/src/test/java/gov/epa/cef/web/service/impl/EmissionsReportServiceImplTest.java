@@ -1,25 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.domain.Sort;
-
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
@@ -39,24 +19,41 @@ import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EmissionsReportServiceImplTest {
-    
+public class EmissionsReportServiceImplTest extends BaseServiceTest {
+
     @Mock
     private EmissionsReportRepository erRepo;
-    
+
     @Mock
     private EmissionsReportMapper emissionsReportMapper;
-    
+
     @InjectMocks
     private EmissionsReportServiceImpl emissionsReportServiceImpl;
-    
-    
+
+
     private EmissionsReportDto emissionsReportDto;
-    
+
     private List<EmissionsReportDto> emissionsReportDtoList;
-    
+
     @Before
     public void init(){
         EmissionsReport emissionsReport = new EmissionsReport();
@@ -81,35 +78,35 @@ public class EmissionsReportServiceImplTest {
         when(emissionsReportMapper.toDtoList(emissionsReportList)).thenReturn(emissionsReportDtoList);
     }
 
-	@Test
+    @Test
     public void findById_Should_Return_EmissionsReportObject_When_EmissionsReportExists(){
         EmissionsReportDto emissionsReport = emissionsReportServiceImpl.findById(1L);
         assertEquals(emissionsReportDto, emissionsReport);
     }
-    
+
     @Test
     public void findById_Should_Return_Null_When_EmissionsReportNotExist(){
         EmissionsReportDto emissionsReport = emissionsReportServiceImpl.findById(2L);
         assertEquals(null, emissionsReport);
     }
-    
+
     @Test
     public void findById_Should_Return_Null_When_IDisNull(){
         EmissionsReportDto emissionsReport = emissionsReportServiceImpl.findById(null);
         assertEquals(null, emissionsReport);
     }
-    
+
     @Test
     public void findByFacilityId_Should_Return_ReportList_WhenReportExist() {
         Collection<EmissionsReportDto> emissionsReportList = emissionsReportServiceImpl.findByFacilityEisProgramId("XXXX");
         assertEquals(emissionsReportDtoList, emissionsReportList);
     }
-    
+
 //    @Test
 //    public void findByFacilityId_Should_ReturnReportListWithCurrentYear() {
 //        Collection<EmissionsReportDto> emissionsReportList = emissionsReportServiceImpl.findByFacilityEisProgramId("XXXX", true);
 //        assertEquals(2, emissionsReportList.size());
-//        
+//
 //        Calendar calendar = Calendar.getInstance();
 //        calendar.setTime(new Date());
 //        short currentYear = (short) calendar.get(Calendar.YEAR);
@@ -117,19 +114,19 @@ public class EmissionsReportServiceImplTest {
 //        EmissionsReportDto dto = (EmissionsReportDto) array[0];
 //        assertEquals(dto.getYear().shortValue(), currentYear);
 //    }
-    
+
     @Test
     public void findByFacilityId_Should_Return_Empty_WhenReportsDoNotExist() {
         Collection<EmissionsReportDto> emissionsReportList = emissionsReportServiceImpl.findByFacilityEisProgramId("YYYY");
         assertEquals(0, emissionsReportList.size());
     }
-    
+
     @Test
     public void findMostRecentByFacilityEisProgramId_Should_ReturnTheLatestEmissionsReportForAFacility_WhenValidFacilityEisProgramIdPassed() {
         EmissionsReportDto emissionsReport = emissionsReportServiceImpl.findMostRecentByFacilityEisProgramId("XXXX");
         assertNotEquals(null, emissionsReport);
     }
-    
+
     @Test
     public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() {
     	EmissionsReport originalEmissionsReport = createHydratedEmissionsReport();
@@ -144,16 +141,16 @@ public class EmissionsReportServiceImplTest {
     	assertEquals(originalFacilitySite.getAltSiteIdentifier(), copyFacilitySite.getAltSiteIdentifier());
     	assertNotEquals(originalFacilitySite.getId(), copyFacilitySite.getId());
     }
-    
+
 
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
     	EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("DEF", 2020);
     	assertEquals(null, nullEmissionsReportCopy);
     }
-    
 
-    
+
+
     private EmissionsReport createHydratedEmissionsReport() {
     	EmissionsReport er = new EmissionsReport();
     	er.setAgencyCode("");
@@ -163,7 +160,7 @@ public class EmissionsReportServiceImplTest {
     	er.setStatus(ReportStatus.APPROVED);
     	er.setValidationStatus(ValidationStatus.PASSED);
     	er.setYear((short) 2020);
-    	
+
     	HashSet<FacilitySite> facilitySites = new HashSet<FacilitySite>();
     	FacilitySite fs = new FacilitySite();
     	fs.setAltSiteIdentifier("ALTID");
@@ -199,14 +196,14 @@ public class EmissionsReportServiceImplTest {
     	naics.setDescription("ABCDE");
     	xref.setNaicsCode(naics);
     	fs.setFacilityNAICS(facilityNAICS);
-    	
+
     	HashSet<ReleasePoint> releasePoints = new HashSet<ReleasePoint>();
     	ReleasePoint rp = new ReleasePoint();
     	rp.setId(1L);
     	rp.setComments("Comments");
     	releasePoints.add(rp);
     	fs.setReleasePoints(releasePoints);
-    	
+
     	HashSet<Control> controls = new HashSet<Control>();
     	Control control = new Control();
     	control.setId(1L);
@@ -223,47 +220,47 @@ public class EmissionsReportServiceImplTest {
     	cp.setId(1L);
     	ca.setControlPath(cp);
     	assignments.add(ca);
-    	
+
     	control.setAssignments(assignments);
     	controls.add(control);
     	fs.setControls(controls);
-    	
-    	
+
+
     	HashSet<EmissionsUnit> units = new HashSet<EmissionsUnit>();
     	EmissionsUnit eu = new EmissionsUnit();
     	eu.setId(1L);
     	eu.setComments("Test Unit");
     	eu.setFacilitySite(fs);
-    	
+
     	HashSet<EmissionsProcess> processes = new HashSet<EmissionsProcess>();
     	EmissionsProcess ep = new EmissionsProcess();
     	ep.setId(1L);
     	ep.setEmissionsUnit(eu);
     	ep.setComments("Test Process Comments");
-    	
+
     	HashSet<ReportingPeriod> reportingPeriods = new HashSet<ReportingPeriod>();
     	ReportingPeriod repPer = new ReportingPeriod();
     	repPer.setId(1L);
     	repPer.setComments("Reporting Period Comments");
     	repPer.setEmissionsProcess(ep);
-    	
+
     	HashSet<Emission> emissions = new HashSet<Emission>();
     	Emission e = new Emission();
     	e.setId(1L);
     	e.setComments("Test Emission Comments");
     	emissions.add(e);
     	repPer.setEmissions(emissions);
-    	
+
     	reportingPeriods.add(repPer);
     	ep.setReportingPeriods(reportingPeriods);
     	processes.add(ep);
     	eu.setEmissionsProcesses(processes);
     	units.add(eu);
     	fs.setEmissionsUnits(units);
-    	
+
     	facilitySites.add(fs);
     	er.setFacilitySites(facilitySites);
-    	
+
     	return er;
 	}
 }

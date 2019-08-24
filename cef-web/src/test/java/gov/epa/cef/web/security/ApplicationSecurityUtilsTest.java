@@ -1,11 +1,6 @@
 package gov.epa.cef.web.security;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import gov.epa.cdx.shared.security.ApplicationUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,17 +14,21 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import gov.epa.cdx.shared.security.ApplicationUser;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationSecurityUtilsTest {
+public class ApplicationSecurityUtilsTest extends BaseSecurityTest {
 
     @Mock
     ApplicationUser applicationUser;
-    
+
     @InjectMocks
     private ApplicationSecurityUtils applicationSecurityUtils;
-    
+
     private SimpleGrantedAuthority ROLE_CERTIFIER=new SimpleGrantedAuthority("CERTIFIER");
 
     @Before
@@ -39,7 +38,7 @@ public class ApplicationSecurityUtilsTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getPrincipal()).thenReturn(applicationUser);
-        
+
         List<GrantedAuthority> authorities=new ArrayList<>();
         authorities.add(ROLE_CERTIFIER);
         when(applicationUser.getAuthorities()).thenReturn(authorities);

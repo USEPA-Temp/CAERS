@@ -1,8 +1,8 @@
 package gov.epa.cef.web.api.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.dto.FacilitySiteDto;
+import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +12,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import gov.epa.cef.web.service.FacilitySiteService;
-import gov.epa.cef.web.service.dto.FacilitySiteDto;
-import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class FacilitySiteApiTest {
+public class FacilitySiteApiTest extends BaseApiTest {
 
     @Mock
     private FacilitySiteService facilityService;
@@ -27,16 +26,16 @@ public class FacilitySiteApiTest {
 
     @InjectMocks
     private FacilitySiteApi facilitySiteApi;
-    
+
     private FacilitySiteDto facilitSiteDto;
-    
+
     @Before
     public void init() {
         facilitSiteDto=new FacilitySiteDto();
         when(facilityService.findById(123L)).thenReturn(facilitSiteDto);
         when(facilityService.findByEisProgramIdAndReportId("p-id", 1L)).thenReturn(facilitSiteDto);
     }
-    
+
     @Test
     public void retrieveFacilitySite_Should_ReturnFacilitySiteDtoObject_When_ValidIdPassed() {
         ResponseEntity<FacilitySiteDto> result=facilitySiteApi.retrieveFacilitySite(123L);
@@ -49,7 +48,7 @@ public class FacilitySiteApiTest {
         ResponseEntity<FacilitySiteDto> result=facilitySiteApi.retrieveFacilitySiteByProgramIdAndReportId(1L, "p-id");
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(facilitSiteDto, result.getBody());
-        
+
     }
 
 }
