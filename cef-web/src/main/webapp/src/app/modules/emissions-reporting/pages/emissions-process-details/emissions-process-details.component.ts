@@ -27,13 +27,13 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   editDetails = false;
   editPeriod = false;
 
-  @ViewChild(EditProcessInfoPanelComponent)
+  @ViewChild(EditProcessInfoPanelComponent, { static: false })
   infoComponent: EditProcessInfoPanelComponent;
 
-  @ViewChild(EditProcessOperatingDetailPanelComponent)
+  @ViewChild(EditProcessOperatingDetailPanelComponent, { static: false })
   operatingDetailsComponent: EditProcessOperatingDetailPanelComponent;
 
-  @ViewChild(EditProcessReportingPeriodPanelComponent)
+  @ViewChild(EditProcessReportingPeriodPanelComponent, { static: false })
   reportingPeriodComponent: EditProcessReportingPeriodPanelComponent;
 
   constructor(
@@ -82,49 +82,61 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   }
 
   updateProcess() {
-    const updatedProcess = new Process();
+    if (!this.infoComponent.processForm.valid) {
+      this.infoComponent.processForm.markAllAsTouched();
+    } else {
+      const updatedProcess = new Process();
 
-    Object.assign(updatedProcess, this.infoComponent.processForm.value);
-    updatedProcess.emissionsUnitId = this.process.emissionsUnitId;
-    updatedProcess.id = this.process.id;
+      Object.assign(updatedProcess, this.infoComponent.processForm.value);
+      updatedProcess.emissionsUnitId = this.process.emissionsUnitId;
+      updatedProcess.id = this.process.id;
 
-    this.processService.update(updatedProcess)
-    .subscribe(result => {
+      this.processService.update(updatedProcess)
+      .subscribe(result => {
 
-      Object.assign(this.process, result);
-      this.setEditInfo(false);
-    });
+        Object.assign(this.process, result);
+        this.setEditInfo(false);
+      });
+    }
   }
 
   updateOperatingDetail(detail: OperatingDetail) {
-    const updatedDetail = new OperatingDetail();
+    if (!this.operatingDetailsComponent.operatingDetailsForm.valid) {
+      this.operatingDetailsComponent.operatingDetailsForm.markAllAsTouched();
+    } else {
+      const updatedDetail = new OperatingDetail();
 
-    Object.assign(updatedDetail, this.operatingDetailsComponent.operatingDetailsForm.value);
+      Object.assign(updatedDetail, this.operatingDetailsComponent.operatingDetailsForm.value);
 
-    updatedDetail.id = detail.id;
+      updatedDetail.id = detail.id;
 
-    this.operatingDetailService.update(updatedDetail)
-    .subscribe(result => {
+      this.operatingDetailService.update(updatedDetail)
+      .subscribe(result => {
 
-      Object.assign(detail, result);
-      this.setEditDetails(false);
-    });
+        Object.assign(detail, result);
+        this.setEditDetails(false);
+      });
+    }
   }
 
   updateReportingPeriod(period: ReportingPeriod) {
-    const updatedReportingPeriod = new ReportingPeriod();
+    if (!this.reportingPeriodComponent.reportingPeriodForm.valid) {
+      this.reportingPeriodComponent.reportingPeriodForm.markAllAsTouched();
+    } else {
+      const updatedReportingPeriod = new ReportingPeriod();
 
-    Object.assign(updatedReportingPeriod, this.reportingPeriodComponent.reportingPeriodForm.value);
+      Object.assign(updatedReportingPeriod, this.reportingPeriodComponent.reportingPeriodForm.value);
 
-    updatedReportingPeriod.emissionsProcessId = this.process.id;
-    updatedReportingPeriod.id = period.id;
+      updatedReportingPeriod.emissionsProcessId = this.process.id;
+      updatedReportingPeriod.id = period.id;
 
-    this.reportingPeriodService.update(updatedReportingPeriod)
-    .subscribe(result => {
+      this.reportingPeriodService.update(updatedReportingPeriod)
+      .subscribe(result => {
 
-      Object.assign(period, result);
-      this.setEditPeriod(false);
-    });
+        Object.assign(period, result);
+        this.setEditPeriod(false);
+      });
+    }
   }
 
 }

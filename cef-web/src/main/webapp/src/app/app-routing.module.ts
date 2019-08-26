@@ -20,7 +20,7 @@ const routes: Routes = [
         children: [
           {
             path: 'report',
-            loadChildren: 'src/app/modules/emissions-reporting/emissions-reporting.module#EmissionsReportingModule'
+            loadChildren: () => import('src/app/modules/emissions-reporting/emissions-reporting.module').then(m => m.EmissionsReportingModule)
           },
           {
               path: 'review',

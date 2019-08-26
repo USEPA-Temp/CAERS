@@ -12,7 +12,7 @@ import { ChangeDetectorRef } from "@angular/core";
 } )
 export class HeaderComponent implements OnInit {
 
-    @ViewChild('logoutForm') private logoutFormEl: ElementRef;
+    @ViewChild('logoutForm', { static: true }) private logoutFormEl: ElementRef;
 
     ssoToken:string ='';
     returnUrl:string ='';
