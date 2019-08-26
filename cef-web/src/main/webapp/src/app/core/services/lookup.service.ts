@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Pollutant } from 'src/app/shared/models/pollutant';
 import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
+import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +45,8 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
-  retrieveUom(): Observable<BaseCodeLookup[]> {
+  retrieveUom(): Observable<UnitMeasureCode[]> {
     const url = `${this.baseUrl}/uom`;
-    return this.http.get<BaseCodeLookup[]>(url);
+    return this.http.get<UnitMeasureCode[]>(url);
   }
 }

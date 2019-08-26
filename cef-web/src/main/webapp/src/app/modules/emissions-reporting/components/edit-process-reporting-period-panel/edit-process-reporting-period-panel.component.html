@@ -39,7 +39,7 @@
         <label for="rpUomSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Calculation UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="rpUomSelect" formControlName="calculationParameterUom" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                <option *ngFor="let opt of denominatorUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.calculationParameterUom"></app-validation-message>
         </div>

@@ -19,11 +19,12 @@ import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
+import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
 
 @Mapper(componentModel = "spring", uses = {})
 public abstract class LookupEntityMapper {
-    
+
     @Autowired
     private LookupRepositories repos;
 
@@ -39,8 +40,10 @@ public abstract class LookupEntityMapper {
 
     public abstract FacilityCategoryCodeDto facilityCategoryCodeToDto(FacilityCategoryCode code);
 
+    public abstract UnitMeasureCodeDto unitMeasureCodeToDto(UnitMeasureCode source);
+
     public abstract PollutantDto pollutantToDto(Pollutant source);
-    
+
     @Named("CalculationMethodCode")
     public CalculationMethodCode dtoToCalculationMethodCode(CodeLookupDto source) {
         if (source != null) {

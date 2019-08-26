@@ -4,6 +4,7 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
+import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 
 @Component({
   selector: 'app-edit-process-reporting-period-panel',
@@ -30,7 +31,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   parameterTypeValues: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
   reportingPeriodValues: BaseCodeLookup[];
-  uomValues: BaseCodeLookup[];
+  uomValues: UnitMeasureCode[];
+  denominatorUomValues: UnitMeasureCode[];
 
   constructor(
     private lookupService: LookupService,
@@ -62,6 +64,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     this.lookupService.retrieveUom()
     .subscribe(result => {
       this.uomValues = result;
+      this.denominatorUomValues = this.uomValues.filter(val => val.efDenominator);
     });
   }
 
