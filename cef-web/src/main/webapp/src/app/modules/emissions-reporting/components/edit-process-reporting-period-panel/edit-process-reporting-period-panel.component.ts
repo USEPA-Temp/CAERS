@@ -14,7 +14,7 @@ import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChanges {
   @Input() reportingPeriod: ReportingPeriod;
   reportingPeriodForm = this.fb.group({
-    reportingPeriodTypeCode: [null, Validators.required],
+    reportingPeriodTypeCode: [{code: 'A'}, Validators.required],
     emissionsOperatingTypeCode: [null, Validators.required],
     calculationParameterTypeCode: [null, Validators.required],
     calculationParameterValue: ['', [

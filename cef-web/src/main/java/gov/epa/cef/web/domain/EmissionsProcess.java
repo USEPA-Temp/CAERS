@@ -43,12 +43,15 @@ public class EmissionsProcess extends BaseAuditEntity {
     @Column(name = "scc_code", nullable = false, length = 20)
     private String sccCode;
 
+    @Column(name = "scc_description", length = 500)
+    private String sccDescription;
+
     @Column(name = "scc_short_name", length = 100)
     private String sccShortName;
 
     @Column(name = "description", length = 200)
     private String description;
-    
+
     @Column(name = "comments", length = 200)
     private String comments;
 
@@ -141,6 +144,14 @@ public class EmissionsProcess extends BaseAuditEntity {
     }
     public void setSccCode(String sccCode) {
         this.sccCode = sccCode;
+    }
+
+    public String getSccDescription() {
+        return sccDescription;
+    }
+
+    public void setSccDescription(String sccDescription) {
+        this.sccDescription = sccDescription;
     }
 
     public String getSccShortName() {

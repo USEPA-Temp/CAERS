@@ -3,19 +3,19 @@
         <label for="processIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process ID:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier">
-            <app-validation-message [control]="processForm.controls.emissionsProcessIdentifier"></app-validation-message>
-        </div>
-        <label for="processSccInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode">
-            <app-validation-message [control]="processForm.controls.sccCode"></app-validation-message>
+            <app-validation-message [control]="processForm.get('emissionsProcessIdentifier')"></app-validation-message>
         </div>
         <label for="processStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Process Status:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="processStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
-            <app-validation-message [control]="processForm.controls.operatingStatusCode"></app-validation-message>
+            <app-validation-message [control]="processForm.get('operatingStatusCode')"></app-validation-message>
+        </div>
+        <label for="processStatusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Status Year:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
+            <app-validation-message [control]="processForm.get('statusYear')"></app-validation-message>
         </div>
     </div>
     
@@ -23,17 +23,26 @@
         <label for="processDescriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Description:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
-            <app-validation-message [control]="processForm.controls.description"></app-validation-message>
+            <app-validation-message [control]="processForm.get('description')"></app-validation-message>
+        </div>
+        <label for="processSccInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode">
+            <app-validation-message [control]="processForm.get('sccCode')"></app-validation-message>
         </div>
         <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Aircraft Engine Code:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCodeCode">
-            <app-validation-message [control]="processForm.controls.aircraftEngineTypeCodeCode"></app-validation-message>
+            <app-validation-message [control]="processForm.get('aircraftEngineTypeCodeCode')"></app-validation-message>
         </div>
-        <label for="processStatusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Status Year:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
-            <app-validation-message [control]="processForm.controls.statusYear"></app-validation-message>
+        
+    </div>
+
+    <div class="row pb-1">
+        <label for="sccDescriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC Description:</strong></label>
+        <div class="col-sm-6 col-md-10">
+            <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription"></textarea>
+            <app-validation-message [control]="processForm.get('sccDescription')"></app-validation-message>
         </div>
     </div>
 
@@ -41,7 +50,7 @@
         <label for="processCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
         <div class="col-sm-6 col-md-10">
             <textarea rows="3" class="form-control" style="height:100%;" id="processCommentsInput" formControlName="comments"></textarea>
-            <app-validation-message [control]="processForm.controls.comments"></app-validation-message>
+            <app-validation-message [control]="processForm.get('comments')"></app-validation-message>
         </div>
     </div>
 
