@@ -8,6 +8,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
+import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
 import java.util.List;
 
@@ -81,7 +82,7 @@ public interface LookupService {
      * Retrieve UoM codes
      * @return
      */
-    List<CodeLookupDto> retrieveUnitMeasureCodes();
+    List<UnitMeasureCodeDto> retrieveUnitMeasureCodes();
 
     /**
      * Retrieve UoM code database object by code

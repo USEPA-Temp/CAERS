@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -20,5 +21,27 @@ import javax.persistence.Table;
 public class UnitMeasureCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
+
+    @Column(name = "ef_numerator", nullable = false)
+    private Boolean efNumerator;
+
+    @Column(name = "ef_denominator", nullable = false)
+    private Boolean efDenominator;
+
+    public Boolean getEfNumerator() {
+        return efNumerator;
+    }
+
+    public void setEfNumerator(Boolean efNumerator) {
+        this.efNumerator = efNumerator;
+    }
+
+    public Boolean getEfDenominator() {
+        return efDenominator;
+    }
+
+    public void setEfDenominator(Boolean efDenominator) {
+        this.efDenominator = efDenominator;
+    }
 
 }

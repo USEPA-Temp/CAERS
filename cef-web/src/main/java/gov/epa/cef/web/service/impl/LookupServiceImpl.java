@@ -24,6 +24,7 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
+import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 
 @Service
@@ -171,13 +172,13 @@ public class LookupServiceImpl implements LookupService {
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveUnitMeasureCodes()
      */
     @Override
-    public List<CodeLookupDto> retrieveUnitMeasureCodes() {
+    public List<UnitMeasureCodeDto> retrieveUnitMeasureCodes() {
 
-        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        List<UnitMeasureCodeDto> result = new ArrayList<UnitMeasureCodeDto>();
         Iterable<UnitMeasureCode> entities = uomRepo.findAll();
 
         entities.forEach(entity -> {
-            result.add(lookupMapper.toDto(entity));
+            result.add(lookupMapper.unitMeasureCodeToDto(entity));
         });
         return result;
     }

@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
+import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 
 @Component({
   selector: 'app-emission-details-modal',
@@ -40,7 +41,9 @@ export class EmissionDetailsModalComponent implements OnInit {
 
   methodValues: CalculationMethodCode[];
   pollutantValues: Pollutant[];
-  uomValues: BaseCodeLookup[];
+  uomValues: UnitMeasureCode[];
+  numeratorUomValues: UnitMeasureCode[];
+  denominatorUomValues: UnitMeasureCode[];
 
   constructor(
     private emissionService: EmissionService,
@@ -64,6 +67,8 @@ export class EmissionDetailsModalComponent implements OnInit {
     this.lookupService.retrieveUom()
     .subscribe(result => {
       this.uomValues = result;
+      this.numeratorUomValues = this.uomValues.filter(val => val.efNumerator);
+      this.denominatorUomValues = this.uomValues.filter(val => val.efDenominator);
     });
 
     if (this.createMode) {

@@ -14,6 +14,7 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
+import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
 @RestController
 @RequestMapping("/api/lookup")
@@ -100,10 +101,10 @@ public class LookupApi {
      */
     @GetMapping(value = "/uom")
     @ResponseBody
-    public ResponseEntity<List<CodeLookupDto>> retrieveUnitMeasureCodes() {
+    public ResponseEntity<List<UnitMeasureCodeDto>> retrieveUnitMeasureCodes() {
 
-        List<CodeLookupDto> result = lookupService.retrieveUnitMeasureCodes();
-        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+        List<UnitMeasureCodeDto> result = lookupService.retrieveUnitMeasureCodes();
+        return new ResponseEntity<List<UnitMeasureCodeDto>>(result, HttpStatus.OK);
     }
 
 }
