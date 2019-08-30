@@ -29,6 +29,10 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(20)
     ]],
+    sccDescription: ['', [
+      Validators.required,
+      Validators.maxLength(500)
+    ]],
     description: ['', [
       Validators.required,
       Validators.maxLength(200)
