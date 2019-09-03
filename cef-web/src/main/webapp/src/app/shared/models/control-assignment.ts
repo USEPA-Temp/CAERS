@@ -8,9 +8,7 @@ export class ControlAssignment {
   id: number;
   control: EmissionsReportItem;
   controlPath: ControlPath;
-  emissionsUnit: EmissionUnit;
-  emissionsProcess: Process;
-  releasePoint: ReleasePoint;
   association: EmissionsReportItem;
   description: string;
+  sequenceNumber: string;
 }

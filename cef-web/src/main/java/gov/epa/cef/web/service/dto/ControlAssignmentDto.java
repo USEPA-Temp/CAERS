@@ -9,10 +9,8 @@ public class ControlAssignmentDto implements Serializable {
     private Long id;
     private EmissionsReportItemDto control;
     private ControlPathDto controlPath;
-    private EmissionsProcessDto emissionsProcess;
-    private EmissionsUnitDto emissionsUnit;
-    private ReleasePointDto releasePoint;
     private String description;
+    private Integer sequenceNumber;
 
     public Long getId() {
         return id;
@@ -38,36 +36,20 @@ public class ControlAssignmentDto implements Serializable {
         this.controlPath = controlPath;
     }
 
-    public EmissionsProcessDto getEmissionsProcess() {
-        return emissionsProcess;
-    }
-
-    public void setEmissionsProcess(EmissionsProcessDto emissionsProcess) {
-        this.emissionsProcess = emissionsProcess;
-    }
-
-    public EmissionsUnitDto getEmissionsUnit() {
-        return emissionsUnit;
-    }
-
-    public void setEmissionsUnit(EmissionsUnitDto emissionsUnit) {
-        this.emissionsUnit = emissionsUnit;
-    }
-
-    public ReleasePointDto getReleasePoint() {
-        return releasePoint;
-    }
-
-    public void setReleasePoint(ReleasePointDto releasePoint) {
-        this.releasePoint = releasePoint;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 
 }

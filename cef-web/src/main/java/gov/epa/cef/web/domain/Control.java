@@ -56,7 +56,7 @@ public class Control extends BaseAuditEntity {
     
     
     /**
-     * Copy constructor
+     * Copy constructor (control assignment is not copied here, they are copied within the ControlPath entity)
      * @param originalControl
      */
     public Control(FacilitySite facilitySite, Control originalControl) {
@@ -68,9 +68,6 @@ public class Control extends BaseAuditEntity {
     	this.percentCapture = originalControl.getPercentCapture();
     	this.percentControl = originalControl.getPercentControl();
     	this.comments = originalControl.getComments();
-    	for (ControlAssignment controlAssignment : originalControl.getAssignments()) {
-    		this.assignments.add(new ControlAssignment(this, controlAssignment));
-    	}
     	for (ControlPollutant pollutant : originalControl.getPollutants()) {
     		this.pollutants.add(new ControlPollutant(this, pollutant));
     	}

@@ -1,19 +1,16 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
@@ -26,16 +23,18 @@ public class ControlPath extends BaseAuditEntity {
     @Column(name = "description", nullable = false, length = 200)
     private String description;
 
-    @Column(name = "control_order", nullable = false, length = 3)
-    private String controlOrder;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
+    private Set<ControlAssignment> assignments;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "control_type", nullable = false, length = 10)
-    private ControlType controlType;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPathParent")
+    private Set<ControlAssignment> parentAssignments;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
-    private ControlAssignment assignment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "facility_site_id", nullable = false)
+    private FacilitySite facilitySite;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlPath")
+    private Set<ReleasePointAppt> releasePointAppts;
     
     
     /**
@@ -48,12 +47,28 @@ public class ControlPath extends BaseAuditEntity {
      * Copy constructor
      * @param originalControlPath
      */
-    public ControlPath(ControlAssignment assignment, ControlPath originalControlPath) {
+    public ControlPath(FacilitySite facilitySite, ControlPath originalControlPath) {
     	this.id = originalControlPath.getId();
-    	this.assignment = assignment;
+    	this.facilitySite = facilitySite;
     	this.description = originalControlPath.getDescription();
-    	this.controlOrder = originalControlPath.getControlOrder();
-    	this.controlType = originalControlPath.getControlType();
+
+        for (ControlAssignment originalControlAssignment : originalControlPath.getAssignments()) {
+        	Control c = null;
+        	for(Control newControl : this.facilitySite.getControls()) {
+        		if (newControl.getId().equals(originalControlAssignment.getControl().getId())) {
+        			c = newControl;
+        			break;
+        		}
+        	}
+        	ControlPath cpp = null;
+        	for(ControlPath newControlPathParent : this.facilitySite.getControlPaths()) {
+        		if (newControlPathParent.getId().equals(originalControlAssignment.getControlPathParent().getId())) {
+        			cpp = newControlPathParent;
+        			break;
+        		}
+        	}
+        	this.assignments.add(new ControlAssignment(this, c, cpp, originalControlAssignment));
+        }
     }
 
     public String getDescription() {
@@ -64,28 +79,36 @@ public class ControlPath extends BaseAuditEntity {
         this.description = description;
     }
 
-    public String getControlOrder() {
-        return controlOrder;
+    public Set<ControlAssignment> getAssignments() {
+        return assignments;
     }
 
-    public void setControlOrder(String controlOrder) {
-        this.controlOrder = controlOrder;
+    public void setAssignments(Set<ControlAssignment> assignments) {
+        this.assignments = assignments;
     }
 
-    public ControlType getControlType() {
-        return controlType;
+    public Set<ControlAssignment> getParentAssignments() {
+        return parentAssignments;
     }
 
-    public void setControlType(ControlType controlType) {
-        this.controlType = controlType;
+    public void setParentAssignments(Set<ControlAssignment> parentAssignments) {
+        this.parentAssignments = parentAssignments;
+    }
+    
+    public FacilitySite getFacilitySite() {
+        return facilitySite;
     }
 
-    public ControlAssignment getAssignment() {
-        return assignment;
+    public void setFacilitySite(FacilitySite facilitySite) {
+        this.facilitySite = facilitySite;
     }
 
-    public void setAssignment(ControlAssignment assignment) {
-        this.assignment = assignment;
+    public Set<ReleasePointAppt> getReleasePointAppts() {
+        return releasePointAppts;
+    }
+
+    public void setReleasePointAppts(Set<ReleasePointAppt> releasePointAppts) {
+        this.releasePointAppts = releasePointAppts;
     }
     
     
