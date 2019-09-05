@@ -8,6 +8,8 @@ import { Process } from 'src/app/shared/models/process';
 import { EmissionService } from 'src/app/core/services/emission.service';
 import {ReportingPeriodService} from 'src/app/core/services/reporting-period.service';
 import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ActivatedRoute } from '@angular/router';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
 @Component({
   selector: 'app-emission-table',
@@ -18,16 +20,24 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
   @Input() tableData: Emission[];
   @Input() reportingPeriod: ReportingPeriod;
   @Input() process: Process;
+  baseUrl: string;
 
     constructor(private modalService: NgbModal,
                 private emissionService: EmissionService,
-                private reportingPeriodService: ReportingPeriodService) {
+                private reportingPeriodService: ReportingPeriodService,
+                private route: ActivatedRoute) {
         super();
     }
 
     ngOnInit() {
+
+        this.route.paramMap
+        .subscribe(map => {
+            this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.REPORTING_PERIOD}/${this.reportingPeriod.id}/${BaseReportUrl.EMISSION}`;
+        });
     }
 
+    // unused
     openEditEmissionModal(selectedEmission: Emission) {
         const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.emission = selectedEmission;
@@ -35,6 +45,7 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
         modalRef.componentInstance.process = this.process;
     }
 
+    // unused
     openCreateEmissionModal() {
         const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg', backdrop: 'static' });
         modalRef.componentInstance.reportingPeriod = this.reportingPeriod;

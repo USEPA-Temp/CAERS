@@ -59,6 +59,14 @@ public class EmissionServiceImpl implements EmissionService {
         return result;
     }
     
+    @Override
+    public EmissionDto retrieveById(Long id) {
+        Emission result = emissionRepo
+            .findById(id)
+            .orElse(null);
+        return emissionMapper.toDto(result);
+    }
+    
     /**
      * Update an existing emission from a DTO
      */
