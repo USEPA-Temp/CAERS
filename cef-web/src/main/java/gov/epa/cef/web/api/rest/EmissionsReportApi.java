@@ -1,21 +1,24 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.List;
-
+import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.service.EmissionsReportService;
-import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
@@ -66,7 +69,7 @@ public class EmissionsReportApi {
         return new ResponseEntity<EmissionsReportDto>(result, HttpStatus.OK);
     }
 
-    
+
     /**
      * Submits a report to CROMERR after the user authenticates through the widgets and generates and activityId
      * @param activityId CROMERR Activity ID
@@ -82,16 +85,22 @@ public class EmissionsReportApi {
         return new ResponseEntity<String>(documentId, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/facility/{facilityEisProgramId}")
+    public ResponseEntity<EmissionsReportDto> create(@PathVariable String facilityEisProgramId,
+                                                     @NotNull EmissionsReportDto reportDto) {
 
-    @GetMapping(value = "/create/{facilityEisProgramId}/{reportYear}")
-    public ResponseEntity<EmissionsReportDto> create(@PathVariable String facilityEisProgramId, @PathVariable Integer reportYear) {
-
-        EmissionsReport reportCopy = emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportYear);
-        EmissionsReportDto result = new EmissionsReportDto();
-        if (reportCopy != null) {
-        	result = emissionsReportService.saveEmissionReport(reportCopy);
+        if (reportDto.getYear() == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
 
-        return new ResponseEntity<EmissionsReportDto>(result, HttpStatus.OK);
+        EmissionsReport reportCopy = this.emissionsReportService.createEmissionReportCopy(
+            facilityEisProgramId, Integer.valueOf(reportDto.getYear()));
+
+        EmissionsReportDto result = null;
+        if (reportCopy != null) {
+        	result = this.emissionsReportService.saveEmissionReport(reportCopy);
+        }
+
+        return new ResponseEntity<>(result, result == null ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 }
