@@ -157,23 +157,55 @@ INSERT INTO EMISSIONS_PROCESS (id, emissions_unit_id, emissions_process_identifi
     VALUES ('9999995', '9999994', 'PROC1', 'OP', '1977', '10500106', '', 'EXTERNAL COMBUSTION - SPACE HEATERS - INDUSTRIAL - NATURAL GAS', 
         'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for PROC1');
 
+INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date, comments)
+    VALUES ('9999991', '9999991', 'OP', 'Control 001', 'Acetaldehyde and Benzene Control', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 
+    'Sample comments for Control 001');
+INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date, comments)
+    VALUES ('9999992', '9999991', 'OP', 'Control 002', 'Acetaldehyde Control', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 
+    'Sample comments for Control 002');
+
+INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
+    VALUES ('9999991', '9999991', '75070', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 100.0);
+INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
+    VALUES ('9999992', '9999991', '71432', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 99.9);
+INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
+    VALUES ('9999993', '9999992', '75070', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 1.3);
+
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
+	VALUES ('9999991', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
+	VALUES ('9999992', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
+	VALUES ('9999993', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
+	VALUES ('9999994', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
+
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+	VALUES ('9999991', '9999991', '9999991', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+	VALUES ('9999992', '9999991', '9999992', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+	VALUES ('9999993', '9999991', '9999993', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+	VALUES ('9999994', '9999992', '9999994', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
+
 --RELEASE POINT APPORTIONMENT
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999991', '9999991', '9999991', '33', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999992', '9999992', '9999991', '33', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999993', '9999993', '9999991', '34', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999994', '9999991', '9999992', '60', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999995', '9999992', '9999992', '40', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999996', '9999991', '9999993', '10', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999997', '9999992', '9999993', '20', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999998', '9999993', '9999993', '70', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999991', '9999991', '9999991', '33', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999992', '9999992', '9999991', '33', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999992');
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999993', '9999993', '9999991', '34', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999993');
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999994', '9999991', '9999992', '60', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999994');
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999995', '9999992', '9999992', '40', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999996', '9999991', '9999993', '10', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999992');
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999997', '9999992', '9999993', '20', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999993');
+INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)
+    VALUES ('9999998', '9999993', '9999993', '70', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999994');
 
 --REPORTING_PERIOD
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
@@ -238,47 +270,7 @@ INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, total_emissions, 
     calculated_emissions_tons)
     VALUES ('9999997', '9999994', 'NOX', '55151.9', 'TON', '0.001', '100.000000000000000 Lb per Million Cubic Feet Natural Gas Burned', 
         'TON', 'E3FT2/HR', '1', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample comments for Nitrogen Oxides', '55151.9');
-        
-INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date, comments)
-    VALUES ('9999991', '9999991', 'OP', 'Control 001', 'Acetaldehyde and Benzene Control', 50, 50, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 
-    'Sample comments for Control 001');
-INSERT INTO CONTROL (id, facility_site_id, status_code, identifier, description, percent_capture, percent_control, created_by, created_date, last_modified_by, last_modified_date, comments)
-    VALUES ('9999992', '9999991', 'OP', 'Control 002', 'Acetaldehyde Control', 25, 75, 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 
-    'Sample comments for Control 002');
 
-INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
-    VALUES ('9999991', '9999991', '75070', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 100.0);
-INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
-    VALUES ('9999992', '9999991', '71432', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 99.9);
-INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
-    VALUES ('9999993', '9999992', '75070', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 1.3);
-
-INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999991', 'Path Description', '1', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999992', 'Path Description', '2', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999993', 'Path Description', '1', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_path(id, description, control_order, control_type, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999994', 'Path Description', '1', 'Serial', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-
-INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
-    created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999991', '9999991', '9999991', null, '9999991', null, 'Assignment Description', 
-        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
-    created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999992', '9999991', '9999992', null, null, '9999991', 'Assignment Description', 
-        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
-    created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999993', '9999991', '9999993', '9999991', null, null, 'Assignment Description', 
-        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO control_assignment(id, control_id, control_path_id, release_point_id, emissions_unit_id, emissions_process_id, description, 
-    created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999994', '9999992', '9999994', null, null, '9999991', 'Assignment Description', 
-        'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-        
 INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
     VALUES('9999991', '9999991', '4241', true,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
