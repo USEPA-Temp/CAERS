@@ -37,30 +37,6 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
         });
     }
 
-    // unused
-    openEditEmissionModal(selectedEmission: Emission) {
-        const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg', backdrop: 'static' });
-        modalRef.componentInstance.emission = selectedEmission;
-        modalRef.componentInstance.reportingPeriod = this.reportingPeriod;
-        modalRef.componentInstance.process = this.process;
-    }
-
-    // unused
-    openCreateEmissionModal() {
-        const modalRef = this.modalService.open(EmissionDetailsModalComponent, { size: 'lg', backdrop: 'static' });
-        modalRef.componentInstance.reportingPeriod = this.reportingPeriod;
-        modalRef.componentInstance.process = this.process;
-        modalRef.componentInstance.createMode = true;
-
-        modalRef.result.then(result => {
-        if (result) {
-            this.tableData.push(result);
-        }
-        }, () => {
-        // needed for dismissing without errors
-        });
-    }
-
     openDeleteModal(emissionName: string, emissionId: number) {
         const modalMessage = `Are you sure you want to delete the pollutant ${emissionName} from this process?`;
         const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
