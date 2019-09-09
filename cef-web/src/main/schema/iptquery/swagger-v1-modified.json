@@ -1,0 +1,3510 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "The FRS API exposes several RESTful web services for querying FRS data. This web page is intended for a technical audience and describes the content and purpose of each API service available. These endpoints are NAAS secured http://www.exchangenetwork.net/network-authentication-authorization-services-naas/ .",
+        "version": "1.0.0",
+        "title": "FRS API",
+        "contact": {
+            "email": "james.chilton@cgifederal.com"
+        }
+    },
+    "basePath": "http://localhost/facilityiptquery/v1/FRS",
+    "tags": [
+        {
+            "name": "FRS"
+        }
+    ],
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "paths": {
+        "/QueryRegistry": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for facility data in FRS.",
+                "description": "This service is used to search for facility data in FRS.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "registryId",
+                        "required": false,
+                        "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify an object of interest.",
+                        "maxLength": 12,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "primaryName",
+                        "required": false,
+                        "description": "The primary name. Max 150 characters.",
+                        "maxLength": 150,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "locationAddress",
+                        "required": false,
+                        "description": "The location address. Max 100 characters.",
+                        "maxLength": 100,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "cityName",
+                        "required": false,
+                        "description": "The city name. Max 60 characters.",
+                        "maxLength": 60,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "countyName",
+                        "required": false,
+                        "description": "The county name. Max 35 characters.",
+                        "maxLength": 35,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "fipsCode",
+                        "required": false,
+                        "description": "The numberic FIPS code. Max 5 characters.",
+                        "maxLength": 5,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "stateCode",
+                        "required": false,
+                        "description": "The state code/abbreviation. Max 5 characters.",
+                        "maxLength": 5,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "stateName",
+                        "required": false,
+                        "description": "The state name. Max 35 characters.",
+                        "maxLength": 35,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "countryName",
+                        "required": false,
+                        "description": "The country name. Max 44 characters.",
+                        "maxLength": 44,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "postalCode",
+                        "required": false,
+                        "description": "The numeric postal code, dashes allowed. Max 14 characters.",
+                        "maxLength": 14,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Registry"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryRegistryGis": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for facility GIS data in FRS.",
+                "description": "This service is used to search for facility GIS data in FRS.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "registryId",
+                        "required": false,
+                        "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify an object of interest.",
+                        "maxLength": 12,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RegistryGis"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryProgramFacility": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for program facility data in FRS.",
+                "description": "This service is used to search for program facility data in FRS.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "registryId",
+                        "required": false,
+                        "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify an object of interest.",
+                        "maxLength": 12,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProgramFacility"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryProgramGis": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Program Facility GIS data in FRS.",
+                "description": "Users can search for Program Facility GIS in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProgramGIS"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryInterest": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Interest data in FRS.",
+                "description": "Users can search for Interest in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Interest"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryContact": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Contact data in FRS.",
+                "description": "Users can search for Contact in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Contact"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryOrganization": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Organization data in FRS.",
+                "description": "Users can search for Organization in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Organization"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryMail": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Mailing Address data in FRS.",
+                "description": "Users can search for Mailing Address in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Mail"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QuerySic": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for SIC data in FRS.",
+                "description": "Users can search for SIC in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Sic"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryNaics": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for NAICs data in FRS.",
+                "description": "Users can search for NAICs in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Naics"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryAlternativeName": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Alternative Name data in FRS.",
+                "description": "Users can search for Alternative Name in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "registryId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AlternativeName"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryAlternativeId": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Alternative ID data in FRS.",
+                "description": "Users can search for Alternative ID in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AlternativeId"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryTribe": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for SIC data in FRS.",
+                "description": "Users can search for SIC in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Tribe"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryEmissionsUnit": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Emissions Unit data in FRS.",
+                "description": "Users can search for Emissions Unit in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offSet",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Unit"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryReleasePoint": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Release Point data in FRS.",
+                "description": "Users can search for Release Point in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offSet",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReleasePoint"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryAssociation": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Sub-facility Association data in FRS.",
+                "description": "Users can search for Sub-facility Association in the FRS system, based on a variety of search criteria",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offSet",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Association"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryEmissionsProcess": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Emissions Process data in FRS.",
+                "description": "Users can search for Emissions Process in the FRS system, based on a variety of search criteria.",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offSet",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Process"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryEmissionsControl": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Emissions Control data in FRS.",
+                "description": "Users can search for Emissions Control in the FRS system, based on a variety of search criteria.",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offSet",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Control"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        },
+        "/QueryPollutant": {
+            "get": {
+                "tags": [
+                    "FRS"
+                ],
+                "summary": "This service is used to search for Pollutant data in FRS.",
+                "description": "Users can search for Pollutant data in the FRS system, based on a variety of search criteria.",
+                "parameters": [
+                    {
+                        "name": "UserId",
+                        "in": "header",
+                        "required": true,
+                        "description": "User ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Password",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "format": "password"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemAcronym",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "programSystemId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offSet",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Pollutant"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password combination. NAAS authenication has failed."
+                    },
+                    "403": {
+                        "description": "IP Address Failure.  The IP address of the machine calling the service isn't white-listed for access."
+                    },
+                    "500": {
+                        "description": "An error has occurred during processing."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "SupplementalInterestObject": {
+            "type": "object",
+            "properties": {
+                "supplementalProgramAcronym": {
+                    "type": "string",
+                    "description": "The abbreviated name that represents the name of a supplemental information management system. For the purposes of FRS, supplemental systems include state program systems, compliance and enforcement systems, and program systems that include general permits.",
+                    "example": "RI-PLOVER"
+                },
+                "supplementalProgramId": {
+                    "type": "string",
+                    "description": "The unique identification number assigned to a judicial or formal administrative enforcement action, a compliance monitoring activity, a general permit, or a state environmental program.",
+                    "example": "123"
+                },
+                "supplementalInterestType": {
+                    "type": "string",
+                    "description": "The supplemental environmental permit or regulatory program that applies to the facility site or the environmental interest at the facility site. For the purposes of FRS, supplemental program interests include state programs, compliance and enforcement programs, and general permits. Refer to https://www.epa.gov/sites/production/files/2015-09/documents/standard_interests.pdf for list of supplemental interest types FRS accepts currently - this list can be added to.",
+                    "example": "CONCENTRATED ANIMAL FEEDING OPERATION"
+                },
+                "reportedSupplementalInterestType": {
+                    "type": "string",
+                    "description": "The name of the environmental permit or regulatory program, as reported by the supplemental information system.",
+                    "example": "CAFO"
+                }
+            }
+        },
+        "ProgramFacility": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "registryId": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify an object of interest.",
+                    "example": ""
+                },
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "primaryName": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "description": "The public or commercial name of a facility site (i.e., the full name that commonly appears on invoices, signs, or other business documents, or as assigned by the state when the name is ambiguous).",
+                    "example": "RHODE ISLAND STATE HOUSE"
+                },
+                "locationAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "The address that describes the physical (geographic) location of the front door or main entrance of a facility site, including urban-style street address or rural address.",
+                    "example": "82 SMITH ST"
+                },
+                "supplementalLocation": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "The text that provides additional information about a place, including a building name with its secondary unit and number, an industrial park name, an installation name, or descriptive text where no formal address is available.",
+                    "example": "SUITE 45"
+                },
+                "cityName": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "The name of the city, town, village or other locality, when identifiable, within whose boundaries (the majority of) the facility site is located.  This is not always the same as the city used for USPS mail delivery.",
+                    "example": "PROVIDENCE"
+                },
+                "countyName": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "description": " The name of the U.S. county or county equivalent in which the facility site is physically located.",
+                    "example": "PROVIDENCE COUNTY"
+                },
+                "countyFIPSCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "description": "The code that represents the county or county equivalent and the state or state equivalent of the United States.",
+                    "example": "44007"
+                },
+                "stateCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "description": "The U.S. Postal Service abbreviation that represents the state or state equivalent for the U.S. and Canada.",
+                    "example": "RI"
+                },
+                "stateName": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "description": "The name of a principal administrative subdivision of the United States, Canada, or Mexico.",
+                    "example": "RHODE ISLAND"
+                },
+                "countryName": {
+                    "type": "string",
+                    "maxLength": 44,
+                    "description": "The name that represents a primary geopolitical unit of the world.",
+                    "example": "UNITED STATES"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "maxLength": 14,
+                    "description": "The combination of the 5-digit Zone Improvement Plan (ZIP) code and the four-digit extension code (if available) that represents the geographic segment that is a subunit of the ZIP Code, assigned by the U.S. Postal Service to a geographic location; or the postal zone specific to the country, other than the U.S., where the facility site is located.",
+                    "example": "02903"
+                },
+                "isFederalFacilityFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "description": "Code indicating whether or not the facility site is the property of the federal government.",
+                    "example": "Y"
+                },
+                "agencyId": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "description": "The Federal Agency/Bureau code.  The five character code consists of a letter followed by four numbers.  There are four possible letters that can occupy the first character position:  C for Civilian Federal Agency; D for Department of Defense; E for Department of Energy; X for Unknown.  The second and third characters represent the agency code, while the fourth and fifth characters represent the bureau code.",
+                    "example": "D000"
+                },
+                "siteTypeName": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "description": "The descriptive name for the type of facility. Allowable Values (example):POTENTIALLY CONTAMINATED SITE, NETWORK, MONITORING STATION, STATIONARY, WATER SYSTEM, MOBILE, FACILITY, PIPELINE, CONTAMINATION ADDRESSED, CONTAMINATED SITE, BROWNFIELDS SITE, PORTABLE, OFF-SHORE PLATFORM.",
+                    "example": "STATIONARY"
+                },
+                "isSmallBusinessFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "description": "Y/N code indicating whether or not a business is requesting relief under EPA Small Business Policy, which applies to businesses having less than 100 employees.",
+                    "example": "Y"
+                },
+                "HUCCode8": {
+                    "type": "string",
+                    "maxLength": 8,
+                    "description": "The HUC 8 Code for the registry item.",
+                    "example": "17060102"
+                },
+                "HUCCode12": {
+                    "type": "string",
+                    "maxLength": 12,
+                    "description": "The HUC 12 Code for the registry item.",
+                    "example": "170601020101"
+                },
+                "IsPOTWFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "required": "false",
+                    "description": "Indicates whether this registry item is of POTW.",
+                    "example": ""
+                },
+                "airLocationDescription": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "",
+                    "example": ""
+                },
+                "countryISO31661Alpha2": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "required": "false",
+                    "description": "The country code is ISO 3166 1 Alpha 2 format.",
+                    "example": ""
+                },
+                "envJusticeCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "Environmental justice code.",
+                    "example": ""
+                },
+                "facilityManagementTypeCode": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "false",
+                    "description": "The type of facility management performed for the registry item.",
+                    "example": ""
+                },
+                "facilityOwnerType": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "required": "false",
+                    "description": "The type of facility owner for the registry id. Allowable Values (xample): BANK/LOAN COMPANY, BROWNFIELDS/PUBLIC, COUNTY OWNED, DISTRICT OWNED, FEDERALLY OWNED, NEITHER, FORMERLY FEDERALLY OWNED OR OPERATED, GOVERNMENT OWNED / CONTRACTOR OPERATED, MIXED OWNERSHIP, MUNICIPALITY, PRIVATE, PRIVATELY OWNED / GOVERNMENT OPERATED, PROPERTY DEFAULTED BACK TO GOVERNMENT, STATE OWNED, TRIBAL GOVERNMENT, TRUSTEE, FEDERAL, TRUSTEE, STATE, FEDERAL, OTHER, UNKNOWN, GOCO ",
+                    "example": "BROWNFIELDS/PUBLIC"
+                },
+                "legislativeDistrictNumber": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "required": "false",
+                    "description": "The legislative district number for the registry item.",
+                    "example": "10"
+                },
+                "locationDescription": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "required": "false",
+                    "description": "A location description for the registry item.",
+                    "example": "Part of an EPA Superfund site."
+                },
+                "operatingStatus": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The operating status of the registry item.",
+                    "example": "SEASONAL"
+                },
+                "operatingStatusDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The last date the operating status was collected.",
+                    "example": "2012-04-21T18:25:43-05:00"
+                },
+                "operatingStatusYear": {
+                    "type": "number",
+                    "maxLength": 4,
+                    "required": "false",
+                    "description": "The last year the operating status was collected.",
+                    "example": "1991"
+                },
+                "isPortableSourceFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "required": "false",
+                    "description": "Indicates if this is a portable registry item.",
+                    "example": "N"
+                },
+                "startDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data started to be of interest in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "endDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data is no longer of interest in ISO 8601 format",
+                    "example": "2012-04-21"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "FacilitySourceSystemProgramCode": {
+                    "type": "string",
+                    "example": "RI-PLOVER",
+                    "maxLength": 20,
+                    "description": "The code that represents the information management system which has responsibility for the data in a linked or interrelated information management system."
+                },
+                "latitude": {
+                    "type": "number",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian north or south of the equator, as reported by the data source.",
+                    "example": "41.803432"
+                },
+                "longitude": {
+                    "type": "number",
+                    "maxLength": 11,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian east or west of the prime meridian, as reported by the data source.",
+                    "example": "-71.405394"
+                },
+                "accuracyValue": {
+                    "type": "number",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The measure of the accuracy (in meters) of the latitude and longitude coordinates.",
+                    "example": "150"
+                },
+                "collectionMethodCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the method used to determine the latitude and longitude coordinates for a point on the earth.",
+                    "example": ""
+                },
+                "scale": {
+                    "type": "number",
+                    "maxLength": 9,
+                    "required": "false",
+                    "description": "The number that represents the proportional distance on the ground for one unit of measure on the map or photo. Remarks: Mandatory for all horizontal data collection methods except for methods using Global Positioning System (GPS)..",
+                    "example": ""
+                },
+                "heightDatumCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the reference datum used in determining latitude and longitude coordinates. Allowable Values: Value Meaning 001 NAD27 002 NAD83 003 WGS84.",
+                    "example": "002"
+                },
+                "refPointCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the place for which geographic coordinates were established.",
+                    "example": ""
+                }
+            }
+        },
+        "Registry": {
+            "type": "object",
+            "properties": {
+                "registryId": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify an object of interest.",
+                    "example": "999983143090"
+                },
+                "primaryName": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "description": "The public or commercial name of a facility site (i.e., the full name that commonly appears on invoices, signs, or other business documents, or as assigned by the state when the name is ambiguous).",
+                    "example": "RHODE ISLAND STATE HOUSE"
+                },
+                "locationAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "The address that describes the physical (geographic) location of the front door or main entrance of a facility site, including urban-style street address or rural address.",
+                    "example": "82 SMITH ST"
+                },
+                "supplementalLocation": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "The text that provides additional information about a place, including a building name with its secondary unit and number, an industrial park name, an installation name, or descriptive text where no formal address is available.",
+                    "example": "SUITE 45"
+                },
+                "cityName": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "The name of the city, town, village or other locality, when identifiable, within whose boundaries (the majority of) the facility site is located.  This is not always the same as the city used for USPS mail delivery.",
+                    "example": "PROVIDENCE"
+                },
+                "countyName": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "description": " The name of the U.S. county or county equivalent in which the facility site is physically located.",
+                    "example": "PROVIDENCE COUNTY"
+                },
+                "countyFIPSCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "description": "The code that represents the county or county equivalent and the state or state equivalent of the United States.",
+                    "example": "44007"
+                },
+                "stateCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "description": "The U.S. Postal Service abbreviation that represents the state or state equivalent for the U.S. and Canada.",
+                    "example": "RI"
+                },
+                "stateName": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "description": "The name of a principal administrative subdivision of the United States, Canada, or Mexico.",
+                    "example": "RHODE ISLAND"
+                },
+                "countryName": {
+                    "type": "string",
+                    "maxLength": 44,
+                    "description": "The name that represents a primary geopolitical unit of the world.",
+                    "example": "UNITED STATES"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "maxLength": 14,
+                    "description": "The combination of the 5-digit Zone Improvement Plan (ZIP) code and the four-digit extension code (if available) that represents the geographic segment that is a subunit of the ZIP Code, assigned by the U.S. Postal Service to a geographic location; or the postal zone specific to the country, other than the U.S., where the facility site is located.",
+                    "example": "02903"
+                },
+                "isFederalFacilityFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "description": "Code indicating whether or not the facility site is the property of the federal government.",
+                    "example": "Y"
+                },
+                "agencyId": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "description": "The Federal Agency/Bureau code.  The five character code consists of a letter followed by four numbers.  There are four possible letters that can occupy the first character position:  C for Civilian Federal Agency; D for Department of Defense; E for Department of Energy; X for Unknown.  The second and third characters represent the agency code, while the fourth and fifth characters represent the bureau code.",
+                    "example": "D000"
+                },
+                "siteTypeName": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "description": "The descriptive name for the type of facility. Allowable Values (example):POTENTIALLY CONTAMINATED SITE, NETWORK, MONITORING STATION, STATIONARY, WATER SYSTEM, MOBILE, FACILITY, PIPELINE, CONTAMINATION ADDRESSED, CONTAMINATED SITE, BROWNFIELDS SITE, PORTABLE, OFF-SHORE PLATFORM.",
+                    "example": "STATIONARY"
+                },
+                "isSmallBusinessFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "description": "Y/N code indicating whether or not a business is requesting relief under EPA Small Business Policy, which applies to businesses having less than 100 employees.",
+                    "example": "Y"
+                },
+                "HUCCode8": {
+                    "type": "string",
+                    "maxLength": 8,
+                    "description": "The HUC 8 Code for the registry item.",
+                    "example": "17060102"
+                },
+                "HUCCode12": {
+                    "type": "string",
+                    "maxLength": 12,
+                    "description": "The HUC 12 Code for the registry item.",
+                    "example": "170601020101"
+                },
+                "IsPOTWFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "required": "false",
+                    "description": "Indicates whether this registry item is of POTW.",
+                    "example": ""
+                },
+                "airLocationDescription": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "",
+                    "example": ""
+                },
+                "comments": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "required": "false",
+                    "description": "Any comments relating to the registry item.",
+                    "example": ""
+                },
+                "countryISO31661Alpha2": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "required": "false",
+                    "description": "The country code is ISO 3166 1 Alpha 2 format.",
+                    "example": ""
+                },
+                "envJusticeCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "Environmental justice code.",
+                    "example": ""
+                },
+                "facilityManagementTypeCode": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "false",
+                    "description": "The type of facility management performed for the registry item.",
+                    "example": ""
+                },
+                "facilityOwnerType": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "required": "false",
+                    "description": "The type of facility owner for the registry id. Allowable Values (xample): BANK/LOAN COMPANY, BROWNFIELDS/PUBLIC, COUNTY OWNED, DISTRICT OWNED, FEDERALLY OWNED, NEITHER, FORMERLY FEDERALLY OWNED OR OPERATED, GOVERNMENT OWNED / CONTRACTOR OPERATED, MIXED OWNERSHIP, MUNICIPALITY, PRIVATE, PRIVATELY OWNED / GOVERNMENT OPERATED, PROPERTY DEFAULTED BACK TO GOVERNMENT, STATE OWNED, TRIBAL GOVERNMENT, TRUSTEE, FEDERAL, TRUSTEE, STATE, FEDERAL, OTHER, UNKNOWN, GOCO ",
+                    "example": "BROWNFIELDS/PUBLIC"
+                },
+                "legislativeDistrictNumber": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "required": "false",
+                    "description": "The legislative district number for the registry item.",
+                    "example": "10"
+                },
+                "locationDescription": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "required": "false",
+                    "description": "A location description for the registry item.",
+                    "example": "Part of an EPA Superfund site."
+                },
+                "operatingStatus": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The operating status of the registry item.",
+                    "example": "SEASONAL"
+                },
+                "operatingStatusDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The last date the operating status was collected.",
+                    "example": "2012-04-21T18:25:43-05:00"
+                },
+                "operatingStatusYear": {
+                    "type": "number",
+                    "maxLength": 4,
+                    "required": "false",
+                    "description": "The last year the operating status was collected.",
+                    "example": "1991"
+                },
+                "populationServed": {
+                    "type": "number",
+                    "maxLength": 16,
+                    "required": "false",
+                    "description": "The amount of population served by the registry item.",
+                    "example": "1234"
+                },
+                "isPortableSourceFlag": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "required": "false",
+                    "description": "Indicates if this is a portable registry item.",
+                    "example": "N"
+                },
+                "startDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data started to be of interest in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "endDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data is no longer of interest in ISO 8601 format",
+                    "example": "2012-04-21"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "FacilitySourceSystemProgramCode": {
+                    "type": "string",
+                    "example": "RI-PLOVER",
+                    "maxLength": 20,
+                    "description": "The code that represents the information management system which has responsibility for the data in a linked or interrelated information management system."
+                },
+                "latitude": {
+                    "type": "number",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian north or south of the equator, as reported by the data source.",
+                    "example": "41.803432"
+                },
+                "longitude": {
+                    "type": "number",
+                    "maxLength": 11,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian east or west of the prime meridian, as reported by the data source.",
+                    "example": "-71.405394"
+                },
+                "accuracyValue": {
+                    "type": "number",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The measure of the accuracy (in meters) of the latitude and longitude coordinates.",
+                    "example": "150"
+                },
+                "collectionMethodCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the method used to determine the latitude and longitude coordinates for a point on the earth.",
+                    "example": ""
+                },
+                "scale": {
+                    "type": "number",
+                    "maxLength": 9,
+                    "required": "false",
+                    "description": "The number that represents the proportional distance on the ground for one unit of measure on the map or photo. Remarks: Mandatory for all horizontal data collection methods except for methods using Global Positioning System (GPS)..",
+                    "example": ""
+                },
+                "heightDatumCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the reference datum used in determining latitude and longitude coordinates. Allowable Values: Value Meaning 001 NAD27 002 NAD83 003 WGS84.",
+                    "example": "002"
+                },
+                "refPointCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the place for which geographic coordinates were established.",
+                    "example": ""
+                }
+            }
+        },
+        "RegistryGis": {
+            "type": "object",
+            "properties": {
+                "registryId": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify an object of interest.",
+                    "example": "999983143090"
+                },
+                "latitude": {
+                    "type": "number",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian north or south of the equator, as reported by the data source.",
+                    "example": "41.803432"
+                },
+                "longitude": {
+                    "type": "number",
+                    "maxLength": 11,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian east or west of the prime meridian, as reported by the data source.",
+                    "example": "-71.405394"
+                },
+                "accuracyValue": {
+                    "type": "number",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The measure of the accuracy (in meters) of the latitude and longitude coordinates.",
+                    "example": "150"
+                },
+                "collectionMethodCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the method used to determine the latitude and longitude coordinates for a point on the earth.",
+                    "example": ""
+                },
+                "scale": {
+                    "type": "number",
+                    "maxLength": 9,
+                    "required": "false",
+                    "description": "The number that represents the proportional distance on the ground for one unit of measure on the map or photo. Remarks: Mandatory for all horizontal data collection methods except for methods using Global Positioning System (GPS)..",
+                    "example": ""
+                },
+                "heightDatumCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the reference datum used in determining latitude and longitude coordinates. Allowable Values: Value Meaning 001 NAD27 002 NAD83 003 WGS84.",
+                    "example": "002"
+                },
+                "refPointCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the place for which geographic coordinates were established.",
+                    "example": ""
+                }
+            }
+        },
+        "Interest": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "interestType": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "The type of interest.",
+                    "example": "CRITERIA AND HAZARDOUS AIR POLLUTANT INVENTORY"
+                },
+                "federalStateCode": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "description": "Indicator if the interest is a federal, state, or tribal code.  Acceptable values are F (Federal), S (State), and T (Tribal).",
+                    "example": "F"
+                },
+                "startDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "The date this data started to be of interest in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "startDateQualifier": {
+                    "type": "string",
+                    "description": "A qualifier for what the startDate value means.",
+                    "example": "FIRST NOTIFICATION DATE"
+                },
+                "endDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "The date this data is no longer of interest in ISO 8601 format",
+                    "example": "2012-04-21"
+                },
+                "endDateQualifier": {
+                    "type": "string",
+                    "description": "A qualifier for what the endDate value means.",
+                    "example": "FIRST NOTIFICATION DATE"
+                }
+            }
+        },
+        "Sic": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "SICCode": {
+                    "type": "string",
+                    "maxLength": 4,
+                    "required": "true",
+                    "description": "The code that represents the economic activity of a company (four-digits).",
+                    "example": "3087"
+                },
+                "primaryIndicator": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "Indicates whether this SIC is the primary for the registry item. Acceptable values are: PRIMARY, SECONDARY, UNKNOWN.",
+                    "example": "PRIMARY"
+                },
+                "sourceOfData": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "Indicates the originating system for this information.",
+                    "example": "RI-PLOVER"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
+                    "example": "2012-04-21"
+                }
+            }
+        },
+        "Mail": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "affiliationType": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "required": "false",
+                    "description": "The name that describes the capacity or function that an organization or individual serves for a facility site. Allowable Values (examples): Organization Individual Legally Responsible Entity  Report Certifier Legal Operator Regulatory Contact Waste Treater Public Contact Waste Handler  Technical Contact Land Owner Owner Parent Corporation Operator Owner/Operator.",
+                    "example": "MAILING ADDRESS"
+                },
+                "mailingAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The street address of the data.",
+                    "example": "123 MAIN STREET"
+                },
+                "supplementalAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The supplemental address of the data.",
+                    "example": "APT 123"
+                },
+                "cityName": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The name of the city.",
+                    "example": "PROVIDENCE"
+                },
+                "stateCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The state code for the address.",
+                    "example": "RI"
+                },
+                "stateName": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "required": "false",
+                    "description": "The state name for the mailing address.",
+                    "example": "RHODE ISLAND"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "maxLength": 14,
+                    "required": "false",
+                    "description": "The postal code for the mailing address.",
+                    "example": "12345"
+                },
+                "countryName": {
+                    "type": "string",
+                    "maxLength": 44,
+                    "required": "false",
+                    "description": "The country name for the mailing address.",
+                    "example": "USA"
+                },
+                "countryFIPSCode": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "required": "false",
+                    "description": "The FIPS code for the country.",
+                    "example": "US"
+                },
+                "countyFIPSCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The FIPS code for the county.",
+                    "example": "12345"
+                },
+                "countryISO31661Alpha2": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "required": "false",
+                    "description": "The ISO 3166 1 Alpha 2 representation of the country.",
+                    "example": "US"
+                },
+                "startDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data started to be of interest in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "endDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data is no longer of interest in ISO 8601 format",
+                    "example": "2012-04-21"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
+                    "example": "2012-04-21"
+                }
+            }
+        },
+        "Contact": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "affiliationType": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "required": "false",
+                    "description": "The name that describes the capacity or function that an organization or individual serves for a facility site. Allowable Values (examples): Organization Individual Legally Responsible Entity  Report Certifier Legal Operator Regulatory Contact Waste Treater Public Contact Waste Handler  Technical Contact Land Owner Owner Parent Corporation Operator Owner/Operator.",
+                    "example": "APPLICANT"
+                },
+                "fullName": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "required": "false",
+                    "description": "The full name of the contact.",
+                    "example": "JOHN DOE"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "required": "false",
+                    "description": "The contact's title.",
+                    "example": "PRESIDENT"
+                },
+                "divisionName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "required": "false",
+                    "description": "The division name for the contact.",
+                    "example": "HQ DIVISION"
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The phone number for the contact.",
+                    "example": "111-222-3333"
+                },
+                "phoneNumberExtension": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The phone number extension for the contact.",
+                    "example": "1234"
+                },
+                "alternatePhone": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The alternate phone number for the contact.",
+                    "example": "111-222-3334"
+                },
+                "faxNumber": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The fax number for the contact.",
+                    "example": "111-222-3335"
+                },
+                "emailAddress": {
+                    "type": "string",
+                    "maxLength": 120,
+                    "required": "false",
+                    "description": "The email address for the contact.",
+                    "example": "TEST@EPA.GOV"
+                },
+                "mailingAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The mailing address of the contact.",
+                    "example": "123 MAIN STREET"
+                },
+                "supplementalAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The supplemental address of the data.",
+                    "example": "SUITE 123"
+                },
+                "cityName": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The name of the city.",
+                    "example": "PROVIDENCE"
+                },
+                "stateCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The state code for the address.",
+                    "example": "RI"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "maxLength": 14,
+                    "required": "false",
+                    "description": "The postal code for the contact.",
+                    "example": "RI"
+                },
+                "countyName": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "required": "false",
+                    "description": "The name of the county.",
+                    "example": "PROVIDENCE COUNTY"
+                },
+                "countryName": {
+                    "type": "string",
+                    "maxLength": 44,
+                    "required": "false",
+                    "description": "The country name for the contact.",
+                    "example": "USA"
+                },
+                "startDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data started to be of interest in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "endDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data is no longer of interest in ISO 8601 format",
+                    "example": "2012-04-21"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "contactId": {
+                    "type": "string",
+                    "maxLength": 12,
+                    "required": "false",
+                    "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify a Contact person.",
+                    "example": "1234"
+                },
+                "countyFips": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The county FIPs for the Contact person.",
+                    "example": "1234"
+                }
+            }
+        },
+        "Organization": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "orgName": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "required": "true",
+                    "description": "The legal, formal name of an organization that is affiliated with the facility site.",
+                    "example": "ABC COMPANY"
+                },
+                "affiliationType": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "required": "false",
+                    "description": "The name that describes the capacity or function that an organization or individual serves for a facility site. Allowable Values (examples): Organization Individual Legally Responsible Entity  Report Certifier Legal Operator Regulatory Contact Waste Treater Public Contact Waste Handler  Technical Contact Land Owner Owner Parent Corporation Operator Owner/Operator.",
+                    "example": "OWNER"
+                },
+                "startDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data started to be of interest in ISO 8601 format.",
+                    "example": "2012-04-21"
+                },
+                "endDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The date this data is no longer of interest in ISO 8601 format",
+                    "example": "2012-04-21"
+                },
+                "orgType": {
+                    "type": "string",
+                    "maxLength": 40,
+                    "required": "false",
+                    "description": "The type of organization. Allowable Values (examples): Federal Private GOCO County District Tribal Municipal Other State.",
+                    "example": "GOCO"
+                },
+                "dunsNumber": {
+                    "type": "string",
+                    "maxLength": 9,
+                    "required": "false",
+                    "description": "The Data Universal Numbering System (DUNS) number assigned by Dun and Bradstreet to identify unique business establishments.",
+                    "example": "123"
+                },
+                "divisionName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "required": "false",
+                    "description": "The name of a division or a department of a company.",
+                    "example": "HQ"
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The primary telephone number for an organization.",
+                    "example": "123-456-7899"
+                },
+                "alternatePhone": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "An alternate telephone number for an organization.",
+                    "example": "123-456-8888"
+                },
+                "faxNumber": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The telephone number to which a facsimile can be sent to an organization.",
+                    "example": "123-456-9999"
+                },
+                "emailAddress": {
+                    "type": "string",
+                    "maxLength": 120,
+                    "required": "false",
+                    "description": "The text that describes an electronic mail address of an organization.",
+                    "example": "TEST@EPA.GOV"
+                },
+                "ein": {
+                    "type": "string",
+                    "maxLength": 14,
+                    "required": "false",
+                    "description": "The unique tax identification number issued by the Internal Revenue Service to the employer.",
+                    "example": "1234"
+                },
+                "stateBusinessId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The uniform business number assigned to an official business by a state.",
+                    "example": "5678"
+                },
+                "mailingAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The street address of the data.",
+                    "example": "123 MAIN STREET"
+                },
+                "supplementalAddress": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The supplemental address of the data.",
+                    "example": "APT 123"
+                },
+                "cityName": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The name of the city.",
+                    "example": "PROVIDENCE"
+                },
+                "stateCode": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The state code for the address.",
+                    "example": "RI"
+                },
+                "stateName": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "required": "false",
+                    "description": "The state name for the mailing address.",
+                    "example": "RHODE ISLAND"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "maxLength": 14,
+                    "required": "false",
+                    "description": "The postal code for the mailing address.",
+                    "example": "12345"
+                },
+                "countryName": {
+                    "type": "string",
+                    "maxLength": 44,
+                    "required": "false",
+                    "description": "The country name for the mailing address.",
+                    "example": "USA"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 7,
+                    "required": "false",
+                    "description": "The most recent date the corresponding individual data was reported to the Source of Data.",
+                    "example": "2017-10-08"
+                },
+                "ownerPercent": {
+                    "type": "string",
+                    "maxLength": 22,
+                    "required": "false",
+                    "description": "The percentage of the facility the company owns.",
+                    "example": "100"
+                },
+                "countryFipsCode": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "required": "false",
+                    "description": "Two-character codes developed to represent countries.",
+                    "example": "US"
+                },
+                "phoneNumExtension": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The phone number extension.",
+                    "example": "1234"
+                },
+                "comments": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "required": "false",
+                    "description": "The organization comments.",
+                    "example": "ORGANIZATION COMMENTS TESTING"
+                },
+                "employeeCount": {
+                    "type": "string",
+                    "maxLength": 22,
+                    "required": "false",
+                    "description": "The employee count of the organization.",
+                    "example": "123"
+                },
+                "websiteUrl": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "required": "false",
+                    "description": "The URL of the organization website.",
+                    "example": "https://www.epa.gov"
+                }
+            }
+        },
+        "Naics": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "naicsCode": {
+                    "type": "string",
+                    "maxLength": 6,
+                    "description": "The code that represents a subdivision of an industry that accommodates user needs in the United States (six-digits).",
+                    "example": "22132"
+                },
+                "primaryIndicator": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "Indicates whether this SIC is the primary for the registry item. Acceptable values are: PRIMARY, SECONDARY, UNKNOWN.",
+                    "example": "PRIMARY"
+                },
+                "sourceOfData": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "Indicates the originating system for this information.",
+                    "example": "RI-PLOVER"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
+                    "example": "2012-04-21"
+                }
+            }
+        },
+        "Association": {
+            "type": "object",
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "subComponentId1": {
+                    "type": "string",
+                    "example": "R80307-DEMO",
+                    "maxLength": 30,
+                    "description": "the sub-component ID to be associated with subComponentId2.",
+                    "required": true
+                },
+                "subComponentId2": {
+                    "type": "string",
+                    "example": "P57394-DEMO",
+                    "maxLength": 30,
+                    "description": "the sub-component ID to be associated with subComponentId1.",
+                    "required": true
+                },
+                "subAssociationAveragePercent": {
+                    "type": "number",
+                    "example": 100,
+                    "maxLength": 3,
+                    "description": "The average percent of subAssociationInternalId1/subAssociationProgramSystemId1 as it relates to subAssociationInternalId2/subAssociationProgramSystemId2. For example, the average percent of emissions vented through a release point. ",
+                    "required": false
+                },
+                "controlOrder": {
+                    "type": "string",
+                    "example": 2,
+                    "maxLength": 3,
+                    "description": "stores the order a control variable is in the chain of the specified relationship",
+                    "required": false
+                },
+                "seriesParallelInd": {
+                    "type": "string",
+                    "example": "Y",
+                    "maxLength": 3,
+                    "description": "denotes if a component is in a parallel sequence (or order) with another component",
+                    "required": false
+                }
+            }
+        },
+        "Unit": {
+            "type": "object",
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "unitId": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "An identifier by which the unit is referred to by the primary EPA environmental information system that collects air emission information.",
+                    "required": true
+                },
+                "unitAlternateID": {
+                    "type": "string",
+                    "example": "54765765",
+                    "maxLength": 150,
+                    "description": "An alternative identification number maintained by an information management system for an environmental program.",
+                    "required": true
+                },
+                "unitAlternateName": {
+                    "type": "string",
+                    "example": "YTUTYU",
+                    "maxLength": 150,
+                    "description": "An alternative, historic or program specific name for the sub-component. ",
+                    "required": false
+                },
+                "unitDescription": {
+                    "type": "string",
+                    "example": "YTUTYU",
+                    "maxLength": 255,
+                    "description": "Text description of the emissions unit.",
+                    "required": true
+                },
+                "unitTypeCode": {
+                    "type": "string",
+                    "example": "100",
+                    "maxLength": 20,
+                    "description": "Code that identifies the type of emissions unit activity.",
+                    "required": true
+                },
+                "unitTypeDescription": {
+                    "type": "string",
+                    "example": "BOILER - FUEL COMB. EQUIPMENT",
+                    "maxLength": 100,
+                    "description": "The description of the unit type code, which identifies the type of emissions unit activity.",
+                    "required": true
+                },
+                "unitDesignCapacity": {
+                    "type": "Number",
+                    "example": "",
+                    "maxLength": 30,
+                    "description": "The measure of the size of the unit based on the maximum continuous throughput capacity of the unit.",
+                    "required": false
+                },
+                "unitDesignCapacityUomCode": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "Unit of measure code for the design capacity of the emissions unit.",
+                    "required": false
+                },
+                "unitOfMeasureDescription": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 200,
+                    "description": "Description of the unit of measure code.",
+                    "required": false
+                },
+                "unitOperationDate": {
+                    "type": "string",
+                    "example": "01-Nov-2017",
+                    "maxLength": 20,
+                    "description": "The date on which unit activity became operational.",
+                    "required": false
+                },
+                "unitComment": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 400,
+                    "description": "Any comments regarding the emissions unit activity.",
+                    "required": false
+                },
+                "unitOperatingStatus": {
+                    "type": "string",
+                    "example": "OPERATING",
+                    "maxLength": 100,
+                    "description": "The operating status of the object of interest. Acceptable values are PLANNED, UNDER CONSTRUCTION, OPERATING, TEMPORARILY CLOSED, PERMANENTLY CLOSED, SEASONAL.",
+                    "required": false
+                },
+                "unitOperatingStatusYear": {
+                    "type": "string",
+                    "example": "2010",
+                    "maxLength": 4,
+                    "description": "The operating status year.",
+                    "required": false
+                },
+                "unitPermitStatus": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 100,
+                    "description": " The permitting status of the object of interest.",
+                    "required": false
+                },
+                "unitPermitStartYear": {
+                    "type": "string",
+                    "example": "2010",
+                    "maxLength": 4,
+                    "description": "The start year of the permitting status of the object.",
+                    "required": false
+                },
+                "unitPermitEndYear": {
+                    "type": "string",
+                    "example": "2015",
+                    "maxLength": 4,
+                    "description": "The end year of the permitting status of the object.",
+                    "required": false
+                },
+                "unitSourceSystemProgramCode": {
+                    "type": "string",
+                    "example": "RI-PLOVER",
+                    "maxLength": 20,
+                    "description": "The code that represents the information management system which has responsibility for the data in a linked or interrelated information management system.",
+                    "required": false
+                }
+            }
+        },
+        "Process": {
+            "type": "object",
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "processId": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "An identifier by which the Process is referred to by the primary EPA environmental information system that collects air emission information.",
+                    "required": true
+                },
+                "processAlternateID": {
+                    "type": "string",
+                    "example": "ASDFSDAF",
+                    "maxLength": 150,
+                    "description": "An alternative identification number maintained by an information management system for an environmental program.",
+                    "required": true
+                },
+                "processSccCode": {
+                    "type": "string",
+                    "example": "41000132",
+                    "maxLength": 20,
+                    "description": "EPA Source Classification Code that identifies an emissions process.",
+                    "required": false
+                },
+                "processDescription": {
+                    "type": "string",
+                    "example": "CHEMICAL EVAPORATION - DRY CLEANING - PETROLEUM SOLVENT - INDUSTRIAL - DRYER: DRYING CYCLE",
+                    "maxLength": 756,
+                    "description": "A text description of the emissions process.",
+                    "required": false
+                },
+                "processOperatingStatus": {
+                    "type": "string",
+                    "example": "OPERATING",
+                    "maxLength": 100,
+                    "description": "The operating status of the object of interest. Acceptable values are PLANNED, UNDER CONSTRUCTION, OPERATING, TEMPORARILY CLOSED, PERMANENTLY CLOSED, SEASONAL.",
+                    "required": false
+                },
+                "processOperatingStatusYear": {
+                    "type": "string",
+                    "example": "2010",
+                    "maxLength": 4,
+                    "description": "The operating status year.",
+                    "required": false
+                },
+                "processSourceSystemProgramCode": {
+                    "type": "string",
+                    "example": "RI-PLOVER",
+                    "maxLength": 20,
+                    "description": "The code that represents the information management system which has responsibility for the data in a linked or interrelated information management system.",
+                    "required": false
+                },
+                "processAircraftEngineTypeCode": {
+                    "type": "string",
+                    "example": "1234",
+                    "maxLength": 20,
+                    "description": "Identifies the combination of aircraft and engine type for airport emissions.",
+                    "required": false
+                }
+            }
+        },
+        "Control": {
+            "type": "object",
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "controlId": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "An identifier by which the control measure is referred to by the  information system that collected the air emission information.",
+                    "required": true
+                },
+                "controlAlternateID": {
+                    "type": "string",
+                    "example": "ASDFSDAF",
+                    "maxLength": 150,
+                    "description": "An alternative identification number maintained by an information management system for an environmental program.",
+                    "required": true
+                },
+                "controlCaptureEfficiencyPercent": {
+                    "type": "number",
+                    "example": 50,
+                    "maxLength": 5,
+                    "description": "An estimate of that portion of an affected emission stream that is collected and routed to the control measures when the capture or collection system is operating as designed, reported as a percent.",
+                    "required": false
+                },
+                "controlEffectivenessPercent": {
+                    "type": "number",
+                    "example": 50,
+                    "maxLength": 5,
+                    "description": "An estimate of the portion of the reporting period's activity for which the overall control system or approach (including both capture and control measures) were operating as designed (regardless of whether the control measure is due to rule or voluntary).",
+                    "required": false
+                },
+                "controlFirstInventoryYear": {
+                    "type": "number",
+                    "example": "1980",
+                    "maxLength": 4,
+                    "description": "The inventory year for which the controls were implemented.",
+                    "required": true
+                },
+                "controlLastInventoryYear": {
+                    "type": "number",
+                    "example": "2050",
+                    "maxLength": 4,
+                    "description": "The last inventory year for which the controls were active.",
+                    "required": false
+                },
+                "controlOperatingMonthsNumber": {
+                    "type": "number",
+                    "example": 12,
+                    "maxLength": 2,
+                    "description": "Number of months the control measure is being operated.",
+                    "required": true
+                },
+                "controlMeasureType": {
+                    "type": "string",
+                    "example": "112",
+                    "maxLength": 20,
+                    "description": "The code that indicates the type of control measure.",
+                    "required": true
+                },
+                "controlMeasureTypeDesc": {
+                    "type": "string",
+                    "example": "AFTERBURNER - DEVICE",
+                    "maxLength": 200,
+                    "description": "The description of the code about the control measure.",
+                    "required": false
+                },
+                "controlOperatingStatus": {
+                    "type": "string",
+                    "example": "OPERATING",
+                    "maxLength": 100,
+                    "description": "The operating status of the object of interest. Acceptable values are PLANNED, UNDER CONSTRUCTION, OPERATING, TEMPORARILY CLOSED, PERMANENTLY CLOSED, SEASONAL.",
+                    "required": false
+                },
+                "controlOperatingStatusYear": {
+                    "type": "string",
+                    "example": "2010",
+                    "maxLength": 4,
+                    "description": "The operating status year.",
+                    "required": false
+                },
+                "controlSourceSystemProgramCode": {
+                    "type": "string",
+                    "example": "RI-PLOVER",
+                    "maxLength": 20,
+                    "description": "The code that represents the information management system which has responsibility for the data in a linked or interrelated information management system.",
+                    "required": false
+                },
+                "controlEquipmentType": {
+                    "type": "string",
+                    "example": "TEST",
+                    "maxLength": 100,
+                    "description": "Name that identifies the piece of equipment or practice that is used to reduce one or more pollutants.",
+                    "required": false
+                }
+            }
+        },
+        "Pollutant": {
+            "type": "object",
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "controlId": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "An identifier by which the control measure is referred to by the  information system that collected the air emission information.",
+                    "required": false
+                },
+                "unitId": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "An identifier by which the unit is referred to by the  information system that collected the air emission information.",
+                    "required": false
+                },
+                "processId": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "An identifier by which the processis referred to by the  information system that collected the air emission information.",
+                    "required": false
+                },
+                "controlPollutantName": {
+                    "type": "string",
+                    "example": "PROPIONALDEHYDE",
+                    "maxLength": 200,
+                    "description": "The name of the pollutant which is controlled by the control measure.",
+                    "required": true
+                },
+                "controlReductionEfficiencyPercent": {
+                    "type": "number",
+                    "example": 50,
+                    "maxLength": 5,
+                    "description": "",
+                    "required": false
+                },
+                "pollutantCode": {
+                    "type": "string",
+                    "example": "123386",
+                    "maxLength": 50,
+                    "description": "The code for the pollutant which is controlled by the control measure.",
+                    "required": false
+                }
+            }
+        },
+        "ReleasePoint": {
+            "type": "object",
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "releasePointId": {
+                    "type": "string",
+                    "example": "",
+                    "maxLength": 20,
+                    "description": "An identifier by which the release point is referred to by the environmental system.",
+                    "required": true
+                },
+                "releasePointAlternateID": {
+                    "type": "string",
+                    "example": "ASDFSDAF",
+                    "maxLength": 150,
+                    "description": "An alternative identification number maintained by an information management system for an environmental program.",
+                    "required": true
+                },
+                "releasePointTypeName": {
+                    "type": "string",
+                    "example": "VERTICAL STACK",
+                    "maxLength": 30,
+                    "description": "Name that identifies the type of release point. Permitted values include Goose Neck, Downward-facing Vent, Vertical, Vertical with Rain Cap, Horizontal, etc.",
+                    "required": true
+                },
+                "releasePointExitGasVelocityMeasure": {
+                    "type": "number",
+                    "example": 12,
+                    "maxLength": 10,
+                    "description": "The velocity of an exit gas stream. ",
+                    "required": false
+                },
+                "releasePointExitGasFlowRateMeasure": {
+                    "type": "number",
+                    "example": 2.2,
+                    "maxLength": 13,
+                    "description": "The value of stack gas flow rate.",
+                    "required": false
+                },
+                "releasePointExitTemperatureMeasure": {
+                    "type": "number",
+                    "example": 1231,
+                    "maxLength": 4,
+                    "description": "The temperature of an exit gas stream (measured in degrees Fahrenheit).",
+                    "required": false
+                },
+                "releasePointFugitiveHeightMeasure": {
+                    "type": "number",
+                    "example": 10,
+                    "maxLength": 5,
+                    "description": "The fugitive release height above terrain of fugitive emissions.",
+                    "required": false
+                },
+                "releasePointFugitiveWidthMeasure": {
+                    "type": "number",
+                    "example": 10,
+                    "maxLength": 6,
+                    "description": "The width of the fugitive release in the East-West direction as if the angle is zero degrees.",
+                    "required": false
+                },
+                "releasePointFugitiveLengthMeasure": {
+                    "type": "number",
+                    "example": 50,
+                    "maxLength": 6,
+                    "description": "The length of the fugitive release in the North-South direction as if the angle is zero degrees.",
+                    "required": false
+                },
+                "releasePointFugitiveAngleMeasure": {
+                    "type": "number",
+                    "example": 20,
+                    "maxLength": 3,
+                    "description": "The orientation angle for the area in degrees from North, measured positive in the clockwise direction.",
+                    "required": false
+                },
+                "releasePointLatitude": {
+                    "type": "number",
+                    "example": 30.199608,
+                    "maxLength": 9,
+                    "description": "The measure of the angular distance on a meridian north or south of the equator, as reported by the data source.  ",
+                    "required": true
+                },
+                "releasePointLongitude": {
+                    "type": "number",
+                    "example": -92.394333,
+                    "maxLength": 10,
+                    "description": "The measure of the angular distance on a meridian east or west of the prime meridian, as reported by the data source",
+                    "required": true
+                },
+                "releasePointFugitiveLinePt1Latitude": {
+                    "type": "number",
+                    "example": 30.199608,
+                    "maxLength": 9,
+                    "description": "The measure of angular distance on a meridian north or south of the equator for a two-dimensional fugitive release.",
+                    "required": false
+                },
+                "releasePointFugitiveLinePt1Longitude": {
+                    "type": "number",
+                    "example": -92.394333,
+                    "maxLength": 10,
+                    "description": "The measure of angular distance on a meridian east or west of the prime meridian for a two-dimensional fugitive release.",
+                    "required": false
+                },
+                "releasePointFugitiveLinePt2Latitude": {
+                    "type": "number",
+                    "example": 30.199608,
+                    "maxLength": 9,
+                    "description": "The measure of angular distance on a meridian north or south of the equator for a two-dimensional fugitive release.",
+                    "required": false
+                },
+                "releasePointFugitiveLinePt2Longitude": {
+                    "type": "number",
+                    "example": -92.394333,
+                    "maxLength": 10,
+                    "description": "The measure of angular distance on a meridian east or west of the prime meridian for a two-dimensional fugitive release.",
+                    "required": false
+                },
+                "releasePointStackDiameterMeasure": {
+                    "type": "number",
+                    "example": 0.56,
+                    "maxLength": 7,
+                    "description": "The internal diameter of the stack at the release height.",
+                    "required": false
+                },
+                "releasePointStackHeightMeasure": {
+                    "type": "number",
+                    "example": 1,
+                    "maxLength": 5,
+                    "description": "The height of the stack from the ground.",
+                    "required": false
+                },
+                "releasePointStackHeightUomCode": {
+                    "type": "string",
+                    "example": "FEET",
+                    "maxLength": 20,
+                    "description": "The stack height unit of measure.",
+                    "required": false
+                },
+                "releasePointStackDiameterUomCode": {
+                    "type": "string",
+                    "example": "FEET",
+                    "maxLength": 20,
+                    "description": "The stack diameter unit of measure.",
+                    "required": false
+                },
+                "releasePointExitGasVelocityUomCode": {
+                    "type": "string",
+                    "example": "FPS",
+                    "maxLength": 20,
+                    "description": "The unit of measure for the velocity of an exit gas stream value.",
+                    "required": false
+                },
+                "releasePointExitGasFlowRateUomCode": {
+                    "type": "string",
+                    "example": "ACFS",
+                    "maxLength": 20,
+                    "description": "The unit of measure for the stack gas flow rate value.",
+                    "required": false
+                },
+                "releasePointFugitiveHeightUomCode": {
+                    "type": "string",
+                    "example": "FEET",
+                    "maxLength": 20,
+                    "description": "The fugitive release height above terrain of fugitive emissions.",
+                    "required": false
+                },
+                "releasePointFugitiveWidthUomCode": {
+                    "type": "string",
+                    "example": "FEET",
+                    "maxLength": 20,
+                    "description": "The fugitive width unit of measure code. Default is 'feet'.",
+                    "required": false
+                },
+                "releasePointFugitiveLengthUomCode": {
+                    "type": "string",
+                    "example": "FEET",
+                    "maxLength": 20,
+                    "description": "The fugitive length unit of measure code. Default is 'feet'.",
+                    "required": false
+                },
+                "releasePointFugitiveAngleMsrUomCode": {
+                    "type": "string",
+                    "example": "FEET",
+                    "maxLength": 20,
+                    "description": "The fugitive angle unit of measure code",
+                    "required": false
+                },
+                "releasePointReferenceCode": {
+                    "type": "string",
+                    "example": "006",
+                    "maxLength": 3,
+                    "description": "The code that determines the location of the release point. ",
+                    "required": false
+                },
+                "releasePointDataCollectionDate": {
+                    "type": "string",
+                    "example": "01-Nov-2017",
+                    "maxLength": 11,
+                    "description": "The calendar date when data were collected. ",
+                    "required": false
+                },
+                "releasePointFugitiveDiameter": {
+                    "type": "number",
+                    "example": 1.2,
+                    "maxLength": 7,
+                    "description": "The diameter of the fugitive release.",
+                    "required": false
+                },
+                "releasePointFugitiveDiameterUomCode": {
+                    "type": "string",
+                    "example": "FEET",
+                    "maxLength": 20,
+                    "description": "The fugitive diameter unit of measure code",
+                    "required": false
+                },
+                "releasePointCollectionMthCode": {
+                    "type": "string",
+                    "example": "003",
+                    "maxLength": 3,
+                    "description": "The code that represents the method used to determine the latitude and longitude coordinates for a point on the earth. ",
+                    "required": false
+                },
+                "releasePointCollectionMthComment": {
+                    "type": "string",
+                    "example": "INHERITED FROM FACILITY",
+                    "maxLength": 50,
+                    "description": "The description of the code that represents the method used to determine the latitude and longitude coordinates for a point on the earth. ",
+                    "required": false
+                },
+                "releasePointTypeCode": {
+                    "type": "string",
+                    "example": "123",
+                    "maxLength": 3,
+                    "description": "The release point type code. ",
+                    "required": false
+                },
+                "releasePointOperatingStatus": {
+                    "type": "string",
+                    "example": "OPERATING",
+                    "maxLength": 100,
+                    "description": "The operating status of the object of interest. Acceptable values are PLANNED, UNDER CONSTRUCTION, OPERATING, TEMPORARILY CLOSED, PERMANENTLY CLOSED, SEASONAL.",
+                    "required": false
+                },
+                "releasePointOperatingStatusYear": {
+                    "type": "string",
+                    "example": "2010",
+                    "maxLength": 4,
+                    "description": "The operating status year.",
+                    "required": false
+                },
+                "releasePointSourceSystemProgramCode": {
+                    "type": "string",
+                    "example": "RI-PLOVER",
+                    "maxLength": 20,
+                    "description": "The code that represents the information management system which has responsibility for the data in a linked or interrelated information management system.",
+                    "required": false
+                }
+            }
+        },
+        "AlternativeName": {
+            "type": "object",
+            "required": [
+                "registryId"
+            ],
+            "properties": {
+                "registryId": {
+                    "type": "string",
+                    "maxLength": 12,
+                    "required": "true",
+                    "description": "The identification number assigned by the EPA Facility Registry System to uniquely identify an object of interest.",
+                    "example": "110000308042"
+                },
+                "alternativeName": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "required": "false",
+                    "description": "An alternative, historic or program specific name for the facility site.",
+                    "example": "ALT NAME 1"
+                },
+                "alternativeNameType": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "required": "false",
+                    "description": "The type of the alternative, historical, or program-specific name for the registry object (e.g., primary, legal, historical, local).",
+                    "example": "PLOVER ALT NAME"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 7,
+                    "required": "false",
+                    "description": "The most recent date the corresponding individual data was reported to the Source of Data.",
+                    "example": "2017-10-08"
+                }
+            }
+        },
+        "ProgramGIS": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "latitude": {
+                    "type": "number",
+                    "maxLength": 10,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian north or south of the equator, as reported by the data source.",
+                    "example": "41.803432"
+                },
+                "longitude": {
+                    "type": "number",
+                    "maxLength": 11,
+                    "required": "true",
+                    "description": "The measure of the angular distance on a meridian east or west of the prime meridian, as reported by the data source.",
+                    "example": "-71.405394"
+                },
+                "accuracyValue": {
+                    "type": "number",
+                    "maxLength": 5,
+                    "required": "false",
+                    "description": "The measure of the accuracy (in meters) of the latitude and longitude coordinates.",
+                    "example": "150"
+                },
+                "verticalMeasure": {
+                    "type": "number",
+                    "maxLength": 10,
+                    "required": "false",
+                    "description": "The measure of elevation (i.e., the altitude), in meters, above or below a reference datum.",
+                    "example": ""
+                },
+                "verticalMethodCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the method used to collect the vertical measure (i.e., the altitude) of a reference point.",
+                    "example": ""
+                },
+                "verticalDatumCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the reference datum used to determine the vertical measure (i.e., the altitude). Allowable Values: Value Meaning 001 NAVD88 002 NGVD29 003 MEAN SEA-LEVEL 004 LOCAL TIDAL DATUM.",
+                    "example": "001"
+                },
+                "verticalAccuracy": {
+                    "type": "number",
+                    "maxLength": 7,
+                    "required": "false",
+                    "description": "The measure of the accuracy (in meters) of the vertical measure (i.e., the altitude) of a reference point.",
+                    "example": ""
+                },
+                "collectionMethodCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the method used to determine the latitude and longitude coordinates for a point on the earth.",
+                    "example": ""
+                },
+                "scale": {
+                    "type": "number",
+                    "maxLength": 9,
+                    "required": "false",
+                    "description": "The number that represents the proportional distance on the ground for one unit of measure on the map or photo. Remarks: Mandatory for all horizontal data collection methods except for methods using Global Positioning System (GPS)..",
+                    "example": ""
+                },
+                "heightDatumCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the reference datum used in determining latitude and longitude coordinates. Allowable Values: Value Meaning 001 NAD27 002 NAD83 003 WGS84.",
+                    "example": "002"
+                },
+                "collectionDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The calendar data when data were collected.",
+                    "example": "2012-04-21"
+                },
+                "commentText": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "required": "false",
+                    "description": "The text that provides additional information about the geographic coordinates.",
+                    "example": "TEST GIS COMMENTS"
+                },
+                "geometricTypeCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the geometric entity represented by one point or a sequence of latitude and longitude points. Allowable Values: Value Meaning 001 POINT 002 LINE 003 AREA 004 REGION 005 ROUTE.",
+                    "example": "001"
+                },
+                "refPointCode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the place for which geographic coordinates were established.",
+                    "example": ""
+                }
+            }
+        },
+        "AlternativeId": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId",
+                "alternativeId",
+                "alternativeIdType"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "alternativeId": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "required": "true",
+                    "description": "An alternative identification number maintained by an information management system for an environmental program.",
+                    "example": "1A"
+                },
+                "alternativeIdType": {
+                    "type": "string",
+                    "maxLength": 250,
+                    "required": "true",
+                    "description": "The type of alternative identification number (for example, STATE PERMIT NUMBER), or the abbreviated name of the environmental information system that references the alternative identification number (for example, TRIS, PCS).",
+                    "example": "PLOVER ALT ID"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 7,
+                    "required": "false",
+                    "description": "The most recent date the corresponding individual data was reported to the Source of Data.",
+                    "example": "2017-10-08"
+                }
+            }
+        },
+        "Tribe": {
+            "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
+            "properties": {
+                "programSystemAcronym": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "required": "true",
+                    "description": "The abbreviated name that represents the name of an information management system for an environmental program.",
+                    "example": "RI-PLOVER"
+                },
+                "programSystemId": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "true",
+                    "description": "The identification number, such as the permit number, assigned by an information management system that represents a facility site, waste site, operable unit, or other feature tracked by that Environmental Information System.",
+                    "example": "3977"
+                },
+                "EPAId": {
+                    "type": "number",
+                    "maxLength": 9,
+                    "required": "false",
+                    "description": "The EPA internal identifier of the tribe.",
+                    "example": "406"
+                },
+                "BIACode": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "required": "false",
+                    "description": "The code that represents the American Indian tribe, band, or Alaskan Native entity. Permissible values for the Tribal Code data element are based on the BIA official list of tribal codes, e.g., 007 (St. Regis Band of Mohawk Indians of New York) or F09 (Birch Creek Tribe).",
+                    "example": "162"
+                },
+                "tribeName": {
+                    "type": "string",
+                    "maxLength": 350,
+                    "required": "false",
+                    "description": "The name of the American Indian tribe, band, or Alaskan Native entity. Permissible values for the Tribal Name data element are based on the BIA federally recognized tribal list, e.g., St. Regis Band of Mohawk Indians of New York.",
+                    "example": "NATIVE VILLAGE OF FORT YUKON"
+                },
+                "lastReportedDate": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "required": "false",
+                    "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
+                    "example": "2012-04-21"
+                }
+            }
+        }
+    }
+}

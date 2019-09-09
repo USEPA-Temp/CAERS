@@ -1,20 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import javax.activation.DataHandler;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
+import gov.epa.cef.web.client.soap.DocumentDataSource;
+import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReportStatus;
@@ -23,44 +10,59 @@ import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
-import gov.epa.cef.web.soap.DocumentDataSource;
-import gov.epa.cef.web.soap.SignatureServiceClient;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import javax.activation.DataHandler;
+import java.io.File;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private EmissionsReportRepository erRepo;
-    
+
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
-    
+
     @Autowired
     private CefConfig cefConfig;
-    
+
     @Autowired
     private SignatureServiceClient signatureServiceClient;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private CersXmlService cersXmlService;
-    
+
+    @Autowired
+    private FacilitySiteService facilitySiteService;
+
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
     @Override
-    public List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId) {        
+    public List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId) {
         return findByFacilityEisProgramId(facilityEisProgramId, false);
     }
-    
+
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -71,7 +73,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         if (addReportForCurrentYear) {
         	addCurrentYear(emissionReports, facilityEisProgramId);
         }
-        
+
         List<EmissionsReportDto> dtoList = emissionsReportMapper.toDtoList(emissionReports);
         return dtoList;
     }
@@ -95,11 +97,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Override
     public EmissionsReportDto findMostRecentByFacilityEisProgramId(String facilityEisProgramId) {
 
-        EmissionsReport emissionsReport = findMostRecentEmissionsReport(facilityEisProgramId);
-        return emissionsReportMapper.toDto(emissionsReport);
+        return findMostRecentEmissionsReport(facilityEisProgramId)
+            .map(emissionsReport -> emissionsReportMapper.toDto(emissionsReport))
+            .orElse(null);
     }
-    
-    
+
     @Override
     public String submitToCromerr(Long emissionsReportId, String activityId) throws ApplicationException {
         String cromerrDocumentId=null;
@@ -138,27 +140,45 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     /**
      * Create a copy of the emissions report for the current year based on the specified facility and year.  The copy of the report is NOT saved to the database.
-     * @param facilitySiteId 
-     * @param currentReportYear The year of the report that is being created
+     * @param facilityEisProgramId
+     * @param reportYear The year of the report that is being created
      * @return
      */
     @Override
-    public EmissionsReport createEmissionReportCopy(String facilityEisProgramId, Integer reportYear) {
+    public EmissionsReport createEmissionReportCopy(String facilityEisProgramId, short reportYear) {
 
-        EmissionsReport mostRecentReport = findMostRecentEmissionsReport(facilityEisProgramId);
-        if (mostRecentReport != null) {
-        	EmissionsReport reportCopy = new EmissionsReport(mostRecentReport);
-	    	reportCopy.setYear(reportYear.shortValue());
-	    	reportCopy.setStatus(ReportStatus.IN_PROGRESS);
-	    	reportCopy.setValidationStatus(ValidationStatus.UNVALIDATED);
-	    	reportCopy.clearId();
-	    	return reportCopy;
-        } else {
-        	return null;
-        }
+        return findMostRecentEmissionsReport(facilityEisProgramId)
+            .map(mostRecentReport -> {
+
+                EmissionsReport cloneReport = new EmissionsReport(mostRecentReport);
+                cloneReport.setYear(reportYear);
+                cloneReport.setStatus(ReportStatus.IN_PROGRESS);
+                cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+                cloneReport.clearId();
+
+                return this.erRepo.save(cloneReport);
+
+            })
+            .orElseGet(() -> this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
+                .map(programFacility -> {
+
+                    EmissionsReport newReport = new EmissionsReport();
+                    newReport.setYear(reportYear);
+                    newReport.setStatus(ReportStatus.IN_PROGRESS);
+                    newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+
+                    newReport.setFrsFacilityId(programFacility.getRegistryId());
+                    newReport.setEisProgramId(programFacility.getProgramSystemId());
+                    newReport.setAgencyCode(programFacility.getAgencyId());
+
+                    newReport.setNeedsFacilitySiteInfo(true);
+
+                    return this.erRepo.save(newReport);
+                })
+                .orElse(null)
+            );
     }
-    
-    
+
 
     /**
      * Save the emissions report to the database.
@@ -170,19 +190,19 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	    	EmissionsReport savedReport = erRepo.save(emissionsReport);
 	    	return emissionsReportMapper.toDto(savedReport);
     }
-    
-    
+
+
     /**
      * Find the most recent emissions report model object for the given facility
      * @param facilityEisProgramId
      * @return The EmissionsReport model object
      */
-    private EmissionsReport findMostRecentEmissionsReport(String facilityEisProgramId) {
-        EmissionsReport mostRecentReport = erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
-                .stream().findFirst().orElse(null);
-        return mostRecentReport;
+    private Optional<EmissionsReport> findMostRecentEmissionsReport(String facilityEisProgramId) {
+
+        return erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
+            .stream().findFirst();
     }
-    
+
 
     /**
      * Add an emissions report to the list if one does not exist for the current year
@@ -192,18 +212,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         short currentYear = (short) calendar.get(Calendar.YEAR);
-        
+
         if (!reportYearExists(currentYear, emissionReports)) {
 	        EmissionsReport newReport = new EmissionsReport();
 	        newReport.setEisProgramId(facilityEisProgramId);
 	        newReport.setStatus(ReportStatus.NEW);
 	        newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
 	        newReport.setYear(currentYear);
-	        
+
 	        emissionReports.add(newReport);
         }
 	}
-    
+
 
 
     /**
@@ -214,7 +234,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      */
     private boolean reportYearExists(short year, List<EmissionsReport> emissionReports) {
         for (EmissionsReport rpt : emissionReports) {
-	    	if (rpt.getYear() != null && rpt.getYear().shortValue() ==  year) {
+	    	if (rpt.getYear() != null && rpt.getYear() ==  year) {
 	    		return true;
 	    	}
         }

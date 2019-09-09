@@ -7,6 +7,9 @@ import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { Router } from '@angular/router';
 
+import {FacilitySiteService} from "../../../../core/services/facility-site.service";
+import {FacilitySite} from "../../../../shared/models/facility-site";
+
 @Component({
   selector: 'app-emissions-reporting-list-buttons',
   templateUrl: './emissions-reporting-list-buttons.component.html',
@@ -18,6 +21,7 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
 
   constructor(public userContext: UserContextService,
               private reportService: EmissionsReportingService,
+              private facilityService: FacilitySiteService,
               public router: Router,
               private modalService: NgbModal) { }
 
@@ -40,10 +44,45 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
   createNewReport() {
 
     const modalWindow = this.modalService.open(BusyModalComponent, { size: 'lg' });
-    modalWindow.componentInstance.message = `Please wait while we generate your new report.`;
+    modalWindow.componentInstance.message = "Please wait while we generate your new report.";
 
     const currentYear: number = new Date().getFullYear();
-    this.reportService.createReport(this.facility.programId, currentYear).subscribe(newReport => this.reportCompleted(newReport));
+    this.reportService.createReport(this.facility.programId, currentYear)
+        .subscribe(reportResp => {
+
+            if (reportResp.status === 204) {
+
+                // 204 No Content
+                // no previous report, no FRS data
+                this.modalService.dismissAll();
+
+
+            } else if (reportResp.status === 200) {
+
+                // 200 OK
+                // previous report was copied
+                this.reportCompleted(reportResp.body);
+
+            } else if (reportResp.status === 202) {
+
+                // 202 Accepted
+                // pull more data from FRS
+                modalWindow.componentInstance.message =
+                    "Please wait: Searching for Facility Data in EPA's Facility Registry System to populate your Emissions Report";
+
+                let newReport = reportResp.body;
+
+                let facilitySite = new FacilitySite();
+                facilitySite.eisProgramId = newReport.eisProgramId;
+                facilitySite.emissionsReport = newReport;
+
+                this.facilityService.createFacilitySite(facilitySite)
+                    .subscribe(facilitySite => {
+
+                        this.reportCompleted(newReport);
+                    });
+            }
+        });
   }
 
 

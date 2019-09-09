@@ -1,4 +1,4 @@
-package gov.epa.cef.web.soap;
+package gov.epa.cef.web.client.soap;
 
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import net.exchangenetwork.wsdl.register.program_facility._1.RegisterProgramFacilityService;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class RegisterFacilityClient extends AbstractClient {
+public class RegisterFacilityClient extends AbstractClient<RegisterProgramFacilityService> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterFacilityClient.class);
 
@@ -32,8 +32,8 @@ public class RegisterFacilityClient extends AbstractClient {
      * @return
      */
     protected RegisterProgramFacilityService getClient(URL endpoint, boolean mtom, boolean chunking) {
-        return (RegisterProgramFacilityService) this.getClient(endpoint.toString(),
-                RegisterProgramFacilityService.class, mtom, chunking);
+
+        return this.getClient(endpoint.toString(), RegisterProgramFacilityService.class, mtom, chunking);
     }
 
     /**
@@ -71,7 +71,7 @@ public class RegisterFacilityClient extends AbstractClient {
             throw this.handleException(e, LOGGER);
         }
     }
-    
+
     /**
      * Retrieve CDX facilities by id
      * @param endpoint
@@ -89,7 +89,7 @@ public class RegisterFacilityClient extends AbstractClient {
             throw this.handleException(e, LOGGER);
         }
     }
-    
+
     /**
      * Retrieve CDX facilities associated with the user
      * @param endpoint
@@ -109,7 +109,7 @@ public class RegisterFacilityClient extends AbstractClient {
             throw this.handleException(e, LOGGER);
         }
     }
-    
+
     /**
      * Retrieve NAICS codes for a program
      * @param endpoint

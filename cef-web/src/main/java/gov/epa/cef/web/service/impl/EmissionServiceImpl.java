@@ -1,16 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -22,32 +11,42 @@ import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 
 @Service
 public class EmissionServiceImpl implements EmissionService {
-    
+
     Logger LOGGER = LoggerFactory.getLogger(EmissionServiceImpl.class);
-    
+
     @Autowired
     private EmissionRepository emissionRepo;
-    
+
     @Autowired
     private EmissionsByFacilityAndCASRepository emissionsByFacilityAndCASRepo;
-    
+
     @Autowired
     private EmissionsReportRepository emissionsReportRepo;
-    
+
     @Autowired
     private EmissionMapper emissionMapper;
-    
+
     @Autowired
-    EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
-    
+    private EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
+
     private static final String POINT_EMISSION_RELEASE_POINT = "stack";
     private static final int TWO_DECIMAL_POINTS = 2;
-    
-    private static enum RETURN_CODE {NO_EMISSIONS_REPORT, NO_EMISSIONS_REPORTED_FOR_CAS, EMISSIONS_FOUND}
-    
+
+    private enum RETURN_CODE {NO_EMISSIONS_REPORT, NO_EMISSIONS_REPORTED_FOR_CAS, EMISSIONS_FOUND}
+
     /**
      * Create a new emission from a DTO object
      */
@@ -58,7 +57,7 @@ public class EmissionServiceImpl implements EmissionService {
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
         return result;
     }
-    
+
     /**
      * Update an existing emission from a DTO
      */
@@ -70,7 +69,7 @@ public class EmissionServiceImpl implements EmissionService {
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
         return result;
     }
-    
+
     /**
      * Delete an Emission for a given id
      * @param id
@@ -78,23 +77,23 @@ public class EmissionServiceImpl implements EmissionService {
     public void delete(Long id) {
         emissionRepo.deleteById(id);
     }
-    
+
     /**
      * Find Emissions by Facility and CAS Number.
      * This method is primarily intended to provide the interface to TRIMEweb so that TRI users can
      * see what emissions have been reported to the Common Emissions Form for the current
      * facility and chemical that they are working on.
-     * 
+     *
      * @param frsFacilityId
      * @param casNumber
      * @return
      */
     public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId) {
         LOGGER.debug("findEmissionsByFacilityAndCAS - Entering");
-        
+
         EmissionsByFacilityAndCASDto emissionsByFacilityDto = new EmissionsByFacilityAndCASDto();
         Short latestReportYear = null;
-        
+
         //First find the most recent report for the the given facility so we can check THAT report for emissions
         List<EmissionsReport> emissionsReports = emissionsReportRepo.findByFrsFacilityId(frsFacilityId, Sort.by(Sort.Direction.DESC, "year"));
         if (!emissionsReports.isEmpty()) {
@@ -106,11 +105,11 @@ public class EmissionServiceImpl implements EmissionService {
             emissionsByFacilityDto.setCode(RETURN_CODE.NO_EMISSIONS_REPORT.toString());
             return emissionsByFacilityDto;
         }
-        
-        List<EmissionsByFacilityAndCAS> emissionsByFacilityAndCAS = 
+
+        List<EmissionsByFacilityAndCAS> emissionsByFacilityAndCAS =
                 emissionsByFacilityAndCASRepo.findByFrsFacilityIdAndPollutantCasIdAndYear(frsFacilityId, pollutantCasId, latestReportYear);
-        
-        //if there are any emissions that match the facility and CAS Id for the most recent year, 
+
+        //if there are any emissions that match the facility and CAS Id for the most recent year,
         //then loop through them and add them to the point / nonPoint totals
         if (emissionsByFacilityAndCAS.isEmpty()) {
             LOGGER.debug("findEmissionsByFacilityAndCAS - No emissions for the given CAS number were reported on the most recent report for the facility");
@@ -124,20 +123,20 @@ public class EmissionServiceImpl implements EmissionService {
             //populate the common parts of the DTO object by mapping the first result.
             //since we're matching on facility and CAS, all of these fields should be the same for each instance of the list
             emissionsByFacilityDto = emissionsByFacilityAndCASMapper.toDto(emissionsByFacilityAndCAS.get(0));
-            
+
             BigDecimal stackEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
             BigDecimal fugitiveEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
-               
+
             for (EmissionsByFacilityAndCAS currentEmissions :emissionsByFacilityAndCAS) {
                 //if the release point type is fugitive - add it to the "fugitive" emissions. Otherwise add the amount
                 //to the stack release emissions
-                if (StringUtils.equalsIgnoreCase(POINT_EMISSION_RELEASE_POINT, currentEmissions.getReleasePointType())) { 
+                if (StringUtils.equalsIgnoreCase(POINT_EMISSION_RELEASE_POINT, currentEmissions.getReleasePointType())) {
                     stackEmissions = stackEmissions.add(currentEmissions.getApportionedEmissions());
                 } else {
                     fugitiveEmissions = fugitiveEmissions.add(currentEmissions.getApportionedEmissions());
                 }
             }
-            
+
             //Round both of the values to the nearest hundredth
             emissionsByFacilityDto.setStackEmissions(stackEmissions);
             emissionsByFacilityDto.setFugitiveEmissions(fugitiveEmissions);

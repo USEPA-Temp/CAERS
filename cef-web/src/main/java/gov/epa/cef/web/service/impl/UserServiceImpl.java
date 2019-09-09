@@ -1,13 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
-import java.net.URL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import gov.epa.cdx.shared.security.ApplicationUser;
+import gov.epa.cef.web.client.soap.SecurityTokenClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.security.ApplicationSecurityUtils;
@@ -15,25 +9,30 @@ import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.TokenDto;
 import gov.epa.cef.web.service.dto.UserDto;
 import gov.epa.cef.web.service.mapper.ApplicationUserMapper;
-import gov.epa.cef.web.soap.SecurityTokenClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.net.URL;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
-    
+
     @Autowired
     SecurityTokenClient tokenClient;
-    
+
     @Autowired
     private CefConfig cefConfig;
-    
+
     @Autowired
     private ApplicationSecurityUtils applicationSecurityUtils;
-    
+
     @Autowired
     private ApplicationUserMapper applicationUserMapper;
-    
+
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.UserService#createToken(java.lang.String)
@@ -49,7 +48,7 @@ public class UserServiceImpl implements UserService {
             tokenDto=new TokenDto();
             tokenDto.setToken(token);
             tokenDto.setUserRoleId(userRoleId);
-            tokenDto.setBaseServiceUrl(cefConfig.getCdxConfig().getFrsBaseUrl());            
+            tokenDto.setBaseServiceUrl(cefConfig.getCdxConfig().getFrsBaseUrl());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
         return tokenDto;
     }
-    
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.UserService#getCurrentUser()
      */
@@ -66,5 +65,5 @@ public class UserServiceImpl implements UserService {
         ApplicationUser applicationUser=applicationSecurityUtils.getCurrentApplicationUser();
         return applicationUserMapper.toUserDto(applicationUser);
     }
-    
+
 }

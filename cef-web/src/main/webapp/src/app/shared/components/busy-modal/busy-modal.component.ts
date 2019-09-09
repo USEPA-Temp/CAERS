@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class BusyModalComponent implements OnInit {
     @Input() message: string;
 
-  constructor() { }
+  constructor() {  }
 
   ngOnInit() {
   }

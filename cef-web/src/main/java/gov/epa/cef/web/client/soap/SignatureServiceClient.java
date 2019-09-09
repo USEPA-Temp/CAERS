@@ -1,4 +1,4 @@
-package gov.epa.cef.web.soap;
+package gov.epa.cef.web.client.soap;
 
 import net.exchangenetwork.wsdl.register.sign._1.*;
 import org.slf4j.Logger;
@@ -14,12 +14,13 @@ import java.net.URL;
  * @author dfladung
  */
 @Component
-public class SignatureServiceClient extends AbstractClient {
+public class SignatureServiceClient extends AbstractClient<RegisterSignService> {
 
     private static final Logger logger = LoggerFactory.getLogger(SignatureServiceClient.class);
 
     protected RegisterSignService getClient(URL endpoint, boolean mtom, boolean chunking) {
-        return (RegisterSignService) this.getClient(endpoint.toString(), RegisterSignService.class, mtom, chunking);
+
+        return this.getClient(endpoint.toString(), RegisterSignService.class, mtom, chunking);
     }
 
     public String sign(URL endpoint, String token, String activityId, SignatureDocumentType document) throws ApplicationException {
@@ -42,7 +43,7 @@ public class SignatureServiceClient extends AbstractClient {
             throw this.handleException(e, logger);
         }
     }
-    
+
     public String authenticate(URL endpoint, String adminUserId, String adminPassword) throws ApplicationException {
         try {
             return getClient(endpoint, false, true).authenticate(adminUserId, adminPassword, DOMAIN, AUTH_METHOD);

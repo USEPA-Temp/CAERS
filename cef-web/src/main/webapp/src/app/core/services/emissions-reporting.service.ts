@@ -1,5 +1,5 @@
 import { EmissionsReport } from 'src/app/shared/models/emissions-report';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -27,9 +27,14 @@ export class EmissionsReportingService {
         return this.http.get<EmissionsReport>(url);
     }
 
-    /** GET request to the server to create a report for the current year */
-    createReport(eisFacilityId: string, reportYear: number): Observable<EmissionsReport> {
-        const url = `${this.baseUrl}/create/${eisFacilityId}/${reportYear}`;
-        return this.http.get<EmissionsReport>(url);
+    /** POST request to the server to create a report for the current year */
+    createReport(eisFacilityId: string, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
+        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
+        return this.http.post<EmissionsReport>(url, {
+            year: reportYear,
+            eisProgramId: eisFacilityId
+        }, {
+            observe: "response"
+        });
     }
 }

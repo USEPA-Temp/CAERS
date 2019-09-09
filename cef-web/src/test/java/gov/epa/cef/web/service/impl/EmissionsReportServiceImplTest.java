@@ -130,7 +130,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     @Test
     public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() {
     	EmissionsReport originalEmissionsReport = createHydratedEmissionsReport();
-    	EmissionsReport emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("ABC", 2020);
+    	EmissionsReport emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("ABC", (short) 2020);
     	assertEquals(ReportStatus.IN_PROGRESS, emissionsReportCopy.getStatus());
     	assertEquals(ValidationStatus.UNVALIDATED, emissionsReportCopy.getValidationStatus());
     	assertEquals("2020", emissionsReportCopy.getYear().toString());
@@ -145,7 +145,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
-    	EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("DEF", 2020);
+    	EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("DEF", (short) 2020);
     	assertEquals(null, nullEmissionsReportCopy);
     }
 

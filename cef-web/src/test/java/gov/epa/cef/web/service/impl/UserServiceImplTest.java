@@ -8,7 +8,7 @@ import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.dto.TokenDto;
 import gov.epa.cef.web.service.dto.UserDto;
 import gov.epa.cef.web.service.mapper.ApplicationUserMapper;
-import gov.epa.cef.web.soap.SecurityTokenClient;
+import gov.epa.cef.web.client.soap.SecurityTokenClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
