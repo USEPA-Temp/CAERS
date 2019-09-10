@@ -16,6 +16,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FacilitySiteResolverService } from 'src/app/core/services/facility-site-resolver.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { EmissionDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emission-details/emission-details.component';
 
 const reportRoutes: Routes = [
   {
@@ -61,6 +62,14 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.EMISSIONS_PROCESS}/:processId`,
             component: EmissionsProcessDetailsComponent,
             data: { title: 'Emissions Process Details', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}`,
+            component: EmissionDetailsComponent,
+            data: { title: 'Emission Details', breadcrumb: '&year Emissions Report', create: 'true'}
+          }, {
+            path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}/:emissionId`,
+            component: EmissionDetailsComponent,
+            data: { title: 'Emission Details', breadcrumb: '&year Emissions Report', create: 'false'}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}/:releasePointId`,
             component: ReleasePointDetailsComponent,

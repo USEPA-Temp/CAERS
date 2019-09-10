@@ -11,7 +11,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td><a routerLink="." (click)="openEditEmissionModal(item)">{{item.pollutant.pollutantName}}</a></td>
+      <td><a [routerLink]="[baseUrl, item.id]">{{item.pollutant.pollutantName}}</a></td>
       <td>{{item.pollutant.pollutantCode}}</td>
       <td>{{item.pollutant.pollutantCasId}}</td>
       <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
@@ -20,7 +20,7 @@
       <td></td>
       <td></td>
       <td></td>
-      <td><a routerLink="." (click)="openCreateEmissionModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+      <td><a [routerLink]="[baseUrl]"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
     </tr>
     </tbody>
   </table>

@@ -1,0 +1,138 @@
+<div>
+    <div class="card mb-3">
+        <div class="card-header text-center">
+            <strong>Process Information</strong>
+        </div>
+        <div class="card-body">
+          <div class="row pb-2" *ngIf="process && reportingPeriod">
+            <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
+            <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
+            <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode.shortName}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
+            <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
+          </div>
+
+          <div class="row pb-5" *ngIf="reportingPeriod">
+            <div class="col-sm-6 col-md-2"><strong>Calculation Parameter:</strong></div>
+            <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode.description}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Calculation Value:</strong></div>
+            <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterValue}}</div>
+            <div class="col-sm-6 col-md-2"><strong>Calculation UoM:</strong></div>
+            <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom.description}}</div>
+          </div>
+        </div>
+    </div>
+
+    <form [formGroup]="emissionForm" (ngSubmit)="onSubmit()">
+        <div class="card mb-3">
+            <div class="card-header text-center">
+                <strong>Pollutant Information</strong>
+                <div class="float-right" *ngIf="emissionForm.disabled && !createMode">
+                    <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label for="pollutantSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant:</strong></label>
+                    <div class="col-sm-8 col-lg-5">
+                        <input id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
+                        <app-validation-message [control]="emissionForm.controls.pollutant"></app-validation-message>
+                    </div>
+                    <label for="pollutantCodeInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant Code:</strong></label>
+                    <div class="col-sm-8 col-lg-3">
+                        <input type="text" class="form-control" id="pollutantCodeInput" [value]="emissionForm.value.pollutant?.pollutantCode" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="pollutantNameInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant Name:</strong></label>
+                    <div class="col-sm-8 col-lg-5">
+                        <input type="text" class="form-control" id="pollutantNameInput" [value]="emissionForm.value.pollutant?.pollutantName" disabled>
+                    </div>
+                    <label for="pollutantCasIdInput" class="col-sm-4 col-lg-2 col-form-label"><strong>CAS ID:</strong></label>
+                    <div class="col-sm-8 col-lg-3">
+                        <input type="text" class="form-control" id="pollutantCasIdInput" [value]="emissionForm.value.pollutant?.pollutantCasId" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header text-center">
+                <strong>Calculation Information</strong>
+                <div class="float-right" *ngIf="emissionForm.disabled && !createMode">
+                    <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row pb-2">
+                    
+                    <label for="emissionsCalcMethodCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Calculation Method:</strong></label>
+                    <div class="col-sm-8 col-lg-10">
+                        <select type="text" class="form-control" id="emissionsCalcMethodCodeSelect" formControlName="emissionsCalcMethodCode" [compareWith]="formUtils.compareCode">
+                            <option *ngFor="let opt of methodValues" [ngValue]="opt">{{opt.description}}</option>
+                        </select>
+                        <app-validation-message [control]="emissionForm.controls.emissionsCalcMethodCode"></app-validation-message>
+                    </div>
+                </div>
+
+                <div class="row pb-2">
+                    <label for="emissionFactorInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor:</strong></label>
+                    <div class="col-sm-8 col-lg-4">
+                        <input type="number" class="form-control" id="emissionFactorInput" formControlName="emissionsFactor">
+                        <app-validation-message [control]="emissionForm.controls.emissionsFactor"></app-validation-message>
+                    </div>
+                    <label for="emissionsFactorTextInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions Factor Description:</strong></label>
+                    <div class="col-sm-8 col-lg-4">
+                        <textarea class="form-control" id="emissionsFactorTextInput" formControlName="emissionsFactorText"></textarea>
+                        <app-validation-message [control]="emissionForm.controls.emissionsFactorText"></app-validation-message>
+                    </div>
+                </div>
+
+                <div class="row pb-2">
+                    <label for="emissionsNumeratorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Numerator UoM:</strong></label>
+                    <div class="col-sm-8 col-lg-4">
+                        <select type="text" class="form-control" id="emissionsNumeratorSelect" formControlName="emissionsNumeratorUom" [compareWith]="formUtils.compareCode">
+                            <option *ngFor="let opt of numeratorUomValues" [ngValue]="opt">{{opt.code}}</option>
+                        </select>
+                        <app-validation-message [control]="emissionForm.controls.emissionsNumeratorUom"></app-validation-message>
+                    </div>
+                    <label for="emissionsDenominatorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
+                    <div class="col-sm-8 col-lg-4">
+                        <select type="text" class="form-control" id="emissionsDenominatorSelect" formControlName="emissionsDenominatorUom" [compareWith]="formUtils.compareCode">
+                            <option *ngFor="let opt of denominatorUomValues" [ngValue]="opt">{{opt.code}}</option>
+                        </select>
+                        <app-validation-message [control]="emissionForm.controls.emissionsDenominatorUom"></app-validation-message>
+                    </div>
+                </div>
+
+                <div class="row pb-2">
+                    <label for="totalEmissionsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Total Emissions:</strong></label>
+                    <div class="col-sm-8 col-lg-4">
+                        <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions">
+                        <app-validation-message [control]="emissionForm.controls.totalEmissions"></app-validation-message>
+                    </div>
+                    <label for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions UoM:</strong></label>
+                    <div class="col-sm-8 col-lg-4">
+                        <select type="text" class="form-control" id="emissionsUomCodeSelect" formControlName="emissionsUomCode" [compareWith]="formUtils.compareCode">
+                            <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                        </select>
+                        <app-validation-message [control]="emissionForm.controls.emissionsUomCode"></app-validation-message>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="emissionCommentsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Comments:</strong></label>
+                    <div class="col-sm-8 col-lg-10">
+                        <textarea rows="3" class="form-control" id="emissionCommentsInput" formControlName="comments"></textarea>
+                        <app-validation-message [control]="emissionForm.controls.comments"></app-validation-message>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="float-right pb-3 pr-3">
+        <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Cancel</button>
+        <button type="submit" class="btn btn-success" (click)="onSubmit()" [disabled]="emissionForm.disabled">Save</button>
+    </div>
+</div>
