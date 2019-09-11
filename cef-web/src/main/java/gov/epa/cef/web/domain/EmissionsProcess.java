@@ -37,7 +37,7 @@ public class EmissionsProcess extends BaseAuditEntity {
     @Column(name = "emissions_process_identifier", nullable = false, length = 20)
     private String emissionsProcessIdentifier;
 
-    @Column(name = "status_year", nullable = false)
+    @Column(name = "status_year")
     private Short statusYear;
 
     @Column(name = "scc_code", nullable = false, length = 20)

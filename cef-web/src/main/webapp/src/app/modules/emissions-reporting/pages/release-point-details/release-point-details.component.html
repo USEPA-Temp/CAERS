@@ -67,7 +67,7 @@
                         <div class="col-sm-6 col-md-2"><strong>Longitude Measure:</strong></div>
                         <div class="col-sm-6 col-md-2">{{releasePoint.longitude}}</div>
                         <div class="col-sm-6 col-md-2"><strong>Release Point Program System:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{releasePoint.programSystemCode.description}}</div>
+                        <div class="col-sm-6 col-md-2"><span *ngIf="releasePoint.programSystemCode">{{releasePoint.programSystemCode.description}}</span></div>
                     </div>
 
                     <div class="row">
