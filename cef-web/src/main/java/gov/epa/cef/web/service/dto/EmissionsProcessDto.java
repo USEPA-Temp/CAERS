@@ -17,6 +17,7 @@ public class EmissionsProcessDto implements Serializable {
     private String emissionsProcessIdentifier;
     private Short statusYear;
     private String sccCode;
+    private String sccDescription;
     private String sccShortName;
     private String description;
     private String comments;
@@ -76,6 +77,14 @@ public class EmissionsProcessDto implements Serializable {
 
     public void setSccCode(String sccCode) {
         this.sccCode = sccCode;
+    }
+
+    public String getSccDescription() {
+        return sccDescription;
+    }
+
+    public void setSccDescription(String sccDescription) {
+        this.sccDescription = sccDescription;
     }
 
     public String getSccShortName() {

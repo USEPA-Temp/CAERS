@@ -58,6 +58,15 @@ public class EmissionServiceImpl implements EmissionService {
         return result;
     }
 
+    @Override
+    public EmissionDto retrieveById(Long id) {
+
+        return this.emissionRepo
+            .findById(id)
+            .map(e -> emissionMapper.toDto(e))
+            .orElse(null);
+    }
+
     /**
      * Update an existing emission from a DTO
      */
@@ -85,7 +94,7 @@ public class EmissionServiceImpl implements EmissionService {
      * facility and chemical that they are working on.
      *
      * @param frsFacilityId
-     * @param casNumber
+     * @param pollutantCasId
      * @return
      */
     public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId) {

@@ -27,7 +27,7 @@ public class ReleasePoint extends BaseAuditEntity {
     // Fields
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "program_system_code", nullable = false)
+    @JoinColumn(name = "program_system_code")
     private ProgramSystemCode programSystemCode;
     
     @ManyToOne(fetch = FetchType.LAZY)

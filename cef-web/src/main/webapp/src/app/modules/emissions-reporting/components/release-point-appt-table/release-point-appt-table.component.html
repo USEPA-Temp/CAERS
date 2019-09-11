@@ -10,7 +10,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td><a routerLink="{{baseUrl}}/release/{{item.id}}">{{item.releasePointIdentifier}}</a></td>
+      <td><a routerLink="{{baseUrl}}/release/{{item.releasePointId}}">{{item.releasePointIdentifier}}</a></td>
       <td>{{item.releasePointTypeCode.description}}</td>
       <td>{{item.percent}}%</td>
       <td><a href="#"><fa-icon icon="trash-alt"></fa-icon></a></td>

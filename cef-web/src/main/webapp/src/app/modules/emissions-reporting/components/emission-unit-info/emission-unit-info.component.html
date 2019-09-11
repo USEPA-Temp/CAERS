@@ -23,9 +23,9 @@
             <div class="col-sm-6 col-md-2"><strong>Unit Design Capacity:</strong></div>
 			<div class="col-sm-6 col-md-2">{{emissionsUnit.designCapacity}}</div>
             <div class="col-sm-6 col-md-2"><strong>Unit Design Capacity UoM:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.unitOfMeasureCode.description}}</div>
+			<div class="col-sm-6 col-md-2"><span *ngIf="emissionsUnit.unitOfMeasureCode">{{emissionsUnit.unitOfMeasureCode.code}}</span></div>
 			<div class="col-sm-6 col-md-2"><strong>UoM Description:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.unitOfMeasureDescription}}</div>
+			<div class="col-sm-6 col-md-2"><span *ngIf="emissionsUnit.unitOfMeasureCode">{{emissionsUnit.unitOfMeasureCode.description}}</span></div>
         </div>
         
         <div class="row">

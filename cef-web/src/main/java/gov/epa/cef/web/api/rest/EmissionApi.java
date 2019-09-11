@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +34,19 @@ public class EmissionApi {
 
         EmissionDto result = emissionService.create(dto);
 
+        return new ResponseEntity<EmissionDto>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve an Emission
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    public ResponseEntity<EmissionDto> retrieveEmission(@PathVariable Long id) {
+
+        EmissionDto result = emissionService.retrieveById(id);
         return new ResponseEntity<EmissionDto>(result, HttpStatus.OK);
     }
 

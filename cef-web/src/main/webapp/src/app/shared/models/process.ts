@@ -10,6 +10,7 @@ export class Process {
   emissionsProcessIdentifier: string;
   statusYear: number;
   sccCode: string;
+  sccDescription: string;
   sccShortName: string;
   description: string;
   comments: string;

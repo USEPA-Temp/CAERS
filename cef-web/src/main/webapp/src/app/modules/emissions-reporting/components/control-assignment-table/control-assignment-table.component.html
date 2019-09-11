@@ -3,23 +3,20 @@
   <table class="table table-sm table-striped table-bordered">
     <thead class="thead-cef-medium">
     <tr>
-      <th scope="col" sortable="association.identifier" (sort)="onSort($event)">Control Assignment</th>
-      <th scope="col" sortable="association.typeDesc" (sort)="onSort($event)">Control Assignment Type</th>
-      <th scope="col" sortable="controlPath.controlType" (sort)="onSort($event)">Connection Type</th>
-      <th scope="col" sortable="controlPath.controlOrder" (sort)="onSort($event)">Control Order</th>
+      <th scope="col" sortable="identifier" (sort)="onSort($event)">Control Assignment</th>
+      <th scope="col" sortable="controlPath.description" (sort)="onSort($event)">Control Path</th>
+      <th scope="col" sortable="sequenceNumber" (sort)="onSort($event)">Control Order</th>
       <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td><a routerLink="{{baseUrl}}/{{item.association.type}}/{{item.association.id}}">{{item.association.identifier}}</a></td>
-      <td>{{item.association.typeDesc}}</td>
-      <td>{{item.controlPath.controlType}}</td>
-      <td>{{item.controlPath.controlOrder}}</td>
+      <td><a routerLink="{{baseUrl}}/item.association.type/{{item.id}}">{{item.description}}</a></td>
+      <td>{{item.controlPath.description}}</td>
+      <td>{{item.sequenceNumber}}</td>
       <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
     </tr>
     <tr>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>

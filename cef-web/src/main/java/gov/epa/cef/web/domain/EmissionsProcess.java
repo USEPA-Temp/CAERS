@@ -37,18 +37,21 @@ public class EmissionsProcess extends BaseAuditEntity {
     @Column(name = "emissions_process_identifier", nullable = false, length = 20)
     private String emissionsProcessIdentifier;
 
-    @Column(name = "status_year", nullable = false)
+    @Column(name = "status_year")
     private Short statusYear;
 
     @Column(name = "scc_code", nullable = false, length = 20)
     private String sccCode;
+
+    @Column(name = "scc_description", length = 500)
+    private String sccDescription;
 
     @Column(name = "scc_short_name", length = 100)
     private String sccShortName;
 
     @Column(name = "description", length = 200)
     private String description;
-    
+
     @Column(name = "comments", length = 200)
     private String comments;
 
@@ -57,9 +60,6 @@ public class EmissionsProcess extends BaseAuditEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
     private Set<ReportingPeriod> reportingPeriods = new HashSet<ReportingPeriod>(0);
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
-    private Set<ControlAssignment> controlAssignments = new HashSet<ControlAssignment>(0);
     
     /***
      * Default constructor
@@ -92,7 +92,14 @@ public class EmissionsProcess extends BaseAuditEntity {
         			break;
         		}
         	}
-        	this.releasePointAppts.add(new ReleasePointAppt(rp, this, originalApportionment));
+        	ControlPath cp = null;
+        	for(ControlPath newControlPath : this.emissionsUnit.getFacilitySite().getControlPaths()) {
+        		if (newControlPath.getId().equals(originalApportionment.getControlPath().getId())) {
+        			cp = newControlPath;
+        			break;
+        		}
+        	}
+        	this.releasePointAppts.add(new ReleasePointAppt(rp, this, cp, originalApportionment));
         }
 
         for (ReportingPeriod reportingPeriod : originalProcess.getReportingPeriods()) {
@@ -143,6 +150,14 @@ public class EmissionsProcess extends BaseAuditEntity {
         this.sccCode = sccCode;
     }
 
+    public String getSccDescription() {
+        return sccDescription;
+    }
+
+    public void setSccDescription(String sccDescription) {
+        this.sccDescription = sccDescription;
+    }
+
     public String getSccShortName() {
         return this.sccShortName;
     }
@@ -177,16 +192,6 @@ public class EmissionsProcess extends BaseAuditEntity {
     }
     public void setReportingPeriods(Set<ReportingPeriod> reportingPeriods) {
         this.reportingPeriods = reportingPeriods;
-    }
-    
-    
-    public Set<ControlAssignment> getControlAssignments() {
-        return controlAssignments;
-    }
-
-
-    public void setControlAssignments(Set<ControlAssignment> controlAssignments) {
-        this.controlAssignments = controlAssignments;
     }
 
 

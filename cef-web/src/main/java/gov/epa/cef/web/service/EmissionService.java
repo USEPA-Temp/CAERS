@@ -13,6 +13,13 @@ public interface EmissionService {
     public EmissionDto create(EmissionDto dto);
     
     /**
+     * Retrieve Emission by id
+     * @param id 
+     * @return
+     */
+    public EmissionDto retrieveById(Long id);
+    
+    /**
      * Update an existing Emission
      * @param dto
      * @return
