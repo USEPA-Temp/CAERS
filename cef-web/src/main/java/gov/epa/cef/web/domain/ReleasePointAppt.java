@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,6 +33,10 @@ public class ReleasePointAppt extends BaseAuditEntity {
     @Column(name = "percent", nullable = false, precision = 4, scale = 1)
     private Double percent;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "control_path_id", nullable = false)
+    private ControlPath controlPath;
+
     
     /***
      * Default constructor
@@ -45,11 +50,12 @@ public class ReleasePointAppt extends BaseAuditEntity {
      * @param newEmissionProcess The process that should be associated with this release point apportionment object
      * @param originalReleasePointAppt The release point apportionment object that is being copied
      */
-    public ReleasePointAppt(ReleasePoint newReleasePoint, EmissionsProcess newEmissionProcess, ReleasePointAppt originalReleasePointAppt) {
+    public ReleasePointAppt(ReleasePoint newReleasePoint, EmissionsProcess newEmissionProcess, ControlPath newControlPath, ReleasePointAppt originalReleasePointAppt) {
 		this.id = originalReleasePointAppt.getId();
     	this.releasePoint = newReleasePoint;
     	this.emissionsProcess = newEmissionProcess;
     	this.percent = originalReleasePointAppt.getPercent();
+    	this.controlPath = newControlPath;
     }
     
     
@@ -75,6 +81,14 @@ public class ReleasePointAppt extends BaseAuditEntity {
 
     public void setPercent(Double percent) {
         this.percent = percent;
+    }
+
+    public ControlPath getControlPath() {
+        return controlPath;
+    }
+
+    public void setControlPath(ControlPath controlPath) {
+        this.controlPath = controlPath;
     }
     
     

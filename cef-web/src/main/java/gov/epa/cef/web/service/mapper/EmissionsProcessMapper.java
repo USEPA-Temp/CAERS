@@ -27,7 +27,6 @@ public interface EmissionsProcessMapper {
     @Mapping(target = "operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
     @Mapping(target = "releasePointAppts", ignore = true)
     @Mapping(target = "reportingPeriods", ignore = true)
-    @Mapping(target = "controlAssignments", ignore = true)
     void updateFromSaveDto(EmissionsProcessSaveDto source, @MappingTarget EmissionsProcess target);
 
 }

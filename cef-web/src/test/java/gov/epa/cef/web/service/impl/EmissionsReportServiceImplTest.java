@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -213,10 +214,11 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	ControlAssignment ca = new ControlAssignment();
     	ca.setControl(control);
     	ca.setId(1L);
-    	ca.setReleasePoint(rp);
     	ca.setDescription("Control Assignment");
     	ControlPath cp = new ControlPath();
-    	cp.setAssignment(ca);
+    	Set<ControlAssignment> caSet = new HashSet<ControlAssignment>();
+    	caSet.add(ca);
+    	cp.setAssignments(caSet);
     	cp.setId(1L);
     	ca.setControlPath(cp);
     	assignments.add(ca);
