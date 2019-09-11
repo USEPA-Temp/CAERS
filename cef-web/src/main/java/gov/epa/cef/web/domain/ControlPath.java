@@ -26,8 +26,8 @@ public class ControlPath extends BaseAuditEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
     private Set<ControlAssignment> assignments;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPathParent")
-    private Set<ControlAssignment> parentAssignments;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPathChild")
+    private Set<ControlAssignment> childAssignments;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
@@ -60,14 +60,14 @@ public class ControlPath extends BaseAuditEntity {
         			break;
         		}
         	}
-        	ControlPath cpp = null;
-        	for(ControlPath newControlPathParent : this.facilitySite.getControlPaths()) {
-        		if (newControlPathParent.getId().equals(originalControlAssignment.getControlPathParent().getId())) {
-        			cpp = newControlPathParent;
+        	ControlPath cpc = null;
+        	for(ControlPath newControlPathChild : this.facilitySite.getControlPaths()) {
+        		if (newControlPathChild.getId().equals(originalControlAssignment.getControlPathChild().getId())) {
+        			cpc = newControlPathChild;
         			break;
         		}
         	}
-        	this.assignments.add(new ControlAssignment(this, c, cpp, originalControlAssignment));
+        	this.assignments.add(new ControlAssignment(this, c, cpc, originalControlAssignment));
         }
     }
 
@@ -87,12 +87,12 @@ public class ControlPath extends BaseAuditEntity {
         this.assignments = assignments;
     }
 
-    public Set<ControlAssignment> getParentAssignments() {
-        return parentAssignments;
+    public Set<ControlAssignment> getChildAssignments() {
+        return childAssignments;
     }
 
-    public void setParentAssignments(Set<ControlAssignment> parentAssignments) {
-        this.parentAssignments = parentAssignments;
+    public void setChildAssignments(Set<ControlAssignment> childAssignments) {
+        this.childAssignments = childAssignments;
     }
     
     public FacilitySite getFacilitySite() {

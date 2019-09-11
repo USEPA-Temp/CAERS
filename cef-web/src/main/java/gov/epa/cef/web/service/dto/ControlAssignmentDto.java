@@ -11,6 +11,7 @@ public class ControlAssignmentDto implements Serializable {
     private ControlPathDto controlPath;
     private String description;
     private Integer sequenceNumber;
+    private ControlPathDto controlPathChild;
 
     public Long getId() {
         return id;
@@ -50,6 +51,14 @@ public class ControlAssignmentDto implements Serializable {
 
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    public ControlPathDto getControlPathChild() {
+        return controlPathChild;
+    }
+
+    public void setControlPathChild(ControlPathDto controlPathChild) {
+        this.controlPathChild = controlPathChild;
     }
 
 }

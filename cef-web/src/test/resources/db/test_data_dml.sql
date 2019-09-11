@@ -180,13 +180,13 @@ INSERT INTO control_path (id, description, created_by, created_date, last_modifi
 INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
 	VALUES ('9999994', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
 
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
 	VALUES ('9999991', '9999991', '9999991', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
 	VALUES ('9999992', '9999991', '9999992', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
 	VALUES ('9999993', '9999991', '9999993', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_parent_id, sequence_number)
+INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
 	VALUES ('9999994', '9999992', '9999994', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
 
 --RELEASE POINT APPORTIONMENT

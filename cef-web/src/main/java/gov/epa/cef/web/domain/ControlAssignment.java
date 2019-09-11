@@ -26,8 +26,8 @@ public class ControlAssignment extends BaseAuditEntity {
     private ControlPath controlPath;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "control_path_parent_id", nullable = false)
-    private ControlPath controlPathParent;
+    @JoinColumn(name = "control_path_child_id", nullable = false)
+    private ControlPath controlPathChild;
 
     @Column(name = "description", length = 200)
     private String description;
@@ -47,11 +47,11 @@ public class ControlAssignment extends BaseAuditEntity {
      * @param control
      * @param controlAssignment
      */
-    public ControlAssignment(ControlPath controlPath, Control newControl, ControlPath newControlPathParent, ControlAssignment originalControlAssignment) {
+    public ControlAssignment(ControlPath controlPath, Control newControl, ControlPath newControlPathChild, ControlAssignment originalControlAssignment) {
     	this.id = originalControlAssignment.getId();
     	this.controlPath = controlPath;
     	this.description = originalControlAssignment.getDescription();
-    	this.controlPathParent = newControlPathParent;
+    	this.controlPathChild = newControlPathChild;
     	this.control = newControl;
     	this.sequenceNumber = originalControlAssignment.getSequenceNumber();
     }
@@ -72,12 +72,12 @@ public class ControlAssignment extends BaseAuditEntity {
         this.controlPath = controlPath;
     }
 
-    public ControlPath getControlPathParent() {
-        return controlPathParent;
+    public ControlPath getControlPathChild() {
+        return controlPathChild;
     }
 
-    public void setControlPathParent(ControlPath controlPathParent) {
-        this.controlPathParent = controlPathParent;
+    public void setControlPathChild(ControlPath controlPathChild) {
+        this.controlPathChild = controlPathChild;
     }
 
     public String getDescription() {

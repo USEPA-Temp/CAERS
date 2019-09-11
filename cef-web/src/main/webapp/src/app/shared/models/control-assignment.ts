@@ -11,4 +11,5 @@ export class ControlAssignment {
   association: EmissionsReportItem;
   description: string;
   sequenceNumber: string;
+  controlPathChild: ControlPath;
 }
