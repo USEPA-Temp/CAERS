@@ -118,6 +118,9 @@ public class FacilitySite extends BaseAuditEntity {
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<Control> controls = new HashSet<Control>(0);
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
+    private Set<ControlPath> controlPaths = new HashSet<ControlPath>(0);
 
     
     /***
@@ -172,6 +175,9 @@ public class FacilitySite extends BaseAuditEntity {
         }
         for (Control control : originalFacilitySite.getControls()) {
         	this.controls.add(new Control(this, control));
+        }
+        for (ControlPath controlPath : originalFacilitySite.getControlPaths()) {
+        	this.controlPaths.add(new ControlPath(this, controlPath));
         }
     }
     
@@ -407,6 +413,14 @@ public class FacilitySite extends BaseAuditEntity {
     public void setControls(Set<Control> controls) {
         this.controls = controls;
     }
+
+    public Set<ControlPath> getControlPaths() {
+        return controlPaths;
+    }
+
+    public void setControlPaths(Set<ControlPath> controlPaths) {
+        this.controlPaths = controlPaths;
+    }
     
     
     /***
@@ -429,6 +443,9 @@ public class FacilitySite extends BaseAuditEntity {
         }
 		for (Control control : this.controls) {
 			control.clearId();
+		}
+		for (ControlPath controlPath : this.controlPaths) {
+			controlPath.clearId();
 		}
     }
 }
