@@ -39,19 +39,19 @@ public class EmissionsUnit extends BaseAuditEntity {
     @Column(name = "unit_identifier", nullable = false, length = 20)
     private String unitIdentifier;
 
-    @Column(name = "program_system_code", nullable = false, length = 20)
+    @Column(name = "program_system_code", length = 20)
     private String programSystemCode;
 
     @Column(name = "description", length = 100)
     private String description;
 
-    @Column(name = "type_code_description", nullable = false, length = 100)
+    @Column(name = "type_code_description", length = 100)
     private String typeCodeDescription;
 
-    @Column(name = "status_year", nullable = false)
+    @Column(name = "status_year")
     private Short statusYear;
     
-    @Column(name = "design_capacity", precision = 3)
+    @Column(name = "design_capacity", precision = 4)
     private Double designCapacity;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -35,7 +35,7 @@ public class FacilitySite extends BaseAuditEntity {
     private FacilitySourceTypeCode facilitySourceTypeCode;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "program_system_code", nullable = false)
+    @JoinColumn(name = "program_system_code")
     private ProgramSystemCode programSystemCode;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,7 +61,7 @@ public class FacilitySite extends BaseAuditEntity {
     @Column(name = "description", length = 100)
     private String description;
     
-    @Column(name = "status_year", nullable = false)
+    @Column(name = "status_year")
     private Short statusYear;
     
     @Column(name = "street_address", nullable = false, length = 100)
