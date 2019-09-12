@@ -13,7 +13,7 @@
             <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
           </div>
 
-          <div class="row pb-5" *ngIf="reportingPeriod">
+          <div class="row" *ngIf="reportingPeriod">
             <div class="col-sm-6 col-md-2"><strong>Calculation Parameter:</strong></div>
             <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode.description}}</div>
             <div class="col-sm-6 col-md-2"><strong>Calculation Value:</strong></div>
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
+                <div class="row pb-2">
                     <label for="pollutantSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant:</strong></label>
                     <div class="col-sm-8 col-lg-5">
                         <input id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
@@ -96,6 +96,9 @@
                             <option *ngFor="let opt of numeratorUomValues" [ngValue]="opt">{{opt.code}}</option>
                         </select>
                         <app-validation-message [control]="emissionForm.controls.emissionsNumeratorUom"></app-validation-message>
+                        <div class="validation-message" *ngIf="efNumeratorMismatch">
+                            The Emission Factor Numerator UoM and the Total Emissions do not match - Calculation cannot be completed.
+                        </div>
                     </div>
                     <label for="emissionsDenominatorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
                     <div class="col-sm-8 col-lg-4">
@@ -103,14 +106,22 @@
                             <option *ngFor="let opt of denominatorUomValues" [ngValue]="opt">{{opt.code}}</option>
                         </select>
                         <app-validation-message [control]="emissionForm.controls.emissionsDenominatorUom"></app-validation-message>
+                        <div class="validation-message" *ngIf="efDenominatorMismatch">
+                            The Emission Factor Denominator UoM and the Calculation UoM do not match - Calculation cannot be completed.
+                        </div>
                     </div>
                 </div>
 
                 <div class="row pb-2">
                     <label for="totalEmissionsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Total Emissions:</strong></label>
                     <div class="col-sm-8 col-lg-4">
-                        <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions">
+                        <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!totalManualEntry">
                         <app-validation-message [control]="emissionForm.controls.totalEmissions"></app-validation-message>
+                        <div class="validation-message" *ngIf="emissionForm.errors && (emissionForm.dirty || emissionForm.touched)">
+                            <div *ngIf="emissionForm.getError('emissionsCalculated')">
+                                The Total Emissions must be recalculated.
+                            </div>
+                        </div>
                     </div>
                     <label for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions UoM:</strong></label>
                     <div class="col-sm-8 col-lg-4">
@@ -118,6 +129,9 @@
                             <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                         </select>
                         <app-validation-message [control]="emissionForm.controls.emissionsUomCode"></app-validation-message>
+                        <div class="validation-message" *ngIf="efNumeratorMismatch">
+                            The Emission Factor Numerator UoM and the Total Emissions do not match - Calculation cannot be completed.
+                        </div>
                     </div>
                 </div>
 
@@ -132,6 +146,9 @@
         </div>
     </form>
     <div class="float-right pb-3 pr-3">
+        <span *ngIf="!totalManualEntry && !emissionForm.disabled">
+            <button type="button" class="btn btn-success mr-2" (click)="onCalculate()">Calculate Emissions</button>
+        </span>
         <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Cancel</button>
         <button type="submit" class="btn btn-success" (click)="onSubmit()" [disabled]="emissionForm.disabled">Save</button>
     </div>
