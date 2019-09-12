@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.client.soap.SignatureServiceClient;
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
@@ -17,11 +19,17 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.util.ProgramSystemAcronyms;
+import gov.epa.client.frs.iptquery.model.ProgramFacility;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -36,6 +44,9 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -47,9 +58,23 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     @Mock
     private EmissionsReportMapper emissionsReportMapper;
 
+    @Mock
+    private CefConfig cefConfig;
+
+    @Mock
+    private SignatureServiceClient signatureServiceClient;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private CersXmlService cersXmlService;
+
+    @Mock
+    private FacilitySiteService facilitySiteService;
+
     @InjectMocks
     private EmissionsReportServiceImpl emissionsReportServiceImpl;
-
 
     private EmissionsReportDto emissionsReportDto;
 
@@ -72,6 +97,16 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         when(erRepo.findByEisProgramId("XXXX", new Sort(Sort.Direction.DESC, "year"))).thenReturn(emissionsReportList);
         when(erRepo.findByEisProgramId("ABC", new Sort(Sort.Direction.DESC, "year"))).thenReturn(previousEmissionsReportList);
         when(erRepo.findByEisProgramId("DEF", new Sort(Sort.Direction.DESC, "year"))).thenReturn(emptyEmissionsReportList);
+
+        when(erRepo.save(any())).then(AdditionalAnswers.returnsFirstArg());
+
+        ProgramFacility programFacility = new ProgramFacility();
+        programFacility.setRegistryId("Registry-FRSDATA");
+        programFacility.setProgramSystemAcronym(ProgramSystemAcronyms.EIS.name());
+        programFacility.setProgramSystemId("FRSDATA");
+        programFacility.setAgencyId("Agency-FRSDATA");
+        when(facilitySiteService.retrieveFromFrs("FRSDATA"))
+            .thenReturn(Optional.of(programFacility));
 
         emissionsReportDto=new EmissionsReportDto();
         emissionsReportDtoList=new ArrayList<>();
@@ -143,14 +178,29 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	assertNotEquals(originalFacilitySite.getId(), copyFacilitySite.getId());
     }
 
-
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
-    	EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("DEF", (short) 2020);
-    	assertEquals(null, nullEmissionsReportCopy);
+        EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("DEF", (short) 2020);
+        assertEquals(null, nullEmissionsReportCopy);
     }
 
+    @Test
+    public void createEmissionReportCopy_Should_ReturnFrsData_WhenPreviousDoesNotExist() {
 
+        EmissionsReport report =
+            this.emissionsReportServiceImpl.createEmissionReportCopy("FRSDATA", (short) 2020);
+
+        assertNotNull(report);
+
+        assertEquals(ReportStatus.IN_PROGRESS, report.getStatus());
+        assertEquals(ValidationStatus.UNVALIDATED, report.getValidationStatus());
+        assertEquals("2020", report.getYear().toString());
+        assertTrue(report.isNeedsFacilitySiteInfo());
+
+        assertEquals("Registry-FRSDATA", report.getFrsFacilityId());
+        assertEquals("FRSDATA", report.getEisProgramId());
+        assertEquals("Agency-FRSDATA", report.getAgencyCode());
+    }
 
     private EmissionsReport createHydratedEmissionsReport() {
     	EmissionsReport er = new EmissionsReport();

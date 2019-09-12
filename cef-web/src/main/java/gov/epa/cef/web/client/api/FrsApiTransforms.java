@@ -4,6 +4,7 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.client.frs.iptquery.model.Contact;
 import gov.epa.client.frs.iptquery.model.Naics;
@@ -28,7 +29,10 @@ public class FrsApiTransforms {
             result.setCountryCode(pf.getCountryISO31661Alpha2());
 
             result.setStatusYear(pf.getOperatingStatusYear() == null ? null : pf.getOperatingStatusYear().shortValue());
-            result.setStateCode(pf.getOperatingStatus());
+
+            OperatingStatusCode statusCode = new OperatingStatusCode();
+            statusCode.setCode(pf.getOperatingStatus() == null ? "OP" : pf.getOperatingStatus());
+            result.setOperatingStatusCode(statusCode);
 
             ProgramSystemCode programSystemCode = new ProgramSystemCode();
             programSystemCode.setCode(pf.getFacilitySourceSystemProgramCode());

@@ -50,5 +50,4 @@ public class FrsApiClient {
         return this.client.queryProgramFacilityGet(this.config.getNaasUser(), this.config.getNaasPassword(),
             null, ProgramSystemAcronyms.EIS.name(), eisProgramId).stream().findFirst();
     }
-
 }
