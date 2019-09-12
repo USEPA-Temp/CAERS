@@ -15,6 +15,8 @@ import java.net.URL;
 @ConfigurationProperties(prefix = "frs")
 public class FrsConfig {
 
+    private boolean debugging = false;
+
     @NotNull
     private URL facilityIptEndpoint;
 
@@ -23,9 +25,6 @@ public class FrsConfig {
 
     @NotBlank
     private String naasPassword;
-
-    @NotNull
-    private URL naasTokenUrl;
 
     @NotBlank
     private String naasUser;
@@ -60,16 +59,6 @@ public class FrsConfig {
         this.naasPassword = naasPassword;
     }
 
-    public URL getNaasTokenUrl() {
-
-        return naasTokenUrl;
-    }
-
-    public void setNaasTokenUrl(URL naasTokenUrl) {
-
-        this.naasTokenUrl = naasTokenUrl;
-    }
-
     public String getNaasUser() {
 
         return naasUser;
@@ -78,5 +67,15 @@ public class FrsConfig {
     public void setNaasUser(String naasUser) {
 
         this.naasUser = naasUser;
+    }
+
+    public boolean isDebugging() {
+
+        return debugging;
+    }
+
+    public void setDebugging(boolean debugging) {
+
+        this.debugging = debugging;
     }
 }

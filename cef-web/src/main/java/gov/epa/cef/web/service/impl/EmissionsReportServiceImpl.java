@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
@@ -145,7 +146,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     @Override
-    public EmissionsReport createEmissionReportCopy(String facilityEisProgramId, short reportYear) {
+    public EmissionsReport createEmissionReportCopy(String facilityEisProgramId,
+                                                    short reportYear,
+                                                    ApplicationUser appUser) {
 
         return findMostRecentEmissionsReport(facilityEisProgramId)
             .map(mostRecentReport -> {
@@ -169,7 +172,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
                     newReport.setFrsFacilityId(programFacility.getRegistryId());
                     newReport.setEisProgramId(programFacility.getProgramSystemId());
-                    newReport.setAgencyCode(programFacility.getAgencyId());
+                    newReport.setAgencyCode(appUser.getClientId());
 
                     newReport.setNeedsFacilitySiteInfo(true);
 

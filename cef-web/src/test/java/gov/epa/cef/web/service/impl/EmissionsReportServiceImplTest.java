@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Control;
@@ -37,6 +38,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -80,6 +82,8 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     private List<EmissionsReportDto> emissionsReportDtoList;
 
+    private ApplicationUser applicationUser;
+
     @Before
     public void init(){
         EmissionsReport emissionsReport = new EmissionsReport();
@@ -112,6 +116,9 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         emissionsReportDtoList=new ArrayList<>();
         when(emissionsReportMapper.toDto(emissionsReport)).thenReturn(emissionsReportDto);
         when(emissionsReportMapper.toDtoList(emissionsReportList)).thenReturn(emissionsReportDtoList);
+
+        ApplicationUser appUser = new ApplicationUser("fred.flintstone", Collections.emptyList());
+        appUser.setClientId("BR");
     }
 
     @Test
@@ -166,7 +173,8 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     @Test
     public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() {
     	EmissionsReport originalEmissionsReport = createHydratedEmissionsReport();
-    	EmissionsReport emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("ABC", (short) 2020);
+    	EmissionsReport emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
+    	    "ABC", (short) 2020, this.applicationUser);
     	assertEquals(ReportStatus.IN_PROGRESS, emissionsReportCopy.getStatus());
     	assertEquals(ValidationStatus.UNVALIDATED, emissionsReportCopy.getValidationStatus());
     	assertEquals("2020", emissionsReportCopy.getYear().toString());
@@ -180,7 +188,8 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
-        EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("DEF", (short) 2020);
+        EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
+            "DEF", (short) 2020, this.applicationUser);
         assertEquals(null, nullEmissionsReportCopy);
     }
 
@@ -188,7 +197,8 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     public void createEmissionReportCopy_Should_ReturnFrsData_WhenPreviousDoesNotExist() {
 
         EmissionsReport report =
-            this.emissionsReportServiceImpl.createEmissionReportCopy("FRSDATA", (short) 2020);
+            this.emissionsReportServiceImpl.createEmissionReportCopy(
+                "FRSDATA", (short) 2020, this.applicationUser);
 
         assertNotNull(report);
 

@@ -8,7 +8,7 @@
             "email": "james.chilton@cgifederal.com"
         }
     },
-    "basePath": "http://localhost/facilityiptquery/v1/FRS",
+    "basePath": "http://localhost/facilityiptqueryprd/v1/FRS",
     "tags": [
         {
             "name": "FRS"
@@ -276,6 +276,9 @@
                 ],
                 "summary": "This service is used to search for Program Facility GIS data in FRS.",
                 "description": "Users can search for Program Facility GIS in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -331,6 +334,9 @@
                 ],
                 "summary": "This service is used to search for Interest data in FRS.",
                 "description": "Users can search for Interest in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -386,6 +392,9 @@
                 ],
                 "summary": "This service is used to search for Contact data in FRS.",
                 "description": "Users can search for Contact in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -441,6 +450,9 @@
                 ],
                 "summary": "This service is used to search for Organization data in FRS.",
                 "description": "Users can search for Organization in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -496,6 +508,9 @@
                 ],
                 "summary": "This service is used to search for Mailing Address data in FRS.",
                 "description": "Users can search for Mailing Address in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -551,6 +566,9 @@
                 ],
                 "summary": "This service is used to search for SIC data in FRS.",
                 "description": "Users can search for SIC in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -606,6 +624,9 @@
                 ],
                 "summary": "This service is used to search for NAICs data in FRS.",
                 "description": "Users can search for NAICs in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -661,6 +682,9 @@
                 ],
                 "summary": "This service is used to search for Alternative Name data in FRS.",
                 "description": "Users can search for Alternative Name in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -712,6 +736,9 @@
                 ],
                 "summary": "This service is used to search for Alternative ID data in FRS.",
                 "description": "Users can search for Alternative ID in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -769,6 +796,9 @@
                 ],
                 "summary": "This service is used to search for SIC data in FRS.",
                 "description": "Users can search for SIC in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -826,6 +856,9 @@
                 ],
                 "summary": "This service is used to search for Emissions Unit data in FRS.",
                 "description": "Users can search for Emissions Unit in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -895,6 +928,9 @@
                 ],
                 "summary": "This service is used to search for Release Point data in FRS.",
                 "description": "Users can search for Release Point in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -964,6 +1000,9 @@
                 ],
                 "summary": "This service is used to search for Sub-facility Association data in FRS.",
                 "description": "Users can search for Sub-facility Association in the FRS system, based on a variety of search criteria",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -1033,6 +1072,9 @@
                 ],
                 "summary": "This service is used to search for Emissions Process data in FRS.",
                 "description": "Users can search for Emissions Process in the FRS system, based on a variety of search criteria.",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -1102,6 +1144,9 @@
                 ],
                 "summary": "This service is used to search for Emissions Control data in FRS.",
                 "description": "Users can search for Emissions Control in the FRS system, based on a variety of search criteria.",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",
@@ -1171,6 +1216,9 @@
                 ],
                 "summary": "This service is used to search for Pollutant data in FRS.",
                 "description": "Users can search for Pollutant data in the FRS system, based on a variety of search criteria.",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "UserId",

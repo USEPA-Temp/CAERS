@@ -29,6 +29,9 @@ public class FrsApiClient {
 
         ApiClient apiClient = new ApiClient();
         apiClient.setBasePath(this.config.getFacilityIptEndpoint().toString());
+        if (this.config.isDebugging()) {
+            apiClient.setDebugging(true);
+        }
 
         this.client = new FrsApi(apiClient);
     }

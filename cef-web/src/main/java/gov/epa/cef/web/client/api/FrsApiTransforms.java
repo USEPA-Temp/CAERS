@@ -1,5 +1,6 @@
 package gov.epa.cef.web.client.api;
 
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
@@ -9,21 +10,24 @@ import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.client.frs.iptquery.model.Contact;
 import gov.epa.client.frs.iptquery.model.Naics;
 import gov.epa.client.frs.iptquery.model.ProgramFacility;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.function.Function;
 
 public class FrsApiTransforms {
 
-    public static Function<ProgramFacility, FacilitySite> toFacilitySite() {
+    public static Function<ProgramFacility, FacilitySite> toFacilitySite(EmissionsReport report) {
 
         return pf -> {
 
             FacilitySite result = new FacilitySite();
+            result.setEmissionsReport(report);
             result.setFrsFacilityId(pf.getRegistryId());
             result.setEisProgramId(pf.getProgramSystemId());
             result.setName(pf.getPrimaryName());
             result.setStreetAddress(pf.getLocationAddress());
             result.setCity(pf.getCityName());
+            result.setStateCode(pf.getStateCode());
             result.setPostalCode(pf.getPostalCode());
             result.setCounty(pf.getCountyName());
             result.setCountryCode(pf.getCountryISO31661Alpha2());
@@ -31,17 +35,20 @@ public class FrsApiTransforms {
             result.setStatusYear(pf.getOperatingStatusYear() == null ? null : pf.getOperatingStatusYear().shortValue());
 
             OperatingStatusCode statusCode = new OperatingStatusCode();
-            statusCode.setCode(pf.getOperatingStatus() == null ? "OP" : pf.getOperatingStatus());
+            statusCode.setCode(StringUtils.defaultIfBlank(pf.getOperatingStatus(), "OP"));
             result.setOperatingStatusCode(statusCode);
 
-            ProgramSystemCode programSystemCode = new ProgramSystemCode();
-            programSystemCode.setCode(pf.getFacilitySourceSystemProgramCode());
-            result.setProgramSystemCode(programSystemCode);
+            String pscode = pf.getFacilitySourceSystemProgramCode();
+            if (StringUtils.isNotBlank(pscode)) {
+
+                ProgramSystemCode programSystemCode = new ProgramSystemCode();
+                programSystemCode.setCode(pscode);
+                result.setProgramSystemCode(programSystemCode);
+            }
 
             // TODO lacks precision
             result.setLatitude(pf.getLatitude() == null ? 0d : pf.getLatitude().doubleValue());
             result.setLongitude(pf.getLongitude() == null ? 0d : pf.getLatitude().doubleValue());
-
 
             return result;
         };

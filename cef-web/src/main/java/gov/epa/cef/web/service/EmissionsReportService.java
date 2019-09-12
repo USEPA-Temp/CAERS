@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service;
 
+import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
@@ -49,7 +50,7 @@ public interface EmissionsReportService {
      * @param currentReportYear The year of the report that is being created
      * @return
      */
-    EmissionsReport createEmissionReportCopy(String facilityEisProgramId, short currentReportYear);
+    EmissionsReport createEmissionReportCopy(String facilityEisProgramId, short currentReportYear, ApplicationUser appUser);
 
 
     /**

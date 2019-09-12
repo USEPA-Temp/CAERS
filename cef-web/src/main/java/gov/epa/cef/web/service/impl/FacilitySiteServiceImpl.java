@@ -47,7 +47,7 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             .map(report -> {
 
                 FacilitySite facilitySite = retrieveFromFrs(report.getEisProgramId())
-                    .map(FrsApiTransforms.toFacilitySite())
+                    .map(FrsApiTransforms.toFacilitySite(report))
                     .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
                         String.format("EIS Program ID %s does not exist in FRS.", report.getEisProgramId())));
 

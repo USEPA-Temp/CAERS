@@ -3,6 +3,7 @@ package gov.epa.cef.web.api.rest;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
@@ -30,12 +31,16 @@ public class EmissionsReportApi {
 
     private final EmissionsReportService emissionsReportService;
 
+    private final ApplicationSecurityUtils securityService;
+
     @Autowired
     EmissionsReportApi(EmissionsReportService emissionsReportService,
-                       EmissionsReportMapper emissionsReportMapper) {
+                       EmissionsReportMapper emissionsReportMapper,
+                       ApplicationSecurityUtils securityService) {
 
         this.emissionsReportService = emissionsReportService;
         this.emissionsReportMapper = emissionsReportMapper;
+        this.securityService = securityService;
     }
 
     @PostMapping(value = "/facility/{facilityEisProgramId}",
@@ -48,8 +53,8 @@ public class EmissionsReportApi {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
 
-        EmissionsReport result =
-            this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+        EmissionsReport result = this.emissionsReportService.createEmissionReportCopy(
+            facilityEisProgramId, reportDto.getYear(), securityService.getCurrentApplicationUser());
 
         HttpStatus status = HttpStatus.NO_CONTENT;
         if (result != null) {
