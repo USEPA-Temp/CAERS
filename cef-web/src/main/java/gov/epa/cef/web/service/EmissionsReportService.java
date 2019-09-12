@@ -48,6 +48,7 @@ public interface EmissionsReportService {
      * Create a copy of the emissions report for the current year based on the specified facility and year.  The copy of the report is NOT saved to the database.
      * @param facilityEisProgramId
      * @param currentReportYear The year of the report that is being created
+     * @param appUser the current application user with a valid clientId
      * @return
      */
     EmissionsReport createEmissionReportCopy(String facilityEisProgramId, short currentReportYear, ApplicationUser appUser);
