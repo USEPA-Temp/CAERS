@@ -97,7 +97,7 @@
                         </select>
                         <app-validation-message [control]="emissionForm.controls.emissionsNumeratorUom"></app-validation-message>
                         <div class="validation-message" *ngIf="efNumeratorMismatch">
-                            The Emission Factor Numerator UoM and the Total Emissions do not match - Calculation cannot be completed.
+                            The Emission Factor Numerator UoM and the Total Emissions UoM do not match - Calculation cannot be completed.
                         </div>
                     </div>
                     <label for="emissionsDenominatorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
@@ -130,7 +130,7 @@
                         </select>
                         <app-validation-message [control]="emissionForm.controls.emissionsUomCode"></app-validation-message>
                         <div class="validation-message" *ngIf="efNumeratorMismatch">
-                            The Emission Factor Numerator UoM and the Total Emissions do not match - Calculation cannot be completed.
+                            The Emission Factor Numerator UoM and the Total Emissions UoM do not match - Calculation cannot be completed.
                         </div>
                     </div>
                 </div>
