@@ -17,7 +17,7 @@ import java.net.URL;
  *
  */
 @Component
-public class SecurityTokenClient extends AbstractClient<SecurityTokenPortType> {
+public class SecurityTokenClient extends AbstractClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterFacilityClient.class);
 

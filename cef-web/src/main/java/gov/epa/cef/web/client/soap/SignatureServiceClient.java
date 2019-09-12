@@ -14,7 +14,7 @@ import java.net.URL;
  * @author dfladung
  */
 @Component
-public class SignatureServiceClient extends AbstractClient<RegisterSignService> {
+public class SignatureServiceClient extends AbstractClient {
 
     private static final Logger logger = LoggerFactory.getLogger(SignatureServiceClient.class);
 

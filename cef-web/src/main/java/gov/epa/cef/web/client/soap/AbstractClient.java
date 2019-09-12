@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * @author dfladung
  */
-public abstract class AbstractClient<T> {
+public abstract class AbstractClient {
 
     public static final long READ_TIMEOUT = 1000 * 60 * 5;
     public static final long CONN_TIMEOUT = READ_TIMEOUT;
@@ -37,7 +37,7 @@ public abstract class AbstractClient<T> {
         return ae;
     }
 
-    protected T getClient(String address, Class<?> service, boolean enableMtom, boolean enableChunking) {
+    protected <T> T getClient(String address, Class<T> service, boolean enableMtom, boolean enableChunking) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
 
         // set the endpoint

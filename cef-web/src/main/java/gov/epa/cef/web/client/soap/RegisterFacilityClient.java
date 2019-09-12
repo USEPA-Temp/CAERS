@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class RegisterFacilityClient extends AbstractClient<RegisterProgramFacilityService> {
+public class RegisterFacilityClient extends AbstractClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterFacilityClient.class);
 
