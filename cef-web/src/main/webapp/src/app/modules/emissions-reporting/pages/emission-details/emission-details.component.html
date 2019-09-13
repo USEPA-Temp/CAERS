@@ -27,7 +27,7 @@
     <form [formGroup]="emissionForm" (ngSubmit)="onSubmit()">
         <div class="card mb-3">
             <div class="card-header text-center">
-                <strong>Pollutant Information</strong>
+                <strong>Emission Information</strong>
                 <div class="float-right" *ngIf="emissionForm.disabled && !createMode">
                     <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
                 </div>
@@ -44,7 +44,7 @@
                         <input type="text" class="form-control" id="pollutantCodeInput" [value]="emissionForm.value.pollutant?.pollutantCode" disabled>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row pb-5">
                     <label for="pollutantNameInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant Name:</strong></label>
                     <div class="col-sm-8 col-lg-5">
                         <input type="text" class="form-control" id="pollutantNameInput" [value]="emissionForm.value.pollutant?.pollutantName" disabled>
@@ -54,17 +54,7 @@
                         <input type="text" class="form-control" id="pollutantCasIdInput" [value]="emissionForm.value.pollutant?.pollutantCasId" disabled>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="card mb-3">
-            <div class="card-header text-center">
-                <strong>Calculation Information</strong>
-                <div class="float-right" *ngIf="emissionForm.disabled && !createMode">
-                    <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
-                </div>
-            </div>
-            <div class="card-body">
                 <div class="row pb-2">
                     
                     <label for="emissionsCalcMethodCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Calculation Method:</strong></label>
