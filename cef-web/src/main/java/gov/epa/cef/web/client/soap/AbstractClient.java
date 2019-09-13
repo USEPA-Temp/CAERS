@@ -1,4 +1,4 @@
-package gov.epa.cef.web.soap;
+package gov.epa.cef.web.client.soap;
 
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
@@ -37,7 +37,7 @@ public abstract class AbstractClient {
         return ae;
     }
 
-    protected Object getClient(String address, Class<?> service, boolean enableMtom, boolean enableChunking) {
+    protected <T> T getClient(String address, Class<T> service, boolean enableMtom, boolean enableChunking) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
 
         // set the endpoint
@@ -87,11 +87,12 @@ public abstract class AbstractClient {
         http.setClient(httpClientPolicy);
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format(
-                    "AbstractClient.getClient(address=%s, service=%s, enableMtom=%s, "
-                            + "enableChunking=%s, connectionTimeout=%s, receiveTimeout=%s)",
-                    address, service.getName(), enableMtom, enableMtom, CONN_TIMEOUT, READ_TIMEOUT));
+            LOGGER.debug(
+                    "({})getClient(address={}, service={}, enableMtom={}, "
+                            + "enableChunking={}, connectionTimeout={}, receiveTimeout={})",
+                service.getSimpleName(), address, service.getName(),
+                enableMtom, enableMtom, CONN_TIMEOUT, READ_TIMEOUT);
         }
-        return requester;
+        return (T) requester;
     }
 }

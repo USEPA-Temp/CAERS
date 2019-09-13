@@ -1,37 +1,36 @@
-package gov.epa.cef.web.soap;
-
-import java.net.URL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+package gov.epa.cef.web.client.soap;
 
 import gov.epa.cdx.shared.generatedwsdl.securitytoken._3.AuthMethod;
 import gov.epa.cdx.shared.generatedwsdl.securitytoken._3.DomainTypeCode;
 import gov.epa.cdx.shared.generatedwsdl.securitytoken._3.SecurityTokenPortType;
 import gov.epa.cdx.shared.generatedwsdl.securitytoken._3.TokenType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.net.URL;
 
 /**
  * A client to consume the CDX SecurityToken service
- * 
+ *
  * @author ahmahfou
  *
  */
 @Component
 public class SecurityTokenClient extends AbstractClient {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterFacilityClient.class);
-    
+
     /**
      * Create a SecurityTokenPortType for invoking service methods
      * @param endpoint
      * @return
      */
     protected SecurityTokenPortType getClient(URL endpoint) {
-        return (SecurityTokenPortType) this.getClient(endpoint.toString(),
-                SecurityTokenPortType.class, false, true);
+        return this.getClient(endpoint.toString(),
+            SecurityTokenPortType.class, false, true);
     }
-    
+
     /**
      * Creates a new NAAS toke for the user using the admin user credentials
      * @param endpoint

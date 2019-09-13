@@ -59,6 +59,7 @@
         <powermock.version>2.0.2</powermock.version>
         <postgresql-embedded.version>2.10</postgresql-embedded.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <swagger-annotations.version>2.0.9</swagger-annotations.version>
 
 
         <!-- Plugin versions -->
@@ -69,6 +70,7 @@
         <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
         <jib-maven-plugin.version>0.9.11</jib-maven-plugin.version>
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+        <swagger-codegen-plugin.version>3.0.11</swagger-codegen-plugin.version>
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <sonar-maven-plugin.version>3.5.0.1254</sonar-maven-plugin.version>
         <git-commit-id-plugin.version>2.2.5</git-commit-id-plugin.version>
@@ -274,6 +276,12 @@
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-spring</artifactId>
             <version>${hazelcast.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
         </dependency>
 
         <!-- ====================================================================== -->
@@ -503,7 +511,7 @@
                         <id>token-wsdl</id>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <wsdlDirectory>src/main/wsdl</wsdlDirectory>
+                            <wsdlDirectory>src/main/schema/wsdl</wsdlDirectory>
                             <wsdlFiles>
                                 <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
                                 <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
@@ -513,6 +521,41 @@
                         <goals>
                             <goal>wsimport</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>${swagger-codegen-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- specify the swagger yaml -->
+                            <inputSpec>src/main/schema/json/frs-iptquery-swagger-v1-modified.json</inputSpec>
+
+                            <!-- target to generate java client code -->
+                            <language>java</language>
+                            <library>resttemplate</library>
+
+                            <configOptions>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>true</java8>
+                            </configOptions>
+
+                            <modelPackage>gov.epa.client.frs.iptquery.model</modelPackage>
+                            <apiPackage>gov.epa.client.frs.iptquery</apiPackage>
+                            <invokerPackage>gov.epa.client.frs.iptquery</invokerPackage>
+
+                            <generateApis>true</generateApis>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -757,6 +800,9 @@
                             <executable>true</executable>
                             <fork>true</fork>
                             <addResources>true</addResources>
+                            <systemPropertyVariables>
+                                <cdxWebUser.properties>${basedir}/src/test/resources/cdxWebUser/cdxWebUser.properties</cdxWebUser.properties>
+                            </systemPropertyVariables>
                             <!--
                             Enable the line below to have remote debugging of your application on port 5005
                             <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>

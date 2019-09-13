@@ -3,7 +3,7 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.config.CdxConfig;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.soap.RegisterFacilityClient;
+import gov.epa.cef.web.client.soap.RegisterFacilityClient;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.junit.Before;
 import org.junit.Test;

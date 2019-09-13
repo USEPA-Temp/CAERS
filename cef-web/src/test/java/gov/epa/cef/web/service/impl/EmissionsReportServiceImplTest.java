@@ -1,5 +1,8 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cdx.shared.security.ApplicationUser;
+import gov.epa.cef.web.client.soap.SignatureServiceClient;
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
@@ -17,18 +20,27 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.client.frs.iptquery.model.ProgramFacility;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +48,9 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -47,36 +62,79 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     @Mock
     private EmissionsReportMapper emissionsReportMapper;
 
+    @Mock
+    private CefConfig cefConfig;
+
+    @Mock
+    private SignatureServiceClient signatureServiceClient;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private CersXmlService cersXmlService;
+
+    @Mock
+    private FacilitySiteService facilitySiteService;
+
     @InjectMocks
     private EmissionsReportServiceImpl emissionsReportServiceImpl;
-
 
     private EmissionsReportDto emissionsReportDto;
 
     private List<EmissionsReportDto> emissionsReportDtoList;
 
+    private ApplicationUser applicationUser;
+
     @Before
     public void init(){
+
         EmissionsReport emissionsReport = new EmissionsReport();
         EmissionsReport previousEmissionsReport = createHydratedEmissionsReport();
-        List<EmissionsReport> previousEmissionsReportList = new ArrayList<EmissionsReport>();
+        List<EmissionsReport> previousEmissionsReportList = new ArrayList<>();
         previousEmissionsReportList.add(previousEmissionsReport);
-        List<EmissionsReport> emissionsReportList = new ArrayList<EmissionsReport>();
-        List<EmissionsReport> emptyReportList = new ArrayList<EmissionsReport>();
+        List<EmissionsReport> emissionsReportList = new ArrayList<>();
+        List<EmissionsReport> emptyReportList = new ArrayList<>();
         emissionsReportList.add(emissionsReport);
-        List<EmissionsReport> emptyEmissionsReportList = new ArrayList<EmissionsReport>();
+        List<EmissionsReport> emptyEmissionsReportList = new ArrayList<>();
         when(erRepo.findById(1L)).thenReturn(Optional.of(emissionsReport));
         when(erRepo.findById(2L)).thenReturn(Optional.empty());
         when(erRepo.findByEisProgramId("XXXX")).thenReturn(emissionsReportList);
         when(erRepo.findByEisProgramId("YYYY")).thenReturn(emptyReportList);
-        when(erRepo.findByEisProgramId("XXXX", new Sort(Sort.Direction.DESC, "year"))).thenReturn(emissionsReportList);
-        when(erRepo.findByEisProgramId("ABC", new Sort(Sort.Direction.DESC, "year"))).thenReturn(previousEmissionsReportList);
-        when(erRepo.findByEisProgramId("DEF", new Sort(Sort.Direction.DESC, "year"))).thenReturn(emptyEmissionsReportList);
+        when(erRepo.findByEisProgramId("XXXX", new Sort(Sort.Direction.DESC, "year")))
+            .thenReturn(emissionsReportList);
+        when(erRepo.findByEisProgramId("ABC", new Sort(Sort.Direction.DESC, "year")))
+            .thenReturn(previousEmissionsReportList);
+        when(erRepo.findByEisProgramId("DEF", new Sort(Sort.Direction.DESC, "year")))
+            .thenReturn(emptyEmissionsReportList);
+
+        when(erRepo.save(any())).then(AdditionalAnswers.returnsFirstArg());
+
+        when(emissionsReportMapper.toDto(any()))
+            .thenAnswer(new Answer<EmissionsReportDto>() {
+
+                @Override
+                public EmissionsReportDto answer(InvocationOnMock invocationOnMock) throws Throwable {
+
+                    return Mappers.getMapper(EmissionsReportMapper.class).toDto(invocationOnMock.getArgument(0));
+                }
+            });
+
+        ProgramFacility programFacility = new ProgramFacility();
+        programFacility.setRegistryId("Registry-FRSDATA");
+        programFacility.setProgramSystemAcronym("EIS");
+        programFacility.setProgramSystemId("FRSDATA");
+        programFacility.setAgencyId("Agency-FRSDATA");
+        when(facilitySiteService.retrieveFromFrs("FRSDATA"))
+            .thenReturn(Optional.of(programFacility));
 
         emissionsReportDto=new EmissionsReportDto();
         emissionsReportDtoList=new ArrayList<>();
         when(emissionsReportMapper.toDto(emissionsReport)).thenReturn(emissionsReportDto);
         when(emissionsReportMapper.toDtoList(emissionsReportList)).thenReturn(emissionsReportDtoList);
+
+        ApplicationUser appUser = new ApplicationUser("fred.flintstone", Collections.emptyList());
+        appUser.setClientId("BR");
     }
 
     @Test
@@ -131,26 +189,39 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     @Test
     public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() {
     	EmissionsReport originalEmissionsReport = createHydratedEmissionsReport();
-    	EmissionsReport emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("ABC", 2020);
-    	assertEquals(ReportStatus.IN_PROGRESS, emissionsReportCopy.getStatus());
-    	assertEquals(ValidationStatus.UNVALIDATED, emissionsReportCopy.getValidationStatus());
+    	EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
+    	    "ABC", (short) 2020);
+    	assertEquals(ReportStatus.IN_PROGRESS.toString(), emissionsReportCopy.getStatus());
+    	assertEquals(ValidationStatus.UNVALIDATED.toString(), emissionsReportCopy.getValidationStatus());
     	assertEquals("2020", emissionsReportCopy.getYear().toString());
     	assertNotEquals(originalEmissionsReport.getId(), emissionsReportCopy.getId());
-
-    	FacilitySite originalFacilitySite = originalEmissionsReport.getFacilitySites().iterator().next();
-    	FacilitySite copyFacilitySite = emissionsReportCopy.getFacilitySites().iterator().next();
-    	assertEquals(originalFacilitySite.getAltSiteIdentifier(), copyFacilitySite.getAltSiteIdentifier());
-    	assertNotEquals(originalFacilitySite.getId(), copyFacilitySite.getId());
     }
-
 
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
-    	EmissionsReport nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("DEF", 2020);
-    	assertEquals(null, nullEmissionsReportCopy);
+        EmissionsReportDto nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
+            "DEF", (short) 2020);
+
+        assertNull(nullEmissionsReportCopy);
     }
 
+    @Test
+    public void createEmissionReportCopy_Should_ReturnFrsData_WhenPreviousDoesNotExist() {
 
+        EmissionsReportDto report =
+            this.emissionsReportServiceImpl.createEmissionReportFromFrs(
+                "FRSDATA", (short) 2020);
+
+        assertNotNull(report);
+
+        assertEquals(ReportStatus.IN_PROGRESS.toString(), report.getStatus());
+        assertEquals(ValidationStatus.UNVALIDATED.toString(), report.getValidationStatus());
+        assertEquals("2020", report.getYear().toString());
+
+        assertEquals("Registry-FRSDATA", report.getFrsFacilityId());
+        assertEquals("FRSDATA", report.getEisProgramId());
+        assertEquals("GA", report.getAgencyCode());
+    }
 
     private EmissionsReport createHydratedEmissionsReport() {
     	EmissionsReport er = new EmissionsReport();

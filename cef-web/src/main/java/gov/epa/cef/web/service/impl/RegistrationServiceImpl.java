@@ -1,19 +1,18 @@
 package gov.epa.cef.web.service.impl;
 
-import java.net.URL;
-import java.util.List;
-
+import gov.epa.cef.web.client.soap.RegisterFacilityClient;
+import gov.epa.cef.web.config.CefConfig;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.service.RegistrationService;
+import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gov.epa.cef.web.config.CefConfig;
-import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.service.RegistrationService;
-import gov.epa.cef.web.soap.RegisterFacilityClient;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import java.net.URL;
+import java.util.List;
 
 /**
  * Service for invoking Register Webservice methods
@@ -30,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     private CefConfig cefConfig;
-    
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.RegisterService#retrieveFacilities(java.lang.Long)
      */

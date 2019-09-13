@@ -1,36 +1,84 @@
 package gov.epa.cef.web.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import gov.epa.cef.web.client.api.FrsApiClient;
+import gov.epa.cef.web.client.api.FrsApiTransforms;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
+import gov.epa.client.frs.iptquery.model.ProgramFacility;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED)
 public class FacilitySiteServiceImpl implements FacilitySiteService {
 
-    @Autowired
-    private FacilitySiteRepository facSiteRepo;
+    private final FacilitySiteRepository facSiteRepo;
+
+    private final FacilitySiteMapper facilitySiteMapper;
+
+    private final FrsApiClient frsClient;
 
     @Autowired
-    private FacilitySiteMapper facilitySiteMapper;
+    FacilitySiteServiceImpl(FacilitySiteRepository facSiteRepo,
+                            FacilitySiteMapper facilitySiteMapper,
+                            FrsApiClient frsClient) {
+
+        this.facSiteRepo = facSiteRepo;
+        this.facilitySiteMapper = facilitySiteMapper;
+        this.frsClient = frsClient;
+    }
+
+    @Override
+    public FacilitySite copyFromFrs(EmissionsReport report) {
+
+        FacilitySite facilitySite = retrieveFromFrs(report.getEisProgramId())
+            .map(FrsApiTransforms.toFacilitySite(report))
+            .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
+                String.format("EIS Program ID %s does not exist in FRS.", report.getEisProgramId())));
+
+        facilitySite.getContacts().addAll(frsClient.queryContacts(report.getEisProgramId()).stream()
+            .map(FrsApiTransforms.toFacilitySiteContact(facilitySite))
+            .collect(Collectors.toList()));
+
+        facilitySite.getFacilityNAICS().addAll(frsClient.queryNaics(report.getEisProgramId()).stream()
+            .map(FrsApiTransforms.toFacilityNaicsXref(facilitySite))
+            .collect(Collectors.toList()));
+
+        return this.facSiteRepo.save(facilitySite);
+    }
+
+    @Override
+    public FacilitySiteDto findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId) {
+
+        return facSiteRepo.findByEisProgramIdAndEmissionsReportId(eisProgramId, emissionsReportId)
+            .stream()
+            .findFirst()
+            .map(facilitySiteMapper::toDto)
+            .orElse(null);
+    }
 
     @Override
     public FacilitySiteDto findById(Long id) {
-        FacilitySite facilitySite=facSiteRepo.findById(id)
-                    .orElse(null);
-        return facilitySiteMapper.toDto(facilitySite);
-    }
-    
-    @Override
-    public FacilitySiteDto findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId) {
-        FacilitySite facilitySite=facSiteRepo.findByEisProgramIdAndEmissionsReportId(eisProgramId, emissionsReportId)
-            .stream()
-            .findFirst()
+
+        return facSiteRepo.findById(id)
+            .map(facilitySiteMapper::toDto)
             .orElse(null);
-        return facilitySiteMapper.toDto(facilitySite);
+    }
+
+    @Override
+    public Optional<ProgramFacility> retrieveFromFrs(String facilityEisProgramId) {
+
+        return this.frsClient.queryProgramFacility(facilityEisProgramId);
     }
 }
