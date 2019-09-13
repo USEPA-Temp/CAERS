@@ -1,12 +1,12 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
@@ -21,6 +21,8 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.activation.DataHandler;
 import java.io.File;
@@ -32,7 +34,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
+
+    private static final String __HARD_CODED_AGENCY_CODE__ = "GA";
 
     @Autowired
     private EmissionsReportRepository erRepo;
@@ -137,8 +142,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         }
     }
 
-
-
     /**
      * Create a copy of the emissions report for the current year based on the specified facility and year.  The copy of the report is NOT saved to the database.
      * @param facilityEisProgramId
@@ -146,9 +149,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     @Override
-    public EmissionsReport createEmissionReportCopy(String facilityEisProgramId,
-                                                    short reportYear,
-                                                    ApplicationUser appUser) {
+    public EmissionsReportDto createEmissionReportCopy(String facilityEisProgramId, short reportYear) {
 
         return findMostRecentEmissionsReport(facilityEisProgramId)
             .map(mostRecentReport -> {
@@ -159,29 +160,52 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.clearId();
 
-                return this.erRepo.save(cloneReport);
-
+                return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
             .orElseGet(() -> this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
                 .map(programFacility -> {
 
-                    EmissionsReport newReport = new EmissionsReport();
+                    // create a shell/dto report
+                    EmissionsReportDto newReport = new EmissionsReportDto();
                     newReport.setYear(reportYear);
-                    newReport.setStatus(ReportStatus.IN_PROGRESS);
-                    newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+                    newReport.setStatus(ReportStatus.IN_PROGRESS.toString());
+                    newReport.setValidationStatus(ValidationStatus.UNVALIDATED.toString());
 
                     newReport.setFrsFacilityId(programFacility.getRegistryId());
                     newReport.setEisProgramId(programFacility.getProgramSystemId());
-                    newReport.setAgencyCode(appUser.getClientId());
+                    newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
 
-                    newReport.setNeedsFacilitySiteInfo(true);
-
-                    return this.erRepo.save(newReport);
+                    return newReport;
                 })
                 .orElse(null)
             );
     }
 
+    @Override
+    public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {
+
+        return this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
+            .map(programFacility -> {
+
+                EmissionsReport newReport = new EmissionsReport();
+                newReport.setYear(reportYear);
+                newReport.setStatus(ReportStatus.IN_PROGRESS);
+                newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+
+                newReport.setFrsFacilityId(programFacility.getRegistryId());
+                newReport.setEisProgramId(programFacility.getProgramSystemId());
+
+                newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
+
+                newReport = this.erRepo.save(newReport);
+
+                this.facilitySiteService.copyFromFrs(newReport);
+
+                return this.emissionsReportMapper.toDto(newReport);
+            })
+            .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
+                String.format("EIS Program ID [%s] is not found in FRS.", facilityEisProgramId)));
+    }
 
     /**
      * Save the emissions report to the database.

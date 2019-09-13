@@ -26,10 +26,4 @@ export class FacilitySiteService {
         const url = `${this.baseUrl}/report/${reportId}/facility/${programId}`;
         return this.http.get<FacilitySite>(url);
     }
-
-    createFacilitySite(facilitySite: FacilitySite) : Observable<FacilitySite> {
-
-        const url = `${this.baseUrl}/report/${facilitySite.emissionsReport.id}/facility`;
-        return this.http.post<FacilitySite>(url, facilitySite);
-    }
 }

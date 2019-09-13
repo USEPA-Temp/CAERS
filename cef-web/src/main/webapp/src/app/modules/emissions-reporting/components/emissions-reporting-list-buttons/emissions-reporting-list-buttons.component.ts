@@ -7,9 +7,6 @@ import {EmissionsReport} from 'src/app/shared/models/emissions-report';
 import {CdxFacility} from 'src/app/shared/models/cdx-facility';
 import {Router} from '@angular/router';
 
-import {FacilitySiteService} from "../../../../core/services/facility-site.service";
-import {FacilitySite} from "../../../../shared/models/facility-site";
-
 @Component({
     selector: 'app-emissions-reporting-list-buttons',
     templateUrl: './emissions-reporting-list-buttons.component.html',
@@ -26,7 +23,6 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
 
     constructor(public userContext: UserContextService,
                 private reportService: EmissionsReportingService,
-                private facilityService: FacilitySiteService,
                 public router: Router,
                 private modalService: NgbModal) {
     }
@@ -42,7 +38,6 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
         }
         return false;
     }
-
 
     /**
      * Create a new report.  Either a copy of the previous report (if one exists) or a new report
@@ -78,14 +73,8 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
                     modalWindow.componentInstance.message =
                         "Please wait: Searching for Facility Data in EPA's Facility Registry System to populate your Emissions Report";
 
-                    let newReport = reportResp.body;
-
-                    let facilitySite = new FacilitySite();
-                    facilitySite.eisProgramId = newReport.eisProgramId;
-                    facilitySite.emissionsReport = newReport;
-
-                    this.facilityService.createFacilitySite(facilitySite)
-                        .subscribe(facilitySite => {
+                    this.reportService.createReportFromFrs(this.facility.programId, currentYear)
+                        .subscribe(newReport => {
 
                             modalWindow.dismiss();
                             this.reportCompleted(newReport);

@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service;
 
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.client.frs.iptquery.model.ProgramFacility;
@@ -10,10 +11,10 @@ public interface FacilitySiteService {
 
     /**
      * Create a FacilitySite record from FRS information
-     * @param facilityEisProgramId
+     * @param report
      * @return
      */
-    Optional<FacilitySite> copyFromFrs(long emissionsReportId, String facilityEisProgramId);
+    FacilitySite copyFromFrs(EmissionsReport report);
 
     /**
      * Find facility by ID

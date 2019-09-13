@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    SecurityTokenClient tokenClient;
+    private SecurityTokenClient tokenClient;
 
     @Autowired
     private CefConfig cefConfig;

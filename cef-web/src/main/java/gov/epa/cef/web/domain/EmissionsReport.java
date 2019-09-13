@@ -10,7 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,10 +41,10 @@ public class EmissionsReport extends BaseAuditEntity {
     private ReportStatus status;
 
     @Column(name = "cromerr_activity_id", length = 37)
-    String cromerrActivityId;
+    private String cromerrActivityId;
 
     @Column(name = "cromerr_document_id", length = 36)
-    String cromerrDocumentId;
+    private String cromerrDocumentId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "validation_status")
@@ -53,9 +52,6 @@ public class EmissionsReport extends BaseAuditEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private Set<FacilitySite> facilitySites = new HashSet<FacilitySite>(0);
-
-    @Transient
-    private boolean needsFacilitySiteInfo = false;
 
     /***
      * Default constructor
@@ -164,15 +160,5 @@ public class EmissionsReport extends BaseAuditEntity {
     	for (FacilitySite facilitySite : this.facilitySites) {
     		facilitySite.clearId();
     	}
-    }
-
-    public boolean isNeedsFacilitySiteInfo() {
-
-        return needsFacilitySiteInfo;
-    }
-
-    public void setNeedsFacilitySiteInfo(boolean needsFacilitySiteInfo) {
-
-        this.needsFacilitySiteInfo = needsFacilitySiteInfo;
     }
 }

@@ -34,6 +34,5 @@ frs:
   facility-ipt-endpoint:  https://ofmext.epa.gov/facilityiptqueryprd/v1/FRS
   naas-user: caer-cef-admin@epa.gov
   naas-password: CDXcaercef01
-  naas-ip: 127.0.0.1
   debugging: false
 

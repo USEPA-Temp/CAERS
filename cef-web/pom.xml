@@ -145,10 +145,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
             <scope>runtime</scope>
@@ -539,7 +535,7 @@
                         </goals>
                         <configuration>
                             <!-- specify the swagger yaml -->
-                            <inputSpec>src/main/schema/iptquery/swagger-v1-modified.json</inputSpec>
+                            <inputSpec>src/main/schema/json/frs-iptquery-swagger-v1-modified.json</inputSpec>
 
                             <!-- target to generate java client code -->
                             <language>java</language>

@@ -1,13 +1,11 @@
 package gov.epa.cef.web.api.rest;
 
-import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.security.ApplicationSecurityUtils;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,45 +25,40 @@ import java.util.List;
 @RequestMapping("/api/emissionsReport")
 public class EmissionsReportApi {
 
-    private final EmissionsReportMapper emissionsReportMapper;
-
     private final EmissionsReportService emissionsReportService;
 
-    private final ApplicationSecurityUtils securityService;
-
     @Autowired
-    EmissionsReportApi(EmissionsReportService emissionsReportService,
-                       EmissionsReportMapper emissionsReportMapper,
-                       ApplicationSecurityUtils securityService) {
+    EmissionsReportApi(EmissionsReportService emissionsReportService) {
 
         this.emissionsReportService = emissionsReportService;
-        this.emissionsReportMapper = emissionsReportMapper;
-        this.securityService = securityService;
     }
 
     @PostMapping(value = "/facility/{facilityEisProgramId}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmissionsReportDto> create(@PathVariable String facilityEisProgramId,
-                                                     @NotNull @RequestBody EmissionsReportDto reportDto) {
+                                                     @NotNull @RequestBody EmissionsReportStarterDto reportDto) {
 
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
 
-        EmissionsReport result = this.emissionsReportService.createEmissionReportCopy(
-            facilityEisProgramId, reportDto.getYear(), securityService.getCurrentApplicationUser());
+        String source = StringUtils.defaultIfBlank(reportDto.getSource(), "previous");
+
+        EmissionsReportDto result = "frs".equals(source)
+            ? this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear())
+            : this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
 
         HttpStatus status = HttpStatus.NO_CONTENT;
         if (result != null) {
-            if (result.isNeedsFacilitySiteInfo()) {
+            if (result.getId() == null) {
                 status = HttpStatus.ACCEPTED;
             } else {
                 status = HttpStatus.OK;
             }
         }
 
-        return new ResponseEntity<>(this.emissionsReportMapper.toDto(result), status);
+        return new ResponseEntity<>(result, status);
     }
 
     /**
@@ -79,7 +72,7 @@ public class EmissionsReportApi {
 
         EmissionsReportDto result = emissionsReportService.findMostRecentByFacilityEisProgramId(facilityEisProgramId);
 
-        return new ResponseEntity<EmissionsReportDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -93,7 +86,7 @@ public class EmissionsReportApi {
 
         EmissionsReportDto result = emissionsReportService.findById(reportId);
 
-        return new ResponseEntity<EmissionsReportDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -107,7 +100,7 @@ public class EmissionsReportApi {
 
         List<EmissionsReportDto> result = emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId, true);
 
-        return new ResponseEntity<List<EmissionsReportDto>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -124,4 +117,44 @@ public class EmissionsReportApi {
 
         return new ResponseEntity<String>(documentId, HttpStatus.OK);
     }
+
+    static class EmissionsReportStarterDto {
+
+        private String eisProgramId;
+
+        private String source;
+
+        private Short year;
+
+        public String getEisProgramId() {
+
+            return eisProgramId;
+        }
+
+        public void setEisProgramId(String eisProgramId) {
+
+            this.eisProgramId = eisProgramId;
+        }
+
+        public String getSource() {
+
+            return source;
+        }
+
+        public void setSource(String source) {
+
+            this.source = source;
+        }
+
+        public Short getYear() {
+
+            return year;
+        }
+
+        public void setYear(Short year) {
+
+            this.year = year;
+        }
+    }
+
 }

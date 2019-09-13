@@ -32,9 +32,21 @@ export class EmissionsReportingService {
         const url = `${this.baseUrl}/facility/${eisFacilityId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
-            eisProgramId: eisFacilityId
+            eisProgramId: eisFacilityId,
+            source: "previous"
         }, {
             observe: "response"
+        });
+    }
+
+    /** POST request to the server to create a report for the current year from FRS data */
+    createReportFromFrs(eisFacilityId: string, reportYear: number) : Observable<EmissionsReport>{
+
+        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
+        return this.http.post<EmissionsReport>(url, {
+            year: reportYear,
+            eisProgramId: eisFacilityId,
+            source: "frs"
         });
     }
 }

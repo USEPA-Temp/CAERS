@@ -1,6 +1,5 @@
 package gov.epa.cef.web.service;
 
-import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
@@ -11,13 +10,19 @@ import java.util.List;
 public interface EmissionsReportService {
 
     /**
+     * Creates an emissions report from FRS data
+     * @param facilityEisProgramId
+     * @param year
+     * @return
+     */
+    EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short year);
+
+    /**
      * Find reports for a given facility
      * @param facilityEisProgramId {@link ProgramFacility}'s programId
      * @return
      */
     List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId);
-
-
 
     /**
      * Find reports for a given facility and add a new emissions report record in memory for the current year if addReportForCurrentYear is true
@@ -48,10 +53,9 @@ public interface EmissionsReportService {
      * Create a copy of the emissions report for the current year based on the specified facility and year.  The copy of the report is NOT saved to the database.
      * @param facilityEisProgramId
      * @param currentReportYear The year of the report that is being created
-     * @param appUser the current application user with a valid clientId
      * @return
      */
-    EmissionsReport createEmissionReportCopy(String facilityEisProgramId, short currentReportYear, ApplicationUser appUser);
+    EmissionsReportDto createEmissionReportCopy(String facilityEisProgramId, short currentReportYear);
 
 
     /**

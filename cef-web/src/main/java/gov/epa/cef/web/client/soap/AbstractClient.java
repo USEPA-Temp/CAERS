@@ -87,10 +87,11 @@ public abstract class AbstractClient {
         http.setClient(httpClientPolicy);
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format(
-                    "AbstractClient.getClient(address=%s, service=%s, enableMtom=%s, "
-                            + "enableChunking=%s, connectionTimeout=%s, receiveTimeout=%s)",
-                    address, service.getName(), enableMtom, enableMtom, CONN_TIMEOUT, READ_TIMEOUT));
+            LOGGER.debug(
+                    "({})getClient(address={}, service={}, enableMtom={}, "
+                            + "enableChunking={}, connectionTimeout={}, receiveTimeout={})",
+                service.getSimpleName(), address, service.getName(),
+                enableMtom, enableMtom, CONN_TIMEOUT, READ_TIMEOUT);
         }
         return (T) requester;
     }

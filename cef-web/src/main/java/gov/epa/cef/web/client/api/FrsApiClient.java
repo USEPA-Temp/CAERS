@@ -1,7 +1,6 @@
 package gov.epa.cef.web.client.api;
 
 import gov.epa.cef.web.config.FrsConfig;
-import gov.epa.cef.web.util.ProgramSystemAcronyms;
 import gov.epa.client.frs.iptquery.ApiClient;
 import gov.epa.client.frs.iptquery.FrsApi;
 import gov.epa.client.frs.iptquery.model.Contact;
@@ -15,6 +14,8 @@ import java.util.Optional;
 
 @Component
 public class FrsApiClient {
+
+    private static final String EISProgramAcronym = "EIS";
 
     private final FrsApi client;
 
@@ -39,18 +40,18 @@ public class FrsApiClient {
     public Collection<Contact> queryContacts(String eisProgramId) {
 
         return this.client.queryContactGet(this.config.getNaasUser(), this.config.getNaasPassword(),
-            ProgramSystemAcronyms.EIS.name(), eisProgramId);
+            EISProgramAcronym, eisProgramId);
     }
 
     public Collection<Naics> queryNaics(String eisProgramId) {
 
         return this.client.queryNaicsGet(this.config.getNaasUser(), this.config.getNaasPassword(),
-            ProgramSystemAcronyms.EIS.name(), eisProgramId);
+            EISProgramAcronym, eisProgramId);
     }
 
     public Optional<ProgramFacility> queryProgramFacility(String eisProgramId) {
 
         return this.client.queryProgramFacilityGet(this.config.getNaasUser(), this.config.getNaasPassword(),
-            null, ProgramSystemAcronyms.EIS.name(), eisProgramId).stream().findFirst();
+            null, EISProgramAcronym, eisProgramId).stream().findFirst();
     }
 }

@@ -21,9 +21,6 @@ public class FrsConfig {
     private URL facilityIptEndpoint;
 
     @NotBlank
-    private String naasIp;
-
-    @NotBlank
     private String naasPassword;
 
     @NotBlank
@@ -37,16 +34,6 @@ public class FrsConfig {
     public void setFacilityIptEndpoint(URL facilityIptEndpoint) {
 
         this.facilityIptEndpoint = facilityIptEndpoint;
-    }
-
-    public String getNaasIp() {
-
-        return naasIp;
-    }
-
-    public void setNaasIp(String naasIp) {
-
-        this.naasIp = naasIp;
     }
 
     public String getNaasPassword() {
