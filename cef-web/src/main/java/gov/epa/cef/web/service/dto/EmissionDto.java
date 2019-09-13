@@ -10,7 +10,7 @@ public class EmissionDto implements Serializable {
     private Long id;
     private Long reportingPeriodId;
     private PollutantDto pollutant;
-    private Integer totalEmissions;
+    private BigDecimal totalEmissions;
     private CodeLookupDto emissionsUomCode;
     private BigDecimal emissionsFactor;
     private String emissionsFactorText;
@@ -44,11 +44,11 @@ public class EmissionDto implements Serializable {
         this.pollutant = pollutant;
     }
 
-    public Integer getTotalEmissions() {
+    public BigDecimal getTotalEmissions() {
         return totalEmissions;
     }
 
-    public void setTotalEmissions(Integer totalEmissions) {
+    public void setTotalEmissions(BigDecimal totalEmissions) {
         this.totalEmissions = totalEmissions;
     }
 
