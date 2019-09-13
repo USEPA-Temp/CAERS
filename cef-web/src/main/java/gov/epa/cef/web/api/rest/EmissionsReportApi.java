@@ -1,11 +1,11 @@
 package gov.epa.cef.web.api.rest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +33,12 @@ public class EmissionsReportApi {
         this.emissionsReportService = emissionsReportService;
     }
 
+    /**
+     * Creates an Emissions Report from either previous report or data from FRS
+     * @param facilityEisProgramId
+     * @param reportDto
+     * @return
+     */
     @PostMapping(value = "/facility/{facilityEisProgramId}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,9 +49,7 @@ public class EmissionsReportApi {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
 
-        String source = StringUtils.defaultIfBlank(reportDto.getSource(), "previous");
-
-        EmissionsReportDto result = "frs".equals(source)
+        EmissionsReportDto result = reportDto.isSourceFrs()
             ? this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear())
             : this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
 
@@ -120,9 +124,13 @@ public class EmissionsReportApi {
 
     static class EmissionsReportStarterDto {
 
+        enum SourceType {
+            previous, frs
+        }
+
         private String eisProgramId;
 
-        private String source;
+        private SourceType source;
 
         private Short year;
 
@@ -131,17 +139,23 @@ public class EmissionsReportApi {
             return eisProgramId;
         }
 
+        @JsonIgnore
+        boolean isSourceFrs() {
+
+            return this.source != null && this.source.equals(SourceType.frs);
+        }
+
         public void setEisProgramId(String eisProgramId) {
 
             this.eisProgramId = eisProgramId;
         }
 
-        public String getSource() {
+        public SourceType getSource() {
 
             return source;
         }
 
-        public void setSource(String source) {
+        public void setSource(SourceType source) {
 
             this.source = source;
         }

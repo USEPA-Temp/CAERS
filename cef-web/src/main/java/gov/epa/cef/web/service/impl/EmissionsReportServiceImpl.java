@@ -37,6 +37,8 @@ import java.util.Optional;
 @Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
 
+    // TODO: Remove hard coded value
+    // https://alm.cgifederal.com/projects/browse/CEF-319
     private static final String __HARD_CODED_AGENCY_CODE__ = "GA";
 
     @Autowired
@@ -173,6 +175,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
                     newReport.setFrsFacilityId(programFacility.getRegistryId());
                     newReport.setEisProgramId(programFacility.getProgramSystemId());
+
+                    // TODO: Remove hard coded value
+                    // Using GA for now until FRS has the agency id available for us
+                    // https://alm.cgifederal.com/projects/browse/CEF-319
                     newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
 
                     return newReport;
@@ -195,6 +201,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 newReport.setFrsFacilityId(programFacility.getRegistryId());
                 newReport.setEisProgramId(programFacility.getProgramSystemId());
 
+                // TODO: Remove hard coded value
+                // Using GA for now until FRS has the agency id available for us
+                // https://alm.cgifederal.com/projects/browse/CEF-319
                 newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
 
                 newReport = this.erRepo.save(newReport);
