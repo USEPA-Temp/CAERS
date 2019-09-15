@@ -30,8 +30,8 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "pollutant_code", nullable = false)
     private Pollutant pollutant;
     
-    @Column(name = "total_emissions", nullable = false, precision = 6, scale = 0)
-    private Integer totalEmissions;
+    @Column(name = "total_emissions", nullable = false)
+    private BigDecimal totalEmissions;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emissions_uom_code", nullable = false)
@@ -104,11 +104,11 @@ public class Emission extends BaseAuditEntity {
         this.pollutant = pollutant;
     }
 
-    public Integer getTotalEmissions() {
+    public BigDecimal getTotalEmissions() {
         return this.totalEmissions;
     }
 
-    public void setTotalEmissions(Integer totalEmissions) {
+    public void setTotalEmissions(BigDecimal totalEmissions) {
         this.totalEmissions = totalEmissions;
     }
 
