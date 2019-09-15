@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Cacheable;
@@ -47,14 +48,14 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
     @Column(name = "pollutant_code", length = 12)
     private String pollutantCode;
     
-    @Column(name = "formula_indicator", nullable = false, precision = 1, scale = 0)
-    private Short formulaIndicator;
+    @Column(name = "formula_indicator")
+    private boolean formulaIndicator;
     
-    @Column(name = "control_indicator", nullable = false, precision = 1, scale = 0)
-    private Short controlIndicator;
+    @Column(name = "control_indicator")
+    private boolean controlIndicator;
     
     @Column(name = "emission_factor", nullable = false, precision = 30, scale = 20)
-    private Double emissionFactor;
+    private BigDecimal emissionFactor;
     
     @Column(name = "emission_factor_formula", length = 200)
     private String emissionFactorFormula;
@@ -71,119 +72,119 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
     @Column(name = "last_update_date")
     private Date lastUpdateDate;
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
-
     public UnitMeasureCode getEmissionsNumeratorUom() {
         return emissionsNumeratorUom;
-    }
-
-    public UnitMeasureCode getEmissionsDenominatorUom() {
-        return emissionsDenominatorUom;
-    }
-
-    public CalculationParameterTypeCode getCalculationParameterTypeCode() {
-        return calculationParameterTypeCode;
-    }
-
-    public CalculationMaterialCode getCalculationMaterialCode() {
-        return calculationMaterialCode;
-    }
-
-    public Integer getSccCode() {
-        return sccCode;
-    }
-
-    public String getPollutantCode() {
-        return pollutantCode;
-    }
-
-    public Short getFormulaIndicator() {
-        return formulaIndicator;
-    }
-
-    public Short getControlIndicator() {
-        return controlIndicator;
-    }
-
-    public Double getEmissionFactor() {
-        return emissionFactor;
-    }
-
-    public String getEmissionFactorFormula() {
-        return emissionFactorFormula;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public Date getLastUpdateDate() {
-        return lastUpdateDate;
     }
 
     public void setEmissionsNumeratorUom(UnitMeasureCode emissionsNumeratorUom) {
         this.emissionsNumeratorUom = emissionsNumeratorUom;
     }
 
+    public UnitMeasureCode getEmissionsDenominatorUom() {
+        return emissionsDenominatorUom;
+    }
+
     public void setEmissionsDenominatorUom(UnitMeasureCode emissionsDenominatorUom) {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
+    }
+
+    public CalculationParameterTypeCode getCalculationParameterTypeCode() {
+        return calculationParameterTypeCode;
     }
 
     public void setCalculationParameterTypeCode(CalculationParameterTypeCode calculationParameterTypeCode) {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
+    public CalculationMaterialCode getCalculationMaterialCode() {
+        return calculationMaterialCode;
+    }
+
     public void setCalculationMaterialCode(CalculationMaterialCode calculationMaterialCode) {
         this.calculationMaterialCode = calculationMaterialCode;
+    }
+
+    public Integer getSccCode() {
+        return sccCode;
     }
 
     public void setSccCode(Integer sccCode) {
         this.sccCode = sccCode;
     }
 
+    public String getPollutantCode() {
+        return pollutantCode;
+    }
+
     public void setPollutantCode(String pollutantCode) {
         this.pollutantCode = pollutantCode;
     }
 
-    public void setFormulaIndicator(Short formulaIndicator) {
+    public boolean isFormulaIndicator() {
+        return formulaIndicator;
+    }
+
+    public void setFormulaIndicator(boolean formulaIndicator) {
         this.formulaIndicator = formulaIndicator;
     }
 
-    public void setControlIndicator(Short controlIndicator) {
+    public boolean isControlIndicator() {
+        return controlIndicator;
+    }
+
+    public void setControlIndicator(boolean controlIndicator) {
         this.controlIndicator = controlIndicator;
     }
 
-    public void setEmissionFactor(Double emissionFactor) {
+    public BigDecimal getEmissionFactor() {
+        return emissionFactor;
+    }
+
+    public void setEmissionFactor(BigDecimal emissionFactor) {
         this.emissionFactor = emissionFactor;
+    }
+
+    public String getEmissionFactorFormula() {
+        return emissionFactorFormula;
     }
 
     public void setEmissionFactorFormula(String emissionFactorFormula) {
         this.emissionFactorFormula = emissionFactorFormula;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getNote() {
+        return note;
     }
 
     public void setNote(String note) {
         this.note = note;
     }
 
+    public String getSource() {
+        return source;
+    }
+
     public void setSource(String source) {
         this.source = source;
     }
 
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
     public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 }
