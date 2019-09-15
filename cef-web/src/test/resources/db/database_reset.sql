@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS facility_site;
 DROP TABLE IF EXISTS emissions_report;
 
 --REFERENCE TABLES
+DROP TABLE IF EXISTS emission_factor;
 DROP TABLE IF EXISTS agency;
 DROP TABLE IF EXISTS aircraft_engine_type_code;
 DROP TABLE IF EXISTS calculation_parameter_type_code;
@@ -56,6 +57,7 @@ DROP TABLE IF EXISTS naics_code_industry;
 DROP TABLE IF EXISTS pollutant;
 
 --SEQUENCES
+DROP SEQUENCE IF EXISTS emission_factor_id_seq;
 DROP SEQUENCE IF EXISTS emission_id_seq;
 DROP SEQUENCE IF EXISTS emissions_process_id_seq;
 DROP SEQUENCE IF EXISTS emissions_report_id_seq;
