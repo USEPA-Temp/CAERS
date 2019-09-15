@@ -17,19 +17,19 @@ CREATE TABLE emission_factor
     last_update_date date NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT ef_calc_material_fkey FOREIGN KEY (calculation_material_code)
-        REFERENCES public.calculation_material_code (code) MATCH SIMPLE
+        REFERENCES calculation_material_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT ef_calc_parameter_fkey FOREIGN KEY (calculation_parameter_type_code)
-        REFERENCES public.calculation_parameter_type_code (code) MATCH SIMPLE
+        REFERENCES calculation_parameter_type_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT ef_denominator_uom_fkey FOREIGN KEY (denominator_uom_code)
-        REFERENCES public.unit_measure_code (code) MATCH SIMPLE
+        REFERENCES unit_measure_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT ef_numerator_uom_fkey FOREIGN KEY (numerator_uom_code)
-        REFERENCES public.unit_measure_code (code) MATCH SIMPLE
+        REFERENCES unit_measure_code (code) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
