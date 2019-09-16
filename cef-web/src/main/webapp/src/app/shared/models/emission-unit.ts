@@ -1,4 +1,4 @@
-import { Process } from './process';
+import { Process } from 'src/app/shared/models/process';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 
 export class EmissionUnit {

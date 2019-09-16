@@ -3,20 +3,47 @@
   <table class="table table-sm table-striped table-bordered">
     <thead class="thead-cef-medium">
     <tr>
-      <th scope="col" sortable="identifier" (sort)="onSort($event)">Control Assignment</th>
+      <th scope="col" sortable="description" (sort)="onSort($event)">Control Assignment</th>
       <th scope="col" sortable="controlPath.description" (sort)="onSort($event)">Control Path</th>
+      <th scope="col">Component</th>
       <th scope="col" sortable="sequenceNumber" (sort)="onSort($event)">Control Order</th>
       <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let item of tableData">
-      <td><a routerLink="{{baseUrl}}/item.association.type/{{item.id}}">{{item.description}}</a></td>
-      <td>{{item.controlPath.description}}</td>
-      <td>{{item.sequenceNumber}}</td>
-      <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-    </tr>
+    <ng-container *ngFor="let assignment of tableData">
+      <ng-container *ngFor="let rpa of assignment.controlPath.releasePointAppts">
+        <ng-container *ngIf="rpa.releasePoint">
+	        <tr>
+	          <td><a routerLink="{{baseUrl}}/release/{{rpa.releasePoint.id}}">{{assignment.description}}</a></td>
+	          <td>{{assignment.controlPath.description}}</td>
+	          <td>{{rpa.releasePoint.description}}</td>
+	          <td>{{assignment.sequenceNumber}}</td>
+	          <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+	        </tr>
+        </ng-container>
+        <ng-container *ngIf="rpa.emissionsProcess">
+	        <tr>
+	          <td><a routerLink="{{baseUrl}}/process/{{rpa.emissionsProcess.id}}">{{assignment.description}}</a></td>
+	          <td>{{assignment.controlPath.description}}</td>
+	          <td>{{rpa.emissionsProcess.description}}</td>
+	          <td>{{assignment.sequenceNumber}}</td>
+	          <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+	        </tr>
+        </ng-container>
+        <ng-container *ngIf="rpa.emissionsProcess && rpa.emissionsProcess.emissionsUnit">
+	        <tr>
+	          <td><a routerLink="{{baseUrl}}/emissionUnit/{{rpa.emissionsProcess.emissionsUnit.id}}">{{assignment.description}}</a></td>
+	          <td>{{assignment.controlPath.description}}</td>
+	          <td>{{rpa.emissionsProcess.emissionsUnit.description}}</td>
+	          <td>{{assignment.sequenceNumber}}</td>
+	          <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+	        </tr>
+        </ng-container>
+      </ng-container>
+    </ng-container>
     <tr>
+      <td></td>
       <td></td>
       <td></td>
       <td></td>
