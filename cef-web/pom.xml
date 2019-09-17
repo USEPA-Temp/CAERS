@@ -35,6 +35,9 @@
     </distributionManagement>
 
     <properties>
+
+        <java.version>1.8</java.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
@@ -42,20 +45,28 @@
         <skip.node>false</skip.node>
         <prod.postgres.version>10.8.0</prod.postgres.version>
 
+        <!--
+        ** spring-boot dependency properties
+        <hibernate.version></hibernate.version>
+        <jackson.version></jackson.version>
+        <jersey.version></jersey.version>
+        <logback.version></logback.version>
+        <slf4j.version></slf4j.version>
+        <hazelcast.version></hazelcast.version>
+        -->
+
+        <!-- spring-boot overrides -->
+        <resource.delimiter>#</resource.delimiter>
+        <hazelcast-hibernate5.version>1.3.2</hazelcast-hibernate5.version>
+        <!-- end spring boot overrides -->
+
         <node.version>v10.15.0</node.version>
         <npm.version>6.4.1</npm.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <cxf.version>3.3.1</cxf.version>
-        <hazelcast.version>3.12.2</hazelcast.version>
-        <hazelcast-hibernate.version>1.3.2</hazelcast-hibernate.version>
-        <hibernate.version>5.3.9.FINAL</hibernate.version>
-        <jackson.version>2.9.8</jackson.version>
-        <jersey.version>2.27</jersey.version>
-        <logback.version>1.2.3</logback.version>
         <cdx.shared.version>1.0.4</cdx.shared.version>
         <powermock.version>2.0.2</powermock.version>
         <postgresql-embedded.version>2.10</postgresql-embedded.version>
-        <slf4j.version>1.7.28</slf4j.version>
         <swagger-annotations.version>2.0.9</swagger-annotations.version>
 
         <!-- Plugin versions -->
@@ -160,16 +171,18 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>5.2.4</version>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <!-- spring-boot managed -->
         </dependency>
         <!-- using Tomcat pool instead of default Hikari pool -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -184,7 +197,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -241,12 +254,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>${hibernate.version}</version>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -263,17 +276,17 @@
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
-            <version>${hazelcast.version}</version>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-hibernate53</artifactId>
-            <version>${hazelcast-hibernate.version}</version>
+            <version>${hazelcast-hibernate5.version}</version>
         </dependency>
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-spring</artifactId>
-            <version>${hazelcast.version}</version>
+            <!-- spring-boot managed -->
         </dependency>
 
         <dependency>
@@ -288,35 +301,35 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-ext</artifactId>
-            <version>${slf4j.version}</version>
+            <!-- spring-boot managed -->
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <!-- spring-boot managed -->
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
+            <!-- spring-boot managed -->
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
+            <!-- spring-boot managed -->
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
+            <!-- spring-boot managed -->
             <scope>runtime</scope>
         </dependency>
 
@@ -369,13 +382,6 @@
     <!-- ====================================================================== -->
     <build>
         <finalName>cef-web</finalName>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>2.4</version>
-            </extension>
-        </extensions>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
             <plugin>
@@ -694,38 +700,6 @@
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-resources-plugin.version}</version>
                     <executions>
-                        <execution>
-                            <id>default-resources</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                <useDefaultDelimiters>false</useDefaultDelimiters>
-                                <delimiters>
-                                    <delimiter>#</delimiter>
-                                </delimiters>
-                                <resources>
-                                    <resource>
-                                        <directory>src/main/resources/</directory>
-                                        <filtering>true</filtering>
-                                        <includes>
-                                            <include>application.yml</include>
-                                            <include>application-*.yml</include>
-                                        </includes>
-                                    </resource>
-                                    <resource>
-                                        <directory>src/main/resources/</directory>
-                                        <filtering>false</filtering>
-                                        <excludes>
-                                            <exlude>application.yml</exlude>
-                                            <exclude>application-*.yml</exclude>
-                                        </excludes>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                        </execution>
                         <!--
                         Only needed when we build a spring boot JAR to serve the angular app from static folder
                         <execution>
@@ -912,55 +886,6 @@
                                 WEB-INF/classes/cef-web-config.yml
                             </packagingExcludes>
                         </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>${maven-resources-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>default-resources</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <useDefaultDelimiters>false</useDefaultDelimiters>
-                                    <delimiters>
-                                        <delimiter>#</delimiter>
-                                    </delimiters>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/main/resources/</directory>
-                                            <filtering>false</filtering>
-                                            <excludes>
-                                                <exclude>*.yml</exclude>
-                                            </excludes>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                            <!--
-                            Only needed when we build a spring boot JAR to serve the angular app from static folder
-                            <execution>
-                                <id>jib-www-resources</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.directory}/classes/static/</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.build.directory}/www</directory>
-                                            <filtering>false</filtering>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                            -->
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
