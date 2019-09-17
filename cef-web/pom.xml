@@ -713,14 +713,16 @@
                                         <directory>src/main/resources/</directory>
                                         <filtering>true</filtering>
                                         <includes>
-                                            <include>config/*.yml</include>
+                                            <include>application.yml</include>
+                                            <include>application-*.yml</include>
                                         </includes>
                                     </resource>
                                     <resource>
                                         <directory>src/main/resources/</directory>
                                         <filtering>false</filtering>
                                         <excludes>
-                                            <exclude>config/*.yml</exclude>
+                                            <exlude>application.yml</exlude>
+                                            <exclude>application-*.yml</exclude>
                                         </excludes>
                                     </resource>
                                 </resources>
@@ -908,7 +910,8 @@
                                 </resource>
                             </webResources>
                             <packagingExcludes>
-                                WEB-INF/classes/logback-test.xml
+                                WEB-INF/classes/logback-test.xml,
+                                WEB-INF/classes/cef-web-config.yml
                             </packagingExcludes>
                         </configuration>
                     </plugin>
@@ -996,7 +999,8 @@
                                 </resource>
                             </webResources>
                             <packagingExcludes>
-                                WEB-INF/classes/logback-test.xml
+                                WEB-INF/classes/logback-test.xml,
+                                WEB-INF/classes/cef-web-config.yml
                             </packagingExcludes>
                         </configuration>
                     </plugin>

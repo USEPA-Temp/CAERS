@@ -2,10 +2,10 @@ spring:
   profiles:
     active: prod
   datasource:
-    driver-class-name: "org.postgresql.Driver"
-    url: "jdbc:postgresql://172.20.2.35:5432/CEF"
-    username: "cef"
-    password: "cef_fall2017"
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://172.20.2.35:5432/CEF
+    username: cef
+    password: cef_fall2017
     tomcat:
       fairQueue: true
       jmx-enabled: false
@@ -15,7 +15,7 @@ spring:
       testOnBorrow: true
       testWhileIdle: true
       timeBetweenEvictionRunsMillis: 60000
-      validationQuery: "select 1"
+      validationQuery: select 1
       validationQueryTimeout: 10
       maxWait: 30000
 cdx:
