@@ -38,6 +38,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -233,7 +234,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	er.setValidationStatus(ValidationStatus.PASSED);
     	er.setYear((short) 2020);
 
-    	HashSet<FacilitySite> facilitySites = new HashSet<FacilitySite>();
+    	HashSet<FacilitySite> facilitySites = new HashSet<>();
     	FacilitySite fs = new FacilitySite();
     	fs.setAltSiteIdentifier("ALTID");
     	fs.setCity("Raleigh");
@@ -241,15 +242,15 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	fs.setEisProgramId("EISID");
     	fs.setEmissionsReport(er);
     	fs.setId(1L);
-    	fs.setLatitude((double)2.5);
-    	fs.setLongitude((double)2.5);
+    	fs.setLatitude(BigDecimal.valueOf(2.5d));
+    	fs.setLongitude(BigDecimal.valueOf(2.5d));
 
     	FacilitySourceTypeCode fstc = new FacilitySourceTypeCode();
     	fstc.setCode("Source Type Code");
     	fstc.setDescription("Source Type Desc");
     	fs.setFacilitySourceTypeCode(fstc);
 
-    	HashSet<FacilitySiteContact> contacts = new HashSet<FacilitySiteContact>();
+    	HashSet<FacilitySiteContact> contacts = new HashSet<>();
     	FacilitySiteContact fsc = new FacilitySiteContact();
     	fsc.setCity("Raleigh");
     	fsc.setId(1L);

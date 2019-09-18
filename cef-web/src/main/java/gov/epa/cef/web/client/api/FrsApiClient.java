@@ -9,8 +9,10 @@ import gov.epa.client.frs.iptquery.model.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class FrsApiClient {
@@ -37,21 +39,27 @@ public class FrsApiClient {
         this.client = new FrsApi(apiClient);
     }
 
-    public Collection<Contact> queryContacts(String eisProgramId) {
+    public Collection<Contact> queryContacts(@NotNull String eisProgramId) {
 
         return this.client.queryContactGet(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId);
+            EISProgramAcronym, eisProgramId).stream()
+            .filter(contact -> eisProgramId.equals(contact.getProgramSystemId()))
+            .collect(Collectors.toList());
     }
 
-    public Collection<Naics> queryNaics(String eisProgramId) {
+    public Collection<Naics> queryNaics(@NotNull String eisProgramId) {
 
         return this.client.queryNaicsGet(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId);
+            EISProgramAcronym, eisProgramId).stream()
+            .filter(naic -> eisProgramId.equals(naic.getProgramSystemId()))
+            .collect(Collectors.toList());
     }
 
-    public Optional<ProgramFacility> queryProgramFacility(String eisProgramId) {
+    public Optional<ProgramFacility> queryProgramFacility(@NotNull String eisProgramId) {
 
         return this.client.queryProgramFacilityGet(this.config.getNaasUser(), this.config.getNaasPassword(),
-            null, EISProgramAcronym, eisProgramId).stream().findFirst();
+            null, EISProgramAcronym, eisProgramId).stream()
+            .filter(pf -> eisProgramId.equals(pf.getProgramSystemId()))
+            .findFirst();
     }
 }
