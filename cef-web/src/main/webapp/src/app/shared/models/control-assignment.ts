@@ -8,7 +8,6 @@ export class ControlAssignment {
   id: number;
   control: EmissionsReportItem;
   controlPath: ControlPath;
-  association: EmissionsReportItem;
   description: string;
   sequenceNumber: string;
   controlPathChild: ControlPath;

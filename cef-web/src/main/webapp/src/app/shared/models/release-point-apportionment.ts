@@ -1,5 +1,6 @@
-import { ReleasePoint } from './release-point';
-import { BaseCodeLookup } from './base-code-lookup';
+import { ReleasePoint } from 'src/app/shared/models/release-point';
+import { Process } from 'src/app/shared/models/process';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 
 export class ReleasePointApportionment {
   id: number;
@@ -9,4 +10,5 @@ export class ReleasePointApportionment {
   releasePointDescription: string;
   releasePointTypeCode: BaseCodeLookup;
   releasePoint: ReleasePoint;
+  emissionsProcess: Process;
 }
