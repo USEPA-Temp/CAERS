@@ -59,6 +59,7 @@ public class FrsApiClient {
 
     public Optional<ProgramFacility> queryProgramFacility(@NotNull String eisProgramId) {
 
+        // use the first one, assumption is that only one is available after filter
         return this.client.queryProgramFacility(this.config.getNaasUser(), this.config.getNaasPassword(),
             null, EISProgramAcronym, eisProgramId).stream()
             .filter(pf -> new ProgramIdTest(eisProgramId).test(pf.getProgramSystemAcronym(), pf.getProgramSystemId()))
@@ -67,6 +68,7 @@ public class FrsApiClient {
 
     public Optional<ProgramGIS> queryProgramGis(@NotNull String eisProgramId) {
 
+        // use the first one, assumption is that only one is available after filter
         return this.client.queryProgramGis(this.config.getNaasUser(), this.config.getNaasPassword(),
             EISProgramAcronym, eisProgramId).stream()
             .filter(pg -> new ProgramIdTest(eisProgramId).test(pg.getProgramSystemAcronym(), pg.getProgramSystemId()))
