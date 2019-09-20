@@ -156,7 +156,7 @@ export class EmissionDetailsComponent implements OnInit {
       }
 
       // set epaEmissionFactor to true for EPA calculation methods
-      if (value && (value.code === '8' || value.code === '28')) {
+      if (value && value.epaEmissionFactor) {
         this.epaEmissionFactor = true;
       } else {
         this.epaEmissionFactor = false;
@@ -241,10 +241,10 @@ export class EmissionDetailsComponent implements OnInit {
       efCriteria.pollutantCode = this.emissionForm.get('pollutant').value.pollutantCode;
 
       // set controlIndicator based on which calculation method is selected
-      if (this.emissionForm.get('emissionsCalcMethodCode').value.code === '8') {
-        efCriteria.controlIndicator = false;
-      } else {
+      if (this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator) {
         efCriteria.controlIndicator = true;
+      } else {
+        efCriteria.controlIndicator = false;
       }
 
       // Emission Factors with formulas are ignored for now

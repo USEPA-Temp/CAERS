@@ -4,5 +4,7 @@ export class CalculationMethodCode implements BaseCodeLookup {
   code: string;
   description: string;
   shortName: string;
+  controlIndicator: boolean;
+  epaEmissionFactor: boolean;
   totalDirectEntry: boolean;
 }
