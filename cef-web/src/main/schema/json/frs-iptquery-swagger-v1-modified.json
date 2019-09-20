@@ -8,7 +8,8 @@
             "email": "james.chilton@cgifederal.com"
         }
     },
-    "basePath": "http://localhost/facilityiptqueryprd/v1/FRS",
+    "host": "localhost",
+    "basePath": "/facilityiptqueryprd/v1/FRS",
     "tags": [
         {
             "name": "FRS"
@@ -21,6 +22,7 @@
     "paths": {
         "/QueryRegistry": {
             "get": {
+                "operationId": "queryRegistry",
                 "tags": [
                     "FRS"
                 ],
@@ -149,6 +151,7 @@
         },
         "/QueryRegistryGis": {
             "get": {
+                "operationId": "queryRegistryGis",
                 "tags": [
                     "FRS"
                 ],
@@ -205,6 +208,7 @@
         },
         "/QueryProgramFacility": {
             "get": {
+                "operationId": "queryProgramFacility",
                 "tags": [
                     "FRS"
                 ],
@@ -271,6 +275,7 @@
         },
         "/QueryProgramGis": {
             "get": {
+                "operationId": "queryProgramGis",
                 "tags": [
                     "FRS"
                 ],
@@ -329,6 +334,7 @@
         },
         "/QueryInterest": {
             "get": {
+                "operationId": "queryInterest",
                 "tags": [
                     "FRS"
                 ],
@@ -387,6 +393,7 @@
         },
         "/QueryContact": {
             "get": {
+                "operationId": "queryContact",
                 "tags": [
                     "FRS"
                 ],
@@ -445,6 +452,7 @@
         },
         "/QueryOrganization": {
             "get": {
+                "operationId": "queryOrganization",
                 "tags": [
                     "FRS"
                 ],
@@ -503,6 +511,7 @@
         },
         "/QueryMail": {
             "get": {
+                "operationId": "queryMail",
                 "tags": [
                     "FRS"
                 ],
@@ -561,6 +570,7 @@
         },
         "/QuerySic": {
             "get": {
+                "operationId": "querySic",
                 "tags": [
                     "FRS"
                 ],
@@ -619,6 +629,7 @@
         },
         "/QueryNaics": {
             "get": {
+                "operationId": "queryNaics",
                 "tags": [
                     "FRS"
                 ],
@@ -677,6 +688,7 @@
         },
         "/QueryAlternativeName": {
             "get": {
+                "operationId": "queryAlternativeName",
                 "tags": [
                     "FRS"
                 ],
@@ -731,6 +743,7 @@
         },
         "/QueryAlternativeId": {
             "get": {
+                "operationId": "queryAlternativeId",
                 "tags": [
                     "FRS"
                 ],
@@ -791,6 +804,7 @@
         },
         "/QueryTribe": {
             "get": {
+                "operationId": "queryTribe",
                 "tags": [
                     "FRS"
                 ],
@@ -851,6 +865,7 @@
         },
         "/QueryEmissionsUnit": {
             "get": {
+                "operationId": "queryEmissionsUnit",
                 "tags": [
                     "FRS"
                 ],
@@ -923,6 +938,7 @@
         },
         "/QueryReleasePoint": {
             "get": {
+                "operationId": "queryReleasePoint",
                 "tags": [
                     "FRS"
                 ],
@@ -995,6 +1011,7 @@
         },
         "/QueryAssociation": {
             "get": {
+                "operationId": "queryAssociation",
                 "tags": [
                     "FRS"
                 ],
@@ -1067,6 +1084,7 @@
         },
         "/QueryEmissionsProcess": {
             "get": {
+                "operationId": "queryEmissionsProcess",
                 "tags": [
                     "FRS"
                 ],
@@ -1139,6 +1157,7 @@
         },
         "/QueryEmissionsControl": {
             "get": {
+                "operationId": "queryEmissionsControl",
                 "tags": [
                     "FRS"
                 ],
@@ -1211,6 +1230,7 @@
         },
         "/QueryPollutant": {
             "get": {
+                "operationId": "queryPollutant",
                 "tags": [
                     "FRS"
                 ],
@@ -1309,6 +1329,7 @@
             }
         },
         "ProgramFacility": {
+            "x-frs-program-identifiable": true,
             "type": "object",
             "required": [
                 "programSystemAcronym",
@@ -1539,55 +1560,6 @@
                     "example": "RI-PLOVER",
                     "maxLength": 20,
                     "description": "The code that represents the information management system which has responsibility for the data in a linked or interrelated information management system."
-                },
-                "latitude": {
-                    "type": "number",
-                    "maxLength": 10,
-                    "required": "true",
-                    "description": "The measure of the angular distance on a meridian north or south of the equator, as reported by the data source.",
-                    "example": "41.803432"
-                },
-                "longitude": {
-                    "type": "number",
-                    "maxLength": 11,
-                    "required": "true",
-                    "description": "The measure of the angular distance on a meridian east or west of the prime meridian, as reported by the data source.",
-                    "example": "-71.405394"
-                },
-                "accuracyValue": {
-                    "type": "number",
-                    "maxLength": 5,
-                    "required": "false",
-                    "description": "The measure of the accuracy (in meters) of the latitude and longitude coordinates.",
-                    "example": "150"
-                },
-                "collectionMethodCode": {
-                    "type": "string",
-                    "maxLength": 3,
-                    "required": "false",
-                    "description": "The code that represents the method used to determine the latitude and longitude coordinates for a point on the earth.",
-                    "example": ""
-                },
-                "scale": {
-                    "type": "number",
-                    "maxLength": 9,
-                    "required": "false",
-                    "description": "The number that represents the proportional distance on the ground for one unit of measure on the map or photo. Remarks: Mandatory for all horizontal data collection methods except for methods using Global Positioning System (GPS)..",
-                    "example": ""
-                },
-                "heightDatumCode": {
-                    "type": "string",
-                    "maxLength": 3,
-                    "required": "false",
-                    "description": "The code that represents the reference datum used in determining latitude and longitude coordinates. Allowable Values: Value Meaning 001 NAD27 002 NAD83 003 WGS84.",
-                    "example": "002"
-                },
-                "refPointCode": {
-                    "type": "string",
-                    "maxLength": 3,
-                    "required": "false",
-                    "description": "The code that represents the place for which geographic coordinates were established.",
-                    "example": ""
                 }
             }
         },
@@ -2705,7 +2677,7 @@
                     "required": true
                 },
                 "unitDesignCapacity": {
-                    "type": "Number",
+                    "type": "number",
                     "example": "",
                     "maxLength": 30,
                     "description": "The measure of the size of the unit based on the maximum continuous throughput capacity of the unit.",

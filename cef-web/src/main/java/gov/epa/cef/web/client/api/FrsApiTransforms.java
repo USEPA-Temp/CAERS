@@ -46,9 +46,6 @@ public class FrsApiTransforms {
                 result.setProgramSystemCode(programSystemCode);
             }
 
-            result.setLatitude(pf.getLatitude());
-            result.setLongitude(pf.getLongitude());
-
             return result;
         };
     }
