@@ -16,6 +16,10 @@ import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { EmissionFactor } from 'src/app/shared/models/emission-factor';
+import { EmissionFactorService } from 'src/app/core/services/emission-factor.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EmissionFactorModalComponent } from 'src/app/modules/emissions-reporting/components/emission-factor-modal/emission-factor-modal.component';
 
 @Component({
   selector: 'app-emission-details',
@@ -29,6 +33,7 @@ export class EmissionDetailsComponent implements OnInit {
   @Input() editable = false;
   @Input() createMode = false;
   totalManualEntry = false;
+  epaEmissionFactor = false;
   efNumeratorMismatch = false;
   efDenominatorMismatch = false;
   calculatedEf: number;
@@ -57,10 +62,12 @@ export class EmissionDetailsComponent implements OnInit {
     private emissionService: EmissionService,
     private periodService: ReportingPeriodService,
     private processService: EmissionsProcessService,
+    private efService: EmissionFactorService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
     private router: Router,
     public formUtils: FormUtilsService,
+    private modalService: NgbModal,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -147,6 +154,13 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsDenominatorUom').enable();
         this.totalManualEntry = false;
       }
+
+      // set epaEmissionFactor to true for EPA calculation methods
+      if (value && (value.code === '8' || value.code === '28')) {
+        this.epaEmissionFactor = true;
+      } else {
+        this.epaEmissionFactor = false;
+      }
     }
   }
 
@@ -215,6 +229,46 @@ export class EmissionDetailsComponent implements OnInit {
         });
       }
     }
+  }
+
+  openSearchEfModal() {
+    if (!this.emissionForm.get('pollutant').valid || !this.emissionForm.get('emissionsCalcMethodCode').valid) {
+      this.emissionForm.get('pollutant').markAsTouched();
+      this.emissionForm.get('emissionsCalcMethodCode').markAsTouched();
+    } else {
+      const efCriteria = new EmissionFactor();
+      efCriteria.sccCode = +this.process.sccCode;
+      efCriteria.pollutantCode = this.emissionForm.get('pollutant').value.pollutantCode;
+
+      // set controlIndicator based on which calculation method is selected
+      if (this.emissionForm.get('emissionsCalcMethodCode').value.code === '8') {
+        efCriteria.controlIndicator = false;
+      } else {
+        efCriteria.controlIndicator = true;
+      }
+
+      // Emission Factors with formulas are ignored for now
+      efCriteria.formulaIndicator = false;
+
+      this.efService.search(efCriteria)
+      .subscribe(result => {
+        const modalRef = this.modalService.open(EmissionFactorModalComponent, { size: 'lg', backdrop: 'static' });
+        modalRef.componentInstance.tableData = result;
+
+        // update form when modal closes successfully
+        modalRef.result.then((modalEf: EmissionFactor) => {
+          if (modalEf) {
+            this.emissionForm.get('emissionsFactor').setValue(modalEf.emissionFactor);
+            this.emissionForm.get('emissionsNumeratorUom').setValue(modalEf.emissionsNumeratorUom);
+            this.emissionForm.get('emissionsDenominatorUom').setValue(modalEf.emissionsDenominatorUom);
+            this.emissionForm.get('emissionsUomCode').setValue(modalEf.emissionsNumeratorUom);
+          }
+        }, () => {
+          // needed for dismissing without errors
+        });
+      });
+    }
+
   }
 
   searchPollutants = (text$: Observable<string>) =>

@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <h4 class="modal-title w-100">Select Emission Factor</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div *ngIf="tableData && tableData.length">
+    <table class="table table-sm table-striped table-bordered">
+      <thead class="thead-cef-medium">
+        <tr>
+          <th scope="col">Select</th>
+          <th scope="col" sortable="emissionFactor" (sort)="onSort($event)">Emissions Factor</th>
+          <th scope="col" sortable="description" (sort)="onSort($event)">Description</th>
+          <th scope="col" sortable="emissionsNumeratorUom.code" (sort)="onSort($event)">Numerator UoM</th>
+          <th scope="col" sortable="emissionsDenominatorUom.code" (sort)="onSort($event)">Denominator UoM</th>
+          <th scope="col" sortable="calculationMaterialCode.description" (sort)="onSort($event)">Calculation Material</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of tableData">
+          <td><input class="" type="radio" name="efRadio" [formControl]="efControl" [value]="item"></td>
+          <td>{{item.emissionFactor}}</td>
+          <td>{{item.description}}</td>
+          <td>{{item.emissionsNumeratorUom.code}}</td>
+          <td>{{item.emissionsDenominatorUom.code}}</td>
+          <td>{{item.calculationMaterialCode.description}}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="validation-message" *ngIf="efControl.errors && (efControl.dirty || efControl.touched)">
+      <div *ngIf="efControl.errors?.required">
+          An Emission Factor must be selected.
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!tableData || !tableData.length">
+    There are no EPA Emission Factors for this combination of SCC Code, Pollutant, and Calculation Method. Please confirm that these fields are correct.
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="onClose()">Cancel</button>
+  <button type="submit" class="btn btn-success" (click)="onSubmit()" *ngIf="tableData && tableData.length">Select</button>
+</div>

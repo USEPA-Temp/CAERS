@@ -48,11 +48,11 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
     @Column(name = "pollutant_code", length = 12)
     private String pollutantCode;
     
-    @Column(name = "formula_indicator")
-    private boolean formulaIndicator;
+    @Column(name = "formula_indicator", nullable = false)
+    private Boolean formulaIndicator;
     
-    @Column(name = "control_indicator")
-    private boolean controlIndicator;
+    @Column(name = "control_indicator", nullable = false)
+    private Boolean controlIndicator;
     
     @Column(name = "emission_factor", nullable = false, precision = 30, scale = 20)
     private BigDecimal emissionFactor;
@@ -120,19 +120,19 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
         this.pollutantCode = pollutantCode;
     }
 
-    public boolean isFormulaIndicator() {
+    public Boolean isFormulaIndicator() {
         return formulaIndicator;
     }
 
-    public void setFormulaIndicator(boolean formulaIndicator) {
+    public void setFormulaIndicator(Boolean formulaIndicator) {
         this.formulaIndicator = formulaIndicator;
     }
 
-    public boolean isControlIndicator() {
+    public Boolean isControlIndicator() {
         return controlIndicator;
     }
 
-    public void setControlIndicator(boolean controlIndicator) {
+    public void setControlIndicator(Boolean controlIndicator) {
         this.controlIndicator = controlIndicator;
     }
 

@@ -39,6 +39,7 @@ import { EditProcessInfoPanelComponent } from 'src/app/modules/emissions-reporti
 import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-operating-detail-panel/edit-process-operating-detail-panel.component';
 import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 import { EmissionDetailsComponent } from './pages/emission-details/emission-details.component';
+import { EmissionFactorModalComponent } from './components/emission-factor-modal/emission-factor-modal.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { EmissionDetailsComponent } from './pages/emission-details/emission-deta
     EditProcessInfoPanelComponent,
     EditProcessOperatingDetailPanelComponent,
     EditProcessReportingPeriodPanelComponent,
-    EmissionDetailsComponent
+    EmissionDetailsComponent,
+    EmissionFactorModalComponent
 
   ],
   imports: [
@@ -86,7 +88,8 @@ import { EmissionDetailsComponent } from './pages/emission-details/emission-deta
     FontAwesomeModule
   ],
   entryComponents: [
-    EmissionDetailsModalComponent
+    EmissionDetailsModalComponent,
+    EmissionFactorModalComponent
   ]
 })
 export class EmissionsReportingModule { }
