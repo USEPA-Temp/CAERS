@@ -42,10 +42,19 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     @Override
     public FacilitySite copyFromFrs(EmissionsReport report) {
 
-        FacilitySite facilitySite = retrieveFromFrs(report.getEisProgramId())
+        String eisProgramId = report.getEisProgramId();
+
+        FacilitySite facilitySite = retrieveFromFrs(eisProgramId)
             .map(FrsApiTransforms.toFacilitySite(report))
             .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
                 String.format("EIS Program ID %s does not exist in FRS.", report.getEisProgramId())));
+
+        frsClient.queryProgramGis(eisProgramId)
+            .ifPresent(gis -> {
+
+                facilitySite.setLatitude(gis.getLatitude());
+                facilitySite.setLongitude(gis.getLongitude());
+            });
 
         facilitySite.getContacts().addAll(frsClient.queryContacts(report.getEisProgramId()).stream()
             .map(FrsApiTransforms.toFacilitySiteContact(facilitySite))

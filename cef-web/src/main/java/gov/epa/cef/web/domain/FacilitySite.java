@@ -1,7 +1,6 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,8 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import gov.epa.cef.web.domain.common.BaseAuditEntity;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Facility entity. @author MyEclipse Persistence Tools
@@ -21,114 +21,114 @@ import gov.epa.cef.web.domain.common.BaseAuditEntity;
 @Table(name = "facility_site")
 
 public class FacilitySite extends BaseAuditEntity {
-    
+
     private static final long serialVersionUID = 1L;
 
     // Fields
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_code")
     private FacilityCategoryCode facilityCategoryCode;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_type_code")
     private FacilitySourceTypeCode facilitySourceTypeCode;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_system_code")
     private ProgramSystemCode programSystemCode;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_code", nullable = false)
     private OperatingStatusCode operatingStatusCode;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id", nullable = false)
     private EmissionsReport emissionsReport;
-    
+
     @Column(name = "frs_facility_id", length = 22)
     private String frsFacilityId;
-    
+
     @Column(name = "eis_program_id", length = 22)
     private String eisProgramId;
-    
+
     @Column(name = "alt_site_identifier", length = 30)
     private String altSiteIdentifier;
-    
+
     @Column(name = "name", nullable = false, length = 80)
     private String name;
-    
+
     @Column(name = "description", length = 100)
     private String description;
-    
+
     @Column(name = "status_year")
     private Short statusYear;
-    
+
     @Column(name = "street_address", nullable = false, length = 100)
     private String streetAddress;
-    
+
     @Column(name = "city", nullable = false, length = 60)
     private String city;
-    
+
     @Column(name = "county", length = 43)
     private String county;
-    
+
     @Column(name = "state_code", nullable = false, length = 5)
     private String stateCode;
-    
+
     @Column(name = "country_code", length = 10)
     private String countryCode;
-    
+
     @Column(name = "postal_code", length = 10)
     private String postalCode;
-    
+
     @Column(name = "mailing_street_address", length = 100)
     private String mailingStreetAddress;
-    
+
     @Column(name = "mailing_city", length = 60)
     private String mailingCity;
-    
+
     @Column(name = "mailing_state_code", length = 5)
     private String mailingStateCode;
-    
+
     @Column(name = "mailing_postal_code", length = 10)
     private String mailingPostalCode;
-    
+
     @Column(name = "latitude", precision = 10, scale = 6)
-    private Double latitude;
-    
+    private BigDecimal latitude;
+
     @Column(name = "longitude", precision = 10, scale = 6)
-    private Double longitude;
-    
+    private BigDecimal longitude;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tribal_code", nullable = false)
     private TribalCode tribalCode;
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<FacilityNAICSXref> facilityNAICS = new HashSet<FacilityNAICSXref>(0);
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<FacilitySiteContact> contacts = new HashSet<FacilitySiteContact>(0);
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<Control> controls = new HashSet<Control>(0);
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<ControlPath> controlPaths = new HashSet<ControlPath>(0);
 
-    
+
     /***
      * Default constructor
      */
     public FacilitySite() {}
-    
-    
+
+
     /***
      * Copy constructor
      * @param emissionsReport The emissions report object that this facility site should be associated with
@@ -180,8 +180,8 @@ public class FacilitySite extends BaseAuditEntity {
         	this.controlPaths.add(new ControlPath(this, controlPath));
         }
     }
-    
-    
+
+
     public FacilityCategoryCode getFacilityCategoryCode() {
         return this.facilityCategoryCode;
     }
@@ -350,19 +350,19 @@ public class FacilitySite extends BaseAuditEntity {
         this.mailingPostalCode = mailingPostalCode;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return this.latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return this.longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
@@ -421,8 +421,8 @@ public class FacilitySite extends BaseAuditEntity {
     public void setControlPaths(Set<ControlPath> controlPaths) {
         this.controlPaths = controlPaths;
     }
-    
-    
+
+
     /***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */
