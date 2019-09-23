@@ -16,6 +16,7 @@ public class ReportSummaryDto implements Serializable {
     private Double previousYearTotal;
     private Short reportYear;
     private Long facilitySiteId;
+    private Short previousYear;
 
 
     public Long getId() {
@@ -93,6 +94,12 @@ public class ReportSummaryDto implements Serializable {
     }
     public void setFacilitySiteId(Long facilitySiteId) {
         this.facilitySiteId = facilitySiteId;
+    }
+    public Short getPreviousYear() {
+        return previousYear;
+    }
+    public void setPreviousYear(Short previousYear) {
+        this.previousYear = previousYear;
     }
 
 

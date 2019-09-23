@@ -43,6 +43,9 @@ public class ReportSummary extends BaseEntity {
     
     @Column(name = "facility_site_id")
     private Long facilitySiteId ;
+    
+    @Column(name = "previous_year")
+    private Short previousYear;
 
 
 
@@ -114,6 +117,12 @@ public class ReportSummary extends BaseEntity {
     }
     public void setFacilitySiteId(Long facilitySiteId) {
         this.facilitySiteId = facilitySiteId;
+    }
+    public Short getPreviousYear() {
+        return previousYear;
+    }
+    public void setPreviousYear(Short previousYear) {
+        this.previousYear = previousYear;
     }
 
 
