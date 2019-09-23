@@ -19,8 +19,30 @@ public class CalculationMethodCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "control_indicator", nullable = false)
+    private Boolean controlIndicator;
+
+    @Column(name = "epa_emission_factor", nullable = false)
+    private Boolean epaEmissionFactor;
+
     @Column(name = "total_direct_entry", nullable = false)
     private Boolean totalDirectEntry;
+
+    public Boolean getControlIndicator() {
+        return controlIndicator;
+    }
+
+    public void setControlIndicator(Boolean controlIndicator) {
+        this.controlIndicator = controlIndicator;
+    }
+
+    public Boolean getEpaEmissionFactor() {
+        return epaEmissionFactor;
+    }
+
+    public void setEpaEmissionFactor(Boolean epaEmissionFactor) {
+        this.epaEmissionFactor = epaEmissionFactor;
+    }
 
     public Boolean getTotalDirectEntry() {
         return totalDirectEntry;
@@ -29,5 +51,6 @@ public class CalculationMethodCode extends BaseLookupEntity {
     public void setTotalDirectEntry(Boolean totalDirectEntry) {
         this.totalDirectEntry = totalDirectEntry;
     }
+
 
 }
