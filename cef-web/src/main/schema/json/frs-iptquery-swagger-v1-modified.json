@@ -1514,7 +1514,6 @@
                 },
                 "operatingStatusDate": {
                     "type": "string",
-                    "format": "date-time",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The last date the operating status was collected.",
@@ -1536,7 +1535,6 @@
                 },
                 "startDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -1544,7 +1542,6 @@
                 },
                 "endDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -1742,7 +1739,6 @@
                 },
                 "operatingStatusDate": {
                     "type": "string",
-                    "format": "date-time",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The last date the operating status was collected.",
@@ -1771,7 +1767,6 @@
                 },
                 "startDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -1779,7 +1774,6 @@
                 },
                 "endDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -1942,7 +1936,6 @@
                 },
                 "startDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "description": "The date this data started to be of interest in ISO 8601 format.",
                     "example": "2012-04-21"
@@ -1954,7 +1947,6 @@
                 },
                 "endDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "description": "The date this data is no longer of interest in ISO 8601 format",
                     "example": "2012-04-21"
@@ -2117,7 +2109,6 @@
                 },
                 "startDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -2125,7 +2116,6 @@
                 },
                 "endDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -2275,7 +2265,6 @@
                 },
                 "startDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -2283,7 +2272,6 @@
                 },
                 "endDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -2349,7 +2337,6 @@
                 },
                 "startDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -2357,7 +2344,6 @@
                 },
                 "endDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -3246,7 +3232,6 @@
                 },
                 "releasePointDataCollectionDate": {
                     "type": "string",
-                    "format": "date",
                     "example": "01-Nov-2017",
                     "maxLength": 30,
                     "description": "The calendar date when data were collected. ",
@@ -3439,7 +3424,6 @@
                 },
                 "collectionDate": {
                     "type": "string",
-                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The calendar data when data were collected.",

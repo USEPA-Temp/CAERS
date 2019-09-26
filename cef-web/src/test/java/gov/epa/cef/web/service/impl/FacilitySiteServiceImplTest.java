@@ -6,6 +6,7 @@ import com.google.common.io.Resources;
 import gov.epa.cef.web.client.api.FrsApiClient;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
@@ -113,6 +114,11 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
 
         assertTrue(facilitySite.getContacts().isEmpty());
 
+        assertEquals(1, facilitySite.getFacilityNAICS().size());
+        FacilityNAICSXref naics = facilitySite.getFacilityNAICS().iterator().next();
+        assertTrue(naics.isPrimaryFlag());
+        assertEquals(321113L, naics.getNaicsCode().getCode().longValue());
+
         assertFalse(facilitySite.getEmissionsUnits().isEmpty());
         assertEquals(10, facilitySite.getEmissionsUnits().size());
 
@@ -123,6 +129,8 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
         assertNotNull(unit.getUnitOfMeasureCode());
         assertEquals("HP", unit.getUnitOfMeasureCode().getCode());
         assertEquals(new BigDecimal("64"), unit.getDesignCapacity());
+        assertNotNull(unit.getOperatingStatusCode());
+        assertEquals("OP", unit.getOperatingStatusCode().getCode());
     }
 
     @Test

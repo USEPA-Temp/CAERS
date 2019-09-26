@@ -30,8 +30,19 @@ public class FrsSubfacilityTransforms {
             String opstatus = unit.getUnitOperatingStatus();
             if (opstatus != null) {
 
+                // TODO do we need translation from FRS to CAER?
+                switch(opstatus) {
+                    case "OPERATING":
+                        opstatus = "OP";
+                        break;
+                    case "PERMANENTLY SHUTDOWN":
+                        opstatus = "PS";
+                        break;
+                }
+
                 OperatingStatusCode operatingStatusCode = new OperatingStatusCode();
                 operatingStatusCode.setCode(opstatus);
+
                 result.setOperatingStatusCode(operatingStatusCode);
             }
 
@@ -41,10 +52,9 @@ public class FrsSubfacilityTransforms {
             String typecode = unit.getUnitTypeCode();
             if (typecode != null) {
 
-                UnitTypeCode utc = new UnitTypeCode();
-                utc.setCode(typecode);
-
-                result.setUnitTypeCode(utc);
+                UnitTypeCode unitTypeCode = new UnitTypeCode();
+                unitTypeCode.setCode(typecode);
+                result.setUnitTypeCode(unitTypeCode);
             }
 
             result.setTypeCodeDescription(unit.getUnitTypeDescription());

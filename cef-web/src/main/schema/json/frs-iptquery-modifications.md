@@ -22,5 +22,5 @@ Model Dates: change all dates to maxlength 30 for consistency
 Model Dates: added format: "date" or "date-time" as appropriate (guess)
 Model flag/indicator: changed type to boolean
 Model lastReportedDate: reverted to string, it is neither date nor date-time, format unknown
-Model Dates: had to revert some dates, data coming from FRS is not in an ISO format
+Model Dates: had to revert dates to string, data format coming from FRS is not in an ISO format
 Model boolean: had to revert to string, why can't we use standard JSON datatypes?
