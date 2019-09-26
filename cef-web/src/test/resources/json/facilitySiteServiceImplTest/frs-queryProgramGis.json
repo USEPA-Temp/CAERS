@@ -1,0 +1,18 @@
+{
+    "programSystemId": "554711",
+    "programSystemAcronym": "EIS",
+    "latitude": "34.252502",
+    "longitude": "-85.321754",
+    "accuracyValue": "100",
+    "verticalMeasure": null,
+    "verticalMethodCode": null,
+    "verticalDatumCode": null,
+    "verticalAccuracy": null,
+    "collectionMethodCode": null,
+    "scale": null,
+    "heightDatumCode": "003",
+    "collectionDate": null,
+    "commentText": null,
+    "geometricTypeCode": null,
+    "refPointCode": null
+}

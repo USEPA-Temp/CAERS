@@ -905,13 +905,13 @@
                         "in": "query",
                         "name": "pageSize",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     },
                     {
                         "in": "query",
                         "name": "offSet",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -978,13 +978,13 @@
                         "in": "query",
                         "name": "pageSize",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     },
                     {
                         "in": "query",
                         "name": "offSet",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1051,13 +1051,13 @@
                         "in": "query",
                         "name": "pageSize",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     },
                     {
                         "in": "query",
                         "name": "offSet",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1124,13 +1124,13 @@
                         "in": "query",
                         "name": "pageSize",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     },
                     {
                         "in": "query",
                         "name": "offSet",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1197,13 +1197,13 @@
                         "in": "query",
                         "name": "pageSize",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     },
                     {
                         "in": "query",
                         "name": "offSet",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1270,13 +1270,13 @@
                         "in": "query",
                         "name": "pageSize",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     },
                     {
                         "in": "query",
                         "name": "offSet",
                         "required": false,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1329,7 +1329,6 @@
             }
         },
         "ProgramFacility": {
-            "x-frs-program-identifiable": true,
             "type": "object",
             "required": [
                 "programSystemAcronym",
@@ -1438,19 +1437,19 @@
                     "description": "Y/N code indicating whether or not a business is requesting relief under EPA Small Business Policy, which applies to businesses having less than 100 employees.",
                     "example": "Y"
                 },
-                "HUCCode8": {
+                "huccode8": {
                     "type": "string",
                     "maxLength": 8,
                     "description": "The HUC 8 Code for the registry item.",
                     "example": "17060102"
                 },
-                "HUCCode12": {
+                "huccode12": {
                     "type": "string",
                     "maxLength": 12,
                     "description": "The HUC 12 Code for the registry item.",
                     "example": "170601020101"
                 },
-                "IsPOTWFlag": {
+                "isPOTWFlag": {
                     "type": "string",
                     "maxLength": 1,
                     "required": "false",
@@ -1515,13 +1514,14 @@
                 },
                 "operatingStatusDate": {
                     "type": "string",
+                    "format": "date-time",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The last date the operating status was collected.",
                     "example": "2012-04-21T18:25:43-05:00"
                 },
                 "operatingStatusYear": {
-                    "type": "number",
+                    "type": "integer",
                     "maxLength": 4,
                     "required": "false",
                     "description": "The last year the operating status was collected.",
@@ -1536,6 +1536,7 @@
                 },
                 "startDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -1543,6 +1544,7 @@
                 },
                 "endDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -1555,7 +1557,7 @@
                     "description": "The most recent date the corresponding data was reported to the Source of Data in ISO 8601 format.",
                     "example": "2012-04-21"
                 },
-                "FacilitySourceSystemProgramCode": {
+                "facilitySourceSystemProgramCode": {
                     "type": "string",
                     "example": "RI-PLOVER",
                     "maxLength": 20,
@@ -1740,13 +1742,14 @@
                 },
                 "operatingStatusDate": {
                     "type": "string",
+                    "format": "date-time",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The last date the operating status was collected.",
                     "example": "2012-04-21T18:25:43-05:00"
                 },
                 "operatingStatusYear": {
-                    "type": "number",
+                    "type": "integer",
                     "maxLength": 4,
                     "required": "false",
                     "description": "The last year the operating status was collected.",
@@ -1768,6 +1771,7 @@
                 },
                 "startDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -1775,6 +1779,7 @@
                 },
                 "endDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -1937,6 +1942,7 @@
                 },
                 "startDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "description": "The date this data started to be of interest in ISO 8601 format.",
                     "example": "2012-04-21"
@@ -1948,6 +1954,7 @@
                 },
                 "endDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "description": "The date this data is no longer of interest in ISO 8601 format",
                     "example": "2012-04-21"
@@ -2110,6 +2117,7 @@
                 },
                 "startDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -2117,6 +2125,7 @@
                 },
                 "endDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -2266,6 +2275,7 @@
                 },
                 "startDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -2273,6 +2283,7 @@
                 },
                 "endDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -2338,6 +2349,7 @@
                 },
                 "startDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data started to be of interest in ISO 8601 format.",
@@ -2345,6 +2357,7 @@
                 },
                 "endDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The date this data is no longer of interest in ISO 8601 format",
@@ -2464,7 +2477,7 @@
                 },
                 "lastReportedDate": {
                     "type": "string",
-                    "maxLength": 7,
+                    "maxLength": 30,
                     "required": "false",
                     "description": "The most recent date the corresponding individual data was reported to the Source of Data.",
                     "example": "2017-10-08"
@@ -2565,6 +2578,10 @@
         },
         "Association": {
             "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
             "properties": {
                 "programSystemAcronym": {
                     "type": "string",
@@ -2619,6 +2636,10 @@
         },
         "Unit": {
             "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
             "properties": {
                 "programSystemAcronym": {
                     "type": "string",
@@ -2700,7 +2721,7 @@
                 "unitOperationDate": {
                     "type": "string",
                     "example": "01-Nov-2017",
-                    "maxLength": 20,
+                    "maxLength": 30,
                     "description": "The date on which unit activity became operational.",
                     "required": false
                 },
@@ -2719,7 +2740,7 @@
                     "required": false
                 },
                 "unitOperatingStatusYear": {
-                    "type": "string",
+                    "type": "integer",
                     "example": "2010",
                     "maxLength": 4,
                     "description": "The operating status year.",
@@ -2733,14 +2754,14 @@
                     "required": false
                 },
                 "unitPermitStartYear": {
-                    "type": "string",
+                    "type": "integer",
                     "example": "2010",
                     "maxLength": 4,
                     "description": "The start year of the permitting status of the object.",
                     "required": false
                 },
                 "unitPermitEndYear": {
-                    "type": "string",
+                    "type": "integer",
                     "example": "2015",
                     "maxLength": 4,
                     "description": "The end year of the permitting status of the object.",
@@ -2757,6 +2778,10 @@
         },
         "Process": {
             "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
             "properties": {
                 "programSystemAcronym": {
                     "type": "string",
@@ -2808,7 +2833,7 @@
                     "required": false
                 },
                 "processOperatingStatusYear": {
-                    "type": "string",
+                    "type": "integer",
                     "example": "2010",
                     "maxLength": 4,
                     "description": "The operating status year.",
@@ -2832,6 +2857,10 @@
         },
         "Control": {
             "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
             "properties": {
                 "programSystemAcronym": {
                     "type": "string",
@@ -2876,21 +2905,21 @@
                     "required": false
                 },
                 "controlFirstInventoryYear": {
-                    "type": "number",
+                    "type": "integer",
                     "example": "1980",
                     "maxLength": 4,
                     "description": "The inventory year for which the controls were implemented.",
                     "required": true
                 },
                 "controlLastInventoryYear": {
-                    "type": "number",
+                    "type": "integer",
                     "example": "2050",
                     "maxLength": 4,
                     "description": "The last inventory year for which the controls were active.",
                     "required": false
                 },
                 "controlOperatingMonthsNumber": {
-                    "type": "number",
+                    "type": "integer",
                     "example": 12,
                     "maxLength": 2,
                     "description": "Number of months the control measure is being operated.",
@@ -2918,7 +2947,7 @@
                     "required": false
                 },
                 "controlOperatingStatusYear": {
-                    "type": "string",
+                    "type": "integer",
                     "example": "2010",
                     "maxLength": 4,
                     "description": "The operating status year.",
@@ -2942,6 +2971,10 @@
         },
         "Pollutant": {
             "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
             "properties": {
                 "programSystemAcronym": {
                     "type": "string",
@@ -3003,6 +3036,10 @@
         },
         "ReleasePoint": {
             "type": "object",
+            "required": [
+                "programSystemAcronym",
+                "programSystemId"
+            ],
             "properties": {
                 "programSystemAcronym": {
                     "type": "string",
@@ -3209,8 +3246,9 @@
                 },
                 "releasePointDataCollectionDate": {
                     "type": "string",
+                    "format": "date",
                     "example": "01-Nov-2017",
-                    "maxLength": 11,
+                    "maxLength": 30,
                     "description": "The calendar date when data were collected. ",
                     "required": false
                 },
@@ -3257,7 +3295,7 @@
                     "required": false
                 },
                 "releasePointOperatingStatusYear": {
-                    "type": "string",
+                    "type": "integer",
                     "example": "2010",
                     "maxLength": 4,
                     "description": "The operating status year.",
@@ -3301,7 +3339,7 @@
                 },
                 "lastReportedDate": {
                     "type": "string",
-                    "maxLength": 7,
+                    "maxLength": 30,
                     "required": "false",
                     "description": "The most recent date the corresponding individual data was reported to the Source of Data.",
                     "example": "2017-10-08"
@@ -3401,6 +3439,7 @@
                 },
                 "collectionDate": {
                     "type": "string",
+                    "format": "date",
                     "maxLength": 30,
                     "required": "false",
                     "description": "The calendar data when data were collected.",
@@ -3468,7 +3507,7 @@
                 },
                 "lastReportedDate": {
                     "type": "string",
-                    "maxLength": 7,
+                    "maxLength": 30,
                     "required": "false",
                     "description": "The most recent date the corresponding individual data was reported to the Source of Data.",
                     "example": "2017-10-08"

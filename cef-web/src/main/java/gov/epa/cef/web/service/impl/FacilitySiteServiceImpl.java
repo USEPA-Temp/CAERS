@@ -1,7 +1,8 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.client.api.FrsApiClient;
-import gov.epa.cef.web.client.api.FrsApiTransforms;
+import gov.epa.cef.web.client.api.FrsFacilityApiTransforms;
+import gov.epa.cef.web.client.api.FrsSubfacilityTransforms;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
@@ -45,24 +46,29 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
         String eisProgramId = report.getEisProgramId();
 
         FacilitySite facilitySite = retrieveFromFrs(eisProgramId)
-            .map(FrsApiTransforms.toFacilitySite(report))
+            .map(FrsFacilityApiTransforms.toFacilitySite(report))
             .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
                 String.format("EIS Program ID %s does not exist in FRS.", report.getEisProgramId())));
 
-        frsClient.queryProgramGis(eisProgramId)
+        this.frsClient.queryProgramGis(eisProgramId)
             .ifPresent(gis -> {
 
                 facilitySite.setLatitude(gis.getLatitude());
                 facilitySite.setLongitude(gis.getLongitude());
             });
 
-        facilitySite.getContacts().addAll(frsClient.queryContacts(report.getEisProgramId()).stream()
-            .map(FrsApiTransforms.toFacilitySiteContact(facilitySite))
+        facilitySite.getContacts().addAll(this.frsClient.queryContacts(eisProgramId).stream()
+            .map(FrsFacilityApiTransforms.toFacilitySiteContact(facilitySite))
             .collect(Collectors.toList()));
 
-        facilitySite.getFacilityNAICS().addAll(frsClient.queryNaics(report.getEisProgramId()).stream()
-            .map(FrsApiTransforms.toFacilityNaicsXref(facilitySite))
+        facilitySite.getFacilityNAICS().addAll(this.frsClient.queryNaics(eisProgramId).stream()
+            .map(FrsFacilityApiTransforms.toFacilityNaicsXref(facilitySite))
             .collect(Collectors.toList()));
+
+        facilitySite.getEmissionsUnits().addAll(
+            this.frsClient.queryEmissionsUnit(eisProgramId, null, null).stream()
+                .map(FrsSubfacilityTransforms.toEmissionsUnit(facilitySite))
+                .collect(Collectors.toList()));
 
         return this.facSiteRepo.save(facilitySite);
     }
