@@ -174,6 +174,7 @@ public class EmissionServiceImpl implements EmissionService {
                     MassUomConversion.TON);
             return calculatedEmissionsTons;
         } catch (IllegalArgumentException ex) {
+            LOGGER.debug("Could not perform emission conversion. " + ex.getLocalizedMessage());
             return null;
         }
     }
