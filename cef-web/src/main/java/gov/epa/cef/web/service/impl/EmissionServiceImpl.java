@@ -11,6 +11,9 @@ import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
+import gov.epa.cef.web.util.CalculationUtils;
+import gov.epa.cef.web.util.MassUomConversion;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,8 @@ public class EmissionServiceImpl implements EmissionService {
     public EmissionDto create(EmissionDto dto) {
 
         Emission emission = emissionMapper.fromDto(dto);
+        
+        emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
         return result;
@@ -74,6 +79,8 @@ public class EmissionServiceImpl implements EmissionService {
 
         Emission emission = emissionRepo.findById(dto.getId()).orElse(null);
         emissionMapper.updateFromDto(dto, emission);
+
+        emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
         return result;
@@ -158,6 +165,17 @@ public class EmissionServiceImpl implements EmissionService {
 
         LOGGER.debug("findEmissionsByFacilityAndCAS - Exiting");
         return emissionsByFacilityDto;
+    }
+    
+    private BigDecimal calculateEmissionTons(Emission emission) {
+        try {
+            BigDecimal calculatedEmissionsTons = CalculationUtils.convertMassUnits(emission.getTotalEmissions(), 
+                    MassUomConversion.valueOf(emission.getEmissionsUomCode().getCode()), 
+                    MassUomConversion.TON);
+            return calculatedEmissionsTons;
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 
 }
