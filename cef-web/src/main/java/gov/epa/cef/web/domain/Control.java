@@ -49,6 +49,10 @@ public class Control extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
     private Set<ControlPollutant> pollutants = new HashSet<ControlPollutant>(0);
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "control_measure_code", nullable = false)
+    private ControlMeasureCode controlMeasureCode;
+
     /**
      * Default constructor
      */
@@ -71,6 +75,7 @@ public class Control extends BaseAuditEntity {
     	for (ControlPollutant pollutant : originalControl.getPollutants()) {
     		this.pollutants.add(new ControlPollutant(this, pollutant));
     	}
+    	this.controlMeasureCode = originalControl.getControlMeasureCode();
     }
     
     public FacilitySite getFacilitySite() {
@@ -143,6 +148,14 @@ public class Control extends BaseAuditEntity {
 
     public void setPollutants(Set<ControlPollutant> controlPollutants) {
         this.pollutants = controlPollutants;
+    }
+
+    public ControlMeasureCode getControlMeasureCode() {
+        return controlMeasureCode;
+    }
+
+    public void setControlMeasureCode(ControlMeasureCode controlMeasureCode) {
+        this.controlMeasureCode = controlMeasureCode;
     }
     
     
