@@ -127,7 +127,7 @@
                     <label for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions UoM:</strong></label>
                     <div class="col-sm-8 col-lg-4">
                         <select type="text" class="form-control" id="emissionsUomCodeSelect" formControlName="emissionsUomCode" [compareWith]="formUtils.compareCode">
-                            <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                            <option *ngFor="let opt of numeratorUomValues" [ngValue]="opt">{{opt.code}}</option>
                         </select>
                         <app-validation-message [control]="emissionForm.controls.emissionsUomCode"></app-validation-message>
                         <div class="validation-message" *ngIf="efNumeratorMismatch">
