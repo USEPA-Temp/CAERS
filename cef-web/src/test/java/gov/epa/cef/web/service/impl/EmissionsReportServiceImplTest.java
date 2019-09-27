@@ -250,7 +250,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	fstc.setDescription("Source Type Desc");
     	fs.setFacilitySourceTypeCode(fstc);
 
-    	HashSet<FacilitySiteContact> contacts = new HashSet<>();
+    	List<FacilitySiteContact> contacts = new ArrayList<>();
     	FacilitySiteContact fsc = new FacilitySiteContact();
     	fsc.setCity("Raleigh");
     	fsc.setId(1L);
@@ -260,7 +260,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	contacts.add(fsc);
     	fs.setContacts(contacts);
 
-    	HashSet<FacilityNAICSXref> facilityNAICS = new HashSet<FacilityNAICSXref>();
+    	List<FacilityNAICSXref> facilityNAICS = new ArrayList<>();
     	FacilityNAICSXref xref = new FacilityNAICSXref();
     	xref.setFacilitySite(fs);
     	xref.setId(1L);
@@ -270,14 +270,14 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	xref.setNaicsCode(naics);
     	fs.setFacilityNAICS(facilityNAICS);
 
-    	HashSet<ReleasePoint> releasePoints = new HashSet<ReleasePoint>();
+    	List<ReleasePoint> releasePoints = new ArrayList<>();
     	ReleasePoint rp = new ReleasePoint();
     	rp.setId(1L);
     	rp.setComments("Comments");
     	releasePoints.add(rp);
     	fs.setReleasePoints(releasePoints);
 
-    	HashSet<Control> controls = new HashSet<Control>();
+    	List<Control> controls = new ArrayList<>();
     	Control control = new Control();
     	control.setId(1L);
     	control.setFacilitySite(fs);
@@ -306,7 +306,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	eu.setComments("Test Unit");
     	eu.setFacilitySite(fs);
 
-    	HashSet<EmissionsProcess> processes = new HashSet<EmissionsProcess>();
+    	List<EmissionsProcess> processes = new ArrayList<>();
     	EmissionsProcess ep = new EmissionsProcess();
     	ep.setId(1L);
     	ep.setEmissionsUnit(eu);

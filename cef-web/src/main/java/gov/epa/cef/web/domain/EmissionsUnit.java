@@ -12,8 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -66,8 +66,7 @@ public class EmissionsUnit extends BaseAuditEntity {
     private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
-    private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
-
+    private List<EmissionsProcess> emissionsProcesses = new ArrayList<>();
 
     /***
      * Default constructor
@@ -182,11 +181,14 @@ public class EmissionsUnit extends BaseAuditEntity {
     }
 
 
-    public Set<EmissionsProcess> getEmissionsProcesses() {
+    public List<EmissionsProcess> getEmissionsProcesses() {
         return this.emissionsProcesses;
     }
-    public void setEmissionsProcesses(Set<EmissionsProcess> emissionsProcesses) {
-        this.emissionsProcesses = emissionsProcesses;
+    public void setEmissionsProcesses(List<EmissionsProcess> emissionsProcesses) {
+        this.emissionsProcesses.clear();
+        if (emissionsProcesses != null) {
+            this.emissionsProcesses.addAll(emissionsProcesses);
+        }
     }
 
 
