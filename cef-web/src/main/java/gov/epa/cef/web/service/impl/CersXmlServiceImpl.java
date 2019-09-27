@@ -67,7 +67,7 @@ public class CersXmlServiceImpl implements CersXmlService {
             cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
         }
 
-        AddProcessControls(source, cers);
+        addProcessControls(source, cers);
         
         cers.setUserIdentifier(userService.getCurrentUser().getEmail());
 
@@ -110,7 +110,7 @@ public class CersXmlServiceImpl implements CersXmlService {
      * Recursively iterate over the control paths to account for child control paths
      * Remove duplicate control pollutants and duplicate control measures
      */
-    private void AddProcessControls(EmissionsReport report, CERSDataType cers) {
+    private void addProcessControls(EmissionsReport report, CERSDataType cers) {
 		for (FacilitySite facility : report.getFacilitySites()) {
 			for (EmissionsUnit unit : facility.getEmissionsUnits()) {
 				for (EmissionsProcess process : unit.getEmissionsProcesses()) {
@@ -120,11 +120,11 @@ public class CersXmlServiceImpl implements CersXmlService {
 					
 					for (ReleasePointAppt rpa : process.getReleasePointAppts()) {
 						if (rpa.getControlPath() != null) {
-							PopulateControlApproach(rpa.getControlPath(), ca);
+							populateControlApproach(rpa.getControlPath(), ca);
 						}
 					}
 					
-					AddControlToCersProcess(ca, process, cers);
+					addControlToCersProcess(ca, process, cers);
 				}
 			}
 		}
@@ -138,7 +138,7 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @param path Control path whose assignments will be iterated
      * @param ca Control Approach that will be updated
      */
-    private void PopulateControlApproach(ControlPath path, ControlApproachDataType ca) {		
+    private void populateControlApproach(ControlPath path, ControlApproachDataType ca) {		
 		for (ControlAssignment assignment : path.getAssignments()) {
 			if (assignment.getControl() != null) {
 				ca.setControlApproachComment(assignment.getControl().getComments());
@@ -158,14 +158,14 @@ public class CersXmlServiceImpl implements CersXmlService {
 				}
 				
 				//add a new control measure to the control measure list
-				if (!IsDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
+				if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
 					ControlMeasureDataType cm = new ControlMeasureDataType();
 					cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getDescription());
 					ca.getControlMeasure().add(cm);
 				}
 				
 				for (ControlPollutant pollutant : assignment.getControl().getPollutants()) {
-					if (!IsDuplicateControlPollutant(ca.getControlPollutant(), pollutant)) {
+					if (!isDuplicateControlPollutant(ca.getControlPollutant(), pollutant)) {
 						ControlPollutantDataType cp = new ControlPollutantDataType();
 						cp.setPercentControlMeasuresReductionEfficiency(new BigDecimal(pollutant.getPercentReduction().toString()));
 						cp.setPollutantCode(pollutant.getPollutant().getPollutantCode());
@@ -174,7 +174,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 				}
 			} else if (assignment.getControlPathChild() != null) {
 				//recursive call to collect data from children control paths
-				PopulateControlApproach(assignment.getControlPathChild(), ca);
+				populateControlApproach(assignment.getControlPathChild(), ca);
 			}
 		}
 		
@@ -187,11 +187,11 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @param sourceProcess
      * @param cers
      */
-	private void AddControlToCersProcess(ControlApproachDataType ca, EmissionsProcess sourceProcess, CERSDataType cers) {
+	private void addControlToCersProcess(ControlApproachDataType ca, EmissionsProcess sourceProcess, CERSDataType cers) {
 		for (FacilitySiteDataType cersFacilitySite: cers.getFacilitySite()) {
 			for (EmissionsUnitDataType cersUnit : cersFacilitySite.getEmissionsUnit()) {
 				for (ProcessDataType cersProcess : cersUnit.getUnitEmissionsProcess()) {
-					if (ProcessesMatch(sourceProcess, cersProcess)) {
+					if (processesMatch(sourceProcess, cersProcess)) {
 						cersProcess.setProcessControlApproach(ca);
 					}
 				}
@@ -206,7 +206,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 	 * @param control
 	 * @return
 	 */
-	private boolean IsDuplicateControlMeasure(List<ControlMeasureDataType> controlMeasures, Control control) {
+	private boolean isDuplicateControlMeasure(List<ControlMeasureDataType> controlMeasures, Control control) {
 		for (ControlMeasureDataType controlMeasure : controlMeasures) {
 			if (controlMeasure.getControlMeasureCode().equals(control.getControlMeasureCode().getDescription())) {
 				return true;
@@ -222,7 +222,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 	 * @param pollutant
 	 * @return
 	 */
-	private boolean IsDuplicateControlPollutant(List<ControlPollutantDataType> controlPollutants, ControlPollutant pollutant) {
+	private boolean isDuplicateControlPollutant(List<ControlPollutantDataType> controlPollutants, ControlPollutant pollutant) {
 		for (ControlPollutantDataType controlPollutant : controlPollutants) {
 			if (controlPollutant.getPollutantCode().contentEquals(pollutant.getPollutant().getPollutantCode())) {
 				return true;
@@ -238,7 +238,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 	 * @param cersProcess
 	 * @return
 	 */
-	private boolean ProcessesMatch(EmissionsProcess sourceProcess, ProcessDataType cersProcess) {
+	private boolean processesMatch(EmissionsProcess sourceProcess, ProcessDataType cersProcess) {
 
 		if (sourceProcess.getSccCode() != null && !sourceProcess.getSccCode().equals(cersProcess.getSourceClassificationCode())) {
 			return false;
