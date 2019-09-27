@@ -10,8 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,7 +22,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "facility_site")
-
 public class FacilitySite extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +40,7 @@ public class FacilitySite extends BaseAuditEntity {
     @JoinColumn(name = "program_system_code")
     private ProgramSystemCode programSystemCode;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_code", nullable = false)
     private OperatingStatusCode operatingStatusCode;
@@ -101,14 +104,14 @@ public class FacilitySite extends BaseAuditEntity {
     private BigDecimal longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tribal_code", nullable = false)
+    @JoinColumn(name = "tribal_code")
     private TribalCode tribalCode;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<FacilityNAICSXref> facilityNAICS = new HashSet<FacilityNAICSXref>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
-    private Set<EmissionsUnit> emissionsUnits = new HashSet<EmissionsUnit>(0);
+    private List<EmissionsUnit> emissionsUnits = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
@@ -382,12 +385,16 @@ public class FacilitySite extends BaseAuditEntity {
         this.facilityNAICS = facilityNAICS;
     }
 
-    public Set<EmissionsUnit> getEmissionsUnits() {
+    public List<EmissionsUnit> getEmissionsUnits() {
         return this.emissionsUnits;
     }
 
-    public void setEmissionsUnits(Set<EmissionsUnit> emissionsUnits) {
-        this.emissionsUnits = emissionsUnits;
+    public void setEmissionsUnits(List<EmissionsUnit> emissionsUnits) {
+
+        this.emissionsUnits.clear();
+        if (emissionsUnits != null) {
+            this.emissionsUnits.addAll(emissionsUnits);
+        }
     }
 
     public Set<ReleasePoint> getReleasePoints() {

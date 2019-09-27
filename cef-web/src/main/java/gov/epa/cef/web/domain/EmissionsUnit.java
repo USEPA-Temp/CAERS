@@ -1,7 +1,6 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,8 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import gov.epa.cef.web.domain.common.BaseAuditEntity;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -23,15 +24,18 @@ import gov.epa.cef.web.domain.common.BaseAuditEntity;
 public class EmissionsUnit extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
-    
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_code", nullable = false)
     private UnitTypeCode unitTypeCode;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_code", nullable = false)
     private OperatingStatusCode operatingStatusCode;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
@@ -50,27 +54,27 @@ public class EmissionsUnit extends BaseAuditEntity {
 
     @Column(name = "status_year")
     private Short statusYear;
-    
+
     @Column(name = "design_capacity", precision = 4)
-    private Double designCapacity;
+    private BigDecimal designCapacity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_measure_cd")
     private UnitMeasureCode unitOfMeasureCode;
-    
+
     @Column(name = "comments", length = 200)
     private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
     private Set<EmissionsProcess> emissionsProcesses = new HashSet<EmissionsProcess>(0);
 
-    
+
     /***
      * Default constructor
      */
     public EmissionsUnit() {}
-    
-    
+
+
     /***
      * Copy constructor
      * @param facilitySite The facility site object that this unit should be associated with
@@ -94,7 +98,7 @@ public class EmissionsUnit extends BaseAuditEntity {
         	this.emissionsProcesses.add(new EmissionsProcess(this, process));
         }
     }
-    
+
     public UnitTypeCode getUnitTypeCode() {
         return this.unitTypeCode;
     }
@@ -158,12 +162,12 @@ public class EmissionsUnit extends BaseAuditEntity {
         this.unitOfMeasureCode = unitOfMeasureCode;
     }
 
-    public Double getDesignCapacity() {
+    public BigDecimal getDesignCapacity() {
         return designCapacity;
     }
 
 
-    public void setDesignCapacity(Double designCapacity) {
+    public void setDesignCapacity(BigDecimal designCapacity) {
         this.designCapacity = designCapacity;
     }
 
@@ -184,8 +188,8 @@ public class EmissionsUnit extends BaseAuditEntity {
     public void setEmissionsProcesses(Set<EmissionsProcess> emissionsProcesses) {
         this.emissionsProcesses = emissionsProcesses;
     }
-    
-    
+
+
     /***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */

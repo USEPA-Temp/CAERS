@@ -534,6 +534,7 @@
                 <version>${swagger-codegen-plugin.version}</version>
                 <executions>
                     <execution>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -548,6 +549,7 @@
                             <configOptions>
                                 <dateLibrary>java8</dateLibrary>
                                 <java8>true</java8>
+                                <serializableModel>true</serializableModel>
                             </configOptions>
 
                             <modelPackage>gov.epa.client.frs.iptquery.model</modelPackage>
@@ -560,6 +562,44 @@
                             <generateModelTests>false</generateModelTests>
                             <generateSupportingFiles>true</generateSupportingFiles>
                             <generateModelDocumentation>false</generateModelDocumentation>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+
+                                <replace
+                                    dir="${build.directory}/generated-sources/swagger/src/main/java/gov/epa/client/frs/iptquery/model"
+                                    token="implements Serializable"
+                                    value="implements Serializable, gov.epa.cef.web.client.api.FrsProgramIdentifiable">
+                                    <include name="AlternativeId.java"/>
+                                    <include name="Association.java"/>
+                                    <include name="Contact.java"/>
+                                    <include name="Interest.java"/>
+                                    <include name="Mail.java"/>
+                                    <include name="Naics.java"/>
+                                    <include name="Organization.java"/>
+                                    <include name="Pollutant.java"/>
+                                    <include name="Process.java"/>
+                                    <include name="ProgramFacility.java"/>
+                                    <include name="ProgramGIS.java"/>
+                                    <include name="ReleasePoint.java"/>
+                                    <include name="Sic.java"/>
+                                    <include name="Tribe.java"/>
+                                    <include name="Unit.java"/>
+                                </replace>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
@@ -812,7 +852,8 @@
                             <fork>true</fork>
                             <addResources>true</addResources>
                             <systemPropertyVariables>
-                                <cdxWebUser.properties>${basedir}/src/test/resources/cdxWebUser/cdxWebUser.properties</cdxWebUser.properties>
+                                <cdxWebUser.properties>${basedir}/src/test/resources/cdxWebUser/cdxWebUser.properties
+                                </cdxWebUser.properties>
                             </systemPropertyVariables>
                             <!--
                             Enable the line below to have remote debugging of your application on port 5005

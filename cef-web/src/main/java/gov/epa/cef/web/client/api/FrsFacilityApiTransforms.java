@@ -11,10 +11,14 @@ import gov.epa.client.frs.iptquery.model.Contact;
 import gov.epa.client.frs.iptquery.model.Naics;
 import gov.epa.client.frs.iptquery.model.ProgramFacility;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 
-public class FrsApiTransforms {
+public class FrsFacilityApiTransforms {
+
+    private static final Logger logger = LoggerFactory.getLogger(FrsFacilityApiTransforms.class);
 
     public static Function<ProgramFacility, FacilitySite> toFacilitySite(EmissionsReport report) {
 
