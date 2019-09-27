@@ -300,7 +300,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	fs.setControls(controls);
 
 
-    	HashSet<EmissionsUnit> units = new HashSet<EmissionsUnit>();
+    	List<EmissionsUnit> units = new ArrayList<>();
     	EmissionsUnit eu = new EmissionsUnit();
     	eu.setId(1L);
     	eu.setComments("Test Unit");
