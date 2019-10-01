@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  sccSearchUrl: 'https://ofmpub.epa.gov/sccwebservices/sccsearch/',
+  sccSearchApiUrl: 'https://ofmpub.epa.gov/sccwebservices/v1/SCC'
 };
 
 /*

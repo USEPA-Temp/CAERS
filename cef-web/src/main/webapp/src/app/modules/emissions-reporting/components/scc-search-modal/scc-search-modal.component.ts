@@ -5,6 +5,7 @@ import { ExternalSccService } from 'src/app/core/services/external-scc.service';
 import { FormControl, Validators } from '@angular/forms';
 import { SccCode } from 'src/app/shared/models/scc-code';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-scc-search-modal',
@@ -15,6 +16,9 @@ export class SccSearchModalComponent extends BaseSortableTable implements OnInit
   tableData: SccCode[];
   searchControl = new FormControl('', Validators.required);
   hasSearched = false;
+  searchError = false;
+
+  sccSearchUrl = environment.sccSearchUrl;
 
   constructor(private sccService: ExternalSccService, public activeModal: NgbActiveModal) {
     super();
@@ -35,6 +39,11 @@ export class SccSearchModalComponent extends BaseSortableTable implements OnInit
 
         this.tableData = result;
         this.hasSearched = true;
+        this.searchError = false;
+      }, error => {
+        console.log(error);
+        this.hasSearched = true;
+        this.searchError = true;
       });
     }
   }
