@@ -22,24 +22,29 @@
     </div>
   </div>
 
-  <div *ngIf="tableData && tableData.length">
-    <table class="table table-sm table-striped table-bordered">
-      <thead class="thead-cef-medium">
-        <tr>
-          <th scope="col" sortable="code" (sort)="onSort($event)">SCC Code</th>
-          <th scope="col" sortable="description" (sort)="onSort($event)">Description</th>
-          <th scope="col" sortable="sector" (sort)="onSort($event)">Sector</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of tableData">
-          <td><button type="button" class="btn btn-link" (click)="onSubmit(item)">{{item.code}}</button></td>
-          <td>{{item.description}}</td>
-          <td>{{item.sector}}</td>
-        </tr>
-      </tbody>
-    </table>
-  
+  <div *ngIf="hasSearched">
+    <div *ngIf="tableData && tableData.length">
+      <table class="table table-sm table-striped table-bordered">
+        <thead class="thead-cef-medium">
+          <tr>
+            <th scope="col" sortable="code" (sort)="onSort($event)">SCC Code</th>
+            <th scope="col" sortable="description" (sort)="onSort($event)">Description</th>
+            <th scope="col" sortable="sector" (sort)="onSort($event)">Sector</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableData">
+            <td><button type="button" class="btn btn-link" (click)="onSubmit(item)">{{item.code}}</button></td>
+            <td>{{item.description}}</td>
+            <td>{{item.sector}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div *ngIf="!tableData || !tableData.length">
+      No results could be found for this criteria.
+    </div>
   </div>
 
 </div>

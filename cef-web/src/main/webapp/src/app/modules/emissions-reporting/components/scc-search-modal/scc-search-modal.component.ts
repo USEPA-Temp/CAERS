@@ -14,6 +14,7 @@ import { map } from 'rxjs/operators';
 export class SccSearchModalComponent extends BaseSortableTable implements OnInit {
   tableData: SccCode[];
   searchControl = new FormControl('', Validators.required);
+  hasSearched = false;
 
   constructor(private sccService: ExternalSccService, public activeModal: NgbActiveModal) {
     super();
@@ -33,6 +34,7 @@ export class SccSearchModalComponent extends BaseSortableTable implements OnInit
       .subscribe(result => {
 
         this.tableData = result;
+        this.hasSearched = true;
       });
     }
   }
