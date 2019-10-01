@@ -40,6 +40,7 @@ import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissi
 import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 import { EmissionDetailsComponent } from './pages/emission-details/emission-details.component';
 import { EmissionFactorModalComponent } from './components/emission-factor-modal/emission-factor-modal.component';
+import { SccSearchModalComponent } from './components/scc-search-modal/scc-search-modal.component';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { EmissionFactorModalComponent } from './components/emission-factor-modal
     EditProcessOperatingDetailPanelComponent,
     EditProcessReportingPeriodPanelComponent,
     EmissionDetailsComponent,
-    EmissionFactorModalComponent
+    EmissionFactorModalComponent,
+    SccSearchModalComponent
 
   ],
   imports: [
@@ -89,7 +91,8 @@ import { EmissionFactorModalComponent } from './components/emission-factor-modal
   ],
   entryComponents: [
     EmissionDetailsModalComponent,
-    EmissionFactorModalComponent
+    EmissionFactorModalComponent,
+    SccSearchModalComponent
   ]
 })
 export class EmissionsReportingModule { }

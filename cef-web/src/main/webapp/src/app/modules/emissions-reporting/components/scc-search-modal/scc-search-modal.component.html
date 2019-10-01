@@ -1,0 +1,60 @@
+<div class="modal-header">
+  <h4 class="modal-title w-100">Select an SCC Code</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <p>
+    Search for an SCC Code by any of the SCC Levels: 1, 2, 3, or 4, Text, Code Number, Short Name, or Description. 
+    You can do a more extensive search at: 
+    <a [href]='sccSearchUrl' target="blank">{{sccSearchUrl}}</a> 
+  </p>
+
+  <div class="row pb-3">
+    <div class="col-sm-8">
+      <input type="text" class="form-control" id="pollutantNameInput" [formControl]="searchControl">
+      <app-validation-message [control]="searchControl"></app-validation-message>
+    </div>
+    <div class="col-sm-4">
+      <button type="button" class="btn btn-success mr-2" (click)="onSearch()">Search</button>
+    </div>
+  </div>
+
+  <div *ngIf="hasSearched && !searchError">
+    <div *ngIf="tableData && tableData.length">
+      <table class="table table-sm table-striped table-bordered">
+        <thead class="thead-cef-medium">
+          <tr>
+            <th scope="col" sortable="code" (sort)="onSort($event)">SCC Code</th>
+            <th scope="col" sortable="description" (sort)="onSort($event)">Description</th>
+            <th scope="col" sortable="sector" (sort)="onSort($event)">Sector</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableData">
+            <td><button type="button" class="btn btn-link" (click)="onSubmit(item)">{{item.code}}</button></td>
+            <td>{{item.description}}</td>
+            <td>{{item.sector}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div *ngIf="!tableData || !tableData.length">
+      No results could be found for this criteria.
+    </div>
+  </div>
+
+  <div *ngIf="hasSearched && searchError" class="text-warning">
+    The Common Emissions Form is having difficulty communicating with the SCC Code service at the moment. 
+    Please visit the SCC Code search page at 
+    <a [href]='sccSearchUrl' target="blank">{{sccSearchUrl}}</a> 
+    to find the appropriate code for your process.
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="onClose()">Cancel</button>
+</div>

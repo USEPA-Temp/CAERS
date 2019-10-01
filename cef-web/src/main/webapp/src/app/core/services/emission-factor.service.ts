@@ -12,7 +12,7 @@ export class EmissionFactorService {
 
   constructor(private http: HttpClient) { }
 
-  search(criteria: EmissionFactor): Observable<EmissionFactor> {
+  search(criteria: EmissionFactor): Observable<EmissionFactor[]> {
     // convert fields used for searching into strings
     const criteriaParams = {
       sccCode: criteria.sccCode.toString(),
@@ -20,6 +20,6 @@ export class EmissionFactorService {
       controlIndicator: '' + criteria.controlIndicator,
       formulaIndicator: '' + criteria.formulaIndicator
     };
-    return this.http.get<EmissionFactor>(this.baseUrl, {params: criteriaParams});
+    return this.http.get<EmissionFactor[]>(this.baseUrl, {params: criteriaParams});
   }
 }
