@@ -2,6 +2,7 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import org.junit.Before;
@@ -109,6 +110,10 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
         OperatingStatusCode operatingStatusCode = new OperatingStatusCode();
         operatingStatusCode.setCode("I");
 
+        ControlMeasureCode controlMeasureCode = new ControlMeasureCode();
+        controlMeasureCode.setCode("1");
+        controlMeasureCode.setDescription("Control measure code description");
+        
         Control control = new Control();
         control.setComments("I got something to say - It's better to burn out than to fade away.");
         control.setDescription("Totally non-descriptive description.");
@@ -117,6 +122,7 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
         control.setIdentifier("Control 001");
         control.setPercentCapture(50d);
         control.setPercentControl(50d);
+        control.setControlMeasureCode(controlMeasureCode);
         control.setCreatedBy("JUNIT-TEST");
         control.setCreatedDate(new Date());
         control.setLastModifiedBy(control.getCreatedBy());
