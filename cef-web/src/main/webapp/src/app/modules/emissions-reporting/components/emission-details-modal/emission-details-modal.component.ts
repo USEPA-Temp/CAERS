@@ -6,7 +6,6 @@ import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
-import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Pollutant } from 'src/app/shared/models/pollutant';
 import { EmissionService } from 'src/app/core/services/emission.service';
 import { Observable } from 'rxjs';

@@ -4,6 +4,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SccSearchModalComponent } from 'src/app/modules/emissions-reporting/components/scc-search-modal/scc-search-modal.component';
+import { SccCode } from 'src/app/shared/models/scc-code';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -45,6 +48,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   constructor(
     private lookupService: LookupService,
     public formUtils: FormUtilsService,
+    private modalService: NgbModal,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -53,11 +57,26 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     .subscribe(result => {
       this.operatingStatusValues = result;
     });
+
   }
 
   ngOnChanges() {
 
     this.processForm.reset(this.process);
+  }
+
+  openSccSearchModal() {
+    const modalRef = this.modalService.open(SccSearchModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+
+    // update form when modal closes successfully
+    modalRef.result.then((modalScc: SccCode) => {
+      if (modalScc) {
+        this.processForm.get('sccCode').setValue(modalScc.code);
+        this.processForm.get('sccDescription').setValue(modalScc.description);
+      }
+    }, () => {
+      // needed for dismissing without errors
+    });
   }
 
   onSubmit() {
