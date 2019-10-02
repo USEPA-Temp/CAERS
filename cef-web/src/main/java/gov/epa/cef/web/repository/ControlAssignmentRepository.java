@@ -33,5 +33,14 @@ public interface ControlAssignmentRepository extends CrudRepository<ControlAssig
      */
 	@Query("SELECT DISTINCT ca FROM ControlAssignment ca INNER JOIN ca.controlPath cp INNER JOIN cp.releasePointAppts rpa INNER JOIN rpa.releasePoint rp WHERE rp.id = :pointId")
     List<ControlAssignment> findByReleasePointId(@Param("pointId") Long pointId);
+	
+	
+	/***
+	 * Retrieves all control assignments that belong to the parent path (e.g. Path B has several control assignment records; one of those records has Path A as a child; this method 
+	 * returns all Path B control assignment records for Path A)
+	 * @param childPathId
+	 * @return
+	 */
+	List<ControlAssignment> findByControlPathChildId(Long controlPathChildId);
 
 }

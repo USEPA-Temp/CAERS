@@ -3,6 +3,7 @@ import { ControlService } from 'src/app/core/services/control.service';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { Control } from 'src/app/shared/models/control';
+import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Component({
@@ -12,6 +13,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 })
 export class ControlDeviceDetailsComponent implements OnInit {
   control: Control;
+  emissionsReportItems: EmissionsReportItem[];
 
   constructor(
     private controlService: ControlService,
@@ -26,6 +28,12 @@ export class ControlDeviceDetailsComponent implements OnInit {
         console.log('control', control);
         this.control = control;
       });
+      
+      this.controlService.retrieveComponents(+map.get('controlId'))
+      .subscribe(emissionsReportItems => {
+        console.log('emissionsReportItems', emissionsReportItems);
+        this.emissionsReportItems = emissionsReportItems; 
+      });
     });
 
     // emits the report info to the sidebar
@@ -34,5 +42,4 @@ export class ControlDeviceDetailsComponent implements OnInit {
       this.sharedService.emitChange(data.facilitySite);
     });
   }
-
 }
