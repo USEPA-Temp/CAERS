@@ -49,7 +49,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -206,6 +205,9 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         assertNull(nullEmissionsReportCopy);
     }
 
+/*
+        // FIXME
+        This code is being commented out until after the pilot and FRS integration can be solidified.
     @Test
     public void createEmissionReportCopy_Should_ReturnFrsData_WhenPreviousDoesNotExist() {
 
@@ -223,6 +225,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         assertEquals("FRSDATA", report.getEisProgramId());
         assertEquals("GA", report.getAgencyCode());
     }
+*/
 
     private EmissionsReport createHydratedEmissionsReport() {
     	EmissionsReport er = new EmissionsReport();
