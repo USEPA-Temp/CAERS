@@ -6,6 +6,7 @@ export class EmissionFactor {
   emissionsDenominatorUom: BaseCodeLookup;
   calculationParameterTypeCode: BaseCodeLookup;
   calculationMaterialCode: BaseCodeLookup;
+  controlMeasureCode: BaseCodeLookup;
   sccCode: number;
   pollutantCode: string;
   formulaIndicator: boolean;
