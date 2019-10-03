@@ -25,13 +25,11 @@ export class ControlDeviceDetailsComponent implements OnInit {
     .subscribe(map => {
       this.controlService.retrieve(+map.get('controlId'))
       .subscribe(control => {
-        console.log('control', control);
         this.control = control;
       });
       
       this.controlService.retrieveComponents(+map.get('controlId'))
       .subscribe(emissionsReportItems => {
-        console.log('emissionsReportItems', emissionsReportItems);
         this.emissionsReportItems = emissionsReportItems; 
       });
     });

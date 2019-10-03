@@ -22,16 +22,6 @@ export class ControlAssignmentTableComponent extends BaseSortableTable implement
       .subscribe(map => {
         this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
     });
-
-    for (var index in this.tableData) {
-    	if (this.tableData[index].type == 'emissionUnit') {
-    		this.tableData[index].typeDesc = 'Emissions Unit';
-    	} else if (this.tableData[index].type == 'process') {
-    		this.tableData[index].typeDesc = 'Emissions Process';
-    	} else if (this.tableData[index].type == 'release') {
-    		this.tableData[index].typeDesc = 'Release Point';
-    	}
-    }
   }
 
 }

@@ -10,6 +10,7 @@ public class EmissionsReportItemDto implements Serializable {
     private String identifier;
     private String description;
     private String type;
+    private String typeDesc;
 
     public Long getId() {
         return id;
@@ -41,5 +42,13 @@ public class EmissionsReportItemDto implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getTypeDesc() {
+        return typeDesc;
+    }
+
+    public void setTypeDesc(String typeDesc) {
+        this.typeDesc = typeDesc;
     }
 }

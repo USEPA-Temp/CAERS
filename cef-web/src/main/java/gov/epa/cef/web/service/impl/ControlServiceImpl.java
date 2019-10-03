@@ -59,8 +59,9 @@ public class ControlServiceImpl implements ControlService {
     public List<EmissionsReportItemDto> retrieveControlComponents(Long controlId) {
     	Control control = repo.findById(controlId).orElse(null);
     	List<EmissionsReportItemDto> emissionsReportItems = new ArrayList<EmissionsReportItemDto>();
-    	populateComponents(control, emissionsReportItems);
-    	
+    	if (control != null) {
+    		populateComponents(control, emissionsReportItems);
+    	}
     	return emissionsReportItems;
     }
 
@@ -87,6 +88,7 @@ public class ControlServiceImpl implements ControlService {
 					eri.setId(rpa.getEmissionsProcess().getId());
 					eri.setIdentifier(rpa.getEmissionsProcess().getEmissionsProcessIdentifier());
 					eri.setType("process");
+					eri.setTypeDesc("Emissions Process");
 					emissionsReportItems.add(eri);
 				}
 				
@@ -96,6 +98,7 @@ public class ControlServiceImpl implements ControlService {
 					eri.setId(rpa.getReleasePoint().getId());
 					eri.setIdentifier(rpa.getReleasePoint().getReleasePointIdentifier());
 					eri.setType("release");
+					eri.setTypeDesc("Release Point");
 					emissionsReportItems.add(eri);
 				}
 				
@@ -105,6 +108,7 @@ public class ControlServiceImpl implements ControlService {
 					eri.setId(rpa.getEmissionsProcess().getEmissionsUnit().getId());
 					eri.setIdentifier(rpa.getEmissionsProcess().getEmissionsUnit().getUnitIdentifier());
 					eri.setType("emissionUnit");
+					eri.setTypeDesc("Emissions Unit");
 					emissionsReportItems.add(eri);
 				}
 			}
