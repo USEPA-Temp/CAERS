@@ -5,7 +5,6 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.NaicsCode;
-import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.client.frs.iptquery.model.Contact;
 import gov.epa.client.frs.iptquery.model.Naics;
@@ -15,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
+
+import static gov.epa.cef.web.client.api.FrsUtil.createOperatingStatus;
 
 public class FrsFacilityApiTransforms {
 
@@ -38,9 +39,7 @@ public class FrsFacilityApiTransforms {
 
             result.setStatusYear(pf.getOperatingStatusYear() == null ? null : pf.getOperatingStatusYear().shortValue());
 
-            OperatingStatusCode statusCode = new OperatingStatusCode();
-            statusCode.setCode(StringUtils.defaultIfBlank(pf.getOperatingStatus(), "OP"));
-            result.setOperatingStatusCode(statusCode);
+            result.setOperatingStatusCode(createOperatingStatus(pf.getOperatingStatus()));
 
             String pscode = pf.getFacilitySourceSystemProgramCode();
             if (StringUtils.isNotBlank(pscode)) {

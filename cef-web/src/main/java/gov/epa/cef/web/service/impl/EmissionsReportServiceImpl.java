@@ -164,6 +164,13 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
+            .orElse(null);
+
+        /*
+
+        // FIXME
+        This code is being commented out until after the pilot and FRS integration can be solidified.
+
             .orElseGet(() -> this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
                 .map(programFacility -> {
 
@@ -185,6 +192,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 })
                 .orElse(null)
             );
+         */
     }
 
     @Override

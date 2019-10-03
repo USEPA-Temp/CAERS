@@ -1,0 +1,200 @@
+[
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "183087414",
+        "subComponentId2": "129187112",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "183087514",
+        "subComponentId2": "129187212",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "184659414",
+        "subComponentId2": "129187312",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "45963414",
+        "subComponentId2": "45757912",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "45963514",
+        "subComponentId2": "45757712",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "45963614",
+        "subComponentId2": "45757612",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "45963714",
+        "subComponentId2": "45757812",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "48232713",
+        "subComponentId2": "173738114",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "48232713",
+        "subComponentId2": "67668914",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "48232813",
+        "subComponentId2": "45963714",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "48232913",
+        "subComponentId2": "45963614",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "48233013",
+        "subComponentId2": "45963514",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "48233113",
+        "subComponentId2": "45963414",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "67668914",
+        "subComponentId2": "45758012",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "108744513",
+        "subComponentId2": "153969914",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "113328813",
+        "subComponentId2": "159491014",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "127267313",
+        "subComponentId2": "183087414",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "127267413",
+        "subComponentId2": "184659414",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "127267513",
+        "subComponentId2": "183087514",
+        "subAssociationAveragePercent": null,
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "153969914",
+        "subComponentId2": "112221012",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "159491014",
+        "subComponentId2": "115941112",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    },
+    {
+        "programSystemAcronym": "EIS",
+        "programSystemId": "554711",
+        "subComponentId1": "173738114",
+        "subComponentId2": "45757612",
+        "subAssociationAveragePercent": "100",
+        "controlOrder": null,
+        "seriesParallelInd": null
+    }
+]

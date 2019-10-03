@@ -108,19 +108,19 @@ public class FacilitySite extends BaseAuditEntity {
     private TribalCode tribalCode;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
-    private Set<FacilityNAICSXref> facilityNAICS = new HashSet<FacilityNAICSXref>(0);
+    private List<FacilityNAICSXref> facilityNAICS = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private List<EmissionsUnit> emissionsUnits = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
-    private Set<ReleasePoint> releasePoints = new HashSet<ReleasePoint>(0);
+    private List<ReleasePoint> releasePoints = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
-    private Set<FacilitySiteContact> contacts = new HashSet<FacilitySiteContact>(0);
+    private List<FacilitySiteContact> contacts = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
-    private Set<Control> controls = new HashSet<Control>(0);
+    private List<Control> controls = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
     private Set<ControlPath> controlPaths = new HashSet<ControlPath>(0);
@@ -377,12 +377,16 @@ public class FacilitySite extends BaseAuditEntity {
         this.tribalCode = tribalCode;
     }
 
-    public Set<FacilityNAICSXref> getFacilityNAICS() {
+    public List<FacilityNAICSXref> getFacilityNAICS() {
         return facilityNAICS;
     }
 
-    public void setFacilityNAICS(Set<FacilityNAICSXref> facilityNAICS) {
-        this.facilityNAICS = facilityNAICS;
+    public void setFacilityNAICS(List<FacilityNAICSXref> facilityNAICS) {
+
+        this.facilityNAICS.clear();
+        if (facilityNAICS != null) {
+            this.facilityNAICS.addAll(facilityNAICS);
+        }
     }
 
     public List<EmissionsUnit> getEmissionsUnits() {
@@ -397,28 +401,39 @@ public class FacilitySite extends BaseAuditEntity {
         }
     }
 
-    public Set<ReleasePoint> getReleasePoints() {
+    public List<ReleasePoint> getReleasePoints() {
         return this.releasePoints;
     }
 
-    public void setReleasePoints(Set<ReleasePoint> releasePoints) {
-        this.releasePoints = releasePoints;
+    public void setReleasePoints(List<ReleasePoint> releasePoints) {
+
+        this.releasePoints.clear();
+        if (releasePoints != null) {
+            this.releasePoints.addAll(releasePoints);
+        };
     }
 
-    public Set<FacilitySiteContact> getContacts() {
-        return contacts;
+    public List<FacilitySiteContact> getContacts() {
+        return this.contacts;
     }
 
-    public void setContacts(Set<FacilitySiteContact> contacts) {
-        this.contacts = contacts;
+    public void setContacts(List<FacilitySiteContact> contacts) {
+
+        this.contacts.clear();
+        if (contacts != null) {
+            this.contacts.addAll(contacts);
+        }
     }
 
-    public Set<Control> getControls() {
+    public List<Control> getControls() {
         return controls;
     }
 
-    public void setControls(Set<Control> controls) {
-        this.controls = controls;
+    public void setControls(List<Control> controls) {
+        this.controls.clear();
+        if (controls != null) {
+            this.controls.addAll(controls);
+        }
     }
 
     public Set<ControlPath> getControlPaths() {
