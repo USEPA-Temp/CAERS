@@ -252,7 +252,7 @@ export class EmissionDetailsComponent implements OnInit {
 
       this.efService.search(efCriteria)
       .subscribe(result => {
-        const modalRef = this.modalService.open(EmissionFactorModalComponent, { size: 'lg', backdrop: 'static' });
+        const modalRef = this.modalService.open(EmissionFactorModalComponent, { size: 'xl', backdrop: 'static' });
         modalRef.componentInstance.tableData = result;
 
         // update form when modal closes successfully

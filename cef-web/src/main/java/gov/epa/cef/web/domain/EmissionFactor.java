@@ -42,6 +42,10 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
     @JoinColumn(name = "calculation_material_code", nullable = false)
     private CalculationMaterialCode calculationMaterialCode;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "control_measure_code")
+    private ControlMeasureCode controlMeasureCode;
+    
     @Column(name = "scc_code", nullable = false, precision = 8, scale = 0)
     private Integer sccCode;
     
@@ -186,5 +190,13 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
 
     public static long getSerialversionuid() {
         return serialVersionUID;
+    }
+
+    public ControlMeasureCode getControlMeasureCode() {
+        return controlMeasureCode;
+    }
+
+    public void setControlMeasureCode(ControlMeasureCode controlMeasureCode) {
+        this.controlMeasureCode = controlMeasureCode;
     }
 }

@@ -9,6 +9,7 @@ public class EmissionFactorDto {
     private CodeLookupDto emissionsDenominatorUom;
     private CodeLookupDto calculationParameterTypeCode;
     private CodeLookupDto calculationMaterialCode;
+    private CodeLookupDto controlMeasureCode;
     private Integer sccCode;
     private String pollutantCode;
     private Boolean formulaIndicator;
@@ -57,6 +58,14 @@ public class EmissionFactorDto {
 
     public void setCalculationMaterialCode(CodeLookupDto calculationMaterialCode) {
         this.calculationMaterialCode = calculationMaterialCode;
+    }
+    
+    public CodeLookupDto getControlMeasureCode() {
+        return controlMeasureCode;
+    }
+
+    public void setControlMeasureCode(CodeLookupDto controlMeasureCode) {
+        this.controlMeasureCode = controlMeasureCode;
     }
 
     public Integer getSccCode() {
