@@ -27,7 +27,7 @@ function initFrsWidget(userRoleId, token, facilityId, baseServiceUrl){
 
 function initializeFacilityWidget(userRoleId, token, facilityId, baseServiceUrl){
 	$frs.initFacilityManagementWidget({
-        widgetDisplayType: "Single Facility",
+        widgetDisplayType: "Single Facility View Only",
         ImagesFolderPath: baseServiceUrl+"/ContentFramework/FRS%20Widget/images/",
         baseServiceUrl: baseServiceUrl,
         userRoleId: userRoleId,
