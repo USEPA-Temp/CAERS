@@ -35,6 +35,7 @@ public class EmissionsReportApi {
 
     /**
      * Creates an Emissions Report from either previous report or data from FRS
+     *
      * @param facilityEisProgramId
      * @param reportDto
      * @return
@@ -53,6 +54,14 @@ public class EmissionsReportApi {
             ? this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear())
             : this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
 
+        /*
+        If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
+        pull of FRS data is possible. The ACCEPTED status allows the UI to notify the user that a
+        process that might take some time is about to be initiated.
+
+        HTTP Status 202/ACCEPTED indicates that request has been accepted for processing,
+        but the processing has not been completed.
+        */
         HttpStatus status = HttpStatus.NO_CONTENT;
         if (result != null) {
             if (result.getId() == null) {
@@ -139,12 +148,6 @@ public class EmissionsReportApi {
             return eisProgramId;
         }
 
-        @JsonIgnore
-        boolean isSourceFrs() {
-
-            return this.source != null && this.source.equals(SourceType.frs);
-        }
-
         public void setEisProgramId(String eisProgramId) {
 
             this.eisProgramId = eisProgramId;
@@ -168,6 +171,12 @@ public class EmissionsReportApi {
         public void setYear(Short year) {
 
             this.year = year;
+        }
+
+        @JsonIgnore
+        boolean isSourceFrs() {
+
+            return this.source != null && this.source.equals(SourceType.frs);
         }
     }
 

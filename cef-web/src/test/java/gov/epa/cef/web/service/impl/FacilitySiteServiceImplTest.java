@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.io.Resources;
 import gov.epa.cef.web.client.api.FrsApiClient;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
@@ -11,8 +12,10 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
+import gov.epa.client.frs.iptquery.model.Association;
 import gov.epa.client.frs.iptquery.model.Contact;
 import gov.epa.client.frs.iptquery.model.Naics;
+import gov.epa.client.frs.iptquery.model.Process;
 import gov.epa.client.frs.iptquery.model.ProgramFacility;
 import gov.epa.client.frs.iptquery.model.ProgramGIS;
 import gov.epa.client.frs.iptquery.model.Unit;
@@ -90,6 +93,12 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
 
         when(frsClient.queryEmissionsUnit("554711", null, null)).thenReturn(
             hydrateFrsJsonList("frs-queryEmissionsUnit.json", Unit.class));
+
+        when(frsClient.queryAssociation("554711", null, null)).thenReturn(
+            hydrateFrsJsonList("frs-queryAssociation.json", Association.class));
+
+        when(frsClient.queryEmissionsProcess("554711", null, null)).thenReturn(
+            hydrateFrsJsonList("frs-queryEmissionsProcess.json", Process.class));
     }
 
     @Test
@@ -122,7 +131,12 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
         assertFalse(facilitySite.getEmissionsUnits().isEmpty());
         assertEquals(10, facilitySite.getEmissionsUnits().size());
 
-        EmissionsUnit unit = facilitySite.getEmissionsUnits().get(9);
+        EmissionsUnit unit = facilitySite.getEmissionsUnits().stream()
+            .filter(u -> "108744513".equals(u.getUnitIdentifier()))
+            .findFirst()
+            .orElse(null);
+
+        assertNotNull(unit);
         assertEquals("108744513", unit.getUnitIdentifier());
         assertNotNull(unit.getUnitTypeCode());
         assertEquals("160", unit.getUnitTypeCode().getCode());
@@ -131,6 +145,12 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
         assertEquals(new BigDecimal("64"), unit.getDesignCapacity());
         assertNotNull(unit.getOperatingStatusCode());
         assertEquals("OP", unit.getOperatingStatusCode().getCode());
+
+        assertEquals(1, unit.getEmissionsProcesses().size());
+
+        EmissionsProcess process = unit.getEmissionsProcesses().get(0);
+        assertEquals(unit, process.getEmissionsUnit());
+        assertEquals("153969914", process.getEmissionsProcessIdentifier());
     }
 
     @Test

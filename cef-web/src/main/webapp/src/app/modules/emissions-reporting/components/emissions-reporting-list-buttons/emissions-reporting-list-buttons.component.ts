@@ -44,7 +44,11 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
      */
     createNewReport() {
 
-        const modalWindow = this.modalService.open(BusyModalComponent, {size: 'lg'});
+        const modalWindow = this.modalService.open(BusyModalComponent, {
+            backdrop: "static",
+            size: "lg"
+        });
+
         modalWindow.componentInstance.message = "Please wait while we generate your new report.";
 
         const currentYear: number = new Date().getFullYear();
