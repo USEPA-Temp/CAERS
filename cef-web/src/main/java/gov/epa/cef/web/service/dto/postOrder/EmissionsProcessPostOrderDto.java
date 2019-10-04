@@ -1,8 +1,15 @@
-package gov.epa.cef.web.service.dto;
+package gov.epa.cef.web.service.dto.postOrder;
 
 import java.io.Serializable;
 
-public class EmissionsProcessUpDto implements Serializable {
+
+/***
+ * EmissionsProcessPostOrderDto is used to traverse the object hierarchy from the bottom up.  The EmissionsProcessPostOrderDto will contain a reference to this EmissionsUnitPostOrderDto
+ * but the EmissionsUnitPostOrderDto will not contain a list of these EmissionsProcessPostOrderDto objects.  This helps avoid circular references when traversing the hierarchy post order.
+ * @author kbrundag
+ *
+ */
+public class EmissionsProcessPostOrderDto implements Serializable {
 
     /**
      * default version id
@@ -12,7 +19,7 @@ public class EmissionsProcessUpDto implements Serializable {
     private Long id;
     private String emissionsProcessIdentifier;
     private String description;
-    private EmissionsUnitUpDto emissionsUnit;
+    private EmissionsUnitPostOrderDto emissionsUnit;
 
     
     public Long getId() {
@@ -36,10 +43,10 @@ public class EmissionsProcessUpDto implements Serializable {
         this.description = description;
     }
     
-    public EmissionsUnitUpDto getEmissionsUnit() {
+    public EmissionsUnitPostOrderDto getEmissionsUnit() {
         return emissionsUnit;
     }
-    public void setEmissionsUnit(EmissionsUnitUpDto emissionsUnit) {
+    public void setEmissionsUnit(EmissionsUnitPostOrderDto emissionsUnit) {
         this.emissionsUnit = emissionsUnit;
     }
 }

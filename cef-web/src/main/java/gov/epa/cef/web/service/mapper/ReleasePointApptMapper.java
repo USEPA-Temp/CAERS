@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.service.dto.ReleasePointApptDto;
-import gov.epa.cef.web.service.dto.ReleasePointApptUpDto;
+import gov.epa.cef.web.service.dto.postOrder.ReleasePointApptPostOrderDto;
 
 @Mapper(componentModel = "spring", uses = {})   
 public interface ReleasePointApptMapper {
@@ -20,6 +20,6 @@ public interface ReleasePointApptMapper {
     
     List<ReleasePointApptDto> releasePointApptsToReleasePointApptDtos(List<ReleasePointAppt> releasePointAppts);
     
-    ReleasePointApptUpDto toUpDto(ReleasePointAppt releasePointAppt);
+    ReleasePointApptPostOrderDto toUpDto(ReleasePointAppt releasePointAppt);
 
 }

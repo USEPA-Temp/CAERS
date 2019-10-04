@@ -9,7 +9,7 @@ import org.mapstruct.MappingTarget;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
-import gov.epa.cef.web.service.dto.EmissionsProcessUpDto;
+import gov.epa.cef.web.service.dto.postOrder.EmissionsProcessPostOrderDto;
 
 @Mapper(componentModel = "spring", uses = {ReleasePointApptMapper.class, LookupEntityMapper.class})
 public interface EmissionsProcessMapper {
@@ -30,6 +30,6 @@ public interface EmissionsProcessMapper {
     @Mapping(target = "reportingPeriods", ignore = true)
     void updateFromSaveDto(EmissionsProcessSaveDto source, @MappingTarget EmissionsProcess target);
     
-    EmissionsProcessUpDto toUpDto(EmissionsProcess emissionsProcess);
+    EmissionsProcessPostOrderDto toUpDto(EmissionsProcess emissionsProcess);
 
 }
