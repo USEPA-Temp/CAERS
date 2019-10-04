@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.ControlDto;
+import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 
 @RestController
 @RequestMapping("/api/control")
@@ -45,6 +46,14 @@ public class ControlApi {
 
         List<ControlDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
         return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
+    }
+    
+
+    @GetMapping(value = "/components/{controlId}")
+    @ResponseBody
+    public ResponseEntity<List<EmissionsReportItemDto>> retrieveControlComponents(@PathVariable Long controlId) {
+    	List<EmissionsReportItemDto> result = controlService.retrieveControlComponents(controlId);
+    	return new ResponseEntity<List<EmissionsReportItemDto>>(result, HttpStatus.OK);
     }
 
 }

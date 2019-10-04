@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +10,7 @@ import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item
   styleUrls: ['./control-assignment-table.component.scss']
 })
 export class ControlAssignmentTableComponent extends BaseSortableTable implements OnInit {
-  @Input() tableData: ControlAssignment[];
+  @Input() tableData: EmissionsReportItem[];
   baseUrl: string;
 
   constructor(private route: ActivatedRoute) {
