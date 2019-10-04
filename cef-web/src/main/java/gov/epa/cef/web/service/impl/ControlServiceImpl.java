@@ -60,29 +60,29 @@ public class ControlServiceImpl implements ControlService {
     	Control control = repo.findById(controlId).orElse(null);
     	List<EmissionsReportItemDto> emissionsReportItems = new ArrayList<EmissionsReportItemDto>();
     	if (control != null) {
-    		populateComponents(control, emissionsReportItems);
+    		createReportItems(control, emissionsReportItems);
     	}
     	return emissionsReportItems;
     }
 
     
     /***
-     * Populate the sub-facility component lists within the controlComponentDto object (for the control's path and parent paths).
+     * Create and populate the emissions report items for the control's path and parent paths.
      * @param control
      * @param controlComponentDto
      */
-	private void populateComponents(Control control, List<EmissionsReportItemDto> emissionsReportItems) {
+	private void createReportItems(Control control, List<EmissionsReportItemDto> emissionsReportItems) {
 		for (ControlAssignment assignment : control.getAssignments()) {
 			ControlPath path = assignment.getControlPath();
 			List<ControlAssignment> parentAssignments = assignmentRepo.findByControlPathChildId(path.getId());
 			for (ControlAssignment parentAssignment : parentAssignments) {
 				if (parentAssignment.getControl() != null) {
-					populateComponents(parentAssignment.getControl(), emissionsReportItems);
+					createReportItems(parentAssignment.getControl(), emissionsReportItems);
 				}
 			}
 			
 			for (ReleasePointAppt rpa : path.getReleasePointAppts()) {
-				if (!IsDuplicateItem(rpa.getEmissionsProcess().getId(), "process", emissionsReportItems)) {
+				if (!isDuplicateItem(rpa.getEmissionsProcess().getId(), "process", emissionsReportItems)) {
 					EmissionsReportItemDto eri = new EmissionsReportItemDto();
 					eri.setDescription(rpa.getEmissionsProcess().getDescription());
 					eri.setId(rpa.getEmissionsProcess().getId());
@@ -92,7 +92,7 @@ public class ControlServiceImpl implements ControlService {
 					emissionsReportItems.add(eri);
 				}
 				
-				if (!IsDuplicateItem(rpa.getReleasePoint().getId(), "release", emissionsReportItems)) {
+				if (!isDuplicateItem(rpa.getReleasePoint().getId(), "release", emissionsReportItems)) {
 					EmissionsReportItemDto eri = new EmissionsReportItemDto();
 					eri.setDescription(rpa.getReleasePoint().getDescription());
 					eri.setId(rpa.getReleasePoint().getId());
@@ -102,7 +102,7 @@ public class ControlServiceImpl implements ControlService {
 					emissionsReportItems.add(eri);
 				}
 				
-				if (!IsDuplicateItem(rpa.getEmissionsProcess().getEmissionsUnit().getId(), "emissionUnit", emissionsReportItems)) {
+				if (!isDuplicateItem(rpa.getEmissionsProcess().getEmissionsUnit().getId(), "emissionUnit", emissionsReportItems)) {
 					EmissionsReportItemDto eri = new EmissionsReportItemDto();
 					eri.setDescription(rpa.getEmissionsProcess().getEmissionsUnit().getDescription());
 					eri.setId(rpa.getEmissionsProcess().getEmissionsUnit().getId());
@@ -124,7 +124,7 @@ public class ControlServiceImpl implements ControlService {
 	 * @param emissionsUnit
 	 * @return
 	 */
-	private boolean IsDuplicateItem(Long id, String reportItemType, List<EmissionsReportItemDto> emissionsUnits) {
+	private boolean isDuplicateItem(Long id, String reportItemType, List<EmissionsReportItemDto> emissionsUnits) {
 		if (emissionsUnits != null) {
 			for (EmissionsReportItemDto itemDto : emissionsUnits) {
 				if (id.equals(itemDto.getId()) && reportItemType.equals(itemDto.getType())) {
