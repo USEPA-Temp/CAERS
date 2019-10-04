@@ -5,6 +5,8 @@ import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.validation.ValidationResult;
+import gov.epa.cef.web.service.validation.ValidationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +29,14 @@ public class EmissionsReportApi {
 
     private final EmissionsReportService emissionsReportService;
 
+    private final ValidationService validationService;
+
     @Autowired
-    EmissionsReportApi(EmissionsReportService emissionsReportService) {
+    EmissionsReportApi(EmissionsReportService emissionsReportService,
+                       ValidationService validationService) {
 
         this.emissionsReportService = emissionsReportService;
+        this.validationService = validationService;
     }
 
     /**
@@ -95,12 +101,21 @@ public class EmissionsReportApi {
      * @return
      */
     @GetMapping(value = "/{reportId}")
-    public ResponseEntity<EmissionsReportDto> retrieveReport(@PathVariable Long reportId) {
+    public ResponseEntity<EmissionsReportDto> retrieveReport(@NotNull @PathVariable Long reportId) {
 
         EmissionsReportDto result = emissionsReportService.findById(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/{reportId}/validation")
+    public ResponseEntity<ValidationResult> validateReport(@NotNull @PathVariable Long reportId) {
+
+        ValidationResult result = this.validationService.validateReport(reportId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     /**
      * Retrieve reports for a given facility

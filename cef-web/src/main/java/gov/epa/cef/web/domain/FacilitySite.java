@@ -26,8 +26,6 @@ public class FacilitySite extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
-    // Fields
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_code")
     private FacilityCategoryCode facilityCategoryCode;

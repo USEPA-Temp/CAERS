@@ -10,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,17 +24,19 @@ public class EmissionsReport extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
-    // Fields
-
+    @NotBlank
     @Column(name = "frs_facility_id", nullable = false, length = 22)
     private String frsFacilityId;
 
+    @NotBlank
     @Column(name = "eis_program_id", nullable = false, length = 22)
     private String eisProgramId;
 
+    @NotBlank
     @Column(name = "agency_code", nullable = false, length = 3)
     private String agencyCode;
 
+    @NotNull
     @Column(name = "year", nullable = false)
     private Short year;
 
