@@ -2,6 +2,7 @@
 delete from control;
 delete from facility_site;
 delete from emissions_report;
+delete from emission_factor;
 delete from control_measure_code;
 
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
