@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.EmissionsReportValidationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.validation.ValidationResult;
-import gov.epa.cef.web.service.validation.ValidationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,11 +30,11 @@ public class EmissionsReportApi {
 
     private final EmissionsReportService emissionsReportService;
 
-    private final ValidationService validationService;
+    private final EmissionsReportValidationService validationService;
 
     @Autowired
     EmissionsReportApi(EmissionsReportService emissionsReportService,
-                       ValidationService validationService) {
+                       EmissionsReportValidationService validationService) {
 
         this.emissionsReportService = emissionsReportService;
         this.validationService = validationService;
@@ -108,10 +109,12 @@ public class EmissionsReportApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{reportId}/validation")
-    public ResponseEntity<ValidationResult> validateReport(@NotNull @PathVariable Long reportId) {
+    @PostMapping(value = "/validation",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ValidationResult> validateReport(@NotNull @RequestBody EntityRefDto entityRefDto) {
 
-        ValidationResult result = this.validationService.validateReport(reportId);
+        ValidationResult result = this.validationService.validate(entityRefDto.requireNonNull());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

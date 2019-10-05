@@ -1,6 +1,9 @@
 package gov.epa.cef.web.domain;
 
+import com.baidu.unbiz.fluentvalidator.annotation.FluentValid;
+import com.baidu.unbiz.fluentvalidator.annotation.FluentValidate;
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
+import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +13,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,19 +25,15 @@ public class EmissionsReport extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank
     @Column(name = "frs_facility_id", nullable = false, length = 22)
     private String frsFacilityId;
 
-    @NotBlank
     @Column(name = "eis_program_id", nullable = false, length = 22)
     private String eisProgramId;
 
-    @NotBlank
     @Column(name = "agency_code", nullable = false, length = 3)
     private String agencyCode;
 
-    @NotNull
     @Column(name = "year", nullable = false)
     private Short year;
 
@@ -54,6 +51,8 @@ public class EmissionsReport extends BaseAuditEntity {
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
 
+    @FluentValid
+    @FluentValidate(value = {FacilitySiteValidator.class})
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private Set<FacilitySite> facilitySites = new HashSet<FacilitySite>(0);
 

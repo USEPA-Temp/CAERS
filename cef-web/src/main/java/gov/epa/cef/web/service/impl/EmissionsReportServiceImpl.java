@@ -62,7 +62,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Autowired
     private FacilitySiteService facilitySiteService;
 
-
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
@@ -93,10 +92,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Override
     public EmissionsReportDto findById(Long id) {
 
-        EmissionsReport emissionsReport= erRepo
-            .findById(id)
+        return erRepo.findById(id)
+            .map(report -> emissionsReportMapper.toDto(report))
             .orElse(null);
-        return emissionsReportMapper.toDto(emissionsReport);
     }
 
     /* (non-Javadoc)
@@ -234,7 +232,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	    	EmissionsReport savedReport = erRepo.save(emissionsReport);
 	    	return emissionsReportMapper.toDto(savedReport);
     }
-
 
     /**
      * Find the most recent emissions report model object for the given facility

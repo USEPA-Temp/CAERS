@@ -10,25 +10,33 @@ import java.util.List;
 
 public class ValidationResult {
 
-    private final List<ValidationError> errors;
+    private final List<ValidationError> federalErrors;
+
+    private final List<ValidationError> federalWarnings;
 
     private final List<ValidationError> stateErrors;
 
     private final List<ValidationError> stateWarnings;
 
-    private final List<ValidationError> warnings;
+    static final int FEDERAL_ERROR_CODE = 1;
 
-    ValidationResult() {
+    static final int FEDERAL_WARNING_CODE = -1;
 
-        this.errors = new ArrayList<>();
-        this.warnings = new ArrayList<>();
+    static final int STATE_ERROR_CODE = 2;
+
+    static final int STATE_WARNING_CODE = -2;
+
+    public ValidationResult() {
+
+        this.federalErrors = new ArrayList<>();
+        this.federalWarnings = new ArrayList<>();
         this.stateErrors = new ArrayList<>();
         this.stateWarnings = new ArrayList<>();
     }
 
     public void addError(ValidationError error) {
 
-        this.errors.add(error);
+        this.federalErrors.add(error);
     }
 
     public void addStateError(ValidationError error) {
@@ -43,19 +51,32 @@ public class ValidationResult {
 
     public void addWarning(ValidationError warning) {
 
-        this.warnings.add(warning);
+        this.federalWarnings.add(warning);
     }
 
-    public Collection<ValidationError> getErrors() {
+    public Collection<ValidationError> getFederalErrors() {
 
-        return Collections.unmodifiableCollection(this.errors);
+        return Collections.unmodifiableCollection(this.federalErrors);
     }
 
-    public void setErrors(Collection<ValidationError> errors) {
+    public void setFederalErrors(Collection<ValidationError> federalErrors) {
 
-        this.errors.clear();
-        if (errors != null) {
-            this.errors.addAll(errors);
+        this.federalErrors.clear();
+        if (federalErrors != null) {
+            this.federalErrors.addAll(federalErrors);
+        }
+    }
+
+    public Collection<ValidationError> getFederalWarnings() {
+
+        return Collections.unmodifiableCollection(this.federalWarnings);
+    }
+
+    public void setFederalWarnings(Collection<ValidationError> federalWarnings) {
+
+        this.federalWarnings.clear();
+        if (federalWarnings != null) {
+            this.federalWarnings.addAll(federalWarnings);
         }
     }
 
@@ -85,52 +106,55 @@ public class ValidationResult {
         }
     }
 
-    public Collection<ValidationError> getWarnings() {
+    public boolean hasAnyWarnings() {
 
-        return Collections.unmodifiableCollection(this.warnings);
+        return this.hasFederalWarnings() && this.hasStateWarnings();
     }
 
-    public void setWarnings(Collection<ValidationError> warnings) {
+    public boolean hasFederalWarnings() {
 
-        this.warnings.clear();
-        if (warnings != null) {
-            this.warnings.addAll(warnings);
-        }
+        return this.federalWarnings.size() > 0;
     }
 
-    ResultCollector<ValidationResult> federalCollector() {
+    public boolean hasStateWarnings() {
+
+        return this.stateWarnings.size() > 0;
+    }
+
+    public boolean isFederalValid() {
+
+        return this.federalErrors.isEmpty();
+    }
+
+    public boolean isStateValid() {
+
+        return this.stateErrors.isEmpty();
+    }
+
+    public boolean isValid() {
+
+        return isFederalValid() && isStateValid();
+    }
+
+    public ResultCollector<ValidationResult> resultCollector() {
 
         return validationResult -> {
 
             validationResult.getErrors().forEach(error -> {
 
-                if (error.getErrorCode() < 0) {
-
-                    this.warnings.add(error);
-
-                } else {
-
-                    this.errors.add(error);
-                }
-            });
-
-            return this;
-        };
-    }
-
-    ResultCollector<ValidationResult> stateCollector() {
-
-        return validationResult -> {
-
-            validationResult.getErrors().forEach(error -> {
-
-                if (error.getErrorCode() < 0) {
-
-                    this.stateWarnings.add(error);
-
-                } else {
-
-                    this.stateErrors.add(error);
+                switch (error.getErrorCode()) {
+                    case FEDERAL_ERROR_CODE:
+                        this.federalErrors.add(error);
+                        break;
+                    case FEDERAL_WARNING_CODE:
+                        this.federalWarnings.add(error);
+                        break;
+                    case STATE_ERROR_CODE:
+                        this.stateErrors.add(error);
+                        break;
+                    case STATE_WARNING_CODE:
+                        this.stateWarnings.add(error);
+                        break;
                 }
             });
 

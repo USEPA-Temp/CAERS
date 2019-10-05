@@ -57,7 +57,6 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto createEmissionReportCopy(String facilityEisProgramId, short currentReportYear);
 
-
     /**
      * Save the emissions report to the database.
      * @param emissionsReport
