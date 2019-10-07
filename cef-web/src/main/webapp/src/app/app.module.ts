@@ -26,6 +26,7 @@ import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.inter
 import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
 import { BusyModalComponent } from './shared/components/busy-modal/busy-modal.component';
 import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-dialog.component';
+import { RejectSubmissionModalComponent } from './modules/dashboards/components/reject-submission-modal/reject-submission-modal.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-
     FacilityDataReviewComponent,
     ReportSummaryModalComponent,
     BusyModalComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    RejectSubmissionModalComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +62,8 @@ import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-
   entryComponents: [
     ReportSummaryModalComponent,
     BusyModalComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    RejectSubmissionModalComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},

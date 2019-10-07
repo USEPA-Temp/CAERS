@@ -10,8 +10,11 @@
         <app-submission-review-list [tableData]="submissions"></app-submission-review-list>
 
         <div class="text-right">
-          <button class="btn btn-primary btn-md m-3">Reject and Return to Facility</button>
-          <button class="btn btn-success btn-md m-3">Accept and Submit to EIS</button>
+          <button class="btn btn-primary btn-md m-3" (click)="onReject()">Reject and Return to Facility</button>
+          <button class="btn btn-success btn-md m-3" (click)="onApprove()">Accept and Submit to EIS</button>
+          <div class="validation-message p-3" *ngIf="invalidSelection">
+            At least one submission must be selected.
+          </div>
         </div>
       </div>
     </div>

@@ -20,7 +20,7 @@
       </thead>
       <tbody>
       <tr *ngFor="let submission of tableData">
-        <th scope="row"><input type="checkbox"></th>
+        <th scope="row"><input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"></th>
         <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
