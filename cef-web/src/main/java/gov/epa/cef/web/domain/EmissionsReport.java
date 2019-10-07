@@ -1,9 +1,6 @@
 package gov.epa.cef.web.domain;
 
-import com.baidu.unbiz.fluentvalidator.annotation.FluentValid;
-import com.baidu.unbiz.fluentvalidator.annotation.FluentValidate;
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
-import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,8 +10,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * EmissionsReport entity. @author MyEclipse Persistence Tools
@@ -51,10 +49,8 @@ public class EmissionsReport extends BaseAuditEntity {
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
 
-    @FluentValid
-    @FluentValidate(value = {FacilitySiteValidator.class})
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
-    private Set<FacilitySite> facilitySites = new HashSet<FacilitySite>(0);
+    private List<FacilitySite> facilitySites = new ArrayList<>();
 
     /***
      * Default constructor
@@ -130,12 +126,16 @@ public class EmissionsReport extends BaseAuditEntity {
         this.validationStatus = validationStatus;
     }
 
-    public Set<FacilitySite> getFacilitySites() {
+    public List<FacilitySite> getFacilitySites() {
         return this.facilitySites;
     }
 
-    public void setFacilitySites(Set<FacilitySite> facilitySites) {
-        this.facilitySites = facilitySites;
+    public void setFacilitySites(Collection<FacilitySite> facilitySites) {
+
+        this.facilitySites.clear();
+        if (facilitySites != null) {
+            this.facilitySites.addAll(facilitySites);
+        }
     }
 
     public String getCromerrActivityId() {

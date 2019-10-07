@@ -10,6 +10,7 @@ import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
@@ -116,7 +118,9 @@ public class EmissionsReportApi {
 
         ValidationResult result = this.validationService.validate(entityRefDto.requireNonNull());
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.noCache().sMaxAge(0, TimeUnit.SECONDS).mustRevalidate())
+            .body(result);
     }
 
 

@@ -1,14 +1,31 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
+import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmissionsReportValidator extends BaseValidator<EmissionsReport> {
+public class EmissionsReportValidator
+    extends BaseValidator<EmissionsReport>
+    implements IEmissionsReportValidator {
+
+    @Override
+    public void compose(FluentValidator validator,
+                        ValidatorContext validatorContext,
+                        EmissionsReport emissionsReport) {
+
+        ValidationRegistry registry = getCefValidatorContext(validatorContext).getValidationRegistry();
+
+        // add more validators as needed
+        validator.onEach(emissionsReport.getFacilitySites(),
+            registry.findOneByType(FacilitySiteValidator.class));
+    }
 
     @Override
     public boolean validate(ValidatorContext validatorContext, EmissionsReport report) {

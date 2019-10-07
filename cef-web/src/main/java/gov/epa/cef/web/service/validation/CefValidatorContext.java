@@ -20,7 +20,13 @@ public class CefValidatorContext extends ValidatorContext {
 
     private final ResourceBundle resourceBundle;
 
-    public CefValidatorContext(String bundleName) {
+    private final ValidationRegistry validationRegistry;
+
+    public CefValidatorContext(ValidationRegistry validationRegistry, String bundleName) {
+
+        super();
+
+        this.validationRegistry = validationRegistry;
 
         this.resourceBundle = ResourceBundle.getBundle(bundleName,
             Locale.getDefault(), Thread.currentThread().getContextClassLoader());
@@ -29,6 +35,8 @@ public class CefValidatorContext extends ValidatorContext {
             "Unable to find resource bundle %s.", bundleName);
 
         this.features = new HashSet<>();
+
+        this.result = new com.baidu.unbiz.fluentvalidator.ValidationResult();
     }
 
     public void addFederalError(String field, String code, Object... args) {
@@ -87,6 +95,11 @@ public class CefValidatorContext extends ValidatorContext {
 
         this.features.add(feature);
         return this;
+    }
+
+    public ValidationRegistry getValidationRegistry() {
+
+        return validationRegistry;
     }
 
     public boolean isAllEnabled(ValidationFeature feature, ValidationFeature... others) {

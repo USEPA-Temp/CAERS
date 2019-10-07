@@ -10,6 +10,7 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationFeature;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
+import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,14 +47,13 @@ public class EmissionsReportValidationServiceImpl implements EmissionsReportVali
         ValidationResult result = new ValidationResult();
 
         CefValidatorContext cefContext =
-            new CefValidatorContext("validation/emissionsreport.properties")
+            new CefValidatorContext(this.validationRegistry, "validation/emissionsreport")
                 .enable(requestedFeatures);
 
         // Run thru all validators
         FluentValidator.checkAll().failOver()
-            .configure(this.validationRegistry)
             .withContext(cefContext)
-            .on(report, this.validationRegistry.createReportChain())
+            .on(report, this.validationRegistry.createValidatorChain(IEmissionsReportValidator.class))
             .doValidate()
             .result(result.resultCollector());
 
