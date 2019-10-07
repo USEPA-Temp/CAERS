@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h4 class="modal-title">Reject Submissions</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  Would you like to reject the selected submissions?
+  <!-- <br><br>
+  Please enter an explaination for why these submissions were rejected.
+  <textarea rows="3" class="form-control"></textarea> -->
+</div>
+<div class="modal-footer">
+  <button type="button" (click)="onClose()" class="btn btn-success">Cancel</button>
+  <button type="button" (click)="onSubmit()" class="btn btn-primary">OK</button>
+</div>

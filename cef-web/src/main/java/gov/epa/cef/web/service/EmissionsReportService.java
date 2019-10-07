@@ -57,6 +57,20 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto createEmissionReportCopy(String facilityEisProgramId, short currentReportYear);
 
+    /**
+     * Approve the specified reports and move to approved
+     * @param reportIds
+     * @return
+     */
+    List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds);
+
+    /**
+     * Reject the specified reports and move back to in progress
+     * @param reportIds
+     * @return
+     */
+    List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds);
+
 
     /**
      * Save the emissions report to the database.

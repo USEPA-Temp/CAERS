@@ -75,6 +75,32 @@ public class EmissionsReportApi {
     }
 
     /**
+     * Approve the specified reports and move to approved
+     * @param reportIds
+     * @return
+     */
+    @PostMapping(value = "/accept")
+    public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody List<Long> reportIds) {
+
+        List<EmissionsReportDto> result = emissionsReportService.acceptEmissionsReports(reportIds);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Reject the specified reports and move back to in progress
+     * @param reportIds
+     * @return
+     */
+    @PostMapping(value = "/reject")
+    public ResponseEntity<List<EmissionsReportDto>> rejectReports(@NotNull @RequestBody List<Long> reportIds) {
+
+        List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reportIds);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve current report for a given facility
      *
      * @param facilityEisProgramId {@link ProgramFacility}'s programId

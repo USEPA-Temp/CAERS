@@ -5,7 +5,9 @@ export class SubmissionUnderReview {
     facilitySiteId: number;
     altFacilityId: string;
     operatingStatus: string;
+    reportStatus: string;
     industry: string;
     lastSubmittalYear: number;
     year: number;
+    checked?: boolean;
 }
