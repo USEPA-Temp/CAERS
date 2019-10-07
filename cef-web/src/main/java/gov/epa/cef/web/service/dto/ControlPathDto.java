@@ -3,13 +3,15 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import gov.epa.cef.web.service.dto.postOrder.ReleasePointApptPostOrderDto;
+
 public class ControlPathDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private String description;
-    private List<ReleasePointApptUpDto> releasePointAppts;
+    private List<ReleasePointApptPostOrderDto> releasePointAppts;
 
     public Long getId() {
         return id;
@@ -27,11 +29,11 @@ public class ControlPathDto implements Serializable {
         this.description = description;
     }
 
-    public List<ReleasePointApptUpDto> getReleasePointAppts() {
+    public List<ReleasePointApptPostOrderDto> getReleasePointAppts() {
         return releasePointAppts;
     }
 
-    public void setReleasePointAppts(List<ReleasePointApptUpDto> releasePoints) {
+    public void setReleasePointAppts(List<ReleasePointApptPostOrderDto> releasePoints) {
         this.releasePointAppts = releasePoints;
     }
 

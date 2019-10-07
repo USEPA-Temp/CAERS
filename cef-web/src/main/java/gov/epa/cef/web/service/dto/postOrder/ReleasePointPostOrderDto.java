@@ -1,8 +1,15 @@
-package gov.epa.cef.web.service.dto;
+package gov.epa.cef.web.service.dto.postOrder;
 
 import java.io.Serializable;
 
-public class ReleasePointUpDto implements Serializable {
+
+/***
+ * ReleasePointPostOrderDto is used to traverse the object hierarchy from the bottom up.  The ReleasePointApptPostOrderDto will contain a reference to the ReleasePointPostOrderDto
+ * but this ReleasePointPostOrderDto will not contain a list of ReleasePointApptPostOrderDto objects.  This helps avoid circular references when traversing the hierarchy post order.
+ * @author kbrundag
+ *
+ */
+public class ReleasePointPostOrderDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
