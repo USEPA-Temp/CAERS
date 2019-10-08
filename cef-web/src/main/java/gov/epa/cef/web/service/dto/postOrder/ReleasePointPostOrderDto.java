@@ -5,7 +5,8 @@ import java.io.Serializable;
 
 /***
  * ReleasePointPostOrderDto is used to traverse the object hierarchy from the bottom up.  The ReleasePointApptPostOrderDto will contain a reference to the ReleasePointPostOrderDto
- * but this ReleasePointPostOrderDto will not contain a list of ReleasePointApptPostOrderDto objects.  This helps avoid circular references when traversing the hierarchy post order.
+ * but this ReleasePointPostOrderDto will not contain a list of ReleasePointApptPostOrderDto objects.  This helps avoid circular references within the MapStruct mappers when 
+ * traversing the hierarchy post order.
  * @author kbrundag
  *
  */

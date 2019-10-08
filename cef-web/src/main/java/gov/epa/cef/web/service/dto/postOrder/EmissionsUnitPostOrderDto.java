@@ -5,7 +5,8 @@ import java.io.Serializable;
 
 /***
  * EmissionsUnitPostOrderDto is used to traverse the object hierarchy from the bottom up.  The EmissionsProcessPostOrderDto will contain a reference to this EmissionsUnitPostOrderDto
- * but this EmissionsUnitPostOrderDto will not contain a list of EmissionsProcessPostOrderDto objects.  This helps avoid circular references when traversing the hierarchy post order.
+ * but this EmissionsUnitPostOrderDto will not contain a list of EmissionsProcessPostOrderDto objects.  This helps avoid circular references within the MapStruct mappers when 
+ * traversing the hierarchy post order.
  * @author kbrundag
  *
  */
