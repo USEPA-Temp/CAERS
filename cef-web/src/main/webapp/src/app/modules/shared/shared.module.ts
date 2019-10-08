@@ -23,6 +23,7 @@ import { ReportSummaryTableComponent } from 'src/app/modules/shared/components/r
 import { ValidationMessageComponent } from './components/validation-message/validation-message.component';
 import { WholeNumberValidatorDirective } from './directives/whole-number-validator.directive';
 import { NumberValidatorDirective } from './directives/number-validator.directive';
+import { BaseConfirmationModalComponent } from './components/base-confirmation-modal/base-confirmation-modal.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { NumberValidatorDirective } from './directives/number-validator.directiv
     ReportSummaryTableComponent,
     ValidationMessageComponent,
     WholeNumberValidatorDirective,
-    NumberValidatorDirective
+    NumberValidatorDirective,
+    BaseConfirmationModalComponent
 ],
   exports: [
     FacilityInfoComponent,
@@ -54,13 +56,16 @@ import { NumberValidatorDirective } from './directives/number-validator.directiv
     SortableHeaderDirective,
     PhoneNumberPipe,
     ReportSummaryTableComponent,
-    ValidationMessageComponent
-],
+    ValidationMessageComponent,
+  ],
   imports: [
     CommonModule,
     FontAwesomeModule,
     NgbModule,
     SharedRoutingModule
+  ],
+  entryComponents: [
+    BaseConfirmationModalComponent
   ]
 })
 export class SharedModule {

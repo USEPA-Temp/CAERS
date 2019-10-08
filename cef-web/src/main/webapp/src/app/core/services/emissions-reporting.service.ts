@@ -27,6 +27,16 @@ export class EmissionsReportingService {
         return this.http.get<EmissionsReport>(url);
     }
 
+    acceptReports(reportIds: number[]): Observable<EmissionsReport[]> {
+        const url = `${this.baseUrl}/accept`;
+        return this.http.post<EmissionsReport[]>(url, reportIds);
+    }
+
+    rejectReports(reportIds: number[]): Observable<EmissionsReport[]> {
+        const url = `${this.baseUrl}/reject`;
+        return this.http.post<EmissionsReport[]>(url, reportIds);
+    }
+
     /** POST request to the server to create a report for the current year */
     createReport(eisFacilityId: string, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
         const url = `${this.baseUrl}/facility/${eisFacilityId}`;

@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SubmissionsReviewDashboardService } from 'src/app/core/services/submissions-review-dashboard.service';
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
+import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/components/submission-review-list/submission-review-list.component';
+import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RejectSubmissionModalComponent } from 'src/app/modules/dashboards/components/reject-submission-modal/reject-submission-modal.component';
+import { BaseConfirmationModalComponent } from 'src/app/modules/shared/components/base-confirmation-modal/base-confirmation-modal.component';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -9,17 +14,67 @@ import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-re
 } )
 export class SubmissionReviewDashboardComponent implements OnInit {
 
-    submissions: SubmissionUnderReview[] = [];
+    @ViewChild(SubmissionReviewListComponent, {static: true})
+    private listComponent: SubmissionReviewListComponent;
 
-    constructor( private submissionsReviewDashboardService: SubmissionsReviewDashboardService ) { }
+    submissions: SubmissionUnderReview[] = [];
+    invalidSelection = false;
+
+    constructor(
+        private emissionReportService: EmissionsReportingService,
+        private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
+        private modalService: NgbModal ) { }
 
     ngOnInit() {
         this.getSubmissionsUnderReview();
     }
 
+    onApprove() {
+        const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
+        console.log(selectedSubmissions);
+
+        if (!selectedSubmissions.length) {
+            this.invalidSelection = true;
+        } else {
+            this.invalidSelection = false;
+            const modalRef = this.modalService.open(BaseConfirmationModalComponent, { size: 'lg', backdrop: 'static' });
+            modalRef.componentInstance.title = 'Accept Submissions';
+            modalRef.componentInstance.message = 'Would you like to accept the selected submissions?';
+
+            modalRef.result.then(() => {
+                this.emissionReportService.acceptReports(selectedSubmissions)
+                .subscribe(() => {
+                    this.getSubmissionsUnderReview();
+                });
+            }, () => {
+                // needed for dismissing without errors
+            });
+        }
+    }
+
+    onReject() {
+        const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
+        console.log(selectedSubmissions);
+
+        if (!selectedSubmissions.length) {
+            this.invalidSelection = true;
+        } else {
+            this.invalidSelection = false;
+            const modalRef = this.modalService.open(RejectSubmissionModalComponent, { size: 'lg', backdrop: 'static' });
+            modalRef.result.then(() => {
+                this.emissionReportService.rejectReports(selectedSubmissions)
+                .subscribe(() => {
+                    this.getSubmissionsUnderReview();
+                });
+            }, () => {
+                // needed for dismissing without errors
+            });
+        }
+    }
+
     getSubmissionsUnderReview(): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions => this.submissions = submissions );
+            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === 'SUBMITTED') );
     }
 
 }

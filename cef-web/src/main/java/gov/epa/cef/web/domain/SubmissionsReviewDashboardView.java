@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -37,6 +39,10 @@ public class SubmissionsReviewDashboardView implements Serializable{
     
     @Column(name = "operating_status", length = 200)
     private String operatingStatus;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "report_status")
+    private ReportStatus reportStatus;
     
     @Column(name = "industry", length = 200)
     private String industry;
@@ -85,6 +91,12 @@ public class SubmissionsReviewDashboardView implements Serializable{
     }
     public void setOperatingStatus(String operatingStatus) {
         this.operatingStatus = operatingStatus;
+    }
+    public ReportStatus getReportStatus() {
+        return reportStatus;
+    }
+    public void setReportStatus(ReportStatus reportStatus) {
+        this.reportStatus = reportStatus;
     }
     public String getIndustry() {
         return industry;

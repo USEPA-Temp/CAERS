@@ -28,10 +28,13 @@ import javax.activation.DataHandler;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -231,6 +234,40 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     public EmissionsReportDto saveEmissionReport(EmissionsReport emissionsReport) {
 	    	EmissionsReport savedReport = erRepo.save(emissionsReport);
 	    	return emissionsReportMapper.toDto(savedReport);
+    }
+
+    /**
+     * Approve the specified reports and move to approved
+     * @param reportIds
+     * @return
+     */
+    public List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds) {
+        return updateEmissionsReportsStatus(reportIds, ReportStatus.APPROVED);
+    }
+
+    /**
+     * Reject the specified reports and move back to in progress
+     * @param reportIds
+     * @return
+     */
+    public List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds) {
+        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS);
+    }
+
+    /**
+     * Update the status of the specified reports
+     * @param reportIds
+     * @param status
+     * @return
+     */
+    private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status) {
+
+        return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+            .map(report -> {
+                report.setStatus(status);
+                return this.emissionsReportMapper.toDto(this.erRepo.save(report));
+            }).collect(Collectors.toList());
+
     }
 
     /**

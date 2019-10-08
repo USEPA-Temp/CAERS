@@ -20,6 +20,7 @@ public class SubmissionsReviewDashboardDto implements Serializable{
     private Long facilitySiteId;
     private String altFacilityId;
     private String operatingStatus;
+    private String reportStatus;
     private String industry;
     private Short lastSubmittalYear;
     private Short year;
@@ -60,6 +61,12 @@ public class SubmissionsReviewDashboardDto implements Serializable{
     }
     public void setOperatingStatus(String operatingStatus) {
         this.operatingStatus = operatingStatus;
+    }
+    public String getReportStatus() {
+        return reportStatus;
+    }
+    public void setReportStatus(String reportStatus) {
+        this.reportStatus = reportStatus;
     }
     public String getIndustry() {
         return industry;
