@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation;
 
 import com.baidu.unbiz.fluentvalidator.ResultCollector;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,11 +122,13 @@ public class ValidationResult {
         return this.stateWarnings.size() > 0;
     }
 
+    @JsonIgnore
     public boolean isFederalValid() {
 
         return this.federalErrors.isEmpty();
     }
 
+    @JsonIgnore
     public boolean isStateValid() {
 
         return this.stateErrors.isEmpty();
@@ -140,23 +143,26 @@ public class ValidationResult {
 
         return validationResult -> {
 
-            validationResult.getErrors().forEach(error -> {
+            if (validationResult.isSuccess() == false) {
 
-                switch (error.getErrorCode()) {
-                    case FEDERAL_ERROR_CODE:
-                        this.federalErrors.add(error);
-                        break;
-                    case FEDERAL_WARNING_CODE:
-                        this.federalWarnings.add(error);
-                        break;
-                    case STATE_ERROR_CODE:
-                        this.stateErrors.add(error);
-                        break;
-                    case STATE_WARNING_CODE:
-                        this.stateWarnings.add(error);
-                        break;
-                }
-            });
+                validationResult.getErrors().forEach(error -> {
+
+                    switch (error.getErrorCode()) {
+                        case FEDERAL_ERROR_CODE:
+                            this.federalErrors.add(error);
+                            break;
+                        case FEDERAL_WARNING_CODE:
+                            this.federalWarnings.add(error);
+                            break;
+                        case STATE_ERROR_CODE:
+                            this.stateErrors.add(error);
+                            break;
+                        case STATE_WARNING_CODE:
+                            this.stateWarnings.add(error);
+                            break;
+                    }
+                });
+            }
 
             return this;
         };

@@ -6,11 +6,18 @@
                     <strong>Report Summary</strong>
                 </div>
                 <div class="card-body">
-                    <app-report-summary-table [tableData]='tableData' [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
-                    <div class="float-right">
-                        <button class="btn btn-primary btn-md m-3">Run Error Check</button>
-                        <button *ngIf="showCertify" id="certifyAndSubmit" class="btn btn-success btn-md m-3">Certify and Submit to SLT</button>
-                    </div>
+                    <app-report-summary-table [tableData]='tableData'
+                                              [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
+                </div>
+                <div class="card-footer d-flex flex-row justify-content-end">
+                    <button class="btn btn-primary btn-md my-3 mr-3"
+                            (click)="validateReport()">
+                        Run Error Check
+                    </button>
+                    <button *ngIf="showCertify" id="certifyAndSubmit"
+                            class="btn btn-success btn-md my-3 ml-3">
+                        Certify and Submit to SLT
+                    </button>
                 </div>
             </div>
         </div>

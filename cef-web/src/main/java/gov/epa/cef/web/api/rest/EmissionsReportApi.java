@@ -142,7 +142,8 @@ public class EmissionsReportApi {
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ValidationResult> validateReport(@NotNull @RequestBody EntityRefDto entityRefDto) {
 
-        ValidationResult result = this.validationService.validate(entityRefDto.requireNonNull());
+        ValidationResult result =
+            this.validationService.validateAndUpdateStatus(entityRefDto.requireNonNull());
 
         return ResponseEntity.ok()
             .cacheControl(CacheControl.noCache().sMaxAge(0, TimeUnit.SECONDS).mustRevalidate())

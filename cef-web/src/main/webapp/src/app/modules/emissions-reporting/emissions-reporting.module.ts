@@ -41,6 +41,7 @@ import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissi
 import { EmissionDetailsComponent } from './pages/emission-details/emission-details.component';
 import { EmissionFactorModalComponent } from './components/emission-factor-modal/emission-factor-modal.component';
 import { SccSearchModalComponent } from './components/scc-search-modal/scc-search-modal.component';
+import { EmissionsReportValidationComponent } from './pages/emissions-report-validation/emissions-report-validation.component';
 
 
 @NgModule({
@@ -78,8 +79,8 @@ import { SccSearchModalComponent } from './components/scc-search-modal/scc-searc
     EditProcessReportingPeriodPanelComponent,
     EmissionDetailsComponent,
     EmissionFactorModalComponent,
-    SccSearchModalComponent
-
+    SccSearchModalComponent,
+    EmissionsReportValidationComponent
   ],
   imports: [
     CommonModule,

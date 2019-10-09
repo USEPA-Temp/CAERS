@@ -86,8 +86,8 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
                         });
                 }
             });
-    }
 
+    }
 
     /**
      * Callback that is triggered after the new report is created
