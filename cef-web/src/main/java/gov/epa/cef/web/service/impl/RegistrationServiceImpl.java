@@ -6,10 +6,12 @@ import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.net.URL;
 import java.util.List;
@@ -43,6 +45,19 @@ public class RegistrationServiceImpl implements RegistrationService {
             List<ProgramFacility> facilities = registerFacilityClient
                     .getFacilitiesByUserRoleId(registerFacilityServiceUrl, token, userRoleId);
             if (CollectionUtils.isNotEmpty(facilities)) {
+                
+                ProgramFacility acmeFacility = new ProgramFacility();
+                acmeFacility.setFacilityName("ACME Pulp Facility");
+                acmeFacility.setAddress("37 Pulp Facility Lane");
+                acmeFacility.setCity("Springfield");
+                acmeFacility.setState("GA");
+                acmeFacility.setZipCode("31520");
+                acmeFacility.setProgramId("3721011");
+                acmeFacility.setProgramAcronym("EIS");
+                acmeFacility.setEpaRegistryId("110020517412");
+                acmeFacility.setCdxFacilityId(370078L); 
+                facilities.add(acmeFacility);
+                
                 for (ProgramFacility facility : facilities) {
                     LOGGER.debug("Facility Name: " + facility.getFacilityName());
                 }
@@ -62,6 +77,20 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public ProgramFacility retrieveFacilityByProgramId(String programId) {
         try {
+            
+            if (StringUtils.equals("3721011", programId)){
+                ProgramFacility acmeFacility = new ProgramFacility();
+                acmeFacility.setFacilityName("ACME Pulp Facility");
+                acmeFacility.setAddress("37 Pulp Facility Lane");
+                acmeFacility.setCity("Springfield");
+                acmeFacility.setState("GA");
+                acmeFacility.setZipCode("31520");
+                acmeFacility.setProgramId("3721011");
+                acmeFacility.setProgramAcronym("EIS");
+                acmeFacility.setEpaRegistryId("110020517412");
+                acmeFacility.setCdxFacilityId(370078L); 
+                return acmeFacility;
+            }
 
             URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
             String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),

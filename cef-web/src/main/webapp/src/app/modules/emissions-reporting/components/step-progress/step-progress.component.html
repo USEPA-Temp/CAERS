@@ -4,7 +4,7 @@
 		<div class="progress"><div class="progress-bar"></div></div>
 		<span class="bs-wizard-dot"></span>
 	</div>
-	<div class="col-md bs-wizard-step" [ngClass]="isOneOf(facilitySite.emissionsReport.status, ['VALIDATED', 'SUBMITTED', 'APPROVED']) ? 'complete' : 'disabled'">
+	<div class="col-md bs-wizard-step" [ngClass]="(isOneOf(facilitySite.emissionsReport.status, ['IN_PROGRESS', 'SUBMITTED', 'APPROVED']) && isOneOf(facilitySite.emissionsReport.validationStatus, ['PASSED', 'PASSED_WARNINGS'])) ? 'complete' : 'disabled'">
 		<div class="text-center bs-wizard-stepnum">Perform Quality Checks</div>
 		<div class="progress"><div class="progress-bar"></div></div>
 		<span class="bs-wizard-dot"></span>
