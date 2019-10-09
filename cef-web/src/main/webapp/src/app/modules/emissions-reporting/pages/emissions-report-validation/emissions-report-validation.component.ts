@@ -12,8 +12,8 @@ import {SharedService} from "../../../../core/services/shared.service";
 })
 export class EmissionsReportValidationComponent implements OnInit {
 
-    private validationResult: ValidationResult;
-    private validationComplete: boolean;
+    validationResult: ValidationResult;
+    validationComplete: boolean;
 
   constructor(
       private route: ActivatedRoute,
