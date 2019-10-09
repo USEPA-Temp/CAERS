@@ -2,13 +2,13 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 
+
 public class ControlAssignmentDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private EmissionsReportItemDto control;
-    private ControlPathDto controlPath;
+    private ControlDto control;
     private String description;
     private Integer sequenceNumber;
     private ControlPathDto controlPathChild;
@@ -21,20 +21,12 @@ public class ControlAssignmentDto implements Serializable {
         this.id = id;
     }
 
-    public EmissionsReportItemDto getControl() {
+    public ControlDto getControl() {
         return control;
     }
 
-    public void setControl(EmissionsReportItemDto control) {
+    public void setControl(ControlDto control) {
         this.control = control;
-    }
-
-    public ControlPathDto getControlPath() {
-        return controlPath;
-    }
-
-    public void setControlPath(ControlPathDto controlPath) {
-        this.controlPath = controlPath;
     }
 
     public String getDescription() {

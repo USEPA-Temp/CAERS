@@ -3,6 +3,9 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.ControlPollutantDto;
+
 public class ControlDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -15,7 +18,6 @@ public class ControlDto implements Serializable {
     private Double percentCapture;
     private Double percentControl;
     private List<ControlPollutantDto> pollutants;
-    private List<ControlAssignmentDto> assignments;
     private String comments;
 
     public Long getId() {
@@ -88,14 +90,6 @@ public class ControlDto implements Serializable {
 
     public void setPollutants(List<ControlPollutantDto> pollutants) {
         this.pollutants = pollutants;
-    }
-
-    public List<ControlAssignmentDto> getAssignments() {
-        return assignments;
-    }
-
-    public void setAssignments(List<ControlAssignmentDto> assignments) {
-        this.assignments = assignments;
     }
 
 }

@@ -3,7 +3,6 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import gov.epa.cef.web.service.dto.postOrder.ReleasePointApptPostOrderDto;
 
 public class ControlPathDto implements Serializable {
 
@@ -11,7 +10,7 @@ public class ControlPathDto implements Serializable {
 
     private Long id;
     private String description;
-    private List<ReleasePointApptPostOrderDto> releasePointAppts;
+    private List<ControlAssignmentDto> assignments;
 
     public Long getId() {
         return id;
@@ -29,12 +28,12 @@ public class ControlPathDto implements Serializable {
         this.description = description;
     }
 
-    public List<ReleasePointApptPostOrderDto> getReleasePointAppts() {
-        return releasePointAppts;
+    public List<ControlAssignmentDto> getAssignments() {
+        return assignments;
     }
 
-    public void setReleasePointAppts(List<ReleasePointApptPostOrderDto> releasePoints) {
-        this.releasePointAppts = releasePoints;
+    public void setAssignments(List<ControlAssignmentDto> assignments) {
+        this.assignments = assignments;
     }
 
 }

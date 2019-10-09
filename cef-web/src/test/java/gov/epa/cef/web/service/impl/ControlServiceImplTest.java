@@ -2,7 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.repository.ControlRepository;
-import gov.epa.cef.web.service.dto.ControlDto;
+import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import gov.epa.cef.web.service.mapper.ControlMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +32,8 @@ public class ControlServiceImplTest extends BaseServiceTest {
     @InjectMocks
     private ControlServiceImpl controlServiceImpl;
 
-    private ControlDto controlDto;
-    private List<ControlDto> controlDtoList;
+    private ControlPostOrderDto controlDto;
+    private List<ControlPostOrderDto> controlDtoList;
 
     @Before
     public void init(){
@@ -46,7 +46,7 @@ public class ControlServiceImplTest extends BaseServiceTest {
         when(controlRepo.findByFacilitySiteId(1L)).thenReturn(controlList);
         when(controlRepo.findByFacilitySiteId(2L)).thenReturn(emptyControlList);
 
-        controlDto = new ControlDto();
+        controlDto = new ControlPostOrderDto();
         controlDtoList=new ArrayList<>();
         when(controlMapper.toDto(control)).thenReturn(controlDto);
         when(controlMapper.toDtoList(controlList)).thenReturn(controlDtoList);
@@ -54,31 +54,31 @@ public class ControlServiceImplTest extends BaseServiceTest {
 
     @Test
     public void retrieveById_Should_Return_ControlObject_When_ControlExists(){
-        ControlDto control = controlServiceImpl.retrieveById(1L);
+        ControlPostOrderDto control = controlServiceImpl.retrieveById(1L);
         assertNotEquals(null, control);
     }
 
     @Test
     public void retrieveById_Should_Return_Null_When_ControlDoesNotExist(){
-        ControlDto control = controlServiceImpl.retrieveById(2L);
+        ControlPostOrderDto control = controlServiceImpl.retrieveById(2L);
         assertEquals(null, control);
     }
 
     @Test
     public void retrieveById_Should_Return_Null_When_IDisNull(){
-        ControlDto control = controlServiceImpl.retrieveById(null);
+        ControlPostOrderDto control = controlServiceImpl.retrieveById(null);
         assertEquals(null, control);
     }
 
     @Test
     public void retrieveForFacilitySite_Should_Return_ControlList_When_ControlsExist() {
-        Collection<ControlDto> controlList = controlServiceImpl.retrieveForFacilitySite(1L);
+        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(1L);
         assertNotEquals(null, controlList);
     }
 
     @Test
     public void retrieveForFacilitySite_Should_Return_Empty_When_ControlsDoNotExist() {
-        Collection<ControlDto> controlList = controlServiceImpl.retrieveForFacilitySite(2L);
+        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(2L);
         assertEquals(new ArrayList<Control>(), controlList);
     }
 
