@@ -10,8 +10,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * EmissionsReport entity. @author MyEclipse Persistence Tools
@@ -21,8 +22,6 @@ import java.util.Set;
 public class EmissionsReport extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
-
-    // Fields
 
     @Column(name = "frs_facility_id", nullable = false, length = 22)
     private String frsFacilityId;
@@ -51,7 +50,7 @@ public class EmissionsReport extends BaseAuditEntity {
     private ValidationStatus validationStatus;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
-    private Set<FacilitySite> facilitySites = new HashSet<FacilitySite>(0);
+    private List<FacilitySite> facilitySites = new ArrayList<>();
 
     /***
      * Default constructor
@@ -127,12 +126,16 @@ public class EmissionsReport extends BaseAuditEntity {
         this.validationStatus = validationStatus;
     }
 
-    public Set<FacilitySite> getFacilitySites() {
+    public List<FacilitySite> getFacilitySites() {
         return this.facilitySites;
     }
 
-    public void setFacilitySites(Set<FacilitySite> facilitySites) {
-        this.facilitySites = facilitySites;
+    public void setFacilitySites(Collection<FacilitySite> facilitySites) {
+
+        this.facilitySites.clear();
+        if (facilitySites != null) {
+            this.facilitySites.addAll(facilitySites);
+        }
     }
 
     public String getCromerrActivityId() {

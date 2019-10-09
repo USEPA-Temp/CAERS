@@ -61,7 +61,8 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
                     // no previous report, no FRS data
                     modalWindow.dismiss();
 
-                    this._failedToCreateRef = this.modalService.open(this._failedToCreateTemplate);
+                    this._failedToCreateRef = this.modalService.open(
+                        this._failedToCreateTemplate, {backdrop: "static"});
 
                 } else if (reportResp.status === 200) {
 
@@ -85,8 +86,8 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
                         });
                 }
             });
-    }
 
+    }
 
     /**
      * Callback that is triggered after the new report is created

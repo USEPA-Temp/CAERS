@@ -1,0 +1,45 @@
+<div class="card  mb-3">
+    <div class="card-header text-center">
+        <strong>Quality Review</strong>
+    </div>
+    <div class="card-body">
+
+        <div class="d-flex flex-row justify-content-center" style="font-size: large"
+             *ngIf="validationComplete === false">
+            <div class="spinner-border text-dark" role="status"></div>
+            <div class="mt-1 ml-2">Please wait while your QA Checks report is generated...</div>
+        </div>
+
+        <div *ngIf="validationComplete">
+
+            <div class="mb-3" style="font-size: larger">
+                <strong>Errors / Warnings</strong>
+            </div>
+
+            <div class="validation-item-error">
+
+                <div *ngFor="let item of validationResult.federalErrors">
+                    <span>Error: {{ item.errorMsg }}</span>
+                </div>
+
+                <div *ngFor="let item of validationResult.stateErrors">
+                    <span>Error: {{ item.errorMsg }}</span>
+                </div>
+
+            </div>
+
+            <div class="validation-item-warning">
+
+                <div *ngFor="let item of validationResult.federalWarnings">
+                    <span>Warning: {{ item.errorMsg }}</span>
+                </div>
+
+                <div *ngFor="let item of validationResult.stateWarnings">
+                    <span>Warning: {{ item.errorMsg }}</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

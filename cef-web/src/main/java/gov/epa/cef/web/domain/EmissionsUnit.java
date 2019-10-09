@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +24,14 @@ public class EmissionsUnit extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_code", nullable = false)
     private UnitTypeCode unitTypeCode;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_code", nullable = false)
     private OperatingStatusCode operatingStatusCode;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;

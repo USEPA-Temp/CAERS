@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ReportSummary } from 'src/app/shared/models/report-summary';
 import { ReportService } from 'src/app/core/services/report.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
@@ -21,6 +21,7 @@ export class ReportSummaryComponent implements OnInit {
     showCertify: boolean = false;
 
     constructor(
+        private router: Router,
         private reportService: ReportService,
         private route: ActivatedRoute,
         private sharedService: SharedService,
@@ -47,9 +48,22 @@ export class ReportSummaryComponent implements OnInit {
                 );
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                 .subscribe(report => {
+
                     this.tableData = report;
                 });
             }
         });
     }
+
+
+    /**
+     validate the report
+     */
+    validateReport() {
+
+        let reportId = this.facilitySite.emissionsReport.id;
+
+        this.router.navigateByUrl(`/facility/${this.facilitySite.eisProgramId}/report/${reportId}/validation`);
+    }
+
 }
