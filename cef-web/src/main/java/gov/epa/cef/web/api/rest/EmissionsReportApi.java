@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.EmissionsReportValidationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EntityRefDto;
+import gov.epa.cef.web.service.validation.ValidationResult;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
@@ -27,10 +32,14 @@ public class EmissionsReportApi {
 
     private final EmissionsReportService emissionsReportService;
 
+    private final EmissionsReportValidationService validationService;
+
     @Autowired
-    EmissionsReportApi(EmissionsReportService emissionsReportService) {
+    EmissionsReportApi(EmissionsReportService emissionsReportService,
+                       EmissionsReportValidationService validationService) {
 
         this.emissionsReportService = emissionsReportService;
+        this.validationService = validationService;
     }
 
     /**
@@ -121,12 +130,26 @@ public class EmissionsReportApi {
      * @return
      */
     @GetMapping(value = "/{reportId}")
-    public ResponseEntity<EmissionsReportDto> retrieveReport(@PathVariable Long reportId) {
+    public ResponseEntity<EmissionsReportDto> retrieveReport(@NotNull @PathVariable Long reportId) {
 
         EmissionsReportDto result = emissionsReportService.findById(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/validation",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ValidationResult> validateReport(@NotNull @RequestBody EntityRefDto entityRefDto) {
+
+        ValidationResult result =
+            this.validationService.validateAndUpdateStatus(entityRefDto.requireNonNull());
+
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.noCache().sMaxAge(0, TimeUnit.SECONDS).mustRevalidate())
+            .body(result);
+    }
+
 
     /**
      * Retrieve reports for a given facility

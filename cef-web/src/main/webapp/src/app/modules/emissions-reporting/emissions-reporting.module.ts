@@ -42,6 +42,7 @@ import { EmissionDetailsComponent } from './pages/emission-details/emission-deta
 import { EmissionFactorModalComponent } from './components/emission-factor-modal/emission-factor-modal.component';
 import { SccSearchModalComponent } from './components/scc-search-modal/scc-search-modal.component';
 import { ControlPathTableComponent } from './components/control-path-table/control-path-table.component';
+import { EmissionsReportValidationComponent } from './pages/emissions-report-validation/emissions-report-validation.component';
 
 
 @NgModule({
@@ -80,8 +81,8 @@ import { ControlPathTableComponent } from './components/control-path-table/contr
     EmissionDetailsComponent,
     EmissionFactorModalComponent,
     SccSearchModalComponent,
-    ControlPathTableComponent
-
+    ControlPathTableComponent,
+    EmissionsReportValidationComponent
   ],
   imports: [
     CommonModule,

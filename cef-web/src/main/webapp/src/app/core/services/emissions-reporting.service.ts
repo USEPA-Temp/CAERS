@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SideNavItem } from 'src/app/shared/models/side-nav-item';
+import {ValidationResult} from "src/app/shared/models/validation-result";
 
 
 @Injectable({
@@ -57,6 +58,15 @@ export class EmissionsReportingService {
             year: reportYear,
             eisProgramId: eisFacilityId,
             source: "frs"
+        });
+    }
+
+    /** POST request to the server to create a validation result for report */
+    validateReport(reportId: number) : Observable<ValidationResult> {
+
+        const url = `${this.baseUrl}/validation`;
+        return this.http.post<ValidationResult>(url, {
+            id: reportId
         });
     }
 }
