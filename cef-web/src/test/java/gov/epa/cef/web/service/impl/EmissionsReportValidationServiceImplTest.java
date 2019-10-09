@@ -2,14 +2,20 @@ package gov.epa.cef.web.service.impl;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 import com.baidu.unbiz.fluentvalidator.ValidatorChain;
+
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
+import gov.epa.cef.web.service.validation.validator.federal.EmissionsProcessValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsReportValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsUnitValidator;
 import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ReportingPeriodValidator;
 import gov.epa.cef.web.service.validation.validator.state.GeorgiaValidator;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +54,12 @@ public class EmissionsReportValidationServiceImplTest {
         when(validationRegistry.findOneByType(EmissionsUnitValidator.class))
             .thenReturn(new EmissionsUnitValidator());
 
+        when(validationRegistry.findOneByType(EmissionsProcessValidator.class))
+            .thenReturn(new EmissionsProcessValidator());
+
+        when(validationRegistry.findOneByType(ReportingPeriodValidator.class))
+            .thenReturn(new ReportingPeriodValidator());
+
         ValidatorChain reportChain = new ValidatorChain();
         reportChain.setValidators(Arrays.asList(new EmissionsReportValidator(), new GeorgiaValidator()));
 
@@ -61,6 +73,13 @@ public class EmissionsReportValidationServiceImplTest {
         EmissionsReport report = new EmissionsReport();
 
         FacilitySite facilitySite = new FacilitySite();
+        EmissionsUnit emissionsUnit = new EmissionsUnit();
+        EmissionsProcess emissionsProcess = new EmissionsProcess();
+        ReportingPeriod reportingPeriod = new ReportingPeriod();
+
+        emissionsProcess.getReportingPeriods().add(reportingPeriod);
+        emissionsUnit.getEmissionsProcesses().add(emissionsProcess);
+        facilitySite.getEmissionsUnits().add(emissionsUnit);
         report.getFacilitySites().add(facilitySite);
 
         ValidationResult result = this.validationService.validate(report);
@@ -72,5 +91,6 @@ public class EmissionsReportValidationServiceImplTest {
         logger.debug("Failures {}", String.join(", ", federalErrors.keySet()));
         assertTrue(federalErrors.containsKey("report.eisProgramId"));
         assertTrue(federalErrors.containsKey("report.facilitySite.eisProgramId"));
+        assertTrue(federalErrors.containsKey("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue"));
     }
 }

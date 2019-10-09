@@ -41,6 +41,7 @@ public class EmissionsReportValidator
 
         } else if (report.getYear().intValue() < 2019) {
 
+            valid = false;
             context.addFederalWarning("report.year", "report.year.min");
         }
 
