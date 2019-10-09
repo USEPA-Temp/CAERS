@@ -28,9 +28,6 @@ public class ControlAssignment extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "control_path_child_id", nullable = false)
     private ControlPath controlPathChild;
-
-    @Column(name = "description", length = 200)
-    private String description;
     
     @Column(name = "sequence_number", nullable = false)
     private Integer sequenceNumber;
@@ -50,7 +47,6 @@ public class ControlAssignment extends BaseAuditEntity {
     public ControlAssignment(ControlPath controlPath, Control newControl, ControlPath newControlPathChild, ControlAssignment originalControlAssignment) {
     	this.id = originalControlAssignment.getId();
     	this.controlPath = controlPath;
-    	this.description = originalControlAssignment.getDescription();
     	this.controlPathChild = newControlPathChild;
     	this.control = newControl;
     	this.sequenceNumber = originalControlAssignment.getSequenceNumber();
@@ -78,14 +74,6 @@ public class ControlAssignment extends BaseAuditEntity {
 
     public void setControlPathChild(ControlPath controlPathChild) {
         this.controlPathChild = controlPathChild;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Integer getSequenceNumber() {

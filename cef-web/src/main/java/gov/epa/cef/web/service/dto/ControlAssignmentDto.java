@@ -9,7 +9,6 @@ public class ControlAssignmentDto implements Serializable {
 
     private Long id;
     private ControlDto control;
-    private String description;
     private Integer sequenceNumber;
     private ControlPathDto controlPathChild;
 
@@ -27,14 +26,6 @@ public class ControlAssignmentDto implements Serializable {
 
     public void setControl(ControlDto control) {
         this.control = control;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Integer getSequenceNumber() {
