@@ -5,7 +5,9 @@
       <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point ID</th>
       <th scope="col" sortable="releasePointTypeCode" (sort)="onSort($event)">Release Type</th>
       <th scope="col" sortable="percent" (sort)="onSort($event)">Avg. % Emissions</th>
-      <th scope="col"></th>
+      <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
+      </ng-container>
     </tr>
     </thead>
     <tbody>
@@ -13,14 +15,18 @@
       <td><a routerLink="{{baseUrl}}/release/{{item.releasePointId}}">{{item.releasePointIdentifier}}</a></td>
       <td>{{item.releasePointTypeCode.description}}</td>
       <td>{{item.percent}}%</td>
-      <td><a href="#"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a href="#"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      </ng-container>
     </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><a href="#"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
-    </tr>
+    <ng-container *ngIf="!readOnlyMode">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a href="#"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+      </tr>
+    </ng-container>
     </tbody>
   </table>
 </div>

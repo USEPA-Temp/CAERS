@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 import { ControlAssignmentService } from 'src/app/core/services/control-assignment.service';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-release-point-details',
@@ -19,6 +20,8 @@ export class ReleasePointDetailsComponent implements OnInit {
   processes: Process[];
   controlAssignments: ControlAssignment[];
   parentComponentType = 'releasePointAppt';
+
+  readOnlyMode = true;
 
   constructor(
     private releasePointService: ReleasePointService,
@@ -49,8 +52,10 @@ export class ReleasePointDetailsComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-        this.sharedService.emitChange(data.facilitySite);
-      });
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
+      this.sharedService.emitChange(data.facilitySite);
+    });
   }
 
 }
