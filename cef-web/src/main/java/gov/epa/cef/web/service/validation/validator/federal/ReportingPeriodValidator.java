@@ -12,17 +12,17 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 @Component
 public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 
-//    @Override
-//    public void compose(FluentValidator validator,
-//                        ValidatorContext validatorContext,
-//                        ReportingPeriod reportingPeriod) {
-//
-//        ValidationRegistry registry = getCefValidatorContext(validatorContext).getValidationRegistry();
-//
-//        // add more validators as needed
-//        validator.onEach(reportingPeriod.getEmissions(),
-//            registry.findOneByType(EmissionValidator.class));
-//    }
+    @Override
+    public void compose(FluentValidator validator,
+                        ValidatorContext validatorContext,
+                        ReportingPeriod reportingPeriod) {
+
+        ValidationRegistry registry = getCefValidatorContext(validatorContext).getValidationRegistry();
+
+        // add more validators as needed
+        validator.onEach(reportingPeriod.getEmissions(),
+            registry.findOneByType(EmissionValidator.class));
+    }
 
     @Override
     public boolean validate(ValidatorContext validatorContext, ReportingPeriod period) {
@@ -33,6 +33,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 
         if (period.getCalculationParameterValue() == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError(
                 "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue",
@@ -48,6 +49,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 
         if (period.getCalculationMaterialCode() == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError(
                     "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationMaterialCode",
@@ -56,6 +58,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 
         if (period.getCalculationParameterTypeCode() == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError(
                     "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterTypeCode",
@@ -64,6 +67,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 
         if (period.getCalculationParameterUom() == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError(
                     "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterUom",
