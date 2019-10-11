@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-release-point-details',

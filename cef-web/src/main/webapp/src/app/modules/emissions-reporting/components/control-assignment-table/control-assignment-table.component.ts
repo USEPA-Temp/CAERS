@@ -11,6 +11,7 @@ import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item
 })
 export class ControlAssignmentTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: EmissionsReportItem[];
+  @Input() readOnlyMode: boolean;
   baseUrl: string;
 
   constructor(private route: ActivatedRoute) {

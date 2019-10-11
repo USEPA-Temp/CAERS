@@ -9,6 +9,7 @@ import { ControlPollutant } from 'src/app/shared/models/control-pollutant';
 })
 export class ControlPollutantTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: ControlPollutant[];
+  @Input() readOnlyMode: boolean;
 
   constructor() {
     super();

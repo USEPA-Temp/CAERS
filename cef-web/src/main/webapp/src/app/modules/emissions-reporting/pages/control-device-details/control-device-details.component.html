@@ -40,7 +40,7 @@
                     <strong>Control Device Assignment</strong>
                 </div>
                 <div class="card-body">
-                    <app-control-assignment-table [tableData]="emissionsReportItems"></app-control-assignment-table>
+                    <app-control-assignment-table [tableData]="emissionsReportItems" [readOnlyMode]="readOnlyMode"></app-control-assignment-table>
                 </div>
             </div>
             
@@ -51,7 +51,7 @@
                     <strong>Control Pollutants</strong>
                 </div>
                 <div class="card-body">
-                    <app-control-pollutant-table [tableData]="control.pollutants"></app-control-pollutant-table>
+                    <app-control-pollutant-table [tableData]="control.pollutants" [readOnlyMode]="readOnlyMode"></app-control-pollutant-table>
                 </div>
             </div>
             
