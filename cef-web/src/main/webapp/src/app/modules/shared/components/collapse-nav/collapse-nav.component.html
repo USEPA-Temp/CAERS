@@ -5,7 +5,7 @@
         <button class="btn btn-link text-primary font-weight-bold text-left p-0" type="button"
                 (click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
                 [attr.aria-controls]="targetId">
-            <app-collapse-icon [collapsed]='collapsed'></app-collapse-icon>{{desc}}
+            <app-collapse-icon [collapsed]="collapsed"></app-collapse-icon>{{desc}}
         </button>
     </div>
     
