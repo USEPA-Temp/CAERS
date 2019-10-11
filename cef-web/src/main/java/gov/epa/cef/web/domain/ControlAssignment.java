@@ -31,6 +31,9 @@ public class ControlAssignment extends BaseAuditEntity {
     
     @Column(name = "sequence_number", nullable = false)
     private Integer sequenceNumber;
+    
+    @Column(name = "percent_apportionment", nullable = false, precision = 4, scale = 1)
+    private Double percentApportionment;
 
     
     /**
@@ -82,6 +85,14 @@ public class ControlAssignment extends BaseAuditEntity {
 
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    public Double getPercentApportionment() {
+        return this.percentApportionment;
+    }
+
+    public void setPercentApportionment(Double percentApportionment) {
+        this.percentApportionment = percentApportionment;
     }
     
     
