@@ -32,6 +32,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         CefValidatorContext context = getCefValidatorContext(validatorContext);
 
         if (Strings.emptyToNull(facilitySite.getEisProgramId()) == null) {
+            // prevented by db constraints
             result = false;
             context.addFederalError(
                 "report.facilitySite.eisProgramId","facilitysite.eisProgramId.required");

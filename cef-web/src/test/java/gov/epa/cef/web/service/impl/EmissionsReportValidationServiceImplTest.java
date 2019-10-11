@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 import com.baidu.unbiz.fluentvalidator.ValidatorChain;
 
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -11,6 +12,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
+import gov.epa.cef.web.service.validation.validator.federal.EmissionValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsProcessValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsReportValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsUnitValidator;
@@ -60,6 +62,9 @@ public class EmissionsReportValidationServiceImplTest {
         when(validationRegistry.findOneByType(ReportingPeriodValidator.class))
             .thenReturn(new ReportingPeriodValidator());
 
+        when(validationRegistry.findOneByType(EmissionValidator.class))
+            .thenReturn(new EmissionValidator());
+
         ValidatorChain reportChain = new ValidatorChain();
         reportChain.setValidators(Arrays.asList(new EmissionsReportValidator(), new GeorgiaValidator()));
 
@@ -76,7 +81,9 @@ public class EmissionsReportValidationServiceImplTest {
         EmissionsUnit emissionsUnit = new EmissionsUnit();
         EmissionsProcess emissionsProcess = new EmissionsProcess();
         ReportingPeriod reportingPeriod = new ReportingPeriod();
+        Emission emission = new Emission();
 
+        reportingPeriod.getEmissions().add(emission);
         emissionsProcess.getReportingPeriods().add(reportingPeriod);
         emissionsUnit.getEmissionsProcesses().add(emissionsProcess);
         facilitySite.getEmissionsUnits().add(emissionsUnit);
@@ -92,5 +99,6 @@ public class EmissionsReportValidationServiceImplTest {
         assertTrue(federalErrors.containsKey("report.eisProgramId"));
         assertTrue(federalErrors.containsKey("report.facilitySite.eisProgramId"));
         assertTrue(federalErrors.containsKey("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue"));
+        assertTrue(federalErrors.containsKey("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsCalcMethodCode"));
     }
 }

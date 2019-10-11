@@ -36,6 +36,7 @@ public class EmissionsReportValidator
 
         if (report.getYear() == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError("report.year", "report.year.required");
 
@@ -47,18 +48,21 @@ public class EmissionsReportValidator
 
         if (Strings.emptyToNull(report.getAgencyCode()) == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError("report.agencyCode", "report.agencyCode.required");
         }
 
         if (Strings.emptyToNull(report.getFrsFacilityId()) == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError("report.frsFacilityId", "report.frsFacilityId.required");
         }
 
         if (Strings.emptyToNull(report.getEisProgramId()) == null) {
 
+            // prevented by db constraints
             valid = false;
             context.addFederalError("report.eisProgramId", "report.eisProgramId.required");
         }
