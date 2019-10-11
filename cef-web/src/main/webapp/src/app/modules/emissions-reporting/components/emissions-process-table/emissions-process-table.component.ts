@@ -17,6 +17,7 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
   @Input() tableData: Process[];
   @Input() createUrl = '.';
   @Input() parentComponentType: string;
+  @Input() readOnlyMode: boolean;
   baseUrl: string;
 
     constructor(private route: ActivatedRoute,

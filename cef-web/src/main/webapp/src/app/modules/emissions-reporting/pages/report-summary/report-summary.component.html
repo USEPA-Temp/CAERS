@@ -9,7 +9,7 @@
                     <app-report-summary-table [tableData]='tableData'
                                               [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
                 </div>
-                <div class="card-footer d-flex flex-row justify-content-end">
+                <div class="card-footer d-flex flex-row justify-content-end" *ngIf="!readOnlyMode">
                     <button class="btn btn-primary btn-md my-3 mr-3"
                             (click)="validateReport()">
                         Run Error Check

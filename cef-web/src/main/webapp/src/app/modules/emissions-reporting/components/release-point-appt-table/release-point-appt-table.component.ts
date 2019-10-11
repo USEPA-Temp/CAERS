@@ -10,6 +10,7 @@ import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base
 })
 export class ReleasePointApptTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: ReleasePointApportionment[];
+  @Input() readOnlyMode: boolean;
   baseUrl: string;
 
   constructor(private route: ActivatedRoute) {

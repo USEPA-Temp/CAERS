@@ -13,6 +13,7 @@ import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissi
 import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 import { OperatingDetailService } from 'src/app/core/services/operating-detail.service';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -22,6 +23,8 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
   controlPaths: ControlPath[];
+
+  readOnlyMode = true;
 
   editInfo = false;
   editDetails = false;
@@ -65,6 +68,8 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
       this.sharedService.emitChange(data.facilitySite);
     });
   }

@@ -20,6 +20,8 @@ export class EmissionUnitDashboardComponent implements OnInit {
   processes: Process[];
   controlPaths: ControlPath[];
 
+  readOnlyMode = true;
+
   constructor(
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
@@ -49,8 +51,10 @@ export class EmissionUnitDashboardComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-        this.sharedService.emitChange(data.facilitySite);
-      });
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
+      this.sharedService.emitChange(data.facilitySite);
+    });
   }
 
 }

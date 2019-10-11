@@ -6,7 +6,9 @@
       <th scope="col" sortable="pollutant.pollutantName" (sort)="onSort($event)">Pollutant Name</th>
       <th scope="col" sortable="pollutant.pollutantCode" (sort)="onSort($event)">Code</th>
       <th scope="col" sortable="pollutant.pollutantCasId" (sort)="onSort($event)">CAS ID</th>
-      <th scope="col"></th>
+      <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
+      </ng-container>
     </tr>
     </thead>
     <tbody>
@@ -14,14 +16,18 @@
       <td><a [routerLink]="[baseUrl, item.id]">{{item.pollutant.pollutantName}}</a></td>
       <td>{{item.pollutant.pollutantCode}}</td>
       <td>{{item.pollutant.pollutantCasId}}</td>
-      <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      </ng-container>
     </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><a [routerLink]="[baseUrl]"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
-    </tr>
+    <ng-container *ngIf="!readOnlyMode">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a [routerLink]="[baseUrl]"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+      </tr>
+    </ng-container>
     </tbody>
   </table>
 </div>

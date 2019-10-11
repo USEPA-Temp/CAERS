@@ -20,6 +20,8 @@ export class ReleasePointDetailsComponent implements OnInit {
   controlPaths: ControlPath[];
   parentComponentType = 'releasePointAppt';
 
+  readOnlyMode = true;
+
   constructor(
     private releasePointService: ReleasePointService,
     private processService: EmissionsProcessService,
@@ -49,8 +51,10 @@ export class ReleasePointDetailsComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-        this.sharedService.emitChange(data.facilitySite);
-      });
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
+      this.sharedService.emitChange(data.facilitySite);
+    });
   }
 
 }
