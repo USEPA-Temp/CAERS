@@ -52,7 +52,8 @@ public class ControlAssignment extends BaseAuditEntity {
     	this.controlPath = controlPath;
     	this.controlPathChild = newControlPathChild;
     	this.control = newControl;
-    	this.sequenceNumber = originalControlAssignment.getSequenceNumber();
+        this.sequenceNumber = originalControlAssignment.getSequenceNumber();
+        this.percentApportionment = originalControlAssignment.getPercentApportionment();
     }
     
     public Control getControl() {
