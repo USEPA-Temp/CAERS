@@ -2,15 +2,15 @@ import { Component, OnInit, Input } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { ActivatedRoute } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
-import { ControlAssignment } from 'src/app/shared/models/control-assignment';
+import { ControlPath } from 'src/app/shared/models/control-path';
 
 @Component({
-  selector: 'app-control-devices-table',
-  templateUrl: './control-devices-table.component.html',
-  styleUrls: ['./control-devices-table.component.scss']
+  selector: 'app-control-path-panel',
+  templateUrl: './control-path-panel.component.html',
+  styleUrls: ['./control-path-panel.component.scss']
 })
-export class ControlDevicesTableComponent extends BaseSortableTable implements OnInit {
-  @Input() tableData: ControlAssignment[];
+export class ControlPathPanelComponent extends BaseSortableTable implements OnInit {
+  @Input() tableData: ControlPath[];
   baseUrl: string;
 
   constructor(private route: ActivatedRoute) {

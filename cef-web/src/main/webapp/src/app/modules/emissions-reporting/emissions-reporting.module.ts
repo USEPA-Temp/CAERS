@@ -29,7 +29,7 @@ import { ControlDeviceDetailsComponent } from 'src/app/modules/emissions-reporti
 import { ControlAssignmentTableComponent } from 'src/app/modules/emissions-reporting/components/control-assignment-table/control-assignment-table.component';
 import { ControlPollutantTableComponent } from 'src/app/modules/emissions-reporting/components/control-pollutant-table/control-pollutant-table.component';
 import { InventoryControlTableComponent } from 'src/app/modules/emissions-reporting/components/inventory-control-table/inventory-control-table.component';
-import { ControlDevicesTableComponent } from 'src/app/modules/emissions-reporting/components/control-devices-table/control-devices-table.component';
+import { ControlPathPanelComponent } from 'src/app/modules/emissions-reporting/components/control-path-panel/control-path-panel.component';
 import { EmissionsUnitsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/emissions-units-summary/emissions-units-summary.component';
 import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/release-points-summary/release-points-summary.component';
 import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
@@ -41,6 +41,7 @@ import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissi
 import { EmissionDetailsComponent } from './pages/emission-details/emission-details.component';
 import { EmissionFactorModalComponent } from './components/emission-factor-modal/emission-factor-modal.component';
 import { SccSearchModalComponent } from './components/scc-search-modal/scc-search-modal.component';
+import { ControlPathTableComponent } from './components/control-path-table/control-path-table.component';
 import { EmissionsReportValidationComponent } from './pages/emissions-report-validation/emissions-report-validation.component';
 
 
@@ -68,7 +69,7 @@ import { EmissionsReportValidationComponent } from './pages/emissions-report-val
     ControlAssignmentTableComponent,
     ControlPollutantTableComponent,
     InventoryControlTableComponent,
-    ControlDevicesTableComponent,
+    ControlPathPanelComponent,
     EmissionsUnitsSummaryComponent,
     ReleasePointsSummaryComponent,
     ControlDevicesSummaryComponent,
@@ -80,6 +81,7 @@ import { EmissionsReportValidationComponent } from './pages/emissions-report-val
     EmissionDetailsComponent,
     EmissionFactorModalComponent,
     SccSearchModalComponent,
+    ControlPathTableComponent,
     EmissionsReportValidationComponent
   ],
   imports: [

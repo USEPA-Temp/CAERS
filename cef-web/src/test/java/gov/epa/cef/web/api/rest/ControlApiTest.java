@@ -1,7 +1,8 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.service.ControlService;
-import gov.epa.cef.web.service.dto.ControlDto;
+import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,14 +29,14 @@ public class ControlApiTest extends BaseApiTest {
     private ControlApi controlApi;
 
     private
-    ControlDto control = new ControlDto();
+    ControlPostOrderDto control = new ControlPostOrderDto();
 
     private
-    List<ControlDto> controlList;
+    List<ControlPostOrderDto> controlList;
 
     @Before
     public void init() {
-        control = new ControlDto();
+        control = new ControlPostOrderDto();
         when(controlService.retrieveById(123L)).thenReturn(control);
 
         controlList = new ArrayList<>();
@@ -45,14 +46,14 @@ public class ControlApiTest extends BaseApiTest {
 
     @Test
     public void retrieveControl_Should_ReturnControlObjectWithOkStatusCode_When_ValidIdPassed() {
-        ResponseEntity<ControlDto> result = controlApi.retrieveControl(123L);
+        ResponseEntity<ControlPostOrderDto> result = controlApi.retrieveControl(123L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(control, result.getBody());
     }
 
     @Test
     public void retrieveControlsForFacilitySitet_Should_ReturnControlListWithStatusOk_When_ValidFacilitySiteIdPassed() {
-        ResponseEntity<List<ControlDto>> result = controlApi.retrieveControlsForFacilitySite(1L);
+        ResponseEntity<List<ControlPostOrderDto>> result = controlApi.retrieveControlsForFacilitySite(1L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(controlList, result.getBody());
     }

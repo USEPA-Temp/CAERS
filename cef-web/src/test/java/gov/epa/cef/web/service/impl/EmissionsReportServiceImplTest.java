@@ -289,7 +289,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	ControlAssignment ca = new ControlAssignment();
     	ca.setControl(control);
     	ca.setId(1L);
-    	ca.setDescription("Control Assignment");
     	ControlPath cp = new ControlPath();
     	Set<ControlAssignment> caSet = new HashSet<ControlAssignment>();
     	caSet.add(ca);

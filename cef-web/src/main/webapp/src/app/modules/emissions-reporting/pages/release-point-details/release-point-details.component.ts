@@ -6,8 +6,8 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { ControlAssignment } from 'src/app/shared/models/control-assignment';
-import { ControlAssignmentService } from 'src/app/core/services/control-assignment.service';
+import { ControlPath } from 'src/app/shared/models/control-path';
+import { ControlPathService } from 'src/app/core/services/control-path.service';
 
 @Component({
   selector: 'app-release-point-details',
@@ -17,13 +17,13 @@ import { ControlAssignmentService } from 'src/app/core/services/control-assignme
 export class ReleasePointDetailsComponent implements OnInit {
   releasePoint: ReleasePoint;
   processes: Process[];
-  controlAssignments: ControlAssignment[];
+  controlPaths: ControlPath[];
   parentComponentType = 'releasePointAppt';
 
   constructor(
     private releasePointService: ReleasePointService,
     private processService: EmissionsProcessService,
-    private controlAssignmentService: ControlAssignmentService,
+    private controlPathService: ControlPathService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -40,9 +40,9 @@ export class ReleasePointDetailsComponent implements OnInit {
           });
         });
 
-        this.controlAssignmentService.retrieveForReleasePoint(+map.get('releasePointId'))
-        .subscribe(controlAssignments => {
-          this.controlAssignments = controlAssignments;
+        this.controlPathService.retrieveForReleasePoint(+map.get('releasePointId'))
+        .subscribe(controlPaths => {
+          this.controlPaths = controlPaths;
         });
     });
 

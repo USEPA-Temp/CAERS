@@ -6,8 +6,8 @@ import { EmissionsProcessService } from 'src/app/core/services/emissions-process
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { ControlAssignment } from 'src/app/shared/models/control-assignment';
-import { ControlAssignmentService } from 'src/app/core/services/control-assignment.service';
+import { ControlPath } from 'src/app/shared/models/control-path';
+import { ControlPathService } from 'src/app/core/services/control-path.service';
 
 
 @Component({
@@ -18,12 +18,12 @@ import { ControlAssignmentService } from 'src/app/core/services/control-assignme
 export class EmissionUnitDashboardComponent implements OnInit {
   emissionsUnit: EmissionUnit;
   processes: Process[];
-  controlAssignments: ControlAssignment[];
+  controlPaths: ControlPath[];
 
   constructor(
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
-    private controlAssignmentService: ControlAssignmentService,
+    private controlPathService: ControlPathService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -41,9 +41,9 @@ export class EmissionUnitDashboardComponent implements OnInit {
           });
         });
 
-        this.controlAssignmentService.retrieveForEmissionsUnit(+map.get('unitId'))
-        .subscribe(controlAssignments => {
-          this.controlAssignments = controlAssignments;
+        this.controlPathService.retrieveForEmissionsUnit(+map.get('unitId'))
+        .subscribe(controlPaths => {
+          this.controlPaths = controlPaths;
         });
     });
     // emits the report info to the sidebar

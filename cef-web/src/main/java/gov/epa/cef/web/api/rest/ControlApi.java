@@ -1,8 +1,8 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.service.ControlService;
-import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
+import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +28,10 @@ public class ControlApi {
      */
     @GetMapping(value = "/{controlId}")
     @ResponseBody
-    public ResponseEntity<ControlDto> retrieveControl(@PathVariable Long controlId) {
+    public ResponseEntity<ControlPostOrderDto> retrieveControl(@PathVariable Long controlId) {
 
-        ControlDto result = controlService.retrieveById(controlId);
-        return new ResponseEntity<ControlDto>(result, HttpStatus.OK);
+        ControlPostOrderDto result = controlService.retrieveById(controlId);
+        return new ResponseEntity<ControlPostOrderDto>(result, HttpStatus.OK);
     }
 
     /**
@@ -41,10 +41,10 @@ public class ControlApi {
      */
     @GetMapping(value = "/facilitySite/{facilitySiteId}")
     @ResponseBody
-    public ResponseEntity<List<ControlDto>> retrieveControlsForFacilitySite(@PathVariable Long facilitySiteId) {
+    public ResponseEntity<List<ControlPostOrderDto>> retrieveControlsForFacilitySite(@PathVariable Long facilitySiteId) {
 
-        List<ControlDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
-        return new ResponseEntity<List<ControlDto>>(result, HttpStatus.OK);
+        List<ControlPostOrderDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
+        return new ResponseEntity<List<ControlPostOrderDto>>(result, HttpStatus.OK);
     }
 
 

@@ -13,8 +13,8 @@ import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.service.ControlService;
-import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
+import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import gov.epa.cef.web.service.mapper.ControlMapper;
 
 @Service
@@ -33,7 +33,7 @@ public class ControlServiceImpl implements ControlService {
      * @see gov.epa.cef.web.service.impl.ControlService#retrieveById(java.lang.Long)
      */
     @Override
-    public ControlDto retrieveById(Long id) {
+    public ControlPostOrderDto retrieveById(Long id) {
         Control result = repo
             .findById(id)
             .orElse(null);
@@ -44,7 +44,7 @@ public class ControlServiceImpl implements ControlService {
      * @see gov.epa.cef.web.service.impl.ControlService#retrieveForFacilitySite(java.lang.Long)
      */
     @Override
-    public List<ControlDto> retrieveForFacilitySite(Long facilitySiteId) {
+    public List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId) {
         List<Control> result = repo.findByFacilitySiteId(facilitySiteId);
         return mapper.toDtoList(result);
     }

@@ -5,8 +5,8 @@ import { Process } from 'src/app/shared/models/process';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
-import { ControlAssignment } from 'src/app/shared/models/control-assignment';
-import { ControlAssignmentService } from 'src/app/core/services/control-assignment.service';
+import { ControlPath } from 'src/app/shared/models/control-path';
+import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { EditProcessInfoPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-info-panel/edit-process-info-panel.component';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-operating-detail-panel/edit-process-operating-detail-panel.component';
@@ -21,7 +21,7 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 })
 export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
-  controlAssignments: ControlAssignment[];
+  controlPaths: ControlPath[];
 
   editInfo = false;
   editDetails = false;
@@ -40,7 +40,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     private processService: EmissionsProcessService,
     private reportingPeriodService: ReportingPeriodService,
     private operatingDetailService: OperatingDetailService,
-    private controlAssignmentService: ControlAssignmentService,
+    private controlPathService: ControlPathService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -56,9 +56,9 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         });
       });
 
-      this.controlAssignmentService.retrieveForEmissionsProcess(+map.get('processId'))
-      .subscribe(controlAssignments => {
-        this.controlAssignments = controlAssignments;
+      this.controlPathService.retrieveForEmissionsProcess(+map.get('processId'))
+      .subscribe(controlPaths => {
+        this.controlPaths = controlPaths;
       });
     });
 
