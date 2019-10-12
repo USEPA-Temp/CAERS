@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 
 @Component({
@@ -19,6 +20,8 @@ export class EmissionUnitDashboardComponent implements OnInit {
   emissionsUnit: EmissionUnit;
   processes: Process[];
   controlPaths: ControlPath[];
+
+  readOnlyMode = true;
 
   constructor(
     private emissionUnitService: EmissionUnitService,
@@ -49,8 +52,10 @@ export class EmissionUnitDashboardComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-        this.sharedService.emitChange(data.facilitySite);
-      });
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
+      this.sharedService.emitChange(data.facilitySite);
+    });
   }
 
 }

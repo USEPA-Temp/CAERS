@@ -4,8 +4,10 @@
         <th scope="col">Type</th>
         <th scope="col">Control ID</th>
         <th scope="col">Description</th>
-        <th scope="col"sortable="sequenceNumber" (sort)="onSort($event)">Sequence Number</th>
-        <th scope="col"></th>
+        <th scope="col" sortable="sequenceNumber" (sort)="onSort($event)">Sequence Number</th>
+        <ng-container *ngIf="!readOnlyMode">
+            <th scope="col"></th>
+        </ng-container>
     </tr>
     </thead>
     <tbody>
@@ -15,22 +17,28 @@
                 <td><a routerLink="{{baseUrl}}/{{item.control.id}}">{{item.control.identifier}}</a></td>
                 <td>{{item.control.description}}</td>
                 <td>{{item.sequenceNumber}}</td>
-                <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+                <ng-container *ngIf="!readOnlyMode">
+                    <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+                </ng-container>
             </tr>
             <tr *ngIf="item.controlPathChild">
                 <td>Path</td>
                 <td></td>
                 <td>{{item.controlPathChild.description}}</td>
                 <td>{{item.sequenceNumber}}</td>
-                <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+                <ng-container *ngIf="!readOnlyMode">
+                    <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+                </ng-container>
             </tr>
         </ng-container>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
-        </tr>
+        <ng-container *ngIf="!readOnlyMode">
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+            </tr>
+        </ng-container>
     </tbody>
 </table>

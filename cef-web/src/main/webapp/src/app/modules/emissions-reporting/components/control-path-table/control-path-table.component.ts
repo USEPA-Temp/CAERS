@@ -11,6 +11,7 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 })
 export class ControlPathTableComponent extends BaseSortableTable implements OnInit {
     @Input() tableData: ControlAssignment[];
+    @Input() readOnlyMode: boolean;
     baseUrl: string;
 
   constructor(private route: ActivatedRoute) {

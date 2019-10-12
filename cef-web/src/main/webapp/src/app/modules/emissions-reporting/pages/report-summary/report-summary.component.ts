@@ -6,6 +6,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { UserService } from 'src/app/core/services/user.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 declare const initCromerrWidget: any;
 
@@ -20,6 +21,8 @@ export class ReportSummaryComponent implements OnInit {
     emissionsReportYear: number;
     showCertify: boolean = false;
 
+    readOnlyMode = true;
+
     constructor(
         private router: Router,
         private reportService: ReportService,
@@ -30,6 +33,8 @@ export class ReportSummaryComponent implements OnInit {
 
     ngOnInit() {
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
+            this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
             this.facilitySite = data.facilitySite;
             this.sharedService.emitChange(data.facilitySite);
 

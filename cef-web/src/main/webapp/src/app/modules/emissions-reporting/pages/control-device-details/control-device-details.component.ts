@@ -5,6 +5,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { Control } from 'src/app/shared/models/control';
 import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-control-device-details',
@@ -14,6 +15,8 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 export class ControlDeviceDetailsComponent implements OnInit {
   control: Control;
   emissionsReportItems: EmissionsReportItem[];
+
+  readOnlyMode = true;
 
   constructor(
     private controlService: ControlService,
@@ -37,6 +40,8 @@ export class ControlDeviceDetailsComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
       this.sharedService.emitChange(data.facilitySite);
     });
   }

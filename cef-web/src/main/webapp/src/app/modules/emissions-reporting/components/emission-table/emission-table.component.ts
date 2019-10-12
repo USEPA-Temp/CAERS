@@ -20,6 +20,7 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
   @Input() tableData: Emission[];
   @Input() reportingPeriod: ReportingPeriod;
   @Input() process: Process;
+  @Input() readOnlyMode: boolean;
   baseUrl: string;
 
     constructor(private modalService: NgbModal,

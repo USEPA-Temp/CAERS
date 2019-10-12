@@ -3,6 +3,6 @@
   <ng-container *ngFor="let path of tableData">
       <div class="font-weight-bold text-uppercase">{{path.description}}</div>
 
-      <app-control-path-table [tableData]="path.assignments"></app-control-path-table>
+      <app-control-path-table [tableData]="path.assignments" [readOnlyMode]="readOnlyMode"></app-control-path-table>
   </ng-container>
 </div>

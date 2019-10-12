@@ -20,6 +20,8 @@ import { EmissionFactor } from 'src/app/shared/models/emission-factor';
 import { EmissionFactorService } from 'src/app/core/services/emission-factor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionFactorModalComponent } from 'src/app/modules/emissions-reporting/components/emission-factor-modal/emission-factor-modal.component';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-emission-details',
@@ -37,6 +39,8 @@ export class EmissionDetailsComponent implements OnInit {
   efNumeratorMismatch = false;
   efDenominatorMismatch = false;
   calculatedEf: number;
+
+  readOnlyMode = true;
 
   processUrl: string;
 
@@ -66,6 +70,7 @@ export class EmissionDetailsComponent implements OnInit {
     private lookupService: LookupService,
     private route: ActivatedRoute,
     private router: Router,
+    private sharedService: SharedService,
     public formUtils: FormUtilsService,
     private modalService: NgbModal,
     private fb: FormBuilder) { }
@@ -92,6 +97,10 @@ export class EmissionDetailsComponent implements OnInit {
     this.route.data
     .subscribe(data => {
       this.createMode = data.create === 'true';
+
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
+      this.sharedService.emitChange(data.facilitySite);
     });
 
     this.route.paramMap

@@ -11,6 +11,7 @@ import { ControlPath } from 'src/app/shared/models/control-path';
 })
 export class ControlPathPanelComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: ControlPath[];
+  @Input() readOnlyMode: boolean;
   baseUrl: string;
 
   constructor(private route: ActivatedRoute) {
