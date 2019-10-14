@@ -31,6 +31,9 @@ public class ControlAssignment extends BaseAuditEntity {
     
     @Column(name = "sequence_number", nullable = false)
     private Integer sequenceNumber;
+    
+    @Column(name = "percent_apportionment", nullable = false, precision = 4, scale = 1)
+    private Double percentApportionment;
 
     
     /**
@@ -49,7 +52,8 @@ public class ControlAssignment extends BaseAuditEntity {
     	this.controlPath = controlPath;
     	this.controlPathChild = newControlPathChild;
     	this.control = newControl;
-    	this.sequenceNumber = originalControlAssignment.getSequenceNumber();
+        this.sequenceNumber = originalControlAssignment.getSequenceNumber();
+        this.percentApportionment = originalControlAssignment.getPercentApportionment();
     }
     
     public Control getControl() {
@@ -82,6 +86,14 @@ public class ControlAssignment extends BaseAuditEntity {
 
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    public Double getPercentApportionment() {
+        return this.percentApportionment;
+    }
+
+    public void setPercentApportionment(Double percentApportionment) {
+        this.percentApportionment = percentApportionment;
     }
     
     
