@@ -16,6 +16,11 @@
                 <strong>Errors / Warnings</strong>
             </div>
 
+            <div class="text-success" *ngIf="!(hasErrors() || hasWarnings())">
+
+                Quality checks were completed successfully with no warnings or errors.
+            </div>
+
             <div class="validation-item-error">
 
                 <div *ngFor="let item of validationResult.federalErrors">

@@ -25,6 +25,8 @@ export class EmissionsReportValidationComponent implements OnInit {
 
   ngOnInit() {
 
+      this.validationComplete = false;
+
       this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
 
           this.sharedService.emitChange(data.facilitySite);
@@ -37,6 +39,20 @@ export class EmissionsReportValidationComponent implements OnInit {
 
               });
       });
+  }
+
+  hasErrors() {
+      if (this.validationComplete === true && this.validationResult) {
+        return this.validationResult.federalErrors.length || this.validationResult.stateErrors.length;
+      }
+      return false;
+  }
+
+  hasWarnings() {
+      if (this.validationComplete === true && this.validationResult) {
+        return this.validationResult.federalWarnings.length || this.validationResult.stateWarnings.length;
+      }
+      return false;
   }
 
 }
