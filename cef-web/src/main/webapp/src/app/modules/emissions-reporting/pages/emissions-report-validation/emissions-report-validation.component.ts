@@ -35,7 +35,10 @@ export class EmissionsReportValidationComponent implements OnInit {
               .subscribe(validationResult => {
 
                   this.validationResult = validationResult;
-                  this.validationComplete = true;
+
+                  setTimeout(() => {
+                    this.validationComplete = true;
+                  }, 5000);
 
               });
       });
