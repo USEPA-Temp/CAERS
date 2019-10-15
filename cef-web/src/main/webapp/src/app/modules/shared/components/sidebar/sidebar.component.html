@@ -9,17 +9,31 @@
     </div>
     <div class="mt-2" *ngIf="emissionsNavItems && facilityNavItems">
         <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
-                [routerLinkActiveOptions]="{exact: true}" #rla="routerLinkActive">
+                [routerLinkActiveOptions]="{exact: true}" #summaryRla="routerLinkActive">
             <div class="nav-link pl-0 pr-0">
                 <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
                         [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/summary" 
                         >
                     <span>Report Summary
-                          <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !rla.isActive}" size="lg"></fa-icon>
+                          <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !summaryRla.isActive}" size="lg"></fa-icon>
                     </span>
                 </a>
             </div>
         </div>
+
+        <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
+                [routerLinkActiveOptions]="{exact: true}" #validationRla="routerLinkActive">
+            <div class="nav-link pl-0 pr-0">
+                <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
+                        [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/validation" 
+                        >
+                    <span>Quality Checks
+                          <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !validationRla.isActive}" size="lg"></fa-icon>
+                    </span>
+                </a>
+            </div>
+        </div>
+
         <app-collapse-nav [desc]="'Facility Inventory'" [targetId]="'facilityInventoryCollapse'" [linkUrl]="facilitySite.emissionsReport.id" [navItems]="facilityNavItems"></app-collapse-nav>
         <app-collapse-nav [desc]="'Emissions Inventory'" [targetId]="'emissionUnitCollapse'" [linkUrl]="facilitySite.emissionsReport.id" [navItems]="emissionsNavItems"></app-collapse-nav>
     </div>
