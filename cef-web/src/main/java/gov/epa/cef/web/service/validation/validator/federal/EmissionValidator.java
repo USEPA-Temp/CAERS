@@ -24,7 +24,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
             valid = false;
             context.addFederalError(
                 "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsCalcMethodCode",
-                "emission.emissionsCalcMethodCode.required");
+                "emission.emissionsCalcMethodCode.required", 
+                getEmissionsUnitIdentifier(emission),
+                getEmissionsProcessIdentifier(emission),
+                getPollutantName(emission));
 
         } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == true) {
 
@@ -33,7 +36,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.comments",
-                        "emission.comments.required.method");
+                        "emission.comments.required.method", 
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
             }
 
             if(emission.getEmissionsFactor() != null) {
@@ -41,7 +47,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsFactor",
-                        "emission.emissionsFactor.banned.method");
+                        "emission.emissionsFactor.banned.method", 
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
             }
         } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false) {
 
@@ -50,7 +59,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsFactor",
-                        "emission.emissionsFactor.required.method");
+                        "emission.emissionsFactor.required.method",
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
             }
         }
 
@@ -61,7 +73,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsNumeratorUom",
-                        "emission.emissionsNumeratorUom.required.emissionsFactor");
+                        "emission.emissionsNumeratorUom.required.emissionsFactor", 
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
             }
 
             if (emission.getEmissionsDenominatorUom() == null) {
@@ -69,7 +84,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsDenominatorUom",
-                        "emission.emissionsDenominatorUom.required.emissionsFactor");
+                        "emission.emissionsDenominatorUom.required.emissionsFactor", 
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
             }
 
         } else if (emission.getEmissionsFactor() == null) {
@@ -79,7 +97,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsNumeratorUom",
-                        "emission.emissionsNumeratorUom.banned.emissionsFactor");
+                        "emission.emissionsNumeratorUom.banned.emissionsFactor", 
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
             }
 
             if (emission.getEmissionsDenominatorUom() != null) {
@@ -87,11 +108,36 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsDenominatorUom",
-                        "emission.emissionsDenominatorUom.banned.emissionsFactor");
+                        "emission.emissionsDenominatorUom.banned.emissionsFactor", 
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
             }
 
         }
 
         return valid;
+    }
+
+    private String getEmissionsUnitIdentifier(Emission emission) {
+        if (emission.getReportingPeriod() != null && emission.getReportingPeriod().getEmissionsProcess() != null 
+                && emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit() != null) {
+            return emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier();
+        }
+        return null;
+    }
+
+    private String getEmissionsProcessIdentifier(Emission emission) {
+        if (emission.getReportingPeriod() != null && emission.getReportingPeriod().getEmissionsProcess() != null) {
+            return emission.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier();
+        }
+        return null;
+    }
+
+    private String getPollutantName(Emission emission) {
+        if (emission.getPollutant() != null) {
+            return emission.getPollutant().getPollutantName();
+        }
+        return null;
     }
 }
