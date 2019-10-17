@@ -37,14 +37,18 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
             valid = false;
             context.addFederalError(
                 "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue",
-                "reportingPeriod.calculationParameterValue.required");
+                "reportingPeriod.calculationParameterValue.required", 
+                getEmissionsUnitIdentifier(period),
+                getEmissionsProcessIdentifier(period));
 
         } else if (period.getCalculationParameterValue().intValue() < 0) {
 
             valid = false;
             context.addFederalError(
                     "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue",
-                    "reportingPeriod.calculationParameterValue.min");
+                    "reportingPeriod.calculationParameterValue.min", 
+                    getEmissionsUnitIdentifier(period),
+                    getEmissionsProcessIdentifier(period));
         }
 
         if (period.getCalculationMaterialCode() == null) {
@@ -53,7 +57,9 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
             valid = false;
             context.addFederalError(
                     "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationMaterialCode",
-                    "reportingPeriod.calculationMaterialCode.required");
+                    "reportingPeriod.calculationMaterialCode.required", 
+                    getEmissionsUnitIdentifier(period),
+                    getEmissionsProcessIdentifier(period));
         }
 
         if (period.getCalculationParameterTypeCode() == null) {
@@ -62,7 +68,9 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
             valid = false;
             context.addFederalError(
                     "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterTypeCode",
-                    "reportingPeriod.calculationParameterTypeCode.required");
+                    "reportingPeriod.calculationParameterTypeCode.required", 
+                    getEmissionsUnitIdentifier(period),
+                    getEmissionsProcessIdentifier(period));
         }
 
         if (period.getCalculationParameterUom() == null) {
@@ -71,9 +79,25 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
             valid = false;
             context.addFederalError(
                     "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterUom",
-                    "reportingPeriod.calculationParameterUom.required");
+                    "reportingPeriod.calculationParameterUom.required", 
+                    getEmissionsUnitIdentifier(period),
+                    getEmissionsProcessIdentifier(period));
         }
 
         return valid;
+    }
+
+    private String getEmissionsUnitIdentifier(ReportingPeriod period) {
+        if (period.getEmissionsProcess() != null && period.getEmissionsProcess().getEmissionsUnit() != null) {
+            return period.getEmissionsProcess().getEmissionsUnit().getUnitIdentifier();
+        }
+        return null;
+    }
+
+    private String getEmissionsProcessIdentifier(ReportingPeriod period) {
+        if (period.getEmissionsProcess() != null) {
+            return period.getEmissionsProcess().getEmissionsProcessIdentifier();
+        }
+        return null;
     }
 }
