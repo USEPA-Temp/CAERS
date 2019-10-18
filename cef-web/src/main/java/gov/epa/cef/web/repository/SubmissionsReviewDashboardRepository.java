@@ -8,5 +8,5 @@ import gov.epa.cef.web.domain.SubmissionsReviewDashboardView;
 
 public interface SubmissionsReviewDashboardRepository extends JpaRepository<SubmissionsReviewDashboardView, Long> {
 
-    List<SubmissionsReviewDashboardView> findByYearAndAgencyCode(Short year, String agencyCode);
+    List<SubmissionsReviewDashboardView> findByAgencyCode(String agencyCode);
 }

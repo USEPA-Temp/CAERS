@@ -5,9 +5,9 @@ TRUNCATE TABLE CONTROL_PATH CASCADE;
 
 --EMISSION REPORTS
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999997', '110015680798', '9758611', 'GA', '2020', 'SUBMITTED', 'PASSED_WARNINGS', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999997', '110015680798', '9758611', 'GA', '2018', 'IN_PROGRESS', 'PASSED_WARNINGS', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999996', '110015680798', '9758611', 'GA', '2018', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999996', '110015680798', '9758611', 'GA', '2014', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
  VALUES ('9999995', '110015680798', '9758611', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
@@ -15,17 +15,17 @@ INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, y
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
  VALUES ('9999993', '110015680798', '9758611', 'GA', '2015', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999998', '110024286002', '2774511', 'GA', '2014', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999998', '110024286002', '2774511', 'GA', '2013', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
  INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999999', '110024286002', '2774511', 'GA', '2019', 'IN_PROGRESS', 'UNVALIDATED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999999', '110024286002', '2774511', 'GA', '2018', 'SUBMITTED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999910', '110024286002', '2774511', 'GA', '2018', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999910', '110024286002', '2774511', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999911', '110024286002', '2774511', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999911', '110024286002', '2774511', 'GA', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999912', '110020517412', '3721011', 'GA', '2020', 'IN_PROGRESS', 'UNVALIDATED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999912', '110020517412', '3721011', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999913', '110020517412', '3721011', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ VALUES ('9999913', '110020517412', '3721011', 'GA', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
 INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
@@ -383,14 +383,14 @@ INSERT INTO control_path (id, description, created_by, created_date, last_modifi
 INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
 	VALUES ('9999994', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
 
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
-	VALUES ('9999991', '9999991', '9999991', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
-	VALUES ('9999992', '9999991', '9999992', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
-	VALUES ('9999993', '9999991', '9999993', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
-INSERT INTO control_assignment (id, control_id, control_path_id, description, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number)
-	VALUES ('9999994', '9999992', '9999994', 'Assignment Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1);
+INSERT INTO control_assignment (id, control_id, control_path_id, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number, percent_apportionment)
+	VALUES ('9999991', '9999991', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1, 100);
+INSERT INTO control_assignment (id, control_id, control_path_id, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number, percent_apportionment)
+	VALUES ('9999992', '9999991', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1, 100);
+INSERT INTO control_assignment (id, control_id, control_path_id, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number, percent_apportionment)
+	VALUES ('9999993', '9999991', '9999993', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1, 100);
+INSERT INTO control_assignment (id, control_id, control_path_id, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number, percent_apportionment)
+	VALUES ('9999994', '9999992', '9999994', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1, 100);
 
 --RELEASE POINT APPORTIONMENT
 INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, percent, created_by, created_date, last_modified_by, last_modified_date, control_path_id)

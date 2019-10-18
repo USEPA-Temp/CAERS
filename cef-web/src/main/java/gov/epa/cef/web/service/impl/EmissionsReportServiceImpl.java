@@ -289,14 +289,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	private void addCurrentYear(List<EmissionsReport> emissionReports, String facilityEisProgramId) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        short currentYear = (short) calendar.get(Calendar.YEAR);
+        
+        //note: current reporting year is always the previous calendar year - like taxes.
+        //e.g. in 2020, facilities will be creating a 2019 report.
+        calendar.add(Calendar.YEAR, -1);
+        short currentReportingYear = (short) calendar.get(Calendar.YEAR);
 
-        if (!reportYearExists(currentYear, emissionReports)) {
+        if (!reportYearExists(currentReportingYear, emissionReports)) {
 	        EmissionsReport newReport = new EmissionsReport();
 	        newReport.setEisProgramId(facilityEisProgramId);
 	        newReport.setStatus(ReportStatus.NEW);
 	        newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
-	        newReport.setYear(currentYear);
+	        newReport.setYear(currentReportingYear);
 
 	        emissionReports.add(newReport);
         }

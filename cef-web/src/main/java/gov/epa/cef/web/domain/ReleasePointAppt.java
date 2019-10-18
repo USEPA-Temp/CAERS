@@ -48,6 +48,7 @@ public class ReleasePointAppt extends BaseAuditEntity {
      * Copy constructor
      * @param newReleasePoint The release point that should be associated with this release point apportionment object
      * @param newEmissionProcess The process that should be associated with this release point apportionment object
+     * @param newControlPath The control path that should be associated with this release point apportionment
      * @param originalReleasePointAppt The release point apportionment object that is being copied
      */
     public ReleasePointAppt(ReleasePoint newReleasePoint, EmissionsProcess newEmissionProcess, ControlPath newControlPath, ReleasePointAppt originalReleasePointAppt) {
