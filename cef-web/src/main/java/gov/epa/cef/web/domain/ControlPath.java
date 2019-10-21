@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
@@ -51,6 +51,7 @@ public class ControlPath extends BaseAuditEntity {
     	this.id = originalControlPath.getId();
     	this.facilitySite = facilitySite;
     	this.description = originalControlPath.getDescription();
+    	this.assignments = new HashSet<ControlAssignment>();
 
         for (ControlAssignment originalControlAssignment : originalControlPath.getAssignments()) {
         	Control c = null;
@@ -61,11 +62,16 @@ public class ControlPath extends BaseAuditEntity {
         		}
         	}
         	ControlPath cpc = null;
-        	for(ControlPath newControlPathChild : this.facilitySite.getControlPaths()) {
-        		if (newControlPathChild.getId().equals(originalControlAssignment.getControlPathChild().getId())) {
-        			cpc = newControlPathChild;
-        			break;
-        		}
+        	//if the original control assignment has a child control path, then loop through the 
+        	//control paths associated with the new facility, find the appropriate one, and 
+        	//associate it to this control assignment - otherwise leave child path as null
+        	if (originalControlAssignment.getControlPathChild() != null) {
+            	for(ControlPath newControlPathChild : this.facilitySite.getControlPaths()) {
+            		if (newControlPathChild.getId().equals(originalControlAssignment.getControlPathChild().getId())) {
+            			cpc = newControlPathChild;
+            			break;
+            		}
+            	}            
         	}
         	this.assignments.add(new ControlAssignment(this, c, cpc, originalControlAssignment));
         }
@@ -117,6 +123,11 @@ public class ControlPath extends BaseAuditEntity {
      */
     public void clearId() {
     	this.id = null;
+    	
+    	//clear the ids for the child control assignments
+        for (ControlAssignment controlAssignment : this.assignments) {
+            controlAssignment.clearId();
+        }
     }
 
 }

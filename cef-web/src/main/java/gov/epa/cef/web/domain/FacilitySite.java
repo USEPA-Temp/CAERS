@@ -166,17 +166,21 @@ public class FacilitySite extends BaseAuditEntity {
         for (ReleasePoint releasePoint : originalFacilitySite.getReleasePoints()) {
         	this.releasePoints.add(new ReleasePoint(this, releasePoint));
         }
+        
+        //controls need to be before emission unit so that emission process and release point apportionments
+        //underneath the units can association themselves with the appropriate controls
+        for (Control control : originalFacilitySite.getControls()) {
+            this.controls.add(new Control(this, control));
+        }
+        for (ControlPath controlPath : originalFacilitySite.getControlPaths()) {
+            this.controlPaths.add(new ControlPath(this, controlPath));
+        }
+        
         for (EmissionsUnit emissionsUnit : originalFacilitySite.getEmissionsUnits()) {
         	this.emissionsUnits.add(new EmissionsUnit(this, emissionsUnit));
         }
         for (FacilitySiteContact siteContact : originalFacilitySite.getContacts()) {
         	this.contacts.add(new FacilitySiteContact(this, siteContact));
-        }
-        for (Control control : originalFacilitySite.getControls()) {
-        	this.controls.add(new Control(this, control));
-        }
-        for (ControlPath controlPath : originalFacilitySite.getControlPaths()) {
-        	this.controlPaths.add(new ControlPath(this, controlPath));
         }
     }
 

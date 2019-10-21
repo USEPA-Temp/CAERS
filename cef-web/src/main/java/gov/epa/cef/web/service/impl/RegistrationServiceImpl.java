@@ -1,20 +1,19 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.client.soap.RegisterFacilityClient;
-import gov.epa.cef.web.config.CefConfig;
-import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.service.RegistrationService;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import java.net.URL;
+import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.net.URL;
-import java.util.List;
+import gov.epa.cef.web.client.soap.RegisterFacilityClient;
+import gov.epa.cef.web.config.CefConfig;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.service.RegistrationService;
+import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 /**
  * Service for invoking Register Webservice methods
@@ -44,20 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     cefConfig.getCdxConfig().getNaasPassword());
             List<ProgramFacility> facilities = registerFacilityClient
                     .getFacilitiesByUserRoleId(registerFacilityServiceUrl, token, userRoleId);
-            if (CollectionUtils.isNotEmpty(facilities)) {
-                
-                ProgramFacility acmeFacility = new ProgramFacility();
-                acmeFacility.setFacilityName("ACME Pulp Facility");
-                acmeFacility.setAddress("37 Pulp Facility Lane");
-                acmeFacility.setCity("Springfield");
-                acmeFacility.setState("GA");
-                acmeFacility.setZipCode("31520");
-                acmeFacility.setProgramId("3721011");
-                acmeFacility.setProgramAcronym("EIS");
-                acmeFacility.setEpaRegistryId("110020517412");
-                acmeFacility.setCdxFacilityId(370078L); 
-                facilities.add(acmeFacility);
-                
+            if (CollectionUtils.isNotEmpty(facilities)) {              
                 for (ProgramFacility facility : facilities) {
                     LOGGER.debug("Facility Name: " + facility.getFacilityName());
                 }
@@ -77,20 +63,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public ProgramFacility retrieveFacilityByProgramId(String programId) {
         try {
-            
-            if (StringUtils.equals("3721011", programId)){
-                ProgramFacility acmeFacility = new ProgramFacility();
-                acmeFacility.setFacilityName("ACME Pulp Facility");
-                acmeFacility.setAddress("37 Pulp Facility Lane");
-                acmeFacility.setCity("Springfield");
-                acmeFacility.setState("GA");
-                acmeFacility.setZipCode("31520");
-                acmeFacility.setProgramId("3721011");
-                acmeFacility.setProgramAcronym("EIS");
-                acmeFacility.setEpaRegistryId("110020517412");
-                acmeFacility.setCdxFacilityId(370078L); 
-                return acmeFacility;
-            }
 
             URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
             String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),

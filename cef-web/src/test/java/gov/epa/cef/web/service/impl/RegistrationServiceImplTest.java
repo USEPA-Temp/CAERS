@@ -59,7 +59,7 @@ public class RegistrationServiceImplTest extends BaseServiceTest {
 		ProgramFacility programFacility=new ProgramFacility();
 		programFacility.setFacilityName("Test-Facility");
 		facilities.add(programFacility);
-		assertEquals(registrationServiceImpl.retrieveFacilities(123L).size()==2, Boolean.TRUE);
+		assertEquals(registrationServiceImpl.retrieveFacilities(123L).size()==1, Boolean.TRUE);
 	}
 
 	@Test
