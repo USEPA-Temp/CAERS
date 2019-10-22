@@ -16,7 +16,7 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
     @Input() report: EmissionsReport;
     @Input() facility: CdxFacility;
 
-    @ViewChild("FailedToCreateMessageBox", {static: true})
+    @ViewChild('FailedToCreateMessageBox', {static: true})
     _failedToCreateTemplate: TemplateRef<any>;
 
     _failedToCreateRef: NgbModalRef;
@@ -45,14 +45,15 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
     createNewReport() {
 
         const modalWindow = this.modalService.open(BusyModalComponent, {
-            backdrop: "static",
-            size: "lg"
+            backdrop: 'static',
+            size: 'lg'
         });
 
-        modalWindow.componentInstance.message = "Please wait while we generate your new report.";
+        modalWindow.componentInstance.message = 'Please wait while we generate your new report.';
 
-        const currentYear: number = new Date().getFullYear();
-        this.reportService.createReport(this.facility.programId, currentYear)
+        const reportingYearDate = new Date();
+        reportingYearDate.setFullYear( reportingYearDate.getFullYear() - 1 );
+        this.reportService.createReport(this.facility.programId, reportingYearDate.getFullYear())
             .subscribe(reportResp => {
 
                 if (reportResp.status === 204) {
@@ -62,7 +63,7 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
                     modalWindow.dismiss();
 
                     this._failedToCreateRef = this.modalService.open(
-                        this._failedToCreateTemplate, {backdrop: "static"});
+                        this._failedToCreateTemplate, {backdrop: 'static'});
 
                 } else if (reportResp.status === 200) {
 
@@ -76,9 +77,9 @@ export class EmissionsReportingListButtonsComponent implements OnInit {
                     // 202 Accepted
                     // pull more data from FRS
                     modalWindow.componentInstance.message =
-                        "Please wait: Searching for Facility Data in EPA's Facility Registry System to populate your Emissions Report";
+                        'Please wait: Searching for Facility Data in EPA\'s Facility Registry System to populate your Emissions Report';
 
-                    this.reportService.createReportFromFrs(this.facility.programId, currentYear)
+                    this.reportService.createReportFromFrs(this.facility.programId, reportingYearDate.getFullYear())
                         .subscribe(newReport => {
 
                             modalWindow.dismiss();
