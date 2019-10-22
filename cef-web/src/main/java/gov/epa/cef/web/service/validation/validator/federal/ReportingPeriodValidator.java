@@ -109,16 +109,19 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
             }
         }
 
+        // start batch of PM validations
         if (emissionMap.containsKey("PM10-FIL") || emissionMap.containsKey("PM10-PRI") 
                 || emissionMap.containsKey("PM25-FIL") || emissionMap.containsKey("PM25-PRI") 
                 || emissionMap.containsKey("PM-CON")) {
 
+            // get the values of all the pm emissions
             BigDecimal pm10Fil = emissionMap.containsKey("PM10-FIL") ? emissionMap.get("PM10-FIL").get(0).getCalculatedEmissionsTons() : null;
             BigDecimal pm10Pri = emissionMap.containsKey("PM10-PRI") ? emissionMap.get("PM10-PRI").get(0).getCalculatedEmissionsTons() : null;
             BigDecimal pm25Fil = emissionMap.containsKey("PM25-FIL") ? emissionMap.get("PM25-FIL").get(0).getCalculatedEmissionsTons() : null;
             BigDecimal pm25Pri = emissionMap.containsKey("PM25-PRI") ? emissionMap.get("PM25-PRI").get(0).getCalculatedEmissionsTons() : null;
             BigDecimal pmCon = emissionMap.containsKey("PM-CON") ? emissionMap.get("PM-CON").get(0).getCalculatedEmissionsTons() : null;
 
+            // PM10 Filterable should not exceed PM10 Primary
             if (pm10Fil != null && pm10Pri != null && pm10Fil.compareTo(pm10Pri) > 0) {
 
                 valid = false;
@@ -129,6 +132,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                         getEmissionsProcessIdentifier(period));
             }
 
+            // PM2.5 Filterable should not exceed PM2.5 Primary
             if (pm25Fil != null && pm25Pri != null && pm25Fil.compareTo(pm25Pri) > 0) {
 
                 valid = false;
@@ -139,6 +143,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                         getEmissionsProcessIdentifier(period));
             }
 
+            // PM Condensable should not exceed PM10 Primary
             if (pmCon != null && pm10Pri != null && pmCon.compareTo(pm10Pri) > 0) {
 
                 valid = false;
@@ -149,6 +154,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                         getEmissionsProcessIdentifier(period));
             }
 
+            // PM Condensable should not exceed PM2.5 Primary
             if (pmCon != null && pm25Pri != null && pmCon.compareTo(pm25Pri) > 0) {
 
                 valid = false;
@@ -159,6 +165,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                         getEmissionsProcessIdentifier(period));
             }
 
+            // PM10-FIL + PM-CON must equal PM10-PRI
             if (pmCon != null && pm10Fil != null && pm10Pri != null && pmCon.add(pm10Fil).compareTo(pm10Pri) != 0) {
 
                 valid = false;
@@ -169,6 +176,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                         getEmissionsProcessIdentifier(period));
             }
 
+            // PM25-FIL + PM-CON must equal PM25-PRI
             if (pmCon != null && pm25Fil != null && pm25Pri != null && pmCon.add(pm25Fil).compareTo(pm25Pri) != 0) {
 
                 valid = false;
@@ -179,6 +187,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                         getEmissionsProcessIdentifier(period));
             }
 
+            // PM2.5 Primary should not exceed PM10 Primary
             if (pm10Pri != null && pm25Pri != null && pm25Pri.compareTo(pm10Pri) > 0) {
 
                 valid = false;
@@ -189,6 +198,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                         getEmissionsProcessIdentifier(period));
             }
 
+            // PM2.5 Filterable should not exceed PM10 Filterable
             if (pm10Fil != null && pm25Fil != null && pm25Fil.compareTo(pm10Fil) > 0) {
 
                 valid = false;
