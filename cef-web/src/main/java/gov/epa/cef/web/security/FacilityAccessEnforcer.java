@@ -4,6 +4,7 @@ import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.exception.FacilityAccessException;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.service.dto.FacilitySiteAware;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,12 +26,20 @@ public class FacilityAccessEnforcer {
 
     public <T extends FacilitySiteAware> void enforce(Collection<T> facilityAwarables) {
 
+        if (isUserReviewer()) {
+            return;
+        }
+
         enforceProgramIds(facilityAwarables.stream()
             .map(f -> this.facilitySiteRepository.findEisProgramIdById(f.getFacilitySiteId()))
             .collect(Collectors.toList()));
     }
 
     public void enforce(Long facilitySiteId) {
+
+        if (isUserReviewer()) {
+            return;
+        }
 
         enforceProgramIds(Collections.singletonList(
             this.facilitySiteRepository.findEisProgramIdById(facilitySiteId)));
@@ -47,6 +56,10 @@ public class FacilityAccessEnforcer {
     }
 
     public void enforceProgramIds(Collection<String> programIds) {
+
+        if (isUserReviewer()) {
+            return;
+        }
 
         List<String> authorized = getUserFacilityProgramIds();
 
@@ -68,4 +81,10 @@ public class FacilityAccessEnforcer {
             .collect(Collectors.toList());
     }
 
+    private boolean isUserReviewer() {
+
+        return this.applicationUser.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .anyMatch(s -> AppRole.RoleType.REVIEWER.grantedRoleName().equals(s));
+    }
 }
