@@ -52,6 +52,20 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         getEmissionsProcessIdentifier(emission),
                         getPollutantName(emission));
             }
+
+            if (emission.getReportingPeriod() != null 
+                    && emission.getReportingPeriod().getCalculationParameterValue().intValue() == 0 
+                    && emission.getTotalEmissions().intValue() != 0) {
+
+                valid = false;
+                context.addFederalError(
+                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.totalEmissions",
+                        "emission.totalEmissions.nonzero.method", 
+                        getEmissionsUnitIdentifier(emission),
+                        getEmissionsProcessIdentifier(emission),
+                        getPollutantName(emission));
+            }
+
         } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false) {
 
             if(emission.getEmissionsFactor() == null) {
