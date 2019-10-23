@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,12 +18,12 @@ public class CefPreAuthenticationUserDetailsServiceTest extends BaseSecurityTest
     @InjectMocks
     CefPreAuthenticationUserDetailsService cefPreAuthenticationUserDetailsService;
 
-
     @Test
     public void getRoles_Should_ReturnListOfAuthorities_When_ValidRoleIdPassed() {
         Map<String, String> userProperties=new HashMap<>();
         userProperties.put("RoleId", "142710");
-        Collection<SimpleGrantedAuthority> authorities=cefPreAuthenticationUserDetailsService.getRoles(userProperties);
+        Collection<GrantedAuthority> authorities =
+            cefPreAuthenticationUserDetailsService.getRoles(userProperties);
         assertEquals(1, authorities.size());
         assertEquals("ROLE_Preparer", authorities.iterator().next().getAuthority());
     }
@@ -32,8 +32,8 @@ public class CefPreAuthenticationUserDetailsServiceTest extends BaseSecurityTest
     public void getRoles_Should_ReturnEmptyList_When_InvalidRoleIdPassed() {
         Map<String, String> userProperties=new HashMap<>();
         userProperties.put("RoleId", "124");
-        Collection<SimpleGrantedAuthority> authorities=cefPreAuthenticationUserDetailsService.getRoles(userProperties);
+        Collection<GrantedAuthority> authorities =
+            cefPreAuthenticationUserDetailsService.getRoles(userProperties);
         assertEquals(0, authorities.size());
     }
-
 }

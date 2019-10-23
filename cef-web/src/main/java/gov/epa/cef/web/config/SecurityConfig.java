@@ -1,10 +1,10 @@
 package gov.epa.cef.web.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServlet;
-
+import gov.epa.cdx.shared.security.naas.CdxHandoffPreAuthenticationFilter;
+import gov.epa.cdx.shared.security.naas.HandoffToCdxServlet;
+import gov.epa.cdx.shared.security.naas.LoginRedirectServlet;
+import gov.epa.cef.web.security.AppRole;
+import gov.epa.cef.web.security.CefPreAuthenticationUserDetailsService;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,11 +21,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 
-import gov.epa.cdx.shared.security.naas.CdxHandoffPreAuthenticationFilter;
-import gov.epa.cdx.shared.security.naas.HandoffToCdxServlet;
-import gov.epa.cdx.shared.security.naas.LoginRedirectServlet;
-import gov.epa.cef.web.security.AppRole;
-import gov.epa.cef.web.security.CefPreAuthenticationUserDetailsService;
+import javax.servlet.http.HttpServlet;
+import java.util.ArrayList;
+import java.util.List;
 
 @Profile("prod")
 @Configuration
@@ -37,8 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .antMatcher("/**")
+
+        http.headers().frameOptions().disable().and()
             .csrf().disable()
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()
@@ -49,7 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 AppRole.RoleType.PREPARER.roleName(),
                 AppRole.RoleType.CERTIFIER.roleName(),
                 AppRole.RoleType.REVIEWER.roleName())
-            .anyRequest().denyAll();
+            .anyRequest().denyAll().and()
+            .logout()
+            .logoutSuccessUrl("/J2AHandoff?URL=/CDX/Logout");
     }
 
     @Bean

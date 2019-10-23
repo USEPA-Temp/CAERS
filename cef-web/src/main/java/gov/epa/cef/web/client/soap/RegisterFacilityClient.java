@@ -1,5 +1,8 @@
 package gov.epa.cef.web.client.soap;
 
+import gov.epa.cef.web.config.CdxConfig;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import net.exchangenetwork.wsdl.register.program_facility._1.RegisterProgramFacilityService;
 import net.exchangenetwork.wsdl.register.program_facility._1.RegistrationFacility;
@@ -7,16 +10,12 @@ import net.exchangenetwork.wsdl.register.program_facility._1.RegistrationOrganiz
 import net.exchangenetwork.wsdl.register.program_facility._1.RegistrationProgramFacilityNaicsCode;
 import net.exchangenetwork.wsdl.register.program_facility._1.RegistrationRoleType;
 import net.exchangenetwork.wsdl.register.program_facility._1.RegistrationUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
-
-import java.net.URL;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -24,29 +23,28 @@ public class RegisterFacilityClient extends AbstractClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterFacilityClient.class);
 
-    /**
-     * Create a RegisterProgramFacilityService for invoking service methods
-     * @param endpoint
-     * @param mtom
-     * @param chunking
-     * @return
-     */
-    protected RegisterProgramFacilityService getClient(URL endpoint, boolean mtom, boolean chunking) {
+    private final CdxConfig config;
 
-        return this.getClient(endpoint.toString(), RegisterProgramFacilityService.class, mtom, chunking);
+    @Autowired
+    RegisterFacilityClient(CdxConfig config) {
+
+        this.config = config;
     }
 
     /**
-     * Create a NAAS token for authentication into Register services
-     * @param endpoint
-     * @param userId
-     * @param password
+     * Retrieve CDX facilities associated with the user
+     *
+     * @param user
+     * @param org
+     * @param roleType
      * @return
      * @throws ApplicationException
      */
-    public String authenticate(URL endpoint, String userId, String password)  {
+    public List<RegistrationFacility> getFacilities(RegistrationUser user, RegistrationOrganization org, RegistrationRoleType roleType) {
+
         try {
-            return getClient(endpoint, false, true).authenticate(userId, password, DOMAIN, AUTH_METHOD);
+            String token = authenticate();
+            return getClient(false, true).retrieveFacilities(token, user, org, roleType);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
             throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
@@ -56,15 +54,16 @@ public class RegisterFacilityClient extends AbstractClient {
 
     /**
      * Retrieve CDX facilities associated with the user
-     * @param endpoint
-     * @param token
+     *
      * @param userRoleId
      * @return
      * @throws ApplicationException
      */
-    public List<ProgramFacility> getFacilitiesByUserRoleId(URL endpoint, String token, Long userRoleId) {
+    public List<ProgramFacility> getFacilitiesByUserRoleId(Long userRoleId) {
+
         try {
-            return getClient(endpoint, false, true).retrieveFacilitiesByUserRoleId(token, userRoleId);
+            String token = authenticate();
+            return getClient(false, true).retrieveFacilitiesByUserRoleId(token, userRoleId);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
             throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
@@ -74,35 +73,28 @@ public class RegisterFacilityClient extends AbstractClient {
 
     /**
      * Retrieve CDX facilities by id
-     * @param endpoint
-     * @param token
+     *
      * @param programId
      * @return
      * @throws ApplicationException
      */
-    public List<ProgramFacility> getFacilityByProgramId(URL endpoint, String token, String programId) {
-        try {
-            return getClient(endpoint, false, true).retrieveProgramFacilitiesByProgramIds(token, Arrays.asList(new String[]{programId}));
-        } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
-            throw this.handleException(convertFault(fault), LOGGER);
-        } catch (Exception e) {
-            throw this.handleException(e, LOGGER);
-        }
+    public List<ProgramFacility> getFacilityByProgramId(String programId) {
+
+        return getFacilityByProgramIds(Collections.singletonList(programId));
     }
 
     /**
-     * Retrieve CDX facilities associated with the user
-     * @param endpoint
-     * @param token
-     * @param user
-     * @param org
-     * @param roleType
+     * Retrieve CDX facilities by id
+     *
+     * @param programIds
      * @return
      * @throws ApplicationException
      */
-    public List<RegistrationFacility> getFacilities(URL endpoint, String token, RegistrationUser user, RegistrationOrganization  org, RegistrationRoleType roleType) {
+    public List<ProgramFacility> getFacilityByProgramIds(List<String> programIds) {
+
         try {
-            return getClient(endpoint, false, true).retrieveFacilities(token, user, org, roleType);
+            String token = authenticate();
+            return getClient(false, true).retrieveProgramFacilitiesByProgramIds(token, programIds);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
             throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
@@ -112,15 +104,16 @@ public class RegisterFacilityClient extends AbstractClient {
 
     /**
      * Retrieve NAICS codes for a program
-     * @param endpoint
-     * @param token
+     *
      * @param programAcronym
      * @return
      * @throws ApplicationException
      */
-    public List<RegistrationProgramFacilityNaicsCode> getNaicsCodes(URL endpoint, String token, String programAcronym) {
+    public List<RegistrationProgramFacilityNaicsCode> getNaicsCodes(String programAcronym) {
+
         try {
-            return getClient(endpoint, false, true).retrieveNaicsCodesFromFrs(token, programAcronym);
+            String token = authenticate();
+            return getClient(false, true).retrieveNaicsCodesFromFrs(token, programAcronym);
         } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
             throw this.handleException(convertFault(fault), LOGGER);
         } catch (Exception e) {
@@ -130,10 +123,12 @@ public class RegisterFacilityClient extends AbstractClient {
 
     /**
      * Convert Register Service exceptions into application exceptions
+     *
      * @param fault
      * @return
      */
     ApplicationException convertFault(net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
+
         if (fault.getFaultInfo() == null) {
             return new ApplicationException(ApplicationErrorCode.E_REMOTE_SERVICE_ERROR, fault.getMessage());
         } else {
@@ -145,6 +140,40 @@ public class RegisterFacilityClient extends AbstractClient {
                 code = ApplicationErrorCode.E_REMOTE_SERVICE_ERROR;
             }
             return new ApplicationException(code, fault.getFaultInfo().getDescription());
+        }
+    }
+
+    /**
+     * Create a RegisterProgramFacilityService for invoking service methods
+     *
+     * @param mtom
+     * @param chunking
+     * @return
+     */
+    protected RegisterProgramFacilityService getClient(boolean mtom, boolean chunking) {
+
+        String endpoint = this.config.getRegisterProgramFacilityServiceEndpoint();
+
+        return this.getClient(endpoint, RegisterProgramFacilityService.class, mtom, chunking);
+    }
+
+    /**
+     * Create a NAAS token for authentication into Register services
+     *
+     * @return
+     * @throws ApplicationException
+     */
+    private String authenticate() {
+
+        try {
+            String userId = this.config.getNaasUser();
+            String password = this.config.getNaasPassword();
+
+            return getClient(false, true).authenticate(userId, password, DOMAIN, AUTH_METHOD);
+        } catch (net.exchangenetwork.wsdl.register.program_facility._1.RegisterException fault) {
+            throw this.handleException(convertFault(fault), LOGGER);
+        } catch (Exception e) {
+            throw this.handleException(e, LOGGER);
         }
     }
 }

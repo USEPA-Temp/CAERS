@@ -4,7 +4,7 @@ import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.client.soap.SecurityTokenClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.security.ApplicationSecurityUtils;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.TokenDto;
 import gov.epa.cef.web.service.dto.UserDto;
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private CefConfig cefConfig;
 
     @Autowired
-    private ApplicationSecurityUtils applicationSecurityUtils;
+    private SecurityService securityService;
 
     @Autowired
     private ApplicationUserMapper applicationUserMapper;
@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
     public TokenDto createToken() {
         TokenDto tokenDto=new TokenDto();
         try {
-            Long userRoleId=applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId();
-            String userId=applicationSecurityUtils.getCurrentApplicationUser().getUserId();
+            Long userRoleId= securityService.getCurrentApplicationUser().getUserRoleId();
+            String userId= securityService.getCurrentApplicationUser().getUserId();
             URL securityTokenUrl = new URL(cefConfig.getCdxConfig().getNaasTokenUrl());
             String token=tokenClient.createSecurityToken(securityTokenUrl, cefConfig.getCdxConfig().getNaasUser(), cefConfig.getCdxConfig().getNaasPassword(), userId, cefConfig.getCdxConfig().getNaasIp());
             tokenDto=new TokenDto();
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getCurrentUser() {
-        ApplicationUser applicationUser=applicationSecurityUtils.getCurrentApplicationUser();
+        ApplicationUser applicationUser= securityService.getCurrentApplicationUser();
         return applicationUserMapper.toUserDto(applicationUser);
     }
 

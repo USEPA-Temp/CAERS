@@ -4,7 +4,7 @@ import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.config.CdxConfig;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.security.ApplicationSecurityUtils;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.TokenDto;
 import gov.epa.cef.web.service.dto.UserDto;
 import gov.epa.cef.web.service.mapper.ApplicationUserMapper;
@@ -32,7 +32,7 @@ public class UserServiceImplTest extends BaseServiceTest {
     private CefConfig cefConfig;
 
     @Mock
-    private ApplicationSecurityUtils applicationSecurityUtils;
+    private SecurityService securityService;
 
     @Mock
     private CdxConfig cdxConfig;
@@ -48,9 +48,9 @@ public class UserServiceImplTest extends BaseServiceTest {
 
     @Before
     public void init() {
-        when(applicationSecurityUtils.getCurrentApplicationUser()).thenReturn(applicationUser);
-        when(applicationSecurityUtils.getCurrentApplicationUser().getUserId()).thenReturn("mock-user");
-        when(applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId()).thenReturn(123L);
+        when(securityService.getCurrentApplicationUser()).thenReturn(applicationUser);
+        when(securityService.getCurrentApplicationUser().getUserId()).thenReturn("mock-user");
+        when(securityService.getCurrentApplicationUser().getUserRoleId()).thenReturn(123L);
         when(cefConfig.getCdxConfig()).thenReturn(cdxConfig);
         when(cefConfig.getCdxConfig().getNaasUser()).thenReturn("naas-user");
         when(cefConfig.getCdxConfig().getNaasPassword()).thenReturn("naas-password");

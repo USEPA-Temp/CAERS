@@ -1,8 +1,9 @@
 package gov.epa.cef.web.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import gov.epa.cef.web.security.AppRole;
+import gov.epa.cef.web.security.mock.MockHandoffFilter;
+import gov.epa.cef.web.security.mock.MockLogoutHandler;
+import gov.epa.cef.web.security.mock.MockPreAuthenticationUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,9 +17,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 
-import gov.epa.cef.web.security.AppRole;
-import gov.epa.cef.web.security.mock.MockHandoffFilter;
-import gov.epa.cef.web.security.mock.MockPreAuthenticationUserDetailsService;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Runs only in local environment
@@ -32,8 +32,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .antMatcher("/**")
+
+        http.headers().frameOptions().disable().and()
             .csrf().disable()
             .addFilter(mockCdxPreAuthFilter())
             .authorizeRequests()
@@ -42,7 +42,9 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
                 AppRole.RoleType.PREPARER.roleName(),
                 AppRole.RoleType.CERTIFIER.roleName(),
                 AppRole.RoleType.REVIEWER.roleName())
-            .anyRequest().denyAll();
+            .anyRequest().denyAll().and()
+            .logout()
+            .logoutSuccessHandler(new MockLogoutHandler());
     }
 
     @Bean

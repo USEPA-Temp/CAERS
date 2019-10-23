@@ -1,13 +1,13 @@
 package gov.epa.cef.web.security;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
- * 
+ *
  * @author tfesperm
  *
  */
@@ -15,9 +15,10 @@ public class AppRole {
     private static final int ROLE_NAME_START_INDEX = 5;
 
     public enum RoleType {
-        PREPARER(142710L, ROLE_PREPARER), 
-        CERTIFIER(142720L, ROLE_CERTIFIER), 
+        PREPARER(142710L, ROLE_PREPARER),
+        CERTIFIER(142720L, ROLE_CERTIFIER),
         REVIEWER(142730L, ROLE_REVIEWER),
+        ADMIN(-1, ROLE_ADMIN),
         UNKNOWN(-9999, "UNKNOWN");
 
         private final long id;
@@ -153,5 +154,7 @@ public class AppRole {
     public static final String ROLE_CERTIFIER = "ROLE_Certifier";
 
     public static final String ROLE_REVIEWER = "ROLE_Reviewer";
+
+    public static final String ROLE_ADMIN = "ROLE_Admin";
 
 }

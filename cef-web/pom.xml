@@ -525,15 +525,19 @@
                 <artifactId>jaxws-maven-plugin</artifactId>
                 <configuration>
                     <vmArgs>
+                        <vmArg>-Djavax.xml.accessExternalDTD=all</vmArg>
                         <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
                     </vmArgs>
                     <extension>true</extension>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>token-wsdl</id>
+                        <id>wsdl-gen1</id>
                         <phase>generate-sources</phase>
                         <configuration>
+                            <bindingFiles>
+                                <bindingFile>${basedir}/src/main/schema/jaxb/bindings.xml</bindingFile>
+                            </bindingFiles>
                             <wsdlDirectory>src/main/schema/wsdl</wsdlDirectory>
                             <wsdlFiles>
                                 <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>

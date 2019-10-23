@@ -21,13 +21,13 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationSecurityUtilsTest extends BaseSecurityTest {
+public class SecurityServiceTest extends BaseSecurityTest {
 
     @Mock
     ApplicationUser applicationUser;
 
     @InjectMocks
-    private ApplicationSecurityUtils applicationSecurityUtils;
+    private SecurityService securityService;
 
     private SimpleGrantedAuthority ROLE_CERTIFIER=new SimpleGrantedAuthority("CERTIFIER");
 
@@ -46,30 +46,30 @@ public class ApplicationSecurityUtilsTest extends BaseSecurityTest {
 
     @Test
     public void getCurrentApplicationUser_ShouldReturnApplicationUserPrincipal_WhenValidAuthenticatedUserExist() {
-        assertEquals(applicationUser, applicationSecurityUtils.getCurrentApplicationUser());
+        assertEquals(applicationUser, securityService.getCurrentApplicationUser());
     }
 
     @Test
     public void getCurrentUserId_Should_ReturnsTheCurrentAuthenticatedUserId_WhenValidAuthenticatedUserExist() {
         when(applicationUser.getUsername()).thenReturn("mock-user");
-        assertEquals("mock-user", applicationSecurityUtils.getCurrentUserId());
+        assertEquals("mock-user", securityService.getCurrentUserId());
     }
 
     @Test
     public void asUser_Should_AddsTheUserToSecurityContext() {
-        applicationSecurityUtils.asUser(applicationUser);
-        assertEquals(1, applicationSecurityUtils.getCurrentApplicationUser().getAuthorities().size());
+        securityService.asUser(applicationUser);
+        assertEquals(1, securityService.getCurrentApplicationUser().getAuthorities().size());
     }
 
     @Test
     public void addUserToSecurityContext_Should_AddsTheUserToSecurityContext() {
-        applicationSecurityUtils.addUserToSecurityContext(applicationUser);
-        assertEquals(1, applicationSecurityUtils.getCurrentApplicationUser().getAuthorities().size());
+        securityService.addUserToSecurityContext(applicationUser);
+        assertEquals(1, securityService.getCurrentApplicationUser().getAuthorities().size());
     }
 
     @Test
     public void hasRole_Should_ReturnTrue_When_TheUserHasTheRolePassed() {
-        assertEquals(Boolean.FALSE, applicationSecurityUtils.hasRole(ROLE_CERTIFIER));
+        assertEquals(Boolean.FALSE, securityService.hasRole(ROLE_CERTIFIER));
     }
 
 }

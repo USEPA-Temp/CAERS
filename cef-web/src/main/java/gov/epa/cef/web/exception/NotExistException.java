@@ -1,5 +1,9 @@
 package gov.epa.cef.web.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value = HttpStatus.GONE)
 public class NotExistException extends ApplicationException {
 
     public NotExistException(String entityType, long id) {

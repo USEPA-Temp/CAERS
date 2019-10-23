@@ -1,7 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
-import gov.epa.cef.web.security.ApplicationSecurityUtils;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.junit.Before;
@@ -27,7 +27,7 @@ public class CdxFacilityApiTest extends BaseApiTest {
     private RegistrationService registrationService;
 
     @Mock
-    private ApplicationSecurityUtils applicationSecurityUtils;
+    private SecurityService securityService;
 
     @InjectMocks
     private CdxFacilityApi cdxFacilityApi;
@@ -49,8 +49,8 @@ public class CdxFacilityApiTest extends BaseApiTest {
         when(registrationService.retrieveFacilities(123L)).thenReturn(programFacilities);
 
 
-        when(applicationSecurityUtils.getCurrentApplicationUser()).thenReturn(appicationUser);
-        when(applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId()).thenReturn(123L);
+        when(securityService.getCurrentApplicationUser()).thenReturn(appicationUser);
+        when(securityService.getCurrentApplicationUser().getUserRoleId()).thenReturn(123L);
     }
 
     @Test

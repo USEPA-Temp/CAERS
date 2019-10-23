@@ -3,10 +3,7 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import gov.epa.cef.web.service.dto.CodeLookupDto;
-import gov.epa.cef.web.service.dto.ControlPollutantDto;
-
-public class ControlDto implements Serializable {
+public class ControlDto implements FacilitySiteAware, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,10 +25,12 @@ public class ControlDto implements Serializable {
         this.id = id;
     }
 
+    @Override
     public Long getFacilitySiteId() {
         return facilitySiteId;
     }
 
+    @Override
     public void setFacilitySiteId(Long facilitySiteId) {
         this.facilitySiteId = facilitySiteId;
     }

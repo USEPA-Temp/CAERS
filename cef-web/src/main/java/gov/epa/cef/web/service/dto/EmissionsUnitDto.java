@@ -3,10 +3,10 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class EmissionsUnitDto implements Serializable {
-    
+public class EmissionsUnitDto implements Serializable, FacilitySiteAware {
+
     private static final long serialVersionUID = 1L;
-    
+
     private Long id;
     private Long facilitySiteId;
     private String unitTypeCodeDescription;

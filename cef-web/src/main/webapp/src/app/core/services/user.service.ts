@@ -25,11 +25,11 @@ export class UserService {
     const url = `${this.userUrl}/token`;
     return this.http.get<UserToken>(url);
   }
-  
+
   /** Initiate Logout for a user */
   initLogout(): Observable<any> {
-    const url = 'J2AHandoff?URL=/CDX/Logout';
+    const url = 'logout';
     return this.http.post(url,'', {responseType: 'text'});
   }
-  
+
 }
