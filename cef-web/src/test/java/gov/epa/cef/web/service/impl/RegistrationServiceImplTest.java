@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -34,8 +35,12 @@ public class RegistrationServiceImplTest extends BaseServiceTest {
 
 		when(registerFacilityClient.getFacilitiesByUserRoleId(123L)).thenReturn(facilities);
 		when(registerFacilityClient.getFacilitiesByUserRoleId(545L)).thenReturn(new ArrayList<>());
-		when(registerFacilityClient.getFacilityByProgramId("pId")).thenReturn(new ArrayList<>());
-		when(registerFacilityClient.getFacilityByProgramId("pId2")).thenReturn(facilities);
+
+        when(registerFacilityClient.getFacilityByProgramIds(Collections.singletonList("pId")))
+            .thenReturn(new ArrayList<>());
+
+        when(registerFacilityClient.getFacilityByProgramIds(Collections.singletonList("pId2")))
+            .thenReturn(facilities);
 	}
 
 	@Test

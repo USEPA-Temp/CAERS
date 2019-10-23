@@ -1,22 +1,37 @@
 package gov.epa.cef.web.security;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CefPreAuthenticationUserDetailsServiceTest extends BaseSecurityTest {
 
+    @Mock
+    SecurityService securityService;
+
     @InjectMocks
     CefPreAuthenticationUserDetailsService cefPreAuthenticationUserDetailsService;
+
+    @Before
+    public void init() {
+
+        when(securityService.createUserRoles(142710L, null))
+            .thenReturn(Collections.singletonList(new SimpleGrantedAuthority("ROLE_Preparer")));
+    }
 
     @Test
     public void getRoles_Should_ReturnListOfAuthorities_When_ValidRoleIdPassed() {

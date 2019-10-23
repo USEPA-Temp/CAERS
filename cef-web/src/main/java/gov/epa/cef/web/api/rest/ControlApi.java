@@ -25,7 +25,7 @@ public class ControlApi {
     private final SecurityService securityService;
 
     @Autowired
-    public ControlApi(SecurityService securityService, ControlService controlService) {
+    ControlApi(SecurityService securityService, ControlService controlService) {
 
         this.controlService = controlService;
         this.securityService = securityService;

@@ -1,5 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.security.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
@@ -24,6 +26,12 @@ public class FacilitySiteApiTest extends BaseApiTest {
     @Mock
     private FacilitySiteMapper facilitySiteMapper;
 
+    @Mock
+    private SecurityService securityService;
+
+    @Mock
+    private FacilityAccessEnforcer facilityAccessEnforcer;
+
     @InjectMocks
     private FacilitySiteApi facilitySiteApi;
 
@@ -34,6 +42,8 @@ public class FacilitySiteApiTest extends BaseApiTest {
         facilitSiteDto=new FacilitySiteDto();
         when(facilityService.findById(123L)).thenReturn(facilitSiteDto);
         when(facilityService.findByEisProgramIdAndReportId("p-id", 1L)).thenReturn(facilitSiteDto);
+
+        when(securityService.facilityEnforcer()).thenReturn(facilityAccessEnforcer);
     }
 
     @Test

@@ -26,11 +26,16 @@ import java.util.Collection;
 @RequestMapping("/api/facility/cdx")
 public class CdxFacilityApi {
 
-    @Autowired
-    private RegistrationService registrationService;
+    private final RegistrationService registrationService;
+
+    private final SecurityService securityService;
 
     @Autowired
-    private SecurityService securityService;
+    CdxFacilityApi(SecurityService securityService, RegistrationService registrationService) {
+
+        this.registrationService = registrationService;
+        this.securityService = securityService;
+    }
 
     /**
      * Retrieve a facility by program ID
