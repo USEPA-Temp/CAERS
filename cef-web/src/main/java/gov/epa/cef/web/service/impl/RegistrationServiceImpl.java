@@ -47,26 +47,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             List<ProgramFacility> facilities = registerFacilityClient.getFacilitiesByUserRoleId(userRoleId);
             if (CollectionUtils.isNotEmpty(facilities)) {
 
-                ProgramFacility acmeFacility = new ProgramFacility();
-                acmeFacility.setFacilityName("ACME Pulp Facility");
-                acmeFacility.setAddress("37 Pulp Facility Lane");
-                acmeFacility.setCity("Springfield");
-                acmeFacility.setState("GA");
-                acmeFacility.setZipCode("31520");
-                acmeFacility.setProgramId("3721011");
-                acmeFacility.setProgramAcronym("EIS");
-                acmeFacility.setEpaRegistryId("110020517412");
-                acmeFacility.setCdxFacilityId(370078L);
-                facilities.add(acmeFacility);
-
                 for (ProgramFacility facility : facilities) {
                     LOGGER.debug("Facility Name: " + facility.getFacilityName());
                 }
             } else {
                 LOGGER.debug("No Facility found for user role: " + userRoleId);
             }
-            return facilities;
+
+            return facilities == null ? Collections.emptyList() : facilities;
+
         } catch (Exception e) {
+
             LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
@@ -90,29 +81,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
             List<ProgramFacility> facilities = this.registerFacilityClient.getFacilityByProgramIds(programIds);
             if (CollectionUtils.isNotEmpty(facilities)) {
+
                 for (ProgramFacility facility : facilities) {
                     LOGGER.debug("Facility Name: {}", facility.getFacilityName());
                 }
+
             } else {
+
                 LOGGER.debug("No Facilities found for program(s) : {}", String.join(", ", programIds));
             }
 
-            if (programIds.contains("3721011")) {
-                ProgramFacility acmeFacility = new ProgramFacility();
-                acmeFacility.setFacilityName("ACME Pulp Facility");
-                acmeFacility.setAddress("37 Pulp Facility Lane");
-                acmeFacility.setCity("Springfield");
-                acmeFacility.setState("GA");
-                acmeFacility.setZipCode("31520");
-                acmeFacility.setProgramId("3721011");
-                acmeFacility.setProgramAcronym("EIS");
-                acmeFacility.setEpaRegistryId("110020517412");
-                acmeFacility.setCdxFacilityId(370078L);
-
-                facilities.add(acmeFacility);
-            }
-
-            return facilities;
+            return facilities == null ? Collections.emptyList() : facilities;
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

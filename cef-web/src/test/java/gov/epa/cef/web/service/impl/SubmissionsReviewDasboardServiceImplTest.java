@@ -56,7 +56,7 @@ public class SubmissionsReviewDasboardServiceImplTest {
         when(DateUtils.getFiscalYearForDate(date)).thenReturn(2019);
 
         List<SubmissionsReviewDashboardView> submissionsReviewDashboardView=new ArrayList<>();
-        when(repo.findByYearAndAgencyCode((short)2019, "GA")).thenReturn(submissionsReviewDashboardView);
+        when(repo.findByAgencyCode("GA")).thenReturn(submissionsReviewDashboardView);
 
         List<SubmissionsReviewDashboardDto> submissionsReviewDashboardDto=new ArrayList<>();
         when(mapper.toDtoList(submissionsReviewDashboardView)).thenReturn(submissionsReviewDashboardDto);
