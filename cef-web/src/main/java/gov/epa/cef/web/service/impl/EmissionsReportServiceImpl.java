@@ -1,8 +1,30 @@
 package gov.epa.cef.web.service.impl;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.activation.DataHandler;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
+import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FacilitySite;
@@ -19,35 +41,20 @@ import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.FacilitySiteService;
-import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.activation.DataHandler;
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
+    
+    Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
 
     // TODO: Remove hard coded value
     // https://alm.cgifederal.com/projects/browse/CEF-319
@@ -76,18 +83,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private CefConfig cefConfig;
+    
+    @Autowired
+    private SLTConfigHelper sltConfigHelper;
 
     @Autowired
     private SignatureServiceClient signatureServiceClient;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private CersXmlService cersXmlService;
 
     @Autowired
     private FacilitySiteService facilitySiteService;
+    
+    @Autowired
+    private NotificationService notificationService;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -158,9 +168,19 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 emissionsReport.setCromerrActivityId(activityId);
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
                 erRepo.save(emissionsReport);
+                
+                SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getAgencyCode());
+
+                //send an email notification to the SLT's predefined address that a report has been submitted
+                notificationService.sentReportSubmittedNotification(sltConfig.getSltEmail(),
+                        cefConfig.getDefaultEmailAddress(), 
+                        emissionsReport.getFacilitySites().get(0).getName(), 
+                        emissionsReport.getYear().toString());               
             }
             return cromerrDocumentId;
         }catch(Exception e) {
+            LOGGER.error("submitToCromerr - " + e.getMessage());
+            LOGGER.error("submitToCromerr - " + e.getStackTrace().toString());
             throw ApplicationException.asApplicationException(e);
         }finally {
             if(tmp!=null) {
