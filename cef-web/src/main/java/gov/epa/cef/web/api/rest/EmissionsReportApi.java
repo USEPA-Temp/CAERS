@@ -200,27 +200,8 @@ public class EmissionsReportApi {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
-        // LOGGER.info("uploadReport - Entering");
-        // LOGGER.info("reportUpload.agencyCode: " + reportUpload.getAgencyCode());
-        // LOGGER.info("reportUpload.year: " + reportUpload.getYear());
-        // FacilitySiteBulkUploadDto facility = reportUpload.getFacilities().get(0);
-        // LOGGER.info("reportUpload.facility.altSiteIdentifier: " + facility.getAltSiteIdentifier());
-        // LOGGER.info("reportUpload.facility.mailingStreetAddress: " + facility.getMailingStreetAddress());
-        // LOGGER.info("reportUpload.releasePoints count: " + reportUpload.getReleasePoints().size());
-        // LOGGER.info("reportUpload.emissionsUnits count: " + reportUpload.getEmissionsUnits().size());
-
         EmissionsReportDto savedReport = emissionsReportService.saveBulkEmissionReport(reportUpload);
         return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
-
-        // EmissionsReportDto dto = new EmissionsReportDto();
-        // dto.setAgencyCode(reportUpload.getAgencyCode());
-        // dto.setEisProgramId(reportUpload.getEisProgramId());
-        // dto.setFrsFacilityId(reportUpload.getFrsFacilityId());
-        // dto.setId(reportUpload.getId());
-        // dto.setStatus(reportUpload.getStatus());
-        // dto.setValidationStatus(reportUpload.getValidationStatus());
-        // dto.setYear(reportUpload.getYear());
-        // return new ResponseEntity<EmissionsReportDto>(dto, HttpStatus.OK);
     }
 
 
