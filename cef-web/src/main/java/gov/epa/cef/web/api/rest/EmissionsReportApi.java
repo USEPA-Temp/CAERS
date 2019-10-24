@@ -1,14 +1,14 @@
 package gov.epa.cef.web.api.rest;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.service.EmissionsReportService;
-import gov.epa.cef.web.service.EmissionsReportValidationService;
-import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import gov.epa.cef.web.service.dto.EntityRefDto;
-import gov.epa.cef.web.service.validation.ValidationResult;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -22,13 +22,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.EmissionsReportValidationService;
+import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EntityRefDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.validation.ValidationResult;
+import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
 public class EmissionsReportApi {
+
+    Logger LOGGER = LoggerFactory.getLogger(EmissionsReportApi.class);
 
     private final EmissionsReportService emissionsReportService;
 
@@ -179,6 +188,41 @@ public class EmissionsReportApi {
 
         return new ResponseEntity<String>(documentId, HttpStatus.OK);
     }
+
+
+    /**
+     * Inserts a new emissions report, facility, sub-facility components, and emissions based on a JSON input string
+     * 
+     * @param reportUpload
+     * @return
+     */
+    @PostMapping(value = "/upload",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
+        // LOGGER.info("uploadReport - Entering");
+        // LOGGER.info("reportUpload.agencyCode: " + reportUpload.getAgencyCode());
+        // LOGGER.info("reportUpload.year: " + reportUpload.getYear());
+        // FacilitySiteBulkUploadDto facility = reportUpload.getFacilities().get(0);
+        // LOGGER.info("reportUpload.facility.altSiteIdentifier: " + facility.getAltSiteIdentifier());
+        // LOGGER.info("reportUpload.facility.mailingStreetAddress: " + facility.getMailingStreetAddress());
+        // LOGGER.info("reportUpload.releasePoints count: " + reportUpload.getReleasePoints().size());
+        // LOGGER.info("reportUpload.emissionsUnits count: " + reportUpload.getEmissionsUnits().size());
+
+        EmissionsReportDto savedReport = emissionsReportService.saveBulkEmissionReport(reportUpload);
+        return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
+
+        // EmissionsReportDto dto = new EmissionsReportDto();
+        // dto.setAgencyCode(reportUpload.getAgencyCode());
+        // dto.setEisProgramId(reportUpload.getEisProgramId());
+        // dto.setFrsFacilityId(reportUpload.getFrsFacilityId());
+        // dto.setId(reportUpload.getId());
+        // dto.setStatus(reportUpload.getStatus());
+        // dto.setValidationStatus(reportUpload.getValidationStatus());
+        // dto.setYear(reportUpload.getYear());
+        // return new ResponseEntity<EmissionsReportDto>(dto, HttpStatus.OK);
+    }
+
 
     static class EmissionsReportStarterDto {
 
