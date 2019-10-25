@@ -8,6 +8,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
@@ -17,6 +18,7 @@ import gov.epa.cef.web.service.validation.validator.federal.EmissionsProcessVali
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsReportValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsUnitValidator;
 import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
+import gov.epa.cef.web.service.validation.validator.federal.OperatingDetailValidator;
 import gov.epa.cef.web.service.validation.validator.federal.ReportingPeriodValidator;
 import gov.epa.cef.web.service.validation.validator.state.GeorgiaValidator;
 import org.junit.Before;
@@ -62,6 +64,9 @@ public class EmissionsReportValidationServiceImplTest {
         when(validationRegistry.findOneByType(ReportingPeriodValidator.class))
             .thenReturn(new ReportingPeriodValidator());
 
+        when(validationRegistry.findOneByType(OperatingDetailValidator.class))
+            .thenReturn(new OperatingDetailValidator());
+
         when(validationRegistry.findOneByType(EmissionValidator.class))
             .thenReturn(new EmissionValidator());
 
@@ -81,9 +86,11 @@ public class EmissionsReportValidationServiceImplTest {
         EmissionsUnit emissionsUnit = new EmissionsUnit();
         EmissionsProcess emissionsProcess = new EmissionsProcess();
         ReportingPeriod reportingPeriod = new ReportingPeriod();
+        OperatingDetail detail = new OperatingDetail();
         Emission emission = new Emission();
 
         reportingPeriod.getEmissions().add(emission);
+        reportingPeriod.getOperatingDetails().add(detail);
         emissionsProcess.getReportingPeriods().add(reportingPeriod);
         emissionsUnit.getEmissionsProcesses().add(emissionsProcess);
         facilitySite.getEmissionsUnits().add(emissionsUnit);

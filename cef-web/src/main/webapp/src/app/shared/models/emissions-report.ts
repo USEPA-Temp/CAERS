@@ -5,6 +5,7 @@ export class EmissionsReport {
   facilityId: string;
   eisProgramId: string;
   status: string;
+  agencyCode: string;
   validationStatus: string;
   year: number;
   facilitySite: FacilitySite;

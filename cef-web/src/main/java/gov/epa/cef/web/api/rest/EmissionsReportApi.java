@@ -10,8 +10,11 @@ import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -34,6 +37,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/emissionsReport")
 public class EmissionsReportApi {
+
+    Logger LOGGER = LoggerFactory.getLogger(EmissionsReportApi.class);
 
     private final EmissionsReportService emissionsReportService;
 
@@ -212,6 +217,22 @@ public class EmissionsReportApi {
 
         return new ResponseEntity<>(documentId, HttpStatus.OK);
     }
+
+
+    /**
+     * Inserts a new emissions report, facility, sub-facility components, and emissions based on a JSON input string
+     *
+     * @param reportUpload
+     * @return
+     */
+    @PostMapping(value = "/upload",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
+        EmissionsReportDto savedReport = emissionsReportService.saveBulkEmissionReport(reportUpload);
+        return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
+    }
+
 
     static class EmissionsReportStarterDto {
 

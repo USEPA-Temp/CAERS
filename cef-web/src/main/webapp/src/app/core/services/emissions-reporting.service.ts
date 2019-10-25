@@ -2,9 +2,7 @@ import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { SideNavItem } from 'src/app/shared/models/side-nav-item';
-import {ValidationResult} from "src/app/shared/models/validation-result";
+import {ValidationResult} from 'src/app/shared/models/validation-result';
 
 
 @Injectable({
@@ -68,5 +66,12 @@ export class EmissionsReportingService {
         return this.http.post<ValidationResult>(url, {
             id: reportId
         });
+    }
+
+
+    /** POST request to the server to bulk upload an emissions report */
+    uploadReport(jsonFileData: string): Observable<EmissionsReport> {
+        const url = `${this.baseUrl}/upload`;
+        return this.http.post<EmissionsReport>(url, jsonFileData);
     }
 }
