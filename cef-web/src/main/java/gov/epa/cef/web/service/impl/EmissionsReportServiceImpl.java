@@ -11,15 +11,17 @@ import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
-import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,7 @@ import java.util.stream.StreamSupport;
 @Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
 
-    Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
 
     // TODO: Remove hard coded value
     // https://alm.cgifederal.com/projects/browse/CEF-319
