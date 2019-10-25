@@ -164,8 +164,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 // Actual Weeks Per Year must be between 1 and 52
                 result = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.actualHoursPerPeriod",
-                        "operatingDetail.actualHoursPerPeriod.range", 
+                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgWeeksPerPeriod",
+                        "operatingDetail.avgWeeksPerPeriod.range", 
                         getEmissionsUnitIdentifier(detail),
                         getEmissionsProcessIdentifier(detail));
             }
