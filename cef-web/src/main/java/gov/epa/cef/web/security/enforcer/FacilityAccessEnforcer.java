@@ -43,16 +43,7 @@ public class FacilityAccessEnforcer implements IFacilityAccessEnforcer {
     @Override
     public <T extends ProgramIdRetriever> void enforceEntity(Long id, Class<T> repoClazz) {
 
-        ProgramIdRetriever repo = repoLocator.getProgramIdRepository(repoClazz);
-
-        String programId = repo.retrieveEisProgramIdById(id)
-            .orElseThrow(() -> {
-
-                String entity = repoClazz.getSimpleName().replace("Repository", "");
-                return new NotExistException(entity, id);
-            });
-
-        enforceProgramId(programId);
+        enforceEntities(Collections.singletonList(id), repoClazz);
     }
 
     @Override
