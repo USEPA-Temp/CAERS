@@ -12,4 +12,6 @@ public interface UnitMeasureCodeRepository extends CrudRepository<UnitMeasureCod
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Iterable<UnitMeasureCode> findAll();
+
+    UnitMeasureCode findByCode(String code);
 }
