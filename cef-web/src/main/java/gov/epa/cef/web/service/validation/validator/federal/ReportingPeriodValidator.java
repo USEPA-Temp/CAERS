@@ -29,6 +29,9 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
         // add more validators as needed
         validator.onEach(reportingPeriod.getEmissions(),
             registry.findOneByType(EmissionValidator.class));
+
+        validator.onEach(reportingPeriod.getOperatingDetails(),
+                registry.findOneByType(OperatingDetailValidator.class));
     }
 
     @Override
