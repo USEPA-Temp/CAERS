@@ -26,11 +26,20 @@ import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.FacilityCategoryCode;
+import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
+import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
+import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
+import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
+import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.EmissionsReportService;
@@ -53,6 +62,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private EmissionsReportRepository erRepo;
+
+    @Autowired
+    private OperatingStatusCodeRepository operatingStatusRepo;
+
+    @Autowired
+    private FacilityCategoryCodeRepository facilityCategoryRepo;
+
+    @Autowired
+    private FacilitySourceTypeCodeRepository facilitySourceTypeRepo;
+
+    @Autowired
+    private ProgramSystemCodeRepository programSystemCodeRepo;
+
+    @Autowired
+    private TribalCodeRepository tribalCodeRepo;
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
@@ -252,8 +276,68 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      */
     @Override
     public EmissionsReportDto saveEmissionReport(EmissionsReport emissionsReport) {
-	    	EmissionsReport savedReport = erRepo.save(emissionsReport);
-	    	return emissionsReportMapper.toDto(savedReport);
+        EmissionsReport savedReport = erRepo.save(emissionsReport);
+        return emissionsReportMapper.toDto(savedReport);
+    }
+
+    /**
+     * Save the emissions report to the database.
+     * @param bulkEmissionsReport
+     * @return
+     */
+    @Override
+    public EmissionsReportDto saveBulkEmissionReport(EmissionsReportBulkUploadDto bulkEmissionsReport) {
+        EmissionsReport emissionsReport = new EmissionsReport();
+        emissionsReport.setAgencyCode(bulkEmissionsReport.getAgencyCode());
+        emissionsReport.setEisProgramId(bulkEmissionsReport.getEisProgramId());
+        emissionsReport.setFrsFacilityId(bulkEmissionsReport.getFrsFacilityId());
+        emissionsReport.setYear(bulkEmissionsReport.getYear());
+        emissionsReport.setStatus(ReportStatus.valueOf(bulkEmissionsReport.getStatus()));
+        emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));
+
+        for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
+            FacilitySite facility = new FacilitySite();
+            facility.setFrsFacilityId(bulkFacility.getFrsFacilityId());
+            facility.setAltSiteIdentifier(bulkFacility.getAltSiteIdentifier());
+            if (bulkFacility.getFacilityCategoryCode() != null) {
+                facility.setFacilityCategoryCode(facilityCategoryRepo.findByCode(bulkFacility.getFacilityCategoryCode()));
+            }
+            if (bulkFacility.getFacilitySourceTypeCode() != null) {
+                facility.setFacilitySourceTypeCode(facilitySourceTypeRepo.findByCode(bulkFacility.getFacilitySourceTypeCode()));
+            }
+            facility.setName(bulkFacility.getName());
+            facility.setDescription(bulkFacility.getDescription());
+            if (bulkFacility.getOperatingStatusCode() != null) {
+                facility.setOperatingStatusCode(operatingStatusRepo.findByCode(bulkFacility.getOperatingStatusCode()));
+            }
+            facility.setStatusYear(bulkFacility.getStatusYear());
+            if (bulkFacility.getProgramSystemCode() != null) {
+                facility.setProgramSystemCode(programSystemCodeRepo.findByCode(bulkFacility.getProgramSystemCode()));
+            }
+            facility.setStreetAddress(bulkFacility.getStreetAddress());
+            facility.setCity(bulkFacility.getCity());
+            facility.setCounty(bulkFacility.getCounty());
+            facility.setStateCode(bulkFacility.getStateCode());
+            facility.setCountryCode(bulkFacility.getCountryCode());
+            facility.setPostalCode(bulkFacility.getPostalCode());
+            facility.setLatitude(bulkFacility.getLatitude());
+            facility.setLongitude(bulkFacility.getLongitude());
+            facility.setMailingStreetAddress(bulkFacility.getMailingStreetAddress());
+            facility.setMailingCity(bulkFacility.getMailingCity());
+            facility.setMailingStateCode(bulkFacility.getMailingStateCode());
+            facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
+            facility.setEisProgramId(bulkFacility.getEisProgramId());
+            if (bulkFacility.getTribalCode() != null) {
+                facility.setTribalCode(tribalCodeRepo.findByCode(bulkFacility.getTribalCode()));
+            }
+
+            facility.setEmissionsReport(emissionsReport);
+            emissionsReport.getFacilitySites().add(facility);
+        }
+
+
+	    EmissionsReport savedReport = erRepo.save(emissionsReport);
+	    return emissionsReportMapper.toDto(savedReport);
     }
 
     /**

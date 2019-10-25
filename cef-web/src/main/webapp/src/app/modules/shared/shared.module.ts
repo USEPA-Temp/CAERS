@@ -24,6 +24,7 @@ import { ValidationMessageComponent } from './components/validation-message/vali
 import { WholeNumberValidatorDirective } from './directives/whole-number-validator.directive';
 import { NumberValidatorDirective } from './directives/number-validator.directive';
 import { BaseConfirmationModalComponent } from './components/base-confirmation-modal/base-confirmation-modal.component';
+import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { BaseConfirmationModalComponent } from './components/base-confirmation-m
     ValidationMessageComponent,
     WholeNumberValidatorDirective,
     NumberValidatorDirective,
-    BaseConfirmationModalComponent
+    BaseConfirmationModalComponent,
+    BulkUploadComponent
 ],
   exports: [
     FacilityInfoComponent,
