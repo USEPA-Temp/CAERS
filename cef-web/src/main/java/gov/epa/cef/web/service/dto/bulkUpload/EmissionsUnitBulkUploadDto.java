@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class EmissionsUnitBulkUploadDto implements Serializable {
     
@@ -17,7 +18,7 @@ public class EmissionsUnitBulkUploadDto implements Serializable {
     private Short statusYear;
     private String unitOfMeasureCode;
     private String comments;
-    private Double designCapacity;
+    private BigDecimal designCapacity;
 
 
     public Long getId() {
@@ -89,10 +90,10 @@ public class EmissionsUnitBulkUploadDto implements Serializable {
         this.unitOfMeasureCode = unitOfMeasureCode;
     }
 
-    public Double getDesignCapacity() {
+    public BigDecimal getDesignCapacity() {
         return designCapacity;
     }
-    public void setDesignCapacity(Double designCapacity) {
+    public void setDesignCapacity(BigDecimal designCapacity) {
         this.designCapacity = designCapacity;
     }
 
