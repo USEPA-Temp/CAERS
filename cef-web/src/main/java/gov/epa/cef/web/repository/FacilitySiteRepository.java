@@ -1,13 +1,16 @@
 package gov.epa.cef.web.repository;
 
+import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.FacilitySite;
-import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-import javax.persistence.QueryHint;
 import java.util.List;
+import java.util.Optional;
 
-public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Long> {
+public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Long>, ProgramIdRetriever {
 
     /**
      * Retrieve facilities by eis program and emissions report
@@ -29,7 +32,7 @@ public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Lon
      * @param id
      * @return EIS Program ID
      */
-    @QueryHints({
-        @QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    String findEisProgramIdById(Long id);
+    @Cacheable(value = CacheName.FacilityProgramIds)
+    @Query("select fs.eisProgramId from FacilitySite fs where fs.id = :id")
+    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
 }

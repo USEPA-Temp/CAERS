@@ -42,7 +42,7 @@ public class FacilitySiteApi {
     @GetMapping(value = "/{facilitySiteId}")
     public ResponseEntity<FacilitySiteDto> retrieveFacilitySite(@NotNull @PathVariable Long facilitySiteId) {
 
-        this.securityService.facilityEnforcer().enforce(facilitySiteId);
+        this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
 
         FacilitySiteDto  facilitySiteDto= facilityService.findById(facilitySiteId);
         return new ResponseEntity<>(facilitySiteDto, HttpStatus.OK);

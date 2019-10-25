@@ -16,9 +16,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
                     console.log("In HttpErrorInterceptor");
 
-                    if (error.status === 403) {
+                    if (error.status === 401) {
 
-                        // unauthorized
+                        // not authenticated
+                        alert(error.error.message);
+
+                        return throwError(error.error.message);
+                    }
+
+                    if (error.status === 403 || error.status === 410) {
+
+                        // not authorized or not found
                         alert(error.error.message);
 
                         return throwError(error.error.message);

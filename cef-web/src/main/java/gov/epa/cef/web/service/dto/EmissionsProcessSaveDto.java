@@ -16,4 +16,9 @@ public class EmissionsProcessSaveDto extends EmissionsProcessDto {
         this.reportingPeriods = reportingPeriods;
     }
 
+    public EmissionsProcessSaveDto withId(Long id) {
+
+        setId(id);
+        return this;
+    }
 }

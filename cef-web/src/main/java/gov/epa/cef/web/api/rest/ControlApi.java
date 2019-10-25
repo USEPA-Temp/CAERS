@@ -1,5 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
@@ -10,9 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,8 @@ public class ControlApi {
     private final SecurityService securityService;
 
     @Autowired
-    ControlApi(SecurityService securityService, ControlService controlService) {
+    ControlApi(ControlService controlService,
+               SecurityService securityService) {
 
         this.controlService = controlService;
         this.securityService = securityService;
@@ -36,12 +38,11 @@ public class ControlApi {
      * @return
      */
     @GetMapping(value = "/{controlId}")
-    @ResponseBody
     public ResponseEntity<ControlPostOrderDto> retrieveControl(@PathVariable Long controlId) {
 
-        ControlPostOrderDto result = controlService.retrieveById(controlId);
+        this.securityService.facilityEnforcer().enforceEntity(controlId, ControlRepository.class);
 
-        this.securityService.facilityEnforcer().enforce(result);
+        ControlPostOrderDto result = controlService.retrieveById(controlId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -52,25 +53,23 @@ public class ControlApi {
      * @return
      */
     @GetMapping(value = "/facilitySite/{facilitySiteId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlPostOrderDto>> retrieveControlsForFacilitySite(@PathVariable Long facilitySiteId) {
+    public ResponseEntity<List<ControlPostOrderDto>> retrieveControlsForFacilitySite(
+        @NotNull @PathVariable Long facilitySiteId) {
 
-        this.securityService.facilityEnforcer().enforce(facilitySiteId);
+        this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
 
         List<ControlPostOrderDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
     @GetMapping(value = "/components/{controlId}")
-    @ResponseBody
-    public ResponseEntity<List<EmissionsReportItemDto>> retrieveControlComponents(@PathVariable Long controlId) {
+    public ResponseEntity<List<EmissionsReportItemDto>> retrieveControlComponents(
+        @NotNull @PathVariable Long controlId) {
 
-        this.securityService.facilityEnforcer().enforce(controlService.retrieveById(controlId));
+        this.securityService.facilityEnforcer().enforceEntity(controlId, ControlRepository.class);
 
     	List<EmissionsReportItemDto> result = controlService.retrieveControlComponents(controlId);
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }

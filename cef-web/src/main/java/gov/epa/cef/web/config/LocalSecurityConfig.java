@@ -1,6 +1,8 @@
 package gov.epa.cef.web.config;
 
 import gov.epa.cef.web.security.AppRole;
+import gov.epa.cef.web.security.AuthDeniedHandler;
+import gov.epa.cef.web.security.LoginAuthEntryPoint;
 import gov.epa.cef.web.security.mock.MockHandoffFilter;
 import gov.epa.cef.web.security.mock.MockLogoutHandler;
 import gov.epa.cef.web.security.mock.MockPreAuthenticationUserDetailsService;
@@ -30,10 +32,15 @@ import java.util.List;
 @EnableWebSecurity
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
 
+    private static final String LoginRedirectUrl = "/";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.headers().frameOptions().disable().and()
+        http.exceptionHandling()
+            .authenticationEntryPoint(new LoginAuthEntryPoint(LoginRedirectUrl))
+            .accessDeniedHandler(new AuthDeniedHandler(LoginRedirectUrl)).and()
+            .headers().frameOptions().disable().and()
             .csrf().disable()
             .addFilter(mockCdxPreAuthFilter())
             .authorizeRequests()

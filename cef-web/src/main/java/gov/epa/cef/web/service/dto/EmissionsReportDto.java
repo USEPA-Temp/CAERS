@@ -69,6 +69,6 @@ public class EmissionsReportDto implements Serializable {
     public void setValidationStatus(String validationStatus) {
         this.validationStatus = validationStatus;
     }
-    
+
 
 }

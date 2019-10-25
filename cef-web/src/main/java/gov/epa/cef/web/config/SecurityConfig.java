@@ -4,7 +4,10 @@ import gov.epa.cdx.shared.security.naas.CdxHandoffPreAuthenticationFilter;
 import gov.epa.cdx.shared.security.naas.HandoffToCdxServlet;
 import gov.epa.cdx.shared.security.naas.LoginRedirectServlet;
 import gov.epa.cef.web.security.AppRole;
+import gov.epa.cef.web.security.AuthDeniedHandler;
 import gov.epa.cef.web.security.CefPreAuthenticationUserDetailsService;
+import gov.epa.cef.web.security.LoginAuthEntryPoint;
+import gov.epa.cef.web.security.LogoutHandler;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,10 +36,15 @@ import java.util.List;
 @ImportResource(locations = { "file:${spring.config.dir}/cdx-shared/cdx-shared-config.xml" })
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String LoginRedirectUrl = "/LoginRedirect";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.headers().frameOptions().disable().and()
+        http.exceptionHandling()
+            .authenticationEntryPoint(new LoginAuthEntryPoint(LoginRedirectUrl))
+            .accessDeniedHandler(new AuthDeniedHandler(LoginRedirectUrl)).and()
+            .headers().frameOptions().disable().and()
             .csrf().disable()
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()
@@ -49,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 AppRole.RoleType.REVIEWER.roleName())
             .anyRequest().denyAll().and()
             .logout()
-            .logoutSuccessUrl("/J2AHandoff?URL=/CDX/Logout");
+            .logoutSuccessHandler(new LogoutHandler());
     }
 
     @Bean
@@ -65,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public ServletRegistrationBean<HttpServlet> loginRedirect() {
         ServletRegistrationBean<HttpServlet> servRegBean = new ServletRegistrationBean<>();
         servRegBean.setServlet(new LoginRedirectServlet());
-        servRegBean.addUrlMappings("/LoginRedirect");
+        servRegBean.addUrlMappings(LoginRedirectUrl);
         servRegBean.setLoadOnStartup(1);
         return servRegBean;
     }

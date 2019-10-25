@@ -116,4 +116,8 @@ public class EmissionDto implements Serializable {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 
+    public EmissionDto withId(Long id) {
+        setId(id);
+        return this;
+    }
 }

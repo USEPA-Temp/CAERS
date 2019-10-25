@@ -1,6 +1,5 @@
 package gov.epa.cef.web.api.rest;
 
-import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -10,10 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -43,7 +40,6 @@ public class CdxFacilityApi {
      * @return
      */
     @GetMapping(value = "/{programId}")
-    @ResponseBody
     public ResponseEntity<ProgramFacility> retrieveFacility(@NotNull @PathVariable String programId) {
 
         this.securityService.facilityEnforcer().enforceProgramId(programId);
@@ -54,27 +50,11 @@ public class CdxFacilityApi {
     }
 
     /**
-     * Retrieve the specified user's facilities.
-     * @param userRoleId
-     * @return
-     */
-    @GetMapping(value = "/user/{userRoleId}")
-    @ResponseBody
-    @RolesAllowed(AppRole.ROLE_REVIEWER)
-    public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForUser(@PathVariable Long userRoleId) {
-
-        Collection<ProgramFacility> result = registrationService.retrieveFacilities(userRoleId);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    /**
      * Retrieve the currently authenticated user's facilities.
      * This can be called before the user is loaded into the app.
      * @return
      */
     @GetMapping(value = "/user/my")
-    @ResponseBody
     public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForCurrentUser() {
 
         Collection<ProgramFacility> result = this.registrationService.retrieveFacilities(
@@ -82,5 +62,4 @@ public class CdxFacilityApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }

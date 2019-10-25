@@ -10,11 +10,11 @@ spring:
     config: classpath:cef-hazelcast-cache.xml
   thymeleaf:
     mode: HTML
+  data.jpa.repositories.enabled: true
   jpa:
     #open-in-view: false
     show-sql: false
     generate-ddl: false
-    data.jpa.repositories.enabled: true
     properties.hibernate:
       # disables annoying non-error in logs from hibernate
       jdbc.lob.non_contextual_creation: true

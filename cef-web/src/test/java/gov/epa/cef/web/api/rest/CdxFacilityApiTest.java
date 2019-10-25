@@ -1,7 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
-import gov.epa.cef.web.security.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -63,13 +63,6 @@ public class CdxFacilityApiTest extends BaseApiTest {
         ResponseEntity<ProgramFacility> result = cdxFacilityApi.retrieveFacility("p-id");
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(programFacility, result.getBody());
-    }
-
-    @Test
-    public void retrieveFacilitiesForUser_Should_ReturnFacilitiesListWithOkStatusCode_WhenValidUserRoleIdPassed() {
-        ResponseEntity<Collection<ProgramFacility>> result = cdxFacilityApi.retrieveFacilitiesForUser(123L);
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(programFacilities, result.getBody());
     }
 
     @Test

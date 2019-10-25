@@ -97,4 +97,9 @@ public class OperatingDetailDto implements Serializable {
         this.percentFall = percentFall;
     }
 
+    public OperatingDetailDto withId(Long id) {
+
+        setId(id);
+        return this;
+    }
 }

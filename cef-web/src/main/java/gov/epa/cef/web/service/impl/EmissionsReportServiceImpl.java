@@ -25,10 +25,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.activation.DataHandler;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -121,15 +123,17 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 EmissionsReport emissionsReport=emissionsReportOptional.get();
                 URL signatureServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterSignServiceEndpoint());
                 String signatureToken = signatureServiceClient.authenticate(signatureServiceUrl, cefConfig.getCdxConfig().getNaasUser(), cefConfig.getCdxConfig().getNaasPassword());
-                String xmlData=cersXmlService.retrieveCersXml(emissionsReportId);
+                byte[] xmlData=cersXmlService.retrieveCersXml(emissionsReportId);
                 SignatureDocumentType sigDoc = new SignatureDocumentType();
                 sigDoc.setName("emissionsReport.xml");
                 sigDoc.setFormat(SignatureDocumentFormatType.XML);
                 tmp = File.createTempFile("Attachment", ".xml");
-                FileUtils.writeStringToFile(tmp, xmlData, StandardCharsets.UTF_8);
+                try (InputStream is = new ByteArrayInputStream(xmlData)) {
+                    Files.copy(is, tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
                 sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
-                cromerrDocumentId = signatureServiceClient.sign(signatureServiceUrl, signatureToken,
-                        activityId, sigDoc);
+                cromerrDocumentId =
+                    signatureServiceClient.sign(signatureServiceUrl, signatureToken, activityId, sigDoc);
                 emissionsReport.setStatus(ReportStatus.SUBMITTED);
                 emissionsReport.setCromerrActivityId(activityId);
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
@@ -289,7 +293,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	private void addCurrentYear(List<EmissionsReport> emissionReports, String facilityEisProgramId) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        
+
         //note: current reporting year is always the previous calendar year - like taxes.
         //e.g. in 2020, facilities will be creating a 2019 report.
         calendar.add(Calendar.YEAR, -1);

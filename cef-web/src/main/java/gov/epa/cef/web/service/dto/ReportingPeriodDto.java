@@ -108,4 +108,9 @@ public class ReportingPeriodDto implements Serializable {
         this.operatingDetails = operatingDetails;
     }
 
+    public ReportingPeriodDto withId(Long id) {
+
+        setId(id);
+        return this;
+    }
 }

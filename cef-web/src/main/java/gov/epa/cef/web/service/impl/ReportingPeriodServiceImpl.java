@@ -1,16 +1,16 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.ReportingPeriodService;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReportingPeriodServiceImpl implements ReportingPeriodService {
@@ -26,7 +26,9 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
     public ReportingPeriodDto update(ReportingPeriodDto dto) {
 
-        ReportingPeriod period = repo.findById(dto.getId()).orElse(null);
+        ReportingPeriod period = repo.findById(dto.getId())
+            .orElseThrow(() -> new NotExistException("Reporting Period", dto.getId()));
+
         mapper.updateFromDto(dto, period);
 
         if (dto.getCalculationMaterialCode() != null) {

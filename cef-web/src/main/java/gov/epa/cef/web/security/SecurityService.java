@@ -5,13 +5,18 @@ import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.repository.FacilitySiteRepository;
+import gov.epa.cef.web.repository.ProgramIdRetriever;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.IFacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.IProgramIdRepoLocator;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,32 +24,32 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class SecurityService {
+public class SecurityService implements IProgramIdRepoLocator {
+
+    private static final String FacilityRolePrefix = "{EIS}";
+
+    private final ApplicationContext applicationContext;
 
     private final CacheManager cacheManager;
-
-    private final FacilitySiteRepository facilitySiteRepository;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final RegistrationService registrationService;
 
-    static final String FacilityRolePrefix = "{EIS}";
-
     @Autowired
     SecurityService(RegistrationService registrationService,
-                    FacilitySiteRepository facilitySiteRepository,
-                    CacheManager cacheManager) {
+                    CacheManager cacheManager,
+                    ApplicationContext applicationContext) {
 
         this.registrationService = registrationService;
-        this.facilitySiteRepository = facilitySiteRepository;
+
+        this.applicationContext = applicationContext;
 
         this.cacheManager = cacheManager;
     }
@@ -56,7 +61,8 @@ public class SecurityService {
      */
     public void addUserToSecurityContext(ApplicationUser appUser) {
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
+        SecurityContextHolder.getContext().setAuthentication(
+            new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
         logger.debug("User {} explicitly added to security context.", appUser.getUsername());
         for (GrantedAuthority a : appUser.getAuthorities()) {
             logger.debug("Role {} explicitly added to security context.", a.getAuthority());
@@ -116,9 +122,14 @@ public class SecurityService {
         }
     }
 
-    public FacilityAccessEnforcer facilityEnforcer() {
+    public IFacilityAccessEnforcer facilityEnforcer() {
 
-        return new FacilityAccessEnforcer(this.facilitySiteRepository, getCurrentApplicationUser());
+        if (hasRole(AppRole.RoleType.REVIEWER)) {
+
+            return new ReviewerFacilityAccessEnforcer();
+        }
+
+        return new FacilityAccessEnforcer(this, getCurrentUserFacilityProgramIds());
     }
 
     public ApplicationUser getCurrentApplicationUser() {
@@ -131,27 +142,21 @@ public class SecurityService {
         return getCurrentApplicationUser().getUsername();
     }
 
+    @Override
+    public <T extends ProgramIdRetriever> T getProgramIdRepository(Class<T> clazz) {
+
+        return this.applicationContext.getBean(clazz);
+    }
+
     /**
      * Check if the current user has any of the provided roles
      *
-     * @param roles
+     * @param role
      * @return
      */
-    public boolean hasRole(SimpleGrantedAuthority role, SimpleGrantedAuthority... roles) {
+    public boolean hasRole(AppRole.RoleType role) {
 
-        Collection<SimpleGrantedAuthority> croles = new ArrayList<>();
-        croles.add(role);
-        if (roles != null) {
-            croles.addAll(Arrays.asList(roles));
-        }
-
-        for (SimpleGrantedAuthority crole : croles) {
-            if (getCurrentRoles().contains(crole)) {
-                return true;
-            }
-        }
-
-        return false;
+        return getCurrentRoles().stream().anyMatch(r -> r.getAuthority().equals(role.grantedRoleName()));
     }
 
     List<GrantedAuthority> createUserRoles(Long roleId, Long userRoleId) {
@@ -205,6 +210,14 @@ public class SecurityService {
 
         checkSecurityContext();
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+    }
+
+    private List<String> getCurrentUserFacilityProgramIds() {
+
+        return getCurrentApplicationUser().getAuthorities().stream()
+            .filter(r -> r.getAuthority().startsWith(SecurityService.FacilityRolePrefix))
+            .map(r -> r.getAuthority().substring(SecurityService.FacilityRolePrefix.length()))
+            .collect(Collectors.toList());
     }
 
     private boolean hasSecurityContext() {
