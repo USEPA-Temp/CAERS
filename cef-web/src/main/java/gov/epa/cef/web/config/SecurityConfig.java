@@ -4,10 +4,11 @@ import gov.epa.cdx.shared.security.naas.CdxHandoffPreAuthenticationFilter;
 import gov.epa.cdx.shared.security.naas.HandoffToCdxServlet;
 import gov.epa.cdx.shared.security.naas.LoginRedirectServlet;
 import gov.epa.cef.web.security.AppRole;
-import gov.epa.cef.web.security.AuthDeniedHandler;
-import gov.epa.cef.web.security.CefPreAuthenticationUserDetailsService;
-import gov.epa.cef.web.security.LoginAuthEntryPoint;
-import gov.epa.cef.web.security.LogoutHandler;
+import gov.epa.cef.web.security.AccessDeniedHandlerImpl;
+import gov.epa.cef.web.security.AuthenticationSuccessHandlerImpl;
+import gov.epa.cef.web.security.UserDetailsServiceImpl;
+import gov.epa.cef.web.security.AuthenticationEntryPointImpl;
+import gov.epa.cef.web.security.LogoutSuccessHandlerImpl;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.exceptionHandling()
-            .authenticationEntryPoint(new LoginAuthEntryPoint(LoginRedirectUrl))
-            .accessDeniedHandler(new AuthDeniedHandler(LoginRedirectUrl)).and()
+            .authenticationEntryPoint(new AuthenticationEntryPointImpl(LoginRedirectUrl))
+            .accessDeniedHandler(new AccessDeniedHandlerImpl(LoginRedirectUrl)).and()
             .headers().frameOptions().disable().and()
             .csrf().disable()
             .addFilter(cdxWebPreAuthFilter())
@@ -55,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 AppRole.RoleType.REVIEWER.roleName())
             .anyRequest().denyAll().and()
             .logout()
-            .logoutSuccessHandler(new LogoutHandler());
+            .logoutSuccessHandler(new LogoutSuccessHandlerImpl());
     }
 
     @Bean
@@ -78,19 +79,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AbstractPreAuthenticatedProcessingFilter cdxWebPreAuthFilter() {
+
         CdxHandoffPreAuthenticationFilter result = new CdxHandoffPreAuthenticationFilter();
         result.setAuthenticationManager(authenticationManager());
+        result.setAuthenticationSuccessHandler(new AuthenticationSuccessHandlerImpl());
+
         return result;
     }
 
     @Bean
     public AuthenticationManager authenticationManager() {
+
         List<AuthenticationProvider> providers = new ArrayList<>();
+
         PreAuthenticatedAuthenticationProvider cdxPreAuth = new PreAuthenticatedAuthenticationProvider();
-        CefPreAuthenticationUserDetailsService cefUserDetailService = getApplicationContext()
-            .getBean(CefPreAuthenticationUserDetailsService.class);
+        UserDetailsServiceImpl cefUserDetailService =
+            getApplicationContext().getBean(UserDetailsServiceImpl.class);
         cdxPreAuth.setPreAuthenticatedUserDetailsService(cefUserDetailService);
         providers.add(cdxPreAuth);
+
         return new ProviderManager(providers);
     }
 }

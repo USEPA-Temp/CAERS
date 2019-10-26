@@ -2,6 +2,10 @@ server:
   use-forward-headers: true
   servlet:
     context-path: /cef-web
+    session:
+      cookie:
+        http-only: true
+        secure: true
 spring:
   profiles:
     active: #spring.profiles.active#

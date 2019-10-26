@@ -1,6 +1,5 @@
 package gov.epa.cef.web.security;
 
-import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cdx.shared.security.naas.CdxHandoffPreAuthenticationUserDetailsService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.logging.Log;
@@ -19,9 +18,9 @@ import java.util.Map;
 
 @Profile("prod")
 @Service
-public class CefPreAuthenticationUserDetailsService extends CdxHandoffPreAuthenticationUserDetailsService {
+public class UserDetailsServiceImpl extends CdxHandoffPreAuthenticationUserDetailsService {
 
-    private static final Log LOGGER = LogFactory.getLog(CefPreAuthenticationUserDetailsService.class);
+    private static final Log LOGGER = LogFactory.getLog(UserDetailsServiceImpl.class);
 
     @Autowired
     private SecurityService securityService;
@@ -31,7 +30,7 @@ public class CefPreAuthenticationUserDetailsService extends CdxHandoffPreAuthent
 
         try {
             // Load user details from NAAS token via cdx-shared handoff code
-            return (ApplicationUser) super.loadUserDetails(preAuthenticatedAuthenticationToken);
+            return super.loadUserDetails(preAuthenticatedAuthenticationToken);
         } catch (Exception e) {
             LOGGER.error("unable to load user details: " + e.getMessage(), e);
             throw new AuthenticationServiceException("unable to load user details");

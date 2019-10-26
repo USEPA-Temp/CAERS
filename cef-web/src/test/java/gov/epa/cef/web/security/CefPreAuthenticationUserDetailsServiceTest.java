@@ -24,7 +24,7 @@ public class CefPreAuthenticationUserDetailsServiceTest extends BaseSecurityTest
     SecurityService securityService;
 
     @InjectMocks
-    CefPreAuthenticationUserDetailsService cefPreAuthenticationUserDetailsService;
+    UserDetailsServiceImpl cefPreAuthenticationUserDetailsService;
 
     @Before
     public void init() {

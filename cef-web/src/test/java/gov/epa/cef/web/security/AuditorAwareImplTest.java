@@ -15,13 +15,13 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SpringSecurityAuditorAwareTest extends BaseSecurityTest {
+public class AuditorAwareImplTest extends BaseSecurityTest {
 
     @Mock
     SecurityService securityService;
 
     @InjectMocks
-    private SpringSecurityAuditorAware springSecurityAuditorAware;
+    private AuditorAwareImpl auditorAwareImpl;
 
     @Before
     public void init() {
@@ -34,7 +34,7 @@ public class SpringSecurityAuditorAwareTest extends BaseSecurityTest {
 
         when(securityService.hasSecurityContext()).thenReturn(true);
 
-        Optional<String> currentAuditor = springSecurityAuditorAware.getCurrentAuditor();
+        Optional<String> currentAuditor = auditorAwareImpl.getCurrentAuditor();
         assertTrue(currentAuditor.isPresent());
         assertEquals("mock-user", currentAuditor.get());
     }
@@ -44,6 +44,6 @@ public class SpringSecurityAuditorAwareTest extends BaseSecurityTest {
 
         when(securityService.hasSecurityContext()).thenReturn(false);
 
-        assertFalse(springSecurityAuditorAware.getCurrentAuditor().isPresent());
+        assertFalse(auditorAwareImpl.getCurrentAuditor().isPresent());
     }
 }

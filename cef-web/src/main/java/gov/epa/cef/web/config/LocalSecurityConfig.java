@@ -1,11 +1,12 @@
 package gov.epa.cef.web.config;
 
 import gov.epa.cef.web.security.AppRole;
-import gov.epa.cef.web.security.AuthDeniedHandler;
-import gov.epa.cef.web.security.LoginAuthEntryPoint;
+import gov.epa.cef.web.security.AccessDeniedHandlerImpl;
+import gov.epa.cef.web.security.AuthenticationEntryPointImpl;
+import gov.epa.cef.web.security.AuthenticationSuccessHandlerImpl;
 import gov.epa.cef.web.security.mock.MockHandoffFilter;
-import gov.epa.cef.web.security.mock.MockLogoutHandler;
-import gov.epa.cef.web.security.mock.MockPreAuthenticationUserDetailsService;
+import gov.epa.cef.web.security.mock.MockLogoutSuccessHandlerImpl;
+import gov.epa.cef.web.security.mock.MockUserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -36,8 +37,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
 
         http.exceptionHandling()
-            .authenticationEntryPoint(new LoginAuthEntryPoint(LoginRedirectUrl))
-            .accessDeniedHandler(new AuthDeniedHandler(LoginRedirectUrl)).and()
+            .authenticationEntryPoint(new AuthenticationEntryPointImpl(LoginRedirectUrl))
+            .accessDeniedHandler(new AccessDeniedHandlerImpl(LoginRedirectUrl)).and()
             .headers().frameOptions().disable().and()
             .csrf().disable()
             .addFilter(mockCdxPreAuthFilter())
@@ -49,13 +50,16 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
                 AppRole.RoleType.REVIEWER.roleName())
             .anyRequest().denyAll().and()
             .logout()
-            .logoutSuccessHandler(new MockLogoutHandler());
+            .logoutSuccessHandler(new MockLogoutSuccessHandlerImpl());
     }
 
     @Bean
     public AbstractPreAuthenticatedProcessingFilter mockCdxPreAuthFilter() {
+
         MockHandoffFilter result = new MockHandoffFilter();
         result.setAuthenticationManager(authenticationManager());
+        result.setAuthenticationSuccessHandler(new AuthenticationSuccessHandlerImpl());
+
         return result;
     }
 
@@ -63,10 +67,12 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
     public AuthenticationManager authenticationManager() {
         List<AuthenticationProvider> providers = new ArrayList<>();
         PreAuthenticatedAuthenticationProvider cdxPreAuth = new PreAuthenticatedAuthenticationProvider();
-        MockPreAuthenticationUserDetailsService mockCefUserDetailService = getApplicationContext()
-            .getBean(MockPreAuthenticationUserDetailsService.class);
-            cdxPreAuth.setPreAuthenticatedUserDetailsService(mockCefUserDetailService);
+        MockUserDetailsServiceImpl mockCefUserDetailService =
+            getApplicationContext().getBean(MockUserDetailsServiceImpl.class);
+
+        cdxPreAuth.setPreAuthenticatedUserDetailsService(mockCefUserDetailService);
         providers.add(cdxPreAuth);
+
         return new ProviderManager(providers);
     }
 }

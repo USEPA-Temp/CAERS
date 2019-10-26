@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"gov.epa.cef.web.repository"})
-@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
+@EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class AppConfig {
 
     private final DataSource dataSource;

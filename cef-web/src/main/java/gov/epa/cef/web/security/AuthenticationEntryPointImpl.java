@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class LoginAuthEntryPoint implements AuthenticationEntryPoint {
+public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String loginUrl;
 
-    public LoginAuthEntryPoint(String loginUrl) {
+    public AuthenticationEntryPointImpl(String loginUrl) {
         this.loginUrl = loginUrl;
     }
 

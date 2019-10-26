@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,11 +33,11 @@ public class SecurityService {
 
     private static final String FacilityRolePrefix = "{EIS}";
 
-    private final ProgramIdRepoLocator programIdRepoLocator;
-
     private final CacheManager cacheManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private final ProgramIdRepoLocator programIdRepoLocator;
 
     private final RegistrationService registrationService;
 
@@ -107,12 +108,8 @@ public class SecurityService {
 
         if (hasSecurityContext()) {
 
-            ApplicationUser applicationUser = getCurrentApplicationUser();
-
-            this.cacheManager.getCache(CacheName.UserProgramFacilities).evict(applicationUser.getUserRoleId());
-
-            logger.info("Program Facilities for UserRoleId-[{}] were evicted from cache.",
-                applicationUser.getUserRoleId());
+            Long userRoleId = getCurrentApplicationUser().getUserRoleId();
+            evictUserCachedItems(userRoleId);
 
         } else {
 
@@ -173,6 +170,18 @@ public class SecurityService {
         }
 
         return createUserRoles(role, userRoleId);
+    }
+
+    void evictUserCachedItems(long userRoleId) {
+
+        this.cacheManager.getCache(CacheName.UserProgramFacilities).evict(userRoleId);
+
+        logger.info("Program Facilities for UserRoleId-[{}] were evicted from cache.", userRoleId);
+    }
+
+    ApplicationUser getCurrentApplicationUser(Authentication authentication) {
+
+        return (ApplicationUser) getCurrentPrincipal();
     }
 
     /**

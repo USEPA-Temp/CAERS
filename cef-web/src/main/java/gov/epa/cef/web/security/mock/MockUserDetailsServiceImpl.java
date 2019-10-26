@@ -10,10 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Profile("dev")
 @Service
-public class MockPreAuthenticationUserDetailsService implements AuthenticationUserDetailsService {
+public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 
     private static final Long ORGANIZATION_ID = 86819L;
 
@@ -42,13 +42,13 @@ public class MockPreAuthenticationUserDetailsService implements AuthenticationUs
 
     private final SecurityService securityService;
 
-    MockPreAuthenticationUserDetailsService(SecurityService securityService) {
+    MockUserDetailsServiceImpl(SecurityService securityService) {
 
         this.securityService = securityService;
     }
 
     @Override
-    public UserDetails loadUserDetails(Authentication token) {
+    public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) {
 
         ApplicationUser user = null;
 

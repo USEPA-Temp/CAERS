@@ -11,18 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AuthDeniedHandler implements AccessDeniedHandler {
+public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
     private final String forwardUrl;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public AuthDeniedHandler(String forwardUrl) {
+    public AccessDeniedHandlerImpl(String forwardUrl) {
 
         this.forwardUrl = forwardUrl;
     }
 
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException e) throws IOException, ServletException {
 
         this.logger.warn("Access Denied", e);
         String fetch = request.getHeader("X-Requested-With");
