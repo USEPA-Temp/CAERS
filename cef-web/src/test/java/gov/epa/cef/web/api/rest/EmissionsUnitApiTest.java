@@ -1,5 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
 import gov.epa.cef.web.service.EmissionsUnitService;
 import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 import org.junit.Before;
@@ -21,6 +23,9 @@ import static org.mockito.Mockito.when;
 public class EmissionsUnitApiTest extends BaseApiTest {
 
     @Mock
+    private SecurityService securityService;
+
+    @Mock
     private EmissionsUnitService emissionsUnitService;
 
     @InjectMocks
@@ -39,6 +44,7 @@ public class EmissionsUnitApiTest extends BaseApiTest {
         emissionsUnitDtos.add(emissionsUnit);
         when(emissionsUnitService.retrieveEmissionUnitsForFacility(1L)).thenReturn(emissionsUnitDtos);
 
+        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcer());
     }
 
     @Test

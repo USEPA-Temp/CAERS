@@ -4,24 +4,28 @@ import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 @Configuration
-@Component
-public class FlywayConfig {
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {"gov.epa.cef.web.repository"})
+@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
+public class AppConfig {
 
     private final DataSource dataSource;
 
     @Autowired
-    FlywayConfig(DataSource dataSource) {
+    AppConfig(DataSource dataSource) {
 
         this.dataSource = dataSource;
     }
 
     @Bean(initMethod = "migrate")
-    public Flyway flyway() {
+    Flyway flyway() {
         return Flyway.configure()
             .locations("classpath:db/migrations", "classpath:gov/epa/cef/infrastructure/persistence/migrations")
             .table("schema_version_cef")
@@ -30,5 +34,4 @@ public class FlywayConfig {
             .dataSource(this.dataSource)
             .load();
     }
-
 }

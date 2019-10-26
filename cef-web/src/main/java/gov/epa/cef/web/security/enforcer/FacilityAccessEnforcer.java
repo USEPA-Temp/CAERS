@@ -13,9 +13,9 @@ public class FacilityAccessEnforcer implements IFacilityAccessEnforcer {
 
     private final Collection<String> authorizedProgramIds;
 
-    private final IProgramIdRepoLocator repoLocator;
+    private final ProgramIdRepoLocator repoLocator;
 
-    public FacilityAccessEnforcer(IProgramIdRepoLocator repoLocator,
+    public FacilityAccessEnforcer(ProgramIdRepoLocator repoLocator,
                                   Collection<String> authorizedProgramIds) {
 
         this.repoLocator = repoLocator;

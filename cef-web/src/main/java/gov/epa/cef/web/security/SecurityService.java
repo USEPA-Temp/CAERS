@@ -5,10 +5,9 @@ import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.repository.ProgramIdRetriever;
 import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
 import gov.epa.cef.web.security.enforcer.IFacilityAccessEnforcer;
-import gov.epa.cef.web.security.enforcer.IProgramIdRepoLocator;
+import gov.epa.cef.web.security.enforcer.ProgramIdRepoLocator;
 import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,11 +28,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class SecurityService implements IProgramIdRepoLocator {
+public class SecurityService {
 
     private static final String FacilityRolePrefix = "{EIS}";
 
-    private final ApplicationContext applicationContext;
+    private final ProgramIdRepoLocator programIdRepoLocator;
 
     private final CacheManager cacheManager;
 
@@ -45,13 +43,13 @@ public class SecurityService implements IProgramIdRepoLocator {
     @Autowired
     SecurityService(RegistrationService registrationService,
                     CacheManager cacheManager,
-                    ApplicationContext applicationContext) {
+                    ProgramIdRepoLocator programIdRepoLocator) {
 
         this.registrationService = registrationService;
 
-        this.applicationContext = applicationContext;
-
         this.cacheManager = cacheManager;
+
+        this.programIdRepoLocator = programIdRepoLocator;
     }
 
     /**
@@ -129,7 +127,7 @@ public class SecurityService implements IProgramIdRepoLocator {
             return new ReviewerFacilityAccessEnforcer();
         }
 
-        return new FacilityAccessEnforcer(this, getCurrentUserFacilityProgramIds());
+        return new FacilityAccessEnforcer(this.programIdRepoLocator, getCurrentUserFacilityProgramIds());
     }
 
     public ApplicationUser getCurrentApplicationUser() {
@@ -142,12 +140,6 @@ public class SecurityService implements IProgramIdRepoLocator {
         return getCurrentApplicationUser().getUsername();
     }
 
-    @Override
-    public <T extends ProgramIdRetriever> T getProgramIdRepository(Class<T> clazz) {
-
-        return this.applicationContext.getBean(clazz);
-    }
-
     /**
      * Check if the current user has any of the provided roles
      *
@@ -157,6 +149,13 @@ public class SecurityService implements IProgramIdRepoLocator {
     public boolean hasRole(AppRole.RoleType role) {
 
         return getCurrentRoles().stream().anyMatch(r -> r.getAuthority().equals(role.grantedRoleName()));
+    }
+
+    public boolean hasSecurityContext() {
+
+        return SecurityContextHolder.getContext() != null
+            && SecurityContextHolder.getContext().getAuthentication() != null
+            && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null;
     }
 
     List<GrantedAuthority> createUserRoles(Long roleId, Long userRoleId) {
@@ -218,13 +217,6 @@ public class SecurityService implements IProgramIdRepoLocator {
             .filter(r -> r.getAuthority().startsWith(SecurityService.FacilityRolePrefix))
             .map(r -> r.getAuthority().substring(SecurityService.FacilityRolePrefix.length()))
             .collect(Collectors.toList());
-    }
-
-    private boolean hasSecurityContext() {
-
-        return SecurityContextHolder.getContext() != null
-            && SecurityContextHolder.getContext().getAuthentication() != null
-            && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null;
     }
 
     static class FacilityToRoleTransform implements Function<ProgramFacility, GrantedAuthority> {

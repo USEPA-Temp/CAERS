@@ -10,7 +10,6 @@ spring:
     config: classpath:cef-hazelcast-cache.xml
   thymeleaf:
     mode: HTML
-  data.jpa.repositories.enabled: true
   jpa:
     #open-in-view: false
     show-sql: false

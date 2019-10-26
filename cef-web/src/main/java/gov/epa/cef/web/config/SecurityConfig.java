@@ -14,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -30,10 +29,9 @@ import java.util.List;
 
 @Profile("prod")
 @Configuration
-@EnableJpaAuditing
 @EnableWebSecurity
-@ComponentScan(basePackages = { "gov.epa.cdx.shared" })
-@ImportResource(locations = { "file:${spring.config.dir}/cdx-shared/cdx-shared-config.xml" })
+@ComponentScan(basePackages = {"gov.epa.cdx.shared"})
+@ImportResource(locations = {"file:${spring.config.dir}/cdx-shared/cdx-shared-config.xml"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LoginRedirectUrl = "/LoginRedirect";

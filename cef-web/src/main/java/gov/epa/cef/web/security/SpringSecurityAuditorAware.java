@@ -1,25 +1,29 @@
 package gov.epa.cef.web.security;
 
-import java.util.Optional;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import gov.epa.cdx.shared.security.ApplicationUser;
+import java.util.Optional;
 
 @Component
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
+    private final SecurityService securityService;
+
+    @Autowired
+    SpringSecurityAuditorAware(SecurityService securityService) {
+
+        this.securityService = securityService;
+    }
+
     public Optional<String> getCurrentAuditor() {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (this.securityService.hasSecurityContext()) {
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
+            return Optional.of(this.securityService.getCurrentUserId());
         }
 
-        return Optional.of(((ApplicationUser) authentication.getPrincipal()).getUserId());
+        return Optional.empty();
     }
 }
