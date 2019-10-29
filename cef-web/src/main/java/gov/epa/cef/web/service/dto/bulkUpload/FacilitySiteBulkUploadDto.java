@@ -33,6 +33,7 @@ public class FacilitySiteBulkUploadDto implements Serializable {
     private String mailingCountryCode;
     private String eisProgramId;
     private String tribalCode;
+    private Integer naicsCode;
 
     public Long getId() {
         return id;
@@ -74,6 +75,13 @@ public class FacilitySiteBulkUploadDto implements Serializable {
     }
     public void setTribalCode(String tribalCode) {
         this.tribalCode = tribalCode;
+    }
+
+    public Integer getNaicsCode() {
+        return naicsCode;
+    }
+    public void setNaicsCode(Integer naicsCode) {
+        this.naicsCode = naicsCode;
     }
 
     public String getFrsFacilityId() {

@@ -27,6 +27,7 @@ import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -47,6 +48,7 @@ import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
+import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.EmissionsReportService;
@@ -93,6 +95,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private UnitMeasureCodeRepository unitMeasureCodeRepo;
+
+    @Autowired
+    private NaicsCodeRepository naicsCodeRepo;
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
@@ -468,6 +473,14 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         facility.setMailingStateCode(bulkFacility.getMailingStateCode());
         facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
         facility.setEisProgramId(bulkFacility.getEisProgramId());
+
+        if (bulkFacility.getNaicsCode() != null) {
+            FacilityNAICSXref naics = new FacilityNAICSXref();
+            naics.setFacilitySite(facility);
+            naics.setNaicsCode(naicsCodeRepo.findByCode(bulkFacility.getNaicsCode()));
+            naics.setPrimaryFlag(true);
+            facility.getFacilityNAICS().add(naics);
+        }
 
         if (bulkFacility.getFacilityCategoryCode() != null) {
             facility.setFacilityCategoryCode(facilityCategoryRepo.findByCode(bulkFacility.getFacilityCategoryCode()));
