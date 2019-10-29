@@ -32,8 +32,9 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
 
     ngOnInit() {
 
-        this.route.paramMap
-        .subscribe(map => {
+        this.tableData.sort((a,b) => (a.pollutant.pollutantName > b.pollutant.pollutantName) ? 1 : -1);
+
+        this.route.paramMap.subscribe(map => {
             this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.REPORTING_PERIOD}/${this.reportingPeriod.id}/${BaseReportUrl.EMISSION}`;
         });
     }
