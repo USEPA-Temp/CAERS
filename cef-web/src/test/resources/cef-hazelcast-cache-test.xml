@@ -14,7 +14,7 @@
         will get automatically evicted from the map.
         Any integer between 0 and Integer.MAX_VALUE. 0 means infinite. Default is 0.
         -->
-        <time-to-live-seconds>5</time-to-live-seconds>
+        <time-to-live-seconds>20</time-to-live-seconds>
 
         <!--
         Valid values are:

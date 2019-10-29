@@ -83,7 +83,7 @@ public class CacheTest extends BaseRepositoryTest {
         assertNotNull(barrel2);
         assertEquals(BARRELS, barrel2.getDescription());
 
-        Thread.sleep(3100);
+        Thread.sleep(18100);
 
         CodeLookupDto barrel3 = findBarrelFromList();
 
@@ -113,7 +113,7 @@ public class CacheTest extends BaseRepositoryTest {
         assertEquals(BARRELS, barrel2.getDescription());
 
         // wait a few secs for cache to expire
-        Thread.sleep(3100);
+        Thread.sleep(18100);
 
         UnitMeasureCode barrel3 = this.lookupService.retrieveUnitMeasureCodeEntityByCode(BBL);
 

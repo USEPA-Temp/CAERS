@@ -8,6 +8,9 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
+
+import java.util.Calendar;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,10 +43,10 @@ public class EmissionsReportValidator
             valid = false;
             context.addFederalError("report.year", "report.year.required");
 
-        } else if (report.getYear().intValue() < 2019) {
+        } else if (report.getYear().intValue() < Calendar.getInstance().get(Calendar.YEAR) - 1) {
 
             valid = false;
-            context.addFederalWarning("report.year", "report.year.min");
+            context.addFederalWarning("report.year", "report.year.min", "" + (Calendar.getInstance().get(Calendar.YEAR) - 1));
         }
 
         if (Strings.emptyToNull(report.getAgencyCode()) == null) {

@@ -14,7 +14,8 @@
                             (click)="validateReport()">
                         Run Quality Checks
                     </button>
-                    <button *ngIf="showCertify" id="certifyAndSubmit"
+                    <button *ngIf="(facilitySite.emissionsReport.validationStatus=='PASSED'|| facilitySite.emissionsReport.validationStatus=='PASSED_WARNINGS') && showCertify"
+                            id="certifyAndSubmit"
                             class="btn btn-success btn-md my-3 ml-3">
                         Certify and Submit to SLT
                     </button>
