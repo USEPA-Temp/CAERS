@@ -346,12 +346,17 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     }
 
     /**
-     * Reject the specified reports and move back to in progress
+     * Reject the specified reports. Sets report status to in progress and validation status to unvalidated.
      * @param reportIds
      * @return
      */
     public List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds) {
-        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS);
+    	return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+            .map(report -> {
+            	report.setStatus(ReportStatus.IN_PROGRESS);
+                report.setValidationStatus(ValidationStatus.UNVALIDATED);
+                return this.emissionsReportMapper.toDto(this.erRepo.save(report));
+            }).collect(Collectors.toList());
     }
 
     /**
