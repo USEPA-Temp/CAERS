@@ -475,13 +475,14 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         facility.setEisProgramId(bulkFacility.getEisProgramId());
 
         if (bulkFacility.getNaicsCode() != null) {
-            FacilityNAICSXref naics = new FacilityNAICSXref();
-            naics.setFacilitySite(facility);
-            naics.setNaicsCode(naicsCodeRepo.findById(bulkFacility.getNaicsCode()).orElse(null));
-            naics.setPrimaryFlag(true);
-            facility.getFacilityNAICS().add(naics);
+            naicsCodeRepo.findById(bulkFacility.getNaicsCode()).ifPresent(code -> {
+                FacilityNAICSXref naics = new FacilityNAICSXref();
+                naics.setFacilitySite(facility);
+                naics.setNaicsCode(code);
+                naics.setPrimaryFlag(true);
+                facility.getFacilityNAICS().add(naics);
+            });
         }
-
         if (bulkFacility.getFacilityCategoryCode() != null) {
             facility.setFacilityCategoryCode(facilityCategoryRepo.findById(bulkFacility.getFacilityCategoryCode()).orElse(null));
         }
