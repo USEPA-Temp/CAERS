@@ -351,14 +351,29 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     public List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds) {
-    	return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
-            .map(report -> {
-            	report.setStatus(ReportStatus.IN_PROGRESS);
-                report.setValidationStatus(ValidationStatus.UNVALIDATED);
-                return this.emissionsReportMapper.toDto(this.erRepo.save(report));
-            }).collect(Collectors.toList());
+    	return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED);
     }
 
+    /**
+     * Update the status of the specified reports
+     * @param reportIds
+     * @param status
+     * @param validationStatus
+     * @return
+     */
+    private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status, ValidationStatus validationStatus) {
+
+        return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+            .map(report -> {
+                report.setStatus(status);
+                if(validationStatus != null){
+                	report.setValidationStatus(validationStatus);
+                }
+                return this.emissionsReportMapper.toDto(this.erRepo.save(report));
+            }).collect(Collectors.toList());
+
+    }
+    
     /**
      * Update the status of the specified reports
      * @param reportIds
@@ -366,13 +381,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status) {
-
-        return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
-            .map(report -> {
-                report.setStatus(status);
-                return this.emissionsReportMapper.toDto(this.erRepo.save(report));
-            }).collect(Collectors.toList());
-
+    	return updateEmissionsReportsStatus(reportIds, status, null);
     }
 
     /**
