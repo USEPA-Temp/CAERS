@@ -1,57 +1,63 @@
 package gov.epa.cef.web.service.impl;
 
-import java.net.URL;
-import java.util.List;
-
+import gov.epa.cef.web.client.soap.RegisterFacilityClient;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.service.RegistrationService;
+import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gov.epa.cef.web.client.soap.RegisterFacilityClient;
-import gov.epa.cef.web.config.CefConfig;
-import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.service.RegistrationService;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Service for invoking Register Webservice methods
- * @author tfesperm
  *
+ * @author tfesperm
  */
 @Service("registrationService")
 public class RegistrationServiceImpl implements RegistrationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
-    @Autowired
-    private RegisterFacilityClient registerFacilityClient;
+    private final RegisterFacilityClient registerFacilityClient;
 
+    /**
+     * Instantiates a new Registration service.
+     *
+     * @param registerFacilityClient the register facility client
+     */
     @Autowired
-    private CefConfig cefConfig;
+    RegistrationServiceImpl(RegisterFacilityClient registerFacilityClient) {
+
+        this.registerFacilityClient = registerFacilityClient;
+    }
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.RegisterService#retrieveFacilities(java.lang.Long)
      */
     @Override
     public List<ProgramFacility> retrieveFacilities(Long userRoleId) {
+
         try {
 
-            URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
-            String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),
-                    cefConfig.getCdxConfig().getNaasPassword());
-            List<ProgramFacility> facilities = registerFacilityClient
-                    .getFacilitiesByUserRoleId(registerFacilityServiceUrl, token, userRoleId);
-            if (CollectionUtils.isNotEmpty(facilities)) {              
+            List<ProgramFacility> facilities = registerFacilityClient.getFacilitiesByUserRoleId(userRoleId);
+            if (CollectionUtils.isNotEmpty(facilities)) {
+
                 for (ProgramFacility facility : facilities) {
                     LOGGER.debug("Facility Name: " + facility.getFacilityName());
                 }
             } else {
                 LOGGER.debug("No Facility found for user role: " + userRoleId);
             }
-            return facilities;
+
+            return facilities == null ? Collections.emptyList() : facilities;
+
         } catch (Exception e) {
+
             LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
@@ -62,41 +68,34 @@ public class RegistrationServiceImpl implements RegistrationService {
      */
     @Override
     public ProgramFacility retrieveFacilityByProgramId(String programId) {
+
+        return retrieveFacilityByProgramIds(Collections.singletonList(programId)).stream()
+            .findFirst()
+            .orElse(null);
+    }
+
+    @Override
+    public List<ProgramFacility> retrieveFacilityByProgramIds(List<String> programIds) {
+
         try {
 
-            URL registerFacilityServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
-            String token = authenticate(cefConfig.getCdxConfig().getNaasUser(),
-                    cefConfig.getCdxConfig().getNaasPassword());
-            List<ProgramFacility> facilities = registerFacilityClient
-                    .getFacilityByProgramId(registerFacilityServiceUrl, token, programId);
+            List<ProgramFacility> facilities = this.registerFacilityClient.getFacilityByProgramIds(programIds);
             if (CollectionUtils.isNotEmpty(facilities)) {
+
                 for (ProgramFacility facility : facilities) {
-                    LOGGER.debug("Facility Name: " + facility.getFacilityName());
+                    LOGGER.debug("Facility Name: {}", facility.getFacilityName());
                 }
+
             } else {
-                LOGGER.debug("No Facility found for program : " + programId);
+
+                LOGGER.debug("No Facilities found for program(s) : {}", String.join(", ", programIds));
             }
-            return facilities.stream().findFirst().orElse(null);
+
+            return facilities == null ? Collections.emptyList() : facilities;
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
     }
-
-    /**
-     * Create NAAS token for authenticating into CDX Register services
-     * @param user
-     * @param password
-     * @return
-     */
-    private String authenticate(String user, String password) {
-        try {
-            URL registerServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint());
-            return registerFacilityClient.authenticate(registerServiceUrl, user, password);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw ApplicationException.asApplicationException(e);
-        }
-    }
-
 }

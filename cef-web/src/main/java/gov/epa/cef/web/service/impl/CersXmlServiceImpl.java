@@ -1,20 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
-import org.mapstruct.Mapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
@@ -25,6 +10,7 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.UserService;
@@ -37,6 +23,18 @@ import net.exchangenetwork.schema.cer._1._2.EmissionsUnitDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 import net.exchangenetwork.schema.cer._1._2.ObjectFactory;
 import net.exchangenetwork.schema.cer._1._2.ProcessDataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class CersXmlServiceImpl implements CersXmlService {
@@ -58,7 +56,8 @@ public class CersXmlServiceImpl implements CersXmlService {
     @Override
     public CERSDataType generateCersData(Long reportId) {
 
-        EmissionsReport source = reportRepo.findById(reportId).orElse(null);
+        EmissionsReport source = reportRepo.findById(reportId)
+            .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
 
         CERSDataType cers = cersMapper.fromEmissionsReport(source);
         // TODO: find out if programSystemCode should always be the same at the facilitySite and report level
@@ -68,18 +67,18 @@ public class CersXmlServiceImpl implements CersXmlService {
         }
 
         addProcessControls(source, cers);
-        
+
         cers.setUserIdentifier(userService.getCurrentUser().getEmail());
 
         return cers;
     }
-    
+
 
 	/* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.CersXmlService#retrieveCersXml(java.lang.Long)
      */
     @Override
-    public String retrieveCersXml(Long reportId) {
+    public byte[] retrieveCersXml(Long reportId) {
 
         CERSDataType cers = generateCersData(reportId);
 
@@ -89,23 +88,27 @@ public class CersXmlServiceImpl implements CersXmlService {
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-            StringWriter sw = new StringWriter();
-            jaxbMarshaller.marshal(objectFactory.createCERS(cers), sw);
+            try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 
-            return sw.toString();
-        } catch (JAXBException e) {
+                jaxbMarshaller.marshal(objectFactory.createCERS(cers), os);
+
+                return os.toByteArray();
+            }
+
+        } catch (IOException | JAXBException e) {
+
             LOGGER.error("error while marshalling", e);
             throw ApplicationException.asApplicationException(e);
         }
     }
-    
-    
+
+
 
     /***
      * This method will become obsolete when EIS updates the CERS schema with more robust control reporting
-     * 
-     * Manually add the controls from the EmissionsReport processes to the corresponding CERSDataType process 
-     * 
+     *
+     * Manually add the controls from the EmissionsReport processes to the corresponding CERSDataType process
+     *
      * Multiple control measures per control approach
      * Recursively iterate over the control paths to account for child control paths
      * Remove duplicate control pollutants and duplicate control measures
@@ -117,33 +120,33 @@ public class CersXmlServiceImpl implements CersXmlService {
 
 					//instantiate the control approach
 					ControlApproachDataType ca = new ControlApproachDataType();
-					
+
 					for (ReleasePointAppt rpa : process.getReleasePointAppts()) {
 						if (rpa.getControlPath() != null) {
 							populateControlApproach(rpa.getControlPath(), ca);
 						}
 					}
-					
+
 					addControlToCersProcess(ca, process, cers);
 				}
 			}
 		}
-		
+
 	}
-    
-    
+
+
     /***
      * Recursive method that loops through the control assignments for each control path and child control paths to increment the control approach capture efficiency,
      * increment the control approach effectiveness, and add the control measures to the control approach
      * @param path Control path whose assignments will be iterated
      * @param ca Control Approach that will be updated
      */
-    private void populateControlApproach(ControlPath path, ControlApproachDataType ca) {		
+    private void populateControlApproach(ControlPath path, ControlApproachDataType ca) {
 		for (ControlAssignment assignment : path.getAssignments()) {
 			if (assignment.getControl() != null) {
 				ca.setControlApproachComment(assignment.getControl().getComments());
 				ca.setControlApproachDescription(assignment.getControl().getDescription());
-				
+
 				//add to the capture efficiency and %effectiveness to the control approach
 				if (ca.getPercentControlApproachCaptureEfficiency() == null) {
 					ca.setPercentControlApproachCaptureEfficiency(new BigDecimal(assignment.getControl().getPercentCapture().toString()));
@@ -156,14 +159,14 @@ public class CersXmlServiceImpl implements CersXmlService {
 				} else {
 					ca.setPercentControlApproachEffectiveness(ca.getPercentControlApproachEffectiveness().add(new BigDecimal(assignment.getControl().getPercentControl().toString())));
 				}
-				
+
 				//add a new control measure to the control measure list
 				if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
 					ControlMeasureDataType cm = new ControlMeasureDataType();
 					cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getDescription());
 					ca.getControlMeasure().add(cm);
 				}
-				
+
 				for (ControlPollutant pollutant : assignment.getControl().getPollutants()) {
 					if (!isDuplicateControlPollutant(ca.getControlPollutant(), pollutant)) {
 						ControlPollutantDataType cp = new ControlPollutantDataType();
@@ -177,9 +180,9 @@ public class CersXmlServiceImpl implements CersXmlService {
 				populateControlApproach(assignment.getControlPathChild(), ca);
 			}
 		}
-		
+
     }
-    
+
 
     /***
      * Add the fully hydrated control approach to the appropriate emissions process within the current CERS object hierarchy
@@ -198,8 +201,8 @@ public class CersXmlServiceImpl implements CersXmlService {
 			}
 		}
 	}
-	
-	
+
+
 	/***
 	 * Return true if the control already exists in the controlMeasures list
 	 * @param controlMeasures
@@ -214,8 +217,8 @@ public class CersXmlServiceImpl implements CersXmlService {
 		}
 		return false;
 	}
-	
-	
+
+
 	/***
 	 * Return true if the pollutant already exists in the controlPollutants list
 	 * @param controlPollutants
@@ -247,15 +250,15 @@ public class CersXmlServiceImpl implements CersXmlService {
 		if (sourceProcess.getAircraftEngineTypeCode() != null && !sourceProcess.getAircraftEngineTypeCode().getCode().equals(cersProcess.getAircraftEngineTypeCode())) {
 			return false;
 		}
-		
+
 		if (sourceProcess.getDescription() != null && !sourceProcess.getDescription().equals(cersProcess.getProcessDescription())) {
 			return false;
 		}
-		
+
 		if (sourceProcess.getComments() != null && !sourceProcess.getComments().equals(cersProcess.getProcessComment())) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

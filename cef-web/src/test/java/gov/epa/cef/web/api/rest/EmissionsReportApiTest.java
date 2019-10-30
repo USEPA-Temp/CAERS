@@ -1,5 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import org.junit.Before;
@@ -19,6 +21,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class EmissionsReportApiTest extends BaseApiTest {
+    @Mock
+    private SecurityService securityService;
 
     @Mock
     private EmissionsReportService emissionsReportService;
@@ -37,6 +41,8 @@ public class EmissionsReportApiTest extends BaseApiTest {
         when(emissionsReportService.findById(1L)).thenReturn(emissionsReportDto);
         when(emissionsReportService.findByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDtoList);
         when(emissionsReportService.findMostRecentByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDto);
+
+        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcer());
     }
 
     @Test

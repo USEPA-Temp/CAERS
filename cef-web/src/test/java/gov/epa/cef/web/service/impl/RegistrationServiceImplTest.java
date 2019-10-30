@@ -1,9 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.config.CdxConfig;
-import gov.epa.cef.web.config.CefConfig;
-import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.client.soap.RegisterFacilityClient;
+import gov.epa.cef.web.exception.ApplicationException;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -27,12 +25,6 @@ public class RegistrationServiceImplTest extends BaseServiceTest {
 	@Mock
 	private RegisterFacilityClient registerFacilityClient;
 
-	@Mock
-	private CefConfig cefConfig;
-
-	@Mock
-	private CdxConfig cdxConfig;
-
 	@InjectMocks
 	private RegistrationServiceImpl registrationServiceImpl;
 
@@ -40,18 +32,15 @@ public class RegistrationServiceImplTest extends BaseServiceTest {
 
 	@Before
 	public void init() throws ApplicationException, MalformedURLException {
-		String mockCdxUrl="http:\\mockurl";
-		String mockUser="mock-user";
-		String mockPassword="mock-password";
-		when(cefConfig.getCdxConfig()).thenReturn(cdxConfig);
-		when(cefConfig.getCdxConfig().getRegisterProgramFacilityServiceEndpoint()).thenReturn(mockCdxUrl);
-		when(cefConfig.getCdxConfig().getNaasUser()).thenReturn("mock-user");
-		when(cefConfig.getCdxConfig().getNaasPassword()).thenReturn("mock-password");
-		when(registerFacilityClient.authenticate(new URL(mockCdxUrl), mockUser, mockPassword)).thenReturn("token");
-		when(registerFacilityClient.getFacilitiesByUserRoleId(new URL(mockCdxUrl), "token", 123L)).thenReturn(facilities);
-		when(registerFacilityClient.getFacilitiesByUserRoleId(new URL(mockCdxUrl), "token", 545L)).thenReturn(new ArrayList<>());
-		when(registerFacilityClient.getFacilityByProgramId(new URL(mockCdxUrl), "token", "pId")).thenReturn(new ArrayList<>());
-		when(registerFacilityClient.getFacilityByProgramId(new URL(mockCdxUrl), "token", "pId2")).thenReturn(facilities);
+
+		when(registerFacilityClient.getFacilitiesByUserRoleId(123L)).thenReturn(facilities);
+		when(registerFacilityClient.getFacilitiesByUserRoleId(545L)).thenReturn(new ArrayList<>());
+
+        when(registerFacilityClient.getFacilityByProgramIds(Collections.singletonList("pId")))
+            .thenReturn(new ArrayList<>());
+
+        when(registerFacilityClient.getFacilityByProgramIds(Collections.singletonList("pId2")))
+            .thenReturn(facilities);
 	}
 
 	@Test

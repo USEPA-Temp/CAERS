@@ -1,5 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
 import gov.epa.cef.web.service.EmissionsProcessService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import org.junit.Before;
@@ -24,6 +26,9 @@ public class EmissionsProcessApiTest extends BaseApiTest {
     @Mock
     private EmissionsProcessService processService;
 
+    @Mock
+    private SecurityService securityService;
+
     @InjectMocks
     private EmissionsProcessApi emissionsProcessApi;
 
@@ -43,6 +48,7 @@ public class EmissionsProcessApiTest extends BaseApiTest {
         when(processService.retrieveForReleasePoint(1L)).thenReturn(emissionProcessList);
         when(processService.retrieveForEmissionsUnit(1L)).thenReturn(emissionProcessList);
 
+        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcer());
     }
 
     @Test

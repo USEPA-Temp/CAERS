@@ -1,8 +1,9 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,19 +26,25 @@ public class ControlApiTest extends BaseApiTest {
     @Mock
     private ControlService controlService;
 
+    @Mock
+    private SecurityService securityService;
+
     @InjectMocks
     private ControlApi controlApi;
 
-    private
-    ControlPostOrderDto control = new ControlPostOrderDto();
+    @Mock
+    private FacilityAccessEnforcer facilityAccessEnforcer;
 
-    private
-    List<ControlPostOrderDto> controlList;
+    private ControlPostOrderDto control = new ControlPostOrderDto();
+
+    private List<ControlPostOrderDto> controlList;
 
     @Before
     public void init() {
         control = new ControlPostOrderDto();
         when(controlService.retrieveById(123L)).thenReturn(control);
+
+        when(securityService.facilityEnforcer()).thenReturn(facilityAccessEnforcer);
 
         controlList = new ArrayList<>();
         controlList.add(control);

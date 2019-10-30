@@ -1,7 +1,10 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.Collection;
-
+import gov.epa.cef.web.repository.EmissionsProcessRepository;
+import gov.epa.cef.web.repository.ReportingPeriodRepository;
+import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.ReportingPeriodService;
+import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,18 +13,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.service.ReportingPeriodService;
-import gov.epa.cef.web.service.dto.ReportingPeriodDto;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/reportingPeriod")
 public class ReportingPeriodApi {
 
+    private final ReportingPeriodService reportingPeriodService;
+
+    private final SecurityService securityService;
+
     @Autowired
-    private ReportingPeriodService reportingPeriodService;
+    ReportingPeriodApi(SecurityService securityService,
+                              ReportingPeriodService reportingPeriodService) {
+
+        this.reportingPeriodService = reportingPeriodService;
+        this.securityService = securityService;
+    }
 
     /**
      * Update an reporting period
@@ -30,12 +41,14 @@ public class ReportingPeriodApi {
      * @return
      */
     @PutMapping(value = "/{id}")
-    @ResponseBody
-    public ResponseEntity<ReportingPeriodDto> updateReportingPeriod(@PathVariable Long id, @RequestBody ReportingPeriodDto dto) {
+    public ResponseEntity<ReportingPeriodDto> updateReportingPeriod(
+        @NotNull @PathVariable Long id, @NotNull @RequestBody ReportingPeriodDto dto) {
 
-        ReportingPeriodDto result = reportingPeriodService.update(dto);
+        this.securityService.facilityEnforcer().enforceEntity(id, ReportingPeriodRepository.class);
 
-        return new ResponseEntity<ReportingPeriodDto>(result, HttpStatus.OK);
+        ReportingPeriodDto result = reportingPeriodService.update(dto.withId(id));
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -44,23 +57,28 @@ public class ReportingPeriodApi {
      * @return
      */
     @GetMapping(value = "/{periodId}")
-    @ResponseBody
-    public ResponseEntity<ReportingPeriodDto> retrieveReportingPeriod(@PathVariable Long periodId) {
+    public ResponseEntity<ReportingPeriodDto> retrieveReportingPeriod(@NotNull @PathVariable Long periodId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(periodId, ReportingPeriodRepository.class);
 
         ReportingPeriodDto result = reportingPeriodService.retrieveById(periodId);
-        return new ResponseEntity<ReportingPeriodDto>(result, HttpStatus.OK);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
- 
+
     /**
      * Retrieve Reporting Periods for an emissions process
      * @param processId
      * @return
      */
     @GetMapping(value = "/process/{processId}")
-    @ResponseBody
-    public ResponseEntity<Collection<ReportingPeriodDto>> retrieveReportingPeriodsForProcess(@PathVariable Long processId) {
+    public ResponseEntity<Collection<ReportingPeriodDto>> retrieveReportingPeriodsForProcess(
+        @NotNull @PathVariable Long processId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(processId, EmissionsProcessRepository.class);
 
         Collection<ReportingPeriodDto> result = reportingPeriodService.retrieveForEmissionsProcess(processId);
-        return new ResponseEntity<Collection<ReportingPeriodDto>>(result, HttpStatus.OK);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

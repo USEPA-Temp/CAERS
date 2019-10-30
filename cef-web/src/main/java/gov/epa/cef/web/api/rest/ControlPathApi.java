@@ -1,36 +1,50 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.List;
-
+import gov.epa.cef.web.repository.ControlPathRepository;
+import gov.epa.cef.web.repository.EmissionsProcessRepository;
+import gov.epa.cef.web.repository.EmissionsUnitRepository;
+import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.ControlPathService;
+import gov.epa.cef.web.service.dto.ControlPathDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.service.ControlPathService;
-import gov.epa.cef.web.service.dto.ControlPathDto;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/controlPath")
 public class ControlPathApi {
 
+    private final ControlPathService controlPathService;
+
+    private final SecurityService securityService;
+
     @Autowired
-    private ControlPathService controlPathService;
+    ControlPathApi(SecurityService securityService, ControlPathService controlPathService) {
+
+        this.securityService = securityService;
+        this.controlPathService = controlPathService;
+    }
 
     /**
      * Retrieve a control path by id
-     * @param controlAssignmentId
+     * @param controlPathId
      * @return
      */
     @GetMapping(value = "/{controlPathId}")
-    @ResponseBody
-    public ResponseEntity<ControlPathDto> retrieveAssignmentControl(@PathVariable Long controlPathId) {
+    public ResponseEntity<ControlPathDto> retrieveAssignmentControl(@NotNull @PathVariable Long controlPathId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(controlPathId, ControlPathRepository.class);
 
     	ControlPathDto result = controlPathService.retrieveById(controlPathId);
+
         return new ResponseEntity<ControlPathDto>(result, HttpStatus.OK);
     }
 
@@ -40,11 +54,14 @@ public class ControlPathApi {
      * @return
      */
     @GetMapping(value = "/process/{processId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForEmissionsProcess(@PathVariable Long processId) {
+    public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForEmissionsProcess(
+        @NotNull @PathVariable Long processId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(processId, EmissionsProcessRepository.class);
 
         List<ControlPathDto> result = controlPathService.retrieveForEmissionsProcess(processId);
-        return new ResponseEntity<List<ControlPathDto>>(result, HttpStatus.OK);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -53,11 +70,15 @@ public class ControlPathApi {
      * @return
      */
     @GetMapping(value = "/unit/{unitId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForEmissionsUnit(@PathVariable Long unitId) {
+    @PreAuthorize("hasPermission(#unitId, 'EmissionsUnitRepository', null)")
+    public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForEmissionsUnit(
+        @NotNull @PathVariable Long unitId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(unitId, EmissionsUnitRepository.class);
 
         List<ControlPathDto> result = controlPathService.retrieveForEmissionsUnit(unitId);
-        return new ResponseEntity<List<ControlPathDto>>(result, HttpStatus.OK);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -66,10 +87,12 @@ public class ControlPathApi {
      * @return
      */
     @GetMapping(value = "/releasePoint/{pointId}")
-    @ResponseBody
-    public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForReleasePoint(@PathVariable Long pointId) {
+    @PreAuthorize("hasPermission(#unitId, 'ReleasePointRepository', null)")
+    public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForReleasePoint(
+        @NotNull @PathVariable Long pointId) {
 
         List<ControlPathDto> result = controlPathService.retrieveForReleasePoint(pointId);
-        return new ResponseEntity<List<ControlPathDto>>(result, HttpStatus.OK);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

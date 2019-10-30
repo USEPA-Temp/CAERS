@@ -3,9 +3,6 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import gov.epa.cef.web.service.dto.CodeLookupDto;
-import gov.epa.cef.web.service.dto.ControlPollutantDto;
-
 public class ControlDto implements Serializable {
 
     private static final long serialVersionUID = 1L;

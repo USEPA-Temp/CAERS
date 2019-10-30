@@ -1,15 +1,6 @@
 package gov.epa.cef.web.config;
 
-import static java.net.URLDecoder.decode;
-
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-
+import gov.epa.cef.web.security.SessionDestroyedListenerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.WebServerFactory;
@@ -18,6 +9,15 @@ import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+
+import static java.net.URLDecoder.decode;
+
 /**
  * Configuration of web application with Servlet 3.0 APIs.
  */
@@ -25,10 +25,11 @@ import org.springframework.context.annotation.Configuration;
 public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfigurer.class);
-    
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         //
+        servletContext.addListener(new SessionDestroyedListenerImpl());
     }
 
     /**
@@ -36,9 +37,9 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
      */
     @Override
     public void customize(WebServerFactory server) {
+
         // When running in an IDE or with ./mvnw spring-boot:run, set location of the static web assets.
         setLocationForStaticAssets(server);
-
     }
 
     private void setLocationForStaticAssets(WebServerFactory server) {

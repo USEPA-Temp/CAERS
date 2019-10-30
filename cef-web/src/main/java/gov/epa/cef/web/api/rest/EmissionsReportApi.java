@@ -1,12 +1,18 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.security.AppRole;
+import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.EmissionsReportValidationService;
+import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EntityRefDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import gov.epa.cef.web.service.validation.ValidationResult;
+import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.service.EmissionsReportService;
-import gov.epa.cef.web.service.EmissionsReportValidationService;
-import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import gov.epa.cef.web.service.dto.EntityRefDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
-import gov.epa.cef.web.service.validation.ValidationResult;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import javax.annotation.security.RolesAllowed;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
@@ -43,10 +44,14 @@ public class EmissionsReportApi {
 
     private final EmissionsReportValidationService validationService;
 
+    private final SecurityService securityService;
+
     @Autowired
-    EmissionsReportApi(EmissionsReportService emissionsReportService,
+    EmissionsReportApi(SecurityService securityService,
+                       EmissionsReportService emissionsReportService,
                        EmissionsReportValidationService validationService) {
 
+        this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
         this.validationService = validationService;
     }
@@ -61,8 +66,12 @@ public class EmissionsReportApi {
     @PostMapping(value = "/facility/{facilityEisProgramId}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmissionsReportDto> create(@PathVariable String facilityEisProgramId,
+    public ResponseEntity<EmissionsReportDto> create(@NotNull @PathVariable String facilityEisProgramId,
                                                      @NotNull @RequestBody EmissionsReportStarterDto reportDto) {
+
+        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
+
+        reportDto.setEisProgramId(facilityEisProgramId);
 
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
@@ -100,6 +109,8 @@ public class EmissionsReportApi {
     @PostMapping(value = "/accept")
     public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody List<Long> reportIds) {
 
+        this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
+
         List<EmissionsReportDto> result = emissionsReportService.acceptEmissionsReports(reportIds);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -113,6 +124,8 @@ public class EmissionsReportApi {
     @PostMapping(value = "/reject")
     public ResponseEntity<List<EmissionsReportDto>> rejectReports(@NotNull @RequestBody List<Long> reportIds) {
 
+        this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
+
         List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reportIds);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -125,7 +138,10 @@ public class EmissionsReportApi {
      * @return
      */
     @GetMapping(value = "/facility/{facilityEisProgramId}/current")
-    public ResponseEntity<EmissionsReportDto> retrieveCurrentReportForFacility(@PathVariable String facilityEisProgramId) {
+    public ResponseEntity<EmissionsReportDto> retrieveCurrentReportForFacility(
+        @NotNull @PathVariable String facilityEisProgramId) {
+
+        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
 
         EmissionsReportDto result = emissionsReportService.findMostRecentByFacilityEisProgramId(facilityEisProgramId);
 
@@ -141,6 +157,8 @@ public class EmissionsReportApi {
     @GetMapping(value = "/{reportId}")
     public ResponseEntity<EmissionsReportDto> retrieveReport(@NotNull @PathVariable Long reportId) {
 
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
         EmissionsReportDto result = emissionsReportService.findById(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -151,8 +169,11 @@ public class EmissionsReportApi {
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ValidationResult> validateReport(@NotNull @RequestBody EntityRefDto entityRefDto) {
 
+        this.securityService.facilityEnforcer()
+            .enforceEntity(entityRefDto.requireNonNullId(), EmissionsReportRepository.class);
+
         ValidationResult result =
-            this.validationService.validateAndUpdateStatus(entityRefDto.requireNonNull());
+            this.validationService.validateAndUpdateStatus(entityRefDto.getId());
 
         return ResponseEntity.ok()
             .cacheControl(CacheControl.noCache().sMaxAge(0, TimeUnit.SECONDS).mustRevalidate())
@@ -167,9 +188,13 @@ public class EmissionsReportApi {
      * @return
      */
     @GetMapping(value = "/facility/{facilityEisProgramId}")
-    public ResponseEntity<List<EmissionsReportDto>> retrieveReportsForFacility(@PathVariable String facilityEisProgramId) {
+    public ResponseEntity<List<EmissionsReportDto>> retrieveReportsForFacility(
+        @NotNull @PathVariable String facilityEisProgramId) {
 
-        List<EmissionsReportDto> result = emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId, true);
+        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
+
+        List<EmissionsReportDto> result =
+            emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId, true);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -182,17 +207,21 @@ public class EmissionsReportApi {
      * @return
      */
     @GetMapping(value = "/submitToCromerr")
-    public ResponseEntity<String> submitToCromerr(@RequestParam String activityId, @RequestParam Long reportId) {
+    @RolesAllowed(AppRole.ROLE_CERTIFIER)
+    public ResponseEntity<String> submitToCromerr(
+        @NotBlank @RequestParam String activityId, @NotNull @RequestParam Long reportId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
         String documentId = emissionsReportService.submitToCromerr(reportId, activityId);
 
-        return new ResponseEntity<String>(documentId, HttpStatus.OK);
+        return new ResponseEntity<>(documentId, HttpStatus.OK);
     }
 
 
     /**
      * Inserts a new emissions report, facility, sub-facility components, and emissions based on a JSON input string
-     * 
+     *
      * @param reportUpload
      * @return
      */

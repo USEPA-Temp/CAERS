@@ -1,9 +1,9 @@
 package gov.epa.cef.web.service;
 
-import java.util.List;
-
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
+
+import java.util.List;
 
 public interface EmissionsProcessService {
 
@@ -12,18 +12,18 @@ public interface EmissionsProcessService {
      * @param dto
      * @return
      */
-    public EmissionsProcessDto create(EmissionsProcessSaveDto dto);
+    EmissionsProcessDto create(EmissionsProcessSaveDto dto);
 
     /**
      * Update an Emissions Process
      * @param dto
      * @return
      */
-    public EmissionsProcessDto update(EmissionsProcessSaveDto dto);
+    EmissionsProcessDto update(EmissionsProcessSaveDto dto);
 
     /**
      * Retrieve Emissions Process by its id
-     * @param id 
+     * @param id
      * @return
      */
     EmissionsProcessDto retrieveById(Long id);
@@ -37,15 +37,15 @@ public interface EmissionsProcessService {
 
     /**
      * Retrieve Emissions Processes for an Emissions Unit
-     * @param emissionsUnitid
+     * @param emissionsUnitId
      * @return
      */
     List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId);
-    
+
     /**
      * Delete an Emissions Process for a given id
      * @param id
      */
-    public void delete(Long id);
+    void delete(Long id);
 
 }

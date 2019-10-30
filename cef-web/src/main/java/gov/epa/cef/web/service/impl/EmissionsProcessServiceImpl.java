@@ -1,10 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.service.EmissionsProcessService;
@@ -12,6 +7,10 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 import gov.epa.cef.web.service.mapper.EmissionsProcessMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EmissionsProcessServiceImpl implements EmissionsProcessService {
@@ -94,14 +93,14 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
     /**
      * Retrieve Emissions Processes for an Emissions Unit
-     * @param emissionsUnitid
+     * @param emissionsUnitId
      * @return
      */
     public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId) {
         List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
-    
+
     /**
      * Delete an Emissions Process for a given id
      * @param id

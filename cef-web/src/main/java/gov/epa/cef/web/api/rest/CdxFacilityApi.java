@@ -1,19 +1,18 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.Collection;
-
+import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.RegistrationService;
+import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.security.ApplicationSecurityUtils;
-import gov.epa.cef.web.service.RegistrationService;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 /**
  * API for retrieving facility information managed by CDX.
@@ -24,11 +23,16 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 @RequestMapping("/api/facility/cdx")
 public class CdxFacilityApi {
 
-    @Autowired
-    private RegistrationService registrationService;
+    private final RegistrationService registrationService;
+
+    private final SecurityService securityService;
 
     @Autowired
-    private ApplicationSecurityUtils applicationSecurityUtils;
+    CdxFacilityApi(SecurityService securityService, RegistrationService registrationService) {
+
+        this.registrationService = registrationService;
+        this.securityService = securityService;
+    }
 
     /**
      * Retrieve a facility by program ID
@@ -36,26 +40,13 @@ public class CdxFacilityApi {
      * @return
      */
     @GetMapping(value = "/{programId}")
-    @ResponseBody
-    public ResponseEntity<ProgramFacility> retrieveFacility(@PathVariable String programId) {
+    public ResponseEntity<ProgramFacility> retrieveFacility(@NotNull @PathVariable String programId) {
+
+        this.securityService.facilityEnforcer().enforceProgramId(programId);
 
         ProgramFacility result = registrationService.retrieveFacilityByProgramId(programId);
 
-        return new ResponseEntity<ProgramFacility>(result, HttpStatus.OK);
-    }
-
-    /**
-     * Retrieve the specified user's facilities.
-     * @param userRoleId
-     * @return
-     */
-    @GetMapping(value = "/user/{userRoleId}")
-    @ResponseBody
-    public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForUser(@PathVariable Long userRoleId) {
-
-        Collection<ProgramFacility> result = registrationService.retrieveFacilities(userRoleId);
-
-        return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -64,12 +55,11 @@ public class CdxFacilityApi {
      * @return
      */
     @GetMapping(value = "/user/my")
-    @ResponseBody
     public ResponseEntity<Collection<ProgramFacility>> retrieveFacilitiesForCurrentUser() {
 
-        Collection<ProgramFacility> result = registrationService.retrieveFacilities(applicationSecurityUtils.getCurrentApplicationUser().getUserRoleId());
+        Collection<ProgramFacility> result = this.registrationService.retrieveFacilities(
+            this.securityService.getCurrentApplicationUser().getUserRoleId());
 
-        return new ResponseEntity<Collection<ProgramFacility>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }

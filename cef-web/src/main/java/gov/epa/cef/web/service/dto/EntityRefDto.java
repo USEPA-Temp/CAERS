@@ -16,7 +16,7 @@ public class EntityRefDto {
         this.id = id;
     }
 
-    public long requireNonNull() {
+    public long requireNonNullId() {
 
         return Objects.requireNonNull(this.id);
     }

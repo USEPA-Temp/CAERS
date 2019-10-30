@@ -1,26 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import javax.activation.DataHandler;
-
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
@@ -50,20 +29,42 @@ import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.service.CersXmlService;
-import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.activation.DataHandler;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
-    
-    Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
 
     // TODO: Remove hard coded value
     // https://alm.cgifederal.com/projects/browse/CEF-319
@@ -104,7 +105,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private CefConfig cefConfig;
-    
+
     @Autowired
     private SLTConfigHelper sltConfigHelper;
 
@@ -116,7 +117,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private FacilitySiteService facilitySiteService;
-    
+
     @Autowired
     private NotificationService notificationService;
 
@@ -176,27 +177,29 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 EmissionsReport emissionsReport=emissionsReportOptional.get();
                 URL signatureServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterSignServiceEndpoint());
                 String signatureToken = signatureServiceClient.authenticate(signatureServiceUrl, cefConfig.getCdxConfig().getNaasUser(), cefConfig.getCdxConfig().getNaasPassword());
-                String xmlData=cersXmlService.retrieveCersXml(emissionsReportId);
+                byte[] xmlData=cersXmlService.retrieveCersXml(emissionsReportId);
                 SignatureDocumentType sigDoc = new SignatureDocumentType();
                 sigDoc.setName("emissionsReport.xml");
                 sigDoc.setFormat(SignatureDocumentFormatType.XML);
                 tmp = File.createTempFile("Attachment", ".xml");
-                FileUtils.writeStringToFile(tmp, xmlData, StandardCharsets.UTF_8);
+                try (InputStream is = new ByteArrayInputStream(xmlData)) {
+                    Files.copy(is, tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
                 sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
-                cromerrDocumentId = signatureServiceClient.sign(signatureServiceUrl, signatureToken,
-                        activityId, sigDoc);
+                cromerrDocumentId =
+                    signatureServiceClient.sign(signatureServiceUrl, signatureToken, activityId, sigDoc);
                 emissionsReport.setStatus(ReportStatus.SUBMITTED);
                 emissionsReport.setCromerrActivityId(activityId);
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
                 erRepo.save(emissionsReport);
-                
+
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getAgencyCode());
 
                 //send an email notification to the SLT's predefined address that a report has been submitted
                 notificationService.sentReportSubmittedNotification(sltConfig.getSltEmail(),
-                        cefConfig.getDefaultEmailAddress(), 
-                        emissionsReport.getFacilitySites().get(0).getName(), 
-                        emissionsReport.getYear().toString());               
+                        cefConfig.getDefaultEmailAddress(),
+                        emissionsReport.getFacilitySites().get(0).getName(),
+                        emissionsReport.getYear().toString());
             }
             return cromerrDocumentId;
         }catch(Exception e) {
@@ -394,7 +397,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	private void addCurrentYear(List<EmissionsReport> emissionReports, String facilityEisProgramId) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        
+
         //note: current reporting year is always the previous calendar year - like taxes.
         //e.g. in 2020, facilities will be creating a 2019 report.
         calendar.add(Calendar.YEAR, -1);

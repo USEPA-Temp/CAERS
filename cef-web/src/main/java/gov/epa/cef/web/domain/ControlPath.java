@@ -1,7 +1,6 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,8 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import gov.epa.cef.web.domain.common.BaseAuditEntity;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "control_path")
@@ -32,17 +31,17 @@ public class ControlPath extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlPath")
     private Set<ReleasePointAppt> releasePointAppts;
-    
-    
+
+
     /**
      * Default constructor
      */
     public ControlPath() {}
-    
-    
+
+
     /**
      * Copy constructor
      * @param originalControlPath
@@ -62,8 +61,8 @@ public class ControlPath extends BaseAuditEntity {
         		}
         	}
         	ControlPath cpc = null;
-        	//if the original control assignment has a child control path, then loop through the 
-        	//control paths associated with the new facility, find the appropriate one, and 
+        	//if the original control assignment has a child control path, then loop through the
+        	//control paths associated with the new facility, find the appropriate one, and
         	//associate it to this control assignment - otherwise leave child path as null
         	if (originalControlAssignment.getControlPathChild() != null) {
             	for(ControlPath newControlPathChild : this.facilitySite.getControlPaths()) {
@@ -71,7 +70,7 @@ public class ControlPath extends BaseAuditEntity {
             			cpc = newControlPathChild;
             			break;
             		}
-            	}            
+            	}
         	}
         	this.assignments.add(new ControlAssignment(this, c, cpc, originalControlAssignment));
         }
@@ -100,7 +99,7 @@ public class ControlPath extends BaseAuditEntity {
     public void setChildAssignments(Set<ControlAssignment> childAssignments) {
         this.childAssignments = childAssignments;
     }
-    
+
     public FacilitySite getFacilitySite() {
         return facilitySite;
     }
@@ -116,14 +115,14 @@ public class ControlPath extends BaseAuditEntity {
     public void setReleasePointAppts(Set<ReleasePointAppt> releasePointAppts) {
         this.releasePointAppts = releasePointAppts;
     }
-    
-    
+
+
     /***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */
     public void clearId() {
     	this.id = null;
-    	
+
     	//clear the ids for the child control assignments
         for (ControlAssignment controlAssignment : this.assignments) {
             controlAssignment.clearId();

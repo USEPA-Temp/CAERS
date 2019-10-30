@@ -27,7 +27,9 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 @SqlGroup(value = {@Sql("classpath:db/test/controlRepositoryITCase-1.sql")})
-@ContextConfiguration(initializers = {CommonInitializers.NoCacheInitializer.class})
+@ContextConfiguration(initializers = {
+    CommonInitializers.NoCacheInitializer.class
+})
 public class ControlRepositoryTest extends BaseRepositoryTest {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -42,6 +44,8 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
 
     @Before
     public void _onJunitBeginTest() {
+
+        runWithMockUser();
 
         this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
     }
@@ -113,7 +117,7 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
         ControlMeasureCode controlMeasureCode = new ControlMeasureCode();
         controlMeasureCode.setCode("1");
         controlMeasureCode.setDescription("Control measure code description");
-        
+
         Control control = new Control();
         control.setComments("I got something to say - It's better to burn out than to fade away.");
         control.setDescription("Totally non-descriptive description.");

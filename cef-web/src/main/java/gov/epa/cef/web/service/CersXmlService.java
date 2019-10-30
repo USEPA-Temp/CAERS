@@ -16,6 +16,6 @@ public interface CersXmlService {
      * @param reportId
      * @return
      */
-    String retrieveCersXml(Long reportId);
+    byte[] retrieveCersXml(Long reportId);
 
 }
