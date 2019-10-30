@@ -27,7 +27,7 @@
                     
                     <div class="row">
                         <div class="col-sm-6 col-md-2"><strong>Stack Height UoM:</strong></div>
-                        <div class="col-sm-6 col-md-2"><ng-container *ngIf="releasePoint.stackHeightUomCode">{{releasePoint.stackHeightUomCode.description}}</ng-container></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.stackHeightUomCode?.description}}</div>
                         <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate Measure:</strong></div>
                         <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowRate}}</div>
                         <div class="col-sm-6 col-md-2"><strong>Fugitive Line Point 1 Lat:</strong></div>
@@ -45,7 +45,7 @@
                     
                     <div class="row">
                         <div class="col-sm-6 col-md-2"><strong>Stack Diameter UoM:</strong></div>
-                        <div class="col-sm-6 col-md-2"><ng-container *ngIf="releasePoint.stackDiameterUomCode">{{releasePoint.stackDiameterUomCode.description}}</ng-container></div>
+                        <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameterUomCode?.description}}</div>
                         <div class="col-sm-6 col-md-2"><strong>Exit Gas Temperature Measure:</strong></div>
                         <div class="col-sm-6 col-md-2">{{releasePoint.exitGasTemperature}}</div>
                         <div class="col-sm-6 col-md-2"><strong>Fugitive Line Point 2 Lat:</strong></div>
