@@ -6,6 +6,4 @@ import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 
 
 public interface FacilitySourceTypeCodeRepository extends CrudRepository<FacilitySourceTypeCode, String> {
-
-    FacilitySourceTypeCode findByCode(String code);
 }

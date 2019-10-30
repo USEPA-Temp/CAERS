@@ -13,6 +13,4 @@ public interface OperatingStatusCodeRepository extends CrudRepository<OperatingS
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Iterable<OperatingStatusCode> findAll();
-
-    OperatingStatusCode findByCode(String code);
 }

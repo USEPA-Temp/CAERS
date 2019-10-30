@@ -27,6 +27,7 @@ import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -47,6 +48,7 @@ import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
+import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.EmissionsReportService;
@@ -93,6 +95,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private UnitMeasureCodeRepository unitMeasureCodeRepo;
+
+    @Autowired
+    private NaicsCodeRepository naicsCodeRepo;
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
@@ -469,20 +474,29 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
         facility.setEisProgramId(bulkFacility.getEisProgramId());
 
+        if (bulkFacility.getNaicsCode() != null) {
+            naicsCodeRepo.findById(bulkFacility.getNaicsCode()).ifPresent(code -> {
+                FacilityNAICSXref naics = new FacilityNAICSXref();
+                naics.setFacilitySite(facility);
+                naics.setNaicsCode(code);
+                naics.setPrimaryFlag(true);
+                facility.getFacilityNAICS().add(naics);
+            });
+        }
         if (bulkFacility.getFacilityCategoryCode() != null) {
-            facility.setFacilityCategoryCode(facilityCategoryRepo.findByCode(bulkFacility.getFacilityCategoryCode()));
+            facility.setFacilityCategoryCode(facilityCategoryRepo.findById(bulkFacility.getFacilityCategoryCode()).orElse(null));
         }
         if (bulkFacility.getFacilitySourceTypeCode() != null) {
-            facility.setFacilitySourceTypeCode(facilitySourceTypeRepo.findByCode(bulkFacility.getFacilitySourceTypeCode()));
+            facility.setFacilitySourceTypeCode(facilitySourceTypeRepo.findById(bulkFacility.getFacilitySourceTypeCode()).orElse(null));
         }
         if (bulkFacility.getOperatingStatusCode() != null) {
-            facility.setOperatingStatusCode(operatingStatusRepo.findByCode(bulkFacility.getOperatingStatusCode()));
+            facility.setOperatingStatusCode(operatingStatusRepo.findById(bulkFacility.getOperatingStatusCode()).orElse(null));
         }
         if (bulkFacility.getProgramSystemCode() != null) {
-            facility.setProgramSystemCode(programSystemCodeRepo.findByCode(bulkFacility.getProgramSystemCode()));
+            facility.setProgramSystemCode(programSystemCodeRepo.findById(bulkFacility.getProgramSystemCode()).orElse(null));
         }
         if (bulkFacility.getTribalCode() != null) {
-            facility.setTribalCode(tribalCodeRepo.findByCode(bulkFacility.getTribalCode()));
+            facility.setTribalCode(tribalCodeRepo.findById(bulkFacility.getTribalCode()).orElse(null));
         }
 
         return facility;
@@ -512,25 +526,25 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         releasePoint.setComments(bulkReleasePoint.getComments());
 
         if (bulkReleasePoint.getProgramSystemCode() != null) {
-            releasePoint.setProgramSystemCode(programSystemCodeRepo.findByCode(bulkReleasePoint.getProgramSystemCode()));
+            releasePoint.setProgramSystemCode(programSystemCodeRepo.findById(bulkReleasePoint.getProgramSystemCode()).orElse(null));
         }
         if (bulkReleasePoint.getOperatingStatusCode() != null) {
-            releasePoint.setOperatingStatusCode(operatingStatusRepo.findByCode(bulkReleasePoint.getOperatingStatusCode()));
+            releasePoint.setOperatingStatusCode(operatingStatusRepo.findById(bulkReleasePoint.getOperatingStatusCode()).orElse(null));
         }
         if (bulkReleasePoint.getTypeCode() != null) {
-            releasePoint.setTypeCode(releasePointTypeRepo.findByCode(bulkReleasePoint.getTypeCode()));
+            releasePoint.setTypeCode(releasePointTypeRepo.findById(bulkReleasePoint.getTypeCode()).orElse(null));
         }
         if (bulkReleasePoint.getStackHeightUomCode() != null) {
-            releasePoint.setStackHeightUomCode(unitMeasureCodeRepo.findByCode(bulkReleasePoint.getStackHeightUomCode()));
+            releasePoint.setStackHeightUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getStackHeightUomCode()).orElse(null));
         }
         if (bulkReleasePoint.getStackDiameterUomCode() != null) {
-            releasePoint.setStackDiameterUomCode(unitMeasureCodeRepo.findByCode(bulkReleasePoint.getStackDiameterUomCode()));
+            releasePoint.setStackDiameterUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getStackDiameterUomCode()).orElse(null));
         }
         if (bulkReleasePoint.getExitGasVelocityUomCode() != null) {
-            releasePoint.setExitGasVelocityUomCode(unitMeasureCodeRepo.findByCode(bulkReleasePoint.getExitGasVelocityUomCode()));
+            releasePoint.setExitGasVelocityUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getExitGasVelocityUomCode()).orElse(null));
         }
         if (bulkReleasePoint.getExitGasFlowUomCode() != null) {
-            releasePoint.setExitGasFlowUomCode(unitMeasureCodeRepo.findByCode(bulkReleasePoint.getExitGasFlowUomCode()));
+            releasePoint.setExitGasFlowUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getExitGasFlowUomCode()).orElse(null));
         }
 
         return releasePoint;
@@ -552,13 +566,13 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         emissionsUnit.setComments(bulkEmissionsUnit.getComments());
 
         if (bulkEmissionsUnit.getTypeCode() != null) {
-            emissionsUnit.setUnitTypeCode(unitTypeRepo.findByCode(bulkEmissionsUnit.getTypeCode()));
+            emissionsUnit.setUnitTypeCode(unitTypeRepo.findById(bulkEmissionsUnit.getTypeCode()).orElse(null));
         }
         if (bulkEmissionsUnit.getOperatingStatusCodeDescription() != null) {
-            emissionsUnit.setOperatingStatusCode(operatingStatusRepo.findByCode(bulkEmissionsUnit.getOperatingStatusCodeDescription()));
+            emissionsUnit.setOperatingStatusCode(operatingStatusRepo.findById(bulkEmissionsUnit.getOperatingStatusCodeDescription()).orElse(null));
         }
         if (bulkEmissionsUnit.getUnitOfMeasureCode() != null) {
-            emissionsUnit.setUnitOfMeasureCode(unitMeasureCodeRepo.findByCode(bulkEmissionsUnit.getUnitOfMeasureCode()));
+            emissionsUnit.setUnitOfMeasureCode(unitMeasureCodeRepo.findById(bulkEmissionsUnit.getUnitOfMeasureCode()).orElse(null));
         }
 
         return emissionsUnit;
