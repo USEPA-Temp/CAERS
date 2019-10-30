@@ -15,12 +15,18 @@ export class ExternalSccService {
 
   basicSearch(searchTerm: string): Observable<SccCode[]> {
 
-    const criteriaParams = new HttpParams()
+    const criteriaParams1 = new HttpParams()
         .set('facetName[]', 'Code||SCC Level One||SCC Level Two||SCC Level Three||SCC Level Four||Short Name||Sector')
+        .set('facetValue[]', searchTerm)
         .set('facetQualifier[]', 'contains')
         .set('facetMatchType[]', 'all_words')
-        .set('facetValue[]', searchTerm);
 
-    return this.http.jsonp<SccCode[]>(this.baseUrl + '?' + criteriaParams.toString(), 'callback');
+    const criteriaParams2 = new HttpParams()
+        .set('facetName[]', 'Data Category')
+        .set('facetValue[]', 'Point')
+        .set('facetQualifier[]', 'exact')
+        .set('facetMatchType[]', 'whole_phrase');
+
+    return this.http.jsonp<SccCode[]>(this.baseUrl + '?' + criteriaParams1.toString() + '&' + criteriaParams2.toString(), 'callback');
   }
 }
