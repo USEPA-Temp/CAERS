@@ -6,6 +6,4 @@ import gov.epa.cef.web.domain.TribalCode;
 
 
 public interface TribalCodeRepository extends CrudRepository<TribalCode, String> {
-
-    TribalCode findByCode(String code);
 }

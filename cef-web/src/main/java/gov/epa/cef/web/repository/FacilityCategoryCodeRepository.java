@@ -6,6 +6,4 @@ import gov.epa.cef.web.domain.FacilityCategoryCode;
 
 
 public interface FacilityCategoryCodeRepository extends CrudRepository<FacilityCategoryCode, String> {
-
-    FacilityCategoryCode findByCode(String code);
 }
