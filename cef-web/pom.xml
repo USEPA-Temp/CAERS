@@ -950,7 +950,8 @@
                             </webResources>
                             <packagingExcludes>
                                 WEB-INF/classes/logback-test.xml,
-                                WEB-INF/classes/cef-web-config.yml
+                                WEB-INF/classes/cef-web-config.yml,
+                                WEB-INF/classes/cef-web-config-*.yml
                             </packagingExcludes>
                         </configuration>
                     </plugin>
@@ -990,7 +991,9 @@
                             </webResources>
                             <packagingExcludes>
                                 WEB-INF/classes/logback-test.xml,
-                                WEB-INF/classes/cef-web-config.yml
+                                WEB-INF/classes/application-dev.yml,
+                                WEB-INF/classes/cef-web-config.yml,
+                                WEB-INF/classes/cef-web-config-*.yml
                             </packagingExcludes>
                         </configuration>
                     </plugin>

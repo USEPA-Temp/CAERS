@@ -84,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Override
-    @DependsOn("userDetailsService")
+    @DependsOn("userDetailsServiceImpl")
     protected AuthenticationManager authenticationManager() {
 
         List<AuthenticationProvider> providers = new ArrayList<>();

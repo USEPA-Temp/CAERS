@@ -17,11 +17,11 @@ export class UserContextService {
     this.userService.getCurrentUser()
     .subscribe(currentUser => this.user = currentUser);
   }
-  
-  logoutUser(): Observable<any> {
-      return this.userService.initLogout();
+
+  handoffToCdx(whereTo): Observable<any> {
+      return this.userService.initHandoffToCdx(whereTo);
   }
-  
+
   getUser():Observable<User>{
       if(this.user){
           return of(this.user);
