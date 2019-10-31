@@ -109,7 +109,7 @@ public class ValidationResult {
 
     public boolean hasAnyWarnings() {
 
-        return this.hasFederalWarnings() && this.hasStateWarnings();
+        return this.hasFederalWarnings() || this.hasStateWarnings();
     }
 
     public boolean hasFederalWarnings() {

@@ -4,6 +4,8 @@ import {EmissionsReportingService} from "src/app/core/services/emissions-reporti
 import {ActivatedRoute} from "@angular/router";
 import {FacilitySite} from "../../../../shared/models/facility-site";
 import {SharedService} from "../../../../core/services/shared.service";
+import { ValidationStatus } from 'src/app/shared/enums/validation-status.enum';
+
 
 @Component({
   selector: 'app-emissions-report-validation',
@@ -28,18 +30,26 @@ export class EmissionsReportValidationComponent implements OnInit {
       this.validationComplete = false;
 
       this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
-
-          this.sharedService.emitChange(data.facilitySite);
-
+        
           this.emissionsReportingService.validateReport(data.facilitySite.emissionsReport.id)
               .subscribe(validationResult => {
 
                   this.validationResult = validationResult;
-
                   setTimeout(() => {
                     this.validationComplete = true;
+                    if(validationResult['valid']){
+                      if(this.hasWarnings()){
+                        data.facilitySite.emissionsReport.validationStatus = ValidationStatus.PASSED_WARNINGS;
+                      }
+                      else{
+                        data.facilitySite.emissionsReport.validationStatus = ValidationStatus.PASSED;
+                      }
+                     }
+                    else{
+                      data.facilitySite.emissionsReport.validationStatus = ValidationStatus.FAILED;
+                    }
+                    this.sharedService.emitChange(data.facilitySite);
                   }, 5000);
-
               });
       });
   }
