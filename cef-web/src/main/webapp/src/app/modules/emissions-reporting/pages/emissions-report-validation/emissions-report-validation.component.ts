@@ -28,18 +28,26 @@ export class EmissionsReportValidationComponent implements OnInit {
       this.validationComplete = false;
 
       this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
-
-          this.sharedService.emitChange(data.facilitySite);
-
+        
           this.emissionsReportingService.validateReport(data.facilitySite.emissionsReport.id)
               .subscribe(validationResult => {
-
+                
                   this.validationResult = validationResult;
-
                   setTimeout(() => {
                     this.validationComplete = true;
+                    if(validationResult['valid']){
+                      if(this.hasWarnings()){
+                        data.facilitySite.emissionsReport.validationStatus = "PASSED_WARNINGS";
+                      }
+                      else{
+                        data.facilitySite.emissionsReport.validationStatus = "PASSED";
+                      }
+                     }
+                    else{
+                      data.facilitySite.emissionsReport.validationStatus = "FAILED";
+                    }
+                    this.sharedService.emitChange(data.facilitySite);
                   }, 5000);
-
               });
       });
   }
