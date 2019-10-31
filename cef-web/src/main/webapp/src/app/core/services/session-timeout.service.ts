@@ -26,6 +26,7 @@ export class SessionTimeoutService {
 
       this.keepAlivePinged = true;
 
+      // Make a rest call to keep the spring session active
       this.userService.getCurrentUser();
 
       setTimeout(() => {
