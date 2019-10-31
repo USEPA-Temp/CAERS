@@ -26,9 +26,9 @@ export class UserService {
     return this.http.get<UserToken>(url);
   }
 
-  /** Initiate Logout for a user */
-  initLogout(): Observable<any> {
-    const url = 'logout';
+  /** Initiate CDX Handoff for a user */
+  initHandoffToCdx(whereTo): Observable<any> {
+    const url = `J2AHandoff?URL=${whereTo}`;
     return this.http.post(url,'', {responseType: 'text'});
   }
 

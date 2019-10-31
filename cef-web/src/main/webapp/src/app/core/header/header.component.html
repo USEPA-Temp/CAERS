@@ -7,16 +7,9 @@
       <strong>Combined Air Emissions Reporting Form</strong>
     </div>
     <div id="userInfo" *ngIf="userContext.user">
-      {{userContext.user.role}}- {{userContext.user.cdxUserId}} <fa-icon icon="user-circle" size="lg"></fa-icon> <button class="btn btn-link p-1 mb-1" (click)="logout()"><u>Logout</u></button>
+      {{userContext.user.role}}- {{userContext.user.cdxUserId}} <fa-icon icon="user-circle" size="lg"></fa-icon>
+        <a class="btn btn-link p-1 mb-1" href="logout"><u>Logout</u></a>
     </div>
   </div>
-  <form
-    method='POST'
-    [action]='logoutLink'
-    #lform='ngForm'
-    #logoutForm>
-     <input name='ssoToken' type='hidden' [value]='ssoToken'>
-     <input name='returnUrl' type='hidden' [value]='returnUrl'>
-  </form>
 </header>
 

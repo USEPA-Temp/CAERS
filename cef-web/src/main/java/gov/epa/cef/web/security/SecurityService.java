@@ -5,10 +5,10 @@ import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
-import gov.epa.cef.web.security.enforcer.IFacilityAccessEnforcer;
 import gov.epa.cef.web.security.enforcer.ProgramIdRepoLocator;
-import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcerImpl;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
@@ -117,14 +117,14 @@ public class SecurityService {
         }
     }
 
-    public IFacilityAccessEnforcer facilityEnforcer() {
+    public FacilityAccessEnforcer facilityEnforcer() {
 
         if (hasRole(AppRole.RoleType.REVIEWER)) {
 
-            return new ReviewerFacilityAccessEnforcer();
+            return new ReviewerFacilityAccessEnforcerImpl();
         }
 
-        return new FacilityAccessEnforcer(this.programIdRepoLocator, getCurrentUserFacilityProgramIds());
+        return new FacilityAccessEnforcerImpl(this.programIdRepoLocator, getCurrentUserFacilityProgramIds());
     }
 
     public ApplicationUser getCurrentApplicationUser() {

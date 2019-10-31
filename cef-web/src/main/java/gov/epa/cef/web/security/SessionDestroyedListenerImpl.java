@@ -17,7 +17,7 @@ public class SessionDestroyedListenerImpl implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent se) {
 
         // do nothing
-        logger.debug("HttpSession created.");
+        logger.debug("HttpSession {} created.", se.getSession().getId());
     }
 
     @Override
@@ -28,7 +28,7 @@ public class SessionDestroyedListenerImpl implements HttpSessionListener {
 
         if (userRoleId != null) {
 
-            logger.debug("Pulled userRoleId {} from HttpSession.", userRoleId);
+            logger.debug("Pulled userRoleId {} from HttpSession {}.", userRoleId, session.getId());
 
             WebApplicationContext context =
                 WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
@@ -37,8 +37,7 @@ public class SessionDestroyedListenerImpl implements HttpSessionListener {
 
         } else {
 
-            logger.warn("No UserRoleId found in HttpSession. No cache items were evicted.");
+            logger.warn("No UserRoleId found in HttpSession{}. No cache items were evicted.", session.getId());
         }
-
     }
 }

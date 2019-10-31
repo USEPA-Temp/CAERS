@@ -14,9 +14,11 @@ import java.io.IOException;
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final String loginUrl;
 
     public AuthenticationEntryPointImpl(String loginUrl) {
+
         this.loginUrl = loginUrl;
     }
 
@@ -25,10 +27,13 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
         String fetch = request.getHeader("X-Requested-With");
         if (Strings.nullToEmpty(fetch).toLowerCase().endsWith("fetch")) {
+
             this.logger.debug("HTTP Fetch call, sending unauthorized.");
             response.sendError(401);
+
         } else {
-            response.sendRedirect(request.getContextPath().concat(this.loginUrl));
+
+            response.sendRedirect(this.loginUrl);
         }
     }
 }

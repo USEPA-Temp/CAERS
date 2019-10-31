@@ -4,7 +4,7 @@ import gov.epa.cef.web.repository.ProgramIdRetriever;
 
 import java.util.Collection;
 
-public class ReviewerFacilityAccessEnforcer implements IFacilityAccessEnforcer {
+public class ReviewerFacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
 
     @Override
     public <T extends ProgramIdRetriever> void enforceEntities(Collection<Long> ids, Class<T> repositoryClazz) {

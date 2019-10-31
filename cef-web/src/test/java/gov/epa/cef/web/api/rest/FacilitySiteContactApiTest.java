@@ -1,7 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.security.SecurityService;
-import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcerImpl;
 import gov.epa.cef.web.service.FacilitySiteContactService;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class FacilitySiteContactApiTest extends BaseApiTest {
         when(facilitySiteContactService.retrieveById(123L)).thenReturn(facilitySiteContact);
         when(facilitySiteContactService.retrieveForFacilitySite(1L)).thenReturn(facilitySiteContacts);
 
-        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcer());
+        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcerImpl());
     }
 
     @Test

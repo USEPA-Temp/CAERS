@@ -10,7 +10,7 @@ import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.repository.ProgramIdRetriever;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
-import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.enforcer.ProgramIdRepoLocator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -199,11 +199,11 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
         createEnforcer(authorized).enforceProgramIds(badcheck);
     }
 
-    private FacilityAccessEnforcer createEnforcer(Collection<String> programIds) {
+    private FacilityAccessEnforcerImpl createEnforcer(Collection<String> programIds) {
 
         when(this.programIdRepoLocator.getProgramIdRepository(any()))
             .thenReturn(this.programIdRetriever);
 
-        return new FacilityAccessEnforcer(this.programIdRepoLocator, programIds);
+        return new FacilityAccessEnforcerImpl(this.programIdRepoLocator, programIds);
     }
 }

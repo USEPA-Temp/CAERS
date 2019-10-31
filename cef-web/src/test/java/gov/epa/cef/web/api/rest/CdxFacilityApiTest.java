@@ -1,7 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
-import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.RegistrationService;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -37,7 +37,7 @@ public class CdxFacilityApiTest extends BaseApiTest {
     private ApplicationUser appicationUser;
 
     @Mock
-    private FacilityAccessEnforcer facilityAccessEnforcer;
+    private FacilityAccessEnforcerImpl facilityAccessEnforcer;
 
     private ProgramFacility programFacility;
 

@@ -35,7 +35,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
         } else {
 
-            response.sendRedirect(request.getContextPath().concat(this.forwardUrl));
+            response.sendRedirect(this.forwardUrl);
         }
 
     }

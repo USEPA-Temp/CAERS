@@ -877,8 +877,8 @@
                             <fork>true</fork>
                             <addResources>true</addResources>
                             <systemPropertyVariables>
-                                <cdxWebUser.properties>${basedir}/src/test/resources/cdxWebUser/cdxWebUser.properties
-                                </cdxWebUser.properties>
+                                <spring.config.dir>${spring.config.dir}</spring.config.dir>
+                                <cdxWebUser.properties>${basedir}/src/test/resources/cdxWebUser/cdxWebUser.properties</cdxWebUser.properties>
                             </systemPropertyVariables>
                             <!--
                             Enable the line below to have remote debugging of your application on port 5005
@@ -950,7 +950,8 @@
                             </webResources>
                             <packagingExcludes>
                                 WEB-INF/classes/logback-test.xml,
-                                WEB-INF/classes/cef-web-config.yml
+                                WEB-INF/classes/cef-web-config.yml,
+                                WEB-INF/classes/cef-web-config-*.yml
                             </packagingExcludes>
                         </configuration>
                     </plugin>
@@ -990,7 +991,9 @@
                             </webResources>
                             <packagingExcludes>
                                 WEB-INF/classes/logback-test.xml,
-                                WEB-INF/classes/cef-web-config.yml
+                                WEB-INF/classes/application-dev.yml,
+                                WEB-INF/classes/cef-web-config.yml,
+                                WEB-INF/classes/cef-web-config-*.yml
                             </packagingExcludes>
                         </configuration>
                     </plugin>

@@ -55,7 +55,7 @@ public class UserServiceImplTest extends BaseServiceTest {
         when(cefConfig.getCdxConfig().getNaasUser()).thenReturn("naas-user");
         when(cefConfig.getCdxConfig().getNaasPassword()).thenReturn("naas-password");
         when(cefConfig.getCdxConfig().getNaasIp()).thenReturn("127.0.0.1");
-        when(cefConfig.getCdxConfig().getFrsBaseUrl()).thenReturn("http:\\frs-url");
+        when(cefConfig.getCdxConfig().getCdxBaseUrl()).thenReturn("http:\\frs-url");
     }
 
 

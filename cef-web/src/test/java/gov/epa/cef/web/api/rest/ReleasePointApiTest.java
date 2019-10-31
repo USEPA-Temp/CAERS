@@ -1,7 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.security.SecurityService;
-import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcerImpl;
 import gov.epa.cef.web.service.ReleasePointService;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class ReleasePointApiTest extends BaseApiTest {
         when(releasePointService.retrieveById(123L)).thenReturn(releasePointDto);
         when(releasePointService.retrieveByFacilitySiteId(1L)).thenReturn(releasePointDtoList);
 
-        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcer());
+        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcerImpl());
     }
 
     @Test
