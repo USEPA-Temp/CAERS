@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
@@ -33,7 +33,7 @@ public class ControlApiTest extends BaseApiTest {
     private ControlApi controlApi;
 
     @Mock
-    private FacilityAccessEnforcer facilityAccessEnforcer;
+    private FacilityAccessEnforcerImpl facilityAccessEnforcer;
 
     private ControlPostOrderDto control = new ControlPostOrderDto();
 

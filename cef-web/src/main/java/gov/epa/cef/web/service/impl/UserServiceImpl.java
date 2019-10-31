@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
             tokenDto=new TokenDto();
             tokenDto.setToken(token);
             tokenDto.setUserRoleId(userRoleId);
-            tokenDto.setBaseServiceUrl(cefConfig.getCdxConfig().getFrsBaseUrl());
+            tokenDto.setBaseServiceUrl(cefConfig.getCdxConfig().getCdxBaseUrl());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);

@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
@@ -30,7 +30,7 @@ public class FacilitySiteApiTest extends BaseApiTest {
     private SecurityService securityService;
 
     @Mock
-    private FacilityAccessEnforcer facilityAccessEnforcer;
+    private FacilityAccessEnforcerImpl facilityAccessEnforcer;
 
     @InjectMocks
     private FacilitySiteApi facilitySiteApi;

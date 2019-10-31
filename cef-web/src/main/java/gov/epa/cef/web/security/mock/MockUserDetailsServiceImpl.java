@@ -38,7 +38,7 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
 
     private static final Long USER_ROLE_ID = 220632L;
 
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final SecurityService securityService;
 
@@ -57,18 +57,18 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
             File file = new File(cdxWebUserFile);
             if (file.exists()) {
 
-                LOGGER.info("Reading cdxWebUser file for authentication/authorization");
+                logger.info("Reading cdxWebUser file for authentication/authorization");
                 user = readCdxWebUserFile(file);
             } else {
 
-                LOGGER.info("Unable to find cdxWebUserFile: {}", cdxWebUserFile);
+                logger.info("Unable to find cdxWebUserFile: {}", cdxWebUserFile);
             }
         }
 
         if (user == null) {
             try {
 
-                LOGGER.info("Using hard coded user for authentication/authorization");
+                logger.info("Using hard coded user for authentication/authorization");
                 RoleType role = AppRole.RoleType.PREPARER;
 
                 List<GrantedAuthority> roles = this.securityService.createUserRoles(role, USER_ROLE_ID);
@@ -90,10 +90,16 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
                 user.setUserOrganizationId(ORGANIZATION_ID);
 
             } catch (Exception e) {
-                LOGGER.error("unable to load user details: {}", e.getMessage(), e);
+                logger.error("unable to load user details: {}", e.getMessage(), e);
                 throw new AuthenticationServiceException("unable to load user details");
             }
         }
+
+        // detailed logging of the roles from a handoff
+        logger.info("User {} Roles granted: {}", user.getUserId(),
+            user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(", ")));
 
         return user;
     }
@@ -120,7 +126,7 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
 
         } catch (Exception e) {
 
-            LOGGER.error("Unable to load user details from file: {}", e.getMessage(), e);
+            logger.error("Unable to load user details from file: {}", e.getMessage(), e);
             throw new AuthenticationServiceException("unable to load user details");
         }
 

@@ -1,7 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.security.SecurityService;
-import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcerImpl;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import org.junit.Before;
@@ -42,7 +42,7 @@ public class EmissionsReportApiTest extends BaseApiTest {
         when(emissionsReportService.findByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDtoList);
         when(emissionsReportService.findMostRecentByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDto);
 
-        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcer());
+        when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcerImpl());
     }
 
     @Test

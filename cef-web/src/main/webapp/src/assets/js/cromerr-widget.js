@@ -8,8 +8,8 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
 	var jqueryValidate="/ContentFramework/Cromerr/js/jquery.validate.min.js";
 	var jqueryBlockUI="/ContentFramework/Cromerr/js/jquery.blockUI.js";
 	var cromerrJS="/ContentFramework/Cromerr/js/serverWidget.js";
-	var jqueryJS="assets/js/jquery-1.6.4.min.js"
-	
+	var jqueryJS="assets/js/jquery-1.6.4.min.js";
+
 	if(checkIfScriptExists(baseServiceUrl+cromerrJS)){
 		initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId);
 	}else{
@@ -18,8 +18,8 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
 			var fancyboxScript=loadScript(baseServiceUrl+fancyboxJS);
 			fancyboxScript.onload=function(){
 		        var cssLink = document.createElement("link");
-		        cssLink.rel = 'stylesheet';  
-		        cssLink.type = 'text/css'; 
+		        cssLink.rel = 'stylesheet';
+		        cssLink.type = 'text/css';
 		        document.head.prepend(cssLink);
 		        cssLink.href=baseServiceUrl+fancyboxCSS;
 				loadScript(baseServiceUrl+jqueryValidate);
@@ -59,8 +59,8 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
 	        	$.ajax({
 	        		  url: "api/emissionsReport/submitToCromerr",
 	        		  type: "get", //send it through get method
-	        		  data: { 
-	        			activityId: event.activityId, 
+	        		  data: {
+	        			activityId: event.activityId,
 	        		    reportId: emissionsReportId
 	        		  },
 	        		  success: function(response) {

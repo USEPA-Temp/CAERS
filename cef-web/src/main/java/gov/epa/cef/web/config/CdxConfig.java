@@ -30,7 +30,7 @@ public class CdxConfig {
     private String naasIp;
 
     @NotBlank
-    private String frsBaseUrl;
+    private String cdxBaseUrl;
 
     public Map<String, String> getRegisterProgramFacilityEndpointConfiguration() {
         return registerProgramFacilityEndpointConfiguration;
@@ -86,12 +86,12 @@ public class CdxConfig {
         this.naasIp = naasIp;
     }
 
-    public String getFrsBaseUrl() {
-        return frsBaseUrl;
+    public String getCdxBaseUrl() {
+        return cdxBaseUrl;
     }
 
-    public void setFrsBaseUrl(String frsBaseUrl) {
-        this.frsBaseUrl = frsBaseUrl;
+    public void setCdxBaseUrl(String cdxBaseUrl) {
+        this.cdxBaseUrl = cdxBaseUrl;
     }
 
 }
