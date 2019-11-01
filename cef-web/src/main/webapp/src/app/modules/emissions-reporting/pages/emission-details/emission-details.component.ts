@@ -22,6 +22,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionFactorModalComponent } from 'src/app/modules/emissions-reporting/components/emission-factor-modal/emission-factor-modal.component';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-emission-details',
@@ -73,6 +74,7 @@ export class EmissionDetailsComponent implements OnInit {
     private sharedService: SharedService,
     public formUtils: FormUtilsService,
     private modalService: NgbModal,
+    private toastr: ToastrService,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -191,6 +193,7 @@ export class EmissionDetailsComponent implements OnInit {
     if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.reportingPeriod.calculationParameterValue
           && this.emissionForm.get('emissionsFactor').valid) {
       const calculatedValue = this.reportingPeriod.calculationParameterValue * +this.emissionForm.get('emissionsFactor').value;
+      this.toastr.success('','Total emissions successfully calculated',{positionClass: 'toast-top-right'});
       if (calculatedValue) {
         this.calculatedEf = this.emissionForm.get('emissionsFactor').value;
         this.emissionForm.get('totalEmissions').setValue(calculatedValue);
