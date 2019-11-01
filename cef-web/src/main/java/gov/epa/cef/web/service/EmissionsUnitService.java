@@ -19,5 +19,11 @@ public interface EmissionsUnitService {
      * @return
      */
     List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId);
+    
+    /**
+     * Delete an Emissions Unit for a given id
+     * @param unitId
+     */
+    void delete(Long unitId);
 
 }

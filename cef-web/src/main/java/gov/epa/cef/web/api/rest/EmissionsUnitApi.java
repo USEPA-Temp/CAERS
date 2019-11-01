@@ -6,6 +6,7 @@ import gov.epa.cef.web.service.EmissionsUnitService;
 import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,5 +59,18 @@ public class EmissionsUnitApi {
         List<EmissionsUnitDto> emissionsUnits = emissionsUnitService.retrieveEmissionUnitsForFacility(facilitySiteId);
 
         return new ResponseEntity<>(emissionsUnits, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete an emission unit for a given ID
+     * @param unitId
+     * @return
+     */
+    @DeleteMapping(value = "/{unitId}")
+    public void deleteEmissionsUnit(@PathVariable Long unitId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(unitId, EmissionsUnitRepository.class);
+
+        emissionsUnitService.delete(unitId);
     }
 }

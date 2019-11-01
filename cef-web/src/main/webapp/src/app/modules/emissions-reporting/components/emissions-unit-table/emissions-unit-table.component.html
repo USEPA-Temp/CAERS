@@ -7,6 +7,9 @@
       <th scope="col" sortable="unitTypeCodeDescription" (sort)="onSort($event)">Unit Type</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Unit Description</th>
       <th scope="col" sortable="operatingStatusCodeDescription" (sort)="onSort($event)">Operating Status</th>
+      <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
+      </ng-container>
     </tr>
     </thead>
     <tbody>
@@ -15,6 +18,9 @@
       <td>{{item.unitTypeCodeDescription}}</td>
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCodeDescription}}</td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openDeleteModal(item.unitIdentifier, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      </ng-container>
     </tr>
     </tbody>
   </table>
