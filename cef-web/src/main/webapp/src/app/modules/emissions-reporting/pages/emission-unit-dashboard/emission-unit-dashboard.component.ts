@@ -48,6 +48,16 @@ export class EmissionUnitDashboardComponent implements OnInit {
         .subscribe(controlPaths => {
           this.controlPaths = controlPaths;
         });
+
+        // get the control paths again if change is emitted, in case a process has been deleted
+        // and the contols paths have been removed
+        this.sharedService.changeEmitted$
+        .subscribe(() => {
+          this.controlPathService.retrieveForEmissionsUnit(+map.get('unitId'))
+          .subscribe(controlPaths => {
+            this.controlPaths = controlPaths;
+          });
+        } );
     });
     // emits the report info to the sidebar
     this.route.data
