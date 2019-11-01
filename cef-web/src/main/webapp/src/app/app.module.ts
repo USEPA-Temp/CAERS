@@ -27,6 +27,8 @@ import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/componen
 import { BusyModalComponent } from './shared/components/busy-modal/busy-modal.component';
 import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-dialog.component';
 import { RejectSubmissionModalComponent } from './modules/dashboards/components/reject-submission-modal/reject-submission-modal.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { RejectSubmissionModalComponent } from './modules/dashboards/components/
     HttpClientModule,
     HttpClientJsonpModule,
     AppRoutingModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   entryComponents: [
     ReportSummaryModalComponent,
