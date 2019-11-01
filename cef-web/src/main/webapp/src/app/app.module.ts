@@ -29,6 +29,8 @@ import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-
 import { RejectSubmissionModalComponent } from './modules/dashboards/components/reject-submission-modal/reject-submission-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { TimeoutModalComponent } from './shared/components/timeout-modal/timeout-modal.component';
+
 
 @NgModule({
   declarations: [
@@ -47,7 +49,8 @@ import { ToastrModule } from 'ngx-toastr';
     ReportSummaryModalComponent,
     BusyModalComponent,
     DeleteDialogComponent,
-    RejectSubmissionModalComponent
+    RejectSubmissionModalComponent,
+    TimeoutModalComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +70,8 @@ import { ToastrModule } from 'ngx-toastr';
     ReportSummaryModalComponent,
     BusyModalComponent,
     DeleteDialogComponent,
-    RejectSubmissionModalComponent
+    RejectSubmissionModalComponent,
+    TimeoutModalComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
