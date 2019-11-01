@@ -27,6 +27,7 @@ import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/componen
 import { BusyModalComponent } from './shared/components/busy-modal/busy-modal.component';
 import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-dialog.component';
 import { RejectSubmissionModalComponent } from './modules/dashboards/components/reject-submission-modal/reject-submission-modal.component';
+import { TimeoutModalComponent } from './shared/components/timeout-modal/timeout-modal.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { RejectSubmissionModalComponent } from './modules/dashboards/components/
     ReportSummaryModalComponent,
     BusyModalComponent,
     DeleteDialogComponent,
-    RejectSubmissionModalComponent
+    RejectSubmissionModalComponent,
+    TimeoutModalComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +65,8 @@ import { RejectSubmissionModalComponent } from './modules/dashboards/components/
     ReportSummaryModalComponent,
     BusyModalComponent,
     DeleteDialogComponent,
-    RejectSubmissionModalComponent
+    RejectSubmissionModalComponent,
+    TimeoutModalComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
