@@ -4,12 +4,14 @@ import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
@@ -18,6 +20,7 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
@@ -33,6 +36,7 @@ import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
@@ -72,6 +76,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private EmissionsReportRepository erRepo;
+    
+    @Autowired
+    private AircraftEngineTypeCodeRepository aircraftEngineRepo;
 
     @Autowired
     private OperatingStatusCodeRepository operatingStatusRepo;
@@ -102,6 +109,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
+
+    @Autowired
+    private BulkUploadMapper uploadMapper;
 
     @Autowired
     private CefConfig cefConfig;
@@ -326,10 +336,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             }
 
             for (EmissionsUnitBulkUploadDto bulkEmissionsUnit : bulkEmissionsReport.getEmissionsUnits()) {
-                EmissionsUnit emissionsUnit = MapEmissionsUnit(bulkEmissionsUnit);
 
                 if (bulkEmissionsUnit.getFacilitySiteId().equals(bulkFacility.getId())) {
+                    EmissionsUnit emissionsUnit = MapEmissionsUnit(bulkEmissionsUnit);
                     emissionsUnit.setFacilitySite(facility);
+
+                    List<EmissionsProcess> processes = bulkEmissionsReport.getEmissionsProcesses().stream()
+                            .filter(p -> bulkEmissionsUnit.getId().equals(p.getEmissionsUnitId()))
+                            .map(p -> {
+                                EmissionsProcess process = mapEmissionsProcess(p);
+                                process.setEmissionsUnit(emissionsUnit);
+                                return process;
+                            }).collect(Collectors.toList());
+
+                    emissionsUnit.setEmissionsProcesses(processes);
+
                     facility.getEmissionsUnits().add(emissionsUnit);
                 }
             }
@@ -341,6 +362,34 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
 	    EmissionsReport savedReport = erRepo.save(emissionsReport);
 	    return emissionsReportMapper.toDto(savedReport);
+    }
+
+    /**
+     * Testing method for generating upload JSON for a report
+     * @param reportId
+     * @return
+     */
+    public EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId) {
+
+        EmissionsReport report = erRepo.findById(reportId).orElse(null);
+        List<FacilitySite> facilitySites = report.getFacilitySites();
+        List<EmissionsUnit> units = facilitySites.stream()
+                .flatMap(f -> f.getEmissionsUnits().stream())
+                .collect(Collectors.toList());
+        List<EmissionsProcess> processes = units.stream()
+                .flatMap(u -> u.getEmissionsProcesses().stream())
+                .collect(Collectors.toList());
+        List<ReleasePoint> releasePoints = facilitySites.stream()
+                .flatMap(f -> f.getReleasePoints().stream())
+                .collect(Collectors.toList());
+
+        EmissionsReportBulkUploadDto reportDto = uploadMapper.emissionsReportToDto(report);
+        reportDto.setFacilitySites(uploadMapper.facilitySiteToDtoList(facilitySites));
+        reportDto.setEmissionsUnits(uploadMapper.emissionsUnitToDtoList(units));
+        reportDto.setEmissionsProcesses(uploadMapper.emissionsProcessToDtoList(processes));
+        reportDto.setReleasePoints(uploadMapper.releasePointToDtoList(releasePoints));
+
+        return reportDto;
     }
 
 
@@ -593,6 +642,23 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         }
 
         return emissionsUnit;
+    }
+
+    /**
+     * Map an EmissionsProcessBulkUploadDto to an EmissionsProcess domain model
+     */
+    private EmissionsProcess mapEmissionsProcess(EmissionsProcessBulkUploadDto dto) {
+        EmissionsProcess result = uploadMapper.emissionsProcessFromDto(dto);
+
+        if (dto.getAircraftEngineTypeCode() != null) {
+            result.setAircraftEngineTypeCode(aircraftEngineRepo.findById(dto.getAircraftEngineTypeCode()).orElse(null));
+        }
+
+        if (dto.getOperatingStatusCode() != null) {
+            result.setOperatingStatusCode(operatingStatusRepo.findById(dto.getOperatingStatusCode()).orElse(null));
+        }
+
+        return result;
     }
 
 }
