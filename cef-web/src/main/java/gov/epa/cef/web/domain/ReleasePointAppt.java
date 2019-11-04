@@ -33,7 +33,7 @@ public class ReleasePointAppt extends BaseAuditEntity {
     @Column(name = "percent", nullable = false, precision = 4, scale = 1)
     private Double percent;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_path_id", nullable = false)
     private ControlPath controlPath;
 
