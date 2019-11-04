@@ -8,6 +8,7 @@ import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/d
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-emissions-unit-table',
@@ -16,6 +17,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 })
 export class EmissionsUnitTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: EmissionUnit[];
+  readOnlyMode = true;
   baseUrl: string;
 
   constructor(private modalService: NgbModal,
@@ -30,6 +32,12 @@ export class EmissionsUnitTableComponent extends BaseSortableTable implements On
       .subscribe(map => {
         this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.EMISSIONS_UNIT}`;
     });
+
+    this.route.data
+      .subscribe((data: { facilitySite: FacilitySite }) => {
+        this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+
+      });
   }
 
   openDeleteModal(emissionUnitName: string, emissionUnitId: number, facilitySiteId: number) {
