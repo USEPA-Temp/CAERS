@@ -7,6 +7,7 @@ import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-facility-information',
@@ -16,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class FacilityInformationComponent implements OnInit {
   facilitySite: FacilitySite;
   naicsCodes: FacilityNaicsCode[];
+  readOnlyMode = true;
 
   constructor(
     private modalService: NgbModal,
@@ -38,6 +40,8 @@ export class FacilityInformationComponent implements OnInit {
 
       this.naicsCodes = this.facilitySite.facilityNAICS;
       this.naicsCodes.sort((a, b) => a.primaryFlag && !b.primaryFlag ? -1 : !a.primaryFlag && b.primaryFlag ? 1 : 0);
+
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
     });
   }
 
