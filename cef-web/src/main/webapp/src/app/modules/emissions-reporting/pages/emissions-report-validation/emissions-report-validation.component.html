@@ -16,7 +16,7 @@
                 Quality checks were completed successfully with no warnings or errors.
             </div>
 
-            <table class="card  mb-3" *ngIf="validationResult.federalErrors.length > 0 || validationResult.stateErrors.length > 0">
+            <table *ngIf="validationResult.federalErrors.length > 0 || validationResult.stateErrors.length > 0">
             <div class="validation-item-error">
                 <th>
                     <tr class="mb-3" style="font-size:xx-large">Errors</tr>
@@ -34,7 +34,7 @@
             </table>
             
 
-            <table class="card  mb-3" *ngIf="validationResult.federalWarnings.length > 0 || validationResult.stateWarnings.length > 0">
+            <table *ngIf="validationResult.federalWarnings.length > 0 || validationResult.stateWarnings.length > 0">
             <div class="validation-item-warning">
                 <thead>
                     <tr><Strong class="mb-3" style="font-size:xx-large">Warnings</Strong></tr>
