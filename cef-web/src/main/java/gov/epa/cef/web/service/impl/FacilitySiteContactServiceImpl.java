@@ -33,6 +33,10 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
         List<FacilitySiteContact> result = contactRepo.findByFacilitySiteId(facilitySiteId);
         return mapper.toDtoList(result);
     }
+    
+    public void delete(Long id) {
+    	contactRepo.deleteById(id);
+    }
 
 
 }
