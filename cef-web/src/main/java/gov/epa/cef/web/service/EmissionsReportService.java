@@ -87,4 +87,11 @@ public interface EmissionsReportService {
      * @return
      */
     EmissionsReportDto saveBulkEmissionReport(EmissionsReportBulkUploadDto emissionsReport);
+
+    /**
+     * Testing method for generating upload JSON for a report
+     * @param reportId
+     * @return
+     */
+    EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId);
 }

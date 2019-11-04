@@ -67,7 +67,7 @@ public class EmissionsReportValidationServiceImpl implements EmissionsReportVali
 
         this.emissionsReportRepository.findById(reportId).ifPresent(report -> {
 
-            if (result.hasAnyWarnings()) {
+            if (result.hasAnyWarnings() && result.isValid()) {
 
                 report.setValidationStatus(ValidationStatus.PASSED_WARNINGS);
 
