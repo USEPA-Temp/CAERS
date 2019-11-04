@@ -65,12 +65,6 @@ export class FacilityInformationComponent implements OnInit {
         .subscribe(contactServiceResponse => {
           this.facilitySite.contacts = contactServiceResponse;
         });
-
-      // emit the facility data to reflect the updated list of contacts
-      this.route.data
-          .subscribe((data: { facilitySite: FacilitySite }) => {
-          this.sharedService.emitChange(data.facilitySite);
-        });
     });
   }
 }
