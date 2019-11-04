@@ -42,5 +42,13 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
         List<EmissionsUnit> emissionUnits= unitRepo.findByFacilitySiteId(facilitySiteId);
         return emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(emissionUnits);
     }
+    
+    /**
+     * Delete an Emissions Unit for a given id
+     * @param unitId
+     */
+    public void delete(Long unitId) {
+    	unitRepo.deleteById(unitId);
+    }
 
 }

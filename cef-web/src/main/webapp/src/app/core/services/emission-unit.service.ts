@@ -38,4 +38,11 @@ export class EmissionUnitService {
     return this.retrieveForFacility(facilityId).pipe(
             map((items: EmissionUnit[]) => items.map(item => this.emissionsUnitToSideNavPipe.transform(item))));
   }
+
+  /** Delete specified emission unit from the database */
+  delete(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
+  }
+
 }
