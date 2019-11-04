@@ -4,12 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -23,11 +20,6 @@ import gov.epa.cef.web.domain.EmissionsProcess;
     CommonInitializers.NoCacheInitializer.class
 })
 public class EmissionsProcessRepoTest extends BaseRepositoryTest {
-    
-    @Autowired
-    DataSource dataSource;
-
-    NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
     EmissionsProcessRepository processRepo;
@@ -39,8 +31,6 @@ public class EmissionsProcessRepoTest extends BaseRepositoryTest {
     public void _onJunitBeginTest() {
 
         runWithMockUser();
-
-        //this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
     }
     
     /**
