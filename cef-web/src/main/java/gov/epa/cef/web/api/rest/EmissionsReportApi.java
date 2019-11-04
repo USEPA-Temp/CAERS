@@ -233,6 +233,21 @@ public class EmissionsReportApi {
         return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
     }
 
+    /**
+     * Testing method for generating upload JSON for a report
+     * @param reportId
+     * @return
+     */
+    @GetMapping(value = "/export/{reportId}")
+    public ResponseEntity<EmissionsReportBulkUploadDto> exportReport(
+        @NotNull @PathVariable Long reportId) {
+
+        EmissionsReportBulkUploadDto result =
+            emissionsReportService.generateBulkUploadDto(reportId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     static class EmissionsReportStarterDto {
 

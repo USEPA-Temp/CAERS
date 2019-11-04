@@ -23,7 +23,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [ "src/assets/js/frs-widget.js", "src/assets/js/cromerr-widget.js"],
             "es5BrowserSupport": true
