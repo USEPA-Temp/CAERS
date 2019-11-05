@@ -20,8 +20,8 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     private List<ReleasePointBulkUploadDto> releasePoints;
     private List<ReleasePointApptBulkUploadDto> releasePointAppts;
     private List<ReportingPeriodBulkUploadDto> reportingPeriods;
+    private List<OperatingDetailBulkUploadDto> operatingDetails;
     private List<EmissionBulkUploadDto> emissions;
-    
 
     public Long getId() {
         return id;
@@ -114,7 +114,12 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     public List<ReportingPeriodBulkUploadDto> getReportingPeriods() {
         return reportingPeriods;
     }
-    
+    public List<OperatingDetailBulkUploadDto> getOperatingDetails() {
+        return operatingDetails;
+    }
+    public void setOperatingDetails(List<OperatingDetailBulkUploadDto> operatingDetails) {
+        this.operatingDetails = operatingDetails;
+    }
     public void setEmissions(List<EmissionBulkUploadDto> emissions) {
         this.emissions = emissions;
     }
