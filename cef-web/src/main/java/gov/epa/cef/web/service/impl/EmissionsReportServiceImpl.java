@@ -4,28 +4,39 @@ import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.domain.ReportStatus;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
+import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
+import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
+import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
+import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
+import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.TribalCodeRepository;
@@ -61,6 +72,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -76,9 +88,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private EmissionsReportRepository erRepo;
-    
+
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngineRepo;
+
+    @Autowired
+    private CalculationMaterialCodeRepository calcMaterialCodeRepo;
+
+    @Autowired
+    private CalculationMethodCodeRepository calcMethodCodeRepo;
+
+    @Autowired
+    private CalculationParameterTypeCodeRepository calcParamTypeCodeRepo;
 
     @Autowired
     private OperatingStatusCodeRepository operatingStatusRepo;
@@ -93,10 +114,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     private ReleasePointTypeCodeRepository releasePointTypeRepo;
 
     @Autowired
+    private ReportingPeriodCodeRepository reportingPeriodCodeRepo;
+
+    @Autowired
     private UnitTypeCodeRepository unitTypeRepo;
 
     @Autowired
     private ProgramSystemCodeRepository programSystemCodeRepo;
+
+    @Autowired
+    private PollutantRepository pollutantRepo;
 
     @Autowired
     private TribalCodeRepository tribalCodeRepo;
@@ -345,7 +372,40 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                             .filter(p -> bulkEmissionsUnit.getId().equals(p.getEmissionsUnitId()))
                             .map(p -> {
                                 EmissionsProcess process = mapEmissionsProcess(p);
+
+                                Set<ReportingPeriod> periods = bulkEmissionsReport.getReportingPeriods().stream()
+                                        .filter(rp -> p.getId().equals(rp.getEmissionsProcessId()))
+                                        .map(rp -> {
+                                            ReportingPeriod period = mapReportingPeriod(rp);
+
+                                            Set<OperatingDetail> details = bulkEmissionsReport.getOperatingDetails().stream()
+                                                    .filter(od -> rp.getId().equals(od.getReportingPeriodId()))
+                                                    .map(od -> {
+                                                        OperatingDetail detail = mapOperatingDetail(od);
+                                                        detail.setReportingPeriod(period);
+
+                                                        return detail;
+                                                    }).collect(Collectors.toSet());
+
+                                            Set<Emission> emissions = bulkEmissionsReport.getEmissions().stream()
+                                                    .filter(e -> rp.getId().equals(e.getReportingPeriodId()))
+                                                    .map(e -> {
+                                                        Emission emission = mapEmission(e);
+                                                        emission.setReportingPeriod(period);
+
+                                                        return emission;
+                                                    }).collect(Collectors.toSet());
+
+                                            period.setEmissionsProcess(process);
+                                            period.setEmissions(emissions);
+                                            period.setOperatingDetails(details);
+
+                                            return period;
+                                        }).collect(Collectors.toSet());
+
                                 process.setEmissionsUnit(emissionsUnit);
+                                process.setReportingPeriods(periods);
+
                                 return process;
                             }).collect(Collectors.toList());
 
@@ -379,6 +439,15 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         List<EmissionsProcess> processes = units.stream()
                 .flatMap(u -> u.getEmissionsProcesses().stream())
                 .collect(Collectors.toList());
+        List<ReportingPeriod> periods = processes.stream()
+                .flatMap(p -> p.getReportingPeriods().stream())
+                .collect(Collectors.toList());
+        List<OperatingDetail> operatingDetails = periods.stream()
+                .flatMap(p -> p.getOperatingDetails().stream())
+                .collect(Collectors.toList());
+        List<Emission> emissions = periods.stream()
+                .flatMap(p -> p.getEmissions().stream())
+                .collect(Collectors.toList());
         List<ReleasePoint> releasePoints = facilitySites.stream()
                 .flatMap(f -> f.getReleasePoints().stream())
                 .collect(Collectors.toList());
@@ -387,6 +456,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         reportDto.setFacilitySites(uploadMapper.facilitySiteToDtoList(facilitySites));
         reportDto.setEmissionsUnits(uploadMapper.emissionsUnitToDtoList(units));
         reportDto.setEmissionsProcesses(uploadMapper.emissionsProcessToDtoList(processes));
+        reportDto.setReportingPeriods(uploadMapper.reportingPeriodToDtoList(periods));
+        reportDto.setOperatingDetails(uploadMapper.operatingDetailToDtoList(operatingDetails));
+        reportDto.setEmissions(uploadMapper.emissionToDtoList(emissions));
         reportDto.setReleasePoints(uploadMapper.releasePointToDtoList(releasePoints));
 
         return reportDto;
@@ -656,6 +728,65 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         if (dto.getOperatingStatusCode() != null) {
             result.setOperatingStatusCode(operatingStatusRepo.findById(dto.getOperatingStatusCode()).orElse(null));
+        }
+
+        return result;
+    }
+
+    /**
+     * Map an ReportingPeriodBulkUploadDto to an ReportingPeriod domain model
+     */
+    private ReportingPeriod mapReportingPeriod(ReportingPeriodBulkUploadDto dto) {
+        ReportingPeriod result = uploadMapper.reportingPeriodFromDto(dto);
+
+        if(dto.getCalculationMaterialCode() != null) {
+            result.setCalculationMaterialCode(calcMaterialCodeRepo.findById(dto.getCalculationMaterialCode()).orElse(null));
+        }
+        if (dto.getCalculationParameterTypeCode() != null) {
+            result.setCalculationParameterTypeCode(calcParamTypeCodeRepo.findById(dto.getCalculationParameterTypeCode()).orElse(null));
+        }
+        if (dto.getCalculationParameterUom() != null) {
+            result.setCalculationParameterUom(unitMeasureCodeRepo.findById(dto.getCalculationParameterUom()).orElse(null));
+        }
+        if (dto.getEmissionsOperatingTypeCode() != null) {
+            result.setEmissionsOperatingTypeCode(operatingStatusRepo.findById(dto.getEmissionsOperatingTypeCode()).orElse(null));
+        }
+        if (dto.getReportingPeriodTypeCode() != null) {
+            result.setReportingPeriodTypeCode(reportingPeriodCodeRepo.findById(dto.getReportingPeriodTypeCode()).orElse(null));
+        }
+
+        return result;
+    }
+
+    /**
+     * Map an OperatingDetailBulkUploadDto to an OperatingDetail domain model
+     */
+    private OperatingDetail mapOperatingDetail(OperatingDetailBulkUploadDto dto) {
+        OperatingDetail result = uploadMapper.operatingDetailFromDto(dto);
+
+        return result;
+    }
+
+    /**
+     * Map an OperatingDetailBulkUploadDto to an OperatingDetail domain model
+     */
+    private Emission mapEmission(EmissionBulkUploadDto dto) {
+        Emission result = uploadMapper.emissionsFromDto(dto);
+
+        if (dto.getEmissionsCalcMethodCode() != null) {
+            result.setEmissionsCalcMethodCode(calcMethodCodeRepo.findById(dto.getEmissionsCalcMethodCode()).orElse(null));
+        }
+        if (dto.getEmissionsUomCode() != null) {
+            result.setEmissionsUomCode(unitMeasureCodeRepo.findById(dto.getEmissionsUomCode()).orElse(null));
+        }
+        if (dto.getEmissionsNumeratorUom() != null) {
+            result.setEmissionsNumeratorUom(unitMeasureCodeRepo.findById(dto.getEmissionsNumeratorUom()).orElse(null));
+        }
+        if (dto.getEmissionsDenominatorUom() != null) {
+            result.setEmissionsDenominatorUom(unitMeasureCodeRepo.findById(dto.getEmissionsDenominatorUom()).orElse(null));
+        }
+        if (dto.getPollutantCode() != null) {
+            result.setPollutant(pollutantRepo.findById(dto.getPollutantCode()).orElse(null));
         }
 
         return result;
