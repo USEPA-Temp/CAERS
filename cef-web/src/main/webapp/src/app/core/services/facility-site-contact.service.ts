@@ -22,4 +22,10 @@ export class FacilitySiteContactService {
     const url = `${this.baseUrl}/facility/${facilitySiteId}`;
     return this.http.get<FacilitySiteContact[]>(url);
   }
+
+  /** Delete specified contact from the database */
+  delete(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
+  }
 }

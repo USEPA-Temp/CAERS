@@ -7,6 +7,7 @@ import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,5 +62,18 @@ public class FacilitySiteContactApi {
             facilitySiteContactService.retrieveForFacilitySite(facilitySiteId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete a facility site contact by ID
+     * @param contactId
+     * @return
+     */
+    @DeleteMapping(value = "/{contactId}")
+    public void deleteContact(@PathVariable Long contactId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(contactId, FacilitySiteContactRepository.class);
+
+        facilitySiteContactService.delete(contactId);
     }
 }

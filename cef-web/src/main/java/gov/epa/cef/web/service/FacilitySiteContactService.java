@@ -19,5 +19,11 @@ public interface FacilitySiteContactService {
      * @return
      */
     List<FacilitySiteContactDto> retrieveForFacilitySite(Long facilitySiteId);
+    
+    /**
+     * Delete Facility Site Contact by id
+     * @param id
+     */
+    void delete(Long id);
 
 }
