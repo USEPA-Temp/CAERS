@@ -9,6 +9,7 @@ import { SideNavItem } from 'src/app/shared/models/side-nav-item';
 export class SidebarInnerNavComponent implements OnInit {
   @Input() navItems: SideNavItem[];
   @Input() baseUrl = '';
+  @Input() paginate: boolean;
 
   constructor() { }
 
