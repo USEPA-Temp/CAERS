@@ -28,9 +28,9 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
         this.logger.warn("Access Denied", e);
         String fetch = request.getHeader("X-Requested-With");
-        if (Strings.nullToEmpty(fetch).toLowerCase().endsWith("fetch")) {
+        if (Strings.nullToEmpty(fetch).equalsIgnoreCase("XMLHttpRequest")) {
 
-            this.logger.debug("HTTP Fetch call, sending unauthorized.");
+            this.logger.debug("HTTP XMLHttpRequest call, sending unauthorized.");
             response.sendError(401);
 
         } else {
