@@ -1,11 +1,7 @@
-.d-flex.flex-column{
-   display: flex;
-}
-body {
-   min-height:100vh;
+body{
    display: flex;
    flex-direction: column;
 }
-#content{
-   flex-grow:1;
+.d-flex.flex-column {
+   min-height:100vh;
 }

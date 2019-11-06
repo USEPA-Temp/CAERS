@@ -1,7 +1,7 @@
-<div class="d-flex flex-column" (keyup)="keepAlive()" (mouseup)="keepAlive()" 
+<body>
+    <div class="d-flex flex-column" (keyup)="keepAlive()" (mouseup)="keepAlive()" 
                                  (mousemove)="keepAlive()" (touchend)="keepAlive()" 
                                  (touchmove)="keepAlive()">
-    <body>
         <header>
             <app-header></app-header>
             <app-breadcrumb-nav [title]="'Facility Dashboard'"></app-breadcrumb-nav>
@@ -12,5 +12,5 @@
         <footer>
             <app-footer></app-footer>
         </footer>
-    </body>
-</div>
+    </div>
+</body>
