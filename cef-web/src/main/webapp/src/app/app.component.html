@@ -1,14 +1,16 @@
-<body class="d-flex flex-column" (keyup)="keepAlive()" (mouseup)="keepAlive()" 
+<body>
+    <div class="main-view-content d-flex flex-column" (keyup)="keepAlive()" (mouseup)="keepAlive()" 
                                  (mousemove)="keepAlive()" (touchend)="keepAlive()" 
                                  (touchmove)="keepAlive()">
-    <header>
-        <app-header></app-header>
-        <app-breadcrumb-nav [title]="'Facility Dashboard'"></app-breadcrumb-nav>
-    </header>
-    <main class="container-fluid flex-fill">
-        <router-outlet class="m-2 p-3 "></router-outlet>
-    </main>
-    <footer>
-        <app-footer></app-footer>
-    </footer>
+        <header>
+            <app-header></app-header>
+            <app-breadcrumb-nav [title]="'Facility Dashboard'"></app-breadcrumb-nav>
+        </header>
+        <main class="container-fluid flex-fill">
+            <router-outlet class="m-2 p-3 "></router-outlet>
+        </main>
+        <footer>
+            <app-footer></app-footer>
+        </footer>
+    </div>
 </body>
