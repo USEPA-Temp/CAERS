@@ -78,7 +78,7 @@ import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
       {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
-    ],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
