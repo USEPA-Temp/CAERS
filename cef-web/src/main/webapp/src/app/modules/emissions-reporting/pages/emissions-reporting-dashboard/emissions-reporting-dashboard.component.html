@@ -1,10 +1,59 @@
 <div class="card">
 	<div class="card-header text-center">
-        <strong>Emissions Reports</strong>
+		<strong>Emissions Reports</strong>
 	</div>
 	<div class="list-group list-group-flush">
 		<div *ngFor="let report of reports" class="list-group-item">
-			<app-emissions-reporting-list-item [report]="report" [facility]="facility"></app-emissions-reporting-list-item>
+			<div class="d-flex flex-row justify-content-between">
+				<div>{{report.year}} Report</div>
+
+				<div class="pipe-list">
+					<a class="underline-on-hover cursor-pointer text-dark font-weight-bold pipe-item"
+						(click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
+
+					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
+						class="text-dark font-weight-bold pipe-item"
+						*ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
+
+					<a href="#" class="text-dark font-weight-bold pipe-item" *ngIf="report.status === 'IN_PROGRESS'"
+						[routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'validation']">Run Quality Check</a>
+
+					<a href="#" class="text-dark font-weight-bold pipe-item"
+						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify Certifier</a>
+
+					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
+						class="text-dark font-weight-bold pipe-item"
+						*ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
+
+					<a href="#" class="text-dark font-weight-bold pipe-item"
+						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Certifier'">Certify</a>
+
+					<a href="#" class="text-dark font-weight-bold pipe-item"
+						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Certifier'">Return to Preparer</a>
+
+					<a href="#" class="text-dark font-weight-bold pipe-item"
+						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
+
+					<a href="#" class="text-dark font-weight-bold pipe-item" 
+						*ngIf="report.status !== 'NEW'"
+						[routerLink]="['.']" (click)="openDeleteModal(report.eisProgramId, report.id, report.year)">Delete</a>
+				</div>
+				<ng-template #FailedToCreateMessageBox>
+					<div class="modal-header bg-warning">
+						<h4 class="modal-title">Create Emissions Report Error</h4>
+						<button type="button" class="close" aria-label="Close" (click)="onFailedToCreateCloseClick()">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>Unable to create emissions report. No previous report and no FRS data available.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" (click)="onFailedToCreateCloseClick()">OK</button>
+					</div>
+				</ng-template>
+			</div>		
 		</div>
+		
 	</div>
 </div>
