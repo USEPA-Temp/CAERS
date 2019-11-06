@@ -12,6 +12,7 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
@@ -19,6 +20,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 
@@ -124,5 +126,18 @@ public interface BulkUploadMapper {
     ReleasePointBulkUploadDto releasePointToDto(ReleasePoint source);
 
     List<ReleasePointBulkUploadDto> releasePointToDtoList(List<ReleasePoint> source);
+
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="releasePoint", ignore = true)
+    @Mapping(target="emissionsProcess", ignore = true)
+    @Mapping(target="controlPath", ignore = true)
+    ReleasePointAppt releasePointApptFromDto(ReleasePointApptBulkUploadDto source);
+
+    @Mapping(source="releasePoint.id", target="releasePointId")
+    @Mapping(source="emissionsProcess.id", target="emissionProcessId")
+    @Mapping(target="controlPathId", ignore = true)
+    ReleasePointApptBulkUploadDto releasePointApptToDto(ReleasePointAppt source);
+
+    List<ReleasePointApptBulkUploadDto> releasePointApptToDtoList(List<ReleasePointAppt> source);
 
 }
