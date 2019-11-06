@@ -2,6 +2,7 @@ body{
    display: flex;
    flex-direction: column;
 }
-.d-flex.flex-column {
-   min-height:100vh;
+
+.main-view-content.d-flex.flex-column { 
+   min-height: 100vh; 
 }
