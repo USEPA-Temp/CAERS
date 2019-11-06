@@ -94,4 +94,10 @@ public interface EmissionsReportService {
      * @return
      */
     EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId);
+    
+    /**
+     * Delete specified emissions report from database
+     * @param id
+     */
+    void delete(Long id);
 }

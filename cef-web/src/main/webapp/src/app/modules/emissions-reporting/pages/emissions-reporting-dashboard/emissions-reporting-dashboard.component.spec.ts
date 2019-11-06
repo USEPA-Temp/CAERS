@@ -1,9 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EmissionsReportingDashboardComponent } from './emissions-reporting-dashboard.component';
-import { EmissionsReportingListItemComponent } from 'src/app/modules/emissions-reporting/components/emissions-reporting-list-item/emissions-reporting-list-item.component';
 import { HttpClientModule } from '@angular/common/http';
-import { EmissionsReportingListButtonsComponent } from 'src/app/modules/emissions-reporting/components/emissions-reporting-list-buttons/emissions-reporting-list-buttons.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ReportsDashboardComponent', () => {
@@ -23,9 +21,7 @@ describe('ReportsDashboardComponent', () => {
   };
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EmissionsReportingDashboardComponent, 
-                      EmissionsReportingListItemComponent,
-                      EmissionsReportingListButtonsComponent],
+      declarations: [EmissionsReportingDashboardComponent],
       imports: [HttpClientModule, RouterTestingModule]
     })
     .compileComponents();
@@ -34,7 +30,7 @@ describe('ReportsDashboardComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EmissionsReportingDashboardComponent);
     component = fixture.componentInstance;
-    component.facility=facility;
+    component.facility = facility;
     fixture.detectChanges();
   });
 

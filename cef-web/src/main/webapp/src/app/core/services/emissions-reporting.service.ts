@@ -68,10 +68,15 @@ export class EmissionsReportingService {
         });
     }
 
-
     /** POST request to the server to bulk upload an emissions report */
     uploadReport(jsonFileData: string): Observable<EmissionsReport> {
         const url = `${this.baseUrl}/upload`;
         return this.http.post<EmissionsReport>(url, jsonFileData);
+    }
+
+    /** DELETE specified emissions report from database */
+    delete(reportId: number): Observable<{}> {
+        const url = `${this.baseUrl}/${reportId}`;
+        return this.http.delete(url);
     }
 }

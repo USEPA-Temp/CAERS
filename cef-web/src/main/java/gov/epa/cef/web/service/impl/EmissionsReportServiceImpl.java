@@ -391,6 +391,15 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         return reportDto;
     }
+    
+    
+    /**
+     * Delete an emissons report for a given id
+     * @param id
+     */
+    public void delete(Long id) {
+    	erRepo.deleteById(id);
+    }
 
 
     /**

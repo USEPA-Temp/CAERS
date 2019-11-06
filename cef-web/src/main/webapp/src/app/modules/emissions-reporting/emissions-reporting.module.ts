@@ -6,8 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ReportsRoutingModule } from './emissions-reporting-routing.module';
 import { EmissionsReportingDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting-dashboard/emissions-reporting-dashboard.component';
 import { EmissionsReportingComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting/emissions-reporting.component';
-import { EmissionsReportingListItemComponent } from 'src/app/modules/emissions-reporting/components/emissions-reporting-list-item/emissions-reporting-list-item.component';
-import { EmissionsReportingListButtonsComponent } from 'src/app/modules/emissions-reporting/components/emissions-reporting-list-buttons/emissions-reporting-list-buttons.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionUnitDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emission-unit-dashboard/emission-unit-dashboard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -49,8 +47,6 @@ import { EmissionsReportValidationComponent } from './pages/emissions-report-val
   declarations: [
     EmissionsReportingDashboardComponent,
     EmissionsReportingComponent,
-    EmissionsReportingListItemComponent,
-    EmissionsReportingListButtonsComponent,
     EmissionUnitDashboardComponent,
     StepProgressComponent,
     EmissionUnitInfoComponent,

@@ -20,6 +20,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -197,6 +198,19 @@ public class EmissionsReportApi {
             emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId, true);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete a report for given id
+     * @param reportId
+     * @return
+     */
+    @DeleteMapping(value = "/{reportId}")
+    public void deleteReport(@PathVariable Long reportId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
+        emissionsReportService.delete(reportId);
     }
 
     /**
