@@ -1,5 +1,138 @@
 <div class="nav flex-column">
-	<div *ngFor="let navItem of navItems">
-		<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+	<div *ngIf="!paginate">
+		<div *ngFor="let navItem of navItems">
+			<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+		</div>
+	</div>
+	<div *ngIf="paginate">
+		<button type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed25 = !isCollapsed25"
+				[attr.aria-expanded]="!isCollapsed25" aria-controls="target25">
+		1-25
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:0:25">
+			<div id="target25" [ngbCollapse]="isCollapsed25">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+		
+		<button *ngIf="navItems?.length > 25" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed50 = !isCollapsed50"
+				[attr.aria-expanded]="!isCollapsed50" aria-controls="target50">
+			26-50
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:26:50">
+			<div id="target50" [ngbCollapse]="!isCollapsed50">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+
+		<button *ngIf="navItems?.length > 50" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed75 = !isCollapsed75"
+				[attr.aria-expanded]="!isCollapsed75" aria-controls="target75">
+			51-75
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:51:75">
+			<div id="target75" [ngbCollapse]="!isCollapsed75">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+
+		<button *ngIf="navItems?.length > 75" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed100 = !isCollapsed100"
+				[attr.aria-expanded]="!isCollapsed100" aria-controls="target100">
+			76-100
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:76:100">
+			<div id="target100" [ngbCollapse]="!isCollapsed100">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+
+		<button *ngIf="navItems?.length > 100" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed125 = !isCollapsed125"
+				[attr.aria-expanded]="!isCollapsed125" aria-controls="target125">
+			101-125
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:101:125">
+			<div id="target125" [ngbCollapse]="!isCollapsed125">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+		
+		<button *ngIf="navItems?.length > 125" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed150 = !isCollapsed150"
+				[attr.aria-expanded]="!isCollapsed150" aria-controls="target150">
+			126-150
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:126:150">
+			<div id="target150" [ngbCollapse]="!isCollapsed150">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+
+		<button *ngIf="navItems?.length > 150" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed175 = !isCollapsed175"
+				[attr.aria-expanded]="!isCollapsed175" aria-controls="target175">
+			151-175
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:151:175">
+			<div id="target175" [ngbCollapse]="!isCollapsed175">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+
+		<button *ngIf="navItems?.length > 175" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed200 = !isCollapsed200"
+				[attr.aria-expanded]="!isCollapsed200" aria-controls="target200">
+			176-200
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:176:200">
+			<div id="target200" [ngbCollapse]="!isCollapsed200">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+
+		<button *ngIf="navItems?.length > 200" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed225 = !isCollapsed225"
+				[attr.aria-expanded]="!isCollapsed225" aria-controls="target225">
+			201-225
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:201:225">
+			<div id="target225" [ngbCollapse]="!isCollapsed225">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
+
+		<button *ngIf="navItems?.length > 225" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed250 = !isCollapsed250"
+				[attr.aria-expanded]="!isCollapsed250" aria-controls="target250">
+			226-250
+		</button>
+
+		<div *ngFor="let navItem of navItems| slice:226:250">
+			<div id="target250" [ngbCollapse]="!isCollapsed250">
+				<div class="row ml-2">
+					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
