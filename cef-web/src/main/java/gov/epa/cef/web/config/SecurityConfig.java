@@ -49,10 +49,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .accessDeniedHandler(new AccessDeniedHandlerImpl(loginUrl)).and()
             .headers().frameOptions().disable().and()
             .csrf().disable()
+            .cors().configurationSource(cdxConfig.createCorsConfigurationSource()).and()
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()
             .antMatchers("/api/public/**").permitAll()
-            .antMatchers(J2AHandoffUrl).permitAll()
             .antMatchers("/**")
             .hasAnyRole(
                 AppRole.RoleType.PREPARER.roleName(),

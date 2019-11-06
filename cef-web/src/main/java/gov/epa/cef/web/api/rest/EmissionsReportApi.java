@@ -107,6 +107,7 @@ public class EmissionsReportApi {
      * @return
      */
     @PostMapping(value = "/accept")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
     public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody List<Long> reportIds) {
 
         this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
@@ -122,6 +123,7 @@ public class EmissionsReportApi {
      * @return
      */
     @PostMapping(value = "/reject")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
     public ResponseEntity<List<EmissionsReportDto>> rejectReports(@NotNull @RequestBody List<Long> reportIds) {
 
         this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
@@ -228,6 +230,7 @@ public class EmissionsReportApi {
     @PostMapping(value = "/upload",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    // @RolesAllowed(value = {AppRole.ROLE_ADMIN})
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
         EmissionsReportDto savedReport = emissionsReportService.saveBulkEmissionReport(reportUpload);
         return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);

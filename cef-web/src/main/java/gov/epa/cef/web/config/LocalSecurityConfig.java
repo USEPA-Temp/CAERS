@@ -8,6 +8,7 @@ import gov.epa.cef.web.security.mock.MockHandoffFilter;
 import gov.epa.cef.web.security.mock.MockUserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -33,13 +34,17 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
     private static final String LoginRedirectUrl = "/";
 
     @Override
+    @DependsOn("cdxConfig")
     protected void configure(HttpSecurity http) throws Exception {
+
+        CdxConfig cdxConfig = getApplicationContext().getBean(CdxConfig.class);
 
         http.exceptionHandling()
             .authenticationEntryPoint(new AuthenticationEntryPointImpl(LoginRedirectUrl))
             .accessDeniedHandler(new AccessDeniedHandlerImpl(LoginRedirectUrl)).and()
             .headers().frameOptions().disable().and()
             .csrf().disable()
+            .cors().configurationSource(cdxConfig.createCorsConfigurationSource()).and()
             .addFilter(mockCdxPreAuthFilter())
             .authorizeRequests()
             .antMatchers("/**")
