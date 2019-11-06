@@ -12,6 +12,7 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
@@ -19,6 +20,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.domain.ReportStatus;
@@ -70,7 +72,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -352,6 +356,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
             FacilitySite facility = MapFacility(bulkFacility);
+            
+            Map<Long, ReleasePoint> releasePointMap = new HashMap<>();
+            Map<Long, EmissionsProcess> processMap = new HashMap<>();
 
             for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
                 ReleasePoint releasePoint = MapReleasePoint(bulkRp);
@@ -359,6 +366,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 if (bulkRp.getFacilitySiteId().equals(bulkFacility.getId())) {
                     releasePoint.setFacilitySite(facility);
                     facility.getReleasePoints().add(releasePoint);
+                    releasePointMap.put(bulkRp.getId(), releasePoint);
                 }
             }
 
@@ -370,27 +378,27 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
                     List<EmissionsProcess> processes = bulkEmissionsReport.getEmissionsProcesses().stream()
                             .filter(p -> bulkEmissionsUnit.getId().equals(p.getEmissionsUnitId()))
-                            .map(p -> {
-                                EmissionsProcess process = mapEmissionsProcess(p);
+                            .map(bulkProcess -> {
+                                EmissionsProcess process = mapEmissionsProcess(bulkProcess);
 
                                 Set<ReportingPeriod> periods = bulkEmissionsReport.getReportingPeriods().stream()
-                                        .filter(rp -> p.getId().equals(rp.getEmissionsProcessId()))
-                                        .map(rp -> {
-                                            ReportingPeriod period = mapReportingPeriod(rp);
+                                        .filter(rp -> bulkProcess.getId().equals(rp.getEmissionsProcessId()))
+                                        .map(bulkPeriod -> {
+                                            ReportingPeriod period = mapReportingPeriod(bulkPeriod);
 
                                             Set<OperatingDetail> details = bulkEmissionsReport.getOperatingDetails().stream()
-                                                    .filter(od -> rp.getId().equals(od.getReportingPeriodId()))
-                                                    .map(od -> {
-                                                        OperatingDetail detail = mapOperatingDetail(od);
+                                                    .filter(od -> bulkPeriod.getId().equals(od.getReportingPeriodId()))
+                                                    .map(bulkDetail -> {
+                                                        OperatingDetail detail = mapOperatingDetail(bulkDetail);
                                                         detail.setReportingPeriod(period);
 
                                                         return detail;
                                                     }).collect(Collectors.toSet());
 
                                             Set<Emission> emissions = bulkEmissionsReport.getEmissions().stream()
-                                                    .filter(e -> rp.getId().equals(e.getReportingPeriodId()))
-                                                    .map(e -> {
-                                                        Emission emission = mapEmission(e);
+                                                    .filter(e -> bulkPeriod.getId().equals(e.getReportingPeriodId()))
+                                                    .map(bulkEmission -> {
+                                                        Emission emission = mapEmission(bulkEmission);
                                                         emission.setReportingPeriod(period);
 
                                                         return emission;
@@ -406,6 +414,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                                 process.setEmissionsUnit(emissionsUnit);
                                 process.setReportingPeriods(periods);
 
+                                processMap.put(bulkProcess.getId(), process);
+
                                 return process;
                             }).collect(Collectors.toList());
 
@@ -414,6 +424,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                     facility.getEmissionsUnits().add(emissionsUnit);
                 }
             }
+
+            bulkEmissionsReport.getReleasePointAppts().forEach(bulkRpAppt -> {
+                ReleasePoint rp = releasePointMap.get(bulkRpAppt.getReleasePointId());
+                EmissionsProcess ep = processMap.get(bulkRpAppt.getEmissionProcessId());
+                if (rp != null && ep != null) {
+                    ReleasePointAppt rpAppt = mapReleasePointAppt(bulkRpAppt);
+                    rpAppt.setReleasePoint(rp);
+                    rpAppt.setEmissionsProcess(ep);
+                    rp.getReleasePointAppts().add(rpAppt);
+                    ep.getReleasePointAppts().add(rpAppt);
+                }
+            });
 
             facility.setEmissionsReport(emissionsReport);
             emissionsReport.getFacilitySites().add(facility);
@@ -451,6 +473,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         List<ReleasePoint> releasePoints = facilitySites.stream()
                 .flatMap(f -> f.getReleasePoints().stream())
                 .collect(Collectors.toList());
+        List<ReleasePointAppt> releasePointAppts = releasePoints.stream()
+                .flatMap(r -> r.getReleasePointAppts().stream())
+                .collect(Collectors.toList());
 
         EmissionsReportBulkUploadDto reportDto = uploadMapper.emissionsReportToDto(report);
         reportDto.setFacilitySites(uploadMapper.facilitySiteToDtoList(facilitySites));
@@ -460,6 +485,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         reportDto.setOperatingDetails(uploadMapper.operatingDetailToDtoList(operatingDetails));
         reportDto.setEmissions(uploadMapper.emissionToDtoList(emissions));
         reportDto.setReleasePoints(uploadMapper.releasePointToDtoList(releasePoints));
+        reportDto.setReleasePointAppts(uploadMapper.releasePointApptToDtoList(releasePointAppts));
 
         return reportDto;
     }
@@ -797,6 +823,15 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         if (dto.getPollutantCode() != null) {
             result.setPollutant(pollutantRepo.findById(dto.getPollutantCode()).orElse(null));
         }
+
+        return result;
+    }
+
+    /**
+     * Map an ReleasePointApptBulkUploadDto to an OperatingDetail domain model
+     */
+    private ReleasePointAppt mapReleasePointAppt(ReleasePointApptBulkUploadDto dto) {
+        ReleasePointAppt result = uploadMapper.releasePointApptFromDto(dto);
 
         return result;
     }
