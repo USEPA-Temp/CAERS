@@ -29,13 +29,15 @@ public class CefPreAuthenticationUserDetailsServiceTest extends BaseSecurityTest
     @Before
     public void init() {
 
-        when(securityService.createUserRoles("FRED", 142710L, null))
+        when(securityService.createUserRoles("FRED", 142710L, 1111142710L))
             .thenReturn(Collections.singletonList(new SimpleGrantedAuthority("ROLE_Preparer")));
     }
 
     @Test
     public void getRoles_Should_ReturnListOfAuthorities_When_ValidRoleIdPassed() {
         Map<String, String> userProperties=new HashMap<>();
+        userProperties.put("uid", "FRED");
+        userProperties.put("UserRoleId", "1111142710");
         userProperties.put("RoleId", "142710");
         Collection<GrantedAuthority> authorities =
             cefPreAuthenticationUserDetailsService.getRoles(userProperties);
