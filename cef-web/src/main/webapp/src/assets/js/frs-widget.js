@@ -10,12 +10,12 @@ function initFrsWidget(userRoleId, token, facilityId, baseServiceUrl){
 		initializeFacilityWidget(userRoleId, token, facilityId, baseServiceUrl);
 	}else{
 	    var script = document.createElement("script");
-	    document.body.prepend(script);
+	    document.body.insertBefore(script, this.firstChild);
 	    script.onload=function(){
 	        var cssLink = document.createElement("link");
 	        cssLink.rel = 'stylesheet';  
 	        cssLink.type = 'text/css'; 
-	        document.head.prepend(cssLink);
+	        document.head.insertBefore(cssLink, this.firstChild);
 	        cssLink.onload=function(){
 	        	initializeFacilityWidget(userRoleId, token, facilityId, baseServiceUrl);
 	        };

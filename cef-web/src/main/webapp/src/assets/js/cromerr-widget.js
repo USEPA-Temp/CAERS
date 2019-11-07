@@ -20,7 +20,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
 		        var cssLink = document.createElement("link");
 		        cssLink.rel = 'stylesheet';
 		        cssLink.type = 'text/css';
-		        document.head.prepend(cssLink);
+		        document.head.insertBefore(cssLink, this.firstChild);
 		        cssLink.href=baseServiceUrl+fancyboxCSS;
 				loadScript(baseServiceUrl+jqueryValidate);
 				loadScript(baseServiceUrl+jqueryBlockUI);
@@ -37,7 +37,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
 
 function loadScript(srciptUrl){
     var script = document.createElement("script");
-    document.body.prepend(script);
+    document.body.insertBefore(script, this.firstChild);
     script.setAttribute('src', srciptUrl);
     return script;
 }
