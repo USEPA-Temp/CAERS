@@ -43,7 +43,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
             }
 
             if (period.getEmissionsOperatingTypeCode() != null) {
-                period.setEmissionsOperatingTypeCode(lookupService.retrieveOperatingStatusCodeEntityByCode(period.getEmissionsOperatingTypeCode().getCode()));
+                period.setEmissionsOperatingTypeCode(lookupService.retrieveEmissionsOperatingTypeCodeEntityByCode(period.getEmissionsOperatingTypeCode().getCode()));
             }
 
             if (period.getReportingPeriodTypeCode() != null) {

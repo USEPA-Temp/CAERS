@@ -1,69 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.client.soap.DocumentDataSource;
-import gov.epa.cef.web.client.soap.SignatureServiceClient;
-import gov.epa.cef.web.config.CefConfig;
-import gov.epa.cef.web.config.SLTBaseConfig;
-import gov.epa.cef.web.domain.Emission;
-import gov.epa.cef.web.domain.EmissionsProcess;
-import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.FacilityCategoryCode;
-import gov.epa.cef.web.domain.FacilityNAICSXref;
-import gov.epa.cef.web.domain.FacilitySite;
-import gov.epa.cef.web.domain.OperatingDetail;
-import gov.epa.cef.web.domain.ReleasePoint;
-import gov.epa.cef.web.domain.ReleasePointAppt;
-import gov.epa.cef.web.domain.EmissionsUnit;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
-import gov.epa.cef.web.domain.ReportStatus;
-import gov.epa.cef.web.domain.ReportingPeriod;
-import gov.epa.cef.web.domain.ValidationStatus;
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
-import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
-import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
-import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
-import gov.epa.cef.web.repository.EmissionsReportRepository;
-import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
-import gov.epa.cef.web.repository.PollutantRepository;
-import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
-import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
-import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
-import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
-import gov.epa.cef.web.repository.UnitTypeCodeRepository;
-import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
-import gov.epa.cef.web.repository.TribalCodeRepository;
-import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
-import gov.epa.cef.web.repository.NaicsCodeRepository;
-import gov.epa.cef.web.service.CersXmlService;
-import gov.epa.cef.web.service.EmissionsReportService;
-import gov.epa.cef.web.service.FacilitySiteService;
-import gov.epa.cef.web.service.NotificationService;
-import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import gov.epa.cef.web.service.mapper.BulkUploadMapper;
-import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
-import gov.epa.cef.web.util.SLTConfigHelper;
-import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
-import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.activation.DataHandler;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -79,6 +15,72 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import javax.activation.DataHandler;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import gov.epa.cef.web.client.soap.DocumentDataSource;
+import gov.epa.cef.web.client.soap.SignatureServiceClient;
+import gov.epa.cef.web.config.CefConfig;
+import gov.epa.cef.web.config.SLTBaseConfig;
+import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
+import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingDetail;
+import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportStatus;
+import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.domain.ValidationStatus;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
+import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
+import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
+import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
+import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
+import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
+import gov.epa.cef.web.repository.NaicsCodeRepository;
+import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
+import gov.epa.cef.web.repository.PollutantRepository;
+import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
+import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
+import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
+import gov.epa.cef.web.repository.TribalCodeRepository;
+import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
+import gov.epa.cef.web.repository.UnitTypeCodeRepository;
+import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.NotificationService;
+import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
+import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.util.SLTConfigHelper;
+import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
+import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -107,6 +109,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private OperatingStatusCodeRepository operatingStatusRepo;
+    
+    @Autowired
+    EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
 
     @Autowired
     private FacilityCategoryCodeRepository facilityCategoryRepo;
@@ -784,7 +789,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             result.setCalculationParameterUom(unitMeasureCodeRepo.findById(dto.getCalculationParameterUom()).orElse(null));
         }
         if (dto.getEmissionsOperatingTypeCode() != null) {
-            result.setEmissionsOperatingTypeCode(operatingStatusRepo.findById(dto.getEmissionsOperatingTypeCode()).orElse(null));
+            result.setEmissionsOperatingTypeCode(emissionsOperatingTypeCodeRepo.findById(dto.getEmissionsOperatingTypeCode()).orElse(null));
         }
         if (dto.getReportingPeriodTypeCode() != null) {
             result.setReportingPeriodTypeCode(reportingPeriodCodeRepo.findById(dto.getReportingPeriodTypeCode()).orElse(null));

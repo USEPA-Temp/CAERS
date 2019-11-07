@@ -446,53 +446,53 @@ INSERT INTO RELEASE_POINT_APPT (id, release_point_id, emissions_process_id, perc
 --REPORTING_PERIOD
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
 	calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999991', '9999991', 'A', 'OP', 'I', '351', 'LB', '698', 'Reporting Period Comment', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+	VALUES ('9999991', '9999991', 'A', 'R', 'I', '351', 'LB', '698', 'Reporting Period Comment', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
 	calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999992', '9999992', 'A', 'OP', 'O', '15876', 'TON', '70', 'Reporting Period Comment', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+	VALUES ('9999992', '9999992', 'A', 'R', 'O', '15876', 'TON', '70', 'Reporting Period Comment', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
 	calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999993', '9999993', 'A', 'OP', 'E', '466', 'TON', '956', 'Reporting Period Comment', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+	VALUES ('9999993', '9999993', 'A', 'R', 'E', '466', 'TON', '956', 'Reporting Period Comment', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
 	calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-	VALUES ('9999994', '9999994', 'A', 'OP', 'I', '35', 'E6FT3', '209', 'No comments for this reporting period', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+	VALUES ('9999994', '9999994', 'A', 'R', 'I', '35', 'E6FT3', '209', 'No comments for this reporting period', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999995', '9999995', 'A', 'OP', 'I', '79', 'E6FT3', '209', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999995', '9999995', 'A', 'R', 'I', '79', 'E6FT3', '209', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999996', '9999996', 'A', 'OP', 'I', '515', 'E3GAL', '823', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999996', '9999996', 'A', 'R', 'I', '515', 'E3GAL', '823', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999997', '9999997', 'A', 'OP', 'O', '210', 'TON', '971', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999997', '9999997', 'A', 'R', 'O', '210', 'TON', '971', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999998', '9999998', 'A', 'OP', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999998', '9999998', 'A', 'R', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999999', '9999999', 'A', 'OP', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999999', '9999999', 'A', 'R', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999910', '9999910', 'A', 'OP', 'O', '1876', 'TON', '248', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999910', '9999910', 'A', 'R', 'O', '1876', 'TON', '248', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999985', '9999985', 'A', 'OP', 'I', '79', 'E6FT3', '209', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999985', '9999985', 'A', 'R', 'I', '79', 'E6FT3', '209', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999986', '9999986', 'A', 'OP', 'I', '515', 'E3GAL', '823', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999986', '9999986', 'A', 'R', 'I', '515', 'E3GAL', '823', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999987', '9999987', 'A', 'OP', 'O', '210', 'TON', '971', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999987', '9999987', 'A', 'R', 'O', '210', 'TON', '971', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999988', '9999988', 'A', 'OP', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999988', '9999988', 'A', 'R', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999989', '9999989', 'A', 'OP', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999989', '9999989', 'A', 'R', 'O', '817', 'TON', '627', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO REPORTING_PERIOD (id, emissions_process_id, reporting_period_type_code, emissions_operating_type_code, calculation_parameter_type_code,
     calculation_parameter_value, calculation_parameter_uom, calculation_material_code, comments, created_by, created_date, last_modified_by, last_modified_date)
-    VALUES ('9999810', '9999810', 'A', 'OP', 'O', '1876', 'TON', '248', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+    VALUES ('9999810', '9999810', 'A', 'R', 'O', '1876', 'TON', '248', '', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --OPERATING DETAILS
 INSERT INTO OPERATING_DETAIL (id, reporting_period_id, actual_hours_per_period, avg_hours_per_day, avg_days_per_week, avg_weeks_per_period, percent_winter, percent_spring, percent_summer, 

@@ -44,7 +44,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
         }
 
         if (dto.getEmissionsOperatingTypeCode() != null) {
-            period.setEmissionsOperatingTypeCode(lookupService.retrieveOperatingStatusCodeEntityByCode(dto.getEmissionsOperatingTypeCode().getCode()));
+            period.setEmissionsOperatingTypeCode(lookupService.retrieveEmissionsOperatingTypeCodeEntityByCode(dto.getEmissionsOperatingTypeCode().getCode()));
         }
 
         if (dto.getReportingPeriodTypeCode() != null) {

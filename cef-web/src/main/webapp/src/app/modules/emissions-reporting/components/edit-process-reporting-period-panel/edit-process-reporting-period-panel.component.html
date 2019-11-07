@@ -10,7 +10,7 @@
         <label for="rpOperatingCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Type:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="rpOperatingCodeSelect" formControlName="emissionsOperatingTypeCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.shortName}}</option>
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.emissionsOperatingTypeCode"></app-validation-message>
         </div>
