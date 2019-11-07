@@ -54,7 +54,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
         http.exceptionHandling()
             .authenticationEntryPoint(new AuthenticationEntryPointImpl(loginRedirectUrl))
             .accessDeniedHandler(new AccessDeniedHandlerImpl(loginRedirectUrl)).and()
-            .headers().frameOptions().deny().and()
+            .headers().frameOptions().disable().and()
             .csrf().ignoringAntMatchers(HANDOFF_LANDING_PATH)
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
             .cors().configurationSource(this.cdxConfig.createCorsConfigurationSource()).and()
