@@ -35,6 +35,11 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
+  retrieveEmissionsOperatingType(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/emissionsOperatingType`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
   retrievePollutant(): Observable<Pollutant[]> {
     const url = `${this.baseUrl}/pollutant`;
     return this.http.get<Pollutant[]>(url);

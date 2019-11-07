@@ -51,7 +51,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       this.parameterTypeValues = result;
     });
 
-    this.lookupService.retrieveOperatingStatus()
+    this.lookupService.retrieveEmissionsOperatingType()
     .subscribe(result => {
       this.operatingStatusValues = result;
     });

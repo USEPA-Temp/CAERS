@@ -37,7 +37,7 @@ public class ReportingPeriod extends BaseAuditEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emissions_operating_type_code", nullable = false)
-    private OperatingStatusCode emissionsOperatingTypeCode;
+    private EmissionsOperatingTypeCode emissionsOperatingTypeCode;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "calculation_parameter_type_code", nullable = false)
@@ -110,11 +110,11 @@ public class ReportingPeriod extends BaseAuditEntity {
         this.reportingPeriodTypeCode = reportingPeriodTypeCode;
     }
 
-    public OperatingStatusCode getEmissionsOperatingTypeCode() {
+    public EmissionsOperatingTypeCode getEmissionsOperatingTypeCode() {
         return this.emissionsOperatingTypeCode;
     }
 
-    public void setEmissionsOperatingTypeCode(OperatingStatusCode emissionsOperatingTypeCode) {
+    public void setEmissionsOperatingTypeCode(EmissionsOperatingTypeCode emissionsOperatingTypeCode) {
         this.emissionsOperatingTypeCode = emissionsOperatingTypeCode;
     }
 

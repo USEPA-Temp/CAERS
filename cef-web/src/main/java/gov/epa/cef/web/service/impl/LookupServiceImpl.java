@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
+import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
@@ -16,6 +17,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
+import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
@@ -41,6 +43,9 @@ public class LookupServiceImpl implements LookupService {
 
     @Autowired
     private OperatingStatusCodeRepository operatingStatusRepo;
+    
+    @Autowired
+    private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
 
     @Autowired
     private PollutantRepository pollutantRepo;
@@ -132,7 +137,29 @@ public class LookupServiceImpl implements LookupService {
             .findById(code)
             .orElse(null);
         return result;
+    }    
+    
+    @Override
+    public List<CodeLookupDto> retrieveEmissionOperatingTypeCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<EmissionsOperatingTypeCode> entities = emissionsOperatingTypeCodeRepo.findAll();
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.emissionsOperatingTypeCodeToDto(entity));
+        });
+        return result;
     }
+    
+    public EmissionsOperatingTypeCode retrieveEmissionsOperatingTypeCodeEntityByCode(String code) {
+        
+        EmissionsOperatingTypeCode result= emissionsOperatingTypeCodeRepo
+                .findById(code)
+                .orElse(null);
+        return result;
+    }  
+    
+    
 
     @Override
     public List<PollutantDto> retrievePollutants() {

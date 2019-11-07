@@ -30,6 +30,7 @@ DROP TABLE IF EXISTS calculation_method_code;
 DROP TABLE IF EXISTS contact_type_code;
 DROP TABLE IF EXISTS control_measure_code;
 DROP TABLE IF EXISTS coordinate_datasource_code;
+DROP TABLE IF EXISTS emissions_operating_type_code;
 DROP TABLE IF EXISTS facility_category_code;
 DROP TABLE IF EXISTS facility_source_type_code;
 DROP TABLE IF EXISTS fips_country_code;

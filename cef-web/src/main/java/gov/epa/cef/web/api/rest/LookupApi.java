@@ -70,6 +70,18 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveOperatingStatusCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Emissions Operating Type Codes
+     * @return
+     */
+    @GetMapping(value = "/emissionsOperatingType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveEmissionOperatingTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveEmissionOperatingTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve Pollutants

@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import gov.epa.cef.web.domain.CalculationMethodCode;
+import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -35,6 +36,8 @@ public abstract class LookupEntityMapper {
     public abstract CodeLookupDto naicsCodeToDto(NaicsCode code);
 
     public abstract CodeLookupDto reportingPeriodCodeToDto(ReportingPeriodCode source);
+    
+    public abstract CodeLookupDto emissionsOperatingTypeCodeToDto(EmissionsOperatingTypeCode source);
 
     public abstract CalculationMethodCodeDto calculationMethodCodeToDto(CalculationMethodCode source);
 

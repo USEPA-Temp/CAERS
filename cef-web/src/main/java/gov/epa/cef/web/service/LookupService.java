@@ -2,6 +2,7 @@ package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
+import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
@@ -90,5 +91,19 @@ public interface LookupService {
      * @return
      */
     UnitMeasureCode retrieveUnitMeasureCodeEntityByCode(String code);
+
+    /**
+     * Retrieve the list of Emission Operating Type Codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveEmissionOperatingTypeCodes();
+    
+    /**
+     * Retrieve the Emissions Operating Type Code entity by code
+     * 
+     * @param code
+     * @return
+     */
+    EmissionsOperatingTypeCode retrieveEmissionsOperatingTypeCodeEntityByCode(String code);
 
 }
