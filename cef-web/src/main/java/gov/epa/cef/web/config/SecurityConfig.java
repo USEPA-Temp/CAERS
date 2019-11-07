@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
             .authenticationEntryPoint(new AuthenticationEntryPointImpl(loginUrl))
             .accessDeniedHandler(new AccessDeniedHandlerImpl(loginUrl)).and()
-            .headers().frameOptions().deny().and()
+            .headers().frameOptions().disable().and()
             .csrf().ignoringAntMatchers(HANDOFF_LANDING_PATH)
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
             .cors().configurationSource(cdxConfig.createCorsConfigurationSource()).and()
