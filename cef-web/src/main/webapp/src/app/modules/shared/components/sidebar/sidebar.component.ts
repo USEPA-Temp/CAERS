@@ -17,6 +17,7 @@ export class SidebarComponent{
   facilitySite: FacilitySite;
   emissionsNavItems: SideNavItem[];
   facilityNavItems: SideNavItem[];
+  paginate: boolean;
 
   constructor(
       private emissionsUnitService: EmissionUnitService,
@@ -40,6 +41,12 @@ export class SidebarComponent{
       .subscribe(navItems => {
         console.log(JSON.stringify(navItems));
         this.emissionsNavItems = navItems;
+        if(this.emissionsNavItems.length < 25){
+          this.paginate = false;
+        }
+        else{
+          this.paginate = true;
+        }
       });
   }
 
