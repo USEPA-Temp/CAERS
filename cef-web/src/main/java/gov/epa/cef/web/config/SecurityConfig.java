@@ -22,10 +22,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import javax.servlet.http.HttpServlet;
 import java.util.ArrayList;
 import java.util.List;
+
+import static gov.epa.cef.web.controller.HandoffLandingController.HANDOFF_LANDING_PATH;
 
 @Profile("prod")
 @Configuration
@@ -47,8 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
             .authenticationEntryPoint(new AuthenticationEntryPointImpl(loginUrl))
             .accessDeniedHandler(new AccessDeniedHandlerImpl(loginUrl)).and()
-            .headers().frameOptions().disable().and()
-            .csrf().disable()
+            .headers().frameOptions().deny().and()
+            .csrf().ignoringAntMatchers(HANDOFF_LANDING_PATH)
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
             .cors().configurationSource(cdxConfig.createCorsConfigurationSource()).and()
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()

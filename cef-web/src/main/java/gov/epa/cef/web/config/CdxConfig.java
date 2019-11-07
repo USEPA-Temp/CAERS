@@ -128,7 +128,7 @@ public class CdxConfig {
         config.setAllowedMethods(
             Arrays.asList("GET", "POST", "DELETE", "PUT", "HEAD", "PATCH"));
         config.setAllowedHeaders(
-            Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With"));
+            Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-XSRF-TOKEN", "X-Requested-With"));
 
         UrlBasedCorsConfigurationSource result = new UrlBasedCorsConfigurationSource();
         result.registerCorsConfiguration("/**", config);

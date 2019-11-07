@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule } from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule, HttpClientXsrfModule} from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from 'src/app/app.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
@@ -61,6 +61,7 @@ import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
     ReactiveFormsModule,
     NgbModule,
     HttpClientModule,
+    HttpClientXsrfModule,
     HttpClientJsonpModule,
     AppRoutingModule,
     FontAwesomeModule,
