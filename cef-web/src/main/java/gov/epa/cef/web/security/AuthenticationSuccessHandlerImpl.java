@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
@@ -23,9 +24,12 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         Long userRoleId = ((ApplicationUser) authentication.getPrincipal()).getUserRoleId();
         if (userRoleId != null) {
 
-            logger.debug("Adding userRoleId {} to HttpSession.", userRoleId);
+            HttpSession session = httpServletRequest.getSession();
 
-            httpServletRequest.getSession().setAttribute(SessionKey.UserRoleId.key(), userRoleId);
+            logger.debug("Adding userRoleId {} to HttpSession {}.",
+                userRoleId, session.getAttribute(SessionKey.SessionUuid.key()));
+
+            session.setAttribute(SessionKey.UserRoleId.key(), userRoleId);
 
         } else {
 

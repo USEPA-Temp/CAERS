@@ -3,10 +3,11 @@ package gov.epa.cef.web.security;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.config.CacheName;
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
+import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.enforcer.ProgramIdRepoLocator;
 import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcerImpl;
 import gov.epa.cef.web.service.RegistrationService;
@@ -35,6 +36,8 @@ public class SecurityService {
 
     private final CacheManager cacheManager;
 
+    private final CefConfig cefConfig;
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final ProgramIdRepoLocator programIdRepoLocator;
@@ -44,13 +47,16 @@ public class SecurityService {
     @Autowired
     SecurityService(RegistrationService registrationService,
                     CacheManager cacheManager,
-                    ProgramIdRepoLocator programIdRepoLocator) {
+                    ProgramIdRepoLocator programIdRepoLocator,
+                    CefConfig cefConfig) {
 
         this.registrationService = registrationService;
 
         this.cacheManager = cacheManager;
 
         this.programIdRepoLocator = programIdRepoLocator;
+
+        this.cefConfig = cefConfig;
     }
 
     /**
@@ -78,9 +84,15 @@ public class SecurityService {
         addUserToSecurityContext(user);
     }
 
-    public List<GrantedAuthority> createUserRoles(AppRole.RoleType role, Long userRoleId) {
+    public List<GrantedAuthority> createUserRoles(String userId, AppRole.RoleType role, Long userRoleId) {
 
         List<GrantedAuthority> roles = new ArrayList<>();
+
+        if (this.cefConfig.getAdminsAsLowerCase().contains(userId.toLowerCase())) {
+
+            roles.add(new SimpleGrantedAuthority(AppRole.ROLE_ADMIN));
+        }
+
         if (role != null) {
             roles.add(new SimpleGrantedAuthority(role.grantedRoleName()));
         } else {
@@ -155,7 +167,7 @@ public class SecurityService {
             && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null;
     }
 
-    List<GrantedAuthority> createUserRoles(Long roleId, Long userRoleId) {
+    List<GrantedAuthority> createUserRoles(String userId, Long roleId, Long userRoleId) {
 
         AppRole.RoleType role = null;
         if (roleId != null) {
@@ -169,7 +181,7 @@ public class SecurityService {
             logger.warn("RoleId is null.");
         }
 
-        return createUserRoles(role, userRoleId);
+        return createUserRoles(userId, role, userRoleId);
     }
 
     void evictUserCachedItems(long userRoleId) {

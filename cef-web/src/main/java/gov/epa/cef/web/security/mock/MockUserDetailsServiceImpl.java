@@ -71,9 +71,10 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
                 logger.info("Using hard coded user for authentication/authorization");
                 RoleType role = AppRole.RoleType.PREPARER;
 
-                List<GrantedAuthority> roles = this.securityService.createUserRoles(role, USER_ROLE_ID);
+                String userId = "thomas.fesperman";
+                List<GrantedAuthority> roles = this.securityService.createUserRoles(userId, role, USER_ROLE_ID);
 
-                user = new ApplicationUser("thomas.fesperman", roles);
+                user = new ApplicationUser(userId, roles);
 
                 user.setEmail("thomas.fesperman@cgifederal.com");
                 user.setFirstName("Thomas");
@@ -112,12 +113,13 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
             Properties properties = new Properties();
             properties.load(is);
 
+            String userId = properties.getProperty("userId");
             RoleType role = RoleType.fromId(Long.parseLong(properties.getProperty("roleId")));
             long userRoleId = Long.parseLong(properties.getProperty("userRoleId"));
 
-            List<GrantedAuthority> roles = this.securityService.createUserRoles(role, userRoleId);
+            List<GrantedAuthority> roles = this.securityService.createUserRoles(userId, role, userRoleId);
 
-            result = new ApplicationUser(properties.getProperty("userId"), roles);
+            result = new ApplicationUser(userId, roles);
 
             Collection<String> ignoreFields = Arrays.asList("userId", "roleId");
             BeanUtils.populate(result, properties.entrySet().stream()

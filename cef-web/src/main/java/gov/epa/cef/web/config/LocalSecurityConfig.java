@@ -6,9 +6,11 @@ import gov.epa.cef.web.security.AuthenticationEntryPointImpl;
 import gov.epa.cef.web.security.AuthenticationSuccessHandlerImpl;
 import gov.epa.cef.web.security.mock.MockHandoffFilter;
 import gov.epa.cef.web.security.mock.MockUserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -17,9 +19,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static gov.epa.cef.web.controller.HandoffLandingController.HANDOFF_LANDING_PATH;
 
 /**
  * Runs only in local environment
@@ -30,16 +35,29 @@ import java.util.List;
 @EnableWebSecurity
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
 
-    private static final String LoginRedirectUrl = "/";
+    private final Environment environment;
+
+    private final CdxConfig cdxConfig;
+
+    @Autowired
+    LocalSecurityConfig(Environment environment, CdxConfig cdxConfig) {
+
+        this.environment = environment;
+        this.cdxConfig = cdxConfig;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        String loginRedirectUrl = this.environment.getRequiredProperty("server.servlet.context-path");
+
         http.exceptionHandling()
-            .authenticationEntryPoint(new AuthenticationEntryPointImpl(LoginRedirectUrl))
-            .accessDeniedHandler(new AccessDeniedHandlerImpl(LoginRedirectUrl)).and()
-            .headers().frameOptions().disable().and()
-            .csrf().disable()
+            .authenticationEntryPoint(new AuthenticationEntryPointImpl(loginRedirectUrl))
+            .accessDeniedHandler(new AccessDeniedHandlerImpl(loginRedirectUrl)).and()
+            .headers().frameOptions().deny().and()
+            .csrf().ignoringAntMatchers(HANDOFF_LANDING_PATH)
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+            .cors().configurationSource(this.cdxConfig.createCorsConfigurationSource()).and()
             .addFilter(mockCdxPreAuthFilter())
             .authorizeRequests()
             .antMatchers("/**")
@@ -53,7 +71,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
     }
 
     @Bean
-    public AbstractPreAuthenticatedProcessingFilter mockCdxPreAuthFilter() {
+    AbstractPreAuthenticatedProcessingFilter mockCdxPreAuthFilter() {
 
         MockHandoffFilter result = new MockHandoffFilter();
         result.setAuthenticationManager(authenticationManager());
@@ -63,7 +81,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() {
+    protected AuthenticationManager authenticationManager() {
         List<AuthenticationProvider> providers = new ArrayList<>();
         PreAuthenticatedAuthenticationProvider cdxPreAuth = new PreAuthenticatedAuthenticationProvider();
         MockUserDetailsServiceImpl mockCefUserDetailService =

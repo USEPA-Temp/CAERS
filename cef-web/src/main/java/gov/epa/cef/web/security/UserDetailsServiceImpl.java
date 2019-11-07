@@ -40,11 +40,13 @@ public class UserDetailsServiceImpl extends CdxHandoffPreAuthenticationUserDetai
     @Override
     protected Collection<GrantedAuthority> getRoles(Map<String, String> userProperties) {
 
-        List<GrantedAuthority> roles = this.securityService.createUserRoles(
+        String userId = userProperties.get(USER_ID);
+
+        List<GrantedAuthority> roles = this.securityService.createUserRoles(userId,
             nullSafeLong(userProperties.get(ROLE_ID)), nullSafeLong(userProperties.get(USER_ROLE_ID)));
 
         // detailed logging of the roles from a handoff
-        logger.info("User {} Roles granted: {}", userProperties.get(USER_ID),
+        logger.info("User {} Roles granted: {}", userId,
             roles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(", ")));
 
         return roles;

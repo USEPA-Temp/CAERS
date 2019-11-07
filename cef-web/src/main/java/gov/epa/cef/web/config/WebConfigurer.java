@@ -1,6 +1,6 @@
 package gov.epa.cef.web.config;
 
-import gov.epa.cef.web.security.SessionDestroyedListenerImpl;
+import gov.epa.cef.web.security.SessionListenerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.WebServerFactory;
@@ -29,7 +29,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         //
-        servletContext.addListener(new SessionDestroyedListenerImpl());
+        servletContext.addListener(new SessionListenerImpl());
     }
 
     /**

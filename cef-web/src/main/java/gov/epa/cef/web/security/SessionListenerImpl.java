@@ -8,27 +8,31 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import java.util.UUID;
 
-public class SessionDestroyedListenerImpl implements HttpSessionListener {
+public class SessionListenerImpl implements HttpSessionListener {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
 
-        // do nothing
-        logger.debug("HttpSession {} created.", se.getSession().getId());
+        String uuid = UUID.randomUUID().toString();
+        se.getSession().setAttribute(SessionKey.SessionUuid.key(), uuid);
+        logger.debug("HttpSession {} created.", uuid);
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
 
         HttpSession session = se.getSession();
+
+        String uuid = (String) session.getAttribute(SessionKey.SessionUuid.key());
         Long userRoleId = (Long) session.getAttribute(SessionKey.UserRoleId.key());
 
         if (userRoleId != null) {
 
-            logger.debug("Pulled userRoleId {} from HttpSession {}.", userRoleId, session.getId());
+            logger.debug("Pulled userRoleId {} from HttpSession {}.", userRoleId, uuid);
 
             WebApplicationContext context =
                 WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
@@ -37,7 +41,7 @@ public class SessionDestroyedListenerImpl implements HttpSessionListener {
 
         } else {
 
-            logger.warn("No UserRoleId found in HttpSession{}. No cache items were evicted.", session.getId());
+            logger.warn("No UserRoleId found in HttpSession{}. No cache items were evicted.", uuid);
         }
     }
 }

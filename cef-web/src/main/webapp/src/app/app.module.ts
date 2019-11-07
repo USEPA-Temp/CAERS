@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule } from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule, HttpClientXsrfModule} from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from 'src/app/app.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
@@ -30,6 +30,7 @@ import { RejectSubmissionModalComponent } from './modules/dashboards/components/
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { TimeoutModalComponent } from './shared/components/timeout-modal/timeout-modal.component';
+import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { TimeoutModalComponent } from './shared/components/timeout-modal/timeout
     ReactiveFormsModule,
     NgbModule,
     HttpClientModule,
+    HttpClientXsrfModule,
     HttpClientJsonpModule,
     AppRoutingModule,
     FontAwesomeModule,
@@ -75,8 +77,9 @@ import { TimeoutModalComponent } from './shared/components/timeout-modal/timeout
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
-      {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
-    ],
+      {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
+      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
