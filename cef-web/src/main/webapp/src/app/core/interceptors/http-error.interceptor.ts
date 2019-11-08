@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import { HttpRequest, HttpHandler, HttpInterceptor } from '@angular/common/http';
 import {Observable, throwError, EMPTY, of} from 'rxjs';
 import {retryWhen, delay, concatMap} from 'rxjs/operators';
+import {UserContextService} from "../services/user-context.service";
 
 const DELAY_MS : number = 1000;
 const MAX_RETRIES : number = 1;
@@ -10,7 +11,8 @@ const MAX_RETRIES : number = 1;
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-    constructor(private router: Router) { }
+    constructor(private router: Router,
+                private userContext: UserContextService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
         return next.handle(request)
@@ -26,7 +28,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         alert(error.error.message);
 
                         // logout user => send back to CDX
-                        window.location.href = 'logout';
+                        this.userContext.logoutUser();
 
                         return EMPTY;
                     }

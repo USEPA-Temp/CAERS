@@ -1,7 +1,6 @@
 import { UserContextService } from 'src/app/core/services/user-context.service';
-import {Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
-import {HttpXsrfTokenExtractor} from '@angular/common/http';
-import {FormControl} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component( {
     selector: 'app-header',
@@ -10,21 +9,11 @@ import {FormControl} from "@angular/forms";
 } )
 export class HeaderComponent implements OnInit {
 
-    @ViewChild('logoutForm', { static: true }) private logoutFormEl: ElementRef;
-
-    xsrfToken = new FormControl("not-valid");
-
-    constructor( public userContext: UserContextService,
-                 public xsrfCookieExtractor: HttpXsrfTokenExtractor) {
-    }
+    constructor(public userContext: UserContextService) { }
 
     ngOnInit() { }
 
     logout() {
-
-        this.xsrfToken.setValue(this.xsrfCookieExtractor.getToken());
-        //console.log("token", this.xsrfToken);
-
-        this.logoutFormEl.nativeElement.submit();
+        this.userContext.logoutUser();
     }
 }

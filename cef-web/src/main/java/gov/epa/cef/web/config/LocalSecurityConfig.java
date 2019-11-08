@@ -4,6 +4,7 @@ import gov.epa.cef.web.security.AccessDeniedHandlerImpl;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.AuthenticationEntryPointImpl;
 import gov.epa.cef.web.security.AuthenticationSuccessHandlerImpl;
+import gov.epa.cef.web.security.LogoutSuccessHandlerImpl;
 import gov.epa.cef.web.security.mock.MockHandoffFilter;
 import gov.epa.cef.web.security.mock.MockUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
                 AppRole.RoleType.CERTIFIER.roleName(),
                 AppRole.RoleType.REVIEWER.roleName())
             .anyRequest().denyAll().and()
-            .logout()
-            .logoutSuccessUrl("/");
+            .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(loginRedirectUrl));
     }
 
     @Bean

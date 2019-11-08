@@ -11,8 +11,5 @@
         <a class="btn btn-link p-1 mb-1" href="javascript:void(0);" (click)="logout()"><u>Logout</u></a>
     </div>
   </div>
-    <form #logoutForm action="logout" method="POST">
-        <input type="hidden" name="_csrf" [formControl]="xsrfToken" />
-    </form>
 </header>
 

@@ -29,7 +29,16 @@ export class UserService {
   /** Initiate CDX Handoff for a user */
   initHandoffToCdx(whereTo): Observable<any> {
     const url = `J2AHandoff?URL=${whereTo}`;
-    return this.http.post(url,'', {responseType: 'text'});
+      return this.http.post(url,'', {responseType: 'text'});
   }
 
+  /** Logout user from CAER app and redirect to next hop logout  */
+  logoutUser() : void {
+
+      this.http.post("logout", '', {responseType: 'text'})
+          .subscribe((nextHop) => {
+
+          window.location.href = nextHop;
+      });
+  }
 }
