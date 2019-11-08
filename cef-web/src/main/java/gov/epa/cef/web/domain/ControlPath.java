@@ -23,17 +23,17 @@ public class ControlPath extends BaseAuditEntity {
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
-    private Set<ControlAssignment> assignments;
+    private Set<ControlAssignment> assignments = new HashSet<ControlAssignment>(0);
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPathChild")
-    private Set<ControlAssignment> childAssignments;
+    private Set<ControlAssignment> childAssignments = new HashSet<ControlAssignment>(0);
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlPath")
-    private Set<ReleasePointAppt> releasePointAppts;
+    private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
 
 
     /**

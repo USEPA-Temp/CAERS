@@ -31,6 +31,10 @@ import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
+import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlAssignment;
+import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -67,6 +71,10 @@ import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
@@ -361,10 +369,14 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
             FacilitySite facility = MapFacility(bulkFacility);
-            
+
+            // Maps for storing the entity referenced by a certain id in the JSON
             Map<Long, ReleasePoint> releasePointMap = new HashMap<>();
             Map<Long, EmissionsProcess> processMap = new HashMap<>();
+            Map<Long, ControlPath> controlPathMap = new HashMap<>();
+            Map<Long, Control> controlMap = new HashMap<>();
 
+            // Map Release Points
             for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
                 ReleasePoint releasePoint = MapReleasePoint(bulkRp);
 
@@ -375,22 +387,26 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 }
             }
 
+            // Map Emissions Units
             for (EmissionsUnitBulkUploadDto bulkEmissionsUnit : bulkEmissionsReport.getEmissionsUnits()) {
 
                 if (bulkEmissionsUnit.getFacilitySiteId().equals(bulkFacility.getId())) {
                     EmissionsUnit emissionsUnit = MapEmissionsUnit(bulkEmissionsUnit);
                     emissionsUnit.setFacilitySite(facility);
 
+                    // Map Emissions Processes
                     List<EmissionsProcess> processes = bulkEmissionsReport.getEmissionsProcesses().stream()
                             .filter(p -> bulkEmissionsUnit.getId().equals(p.getEmissionsUnitId()))
                             .map(bulkProcess -> {
                                 EmissionsProcess process = mapEmissionsProcess(bulkProcess);
 
+                                // Map Reporting Periods
                                 Set<ReportingPeriod> periods = bulkEmissionsReport.getReportingPeriods().stream()
                                         .filter(rp -> bulkProcess.getId().equals(rp.getEmissionsProcessId()))
                                         .map(bulkPeriod -> {
                                             ReportingPeriod period = mapReportingPeriod(bulkPeriod);
 
+                                            // Map Operating Details, should only be 1
                                             Set<OperatingDetail> details = bulkEmissionsReport.getOperatingDetails().stream()
                                                     .filter(od -> bulkPeriod.getId().equals(od.getReportingPeriodId()))
                                                     .map(bulkDetail -> {
@@ -400,6 +416,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                                                         return detail;
                                                     }).collect(Collectors.toSet());
 
+                                            // Map Emissions
                                             Set<Emission> emissions = bulkEmissionsReport.getEmissions().stream()
                                                     .filter(e -> bulkPeriod.getId().equals(e.getReportingPeriodId()))
                                                     .map(bulkEmission -> {
@@ -430,6 +447,71 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 }
             }
 
+            // Map Control Paths
+            Set<ControlPath> controlPaths = bulkEmissionsReport.getControlPaths().stream()
+                    .filter(c -> bulkFacility.getId().equals(c.getFacilitySiteId()))
+                    .map(bulkControlPath -> {
+                        ControlPath path = mapControlPath(bulkControlPath);
+                        path.setFacilitySite(facility);
+
+                        controlPathMap.put(bulkControlPath.getId(), path);
+
+                        return path;
+                    }).collect(Collectors.toSet());
+
+            facility.setControlPaths(controlPaths);
+
+            // Map Controls
+            List<Control> controls = bulkEmissionsReport.getControls().stream()
+                    .filter(c -> bulkFacility.getId().equals(c.getFacilitySiteId()))
+                    .map(bulkControl -> {
+                        Control control = mapControl(bulkControl);
+                        control.setFacilitySite(facility);
+
+                        // Map Control Pollutants
+                        Set<ControlPollutant> controlPollutants = bulkEmissionsReport.getControlPollutants().stream()
+                                .filter(c -> bulkControl.getId().equals(c.getControlId()))
+                                .map(bulkControlPollutant -> {
+                                    ControlPollutant controlPollutant = mapControlPollutant(bulkControlPollutant);
+                                    controlPollutant.setControl(control);
+
+                                    return controlPollutant;
+                                }).collect(Collectors.toSet());
+
+                        control.setPollutants(controlPollutants);
+
+                        controlMap.put(bulkControl.getId(), control);
+
+                        return control;
+                    }).collect(Collectors.toList());
+
+            facility.setControls(controls);
+
+            // Map Control Assignments into controls and control paths
+            bulkEmissionsReport.getControlAssignments().forEach(bulkControlAssignment -> {
+                ControlAssignment controlAssignment = mapControlAssignment(bulkControlAssignment);
+
+                ControlPath controlPath = controlPathMap.get(bulkControlAssignment.getControlPathId());
+                if (controlPath != null) {
+                    controlAssignment.setControlPath(controlPath);
+                    controlPath.getAssignments().add(controlAssignment);
+                }
+
+                ControlPath controlPathChild = controlPathMap.get(bulkControlAssignment.getControlPathChildId());
+                if (controlPathChild != null) {
+                    controlAssignment.setControlPathChild(controlPathChild);
+                    controlPathChild.getChildAssignments().add(controlAssignment);
+                }
+
+                Control control = controlMap.get(bulkControlAssignment.getControlId());
+                if (control != null) {
+                    controlAssignment.setControl(control);
+                    control.getAssignments().add(controlAssignment);
+                }
+
+            });
+
+            // Map Release Point Apportionments into release points and emissions processes, along with control paths
             bulkEmissionsReport.getReleasePointAppts().forEach(bulkRpAppt -> {
                 ReleasePoint rp = releasePointMap.get(bulkRpAppt.getReleasePointId());
                 EmissionsProcess ep = processMap.get(bulkRpAppt.getEmissionProcessId());
@@ -437,6 +519,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                     ReleasePointAppt rpAppt = mapReleasePointAppt(bulkRpAppt);
                     rpAppt.setReleasePoint(rp);
                     rpAppt.setEmissionsProcess(ep);
+
+                    if (bulkRpAppt.getControlPathId() != null) {
+                        ControlPath controlPath = controlPathMap.get(bulkRpAppt.getControlPathId());
+
+                        if (controlPath != null) {
+                            rpAppt.setControlPath(controlPath);
+                            controlPath.getReleasePointAppts().add(rpAppt);
+                        }
+                    }
+
                     rp.getReleasePointAppts().add(rpAppt);
                     ep.getReleasePointAppts().add(rpAppt);
                 }
@@ -481,6 +573,19 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         List<ReleasePointAppt> releasePointAppts = releasePoints.stream()
                 .flatMap(r -> r.getReleasePointAppts().stream())
                 .collect(Collectors.toList());
+        List<ControlPath> controlPaths = facilitySites.stream()
+                .flatMap(f -> f.getControlPaths().stream())
+                .collect(Collectors.toList());
+        List<Control> controls = facilitySites.stream()
+                .flatMap(c -> c.getControls().stream())
+                .collect(Collectors.toList());
+        // control_path_id in the DB is non-null so this should get every assignment exactly once
+        List<ControlAssignment> controlAssignments = controlPaths.stream()
+                .flatMap(c -> c.getAssignments().stream())
+                .collect(Collectors.toList());
+        List<ControlPollutant> controlPollutants = controls.stream()
+                .flatMap(c -> c.getPollutants().stream())
+                .collect(Collectors.toList());
 
         EmissionsReportBulkUploadDto reportDto = uploadMapper.emissionsReportToDto(report);
         reportDto.setFacilitySites(uploadMapper.facilitySiteToDtoList(facilitySites));
@@ -491,6 +596,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         reportDto.setEmissions(uploadMapper.emissionToDtoList(emissions));
         reportDto.setReleasePoints(uploadMapper.releasePointToDtoList(releasePoints));
         reportDto.setReleasePointAppts(uploadMapper.releasePointApptToDtoList(releasePointAppts));
+        reportDto.setControlPaths(uploadMapper.controlPathToDtoList(controlPaths));
+        reportDto.setControls(uploadMapper.controlToDtoList(controls));
+        reportDto.setControlAssignments(uploadMapper.controlAssignmentToDtoList(controlAssignments));
+        reportDto.setControlPollutants(uploadMapper.controlPollutantToDtoList(controlPollutants));
 
         return reportDto;
     }
@@ -837,6 +946,53 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      */
     private ReleasePointAppt mapReleasePointAppt(ReleasePointApptBulkUploadDto dto) {
         ReleasePointAppt result = uploadMapper.releasePointApptFromDto(dto);
+
+        return result;
+    }
+
+    /**
+     * Map an ControlPathBulkUploadDto to an ControlPath domain model
+     */
+    private ControlPath mapControlPath(ControlPathBulkUploadDto dto) {
+        ControlPath result = uploadMapper.controlPathFromDto(dto);
+
+        return result;
+    }
+
+    /**
+     * Map an ControlBulkUploadDto to an Control domain model
+     */
+    private Control mapControl(ControlBulkUploadDto dto) {
+        Control result = uploadMapper.controlFromDto(dto);
+
+        if (dto.getOperatingStatusCode() != null) {
+            result.setOperatingStatusCode(operatingStatusRepo.findById(dto.getOperatingStatusCode()).orElse(null));
+        }
+//        if (dto.getControlMeasureCode() != null) {
+//            result.setControlMeasureCode(controlMeasureCode);
+//        }
+
+        return result;
+    }
+
+    /**
+     * Map an ControlAssignmentBulkUploadDto to an ControlAssignment domain model
+     */
+    private ControlAssignment mapControlAssignment(ControlAssignmentBulkUploadDto dto) {
+        ControlAssignment result = uploadMapper.controlAssignmentFromDto(dto);
+
+        return result;
+    }
+
+    /**
+     * Map an ControlPollutantBulkUploadDto to an ControlPollutant domain model
+     */
+    private ControlPollutant mapControlPollutant(ControlPollutantBulkUploadDto dto) {
+        ControlPollutant result = uploadMapper.controlPollutantFromDto(dto);
+
+        if (dto.getPollutantCode() != null) {
+            result.setPollutant(pollutantRepo.findById(dto.getPollutantCode()).orElse(null));
+        }
 
         return result;
     }

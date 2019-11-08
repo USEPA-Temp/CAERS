@@ -5,6 +5,10 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlAssignment;
+import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -14,6 +18,10 @@ import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
@@ -135,9 +143,56 @@ public interface BulkUploadMapper {
 
     @Mapping(source="releasePoint.id", target="releasePointId")
     @Mapping(source="emissionsProcess.id", target="emissionProcessId")
-    @Mapping(target="controlPathId", ignore = true)
+    @Mapping(source="controlPath.id", target="controlPathId")
     ReleasePointApptBulkUploadDto releasePointApptToDto(ReleasePointAppt source);
 
     List<ReleasePointApptBulkUploadDto> releasePointApptToDtoList(List<ReleasePointAppt> source);
+
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="facilitySite", ignore = true)
+    ControlPath controlPathFromDto(ControlPathBulkUploadDto source);
+
+    @Mapping(source="facilitySite.id", target="facilitySiteId")
+    ControlPathBulkUploadDto controlPathToDto(ControlPath source);
+
+    List<ControlPathBulkUploadDto> controlPathToDtoList(List<ControlPath> source);
+
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="facilitySite", ignore = true)
+    @Mapping(target="operatingStatusCode", ignore = true)
+//    @Mapping(target="controlMeasureCode", ignore = true)
+    @Mapping(source="controlMeasureCode", target="controlMeasureCode.code")
+    Control controlFromDto(ControlBulkUploadDto source);
+
+    @Mapping(source="facilitySite.id", target="facilitySiteId")
+    @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
+    @Mapping(source="controlMeasureCode.code", target="controlMeasureCode")
+    ControlBulkUploadDto controlToDto(Control source);
+
+    List<ControlBulkUploadDto> controlToDtoList(List<Control> source);
+
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="control", ignore = true)
+    @Mapping(target="controlPath", ignore = true)
+    @Mapping(target="controlPathChild", ignore = true)
+    ControlAssignment controlAssignmentFromDto(ControlAssignmentBulkUploadDto source);
+
+    @Mapping(source="control.id", target="controlId")
+    @Mapping(source="controlPath.id", target="controlPathId")
+    @Mapping(source="controlPathChild.id", target="controlPathChildId")
+    ControlAssignmentBulkUploadDto controlAssignmentToDto(ControlAssignment source);
+
+    List<ControlAssignmentBulkUploadDto> controlAssignmentToDtoList(List<ControlAssignment> source);
+
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="control", ignore = true)
+    @Mapping(target="pollutant", ignore = true)
+    ControlPollutant controlPollutantFromDto(ControlPollutantBulkUploadDto source);
+
+    @Mapping(source="control.id", target="controlId")
+    @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
+    ControlPollutantBulkUploadDto controlPollutantToDto(ControlPollutant source);
+
+    List<ControlPollutantBulkUploadDto> controlPollutantToDtoList(List<ControlPollutant> source);
 
 }
