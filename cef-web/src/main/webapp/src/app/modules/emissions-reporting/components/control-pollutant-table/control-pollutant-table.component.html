@@ -7,9 +7,11 @@
       <th scope="col" sortable="pollutantCode" (sort)="onSort($event)">Code</th>
       <th scope="col" sortable="pollutantCasId" (sort)="onSort($event)">CAS ID</th>
       <th scope="col" sortable="percentReudction" (sort)="onSort($event)">% Reduction</th>
-      <ng-container *ngIf="!readOnlyMode">
-        <th scope="col"></th>
-      </ng-container>
+      <!-- Commented out for pilot 
+        <ng-container *ngIf="!readOnlyMode">
+          <th scope="col"></th>
+        </ng-container>
+      -->
     </tr>
     </thead>
     <tbody>
@@ -18,19 +20,23 @@
       <td>{{item.pollutant.pollutantCode}}</td>
       <td>{{item.pollutant.pollutantCasId}}</td>
       <td>{{item.percentReduction}}</td>
-      <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-      </ng-container>
+      <!-- Commented out for pilot 
+        <ng-container *ngIf="!readOnlyMode">
+          <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+        </ng-container>
+      -->
     </tr>
-    <ng-container *ngIf="!readOnlyMode">
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
-      </tr>
-    </ng-container>
+    <!-- Commented out for pilot 
+      <ng-container *ngIf="!readOnlyMode">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+        </tr>
+      </ng-container> 
+    -->
     </tbody>
   </table>
 </div>

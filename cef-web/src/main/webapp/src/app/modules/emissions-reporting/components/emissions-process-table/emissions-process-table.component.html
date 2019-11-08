@@ -16,20 +16,28 @@
       <td>{{item.sccCode}}</td>
       <ng-container *ngIf="!readOnlyMode">
         <td>
-            <div *ngIf="parentComponentType==='releasePointAppt'; else elseBlock">
-              <a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a>
-            </div>
-            <ng-template #elseBlock>
-              <a routerLink="." (click)="openDeleteModal(item.emissionsProcessIdentifier, item.id, item.emissionsUnitId)"><fa-icon icon="trash-alt"></fa-icon></a>
-            </ng-template>
-          </td>
-        </ng-container>
+          <div *ngIf="parentComponentType==='releasePointAppt'; else elseBlock">
+            <!-- Commented out for pilot
+              <a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a>  
+            -->
+          </div>
+          <ng-template #elseBlock>
+            <a routerLink="." (click)="openDeleteModal(item.emissionsProcessIdentifier, item.id, item.emissionsUnitId)"><fa-icon icon="trash-alt"></fa-icon></a>
+          </ng-template> 
+        </td>
+      </ng-container>
     </tr>
     <ng-container *ngIf="!readOnlyMode">
       <tr>
         <td></td>
         <td></td>
-        <td><a routerLink="{{createUrl}}"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+        <td>   
+          <div *ngIf="parentComponentType==='releasePointAppt'; else elseBlock">
+          </div>
+          <ng-template #elseBlock>
+            <a routerLink="{{createUrl}}"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a>
+          </ng-template>
+        </td> 
       </tr>
     </ng-container>
     </tbody>

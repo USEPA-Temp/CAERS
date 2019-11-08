@@ -6,9 +6,11 @@
       <th scope="col" sortable="identifier" (sort)="onSort($event)">Identifier</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Component</th>
       <th scope="col" sortable="typeDesc" (sort)="onSort($event)">Type</th>
-      <ng-container *ngIf="!readOnlyMode">
-        <th scope="col"></th>
-      </ng-container>
+      <!-- Commented out for pilot 
+        <ng-container *ngIf="!readOnlyMode">
+          <th scope="col"></th>
+        </ng-container>
+      -->
     </tr>
     </thead>
 
@@ -18,19 +20,23 @@
           <td>{{item.identifier}}</td>
           <td><a routerLink="{{baseUrl}}/{{item.type}}/{{item.id}}">{{item.description}}</a></td>
           <td>{{item.typeDesc}}</td>
-          <ng-container *ngIf="!readOnlyMode">
-            <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-          </ng-container>
+          <!-- Commented out for pilot 
+            <ng-container *ngIf="!readOnlyMode">
+              <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+            </ng-container>
+          -->
         </tr>
       </ng-container>
-      <ng-container *ngIf="!readOnlyMode">
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
-        </tr>
-      </ng-container>
+      <!-- Commented out for pilot 
+        <ng-container *ngIf="!readOnlyMode">
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td> 
+          </tr>
+        </ng-container> 
+      -->
     </tbody>
     
   </table>
