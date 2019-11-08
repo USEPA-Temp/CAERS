@@ -22,6 +22,10 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     private List<ReportingPeriodBulkUploadDto> reportingPeriods;
     private List<OperatingDetailBulkUploadDto> operatingDetails;
     private List<EmissionBulkUploadDto> emissions;
+    private List<ControlPathBulkUploadDto> controlPaths;
+    private List<ControlBulkUploadDto> controls;
+    private List<ControlAssignmentBulkUploadDto> controlAssignments;
+    private List<ControlPollutantBulkUploadDto> controlPollutants;
 
     public Long getId() {
         return id;
@@ -125,5 +129,29 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     }
     public List<EmissionBulkUploadDto> getEmissions() {
         return emissions;
+    }
+    public List<ControlPathBulkUploadDto> getControlPaths() {
+        return controlPaths;
+    }
+    public void setControlPaths(List<ControlPathBulkUploadDto> controlPaths) {
+        this.controlPaths = controlPaths;
+    }
+    public List<ControlBulkUploadDto> getControls() {
+        return controls;
+    }
+    public void setControls(List<ControlBulkUploadDto> controls) {
+        this.controls = controls;
+    }
+    public List<ControlAssignmentBulkUploadDto> getControlAssignments() {
+        return controlAssignments;
+    }
+    public void setControlAssignments(List<ControlAssignmentBulkUploadDto> controlAssignments) {
+        this.controlAssignments = controlAssignments;
+    }
+    public List<ControlPollutantBulkUploadDto> getControlPollutants() {
+        return controlPollutants;
+    }
+    public void setControlPollutants(List<ControlPollutantBulkUploadDto> controlPollutants) {
+        this.controlPollutants = controlPollutants;
     }
 }
