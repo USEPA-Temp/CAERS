@@ -33,7 +33,7 @@ export class ReportSummaryComponent implements OnInit {
 
     ngOnInit() {
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
-            this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+            this.readOnlyMode = ReportStatus.APPROVED === data.facilitySite.emissionsReport.status;
 
             this.facilitySite = data.facilitySite;
             this.sharedService.emitChange(data.facilitySite);
@@ -43,7 +43,7 @@ export class ReportSummaryComponent implements OnInit {
                 this.userService.getCurrentUserNaasToken()
                 .subscribe(userToken => {
                     this.userContextService.getUser().subscribe( user => {
-                            if (user.role == 'Certifier' && this.facilitySite.emissionsReport.status!= 'SUBMITTED') {
+                            if (user.role === 'Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
                                 this.showCertify = true;
                                 initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                     this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId);
@@ -62,7 +62,7 @@ export class ReportSummaryComponent implements OnInit {
 
 
     /**
-     validate the report
+     * validate the report
      */
     validateReport() {
 
