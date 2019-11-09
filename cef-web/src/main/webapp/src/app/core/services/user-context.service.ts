@@ -22,11 +22,16 @@ export class UserContextService {
       return this.userService.initHandoffToCdx(whereTo);
   }
 
+  logoutUser() : void {
+
+    return this.userService.logoutUser();
+  }
+
   getUser():Observable<User>{
-      if(this.user){
-          return of(this.user);
-      }else{
-          return this.userService.getCurrentUser();
-      }
+    if(this.user){
+        return of(this.user);
+    }else{
+        return this.userService.getCurrentUser();
+    }
   }
 }

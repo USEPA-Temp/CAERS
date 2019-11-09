@@ -6,6 +6,7 @@ import gov.epa.cef.web.security.AccessDeniedHandlerImpl;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.AuthenticationEntryPointImpl;
 import gov.epa.cef.web.security.AuthenticationSuccessHandlerImpl;
+import gov.epa.cef.web.security.LogoutSuccessHandlerImpl;
 import gov.epa.cef.web.security.UserDetailsServiceImpl;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -63,8 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 AppRole.RoleType.CERTIFIER.roleName(),
                 AppRole.RoleType.REVIEWER.roleName())
             .anyRequest().denyAll().and()
-            .logout()
-            .logoutSuccessUrl(logoutUrl);
+            .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(logoutUrl));
     }
 
     @Bean

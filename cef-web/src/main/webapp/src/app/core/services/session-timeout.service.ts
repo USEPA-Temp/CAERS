@@ -52,7 +52,7 @@ export class SessionTimeoutService {
       // Log user out if modal is not interacted with
       this.dialogTimer = setTimeout(() => {
 
-        window.location.href = 'logout';
+          this.userService.logoutUser();
 
       }, timeRemaining);
 
@@ -68,7 +68,7 @@ export class SessionTimeoutService {
       }, () => {
 
         clearTimeout(this.dialogTimer);
-        window.location.href = 'logout';
+        this.userService.logoutUser();
 
         this.showingDialog = false;
       });
