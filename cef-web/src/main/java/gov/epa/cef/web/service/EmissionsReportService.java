@@ -3,7 +3,6 @@ package gov.epa.cef.web.service;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 import java.util.List;
@@ -80,21 +79,6 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto saveEmissionReport(EmissionsReport emissionsReport);
 
-    
-    /**
-     * Save the emissions report to the database.
-     * @param emissionsReport
-     * @return
-     */
-    EmissionsReportDto saveBulkEmissionReport(EmissionsReportBulkUploadDto emissionsReport);
-
-    /**
-     * Testing method for generating upload JSON for a report
-     * @param reportId
-     * @return
-     */
-    EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId);
-    
     /**
      * Delete specified emissions report from database
      * @param id

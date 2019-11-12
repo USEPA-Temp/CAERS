@@ -48,7 +48,7 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "description", nullable = false, length = 200)
     private String description;
 
-    @Column(name = "stack_height", precision = 6, scale = 3)
+    @Column(name = "stack_height", precision = 8, scale = 3)
     private Double stackHeight;
     
     @ManyToOne(fetch = FetchType.LAZY)

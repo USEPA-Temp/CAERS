@@ -10,8 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "control_path")
@@ -23,17 +24,17 @@ public class ControlPath extends BaseAuditEntity {
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
-    private Set<ControlAssignment> assignments = new HashSet<ControlAssignment>(0);
+    private List<ControlAssignment> assignments = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPathChild")
-    private Set<ControlAssignment> childAssignments = new HashSet<ControlAssignment>(0);
+    private List<ControlAssignment> childAssignments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlPath")
-    private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
+    private List<ReleasePointAppt> releasePointAppts = new ArrayList<>();
 
 
     /**
@@ -50,7 +51,7 @@ public class ControlPath extends BaseAuditEntity {
     	this.id = originalControlPath.getId();
     	this.facilitySite = facilitySite;
     	this.description = originalControlPath.getDescription();
-    	this.assignments = new HashSet<ControlAssignment>();
+//    	this.assignments = new HashSet<ControlAssignment>();
 
         for (ControlAssignment originalControlAssignment : originalControlPath.getAssignments()) {
         	Control c = null;
@@ -84,20 +85,28 @@ public class ControlPath extends BaseAuditEntity {
         this.description = description;
     }
 
-    public Set<ControlAssignment> getAssignments() {
+    public List<ControlAssignment> getAssignments() {
         return assignments;
     }
 
-    public void setAssignments(Set<ControlAssignment> assignments) {
-        this.assignments = assignments;
+    public void setAssignments(List<ControlAssignment> assignments) {
+
+        this.assignments.clear();
+        if (assignments != null) {
+            this.assignments.addAll(assignments);
+        }
     }
 
-    public Set<ControlAssignment> getChildAssignments() {
+    public List<ControlAssignment> getChildAssignments() {
         return childAssignments;
     }
 
-    public void setChildAssignments(Set<ControlAssignment> childAssignments) {
-        this.childAssignments = childAssignments;
+    public void setChildAssignments(List<ControlAssignment> childAssignments) {
+
+        this.childAssignments.clear();
+        if (childAssignments != null) {
+            this.childAssignments.addAll(childAssignments);
+        }
     }
 
     public FacilitySite getFacilitySite() {
@@ -108,12 +117,16 @@ public class ControlPath extends BaseAuditEntity {
         this.facilitySite = facilitySite;
     }
 
-    public Set<ReleasePointAppt> getReleasePointAppts() {
+    public List<ReleasePointAppt> getReleasePointAppts() {
         return releasePointAppts;
     }
 
-    public void setReleasePointAppts(Set<ReleasePointAppt> releasePointAppts) {
-        this.releasePointAppts = releasePointAppts;
+    public void setReleasePointAppts(List<ReleasePointAppt> releasePointAppts) {
+
+        this.releasePointAppts.clear();
+        if (releasePointAppts != null) {
+            this.releasePointAppts.addAll(releasePointAppts);
+        }
     }
 
 
