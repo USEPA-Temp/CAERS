@@ -1,8 +1,8 @@
 package gov.epa.cef.web.domain;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,10 +58,10 @@ public class ReportingPeriod extends BaseAuditEntity {
     private String comments;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
-    private Set<Emission> emissions = new HashSet<Emission>(0);
+    private List<Emission> emissions = new ArrayList<>();
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")
-    private Set<OperatingDetail> operatingDetails = new HashSet<OperatingDetail>(0);
+    private List<OperatingDetail> operatingDetails = new ArrayList<>();
 
     
     /***
@@ -158,23 +158,31 @@ public class ReportingPeriod extends BaseAuditEntity {
         this.comments = comments;
     }
 
-    public Set<Emission> getEmissions() {
+    public List<Emission> getEmissions() {
         return this.emissions;
     }
 
-    public void setEmissions(Set<Emission> emissions) {
-        this.emissions = emissions;
+    public void setEmissions(List<Emission> emissions) {
+
+        this.emissions.clear();
+        if (emissions != null) {
+            this.emissions.addAll(emissions);
+        }
     }
 
-    public Set<OperatingDetail> getOperatingDetails() {
+    public List<OperatingDetail> getOperatingDetails() {
         return this.operatingDetails;
     }
 
-    public void setOperatingDetails(Set<OperatingDetail> operatingDetails) {
-        this.operatingDetails = operatingDetails;
+    public void setOperatingDetails(List<OperatingDetail> operatingDetails) {
+
+        this.operatingDetails.clear();
+        if (operatingDetails != null) {
+            this.operatingDetails.addAll(operatingDetails);
+        }
     }
-    
-    
+
+
     /***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */

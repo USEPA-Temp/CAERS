@@ -12,9 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Facility entity. @author MyEclipse Persistence Tools
@@ -119,7 +117,7 @@ public class FacilitySite extends BaseAuditEntity {
     private List<Control> controls = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facilitySite")
-    private Set<ControlPath> controlPaths = new HashSet<ControlPath>(0);
+    private List<ControlPath> controlPaths = new ArrayList<>();
 
 
     /***
@@ -436,12 +434,15 @@ public class FacilitySite extends BaseAuditEntity {
         }
     }
 
-    public Set<ControlPath> getControlPaths() {
+    public List<ControlPath> getControlPaths() {
         return controlPaths;
     }
 
-    public void setControlPaths(Set<ControlPath> controlPaths) {
-        this.controlPaths = controlPaths;
+    public void setControlPaths(List<ControlPath> controlPaths) {
+        this.controlPaths.clear();
+        if (controlPaths != null) {
+            this.controlPaths.addAll(controlPaths);
+        }
     }
 
 

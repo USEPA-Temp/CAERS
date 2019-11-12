@@ -6,6 +6,7 @@ import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
@@ -45,16 +46,20 @@ public class EmissionsReportApi {
 
     private final EmissionsReportValidationService validationService;
 
+    private final BulkUploadService uploadService;
+
     private final SecurityService securityService;
 
     @Autowired
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
-                       EmissionsReportValidationService validationService) {
+                       EmissionsReportValidationService validationService,
+                       BulkUploadService uploadService) {
 
         this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
         this.validationService = validationService;
+        this.uploadService = uploadService;
     }
 
     /**
@@ -246,7 +251,7 @@ public class EmissionsReportApi {
         produces = MediaType.APPLICATION_JSON_VALUE)
     // @RolesAllowed(value = {AppRole.ROLE_ADMIN})
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
-        EmissionsReportDto savedReport = emissionsReportService.saveBulkEmissionReport(reportUpload);
+        EmissionsReportDto savedReport = uploadService.saveBulkEmissionReport(reportUpload);
         return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
     }
 
@@ -260,7 +265,7 @@ public class EmissionsReportApi {
         @NotNull @PathVariable Long reportId) {
 
         EmissionsReportBulkUploadDto result =
-            emissionsReportService.generateBulkUploadDto(reportId);
+            uploadService.generateBulkUploadDto(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

@@ -51,7 +51,7 @@ public class EmissionsUnit extends BaseAuditEntity {
     @Column(name = "status_year")
     private Short statusYear;
 
-    @Column(name = "design_capacity", precision = 4)
+    @Column(name = "design_capacity")
     private BigDecimal designCapacity;
 
     @ManyToOne(fetch = FetchType.LAZY)

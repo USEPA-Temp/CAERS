@@ -160,8 +160,7 @@ public interface BulkUploadMapper {
     @Mapping(target="id", ignore = true)
     @Mapping(target="facilitySite", ignore = true)
     @Mapping(target="operatingStatusCode", ignore = true)
-//    @Mapping(target="controlMeasureCode", ignore = true)
-    @Mapping(source="controlMeasureCode", target="controlMeasureCode.code")
+    @Mapping(target="controlMeasureCode", ignore = true)
     Control controlFromDto(ControlBulkUploadDto source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")

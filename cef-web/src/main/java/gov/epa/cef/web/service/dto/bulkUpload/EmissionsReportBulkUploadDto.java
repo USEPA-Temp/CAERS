@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmissionsReportBulkUploadDto implements Serializable {
@@ -14,18 +15,18 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     private Short year;
     private String status;
     private String validationStatus;
-    private List<FacilitySiteBulkUploadDto> facilitySites;
-    private List<EmissionsUnitBulkUploadDto> emissionsUnits;
-    private List<EmissionsProcessBulkUploadDto> emissionsProcesses;
-    private List<ReleasePointBulkUploadDto> releasePoints;
-    private List<ReleasePointApptBulkUploadDto> releasePointAppts;
-    private List<ReportingPeriodBulkUploadDto> reportingPeriods;
-    private List<OperatingDetailBulkUploadDto> operatingDetails;
-    private List<EmissionBulkUploadDto> emissions;
-    private List<ControlPathBulkUploadDto> controlPaths;
-    private List<ControlBulkUploadDto> controls;
-    private List<ControlAssignmentBulkUploadDto> controlAssignments;
-    private List<ControlPollutantBulkUploadDto> controlPollutants;
+    private List<FacilitySiteBulkUploadDto> facilitySites = new ArrayList<>();
+    private List<EmissionsUnitBulkUploadDto> emissionsUnits = new ArrayList<>();
+    private List<EmissionsProcessBulkUploadDto> emissionsProcesses = new ArrayList<>();
+    private List<ReleasePointBulkUploadDto> releasePoints = new ArrayList<>();
+    private List<ReleasePointApptBulkUploadDto> releasePointAppts = new ArrayList<>();
+    private List<ReportingPeriodBulkUploadDto> reportingPeriods = new ArrayList<>();
+    private List<OperatingDetailBulkUploadDto> operatingDetails = new ArrayList<>();
+    private List<EmissionBulkUploadDto> emissions = new ArrayList<>();
+    private List<ControlPathBulkUploadDto> controlPaths = new ArrayList<>();
+    private List<ControlBulkUploadDto> controls = new ArrayList<>();
+    private List<ControlAssignmentBulkUploadDto> controlAssignments = new ArrayList<>();
+    private List<ControlPollutantBulkUploadDto> controlPollutants = new ArrayList<>();
 
     public Long getId() {
         return id;

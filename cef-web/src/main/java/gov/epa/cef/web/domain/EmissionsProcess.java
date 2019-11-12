@@ -1,7 +1,7 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,10 +56,10 @@ public class EmissionsProcess extends BaseAuditEntity {
     private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
-    private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
+    private List<ReleasePointAppt> releasePointAppts = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
-    private Set<ReportingPeriod> reportingPeriods = new HashSet<ReportingPeriod>(0);
+    private List<ReportingPeriod> reportingPeriods = new ArrayList<>();
     
     /***
      * Default constructor
@@ -180,18 +180,26 @@ public class EmissionsProcess extends BaseAuditEntity {
         this.comments = comments;
     }
 
-    public Set<ReleasePointAppt> getReleasePointAppts() {
+    public List<ReleasePointAppt> getReleasePointAppts() {
         return this.releasePointAppts;
     }
-    public void setReleasePointAppts(Set<ReleasePointAppt> releasePointAppts) {
-        this.releasePointAppts = releasePointAppts;
+    public void setReleasePointAppts(List<ReleasePointAppt> releasePointAppts) {
+
+        this.releasePointAppts.clear();
+        if (releasePointAppts != null) {
+            this.releasePointAppts.addAll(releasePointAppts);
+        }
     }
 
-    public Set<ReportingPeriod> getReportingPeriods() {
+    public List<ReportingPeriod> getReportingPeriods() {
         return this.reportingPeriods;
     }
-    public void setReportingPeriods(Set<ReportingPeriod> reportingPeriods) {
-        this.reportingPeriods = reportingPeriods;
+    public void setReportingPeriods(List<ReportingPeriod> reportingPeriods) {
+
+        this.reportingPeriods.clear();
+        if (reportingPeriods != null) {
+            this.reportingPeriods.addAll(reportingPeriods);
+        }
     }
 
 

@@ -1,7 +1,7 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,10 +44,10 @@ public class Control extends BaseAuditEntity {
     private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
-    private Set<ControlAssignment> assignments = new HashSet<ControlAssignment>(0);
+    private List<ControlAssignment> assignments = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
-    private Set<ControlPollutant> pollutants = new HashSet<ControlPollutant>(0);
+    private List<ControlPollutant> pollutants = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_measure_code", nullable = false)
@@ -134,20 +134,28 @@ public class Control extends BaseAuditEntity {
         this.comments = comments;
     }
 
-    public Set<ControlAssignment> getAssignments() {
+    public List<ControlAssignment> getAssignments() {
         return assignments;
     }
 
-    public void setAssignments(Set<ControlAssignment> controlAssignments) {
-        this.assignments = controlAssignments;
+    public void setAssignments(List<ControlAssignment> assignments) {
+
+        this.assignments.clear();
+        if (assignments != null) {
+            this.assignments.addAll(assignments);
+        }
     }
 
-    public Set<ControlPollutant> getPollutants() {
+    public List<ControlPollutant> getPollutants() {
         return pollutants;
     }
 
-    public void setPollutants(Set<ControlPollutant> controlPollutants) {
-        this.pollutants = controlPollutants;
+    public void setPollutants(List<ControlPollutant> pollutants) {
+
+        this.pollutants.clear();
+        if (pollutants != null) {
+            this.pollutants.addAll(pollutants);
+        }
     }
 
     public ControlMeasureCode getControlMeasureCode() {
