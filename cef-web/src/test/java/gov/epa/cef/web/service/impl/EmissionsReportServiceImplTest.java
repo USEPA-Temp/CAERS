@@ -42,10 +42,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -237,7 +235,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	er.setValidationStatus(ValidationStatus.PASSED);
     	er.setYear((short) 2020);
 
-    	HashSet<FacilitySite> facilitySites = new HashSet<>();
+    	List<FacilitySite> facilitySites = new ArrayList<>();
     	FacilitySite fs = new FacilitySite();
     	fs.setAltSiteIdentifier("ALTID");
     	fs.setCity("Raleigh");
@@ -285,12 +283,12 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	control.setId(1L);
     	control.setFacilitySite(fs);
 
-    	HashSet<ControlAssignment> assignments = new HashSet<ControlAssignment>();
+    	List<ControlAssignment> assignments = new ArrayList<>();
     	ControlAssignment ca = new ControlAssignment();
     	ca.setControl(control);
     	ca.setId(1L);
     	ControlPath cp = new ControlPath();
-    	Set<ControlAssignment> caSet = new HashSet<ControlAssignment>();
+    	List<ControlAssignment> caSet = new ArrayList<>();
     	caSet.add(ca);
     	cp.setAssignments(caSet);
     	cp.setId(1L);
@@ -314,13 +312,13 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	ep.setEmissionsUnit(eu);
     	ep.setComments("Test Process Comments");
 
-    	HashSet<ReportingPeriod> reportingPeriods = new HashSet<ReportingPeriod>();
+    	List<ReportingPeriod> reportingPeriods = new ArrayList<>();
     	ReportingPeriod repPer = new ReportingPeriod();
     	repPer.setId(1L);
     	repPer.setComments("Reporting Period Comments");
     	repPer.setEmissionsProcess(ep);
 
-    	HashSet<Emission> emissions = new HashSet<Emission>();
+    	List<Emission> emissions = new ArrayList<>();
     	Emission e = new Emission();
     	e.setId(1L);
     	e.setComments("Test Emission Comments");
