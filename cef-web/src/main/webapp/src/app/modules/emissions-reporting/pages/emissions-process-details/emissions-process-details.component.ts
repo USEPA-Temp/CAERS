@@ -14,6 +14,7 @@ import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissi
 import { OperatingDetailService } from 'src/app/core/services/operating-detail.service';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -45,6 +46,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     private operatingDetailService: OperatingDetailService,
     private controlPathService: ControlPathService,
     private route: ActivatedRoute,
+    private toastr: ToastrService,
     private sharedService: SharedService) { }
 
   ngOnInit() {
@@ -106,8 +108,11 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   }
 
   updateOperatingDetail(detail: OperatingDetail) {
-    if (!this.operatingDetailsComponent.operatingDetailsForm.valid) {
+    if (!this.operatingDetailsComponent.operatingDetailsForm.valid || !this.operatingDetailsComponent.validateOperatingPercent()) {
       this.operatingDetailsComponent.operatingDetailsForm.markAllAsTouched();
+      if(!this.operatingDetailsComponent.validateOperatingPercent()){
+        this.toastr.error('',"Total Operating Percent must be between 99.5 and 100.5",{positionClass: 'toast-top-right'})
+      }
     } else {
       const updatedDetail = new OperatingDetail();
 

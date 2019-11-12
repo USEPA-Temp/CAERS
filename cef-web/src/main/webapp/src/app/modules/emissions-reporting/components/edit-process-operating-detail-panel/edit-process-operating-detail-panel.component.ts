@@ -65,6 +65,22 @@ export class EditProcessOperatingDetailPanelComponent implements OnInit, OnChang
   ngOnInit() {
   }
 
+    validateOperatingPercent(){
+    if((parseFloat(this.operatingDetailsForm.controls.percentFall.value) + 
+        parseFloat(this.operatingDetailsForm.controls.percentSpring.value)+
+        parseFloat(this.operatingDetailsForm.controls.percentWinter.value)+
+        parseFloat(this.operatingDetailsForm.controls.percentSummer.value) > 100.5) || (
+        parseFloat(this.operatingDetailsForm.controls.percentFall.value)+ 
+        parseFloat(this.operatingDetailsForm.controls.percentSpring.value)+
+        parseFloat(this.operatingDetailsForm.controls.percentWinter.value)+
+        parseFloat(this.operatingDetailsForm.controls.percentSummer.value) < 99.5)){
+          return false;
+        }
+    else{
+          return true;
+        }
+  }
+
   ngOnChanges() {
 
     this.operatingDetailsForm.reset(this.operatingDetails);
