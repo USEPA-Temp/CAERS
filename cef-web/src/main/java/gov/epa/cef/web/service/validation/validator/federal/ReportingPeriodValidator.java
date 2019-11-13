@@ -51,7 +51,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                 getEmissionsUnitIdentifier(period),
                 getEmissionsProcessIdentifier(period));
 
-        } else if (period.getCalculationParameterValue().intValue() < 0) {
+        } else if (period.getCalculationParameterValue().compareTo(BigDecimal.ZERO) < 0) {
 
             valid = false;
             context.addFederalError(
@@ -185,7 +185,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                 valid = false;
                 context.addFederalError(
                         "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission",
-                        "reportingPeriod.emission.pm10.invalid", 
+                        "reportingPeriod.emission.pm25.invalid", 
                         getEmissionsUnitIdentifier(period),
                         getEmissionsProcessIdentifier(period));
             }
