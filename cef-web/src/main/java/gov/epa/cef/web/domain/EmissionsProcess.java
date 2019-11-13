@@ -80,6 +80,7 @@ public class EmissionsProcess extends BaseAuditEntity {
         this.emissionsProcessIdentifier = originalProcess.getEmissionsProcessIdentifier();
         this.statusYear = originalProcess.getStatusYear();
         this.sccCode = originalProcess.getSccCode();
+        this.sccDescription = originalProcess.getSccDescription();
         this.sccShortName = originalProcess.getSccShortName();
         this.description = originalProcess.getDescription();
         this.comments = originalProcess.getComments();
