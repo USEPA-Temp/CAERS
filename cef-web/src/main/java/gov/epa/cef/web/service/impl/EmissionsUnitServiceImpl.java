@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -39,7 +40,7 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
      */
     @Override
     public List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId) {
-        List<EmissionsUnit> emissionUnits= unitRepo.findByFacilitySiteId(facilitySiteId);
+        List<EmissionsUnit> emissionUnits= unitRepo.findByFacilitySiteId(facilitySiteId, Sort.by(Sort.Direction.ASC, "unitIdentifier"));
         return emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(emissionUnits);
     }
     

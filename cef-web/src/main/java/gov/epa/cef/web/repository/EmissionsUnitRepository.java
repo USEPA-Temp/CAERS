@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
      * @param facilitySiteId
      * @return
      */
-    List<EmissionsUnit> findByFacilitySiteId(Long facilitySiteId);
+    List<EmissionsUnit> findByFacilitySiteId(Long facilitySiteId, Sort sort);
 
     /**
      *
