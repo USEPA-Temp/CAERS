@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +49,8 @@ public class EmissionsUnitServiceImplTest extends BaseServiceTest {
                 .thenReturn(emissionsUnitDtosList);
         when(emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(null)).thenReturn(null);
 
-        when(unitRepo.findByFacilitySiteId(1L)).thenReturn(emissionsUnitsList);
-	    when(unitRepo.findByFacilitySiteId(2L)).thenReturn(null);
+        when(unitRepo.findByFacilitySiteId(1L, Sort.by(Sort.Direction.ASC, "unitIdentifier"))).thenReturn(emissionsUnitsList);
+	    when(unitRepo.findByFacilitySiteId(2L, Sort.by(Sort.Direction.ASC, "unitIdentifier"))).thenReturn(null);
 
 	}
 
