@@ -9,6 +9,7 @@ import { EditProcessInfoPanelComponent } from 'src/app/modules/emissions-reporti
 import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-operating-detail-panel/edit-process-operating-detail-panel.component';
 import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-emissions-process',
@@ -31,7 +32,8 @@ export class CreateEmissionsProcessComponent implements OnInit {
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private toastr: ToastrService) { }
 
   ngOnInit() {
 
@@ -47,7 +49,8 @@ export class CreateEmissionsProcessComponent implements OnInit {
   isValid() {
     return this.infoComponent.processForm.valid
         && this.operatingDetailsComponent.operatingDetailsForm.valid
-        && this.reportingPeriodComponent.reportingPeriodForm.valid;
+        && this.reportingPeriodComponent.reportingPeriodForm.valid
+        && this.operatingDetailsComponent.validateOperatingPercent();
   }
 
   onSubmit() {
@@ -60,6 +63,9 @@ export class CreateEmissionsProcessComponent implements OnInit {
       this.infoComponent.processForm.markAllAsTouched();
       this.operatingDetailsComponent.operatingDetailsForm.markAllAsTouched();
       this.reportingPeriodComponent.reportingPeriodForm.markAllAsTouched();
+      if(!this.operatingDetailsComponent.validateOperatingPercent()){
+        this.toastr.error('',"Total Operating Percent must be between 99.5 and 100.5",{positionClass: 'toast-top-right'})
+      }
     } else {
 
       const process = new Process();
