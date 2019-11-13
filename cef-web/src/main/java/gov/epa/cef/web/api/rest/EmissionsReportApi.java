@@ -251,7 +251,7 @@ public class EmissionsReportApi {
         produces = MediaType.APPLICATION_JSON_VALUE)
     // @RolesAllowed(value = {AppRole.ROLE_ADMIN})
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
-        EmissionsReportDto savedReport = uploadService.saveBulkEmissionReport(reportUpload);
+        EmissionsReportDto savedReport = uploadService.saveBulkEmissionsReport(reportUpload);
         return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
     }
 

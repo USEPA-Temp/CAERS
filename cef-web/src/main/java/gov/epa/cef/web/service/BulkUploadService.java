@@ -10,7 +10,7 @@ public interface BulkUploadService {
      * @param bulkEmissionsReport
      * @return
      */
-    EmissionsReportDto saveBulkEmissionReport(EmissionsReportBulkUploadDto bulkEmissionsReport);
+    EmissionsReportDto saveBulkEmissionsReport(EmissionsReportBulkUploadDto bulkEmissionsReport);
 
     /**
      * Testing method for generating upload JSON for a report
