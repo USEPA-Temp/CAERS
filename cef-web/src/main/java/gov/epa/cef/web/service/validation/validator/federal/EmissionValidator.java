@@ -3,6 +3,9 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
@@ -54,8 +57,8 @@ public class EmissionValidator extends BaseValidator<Emission> {
             }
 
             if (emission.getReportingPeriod() != null 
-                    && emission.getReportingPeriod().getCalculationParameterValue().intValue() == 0 
-                    && emission.getTotalEmissions().intValue() != 0) {
+                    && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
+                    && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
 
                 valid = false;
                 context.addFederalError(
