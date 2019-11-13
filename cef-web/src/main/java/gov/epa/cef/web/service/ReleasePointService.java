@@ -19,5 +19,11 @@ public interface ReleasePointService {
      * @return
      */
     List<ReleasePointDto> retrieveByFacilitySiteId(Long facilitySiteId);
+    
+    /**
+     * Delete Release Point by id
+     * @param releasePointId
+     */
+    void delete(Long releasePointId);
 
 }

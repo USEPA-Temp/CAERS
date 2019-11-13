@@ -7,6 +7,9 @@
       <th scope="col" sortable="typeCode" (sort)="onSort($event)">Release Point Type</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Release Point Description</th>
       <th scope="col" sortable="operatingStatusCode.description" (sort)="onSort($event)">Operating Status</th>
+      <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
+      </ng-container>  
     </tr>
     </thead>
     <tbody>
@@ -15,6 +18,9 @@
       <td>{{item.typeCode.description}}</td>
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCode.description}}</td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      </ng-container> 
     </tr>
     </tbody>
   </table>
