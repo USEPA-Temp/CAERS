@@ -54,7 +54,7 @@ export class EmissionDetailsComponent implements OnInit {
     emissionsCalcMethodCode: ['', Validators.required],
     totalEmissions: ['', [Validators.required, numberValidator()]],
     emissionsUomCode: [null, Validators.required],
-    comments: ['',[Validators.required, Validators.maxLength(200)]],
+    comments: ['', [Validators.maxLength(200)]],
   }, { validators: this.emissionsCalculatedValidator() });
 
   methodValues: CalculationMethodCode[];
@@ -213,9 +213,11 @@ export class EmissionDetailsComponent implements OnInit {
   }
 
   onSubmit() {
-
-    if (!this.emissionForm.valid) {
+    if (!this.emissionForm.valid || (this.totalManualEntry && !this.emissionForm.controls.comments.value)){
       this.emissionForm.markAllAsTouched();
+        if(this.totalManualEntry && !this.emissionForm.controls.comments.value){
+          this.toastr.error('','Comments field must be populated for this pollutant ',{positionClass: 'toast-top-right'});
+        }
     } else {
 
       const saveEmission = new Emission();
