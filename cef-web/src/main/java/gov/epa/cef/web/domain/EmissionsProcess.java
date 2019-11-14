@@ -93,12 +93,15 @@ public class EmissionsProcess extends BaseAuditEntity {
         			break;
         		}
         	}
+
         	ControlPath cp = null;
-        	for(ControlPath newControlPath : this.emissionsUnit.getFacilitySite().getControlPaths()) {
-        		if (newControlPath.getId().equals(originalApportionment.getControlPath().getId())) {
-        			cp = newControlPath;
-        			break;
-        		}
+        	if (originalApportionment.getControlPath() != null) {
+            	for(ControlPath newControlPath : this.emissionsUnit.getFacilitySite().getControlPaths()) {
+            		if (newControlPath.getId().equals(originalApportionment.getControlPath().getId())) {
+            			cp = newControlPath;
+            			break;
+            		}
+            	}
         	}
         	this.releasePointAppts.add(new ReleasePointAppt(rp, this, cp, originalApportionment));
         }
