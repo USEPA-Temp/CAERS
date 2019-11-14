@@ -95,7 +95,7 @@ public class EmissionsProcess extends BaseAuditEntity {
         	}
         	ControlPath cp = null;
         	for(ControlPath newControlPath : this.emissionsUnit.getFacilitySite().getControlPaths()) {
-        		if (newControlPath.getId().equals(originalApportionment.getControlPath().getId())) {
+        		if (originalApportionment.getControlPath() != null && newControlPath.getId().equals(originalApportionment.getControlPath().getId())) {
         			cp = newControlPath;
         			break;
         		}
