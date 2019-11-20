@@ -547,6 +547,7 @@
                                 <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
                                 <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
                                 <wsdlFile>RegisterSignService.wsdl</wsdlFile>
+                                <wsdlFile>NetworkNode2Service.wsdl</wsdlFile>
                             </wsdlFiles>
                         </configuration>
                         <goals>

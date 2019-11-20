@@ -12,6 +12,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,11 @@ public abstract class AbstractClient {
         }
         logger.error(String.format("%s: %s", ae.getErrorCode(), ae.getMessage()), ae);
         return ae;
+    }
+
+    protected <T> T getClient(URL address, Class<T> service, boolean enableMtom, boolean enableChunking) {
+
+        return getClient(address.toString(), service, enableMtom, enableChunking);
     }
 
     protected <T> T getClient(String address, Class<T> service, boolean enableMtom, boolean enableChunking) {

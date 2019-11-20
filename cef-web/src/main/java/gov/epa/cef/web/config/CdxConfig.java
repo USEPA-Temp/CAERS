@@ -3,7 +3,6 @@ package gov.epa.cef.web.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,7 +17,6 @@ import java.util.Map;
 
 @Component
 @Validated
-@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "cdx")
 public class CdxConfig {
 
