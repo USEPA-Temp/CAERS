@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
 import { ToastrService } from 'ngx-toastr';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
 @Component({
   selector: 'app-facility-information',
@@ -18,6 +19,8 @@ export class FacilityInformationComponent implements OnInit {
   facilitySite: FacilitySite;
   naicsCodes: FacilityNaicsCode[];
   readOnlyMode = true;
+
+  createUrl: string;
 
   constructor(
     private modalService: NgbModal,
@@ -42,6 +45,11 @@ export class FacilityInformationComponent implements OnInit {
       this.naicsCodes.sort((a, b) => a.primaryFlag && !b.primaryFlag ? -1 : !a.primaryFlag && b.primaryFlag ? 1 : 0);
 
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+    });
+
+    this.route.paramMap
+    .subscribe(params => {
+      this.createUrl = `/facility/${params.get('facilityId')}/report/${params.get('reportId')}/${BaseReportUrl.FACILITY_CONTACT}`;
     });
   }
 

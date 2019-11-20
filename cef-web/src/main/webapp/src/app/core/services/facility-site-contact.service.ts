@@ -12,6 +12,11 @@ export class FacilitySiteContactService {
 
   constructor(private http: HttpClient) { }
 
+  create(contact: FacilitySiteContact): Observable<FacilitySiteContact> {
+    const url = `${this.baseUrl}`;
+    return this.http.post<FacilitySiteContact>(url, contact);
+  }
+
   /** GET specified facility site contact from the server */
   retrieve(id: number): Observable<FacilitySiteContact> {
     const url = `${this.baseUrl}/${id}`;
@@ -21,6 +26,11 @@ export class FacilitySiteContactService {
   retrieveForFacility(facilitySiteId: number): Observable<FacilitySiteContact[]> {
     const url = `${this.baseUrl}/facility/${facilitySiteId}`;
     return this.http.get<FacilitySiteContact[]>(url);
+  }
+
+  update(contact: FacilitySiteContact): Observable<FacilitySiteContact> {
+    const url = `${this.baseUrl}/${contact.id}`;
+    return this.http.put<FacilitySiteContact>(url, contact);
   }
 
   /** Delete specified contact from the database */

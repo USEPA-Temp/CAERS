@@ -20,6 +20,17 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     @Autowired
     private FacilitySiteContactMapper mapper;
 
+    /**
+     * Create a new Facility Site Contact from a DTO object
+     */
+    public FacilitySiteContactDto create(FacilitySiteContactDto dto) {
+    	
+    	FacilitySiteContact facilityContatct = mapper.fromDto(dto);
+    	
+    	FacilitySiteContactDto results = mapper.toDto(contactRepo.save(facilityContatct));
+    	return results;
+    }
+    
     @Override
     public FacilitySiteContactDto retrieveById(Long id) {
         FacilitySiteContact result = contactRepo

@@ -1,6 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.repository.FacilitySiteContactRepository;
+import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.FacilitySiteContactService;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +35,23 @@ public class FacilitySiteContactApi {
         this.securityService = securityService;
     }
 
+    /**
+     * Create a facility site contact
+     * @param dto
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<FacilitySiteContactDto> createContact(
+    		@NotNull @RequestBody FacilitySiteContactDto dto) {
+    	
+    	this.securityService.facilityEnforcer()
+    		.enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	FacilitySiteContactDto result = facilitySiteContactService.create(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
     /**
      * Retrieve a facility site contact by ID
      * @param contactId

@@ -26,6 +26,9 @@ public class LookupRepositories {
 
     @Autowired
     private UnitMeasureCodeRepository uomRepo;
+    
+    @Autowired
+    private ContactTypeCodeRepository contactTypeRepo;
 
     public CalculationMaterialCodeRepository materialCodeRepo() {
         return materialCodeRepo;
@@ -53,6 +56,10 @@ public class LookupRepositories {
 
     public UnitMeasureCodeRepository uomRepo() {
         return uomRepo;
+    }
+    
+    public ContactTypeCodeRepository contactTypeRepo() {
+        return contactTypeRepo;
     }
 
 }

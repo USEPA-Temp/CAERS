@@ -15,4 +15,7 @@ public interface FacilitySiteContactMapper {
     FacilitySiteContactDto toDto(FacilitySiteContact contact);
     
     List<FacilitySiteContactDto> toDtoList(List<FacilitySiteContact> facilitySiteContacts);
+    
+    @Mapping(source="facilitySiteId", target="facilitySite.id")
+    FacilitySiteContact fromDto(FacilitySiteContactDto source);
 }

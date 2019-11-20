@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
+import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
@@ -17,6 +18,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
+import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
@@ -55,6 +57,9 @@ public class LookupServiceImpl implements LookupService {
 
     @Autowired
     private UnitMeasureCodeRepository uomRepo;
+    
+    @Autowired
+    private ContactTypeCodeRepository contactTypeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -217,5 +222,15 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    public List<CodeLookupDto> retrieveContactTypeCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<ContactTypeCode> entities = contactTypeRepo.findAll();
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
 
 }

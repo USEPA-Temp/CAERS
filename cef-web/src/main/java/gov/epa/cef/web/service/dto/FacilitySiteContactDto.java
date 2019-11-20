@@ -178,4 +178,8 @@ public class FacilitySiteContactDto implements Serializable {
         this.mailingPostalCode = mailingPostalCode;
     }
 
+    public FacilitySiteContactDto withId(Long id) {
+        setId(id);
+        return this;
+    }
 }

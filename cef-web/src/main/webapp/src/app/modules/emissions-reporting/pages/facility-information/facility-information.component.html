@@ -51,6 +51,7 @@
         <div class="card-header text-center">
             <strong>Facility Contact Information</strong>
             <div class="float-right" *ngIf="!editDetails && !readOnlyMode">
+                <!-- <button type="button" class="btn btn-success" (click)="onEdit()">Edit</button>&nbsp; -->
                 <a routerLink="." (click)="openDeleteModal(contact.firstName, contact.lastName, contact.id, contact.facilitySiteId)">
                     <fa-icon icon="trash-alt"></fa-icon>
                 </a>
@@ -84,5 +85,8 @@
             <div class="col-sm-6 col-md-2">{{contact.county}}</div>
             </div>
         </div>
+    </div>
+    <div class="float-right pb-3 pr-3" *ngIf="!editDetails && !readOnlyMode">
+        <button type="button" class="btn btn-success btn-md my-3 ml-3" [routerLink]="[createUrl]">Add Facility Contact Information</button>
     </div>
 </div>

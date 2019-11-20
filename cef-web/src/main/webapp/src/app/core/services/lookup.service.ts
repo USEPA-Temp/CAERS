@@ -54,4 +54,10 @@ export class LookupService {
     const url = `${this.baseUrl}/uom`;
     return this.http.get<UnitMeasureCode[]>(url);
   }
+
+  retrieveFacilityContactType(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/contactType`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
 }

@@ -2,6 +2,7 @@ package gov.epa.cef.web.repository;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -12,6 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import gov.epa.cef.web.config.CommonInitializers;
+import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 
 @SqlGroup(value = {@Sql("classpath:db/test/baseTestData.sql")})
@@ -27,6 +30,24 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
     public void _onJunitBeginTest() {
 
         runWithMockUser();
+    }
+    
+    /**
+     * Verify creating a facility contact
+     * @throws Exception
+     */
+    @Test
+    public void createContactTest() throws Exception {
+    	
+    	FacilitySiteContact contact = newContact();
+    	
+    	this.facilitySiteContactRepo.save(contact);
+    	
+    	//verify the facility contact created
+    	List<FacilitySiteContact> contactList = facilitySiteContactRepo.findByFacilitySiteId(9999991L);
+    	
+    	FacilitySiteContact newContact = contactList.get(contactList.size()-1);
+        assertEquals("Ice", newContact.getFirstName());
     }
     
     /**
@@ -47,5 +68,35 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
         contact = facilitySiteContactRepo.findById(9999991L);
         assertEquals(false, contact.isPresent());
     }
-       
+    
+    
+    private FacilitySiteContact newContact() {
+    	
+    	FacilitySite facilitySite = new FacilitySite();
+        facilitySite.setId(9999991L);
+        
+        ContactTypeCode contactTypeCode = new ContactTypeCode();
+        contactTypeCode.setCode("FAC");
+        
+    	FacilitySiteContact contact = new FacilitySiteContact();
+    	
+    	contact.setFacilitySite(facilitySite);
+    	contact.setType(contactTypeCode);
+    	contact.setFirstName("Ice");
+        contact.setLastName("Bear");
+        contact.setEmail("ice.bear@test.com");
+        contact.setPhone("1234567890");
+        contact.setPhoneExt("");
+        contact.setStreetAddress("123 Test Street");
+        contact.setCity("Fitzgerald");
+        contact.setStateCode("GA");
+        contact.setPostalCode("31750");
+        contact.setCounty("Whitfield");
+        contact.setMailingStreetAddress("123 Test Street");
+        contact.setMailingCity("Fitzgerald");
+        contact.setMailingStateCode("GA");
+        contact.setMailingPostalCode("31750");
+
+        return contact;
+    }
 }
