@@ -54,4 +54,10 @@ export class LookupService {
     const url = `${this.baseUrl}/uom`;
     return this.http.get<UnitMeasureCode[]>(url);
   }
+
+  retrieveUnitType(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/unitType`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
 }

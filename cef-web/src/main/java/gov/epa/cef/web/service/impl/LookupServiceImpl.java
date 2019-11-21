@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
@@ -22,6 +23,7 @@ import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
+import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
@@ -49,6 +51,9 @@ public class LookupServiceImpl implements LookupService {
 
     @Autowired
     private PollutantRepository pollutantRepo;
+
+    @Autowired
+    private UnitTypeCodeRepository unitTypeCodeRepo;
 
     @Autowired
     private ReportingPeriodCodeRepository periodCodeRepo;
@@ -217,5 +222,14 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    public List<CodeLookupDto> retrieveUnitTypeCodes() {
 
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<UnitTypeCode> entities = unitTypeCodeRepo.findAll();
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
 }

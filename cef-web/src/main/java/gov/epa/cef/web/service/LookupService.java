@@ -105,5 +105,11 @@ public interface LookupService {
      * @return
      */
     EmissionsOperatingTypeCode retrieveEmissionsOperatingTypeCodeEntityByCode(String code);
+    
+    /**
+     * Retrieve Unit Type codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveUnitTypeCodes();
 
 }

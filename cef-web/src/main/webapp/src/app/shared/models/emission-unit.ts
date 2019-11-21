@@ -3,7 +3,7 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 
 export class EmissionUnit {
   id: number;
-  facilityId: number;
+  facilitySiteId: number;
   unitIdentifier: string;
   description: string;
   unitTypeCodeDescription: string;

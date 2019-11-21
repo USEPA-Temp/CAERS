@@ -107,6 +107,19 @@ public class LookupApi {
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
 
+    
+    /**
+     * Retrieve Contact Types codes
+     * @return
+     */
+    @GetMapping(value = "/unitType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveUnitTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveUnitTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
     /**
      * Retrieve UoM codes
      * @return

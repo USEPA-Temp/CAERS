@@ -52,4 +52,15 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
     	unitRepo.deleteById(unitId);
     }
 
+    /**
+     * Create a new Emissions Unit from a DTO object
+     */
+    public EmissionsUnitDto create(EmissionsUnitDto dto) {
+    	
+    	EmissionsUnit emissionUnit = emissionsUnitMapper.emissionsUnitFromDto(dto);
+    	
+    	EmissionsUnitDto results = emissionsUnitMapper.emissionsUnitToDto(unitRepo.save(emissionUnit));
+    	return results;
+    }
+
 }

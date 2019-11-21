@@ -26,4 +26,10 @@ public interface EmissionsUnitService {
      */
     void delete(Long unitId);
 
+    /**
+     * Create a new Emissions Unit
+     * @param dto
+     * @return
+     */
+	EmissionsUnitDto create(EmissionsUnitDto dto);
 }
