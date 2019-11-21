@@ -139,7 +139,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @return
      */
     @Override
-    public EmissionsReportDto saveBulkEmissionReport(EmissionsReportBulkUploadDto bulkEmissionsReport) {
+    public EmissionsReportDto saveBulkEmissionsReport(EmissionsReportBulkUploadDto bulkEmissionsReport) {
         EmissionsReport emissionsReport = mapEmissionsReport(bulkEmissionsReport);
 
         for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
