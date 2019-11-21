@@ -22,4 +22,10 @@ export class ReleasePointService {
     const url = `${this.baseUrl}/facility/${facilitySiteId}`;
     return this.http.get<ReleasePoint[]>(url);
   }
+
+  /** Delete specified release point from the database */
+  delete(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
+  }
 }

@@ -7,6 +7,7 @@ import gov.epa.cef.web.service.dto.ReleasePointDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +61,18 @@ public class ReleasePointApi {
         List<ReleasePointDto> result = releasePointService.retrieveByFacilitySiteId(facilitySiteId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete a Release Point for a given ID
+     * @param pointId
+     * @return
+     */
+    @DeleteMapping(value = "/{pointId}")
+    public void deleteReleasePoint(@PathVariable Long pointId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(pointId, ReleasePointRepository.class);
+
+        releasePointService.delete(pointId);
     }
 }

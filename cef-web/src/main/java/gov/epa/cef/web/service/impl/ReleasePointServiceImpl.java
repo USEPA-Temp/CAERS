@@ -39,5 +39,13 @@ public class ReleasePointServiceImpl implements ReleasePointService {
         List<ReleasePoint> releasePoints=releasePointRepo.findByFacilitySiteId(facilitySiteId);
         return releasePointMapper.toDtoList(releasePoints);
     }
+    
+    /**
+     * Delete Release Point for a given id
+     * @param releasePointId
+     */
+    public void delete(Long releasePointId) {
+    	releasePointRepo.deleteById(releasePointId);
+    }
 
 }
