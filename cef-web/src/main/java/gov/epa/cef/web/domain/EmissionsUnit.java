@@ -140,7 +140,7 @@ public class EmissionsUnit extends BaseAuditEntity {
         return this.typeCodeDescription;
     }
     public void setTypeCodeDescription(String typeCodeDescription) {
-        this.typeCodeDescription = this.unitTypeCode.getDescription();
+        this.typeCodeDescription = typeCodeDescription;
     }
 
     public Short getStatusYear() {

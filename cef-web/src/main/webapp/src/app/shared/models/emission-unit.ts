@@ -6,8 +6,8 @@ export class EmissionUnit {
   facilitySiteId: number;
   unitIdentifier: string;
   description: string;
-  unitTypeCodeDescription: string;
-  operatingStatusCodeDescription: string;
+  unitTypeCode: BaseCodeLookup;
+  operatingStatusCode: BaseCodeLookup;
   programSystemCode: string;
   typeCodeDescription: string;
   statusYear: number;
