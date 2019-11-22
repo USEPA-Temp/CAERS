@@ -15,8 +15,10 @@ export class FacilitySiteContact {
   stateCode: string;
   postalCode: string;
   county: string;
+  countryCode: string;
   mailingStreetAddress: string;
   mailingCity: string;
   mailingStateCode: string;
   mailingPostalCode: string;
+  mailingCountryCode: string;
 }

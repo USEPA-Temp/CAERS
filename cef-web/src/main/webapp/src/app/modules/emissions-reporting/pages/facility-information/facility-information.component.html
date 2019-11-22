@@ -62,7 +62,9 @@
                 <div class="col-sm-6 col-md-2"><strong>Contact Type:</strong></div>
                 <div class="col-sm-6 col-md-2">{{contact.type.description}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Phone Number:</strong></div>
-                <div class="col-sm-6 col-md-4">{{contact.phone | phoneNumber}}</div>
+                <div class="col-sm-6 col-md-2">{{contact.phone | phoneNumber}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Ext:</strong></div>
+                <div class="col-sm-6 col-md-2">{{contact.phoneExt}}</div>
             </div>
             
             <div class="row pb-2">
@@ -74,11 +76,11 @@
             
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
-                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode}}&nbsp;{{contact.postalCode}}</div>
+                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode}}&nbsp;{{contact.postalCode}}<br/>{{contact.countryCode}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
                 <div class="col-sm-6 col-md-2">
                     <span *ngIf="contact.mailingStreetAddress">
-                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode}}&nbsp;{{contact.mailingPostalCode}}
+                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode}}&nbsp;{{contact.mailingPostalCode}}<br/>{{contact.mailingCountryCode}}
                     </span>
                 </div>
             <div class="col-sm-6 col-md-2"><strong>County:</strong></div>

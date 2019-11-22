@@ -70,6 +70,9 @@ public class FacilitySiteContact extends BaseAuditEntity {
 
     @Column(name = "mailing_postal_code", length = 10)
     private String mailingPostalCode;
+    
+    @Column(name = "mailing_country_code", length = 10)
+    private String mailingCountryCode;
 
     /**
      * Default constructor
@@ -100,6 +103,7 @@ public class FacilitySiteContact extends BaseAuditEntity {
     	this.mailingCity = originalFacilitySiteContact.getMailingCity();
     	this.mailingStateCode = originalFacilitySiteContact.getMailingStateCode();
     	this.mailingPostalCode = originalFacilitySiteContact.getMailingPostalCode();
+    	this.mailingCountryCode = originalFacilitySiteContact.getMailingCountryCode();
     }
     
     
@@ -246,6 +250,14 @@ public class FacilitySiteContact extends BaseAuditEntity {
 
     public void setMailingPostalCode(String mailingPostalCode) {
         this.mailingPostalCode = mailingPostalCode;
+    }
+    
+    public String getMailingCountryCode() {
+        return mailingCountryCode;
+    }
+
+    public void setMailingCountryCode(String mailingCountryCode) {
+        this.mailingCountryCode = mailingCountryCode;
     }
     
     

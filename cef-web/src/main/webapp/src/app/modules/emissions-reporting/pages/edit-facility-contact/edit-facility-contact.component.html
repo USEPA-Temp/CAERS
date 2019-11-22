@@ -67,12 +67,12 @@
           <div class="row pb-2">
             <label for="firstName" class="col-sm-4 col-lg-2 col-form-label"><strong>First Name:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="firstName" formControlName="firstName" [value]="contactForm.value.contact?.firstName">
+              <input type="text" class="form-control" id="firstName" formControlName="firstName" [value]="contactForm.value.contact?.firstName" maxlength="20">
               <app-validation-message [control]="contactForm.controls.firstName"></app-validation-message>
             </div>
             <label for="lastName" class="col-sm-4 col-lg-2 col-form-label"><strong>Last Name:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="lastName" formControlName="lastName" [value]="contactForm.value.contact?.lastName">
+              <input type="text" class="form-control" id="lastName" formControlName="lastName" [value]="contactForm.value.contact?.lastName" maxlength="20">
               <app-validation-message [control]="contactForm.controls.lastName"></app-validation-message>
             </div>
           </div>
@@ -80,19 +80,19 @@
           <div class="row pb-2">
             <label for="phone" class="col-sm-4 col-lg-2 col-form-label"><strong>Phone Number:</strong></label>
               <div class="col-sm-8 col-lg-4">
-                <input type="text" class="form-control" id="phone" formControlName="phone" [value]="contactForm.value.contact?.phone">
+                <input type="text" class="form-control" id="phone" formControlName="phone" [value]="contactForm.value.contact?.phone" maxlength="15">
                 <app-validation-message [control]="contactForm.controls.phone"></app-validation-message>
               </div>
               <label for="phoneExt" class="col-sm-4 col-lg-2 col-form-label"><strong>Ext.:</strong></label>
               <div class="col-sm-8 col-lg-2">
-                <input type="text" class="form-control" id="phoneExt" formControlName="phoneExt" [value]="contactForm.value.contact?.phoneExt">
+                <input type="text" class="form-control" id="phoneExt" formControlName="phoneExt" [value]="contactForm.value.contact?.phoneExt" maxlength="5">
               </div>
           </div>
 
           <div class="row pb-5">
             <label for="email" class="col-sm-4 col-lg-2 col-form-label"><strong>Email Address:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="email" formControlName="email" [value]="contactForm.value.contact?.email">
+              <input type="text" class="form-control" id="email" formControlName="email" [value]="contactForm.value.contact?.email" maxlength="255">
               <app-validation-message [control]="contactForm.controls.email"></app-validation-message>
             </div>
           </div>
@@ -100,8 +100,7 @@
           <div class="row pb-2">
             <label for="streetAddress" class="col-sm-4 col-lg-2 col-form-label"><strong>Contact Street Address:</strong></label>
             <div class="col-sm-8 col-lg-10">
-              <input type="text" class="form-control" id="streetAddress" formControlName="streetAddress" 
-                [value]="contactForm.value.contact?.streetAddress">
+              <input type="text" class="form-control" id="streetAddress" formControlName="streetAddress" [value]="contactForm.value.contact?.streetAddress" maxlength="100">
               <app-validation-message [control]="contactForm.controls.streetAddress"></app-validation-message>
             </div>
           </div>
@@ -109,35 +108,42 @@
           <div class="row pb-2">
             <label for="city" class="col-sm-4 col-lg-2 col-form-label"><strong>City:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="city" formControlName="city" [value]="contactForm.value.contact?.city">
+              <input type="text" class="form-control" id="city" formControlName="city" [value]="contactForm.value.contact?.city" maxlength="60">
               <app-validation-message [control]="contactForm.controls.city"></app-validation-message>
             </div>
             <label for="stateCode" class="col-sm-4 col-lg-2 col-form-label"><strong>State:</strong></label>
             <div class="col-sm-8 col-lg-2">
-              <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="stateCode" formControlName="stateCode"
-                [value]="contactForm.value.contact?.stateCode" maxlength="2">
+              <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="stateCode" 
+                formControlName="stateCode" [value]="contactForm.value.contact?.stateCode" maxlength="2">
               <app-validation-message [control]="contactForm.controls.stateCode"></app-validation-message>
             </div>
           </div>
 
-          <div class="row pb-5">
+          <div class="row pb-2">
             <label for="county" class="col-sm-4 col-lg-2 col-form-label"><strong>County:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="county" formControlName="county" [value]="contactForm.value.contact?.county">
+              <input type="text" class="form-control" id="county" formControlName="county" [value]="contactForm.value.contact?.county" maxlength="43">
               <app-validation-message [control]="contactForm.controls.county"></app-validation-message>
             </div>
             <label for="postalCode" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
             <div class="col-sm-8 col-lg-2">
-              <input type="text" class="form-control" id="postalCode" formControlName="postalCode" [value]="contactForm.value.contact?.postalCode">
+              <input type="text" class="form-control" id="postalCode" formControlName="postalCode" [value]="contactForm.value.contact?.postalCode" maxlength="10">
               <app-validation-message [control]="contactForm.controls.postalCode"></app-validation-message>
+            </div>
+          </div>
+
+          <div class="row pb-5">
+            <label for="countryCode" class="col-sm-4 col-lg-2 col-form-label"><strong>Country Code:</strong></label>
+            <div class="col-sm-8 col-lg-4">
+              <input type="text" class="form-control" id="countryCode" formControlName="countryCode" [value]="contactForm.value.contact?.countryCode" maxlength="10">
+              <app-validation-message [control]="contactForm.controls.countryCode"></app-validation-message>
             </div>
           </div>
 
           <div class="row pb-2">
             <label for="mailingStreetAddress" class="col-sm-4 col-lg-2 col-form-label"><strong>Mailing Street Address:</strong></label>
             <div class="col-sm-8 col-lg-10">
-              <input type="text" class="form-control" id="mailingStreetAddress" formControlName="mailingStreetAddress" 
-                [value]="contactForm.value.contact?.mailingStreetAddress">
+              <input type="text" class="form-control" id="mailingStreetAddress" formControlName="mailingStreetAddress" [value]="contactForm.value.contact?.mailingStreetAddress" maxlength="100">
               <app-validation-message [control]="contactForm.controls.mailingStreetAddress"></app-validation-message>
             </div>
           </div>
@@ -145,8 +151,7 @@
           <div class="row pb-2">
             <label for="mailingCity" class="col-sm-4 col-lg-2 col-form-label"><strong>City:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="mailingCity" formControlName="mailingCity" 
-                [value]="contactForm.value.contact?.mailingCity">
+              <input type="text" class="form-control" id="mailingCity" formControlName="mailingCity" [value]="contactForm.value.contact?.mailingCity" maxlength="60">
               <app-validation-message [control]="contactForm.controls.mailingCity"></app-validation-message>
             </div>
             <label for="mailingStateCode" class="col-sm-4 col-lg-2 col-form-label"><strong>State:</strong></label>
@@ -158,10 +163,14 @@
           </div>
 
           <div class="row">
+            <label for="mailingCountryCode" class="col-sm-4 col-lg-2 col-form-label"><strong>Country Code:</strong></label>
+            <div class="col-sm-8 col-lg-4">
+              <input type="text" class="form-control" id="mailingCountryCode" formControlName="mailingCountryCode" [value]="contactForm.value.contact?.mailingCountryCode" maxlength="10">
+              <app-validation-message [control]="contactForm.controls.mailingCountryCode"></app-validation-message>
+            </div>
             <label for="mailingPostalCode" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
             <div class="col-sm-8 col-lg-2">
-              <input type="text" class="form-control" id="mailingPostalCode" formControlName="mailingPostalCode" 
-                [value]="contactForm.value.contact?.mailingPostalCode">
+              <input type="text" class="form-control" id="mailingPostalCode" formControlName="mailingPostalCode" [value]="contactForm.value.contact?.mailingPostalCode" maxlength="10">
               <app-validation-message [control]="contactForm.controls.mailingPostalCode"></app-validation-message>
             </div>
           </div>

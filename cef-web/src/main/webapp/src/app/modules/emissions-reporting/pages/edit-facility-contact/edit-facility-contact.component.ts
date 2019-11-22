@@ -4,11 +4,11 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FacilitySiteContactService } from 'src/app/core/services/facility-site-contact.service';
-import { ContactTypeCode } from 'src/app/shared/models/contact-type-code';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -29,7 +29,7 @@ export class EditFacilityContactComponent implements OnInit {
     type: [null, Validators.required],
     phone: ['', [
       Validators.required,
-      Validators.pattern('[0-9]{10}')]],
+      Validators.pattern('[0-9]{10,15}')]],
     phoneExt: [''],
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
@@ -40,14 +40,16 @@ export class EditFacilityContactComponent implements OnInit {
     city: ['', Validators.required],
     stateCode: ['', Validators.required],
     postalCode: ['', Validators.required],
+    countryCode: ['', Validators.required],
     mailingStreetAddress: ['', Validators.required],
     mailingCity: ['', Validators.required],
     mailingStateCode: ['', Validators.required],
     mailingPostalCode: ['', Validators.required],
+    mailingCountryCode: ['', Validators.required],
     county: ['', Validators.required]
   });
 
-  facilityContactType: ContactTypeCode[];
+  facilityContactType: BaseCodeLookup[];
 
   constructor(
     private contactService: FacilitySiteContactService,
@@ -79,13 +81,7 @@ export class EditFacilityContactComponent implements OnInit {
     .subscribe(params => {
 
       if (!this.createMode) {
-        // this.contactService.retrieve(+params.get('contactId'))
-        // .subscribe(result => {
-        //   this.facilityContact = result;
 
-        //   this.contactForm.disable();
-        //   this.contactForm.reset(this.facilityContact);
-        // });
       } else {
         this.contactForm.enable();
       }
@@ -100,10 +96,6 @@ export class EditFacilityContactComponent implements OnInit {
       this.contactForm.reset(this.contactForm);
     }
   }
-
-  // onEdit() {
-  //   this.contactForm.enable();
-  // }
 
   onSubmit() {
     if (!this.contactForm.valid) {

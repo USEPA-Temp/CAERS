@@ -38,16 +38,23 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
      */
     @Test
     public void createContactTest() throws Exception {
-    	
-    	FacilitySiteContact contact = newContact();
-    	
-    	this.facilitySiteContactRepo.save(contact);
-    	
-    	//verify the facility contact created
-    	List<FacilitySiteContact> contactList = facilitySiteContactRepo.findByFacilitySiteId(9999991L);
-    	
-    	FacilitySiteContact newContact = contactList.get(contactList.size()-1);
-        assertEquals("Ice", newContact.getFirstName());
+        
+        //delete the all contacts from facility 9999992
+        facilitySiteContactRepo.deleteById(9999994L);
+        facilitySiteContactRepo.deleteById(9999995L);
+        
+        List<FacilitySiteContact> contactList = facilitySiteContactRepo.findByFacilitySiteId(9999992L);
+        assertEquals(0, contactList.size());
+        
+        //create new contact
+        FacilitySiteContact contact = newContact();
+        
+        facilitySiteContactRepo.save(contact);
+        
+        //verify the facility contact created
+        contactList = facilitySiteContactRepo.findByFacilitySiteId(9999992L);
+        
+        assertEquals(1, contactList.size());
     }
     
     /**
@@ -73,7 +80,7 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
     private FacilitySiteContact newContact() {
     	
     	FacilitySite facilitySite = new FacilitySite();
-        facilitySite.setId(9999991L);
+        facilitySite.setId(9999992L);
         
         ContactTypeCode contactTypeCode = new ContactTypeCode();
         contactTypeCode.setCode("FAC");

@@ -25,6 +25,7 @@ public class FacilitySiteContactDto implements Serializable {
     private String mailingCity;
     private String mailingStateCode;
     private String mailingPostalCode;
+    private String mailingCountryCode;
 
     public Long getId() {
         return id;
@@ -176,6 +177,14 @@ public class FacilitySiteContactDto implements Serializable {
 
     public void setMailingPostalCode(String mailingPostalCode) {
         this.mailingPostalCode = mailingPostalCode;
+    }
+    
+    public String getMailingCountryCode() {
+        return mailingCountryCode;
+    }
+
+    public void setMailingCountryCode(String mailingCountryCode) {
+        this.mailingCountryCode = mailingCountryCode;
     }
 
     public FacilitySiteContactDto withId(Long id) {
