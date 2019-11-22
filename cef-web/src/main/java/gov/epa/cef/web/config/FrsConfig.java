@@ -1,7 +1,6 @@
 package gov.epa.cef.web.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.net.URL;
 
 @Component
-@EnableConfigurationProperties
 @Validated
 @ConfigurationProperties(prefix = "frs")
 public class FrsConfig {

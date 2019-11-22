@@ -61,4 +61,7 @@ frs:
   debugging: false
 ga:
   slt-email: edward.canoles@cgifederal.com
-
+network-nodes:
+  eis:
+    serviceUrl: https://devngn.epacdxnode.net/ngn-enws20/services/NetworkNode2Service
+    dataflow: EIS
