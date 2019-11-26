@@ -11,7 +11,7 @@ import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
   templateUrl: './edit-emission-unit-info-panel.component.html',
   styleUrls: ['./edit-emission-unit-info-panel.component.scss']
 })
-export class EditEmissionUnitInfoPanelComponent implements OnInit {
+export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   @Input() emissionUnit: EmissionUnit;
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
@@ -81,5 +81,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit {
       this.unitTypeValues = result;
     });
     
+  }
+
+  ngOnChanges() {
+    this.emissionUnitForm.reset(this.emissionUnit);
   }
 }

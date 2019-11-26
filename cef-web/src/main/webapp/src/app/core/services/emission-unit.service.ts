@@ -25,6 +25,11 @@ export class EmissionUnitService {
     return this.http.post<EmissionUnit>(url, emissionUnit);
   }
 
+  update(emissionUnit: EmissionUnit): Observable<EmissionUnit> {
+    const url = `${this.baseUrl}/${emissionUnit.id}`;
+    return this.http.put<EmissionUnit>(url, emissionUnit);
+  }
+
   retrieveForFacility(facilityId: number): Observable<EmissionUnit[]> {
     const url = `${this.baseUrl}/facility/${facilityId}`;
     return this.http.get<EmissionUnit[]>(url);
