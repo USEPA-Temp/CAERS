@@ -16,6 +16,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
     operatingStatusCode: [null, Validators.required],
+    unitOfMeasureCode: [null, Validators.required],
     unitIdentifier: ['', [
       Validators.required,
       Validators.maxLength(20)
@@ -30,17 +31,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(20)
     ]],
-    unitOfMeasureCode: ['', [
-      Validators.required,
-      Validators.maxLength(20)
-    ]],
     description: ['', [
       Validators.required,
       Validators.maxLength(500)
-    ]],
-    UOMDescription: ['', [
-      Validators.required,
-      Validators.maxLength(200)
     ]],
     comments: ['', Validators.maxLength(2000)]
   });
