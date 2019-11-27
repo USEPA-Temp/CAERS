@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +35,23 @@ public class FacilitySiteContactApi {
         this.securityService = securityService;
     }
 
+    /**
+     * Create a facility site contact
+     * @param dto
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<FacilitySiteContactDto> createContact(
+    		@NotNull @RequestBody FacilitySiteContactDto dto) {
+    	
+    	this.securityService.facilityEnforcer()
+    		.enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	FacilitySiteContactDto result = facilitySiteContactService.create(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
     /**
      * Retrieve a facility site contact by ID
      * @param contactId
@@ -60,6 +80,23 @@ public class FacilitySiteContactApi {
 
         Collection<FacilitySiteContactDto> result =
             facilitySiteContactService.retrieveForFacilitySite(facilitySiteId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Update an existing facility site contact by ID
+     * @param contactId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/{contactId}")
+    public ResponseEntity<FacilitySiteContactDto> updateContact(
+        @NotNull @PathVariable Long contactId, @NotNull @RequestBody FacilitySiteContactDto dto) {
+
+        this.securityService.facilityEnforcer().enforceEntity(contactId, FacilitySiteContactRepository.class);
+
+        FacilitySiteContactDto result = facilitySiteContactService.update(dto.withId(contactId));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

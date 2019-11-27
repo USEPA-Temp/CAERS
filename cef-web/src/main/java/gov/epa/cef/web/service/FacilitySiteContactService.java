@@ -6,7 +6,14 @@ import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 
 public interface FacilitySiteContactService {
 
-    /**
+	/**
+     * Create a new Facility Site Contact
+     * @param dto
+     * @return
+     */
+	FacilitySiteContactDto create(FacilitySiteContactDto dto);
+	
+	/**
      * Retrieve Facility Site Contact by id
      * @param id 
      * @return
@@ -19,6 +26,13 @@ public interface FacilitySiteContactService {
      * @return
      */
     List<FacilitySiteContactDto> retrieveForFacilitySite(Long facilitySiteId);
+    
+    /**
+     * Update an existing Facility Site Contact by id
+     * @param dto
+     * @return
+     */
+    FacilitySiteContactDto update(FacilitySiteContactDto dto);
     
     /**
      * Delete Facility Site Contact by id

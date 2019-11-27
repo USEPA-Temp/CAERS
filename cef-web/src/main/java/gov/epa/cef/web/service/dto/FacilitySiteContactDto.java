@@ -18,13 +18,14 @@ public class FacilitySiteContactDto implements Serializable {
     private String streetAddress;
     private String city;
     private String county;
-    private String stateCode;
+    private FipsStateCodeDto stateCode;
     private String countryCode;
     private String postalCode;
     private String mailingStreetAddress;
     private String mailingCity;
-    private String mailingStateCode;
+    private FipsStateCodeDto mailingStateCode;
     private String mailingPostalCode;
+    private String mailingCountryCode;
 
     public Long getId() {
         return id;
@@ -122,11 +123,11 @@ public class FacilitySiteContactDto implements Serializable {
         this.county = county;
     }
 
-    public String getStateCode() {
+    public FipsStateCodeDto getStateCode() {
         return stateCode;
     }
 
-    public void setStateCode(String stateCode) {
+    public void setStateCode(FipsStateCodeDto stateCode) {
         this.stateCode = stateCode;
     }
 
@@ -162,11 +163,11 @@ public class FacilitySiteContactDto implements Serializable {
         this.mailingCity = mailingCity;
     }
 
-    public String getMailingStateCode() {
+    public FipsStateCodeDto getMailingStateCode() {
         return mailingStateCode;
     }
 
-    public void setMailingStateCode(String mailingStateCode) {
+    public void setMailingStateCode(FipsStateCodeDto mailingStateCode) {
         this.mailingStateCode = mailingStateCode;
     }
 
@@ -177,5 +178,17 @@ public class FacilitySiteContactDto implements Serializable {
     public void setMailingPostalCode(String mailingPostalCode) {
         this.mailingPostalCode = mailingPostalCode;
     }
+    
+    public String getMailingCountryCode() {
+        return mailingCountryCode;
+    }
 
+    public void setMailingCountryCode(String mailingCountryCode) {
+        this.mailingCountryCode = mailingCountryCode;
+    }
+
+    public FacilitySiteContactDto withId(Long id) {
+        setId(id);
+        return this;
+    }
 }

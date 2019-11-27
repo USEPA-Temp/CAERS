@@ -18,6 +18,7 @@ import { FacilitySiteResolverService } from 'src/app/core/services/facility-site
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EmissionDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emission-details/emission-details.component';
 import {EmissionsReportValidationComponent} from "./pages/emissions-report-validation/emissions-report-validation.component";
+import { EditFacilityContactComponent } from 'src/app/modules/emissions-reporting/pages/edit-facility-contact/edit-facility-contact.component';
 
 const reportRoutes: Routes = [
   {
@@ -39,6 +40,14 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.FACILITY_INFO}`,
             component: FacilityInformationComponent,
             data: { title: 'Facility Information', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.FACILITY_CONTACT}`,
+            component: EditFacilityContactComponent,
+            data: { title: 'Facility Information', breadcrumb: '&year Emissions Report', create: 'true'}
+          }, {
+            path: `${BaseReportUrl.FACILITY_CONTACT}/:contactId`,
+            component: EditFacilityContactComponent,
+            data: { title: 'Facility Information', breadcrumb: '&year Emissions Report', create: 'false'}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}/:controlId`,
             component: ControlDeviceDetailsComponent,

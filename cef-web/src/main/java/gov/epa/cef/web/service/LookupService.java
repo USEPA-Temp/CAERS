@@ -2,12 +2,15 @@ package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
+import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
+import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -105,5 +108,30 @@ public interface LookupService {
      * @return
      */
     EmissionsOperatingTypeCode retrieveEmissionsOperatingTypeCodeEntityByCode(String code);
+    
+    /**
+     * Retrieve Contact Type codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveContactTypeCodes();
+    
+    /**
+     * Retrieve Contact Type code database object by code
+     * @param code
+     * @return
+     */
+    ContactTypeCode retrieveContactTypeEntityByCode(String code);
 
+    /**
+     * Retrieve Fips State codes
+     * @return
+     */
+    List<FipsStateCodeDto> retrieveStateCodes();
+    
+    /**
+     * Retrieve Fips State code database object by code
+     * @param code
+     * @return
+     */
+    FipsStateCode retrieveStateCodeEntityByCode(String code);
 }
