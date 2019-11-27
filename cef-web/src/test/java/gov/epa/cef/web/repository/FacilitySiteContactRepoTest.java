@@ -126,10 +126,12 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
         contactTypeCode.setCode("FAC");
         
         FipsStateCode stateCode = new FipsStateCode();
+        stateCode.setCode("13");
         stateCode.setUspsCode("GA");
         
         FipsStateCode mailingStateCode = new FipsStateCode();
-        mailingStateCode.setUspsCode("GA");        
+        mailingStateCode.setCode("13");     
+        mailingStateCode.setUspsCode("GA");
         
     	FacilitySiteContact contact = new FacilitySiteContact();
     	
