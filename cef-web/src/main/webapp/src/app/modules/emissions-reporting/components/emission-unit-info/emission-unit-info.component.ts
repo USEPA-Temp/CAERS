@@ -11,39 +11,24 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./emission-unit-info.component.scss']
 })
 export class EmissionUnitInfoComponent implements OnInit {
-  @Input() emissionsUnit: EmissionUnit;
-  
-  editInfo = false;
+  @Input() 
+  emissionsUnit: EmissionUnit;
+  @Input()
   facilitySiteId: number;
-  eisProgramId: string;
+  editInfo = false;
   unitId: number;
-  reportId: number;
 
   @ViewChild(EditEmissionUnitInfoPanelComponent, { static: false })
   private infoComponent: EditEmissionUnitInfoPanelComponent;
 
   constructor(private route: ActivatedRoute,
-              private facilitySiteService: FacilitySiteService,
               private unitService: EmissionUnitService) { }
 
   ngOnInit() {
       this.route.paramMap
       .subscribe(map => {
-        this.eisProgramId = map.get('facilityId');
-      });
-      this.route.paramMap
-      .subscribe(map => {
-        this.reportId = parseInt(map.get('reportId'));
-      });
-      this.route.paramMap
-      .subscribe(map => {
         this.unitId = parseInt(map.get('unitId'));
       });
-
-      this.facilitySiteService.retrieveForReport(this.eisProgramId,this.reportId)
-      .subscribe(result => {
-        this.facilitySiteId = result.id;
-      })
   }
 
   setEditInfo(value: boolean) {
