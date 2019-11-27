@@ -28,6 +28,13 @@ public interface FacilitySiteContactService {
     List<FacilitySiteContactDto> retrieveForFacilitySite(Long facilitySiteId);
     
     /**
+     * Update an existing Facility Site Contact by id
+     * @param dto
+     * @return
+     */
+    FacilitySiteContactDto update(FacilitySiteContactDto dto);
+    
+    /**
      * Delete Facility Site Contact by id
      * @param id
      */

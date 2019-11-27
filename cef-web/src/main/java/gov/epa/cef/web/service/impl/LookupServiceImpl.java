@@ -239,6 +239,13 @@ public class LookupServiceImpl implements LookupService {
         });
         return result;
     }
+    
+    public ContactTypeCode retrieveContactTypeEntityByCode(String code) {
+    	ContactTypeCode result= contactTypeRepo
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
 
     public List<FipsStateCodeDto> retrieveStateCodes() {
 
@@ -248,6 +255,13 @@ public class LookupServiceImpl implements LookupService {
         entities.forEach(entity -> {
             result.add(lookupMapper.fipsStateCodeToDto(entity));
         });
+        return result;
+    }
+    
+    public FipsStateCode retrieveStateCodeEntityByCode(String code) {
+    	FipsStateCode result= stateCodeRepo
+            .findById(code)
+            .orElse(null);
         return result;
     }
     

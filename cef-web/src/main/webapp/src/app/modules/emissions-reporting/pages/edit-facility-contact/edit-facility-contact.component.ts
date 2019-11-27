@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
+import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -59,6 +60,7 @@ export class EditFacilityContactComponent implements OnInit {
     private contactService: FacilitySiteContactService,
     private lookupService: LookupService,
     private sharedService: SharedService,
+    public formUtils: FormUtilsService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder) { }
@@ -90,7 +92,13 @@ export class EditFacilityContactComponent implements OnInit {
     .subscribe(params => {
 
       if (!this.createMode) {
+        this.contactService.retrieve(+params.get('contactId'))
+          .subscribe(result => {
+            this.facilityContact = result;
 
+            this.contactForm.disable();
+            this.contactForm.reset(this.facilityContact);
+        });
       } else {
         this.contactForm.enable();
       }
@@ -102,8 +110,12 @@ export class EditFacilityContactComponent implements OnInit {
   onCancelEdit() {
     this.contactForm.enable();
     if (!this.createMode) {
-      this.contactForm.reset(this.contactForm);
+      this.contactForm.reset(this.facilityContact);
     }
+  }
+
+  onEdit() {
+    this.contactForm.enable();
   }
 
   onSubmit() {
@@ -113,6 +125,7 @@ export class EditFacilityContactComponent implements OnInit {
 
       const saveContact = new FacilitySiteContact();
       Object.assign(saveContact, this.contactForm.value);
+
       if (this.createMode) {
 
         saveContact.facilitySiteId = this.facilitySite.id;
@@ -129,7 +142,6 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.update(saveContact)
         .subscribe(result => {
 
-          Object.assign(this.facilityContact, result);
           this.router.navigate([this.facilityUrl]);
         });
       }

@@ -45,6 +45,10 @@ const reportRoutes: Routes = [
             component: EditFacilityContactComponent,
             data: { title: 'Facility Information', breadcrumb: '&year Emissions Report', create: 'true'}
           }, {
+            path: `${BaseReportUrl.FACILITY_CONTACT}/:contactId`,
+            component: EditFacilityContactComponent,
+            data: { title: 'Facility Information', breadcrumb: '&year Emissions Report', create: 'false'}
+          }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}/:controlId`,
             component: ControlDeviceDetailsComponent,
             data: { title: 'Control Device Details', breadcrumb: '&year Emissions Report'}

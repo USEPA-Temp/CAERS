@@ -51,7 +51,7 @@
         <div class="card-header text-center">
             <strong>Facility Contact Information</strong>
             <div class="float-right" *ngIf="!editDetails && !readOnlyMode">
-                <!-- <button type="button" class="btn btn-success" (click)="onEdit()">Edit</button>&nbsp; -->
+                <button type="button" class="btn btn-success" [routerLink]="[createUrl, contact.id]">Edit</button>&nbsp;
                 <a routerLink="." (click)="openDeleteModal(contact.firstName, contact.lastName, contact.id, contact.facilitySiteId)">
                     <fa-icon icon="trash-alt"></fa-icon>
                 </a>

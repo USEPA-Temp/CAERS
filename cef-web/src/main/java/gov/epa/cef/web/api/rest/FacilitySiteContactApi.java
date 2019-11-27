@@ -1,7 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.repository.FacilitySiteContactRepository;
-import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.FacilitySiteContactService;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,6 +80,23 @@ public class FacilitySiteContactApi {
 
         Collection<FacilitySiteContactDto> result =
             facilitySiteContactService.retrieveForFacilitySite(facilitySiteId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Update an existing facility site contact by ID
+     * @param contactId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/{contactId}")
+    public ResponseEntity<FacilitySiteContactDto> updateContact(
+        @NotNull @PathVariable Long contactId, @NotNull @RequestBody FacilitySiteContactDto dto) {
+
+        this.securityService.facilityEnforcer().enforceEntity(contactId, FacilitySiteContactRepository.class);
+
+        FacilitySiteContactDto result = facilitySiteContactService.update(dto.withId(contactId));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

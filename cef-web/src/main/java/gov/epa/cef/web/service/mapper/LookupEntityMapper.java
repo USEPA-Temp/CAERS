@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import gov.epa.cef.web.domain.CalculationMethodCode;
+import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FipsStateCode;
@@ -78,6 +79,14 @@ public abstract class LookupEntityMapper {
     public UnitMeasureCode dtoToUnitMeasureCode(CodeLookupDto source) {
         if (source != null) {
             return repos.uomRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("ContactTypeCode")
+    public ContactTypeCode dtoToContactTypeCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.contactTypeRepo().findById(source.getCode()).orElse(null);
         }
         return null;
     }
