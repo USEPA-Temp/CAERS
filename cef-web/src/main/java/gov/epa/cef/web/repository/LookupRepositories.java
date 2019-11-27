@@ -29,6 +29,10 @@ public class LookupRepositories {
     
     @Autowired
     private ContactTypeCodeRepository contactTypeRepo;
+    
+    @Autowired
+    private FipsStateCodeRepository stateCodeRepo;
+    
 
     public CalculationMaterialCodeRepository materialCodeRepo() {
         return materialCodeRepo;
@@ -60,6 +64,10 @@ public class LookupRepositories {
     
     public ContactTypeCodeRepository contactTypeRepo() {
         return contactTypeRepo;
+    }
+    
+    public FipsStateCodeRepository stateCodeRepo() {
+        return stateCodeRepo;
     }
 
 }

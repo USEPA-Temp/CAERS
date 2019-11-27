@@ -47,8 +47,9 @@ public class FacilitySiteContact extends BaseAuditEntity {
     @Column(name = "city", nullable = false, length = 60)
     private String city;
 
-    @Column(name = "state_code", nullable = false, length = 5)
-    private String stateCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_code", referencedColumnName = "usps_code", nullable = false)
+    private FipsStateCode stateCode;
 
     @Column(name = "country_code", length = 10)
     private String countryCode;
@@ -65,8 +66,9 @@ public class FacilitySiteContact extends BaseAuditEntity {
     @Column(name = "mailing_city", length = 60)
     private String mailingCity;
 
-    @Column(name = "mailing_state_code", length = 5)
-    private String mailingStateCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mailing_state_code", referencedColumnName = "usps_code", nullable = false)
+    private FipsStateCode mailingStateCode;
 
     @Column(name = "mailing_postal_code", length = 10)
     private String mailingPostalCode;
@@ -188,11 +190,11 @@ public class FacilitySiteContact extends BaseAuditEntity {
         this.city = city;
     }
 
-    public String getStateCode() {
+    public FipsStateCode getStateCode() {
         return stateCode;
     }
 
-    public void setStateCode(String stateCode) {
+    public void setStateCode(FipsStateCode stateCode) {
         this.stateCode = stateCode;
     }
 
@@ -236,11 +238,11 @@ public class FacilitySiteContact extends BaseAuditEntity {
         this.mailingCity = mailingCity;
     }
 
-    public String getMailingStateCode() {
+    public FipsStateCode getMailingStateCode() {
         return mailingStateCode;
     }
 
-    public void setMailingStateCode(String mailingStateCode) {
+    public void setMailingStateCode(FipsStateCode mailingStateCode) {
         this.mailingStateCode = mailingStateCode;
     }
 

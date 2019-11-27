@@ -76,11 +76,11 @@
             
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
-                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode}}&nbsp;{{contact.postalCode}}<br/>{{contact.countryCode}}</div>
+                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode.uspsCode}}&nbsp;{{contact.postalCode}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
                 <div class="col-sm-6 col-md-2">
                     <span *ngIf="contact.mailingStreetAddress">
-                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode}}&nbsp;{{contact.mailingPostalCode}}<br/>{{contact.mailingCountryCode}}
+                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode.uspsCode}}&nbsp;{{contact.mailingPostalCode}}
                     </span>
                 </div>
             <div class="col-sm-6 col-md-2"><strong>County:</strong></div>

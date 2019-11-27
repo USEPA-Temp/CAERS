@@ -16,6 +16,7 @@ import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.FipsStateCode;
 
 @SqlGroup(value = {@Sql("classpath:db/test/baseTestData.sql")})
 @ContextConfiguration(initializers = {
@@ -40,8 +41,7 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
     public void createContactTest() throws Exception {
         
         //delete the all contacts from facility 9999992
-        facilitySiteContactRepo.deleteById(9999994L);
-        facilitySiteContactRepo.deleteById(9999995L);
+    	facilitySiteContactRepo.deleteAll(facilitySiteContactRepo.findByFacilitySiteId(9999992L));
         
         List<FacilitySiteContact> contactList = facilitySiteContactRepo.findByFacilitySiteId(9999992L);
         assertEquals(0, contactList.size());
@@ -85,6 +85,12 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
         ContactTypeCode contactTypeCode = new ContactTypeCode();
         contactTypeCode.setCode("FAC");
         
+        FipsStateCode stateCode = new FipsStateCode();
+        stateCode.setUspsCode("GA");
+        
+        FipsStateCode mailingStateCode = new FipsStateCode();
+        mailingStateCode.setUspsCode("GA");        
+        
     	FacilitySiteContact contact = new FacilitySiteContact();
     	
     	contact.setFacilitySite(facilitySite);
@@ -96,12 +102,12 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
         contact.setPhoneExt("");
         contact.setStreetAddress("123 Test Street");
         contact.setCity("Fitzgerald");
-        contact.setStateCode("GA");
+        contact.setStateCode(stateCode);
         contact.setPostalCode("31750");
         contact.setCounty("Whitfield");
         contact.setMailingStreetAddress("123 Test Street");
         contact.setMailingCity("Fitzgerald");
-        contact.setMailingStateCode("GA");
+        contact.setMailingStateCode(mailingStateCode);
         contact.setMailingPostalCode("31750");
 
         return contact;

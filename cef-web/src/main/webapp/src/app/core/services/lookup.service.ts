@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Pollutant } from 'src/app/shared/models/pollutant';
 import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
+import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,11 @@ export class LookupService {
   retrieveFacilityContactType(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/contactType`;
     return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveFipsStateCode(): Observable<FipsStateCode[]> {
+    const url = `${this.baseUrl}/stateCode`;
+    return this.http.get<FipsStateCode[]>(url);
   }
 
 }

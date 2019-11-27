@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -129,6 +130,18 @@ public class LookupApi {
 
         List<CodeLookupDto> result = lookupService.retrieveContactTypeCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Fips State codes
+     * @return
+     */
+    @GetMapping(value = "/stateCode")
+    @ResponseBody
+    public ResponseEntity<List<FipsStateCodeDto>> retrieveStateCodes() {
+
+        List<FipsStateCodeDto> result = lookupService.retrieveStateCodes();
+        return new ResponseEntity<List<FipsStateCodeDto>>(result, HttpStatus.OK);
     }
 
 }

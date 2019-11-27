@@ -8,6 +8,7 @@ import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -112,4 +113,9 @@ public interface LookupService {
      */
     List<CodeLookupDto> retrieveContactTypeCodes();
 
+    /**
+     * Retrieve Fips State codes
+     * @return
+     */
+    List<FipsStateCodeDto> retrieveStateCodes();
 }

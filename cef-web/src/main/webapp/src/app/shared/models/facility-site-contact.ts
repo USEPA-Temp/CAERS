@@ -1,4 +1,5 @@
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { FipsStateCode } from './fips-state-code';
 
 export class FacilitySiteContact {
   id: number;
@@ -12,7 +13,7 @@ export class FacilitySiteContact {
   phoneExt: string;
   streetAddress: string;
   city: string;
-  stateCode: string;
+  stateCode: FipsStateCode;
   postalCode: string;
   county: string;
   countryCode: string;

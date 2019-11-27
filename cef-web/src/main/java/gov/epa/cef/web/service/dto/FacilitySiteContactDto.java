@@ -18,12 +18,12 @@ public class FacilitySiteContactDto implements Serializable {
     private String streetAddress;
     private String city;
     private String county;
-    private String stateCode;
+    private FipsStateCodeDto stateCode;
     private String countryCode;
     private String postalCode;
     private String mailingStreetAddress;
     private String mailingCity;
-    private String mailingStateCode;
+    private FipsStateCodeDto mailingStateCode;
     private String mailingPostalCode;
     private String mailingCountryCode;
 
@@ -123,11 +123,11 @@ public class FacilitySiteContactDto implements Serializable {
         this.county = county;
     }
 
-    public String getStateCode() {
+    public FipsStateCodeDto getStateCode() {
         return stateCode;
     }
 
-    public void setStateCode(String stateCode) {
+    public void setStateCode(FipsStateCodeDto stateCode) {
         this.stateCode = stateCode;
     }
 
@@ -163,11 +163,11 @@ public class FacilitySiteContactDto implements Serializable {
         this.mailingCity = mailingCity;
     }
 
-    public String getMailingStateCode() {
+    public FipsStateCodeDto getMailingStateCode() {
         return mailingStateCode;
     }
 
-    public void setMailingStateCode(String mailingStateCode) {
+    public void setMailingStateCode(FipsStateCodeDto mailingStateCode) {
         this.mailingStateCode = mailingStateCode;
     }
 

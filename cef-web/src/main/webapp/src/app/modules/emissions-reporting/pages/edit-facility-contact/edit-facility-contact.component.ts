@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -38,18 +39,21 @@ export class EditFacilityContactComponent implements OnInit {
       Validators.email]],
     streetAddress: ['', Validators.required],
     city: ['', Validators.required],
-    stateCode: ['', Validators.required],
-    postalCode: ['', Validators.required],
-    countryCode: ['', Validators.required],
+    stateCode: [null, Validators.required],
+    postalCode: ['', [
+      Validators.required,
+      Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')]],
     mailingStreetAddress: ['', Validators.required],
     mailingCity: ['', Validators.required],
-    mailingStateCode: ['', Validators.required],
-    mailingPostalCode: ['', Validators.required],
-    mailingCountryCode: ['', Validators.required],
+    mailingStateCode: [null, Validators.required],
+    mailingPostalCode: ['', [
+      Validators.required,
+      Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')]],
     county: ['', Validators.required]
   });
 
   facilityContactType: BaseCodeLookup[];
+  fipsStateCode: FipsStateCode[];
 
   constructor(
     private contactService: FacilitySiteContactService,
@@ -64,6 +68,11 @@ export class EditFacilityContactComponent implements OnInit {
     this.lookupService.retrieveFacilityContactType()
     .subscribe(result => {
       this.facilityContactType = result;
+    });
+
+    this.lookupService.retrieveFipsStateCode()
+    .subscribe(result => {
+      this.fipsStateCode = result;
     });
 
     this.route.data

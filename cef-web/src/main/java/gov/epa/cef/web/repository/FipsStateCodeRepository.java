@@ -6,11 +6,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
 
-import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.FipsStateCode;
 
-public interface ContactTypeCodeRepository extends CrudRepository<ContactTypeCode, String> {
+public interface FipsStateCodeRepository extends CrudRepository<FipsStateCode, String> {
 
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    Iterable<ContactTypeCode> findAll(Sort sort);
+    Iterable<FipsStateCode> findAll(Sort sort);
 }
