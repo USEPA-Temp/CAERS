@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.mapper;
 
 import java.util.List;
 
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.repository.LookupRepositories;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
@@ -66,6 +68,14 @@ public abstract class LookupEntityMapper {
     public OperatingStatusCode dtoToOperatingStatusCode(CodeLookupDto source) {
         if (source != null) {
             return repos.operatingStatusRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("UnitTypeCode")
+    public UnitTypeCode dtoToUnitTypeCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.UnitTypeCodeRepo().findById(source.getCode()).orElse(null);
         }
         return null;
     }

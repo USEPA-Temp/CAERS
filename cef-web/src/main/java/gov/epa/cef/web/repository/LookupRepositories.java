@@ -14,6 +14,9 @@ public class LookupRepositories {
 
     @Autowired
     private CalculationMethodCodeRepository methodCodeRepo;
+    
+    @Autowired
+    private UnitTypeCodeRepository UnitTypeCodeRepo;
 
     @Autowired
     private CalculationParameterTypeCodeRepository paramTypeCodeRepo;
@@ -77,6 +80,10 @@ public class LookupRepositories {
     
     public FipsStateCodeRepository stateCodeRepo() {
         return stateCodeRepo;
+    }
+    
+    public UnitTypeCodeRepository UnitTypeCodeRepo() {
+        return UnitTypeCodeRepo;
     }
 
 	public ReleasePointTypeCodeRepository releasePtCodeRepo() {

@@ -123,6 +123,11 @@ public interface LookupService {
      * @return
      */
     ContactTypeCode retrieveContactTypeEntityByCode(String code);
+    /**
+     * Retrieve Unit Type codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveUnitTypeCodes();
 
     /**
      * Retrieve Fips State codes

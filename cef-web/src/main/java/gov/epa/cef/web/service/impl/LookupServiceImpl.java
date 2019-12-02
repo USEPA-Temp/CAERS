@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
@@ -31,6 +32,7 @@ import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
+import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
@@ -59,6 +61,9 @@ public class LookupServiceImpl implements LookupService {
 
     @Autowired
     private PollutantRepository pollutantRepo;
+
+    @Autowired
+    private UnitTypeCodeRepository unitTypeCodeRepo;
 
     @Autowired
     private ReportingPeriodCodeRepository periodCodeRepo;
@@ -243,6 +248,17 @@ public class LookupServiceImpl implements LookupService {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
         Iterable<ContactTypeCode> entities = contactTypeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "code"));
+        
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
+    
+    public List<CodeLookupDto> retrieveUnitTypeCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<UnitTypeCode> entities = unitTypeCodeRepo.findAll();
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));

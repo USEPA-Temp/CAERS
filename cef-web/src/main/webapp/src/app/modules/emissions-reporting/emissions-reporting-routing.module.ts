@@ -67,6 +67,10 @@ const reportRoutes: Routes = [
             component: CreateEmissionsUnitComponent,
             data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
           }, {
+            path: `${BaseReportUrl.EMISSIONS_UNIT}/unit/create`,
+            component: CreateEmissionsUnitComponent,
+            data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
+          }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId`,
             component: EmissionUnitDashboardComponent,
             data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
