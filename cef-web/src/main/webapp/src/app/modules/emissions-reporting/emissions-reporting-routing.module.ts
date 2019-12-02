@@ -11,6 +11,8 @@ import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporti
 import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
 import { ReportSummaryComponent } from 'src/app/modules/emissions-reporting/pages/report-summary/report-summary.component';
 import { CreateEmissionsProcessComponent } from 'src/app/modules/emissions-reporting/pages/create-emissions-process/create-emissions-process.component';
+import { EditFacilityContactComponent } from 'src/app/modules/emissions-reporting/pages/edit-facility-contact/edit-facility-contact.component';
+import { CreateReleasePointComponent } from './pages/create-release-point/create-release-point.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -18,7 +20,6 @@ import { FacilitySiteResolverService } from 'src/app/core/services/facility-site
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EmissionDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emission-details/emission-details.component';
 import {EmissionsReportValidationComponent} from "./pages/emissions-report-validation/emissions-report-validation.component";
-import { EditFacilityContactComponent } from 'src/app/modules/emissions-reporting/pages/edit-facility-contact/edit-facility-contact.component';
 
 const reportRoutes: Routes = [
   {
@@ -80,6 +81,10 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}/:emissionId`,
             component: EmissionDetailsComponent,
             data: { title: 'Emission Details', breadcrumb: '&year Emissions Report', create: 'false'}
+          }, {
+            path: `${BaseReportUrl.RELEASE_POINT}/create`,
+            component: CreateReleasePointComponent,
+            data: { title: 'Release Point', breadcrumb: '&year Emissions Report', create: 'true'}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}/:releasePointId`,
             component: ReleasePointDetailsComponent,

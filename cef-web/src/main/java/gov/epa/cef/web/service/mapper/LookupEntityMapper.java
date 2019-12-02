@@ -14,6 +14,8 @@ import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
+import gov.epa.cef.web.domain.ProgramSystemCode;
+import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
@@ -98,4 +100,21 @@ public abstract class LookupEntityMapper {
         }
         return null;
     }
+    
+    @Named("ReleasePointTypeCode")
+    public ReleasePointTypeCode dtoToReleasePointTypeCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.releasePtCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("ProgramSystemCode")
+    public ProgramSystemCode dtoToProgramSystemCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.programSystemCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+
 }

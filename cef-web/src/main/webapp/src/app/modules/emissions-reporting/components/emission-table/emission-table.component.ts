@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { Emission } from 'src/app/shared/models/emission';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EmissionDetailsModalComponent } from 'src/app/modules/emissions-reporting/components/emission-details-modal/emission-details-modal.component';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
 import { EmissionService } from 'src/app/core/services/emission.service';

@@ -5,6 +5,7 @@ export class ReleasePoint {
   description: string;
   operatingStatusCode: BaseCodeLookup;
   programSystemCode: BaseCodeLookup;
+  facilitySiteId: number;
   releasePointIdentifier: string;
   typeCode: BaseCodeLookup;
   stackHeight: number;

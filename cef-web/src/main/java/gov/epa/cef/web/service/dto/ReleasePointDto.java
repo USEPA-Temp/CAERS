@@ -222,5 +222,10 @@ public class ReleasePointDto implements Serializable {
     public void setComments(String comments) {
         this.comments = comments;
     }
+    
+    public ReleasePointDto withId(Long id) {
+        setId(id);
+        return this;
+    }
 
 }

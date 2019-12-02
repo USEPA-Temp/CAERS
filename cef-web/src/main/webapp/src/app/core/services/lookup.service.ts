@@ -66,4 +66,13 @@ export class LookupService {
     return this.http.get<FipsStateCode[]>(url);
   }
 
+  retrieveReleaseTypeCode(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/releaseType`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveProgramSystemTypeCode(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/programSystemType`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
 }

@@ -5,6 +5,13 @@ import gov.epa.cef.web.service.dto.ReleasePointDto;
 import java.util.List;
 
 public interface ReleasePointService {
+	
+	/**
+     * Create a new Facility Site Contact
+     * @param dto
+     * @return
+     */
+	ReleasePointDto create(ReleasePointDto dto);
 
     /**
      * Retrieve Release Point by id

@@ -1,7 +1,10 @@
 package gov.epa.cef.web.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
+
+import gov.epa.cef.web.domain.CalculationMethodCode;
 
 @Service
 public class LookupRepositories {
@@ -32,6 +35,12 @@ public class LookupRepositories {
     
     @Autowired
     private FipsStateCodeRepository stateCodeRepo;
+    
+    @Autowired
+    private ReleasePointTypeCodeRepository releasePtCodeRepo;
+    
+    @Autowired
+    private ProgramSystemCodeRepository programSystemCodeRepo;
     
 
     public CalculationMaterialCodeRepository materialCodeRepo() {
@@ -68,6 +77,14 @@ public class LookupRepositories {
     
     public FipsStateCodeRepository stateCodeRepo() {
         return stateCodeRepo;
+    }
+
+	public ReleasePointTypeCodeRepository releasePtCodeRepo() {
+        return releasePtCodeRepo;
+    }
+	
+	public ProgramSystemCodeRepository programSystemCodeRepo() {
+        return programSystemCodeRepo;
     }
 
 }

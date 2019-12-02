@@ -22,6 +22,15 @@
         <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container> 
     </tr>
+      <ng-container *ngIf="!readOnlyMode">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><a routerLink="{{baseUrl}}/create"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td> 
+        </tr>
+      </ng-container> 
     </tbody>
   </table>
 </div>
