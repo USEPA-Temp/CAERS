@@ -11,6 +11,7 @@ import { ReleasePointsSummaryComponent } from 'src/app/modules/emissions-reporti
 import { ControlDevicesSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-devices-summary/control-devices-summary.component';
 import { ReportSummaryComponent } from 'src/app/modules/emissions-reporting/pages/report-summary/report-summary.component';
 import { CreateEmissionsProcessComponent } from 'src/app/modules/emissions-reporting/pages/create-emissions-process/create-emissions-process.component';
+import { CreateEmissionsUnitComponent } from 'src/app/modules/emissions-reporting/pages/create-emissions-unit/create-emissions-unit.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -60,7 +61,12 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId/process/create`,
             component: CreateEmissionsProcessComponent,
             data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
-          }, {
+          },{
+            path: `${BaseReportUrl.EMISSIONS_UNIT}/unit/create`,
+            component: CreateEmissionsUnitComponent,
+            data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
+          }, 
+          {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId`,
             component: EmissionUnitDashboardComponent,
             data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}

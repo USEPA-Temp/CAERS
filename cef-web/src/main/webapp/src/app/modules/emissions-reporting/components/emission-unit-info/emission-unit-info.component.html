@@ -1,37 +1,49 @@
 <div class="card mb-3">
 	<div class="card-header text-center">
 		<strong>Emission Unit Information</strong>
+		<div class="float-right" *ngIf="!editInfo">
+            <button type="button" class="btn btn-success" (click)="setEditInfo(true)">Edit</button>
+        </div>
 	</div>
 	<div class="card-body">
-		<div class="row">
-			<div class="col-sm-6 col-md-2"><strong>Unit ID:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.unitIdentifier}}</div>
-			<div class="col-sm-6 col-md-2"><strong>Unit Type Code:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.unitTypeCodeDescription}}</div>
-			<div class="col-sm-6 col-md-2"><strong>Unit Status:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.operatingStatusCodeDescription}}</div>
+		<div *ngIf="!editInfo">
+			<div class="row">
+				<div class="col-sm-6 col-md-2"><strong>Unit ID:</strong></div>
+				<div class="col-sm-6 col-md-2">{{emissionsUnit.unitIdentifier}}</div>
+				<div class="col-sm-6 col-md-2"><strong>Unit Type Code:</strong></div>
+				<div class="col-sm-6 col-md-2">{{emissionsUnit.unitTypeCodeDescription}}</div>
+				<div class="col-sm-6 col-md-2"><strong>Unit Status:</strong></div>
+				<div class="col-sm-6 col-md-2">{{emissionsUnit.operatingStatusCodeDescription}}</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-6 col-md-2"><strong>Unit Description:</strong></div>
+				<div class="col-sm-6 col-md-2">{{emissionsUnit.description}}</div>
+				<div class="col-sm-6 col-md-2"><strong>Unit Status Year:</strong></div>
+				<div class="col-sm-6 col-md-2">{{emissionsUnit.statusYear}}</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-6 col-md-2"><strong>Unit Design Capacity:</strong></div>
+				<div class="col-sm-6 col-md-2">{{emissionsUnit.designCapacity}}</div>
+				<div class="col-sm-6 col-md-2"><strong>Unit Design Capacity UoM:</strong></div>
+				<div class="col-sm-6 col-md-2"><span *ngIf="emissionsUnit.unitOfMeasureCode">{{emissionsUnit.unitOfMeasureCode.code}}</span></div>
+				<div class="col-sm-6 col-md-2"><strong>UoM Description:</strong></div>
+				<div class="col-sm-6 col-md-2"><span *ngIf="emissionsUnit.unitOfMeasureCode">{{emissionsUnit.unitOfMeasureCode.description}}</span></div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
+				<div class="col-sm-6 col-md-10">{{emissionsUnit.comments}}</div>
+			</div>
 		</div>
-		
-		<div class="row">
-			<div class="col-sm-6 col-md-2"><strong>Unit Description:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.description}}</div>
-			<div class="col-sm-6 col-md-2"><strong>Unit Status Year:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.statusYear}}</div>
-		</div>
-		
-		<div class="row">
-            <div class="col-sm-6 col-md-2"><strong>Unit Design Capacity:</strong></div>
-			<div class="col-sm-6 col-md-2">{{emissionsUnit.designCapacity}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Unit Design Capacity UoM:</strong></div>
-			<div class="col-sm-6 col-md-2"><span *ngIf="emissionsUnit.unitOfMeasureCode">{{emissionsUnit.unitOfMeasureCode.code}}</span></div>
-			<div class="col-sm-6 col-md-2"><strong>UoM Description:</strong></div>
-			<div class="col-sm-6 col-md-2"><span *ngIf="emissionsUnit.unitOfMeasureCode">{{emissionsUnit.unitOfMeasureCode.description}}</span></div>
-        </div>
-        
-        <div class="row">
-            <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
-            <div class="col-sm-6 col-md-10">{{emissionsUnit.comments}}</div>
-        </div>
 
+		<div *ngIf="editInfo">
+            <app-edit-emission-unit-info-panel [emissionUnit]="emissionsUnit"></app-edit-emission-unit-info-panel>
+            <div class="float-right pb-3 pr-3" *ngIf="infoComponent">
+            	<button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
+        		<button type="submit" class="btn btn-success" (click)="updateUnit()">Save</button>
+            </div>
+        </div>
 	</div>
 </div>

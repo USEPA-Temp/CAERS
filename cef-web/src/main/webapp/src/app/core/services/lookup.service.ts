@@ -56,6 +56,7 @@ export class LookupService {
     return this.http.get<UnitMeasureCode[]>(url);
   }
 
+<<<<<<< HEAD
   retrieveFacilityContactType(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/contactType`;
     return this.http.get<BaseCodeLookup[]>(url);
@@ -66,4 +67,11 @@ export class LookupService {
     return this.http.get<FipsStateCode[]>(url);
   }
 
+=======
+  retrieveUnitType(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/unitType`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+>>>>>>> CEF-409-create-functionality-emission-units
 }

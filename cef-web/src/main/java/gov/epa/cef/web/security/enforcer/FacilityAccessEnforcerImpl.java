@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Preconditions;
+
 public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
 
     private final Collection<String> authorizedProgramIds;
@@ -43,6 +45,8 @@ public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
     @Override
     public <T extends ProgramIdRetriever> void enforceEntity(Long id, Class<T> repoClazz) {
 
+    	Preconditions.checkArgument(id != null,"ID for %s repository can not be null.", repoClazz.getSimpleName());
+    	
         enforceEntities(Collections.singletonList(id), repoClazz);
     }
 

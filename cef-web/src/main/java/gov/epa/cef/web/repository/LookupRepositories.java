@@ -11,6 +11,9 @@ public class LookupRepositories {
 
     @Autowired
     private CalculationMethodCodeRepository methodCodeRepo;
+    
+    @Autowired
+    private UnitTypeCodeRepository UnitTypeCodeRepo;
 
     @Autowired
     private CalculationParameterTypeCodeRepository paramTypeCodeRepo;
@@ -62,12 +65,17 @@ public class LookupRepositories {
         return uomRepo;
     }
     
+<<<<<<< HEAD
     public ContactTypeCodeRepository contactTypeRepo() {
         return contactTypeRepo;
     }
     
     public FipsStateCodeRepository stateCodeRepo() {
         return stateCodeRepo;
+=======
+    public UnitTypeCodeRepository UnitTypeCodeRepo() {
+        return UnitTypeCodeRepo;
+>>>>>>> CEF-409-create-functionality-emission-units
     }
 
 }

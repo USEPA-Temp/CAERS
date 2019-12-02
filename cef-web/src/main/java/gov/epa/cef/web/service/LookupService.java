@@ -110,6 +110,7 @@ public interface LookupService {
     EmissionsOperatingTypeCode retrieveEmissionsOperatingTypeCodeEntityByCode(String code);
     
     /**
+<<<<<<< HEAD
      * Retrieve Contact Type codes
      * @return
      */
@@ -121,6 +122,12 @@ public interface LookupService {
      * @return
      */
     ContactTypeCode retrieveContactTypeEntityByCode(String code);
+=======
+     * Retrieve Unit Type codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveUnitTypeCodes();
+>>>>>>> CEF-409-create-functionality-emission-units
 
     /**
      * Retrieve Fips State codes
