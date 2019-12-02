@@ -6,6 +6,7 @@ import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +59,7 @@ public class ControlApi {
 
         this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
 
-        List<ControlPostOrderDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
+        List<ControlPostOrderDto> result = controlService.retrieveForFacilitySite(facilitySiteId, Sort.by(Sort.Direction.ASC, "id"));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

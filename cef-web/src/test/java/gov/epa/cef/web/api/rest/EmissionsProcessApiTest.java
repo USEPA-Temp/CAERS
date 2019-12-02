@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -45,8 +46,8 @@ public class EmissionsProcessApiTest extends BaseApiTest {
 
         emissionProcessList=new ArrayList<>();
         emissionProcessList.add(emissionProcess);
-        when(processService.retrieveForReleasePoint(1L)).thenReturn(emissionProcessList);
-        when(processService.retrieveForEmissionsUnit(1L)).thenReturn(emissionProcessList);
+        when(processService.retrieveForReleasePoint(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(emissionProcessList);
+        when(processService.retrieveForEmissionsUnit(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(emissionProcessList);
 
         when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcerImpl());
     }

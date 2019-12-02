@@ -8,6 +8,7 @@ import gov.epa.cef.web.service.EmissionsProcessService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -98,7 +99,7 @@ public class EmissionsProcessApi {
 
         this.securityService.facilityEnforcer().enforceEntity(releasePointId, ReleasePointRepository.class);
 
-        Collection<EmissionsProcessDto> result = processService.retrieveForReleasePoint(releasePointId);
+        Collection<EmissionsProcessDto> result = processService.retrieveForReleasePoint(releasePointId, Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -114,7 +115,7 @@ public class EmissionsProcessApi {
 
         this.securityService.facilityEnforcer().enforceEntity(emissionsUnitId, EmissionsUnitRepository.class);
 
-        Collection<EmissionsProcessDto> result = processService.retrieveForEmissionsUnit(emissionsUnitId);
+        Collection<EmissionsProcessDto> result = processService.retrieveForEmissionsUnit(emissionsUnitId, Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

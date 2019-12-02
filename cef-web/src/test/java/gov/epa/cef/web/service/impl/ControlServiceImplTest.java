@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,13 +73,13 @@ public class ControlServiceImplTest extends BaseServiceTest {
 
     @Test
     public void retrieveForFacilitySite_Should_Return_ControlList_When_ControlsExist() {
-        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(1L);
+        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(1L,Sort.by(Sort.Direction.ASC, "id"));
         assertNotEquals(null, controlList);
     }
 
     @Test
     public void retrieveForFacilitySite_Should_Return_Empty_When_ControlsDoNotExist() {
-        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(2L);
+        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(2L,Sort.by(Sort.Direction.ASC, "id"));
         assertEquals(new ArrayList<Control>(), controlList);
     }
 

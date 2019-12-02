@@ -38,13 +38,13 @@ export class EmissionUnitDashboardComponent implements OnInit {
           this.emissionsUnit = unit;
           this.processService.retrieveForEmissionsUnit(this.emissionsUnit.id)
           .subscribe(processes => {
-            this.processes = processes.sort((a, b) => (a.emissionsProcessIdentifier > b.emissionsProcessIdentifier ? 1 : -1));
+            this.processes = processes;
           });
         });
 
         this.controlPathService.retrieveForEmissionsUnit(+map.get('unitId'))
         .subscribe(controlPaths => {
-          this.controlPaths = controlPaths.sort((a, b) => (a.id > b.id ? 1 : -1));
+          this.controlPaths = controlPaths;
         });
 
         // get the control paths again if change is emitted, in case a process has been deleted

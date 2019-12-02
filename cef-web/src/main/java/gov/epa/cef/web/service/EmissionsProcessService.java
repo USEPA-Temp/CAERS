@@ -5,6 +5,8 @@ import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
+
 public interface EmissionsProcessService {
 
     /**
@@ -33,14 +35,14 @@ public interface EmissionsProcessService {
      * @param pointId
      * @return
      */
-    List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId);
+    List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId, Sort sort);
 
     /**
      * Retrieve Emissions Processes for an Emissions Unit
      * @param emissionsUnitId
      * @return
      */
-    List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId);
+    List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId, Sort sort);
 
     /**
      * Delete an Emissions Process for a given id

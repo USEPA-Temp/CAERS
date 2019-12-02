@@ -4,6 +4,8 @@ import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.EmissionsUnitService;
 import gov.epa.cef.web.service.dto.EmissionsUnitDto;
+
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,7 +58,7 @@ public class EmissionsUnitApi {
 
         this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
 
-        List<EmissionsUnitDto> emissionsUnits = emissionsUnitService.retrieveEmissionUnitsForFacility(facilitySiteId);
+        List<EmissionsUnitDto> emissionsUnits = emissionsUnitService.retrieveEmissionUnitsForFacility(facilitySiteId,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "unitIdentifier"));
 
         return new ResponseEntity<>(emissionsUnits, HttpStatus.OK);
     }

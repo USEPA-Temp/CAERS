@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
@@ -46,7 +47,7 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
         Optional<ReleasePoint> releasePoint = rpRepo.findById(9999991L);
         assertEquals(true, releasePoint.isPresent());
         
-        List<EmissionsProcess> process = processRepo.findByReleasePointApptsReleasePointId(9999991L);
+        List<EmissionsProcess> process = processRepo.findByReleasePointApptsReleasePointId(9999991L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
         assertEquals(true, process.size()>0);
         
         //delete the unit and verify that the processes are gone as well
@@ -56,7 +57,7 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
         releasePoint = rpRepo.findById(9999991L);
         assertEquals(false, releasePoint.isPresent());
         
-        process = processRepo.findByReleasePointApptsReleasePointId(9999991L);
+        process = processRepo.findByReleasePointApptsReleasePointId(9999991L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
         assertEquals(0, process.size());
         
     }

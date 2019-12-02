@@ -1,6 +1,9 @@
 package gov.epa.cef.web.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Sort;
+
 import gov.epa.cef.web.service.dto.ControlPathDto;
 
 public interface ControlPathService {
@@ -17,14 +20,14 @@ public interface ControlPathService {
      * @param processId
      * @return
      */
-    List<ControlPathDto> retrieveForEmissionsProcess(Long processId);
+    List<ControlPathDto> retrieveForEmissionsProcess(Long processId, Sort sort);
 
     /**
      * Retrieve Control Paths for an emissions unit
      * @param unitId
      * @return
      */
-    List<ControlPathDto> retrieveForEmissionsUnit(Long unitId);
+    List<ControlPathDto> retrieveForEmissionsUnit(Long unitId, Sort sort);
 
     /**
      * Retrieve Control Paths for a release point

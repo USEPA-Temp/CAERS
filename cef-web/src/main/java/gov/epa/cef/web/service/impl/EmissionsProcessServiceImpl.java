@@ -8,6 +8,7 @@ import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 import gov.epa.cef.web.service.mapper.EmissionsProcessMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -85,8 +86,8 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      * @see gov.epa.cef.web.service.impl.EmissionsProcessService#retrieveForReleasePoint(java.lang.Long)
      */
     @Override
-    public List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId) {
-        List<EmissionsProcess> result = processRepo.findByReleasePointApptsReleasePointId(pointId);
+    public List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId, Sort sort) {
+        List<EmissionsProcess> result = processRepo.findByReleasePointApptsReleasePointId(pointId, sort);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
 
@@ -96,8 +97,8 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      * @param emissionsUnitId
      * @return
      */
-    public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId) {
-        List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId);
+    public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId, Sort sort) {
+        List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId, sort);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
 

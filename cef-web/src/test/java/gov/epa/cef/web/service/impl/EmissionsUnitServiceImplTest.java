@@ -74,13 +74,13 @@ public class EmissionsUnitServiceImplTest extends BaseServiceTest {
 
     @Test
     public void retrieveForReleasePoint_Should_ReturnEmissionsUnitDtosList_When_ValidFacilitytIdPassed(){
-        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(1L);
+        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(1L,Sort.by(Sort.Direction.ASC, "unitIdentifier"));
         assertNotEquals(null, emissionsUnitDtosList);
     }
 
     @Test
     public void retrieveForReleasePoint_Should_ReturnNull_When_InvalidFacilityIdPassed(){
-        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(2L);
+        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(2L,Sort.by(Sort.Direction.ASC, "unitIdentifier"));
         assertEquals(null, emissionsUnitDtosList);
     }
 

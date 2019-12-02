@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -42,7 +43,7 @@ public class EmissionsUnitApiTest extends BaseApiTest {
 
         emissionsUnitDtos=new ArrayList<>();
         emissionsUnitDtos.add(emissionsUnit);
-        when(emissionsUnitService.retrieveEmissionUnitsForFacility(1L)).thenReturn(emissionsUnitDtos);
+        when(emissionsUnitService.retrieveEmissionUnitsForFacility(1L,Sort.by(Sort.Direction.ASC, "unitIdentifier"))).thenReturn(emissionsUnitDtos);
 
         when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcerImpl());
     }

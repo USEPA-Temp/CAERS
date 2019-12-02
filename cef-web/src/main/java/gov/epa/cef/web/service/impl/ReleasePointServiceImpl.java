@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.ReleasePoint;
@@ -34,9 +35,8 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReleasePointService#retrieveByFacilityId(java.lang.Long)
      */
-    @Override
     public List<ReleasePointDto> retrieveByFacilitySiteId(Long facilitySiteId) {
-        List<ReleasePoint> releasePoints=releasePointRepo.findByFacilitySiteId(facilitySiteId);
+        List<ReleasePoint> releasePoints=releasePointRepo.findByFacilitySiteId(facilitySiteId, Sort.by(Sort.DEFAULT_DIRECTION.ASC, "releasePointIdentifier"));
         return releasePointMapper.toDtoList(releasePoints);
     }
     

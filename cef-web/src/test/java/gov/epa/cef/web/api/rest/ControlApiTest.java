@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -48,7 +49,7 @@ public class ControlApiTest extends BaseApiTest {
 
         controlList = new ArrayList<>();
         controlList.add(control);
-        when(controlService.retrieveForFacilitySite(1L)).thenReturn(controlList);
+        when(controlService.retrieveForFacilitySite(1L,Sort.by(Sort.Direction.ASC, "id"))).thenReturn(controlList);
     }
 
     @Test

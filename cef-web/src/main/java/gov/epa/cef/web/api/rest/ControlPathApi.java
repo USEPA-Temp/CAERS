@@ -7,6 +7,7 @@ import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,7 +60,7 @@ public class ControlPathApi {
 
         this.securityService.facilityEnforcer().enforceEntity(processId, EmissionsProcessRepository.class);
 
-        List<ControlPathDto> result = controlPathService.retrieveForEmissionsProcess(processId);
+        List<ControlPathDto> result = controlPathService.retrieveForEmissionsProcess(processId, Sort.by(Sort.Direction.ASC, "id"));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -76,7 +77,7 @@ public class ControlPathApi {
 
         this.securityService.facilityEnforcer().enforceEntity(unitId, EmissionsUnitRepository.class);
 
-        List<ControlPathDto> result = controlPathService.retrieveForEmissionsUnit(unitId);
+        List<ControlPathDto> result = controlPathService.retrieveForEmissionsUnit(unitId, Sort.by(Sort.Direction.ASC, "id"));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

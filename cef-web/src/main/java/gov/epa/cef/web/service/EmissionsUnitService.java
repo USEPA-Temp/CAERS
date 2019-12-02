@@ -4,6 +4,8 @@ import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
+
 public interface EmissionsUnitService {
 
     /**
@@ -18,7 +20,7 @@ public interface EmissionsUnitService {
      * @param facilitySiteId
      * @return
      */
-    List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId);
+    List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId, Sort sort);
     
     /**
      * Delete an Emissions Unit for a given id

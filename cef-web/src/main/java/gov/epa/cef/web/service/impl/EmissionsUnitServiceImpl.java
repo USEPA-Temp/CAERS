@@ -39,7 +39,7 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
      * @see gov.epa.cef.web.service.EmissionsUnitService#retrieveEmissionUnitsForFacility(java.lang.Long)
      */
     @Override
-    public List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId) {
+    public List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId, Sort sort) {
         List<EmissionsUnit> emissionUnits= unitRepo.findByFacilitySiteId(facilitySiteId, Sort.by(Sort.Direction.ASC, "unitIdentifier"));
         return emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(emissionUnits);
     }

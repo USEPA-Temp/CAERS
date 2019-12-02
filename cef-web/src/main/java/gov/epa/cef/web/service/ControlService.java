@@ -2,6 +2,8 @@ package gov.epa.cef.web.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
+
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 
@@ -19,7 +21,7 @@ public interface ControlService {
      * @param facilitySiteId
      * @return
      */
-    List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId);
+    List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId, Sort sort);
     
     /***
      * Retrieve a DTO containing all of the related sub-facility components for the given control

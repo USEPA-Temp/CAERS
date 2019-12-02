@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,8 @@ public class ReportServiceImplTest extends BaseServiceTest {
         List<ReportSummary> emptyReportSummaryList = new ArrayList<ReportSummary>();
         List<ReportSummaryDto> fullReportSummaryDtoList = new ArrayList<ReportSummaryDto>();
         List<ReportSummary> fullReportSummaryList = new ArrayList<ReportSummary>();
-        when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2000"), 1L)).thenReturn(emptyReportSummaryList);
-        when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 2L)).thenReturn(emptyReportSummaryList);
+        when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2000"), 1L,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "pollutantName"))).thenReturn(emptyReportSummaryList);
+        when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 2L,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "pollutantName"))).thenReturn(emptyReportSummaryList);
 
         for (int x = 1; x <= 5; x++) {
             ReportSummary rs = new ReportSummary();
@@ -66,7 +67,7 @@ public class ReportServiceImplTest extends BaseServiceTest {
             dto.setUom(rs.getUom());
             fullReportSummaryDtoList.add(dto);
         }
-        when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 1L)).thenReturn(fullReportSummaryList);
+        when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 1L,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "pollutantName"))).thenReturn(fullReportSummaryList);
         when(reportSummaryMapper.toDtoList(fullReportSummaryList)).thenReturn(fullReportSummaryDtoList);
     }
 
