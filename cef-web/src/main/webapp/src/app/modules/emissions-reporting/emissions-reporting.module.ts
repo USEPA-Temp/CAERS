@@ -41,9 +41,10 @@ import { SccSearchModalComponent } from './components/scc-search-modal/scc-searc
 import { ControlPathTableComponent } from './components/control-path-table/control-path-table.component';
 import { EmissionsReportValidationComponent } from './pages/emissions-report-validation/emissions-report-validation.component';
 import { EditFacilityContactComponent } from './pages/edit-facility-contact/edit-facility-contact.component';
+import { EditEmissionUnitInfoPanelComponent } from './components/edit-emission-unit-info-panel/edit-emission-unit-info-panel.component';
+import { CreateEmissionsUnitComponent } from './pages/create-emissions-unit/create-emissions-unit.component';
 import { EditReleasePointPanelComponent } from './components/edit-release-point-panel/edit-release-point-panel.component';
 import { CreateReleasePointComponent } from './pages/create-release-point/create-release-point.component';
-
 
 @NgModule({
   declarations: [
@@ -81,6 +82,8 @@ import { CreateReleasePointComponent } from './pages/create-release-point/create
     ControlPathTableComponent,
     EmissionsReportValidationComponent,
     EditFacilityContactComponent,
+    EditEmissionUnitInfoPanelComponent,
+    CreateEmissionsUnitComponent,
     EditReleasePointPanelComponent,
     CreateReleasePointComponent
   ],
