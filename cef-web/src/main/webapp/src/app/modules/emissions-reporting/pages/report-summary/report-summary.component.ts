@@ -53,8 +53,7 @@ export class ReportSummaryComponent implements OnInit {
                 );
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                 .subscribe(report => {
-
-                    this.tableData = report;
+                    this.tableData = report.sort((a, b) => (a.pollutantName > b.pollutantName) ? 1 : -1);
                 });
             }
         });

@@ -29,7 +29,7 @@ export class ReleasePointsSummaryComponent implements OnInit {
 
       this.releasePointService.retrieveForFacility(this.facilitySite.id)
       .subscribe(points => {
-        this.releasePoints = points;
+        this.releasePoints = points.sort((a, b) => (a.releasePointIdentifier > b.releasePointIdentifier ? 1 : -1));
       });
     });
   }

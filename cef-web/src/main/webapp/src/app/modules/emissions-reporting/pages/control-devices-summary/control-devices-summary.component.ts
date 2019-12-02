@@ -29,7 +29,7 @@ export class ControlDevicesSummaryComponent implements OnInit {
 
       this.controlService.retrieveForFacilitySite(this.facilitySite.id)
       .subscribe(controls => {
-        this.controls = controls;
+        this.controls = controls.sort((a, b) => (a.id > b.id ? 1 : -1));
       });
     });
   }

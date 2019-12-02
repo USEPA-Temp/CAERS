@@ -29,7 +29,7 @@ export class EmissionsUnitsSummaryComponent implements OnInit {
 
       this.emissionUnitsService.retrieveForFacility(this.facilitySite.id)
         .subscribe(units => {
-          this.emissionsUnits = units;
+          this.emissionsUnits = units.sort((a, b) => (a.unitIdentifier > b.unitIdentifier ? 1 : -1));
       });
     });
   }

@@ -29,11 +29,12 @@ export class ControlDeviceDetailsComponent implements OnInit {
       this.controlService.retrieve(+map.get('controlId'))
       .subscribe(control => {
         this.control = control;
+        this.control.pollutants = control.pollutants.sort((a, b) => (a.pollutant.pollutantName > b.pollutant.pollutantName ? 1 : -1));
       });
       
       this.controlService.retrieveComponents(+map.get('controlId'))
       .subscribe(emissionsReportItems => {
-        this.emissionsReportItems = emissionsReportItems; 
+        this.emissionsReportItems = emissionsReportItems.sort((a, b) => (a.identifier > b.identifier ? 1 : -1));
       });
     });
 

@@ -39,7 +39,7 @@ export class SidebarComponent{
   getReportNav(facilityId: number) {
     this.emissionsUnitService.retrieveReportNavTree(facilityId)
       .subscribe(navItems => {
-        console.log(JSON.stringify(navItems));
+        navItems.forEach(navItem => {navItem.children = navItem.children.sort((a, b) => (a.description > b.description? 1 : -1)); })
         this.emissionsNavItems = navItems;
         if(this.emissionsNavItems.length < 25){
           this.paginate = false;
