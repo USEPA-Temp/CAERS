@@ -234,24 +234,27 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
-<<<<<<< HEAD
     public List<CodeLookupDto> retrieveContactTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
         Iterable<ContactTypeCode> entities = contactTypeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "code"));
-=======
+        
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
+    
     public List<CodeLookupDto> retrieveUnitTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
         Iterable<UnitTypeCode> entities = unitTypeCodeRepo.findAll();
->>>>>>> CEF-409-create-functionality-emission-units
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
         });
         return result;
     }
-<<<<<<< HEAD
     
     public ContactTypeCode retrieveContactTypeEntityByCode(String code) {
     	ContactTypeCode result= contactTypeRepo
@@ -278,6 +281,4 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
-=======
->>>>>>> CEF-409-create-functionality-emission-units
 }
