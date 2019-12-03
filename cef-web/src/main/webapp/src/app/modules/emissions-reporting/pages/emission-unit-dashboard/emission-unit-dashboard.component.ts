@@ -36,11 +36,9 @@ export class EmissionUnitDashboardComponent implements OnInit {
       .subscribe(map => {
         this.emissionUnitService.retrieve(+map.get('unitId'))
         .subscribe(unit => {
-          console.log('emission unit2', unit);
           this.emissionsUnit = unit;
           this.processService.retrieveForEmissionsUnit(this.emissionsUnit.id)
           .subscribe(processes => {
-            console.log('processes: ', processes);
             this.processes = processes;
           });
         });

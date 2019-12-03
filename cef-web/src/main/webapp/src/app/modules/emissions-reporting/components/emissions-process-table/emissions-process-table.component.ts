@@ -40,7 +40,7 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
         // update the table with the list of processes
         this.processService.retrieveForEmissionsUnit(emissionsUnitId)
             .subscribe(processes1 => {
-                this.tableData = processes1;
+                this.tableData = processes1.sort((a, b) => (a.id > b.id ? 1 : -1));
             });
 
         // emit the facility data back to the sidebar to reflect the updated

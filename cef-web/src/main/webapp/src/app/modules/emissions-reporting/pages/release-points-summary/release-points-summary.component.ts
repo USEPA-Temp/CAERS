@@ -3,7 +3,6 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { ActivatedRoute } from '@angular/router';
-import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-release-points-summary',
@@ -16,8 +15,7 @@ export class ReleasePointsSummaryComponent implements OnInit {
 
   constructor(
     private releasePointService: ReleasePointService,
-    private route: ActivatedRoute,
-    private sharedService: SharedService) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     // get the resolved facilitySite
@@ -25,7 +23,6 @@ export class ReleasePointsSummaryComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
 
       this.facilitySite = data.facilitySite;
-      this.sharedService.emitChange(data.facilitySite);
 
       this.releasePointService.retrieveForFacility(this.facilitySite.id)
       .subscribe(points => {

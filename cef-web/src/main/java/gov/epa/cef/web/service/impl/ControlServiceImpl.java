@@ -45,7 +45,7 @@ public class ControlServiceImpl implements ControlService {
      */
     @Override
     public List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId) {
-        List<Control> result = repo.findByFacilitySiteId(facilitySiteId);
+        List<Control> result = repo.findByFacilitySiteIdOrderByIdentifier(facilitySiteId);
         return mapper.toDtoList(result);
     }
 

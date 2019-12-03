@@ -53,7 +53,6 @@ export class ReportSummaryComponent implements OnInit {
                 );
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                 .subscribe(report => {
-
                     this.tableData = report;
                 });
             }

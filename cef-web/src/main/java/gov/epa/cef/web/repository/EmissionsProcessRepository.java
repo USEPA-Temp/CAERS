@@ -14,7 +14,7 @@ public interface EmissionsProcessRepository extends CrudRepository<EmissionsProc
 
     List<EmissionsProcess> findByReleasePointApptsReleasePointId(Long releasePointId);
 
-    List<EmissionsProcess> findByEmissionsUnitId(Long emissionsUnitId);
+    List<EmissionsProcess> findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(Long emissionsUnitId);
 
     /**
      *

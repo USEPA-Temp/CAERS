@@ -7,6 +7,7 @@ import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

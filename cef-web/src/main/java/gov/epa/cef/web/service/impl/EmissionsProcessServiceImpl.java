@@ -8,6 +8,7 @@ import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 import gov.epa.cef.web.service.mapper.EmissionsProcessMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -97,7 +98,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      * @return
      */
     public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId) {
-        List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId);
+        List<EmissionsProcess> result = processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(emissionsUnitId);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
 
