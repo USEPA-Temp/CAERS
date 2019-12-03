@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
+import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Average Hours/Day is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgHoursPerDay",
+                    ValidationField.DETAIL_AVG_HR_PER_DAY.value(),
                     "operatingDetail.avgHoursPerDay.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -32,7 +33,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Average Hours Per Day must be between 0.1 and 24
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgHoursPerDay",
+                    ValidationField.DETAIL_AVG_HR_PER_DAY.value(),
                     "operatingDetail.avgHoursPerDay.range", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -43,7 +44,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Average Days/Week is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgDaysPerWeek",
+                    ValidationField.DETAIL_AVG_DAY_PER_WEEK.value(),
                     "operatingDetail.avgDaysPerWeek.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -53,7 +54,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Average Days Per Week must be between 0.1 and 7
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgDaysPerWeek",
+                    ValidationField.DETAIL_AVG_DAY_PER_WEEK.value(),
                     "operatingDetail.avgDaysPerWeek.range", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -64,7 +65,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             //  Actual Hours/Year is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.actualHoursPerPeriod",
+                    ValidationField.DETAIL_ACT_HR_PER_PERIOD.value(),
                     "operatingDetail.actualHoursPerPeriod.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -74,7 +75,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Actual Hours Per Year must be between 1 and 8784
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.actualHoursPerPeriod",
+                    ValidationField.DETAIL_ACT_HR_PER_PERIOD.value(),
                     "operatingDetail.actualHoursPerPeriod.range", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -89,7 +90,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Spring Season % is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percentSpring",
+                    ValidationField.DETAIL_PCT_SPRING.value(),
                     "operatingDetail.percentSpring.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -105,7 +106,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Summer Season % is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percentSummer",
+                    ValidationField.DETAIL_PCT_SUMMER.value(),
                     "operatingDetail.percentSummer.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -121,7 +122,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Fall Season % is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percentFall",
+                    ValidationField.DETAIL_PCT_FALL.value(),
                     "operatingDetail.percentFall.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -137,7 +138,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Winter Season % is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percentWinter",
+                    ValidationField.DETAIL_PCT_WINTER.value(),
                     "operatingDetail.percentWinter.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -153,7 +154,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             // Average Weeks/Year is required
             result = false;
             context.addFederalError(
-                    "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgWeeksPerPeriod",
+                    ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
                     "operatingDetail.avgWeeksPerPeriod.required", 
                     getEmissionsUnitIdentifier(detail),
                     getEmissionsProcessIdentifier(detail));
@@ -164,7 +165,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 // Actual Weeks Per Year must be between 1 and 52
                 result = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgWeeksPerPeriod",
+                        ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
                         "operatingDetail.avgWeeksPerPeriod.range", 
                         getEmissionsUnitIdentifier(detail),
                         getEmissionsProcessIdentifier(detail));
@@ -175,27 +176,27 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 // If Average Weeks/Year > 39 then all Season %'s are required to be > 0%
                 result = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgWeeksPerPeriod",
+                        ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
                         "operatingDetail.avgWeeksPerPeriod.seasons.4", 
                         getEmissionsUnitIdentifier(detail),
                         getEmissionsProcessIdentifier(detail));
 
-            }  if (detail.getAvgWeeksPerPeriod() > 26 && seasons < 3) {
+            }  else if (detail.getAvgWeeksPerPeriod() > 26 && seasons < 3) {
 
                 // If Average Weeks/Year > 26 then at least three Season %'s are required to be > 0%
                 result = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgWeeksPerPeriod",
+                        ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
                         "operatingDetail.avgWeeksPerPeriod.seasons.3", 
                         getEmissionsUnitIdentifier(detail),
                         getEmissionsProcessIdentifier(detail));
 
-            }  if (detail.getAvgWeeksPerPeriod() > 13 && seasons < 2) {
+            }  else if (detail.getAvgWeeksPerPeriod() > 13 && seasons < 2) {
 
                 // If Average Weeks/Year > 13 then at least two Season %'s are required to be > 0%
                 result = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgWeeksPerPeriod",
+                        ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
                         "operatingDetail.avgWeeksPerPeriod.seasons.2", 
                         getEmissionsUnitIdentifier(detail),
                         getEmissionsProcessIdentifier(detail));
@@ -207,7 +208,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 // The sum of seasonal percentages must be between 99.5 and 100.5
                 result = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percents",
+                        ValidationField.DETAIL_PCT.value(),
                         "operatingDetail.percent.total", 
                         getEmissionsUnitIdentifier(detail),
                         getEmissionsProcessIdentifier(detail));

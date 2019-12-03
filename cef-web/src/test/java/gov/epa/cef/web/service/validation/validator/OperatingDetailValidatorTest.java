@@ -4,15 +4,19 @@ package gov.epa.cef.web.service.validation.validator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import gov.epa.cef.web.domain.FacilitySite;
+import com.baidu.unbiz.fluentvalidator.ValidationError;
+
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
-import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
+import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.OperatingDetailValidator;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -40,6 +44,9 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_HR_PER_DAY.value()) && errorMap.get(ValidationField.DETAIL_AVG_HR_PER_DAY.value()).size() == 1);
     }
 
     @Test
@@ -54,11 +61,17 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_HR_PER_DAY.value()) && errorMap.get(ValidationField.DETAIL_AVG_HR_PER_DAY.value()).size() == 1);
+
         cefContext = createContext();
         testData.setAvgHoursPerDay(Double.valueOf(0));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_HR_PER_DAY.value()) && errorMap.get(ValidationField.DETAIL_AVG_HR_PER_DAY.value()).size() == 1);
     }
 
     @Test
@@ -88,6 +101,9 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()) && errorMap.get(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()).size() == 1);
     }
 
     @Test
@@ -102,11 +118,17 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()) && errorMap.get(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()).size() == 1);
+
         cefContext = createContext();
         testData.setAvgDaysPerWeek(Double.valueOf(0));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()) && errorMap.get(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()).size() == 1);
     }
 
     @Test
@@ -136,6 +158,9 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_ACT_HR_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_ACT_HR_PER_PERIOD.value()).size() == 1);
     }
 
     @Test
@@ -150,11 +175,17 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_ACT_HR_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_ACT_HR_PER_PERIOD.value()).size() == 1);
+
         cefContext = createContext();
         testData.setActualHoursPerPeriod(Short.valueOf("0"));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_ACT_HR_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_ACT_HR_PER_PERIOD.value()).size() == 1);
     }
 
     @Test
@@ -186,6 +217,13 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 5);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_SPRING.value()) && errorMap.get(ValidationField.DETAIL_PCT_SPRING.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_SUMMER.value()) && errorMap.get(ValidationField.DETAIL_PCT_SUMMER.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_FALL.value()) && errorMap.get(ValidationField.DETAIL_PCT_FALL.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_WINTER.value()) && errorMap.get(ValidationField.DETAIL_PCT_WINTER.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
     }
 
     @Test
@@ -200,11 +238,17 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
+
         cefContext = createContext();
         testData.setPercentWinter(Double.valueOf(24));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
     }
 
     @Test
@@ -233,6 +277,9 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
     }
 
     @Test
@@ -247,11 +294,17 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
+
         cefContext = createContext();
         testData.setAvgWeeksPerPeriod(Short.valueOf("0"));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
     }
 
     @Test
@@ -283,14 +336,20 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         testData.setAvgWeeksPerPeriod(Short.valueOf("45"));
 
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 3);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
 
         cefContext = createContext();
         testData.setPercentSpring(Double.valueOf(75));
         testData.setPercentSummer(Double.valueOf(25));
 
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
 
         cefContext = createContext();
         testData.setPercentSpring(Double.valueOf(50));
@@ -298,6 +357,9 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
 
         cefContext = createContext();
         testData.setPercentSpring(Double.valueOf(25));
