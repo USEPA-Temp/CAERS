@@ -7,6 +7,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { ToastrService } from 'ngx-toastr';
 
 declare const initCromerrWidget: any;
 
@@ -27,6 +28,7 @@ export class ReportSummaryComponent implements OnInit {
         private router: Router,
         private reportService: ReportService,
         private route: ActivatedRoute,
+        private toastr: ToastrService,
         private sharedService: SharedService,
         private userService: UserService,
         private userContextService: UserContextService) { }
@@ -46,7 +48,7 @@ export class ReportSummaryComponent implements OnInit {
                             if (user.role === 'Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
                                 this.showCertify = true;
                                 initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId);
+                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr);
                             }
                         });
                     }
