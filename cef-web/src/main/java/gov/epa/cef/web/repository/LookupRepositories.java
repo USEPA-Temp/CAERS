@@ -11,6 +11,9 @@ public class LookupRepositories {
 
     @Autowired
     private CalculationMethodCodeRepository methodCodeRepo;
+    
+    @Autowired
+    private UnitTypeCodeRepository UnitTypeCodeRepo;
 
     @Autowired
     private CalculationParameterTypeCodeRepository paramTypeCodeRepo;
@@ -26,6 +29,13 @@ public class LookupRepositories {
 
     @Autowired
     private UnitMeasureCodeRepository uomRepo;
+    
+    @Autowired
+    private ContactTypeCodeRepository contactTypeRepo;
+    
+    @Autowired
+    private FipsStateCodeRepository stateCodeRepo;
+    
 
     public CalculationMaterialCodeRepository materialCodeRepo() {
         return materialCodeRepo;
@@ -53,6 +63,18 @@ public class LookupRepositories {
 
     public UnitMeasureCodeRepository uomRepo() {
         return uomRepo;
+    }
+    
+    public ContactTypeCodeRepository contactTypeRepo() {
+        return contactTypeRepo;
+    }
+    
+    public FipsStateCodeRepository stateCodeRepo() {
+        return stateCodeRepo;
+    }
+    
+    public UnitTypeCodeRepository UnitTypeCodeRepo() {
+        return UnitTypeCodeRepo;
     }
 
 }

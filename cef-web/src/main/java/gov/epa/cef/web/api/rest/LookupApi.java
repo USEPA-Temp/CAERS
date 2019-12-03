@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -107,6 +108,19 @@ public class LookupApi {
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
 
+    
+    /**
+     * Retrieve Contact Types codes
+     * @return
+     */
+    @GetMapping(value = "/unitType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveUnitTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveUnitTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
     /**
      * Retrieve UoM codes
      * @return
@@ -117,6 +131,30 @@ public class LookupApi {
 
         List<UnitMeasureCodeDto> result = lookupService.retrieveUnitMeasureCodes();
         return new ResponseEntity<List<UnitMeasureCodeDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Contact Types codes
+     * @return
+     */
+    @GetMapping(value = "/contactType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveContactTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveContactTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Fips State codes
+     * @return
+     */
+    @GetMapping(value = "/stateCode")
+    @ResponseBody
+    public ResponseEntity<List<FipsStateCodeDto>> retrieveStateCodes() {
+
+        List<FipsStateCodeDto> result = lookupService.retrieveStateCodes();
+        return new ResponseEntity<List<FipsStateCodeDto>>(result, HttpStatus.OK);
     }
 
 }

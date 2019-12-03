@@ -17,6 +17,7 @@ import { ReportStatus } from 'src/app/shared/enums/report-status';
 })
 export class EmissionsUnitTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: EmissionUnit[];
+  @Input() createUrl = '.';
   readOnlyMode = true;
   baseUrl: string;
 

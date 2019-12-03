@@ -3,19 +3,24 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.UnitTypeCode;
+
 public class EmissionsUnitDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private Long facilitySiteId;
+    private CodeLookupDto unitTypeCode;
+    private CodeLookupDto operatingStatusCode;
     private String unitTypeCodeDescription;
     private String operatingStatusCodeDescription;
     private String unitIdentifier;
     private String programSystemCode;
     private String description;
     private String typeCodeDescription;
-    private Short statusYear;
+	private Short statusYear;
     private CodeLookupDto unitOfMeasureCode;
     private Double designCapacity;
     private String unitOfMeasureDescription;
@@ -36,7 +41,7 @@ public class EmissionsUnitDto implements Serializable {
     public void setUnitTypeCodeDescription(String unitTypeCodeDescription) {
         this.unitTypeCodeDescription = unitTypeCodeDescription;
     }
-
+    
     public String getOperatingStatusCodeDescription() {
         return this.operatingStatusCodeDescription;
     }
@@ -117,5 +122,23 @@ public class EmissionsUnitDto implements Serializable {
     public void setEmissionsProcesses(List<EmissionsProcessDto> emissionsProcesses) {
         this.emissionsProcesses = emissionsProcesses;
     }
+    
+    public EmissionsUnitDto withId(Long id) {
+        setId(id);
+        return this;
+    }
+    
+	public CodeLookupDto getOperatingStatusCode() {
+		return operatingStatusCode;
+	}
+	public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
+		this.operatingStatusCode = operatingStatusCode;
+	}
+	public CodeLookupDto getUnitTypeCode() {
+		return unitTypeCode;
+	}
+	public void setUnitTypeCode(CodeLookupDto unitTypeCode) {
+		this.unitTypeCode = unitTypeCode;
+	}
 
 }

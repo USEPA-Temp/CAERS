@@ -21,7 +21,7 @@ export class FacilitySiteService {
         return this.http.get<FacilitySite>(url);
     }
 
-    /** GET facility site for facility and report */
+    /** GET facility site by eis program ID and report ID */
     retrieveForReport(programId: string, reportId: number): Observable<FacilitySite> {
         const url = `${this.baseUrl}/report/${reportId}/facility/${programId}`;
         return this.http.get<FacilitySite>(url);
