@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
+import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
             // prevented by db constraints
             valid = false;
             context.addFederalError(
-                "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsCalcMethodCode",
+                ValidationField.EMISSION_CALC_METHOD.value(),
                 "emission.emissionsCalcMethodCode.required", 
                 getEmissionsUnitIdentifier(emission),
                 getEmissionsProcessIdentifier(emission),
@@ -38,7 +39,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.comments",
+                        ValidationField.EMISSION_COMMENTS.value(),
                         "emission.comments.required.method", 
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
@@ -49,7 +50,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsFactor",
+                        ValidationField.EMISSION_EF.value(),
                         "emission.emissionsFactor.banned.method", 
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
@@ -62,7 +63,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.totalEmissions",
+                        ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
                         "emission.totalEmissions.nonzero.method", 
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
@@ -75,7 +76,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsFactor",
+                        ValidationField.EMISSION_EF.value(),
                         "emission.emissionsFactor.required.method",
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
@@ -89,7 +90,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsNumeratorUom",
+                        ValidationField.EMISSION_NUM_UOM.value(),
                         "emission.emissionsNumeratorUom.required.emissionsFactor", 
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
@@ -100,7 +101,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsDenominatorUom",
+                        ValidationField.EMISSION_DENOM_UOM.value(),
                         "emission.emissionsDenominatorUom.required.emissionsFactor", 
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
@@ -113,7 +114,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsNumeratorUom",
+                        ValidationField.EMISSION_NUM_UOM.value(),
                         "emission.emissionsNumeratorUom.banned.emissionsFactor", 
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
@@ -124,7 +125,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 valid = false;
                 context.addFederalError(
-                        "report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsDenominatorUom",
+                        ValidationField.EMISSION_DENOM_UOM.value(),
                         "emission.emissionsDenominatorUom.banned.emissionsFactor", 
                         getEmissionsUnitIdentifier(emission),
                         getEmissionsProcessIdentifier(emission),
