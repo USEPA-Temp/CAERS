@@ -1,0 +1,60 @@
+<form [formGroup]="emissionUnitForm" >
+
+    <div class="row pb-1">
+        <label for="unitIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit ID:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="unitIdentifierInput" formControlName="unitIdentifier">
+            <app-validation-message [control]="emissionUnitForm.get('unitIdentifier')"></app-validation-message>
+        </div>
+        <label for="unitTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Type Code:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="unitTypeCodeSelect" formControlName="unitTypeCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let unit of unitTypeValues" [ngValue]="unit">{{unit.description}}</option>
+            </select>
+            <app-validation-message [control]="emissionUnitForm.get('unitTypeCode')"></app-validation-message>
+        </div>
+        <label for="unitStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Status:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="unitStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+            </select>
+            <app-validation-message [control]="emissionUnitForm.get('operatingStatusCode')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Description:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="descriptionInput" formControlName="description">
+            <app-validation-message [control]="emissionUnitForm.get('description')"></app-validation-message>
+        </div>
+        <label for="unitStatusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Status Year:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="unitStatusYearInput" formControlName="statusYear">
+            <app-validation-message [control]="emissionUnitForm.get('statusYear')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="unitDesignCapacityInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Design Capacity:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" id="unitDesignCapacityInput" formControlName="designCapacity">
+            <app-validation-message [control]="emissionUnitForm.get('designCapacity')"></app-validation-message>
+        </div>
+        <label for="unitOfMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Design Capacity UoM:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="unitOfMeasureCodeSelect" formControlName="unitOfMeasureCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let uom of uomValues" [ngValue]="uom">{{uom.code}}</option>
+            </select>            
+            <app-validation-message [control]="emissionUnitForm.get('unitOfMeasureCode')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="unitCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
+        <div class="col-sm-6 col-md-10">
+            <textarea rows="3" class="form-control" style="height:100%;" id="unitCommentsInput" formControlName="comments"></textarea>
+            <app-validation-message [control]="emissionUnitForm.get('comments')"></app-validation-message>
+        </div>
+    </div>
+</form>

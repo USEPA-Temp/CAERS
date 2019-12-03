@@ -51,6 +51,7 @@
         <div class="card-header text-center">
             <strong>Facility Contact Information</strong>
             <div class="float-right" *ngIf="!editDetails && !readOnlyMode">
+                <button type="button" class="btn btn-success" [routerLink]="[createUrl, contact.id]">Edit</button>&nbsp;
                 <a routerLink="." (click)="openDeleteModal(contact.firstName, contact.lastName, contact.id, contact.facilitySiteId)">
                     <fa-icon icon="trash-alt"></fa-icon>
                 </a>
@@ -61,7 +62,9 @@
                 <div class="col-sm-6 col-md-2"><strong>Contact Type:</strong></div>
                 <div class="col-sm-6 col-md-2">{{contact.type.description}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Phone Number:</strong></div>
-                <div class="col-sm-6 col-md-4">{{contact.phone | phoneNumber}}</div>
+                <div class="col-sm-6 col-md-2">{{contact.phone | phoneNumber}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Ext:</strong></div>
+                <div class="col-sm-6 col-md-2">{{contact.phoneExt}}</div>
             </div>
             
             <div class="row pb-2">
@@ -73,16 +76,19 @@
             
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
-                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode}}&nbsp;{{contact.postalCode}}</div>
+                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode.uspsCode}}&nbsp;{{contact.postalCode}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
                 <div class="col-sm-6 col-md-2">
                     <span *ngIf="contact.mailingStreetAddress">
-                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode}}&nbsp;{{contact.mailingPostalCode}}
+                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode.uspsCode}}&nbsp;{{contact.mailingPostalCode}}
                     </span>
                 </div>
             <div class="col-sm-6 col-md-2"><strong>County:</strong></div>
             <div class="col-sm-6 col-md-2">{{contact.county}}</div>
             </div>
         </div>
+    </div>
+    <div class="float-right pb-3 pr-3" *ngIf="!editDetails && !readOnlyMode">
+        <button type="button" class="btn btn-success btn-md my-3 ml-3" [routerLink]="[createUrl]">Add Facility Contact Information</button>
     </div>
 </div>

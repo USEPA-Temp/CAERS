@@ -1,5 +1,6 @@
 export enum BaseReportUrl {
   FACILITY_INFO = 'facilityInformation',
+  FACILITY_CONTACT = 'facilitySiteContact',
   EMISSION = 'emission',
   EMISSIONS_UNIT = 'emissionUnit',
   EMISSIONS_PROCESS = 'process',
