@@ -20,14 +20,14 @@ public interface ControlPathService {
      * @param processId
      * @return
      */
-    List<ControlPathDto> retrieveForEmissionsProcess(Long processId, Sort sort);
+    List<ControlPathDto> retrieveForEmissionsProcess(Long processId);
 
     /**
      * Retrieve Control Paths for an emissions unit
      * @param unitId
      * @return
      */
-    List<ControlPathDto> retrieveForEmissionsUnit(Long unitId, Sort sort);
+    List<ControlPathDto> retrieveForEmissionsUnit(Long unitId);
 
     /**
      * Retrieve Control Paths for a release point

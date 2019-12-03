@@ -59,7 +59,7 @@ public class ControlApi {
 
         this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
 
-        List<ControlPostOrderDto> result = controlService.retrieveForFacilitySite(facilitySiteId, Sort.by(Sort.Direction.ASC, "id"));
+        List<ControlPostOrderDto> result = controlService.retrieveForFacilitySite(facilitySiteId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

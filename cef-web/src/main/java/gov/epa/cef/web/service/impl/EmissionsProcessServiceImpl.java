@@ -86,8 +86,8 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      * @see gov.epa.cef.web.service.impl.EmissionsProcessService#retrieveForReleasePoint(java.lang.Long)
      */
     @Override
-    public List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId, Sort sort) {
-        List<EmissionsProcess> result = processRepo.findByReleasePointApptsReleasePointId(pointId, sort);
+    public List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId) {
+        List<EmissionsProcess> result = processRepo.findByReleasePointApptsReleasePointId(pointId);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
 
@@ -97,8 +97,8 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      * @param emissionsUnitId
      * @return
      */
-    public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId, Sort sort) {
-        List<EmissionsProcess> result = processRepo.findByEmissionsUnitId(emissionsUnitId, sort);
+    public List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId) {
+        List<EmissionsProcess> result = processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(emissionsUnitId);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
 

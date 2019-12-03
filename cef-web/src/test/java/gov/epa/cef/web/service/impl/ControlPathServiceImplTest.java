@@ -78,25 +78,25 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
 
     @Test
     public void retrieveForEmissionsProcess_Should_Return_ControlList_When_ControlPathsExist() {
-        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsProcess(3L,Sort.by(Sort.Direction.ASC, "id"));
+        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsProcess(3L);
         assertNotEquals(null, controlPathList);
     }
 
     @Test
     public void retrieveForEmissionsProcess_Should_Return_Empty_When_ControlPathsDoNotExist() {
-        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsProcess(4L,Sort.by(Sort.Direction.ASC, "id"));
+        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsProcess(4L);
         assertEquals(new ArrayList<ControlPath>(), controlPathList);
     }
 
     @Test
     public void retrieveForEmissionsUnit_Should_Return_ControlList_When_ControlPathsExist() {
-        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsUnit(5L,Sort.by(Sort.Direction.ASC, "id"));
+        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsUnit(5L);
         assertNotEquals(null, controlPathList);
     }
 
     @Test
     public void retrieveForEmissionsUnit_Should_Return_Empty_When_ControlPathsDoNotExist() {
-        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsUnit(6L,Sort.by(Sort.Direction.ASC, "id"));
+        Collection<ControlPathDto> controlPathList = serviceImpl.retrieveForEmissionsUnit(6L);
         assertEquals(new ArrayList<ControlPath>(), controlPathList);
     }
 

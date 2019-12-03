@@ -39,13 +39,13 @@ export class ReleasePointDetailsComponent implements OnInit {
           this.releasePoint = point;
           this.processService.retrieveForReleasePoint(this.releasePoint.id)
           .subscribe(processes => {
-            this.processes = processes.sort((a, b) => (a.emissionsProcessIdentifier > b.emissionsProcessIdentifier ? 1 : -1));
+            this.processes = processes;
           });
         });
 
         this.controlPathService.retrieveForReleasePoint(+map.get('releasePointId'))
         .subscribe(controlPaths => {
-          this.controlPaths = controlPaths.sort((a, b) => (a.id > b.id ? 1 : -1));
+          this.controlPaths = controlPaths;
         });
     });
 

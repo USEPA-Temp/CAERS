@@ -18,7 +18,7 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
      * @param facilitySiteId
      * @return
      */
-    List<ReleasePoint> findByFacilitySiteId(Long facilitySiteId, Sort sort);
+    List<ReleasePoint> findByFacilitySiteIdOrderByReleasePointIdentifier(Long facilitySiteId);
 
     /**
      *

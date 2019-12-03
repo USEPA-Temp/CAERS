@@ -46,8 +46,8 @@ public class EmissionsProcessApiTest extends BaseApiTest {
 
         emissionProcessList=new ArrayList<>();
         emissionProcessList.add(emissionProcess);
-        when(processService.retrieveForReleasePoint(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(emissionProcessList);
-        when(processService.retrieveForEmissionsUnit(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(emissionProcessList);
+        when(processService.retrieveForReleasePoint(1L)).thenReturn(emissionProcessList);
+        when(processService.retrieveForEmissionsUnit(1L)).thenReturn(emissionProcessList);
 
         when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcerImpl());
     }

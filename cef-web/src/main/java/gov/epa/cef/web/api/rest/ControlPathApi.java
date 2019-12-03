@@ -60,7 +60,7 @@ public class ControlPathApi {
 
         this.securityService.facilityEnforcer().enforceEntity(processId, EmissionsProcessRepository.class);
 
-        List<ControlPathDto> result = controlPathService.retrieveForEmissionsProcess(processId, Sort.by(Sort.Direction.ASC, "id"));
+        List<ControlPathDto> result = controlPathService.retrieveForEmissionsProcess(processId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -77,7 +77,7 @@ public class ControlPathApi {
 
         this.securityService.facilityEnforcer().enforceEntity(unitId, EmissionsUnitRepository.class);
 
-        List<ControlPathDto> result = controlPathService.retrieveForEmissionsUnit(unitId, Sort.by(Sort.Direction.ASC, "id"));
+        List<ControlPathDto> result = controlPathService.retrieveForEmissionsUnit(unitId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

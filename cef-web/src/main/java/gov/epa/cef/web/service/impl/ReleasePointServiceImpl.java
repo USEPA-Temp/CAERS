@@ -36,7 +36,7 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      * @see gov.epa.cef.web.service.impl.ReleasePointService#retrieveByFacilityId(java.lang.Long)
      */
     public List<ReleasePointDto> retrieveByFacilitySiteId(Long facilitySiteId) {
-        List<ReleasePoint> releasePoints=releasePointRepo.findByFacilitySiteId(facilitySiteId, Sort.by(Sort.DEFAULT_DIRECTION.ASC, "releasePointIdentifier"));
+        List<ReleasePoint> releasePoints=releasePointRepo.findByFacilitySiteIdOrderByReleasePointIdentifier(facilitySiteId);
         return releasePointMapper.toDtoList(releasePoints);
     }
     

@@ -49,8 +49,8 @@ public class EmissionsUnitServiceImplTest extends BaseServiceTest {
                 .thenReturn(emissionsUnitDtosList);
         when(emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(null)).thenReturn(null);
 
-        when(unitRepo.findByFacilitySiteId(1L, Sort.by(Sort.Direction.ASC, "unitIdentifier"))).thenReturn(emissionsUnitsList);
-	    when(unitRepo.findByFacilitySiteId(2L, Sort.by(Sort.Direction.ASC, "unitIdentifier"))).thenReturn(null);
+        when(unitRepo.findByFacilitySiteIdOrderByUnitIdentifier(1L)).thenReturn(emissionsUnitsList);
+	    when(unitRepo.findByFacilitySiteIdOrderByUnitIdentifier(2L)).thenReturn(null);
 
 	}
 
@@ -74,13 +74,13 @@ public class EmissionsUnitServiceImplTest extends BaseServiceTest {
 
     @Test
     public void retrieveForReleasePoint_Should_ReturnEmissionsUnitDtosList_When_ValidFacilitytIdPassed(){
-        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(1L,Sort.by(Sort.Direction.ASC, "unitIdentifier"));
+        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(1L);
         assertNotEquals(null, emissionsUnitDtosList);
     }
 
     @Test
     public void retrieveForReleasePoint_Should_ReturnNull_When_InvalidFacilityIdPassed(){
-        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(2L,Sort.by(Sort.Direction.ASC, "unitIdentifier"));
+        List<EmissionsUnitDto> emissionsUnitDtosList=emissionsUnitServiceImpl.retrieveEmissionUnitsForFacility(2L);
         assertEquals(null, emissionsUnitDtosList);
     }
 

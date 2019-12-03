@@ -49,7 +49,7 @@ public class ControlApiTest extends BaseApiTest {
 
         controlList = new ArrayList<>();
         controlList.add(control);
-        when(controlService.retrieveForFacilitySite(1L,Sort.by(Sort.Direction.ASC, "id"))).thenReturn(controlList);
+        when(controlService.retrieveForFacilitySite(1L)).thenReturn(controlList);
     }
 
     @Test

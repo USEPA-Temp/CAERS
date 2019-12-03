@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.ControlAssignment;
@@ -30,14 +29,14 @@ public class ControlPathServiceImpl implements ControlPathService {
     }
 
     @Override
-    public List<ControlPathDto> retrieveForEmissionsProcess(Long processId, Sort sort) {
+    public List<ControlPathDto> retrieveForEmissionsProcess(Long processId) {
         List<ControlPath> result = repo.findByEmissionsProcessId(processId);
         result.addAll(getChildren(result));
         return mapper.toDtoList(result);
     }
 
 	@Override
-    public List<ControlPathDto> retrieveForEmissionsUnit(Long unitId, Sort sort) {
+    public List<ControlPathDto> retrieveForEmissionsUnit(Long unitId) {
         List<ControlPath> result = repo.findByEmissionsUnitId(unitId);
         result.addAll(getChildren(result));
         return mapper.toDtoList(result);

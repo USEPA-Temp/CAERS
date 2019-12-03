@@ -62,11 +62,11 @@ public class EmissionsProcessServiceImplTest extends BaseServiceTest {
                 .thenReturn(emissionsProcessDtosList);
         when(emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(null)).thenReturn(null);
 
-        when(processRepo.findByReleasePointApptsReleasePointId(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(emissionsProcessList);
-        when(processRepo.findByReleasePointApptsReleasePointId(2L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(null);
+        when(processRepo.findByReleasePointApptsReleasePointId(1L)).thenReturn(emissionsProcessList);
+        when(processRepo.findByReleasePointApptsReleasePointId(2L)).thenReturn(null);
 
-        when(processRepo.findByEmissionsUnitId(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(emissionsProcessList);
-        when(processRepo.findByEmissionsUnitId(2L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"))).thenReturn(null);
+        when(processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(1L)).thenReturn(emissionsProcessList);
+        when(processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(2L)).thenReturn(null);
 
         when(processRepo.save(emissionProcess)).thenReturn(emissionProcess);
 
@@ -98,25 +98,25 @@ public class EmissionsProcessServiceImplTest extends BaseServiceTest {
 
     @Test
     public void retrieveForReleasePoint_Should_ReturnEmissionProcessDtosList_When_ValidReleasePointIdPassed(){
-        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForReleasePoint(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
+        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForReleasePoint(1L);
         assertNotEquals(null, emissionsProcessDtosList);
     }
 
     @Test
     public void retrieveForReleasePoint_Should_ReturnNull_When_InvalidReleasePointIdPassed(){
-        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForReleasePoint(2L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
+        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForReleasePoint(2L);
         assertEquals(null, emissionsProcessDtosList);
     }
 
     @Test
     public void retrieveForEmissionsUnit_Should_ReturnEmissionProcessDtosList_When_ValidEmissionsUnitIdPassed(){
-        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForEmissionsUnit(1L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
+        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForEmissionsUnit(1L);
         assertNotEquals(null, emissionsProcessDtosList);
     }
 
     @Test
     public void retrieveForEmissionsUnit_Should_ReturnNull_When_InvalidEmissionsUnitIdPassed(){
-        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForEmissionsUnit(2L,Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
+        List<EmissionsProcessDto> emissionsProcessDtosList=emissionsProcessServiceImpl.retrieveForEmissionsUnit(2L);
         assertEquals(null, emissionsProcessDtosList);
     }
 

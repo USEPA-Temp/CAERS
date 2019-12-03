@@ -35,14 +35,14 @@ public interface EmissionsProcessService {
      * @param pointId
      * @return
      */
-    List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId, Sort sort);
+    List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId);
 
     /**
      * Retrieve Emissions Processes for an Emissions Unit
      * @param emissionsUnitId
      * @return
      */
-    List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId, Sort sort);
+    List<EmissionsProcessDto> retrieveForEmissionsUnit(Long emissionsUnitId);
 
     /**
      * Delete an Emissions Process for a given id

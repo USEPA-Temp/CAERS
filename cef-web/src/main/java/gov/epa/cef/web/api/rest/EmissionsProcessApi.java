@@ -99,7 +99,7 @@ public class EmissionsProcessApi {
 
         this.securityService.facilityEnforcer().enforceEntity(releasePointId, ReleasePointRepository.class);
 
-        Collection<EmissionsProcessDto> result = processService.retrieveForReleasePoint(releasePointId, Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
+        Collection<EmissionsProcessDto> result = processService.retrieveForReleasePoint(releasePointId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -115,7 +115,7 @@ public class EmissionsProcessApi {
 
         this.securityService.facilityEnforcer().enforceEntity(emissionsUnitId, EmissionsUnitRepository.class);
 
-        Collection<EmissionsProcessDto> result = processService.retrieveForEmissionsUnit(emissionsUnitId, Sort.by(Sort.Direction.ASC, "emissionsProcessIdentifier"));
+        Collection<EmissionsProcessDto> result = processService.retrieveForEmissionsUnit(emissionsUnitId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

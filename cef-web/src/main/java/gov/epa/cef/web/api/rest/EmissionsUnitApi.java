@@ -99,7 +99,7 @@ public class EmissionsUnitApi {
 
         this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
 
-        List<EmissionsUnitDto> emissionsUnits = emissionsUnitService.retrieveEmissionUnitsForFacility(facilitySiteId,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "unitIdentifier"));
+        List<EmissionsUnitDto> emissionsUnits = emissionsUnitService.retrieveEmissionUnitsForFacility(facilitySiteId);
 
         return new ResponseEntity<>(emissionsUnits, HttpStatus.OK);
     }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.Control;
@@ -45,8 +44,8 @@ public class ControlServiceImpl implements ControlService {
      * @see gov.epa.cef.web.service.impl.ControlService#retrieveForFacilitySite(java.lang.Long)
      */
     @Override
-    public List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId, Sort sort) {
-        List<Control> result = repo.findByFacilitySiteId(facilitySiteId);
+    public List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId) {
+        List<Control> result = repo.findByFacilitySiteIdOrderByIdentifier(facilitySiteId);
         return mapper.toDtoList(result);
     }
 

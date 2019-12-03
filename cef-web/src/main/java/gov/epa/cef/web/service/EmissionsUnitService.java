@@ -22,7 +22,7 @@ public interface EmissionsUnitService {
      * @param facilitySiteId
      * @return
      */
-    List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId, Sort sort);
+    List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId);
     
     /**
      * Delete an Emissions Unit for a given id

@@ -44,8 +44,8 @@ public class ControlServiceImplTest extends BaseServiceTest {
         controlList.add(control);
         when(controlRepo.findById(1L)).thenReturn(Optional.of(control));
         when(controlRepo.findById(2L)).thenReturn(Optional.empty());
-        when(controlRepo.findByFacilitySiteId(1L)).thenReturn(controlList);
-        when(controlRepo.findByFacilitySiteId(2L)).thenReturn(emptyControlList);
+        when(controlRepo.findByFacilitySiteIdOrderByIdentifier(1L)).thenReturn(controlList);
+        when(controlRepo.findByFacilitySiteIdOrderByIdentifier(2L)).thenReturn(emptyControlList);
 
         controlDto = new ControlPostOrderDto();
         controlDtoList=new ArrayList<>();
@@ -73,13 +73,13 @@ public class ControlServiceImplTest extends BaseServiceTest {
 
     @Test
     public void retrieveForFacilitySite_Should_Return_ControlList_When_ControlsExist() {
-        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(1L,Sort.by(Sort.Direction.ASC, "id"));
+        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(1L);
         assertNotEquals(null, controlList);
     }
 
     @Test
     public void retrieveForFacilitySite_Should_Return_Empty_When_ControlsDoNotExist() {
-        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(2L,Sort.by(Sort.Direction.ASC, "id"));
+        Collection<ControlPostOrderDto> controlList = controlServiceImpl.retrieveForFacilitySite(2L);
         assertEquals(new ArrayList<Control>(), controlList);
     }
 

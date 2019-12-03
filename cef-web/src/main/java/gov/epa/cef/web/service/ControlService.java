@@ -21,7 +21,7 @@ public interface ControlService {
      * @param facilitySiteId
      * @return
      */
-    List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId, Sort sort);
+    List<ControlPostOrderDto> retrieveForFacilitySite(Long facilitySiteId);
     
     /***
      * Retrieve a DTO containing all of the related sub-facility components for the given control
