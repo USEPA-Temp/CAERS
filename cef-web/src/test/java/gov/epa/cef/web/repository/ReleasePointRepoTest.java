@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -56,9 +57,9 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
     public void createReleasePointTest() throws Exception {
     	
     	//delete the all release points from facility 9999992
-    	rpRepo.deleteAll(rpRepo.findByFacilitySiteId(9999992L));
+    	rpRepo.deleteAll(rpRepo.findByFacilitySiteIdOrderByReleasePointIdentifier(9999992L));
     	
-    	List<ReleasePoint> releasePtList = rpRepo.findByFacilitySiteId(9999992L);
+    	List<ReleasePoint> releasePtList = rpRepo.findByFacilitySiteIdOrderByReleasePointIdentifier(9999992L);
     	assertEquals(0, releasePtList.size());
 
     	//create release point
