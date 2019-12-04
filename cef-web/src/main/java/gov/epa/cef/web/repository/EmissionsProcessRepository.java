@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface EmissionsProcessRepository extends CrudRepository<EmissionsProcess, Long>, ProgramIdRetriever {
 
-    List<EmissionsProcess> findByReleasePointApptsReleasePointId(Long releasePointId);
+    List<EmissionsProcess> findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(Long releasePointId);
 
     List<EmissionsProcess> findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(Long emissionsUnitId);
 

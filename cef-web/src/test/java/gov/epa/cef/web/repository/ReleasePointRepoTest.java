@@ -47,7 +47,7 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
         Optional<ReleasePoint> releasePoint = rpRepo.findById(9999991L);
         assertEquals(true, releasePoint.isPresent());
         
-        List<EmissionsProcess> process = processRepo.findByReleasePointApptsReleasePointId(9999991L);
+        List<EmissionsProcess> process = processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(9999991L);
         assertEquals(true, process.size()>0);
         
         //delete the unit and verify that the processes are gone as well
@@ -57,7 +57,7 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
         releasePoint = rpRepo.findById(9999991L);
         assertEquals(false, releasePoint.isPresent());
         
-        process = processRepo.findByReleasePointApptsReleasePointId(9999991L);
+        process = processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(9999991L);
         assertEquals(0, process.size());
         
     }

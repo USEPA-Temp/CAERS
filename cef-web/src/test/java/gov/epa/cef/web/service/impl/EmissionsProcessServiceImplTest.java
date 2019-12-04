@@ -62,8 +62,8 @@ public class EmissionsProcessServiceImplTest extends BaseServiceTest {
                 .thenReturn(emissionsProcessDtosList);
         when(emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(null)).thenReturn(null);
 
-        when(processRepo.findByReleasePointApptsReleasePointId(1L)).thenReturn(emissionsProcessList);
-        when(processRepo.findByReleasePointApptsReleasePointId(2L)).thenReturn(null);
+        when(processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(1L)).thenReturn(emissionsProcessList);
+        when(processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(2L)).thenReturn(null);
 
         when(processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(1L)).thenReturn(emissionsProcessList);
         when(processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(2L)).thenReturn(null);
