@@ -4,6 +4,7 @@ import { EditReleasePointPanelComponent } from '../../components/edit-release-po
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
 @Component({
   selector: 'app-create-release-point',
@@ -12,6 +13,8 @@ import { ReleasePoint } from 'src/app/shared/models/release-point';
 })
 export class CreateReleasePointComponent implements OnInit {
   @Input() facilitySite: FacilitySite;
+
+  releaseUrl: string;
 
   @ViewChild(EditReleasePointPanelComponent, { static: true })
   private releasePointComponent: EditReleasePointPanelComponent;
@@ -26,6 +29,11 @@ export class CreateReleasePointComponent implements OnInit {
     this.route.data
     .subscribe(data => {
       this.facilitySite = data.facilitySite;
+    });
+
+    this.route.paramMap
+    .subscribe(params => {
+      this.releaseUrl = `/facility/${params.get('facilityId')}/report/${params.get('reportId')}/${BaseReportUrl.RELEASE_POINT}`;
     });
 
   }
@@ -45,9 +53,8 @@ export class CreateReleasePointComponent implements OnInit {
       saveReleasePoint.facilitySiteId = this.facilitySite.id;
 
       this.releasePointService.create(saveReleasePoint)
-      .subscribe(result => {
-        console.log(saveReleasePoint.id);
-        this.router.navigate(['./..'], { relativeTo: this.route });
+      .subscribe(() => {
+        this.router.navigate([this.releaseUrl]);
       });
     }
 

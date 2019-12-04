@@ -19,12 +19,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import gov.epa.cef.web.config.CommonInitializers;
-import gov.epa.cef.web.domain.ContactTypeCode;
-import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.FacilitySite;
-import gov.epa.cef.web.domain.FacilitySiteContact;
-import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePoint;
@@ -57,7 +53,7 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
     }
     
     @Test
-    public void createControlTest() throws Exception {
+    public void createReleasePointTest() throws Exception {
     	
     	//delete the all release points from facility 9999992
     	rpRepo.deleteAll(rpRepo.findByFacilitySiteId(9999992L));

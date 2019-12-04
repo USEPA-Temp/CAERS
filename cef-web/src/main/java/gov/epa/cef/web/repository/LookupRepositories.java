@@ -1,10 +1,7 @@
 package gov.epa.cef.web.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
-
-import gov.epa.cef.web.domain.CalculationMethodCode;
 
 @Service
 public class LookupRepositories {
