@@ -87,7 +87,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      */
     @Override
     public List<EmissionsProcessDto> retrieveForReleasePoint(Long pointId) {
-        List<EmissionsProcess> result = processRepo.findByReleasePointApptsReleasePointId(pointId);
+        List<EmissionsProcess> result = processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(pointId);
         return emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(result);
     }
 
