@@ -11,8 +11,17 @@
       Value cannot be higher than {{control.errors.max.max}}.
   </div>
 
+  <div *ngIf="control.errors?.maxlength">
+    Value cannot exceed {{control.errors.maxlength.requiredLength}} characters.
+  </div>
+
   <div *ngIf="control.errors?.pattern">
-      Value is not in the correct format.
+    <div *ngIf="control.errors?.pattern.requiredPattern == '^[0-9]*$'">
+      Value can only be numeric.
+    </div>
+    <div *ngIf="control.errors?.pattern.requiredPattern == '^[a-zA-Z ]*$'">
+      Value can only be alphabetical characters.
+    </div>
   </div>
 
   <div *ngIf="control.errors?.wholeNumber">
