@@ -86,7 +86,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveCalcMaterialCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<CalculationMaterialCode> entities = materialCodeRepo.findAll();
+        Iterable<CalculationMaterialCode> entities = materialCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -104,7 +104,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CalculationMethodCodeDto> retrieveCalcMethodCodes() {
 
         List<CalculationMethodCodeDto> result = new ArrayList<CalculationMethodCodeDto>();
-        Iterable<CalculationMethodCode> entities = methodCodeRepo.findAll();
+        Iterable<CalculationMethodCode> entities = methodCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.calculationMethodCodeToDto(entity));
@@ -119,7 +119,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveCalcParamTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<CalculationParameterTypeCode> entities = paramTypeCodeRepo.findAll();
+        Iterable<CalculationParameterTypeCode> entities = paramTypeCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -141,7 +141,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveOperatingStatusCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll();
+        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -160,7 +160,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveEmissionOperatingTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<EmissionsOperatingTypeCode> entities = emissionsOperatingTypeCodeRepo.findAll();
+        Iterable<EmissionsOperatingTypeCode> entities = emissionsOperatingTypeCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "shortName"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.emissionsOperatingTypeCodeToDto(entity));
@@ -197,7 +197,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveReportingPeriodCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<ReportingPeriodCode> entities = periodCodeRepo.findAll();
+        Iterable<ReportingPeriodCode> entities = periodCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "shortName"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.reportingPeriodCodeToDto(entity));
@@ -219,7 +219,7 @@ public class LookupServiceImpl implements LookupService {
     public List<UnitMeasureCodeDto> retrieveUnitMeasureCodes() {
 
         List<UnitMeasureCodeDto> result = new ArrayList<UnitMeasureCodeDto>();
-        Iterable<UnitMeasureCode> entities = uomRepo.findAll();
+        Iterable<UnitMeasureCode> entities = uomRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "code"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.unitMeasureCodeToDto(entity));
@@ -248,7 +248,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveUnitTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<UnitTypeCode> entities = unitTypeCodeRepo.findAll();
+        Iterable<UnitTypeCode> entities = unitTypeCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
