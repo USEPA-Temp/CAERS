@@ -5,6 +5,7 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
+import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
@@ -41,33 +42,33 @@ public class EmissionsReportValidator
 
             // prevented by db constraints
             valid = false;
-            context.addFederalError("report.year", "report.year.required");
+            context.addFederalError(ValidationField.REPORT_YEAR.value(), "report.year.required");
 
         } else if (report.getYear().intValue() < Calendar.getInstance().get(Calendar.YEAR) - 1) {
 
             valid = false;
-            context.addFederalWarning("report.year", "report.year.min", "" + (Calendar.getInstance().get(Calendar.YEAR) - 1));
+            context.addFederalWarning(ValidationField.REPORT_YEAR.value(), "report.year.min", "" + (Calendar.getInstance().get(Calendar.YEAR) - 1));
         }
 
         if (Strings.emptyToNull(report.getAgencyCode()) == null) {
 
             // prevented by db constraints
             valid = false;
-            context.addFederalError("report.agencyCode", "report.agencyCode.required");
+            context.addFederalError(ValidationField.REPORT_AGENCY_CODE.value(), "report.agencyCode.required");
         }
 
         if (Strings.emptyToNull(report.getFrsFacilityId()) == null) {
 
             // prevented by db constraints
             valid = false;
-            context.addFederalError("report.frsFacilityId", "report.frsFacilityId.required");
+            context.addFederalError(ValidationField.REPORT_FRS_ID.value(), "report.frsFacilityId.required");
         }
 
         if (Strings.emptyToNull(report.getEisProgramId()) == null) {
 
             // prevented by db constraints
             valid = false;
-            context.addFederalError("report.eisProgramId", "report.eisProgramId.required");
+            context.addFederalError(ValidationField.REPORT_EIS_ID.value(), "report.eisProgramId.required");
         }
 
         return valid;

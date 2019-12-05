@@ -6,6 +6,8 @@ import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
+
 public interface EmissionsUnitService {
 
     /**

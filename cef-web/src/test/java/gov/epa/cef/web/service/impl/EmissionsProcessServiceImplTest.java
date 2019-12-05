@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +62,11 @@ public class EmissionsProcessServiceImplTest extends BaseServiceTest {
                 .thenReturn(emissionsProcessDtosList);
         when(emissionsProcessMapper.emissionsProcessesToEmissionsProcessDtos(null)).thenReturn(null);
 
-        when(processRepo.findByReleasePointApptsReleasePointId(1L)).thenReturn(emissionsProcessList);
-        when(processRepo.findByReleasePointApptsReleasePointId(2L)).thenReturn(null);
+        when(processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(1L)).thenReturn(emissionsProcessList);
+        when(processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(2L)).thenReturn(null);
 
-        when(processRepo.findByEmissionsUnitId(1L)).thenReturn(emissionsProcessList);
-        when(processRepo.findByEmissionsUnitId(2L)).thenReturn(null);
+        when(processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(1L)).thenReturn(emissionsProcessList);
+        when(processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(2L)).thenReturn(null);
 
         when(processRepo.save(emissionProcess)).thenReturn(emissionProcess);
 

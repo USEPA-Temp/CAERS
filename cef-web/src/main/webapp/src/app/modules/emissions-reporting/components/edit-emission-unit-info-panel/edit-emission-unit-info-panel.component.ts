@@ -29,11 +29,12 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     ]],
     designCapacity: ['', [
       Validators.required,
+      Validators.pattern('[0-9]*'),
       Validators.maxLength(20)
     ]],
     description: ['', [
       Validators.required,
-      Validators.maxLength(500)
+      Validators.maxLength(100)
     ]],
     comments: ['', Validators.maxLength(2000)]
   });

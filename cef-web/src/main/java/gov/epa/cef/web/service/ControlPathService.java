@@ -1,6 +1,9 @@
 package gov.epa.cef.web.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Sort;
+
 import gov.epa.cef.web.service.dto.ControlPathDto;
 
 public interface ControlPathService {

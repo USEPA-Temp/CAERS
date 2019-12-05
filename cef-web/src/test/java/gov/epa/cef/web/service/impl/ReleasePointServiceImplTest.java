@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,8 +44,8 @@ public class ReleasePointServiceImplTest extends BaseServiceTest {
         releasePointList.add(releasePoint);
         when(releasePointRepo.findById(1L)).thenReturn(Optional.of(releasePoint));
         when(releasePointRepo.findById(2L)).thenReturn(Optional.empty());
-        when(releasePointRepo.findByFacilitySiteId(1L)).thenReturn(releasePointList);
-        when(releasePointRepo.findByFacilitySiteId(2L)).thenReturn(emptyReleasePointList);
+        when(releasePointRepo.findByFacilitySiteIdOrderByReleasePointIdentifier(1L)).thenReturn(releasePointList);
+        when(releasePointRepo.findByFacilitySiteIdOrderByReleasePointIdentifier(2L)).thenReturn(emptyReleasePointList);
 
         releasePointDto=new ReleasePointDto();
         releasePointDtoList=new ArrayList<>();

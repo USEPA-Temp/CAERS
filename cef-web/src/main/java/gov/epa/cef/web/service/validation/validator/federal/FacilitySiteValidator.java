@@ -5,6 +5,7 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
+import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             // prevented by db constraints
             result = false;
             context.addFederalError(
-                "report.facilitySite.eisProgramId","facilitysite.eisProgramId.required");
+                    ValidationField.FACILITY_EIS_ID.value(),"facilitysite.eisProgramId.required");
         }
 
 
