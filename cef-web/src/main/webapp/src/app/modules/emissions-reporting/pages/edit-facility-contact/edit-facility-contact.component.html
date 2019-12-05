@@ -50,14 +50,16 @@
     <div class="card mb-3">
       <div class="card-header text-center">
         <strong>Contact Information</strong>
-        <div class="float-right" *ngIf="contactForm.disabled && !createMode && !readOnlyMode">
-          <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
-        </div>
       </div>
       <div class="card-body">
 
         <div *ngIf="!readOnlyMode">
           <div class="row pb-2">
+            <label for="prefix" class="col-sm-4 col-lg-2 col-form-label"><strong>Prefix:</strong></label>
+            <div class="col-sm-8 col-lg-4">
+              <input type="text" class="form-control" id="prefix" formControlName="prefix" [value]="contactForm.value.contact?.prefix" maxlength="15">
+              <app-validation-message [control]="contactForm.controls.prefix"></app-validation-message>
+            </div>
             <label for="type" class="col-sm-4 col-lg-2 col-form-label"><strong>Contact Type:</strong></label>
             <div class="col-sm-8 col-lg-4">
               <select type="text" class="form-control" id="type" formControlName="type" [compareWith]="formUtils.compareCode">
@@ -89,6 +91,7 @@
               <label for="phoneExt" class="col-sm-4 col-lg-2 col-form-label"><strong>Ext.:</strong></label>
               <div class="col-sm-8 col-lg-2">
                 <input type="text" class="form-control" id="phoneExt" formControlName="phoneExt" [value]="contactForm.value.contact?.phoneExt" maxlength="5">
+                <app-validation-message [control]="contactForm.controls.phoneExt"></app-validation-message>
               </div>
           </div>
 
