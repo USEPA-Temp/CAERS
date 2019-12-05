@@ -30,7 +30,7 @@
         </div>
         <label for="unitStatusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Status Year:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="4" type="number" id="unitStatusYearInput" formControlName="statusYear">
+            <input type="text" class="form-control" maxlength="4" id="unitStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="emissionUnitForm.get('statusYear')"></app-validation-message>
         </div>
     </div>
@@ -38,7 +38,7 @@
     <div class="row pb-1">
         <label for="unitDesignCapacityInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Design Capacity:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="20" type="number" id="unitDesignCapacityInput" formControlName="designCapacity">
+            <input type="text" class="form-control" maxlength="20" id="unitDesignCapacityInput" formControlName="designCapacity">
             <app-validation-message [control]="emissionUnitForm.get('designCapacity')"></app-validation-message>
         </div>
         <label for="unitOfMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Design Capacity UoM:</strong></label>
