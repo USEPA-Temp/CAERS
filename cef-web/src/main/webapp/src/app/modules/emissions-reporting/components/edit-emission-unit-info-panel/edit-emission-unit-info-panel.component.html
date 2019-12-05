@@ -30,7 +30,7 @@
         </div>
         <label for="unitStatusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Status Year:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="unitStatusYearInput" formControlName="statusYear">
+            <input type="text" class="form-control" maxlength="4" id="unitStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="emissionUnitForm.get('statusYear')"></app-validation-message>
         </div>
     </div>
