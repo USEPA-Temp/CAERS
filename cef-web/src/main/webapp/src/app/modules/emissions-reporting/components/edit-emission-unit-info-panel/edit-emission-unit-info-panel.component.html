@@ -3,7 +3,7 @@
     <div class="row pb-1">
         <label for="unitIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit ID:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="unitIdentifierInput" formControlName="unitIdentifier">
+            <input type="text" class="form-control" maxlength="20" id="unitIdentifierInput" formControlName="unitIdentifier">
             <app-validation-message [control]="emissionUnitForm.get('unitIdentifier')"></app-validation-message>
         </div>
         <label for="unitTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Type Code:</strong></label>
@@ -25,12 +25,12 @@
     <div class="row pb-1">
         <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Description:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="descriptionInput" formControlName="description">
+            <input type="text" class="form-control" maxlength="100" id="descriptionInput" formControlName="description">
             <app-validation-message [control]="emissionUnitForm.get('description')"></app-validation-message>
         </div>
         <label for="unitStatusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Status Year:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="4" id="unitStatusYearInput" formControlName="statusYear">
+            <input type="text" class="form-control" maxlength="4" type="number" id="unitStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="emissionUnitForm.get('statusYear')"></app-validation-message>
         </div>
     </div>
@@ -38,7 +38,7 @@
     <div class="row pb-1">
         <label for="unitDesignCapacityInput" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Design Capacity:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="unitDesignCapacityInput" formControlName="designCapacity">
+            <input type="text" class="form-control" maxlength="20" type="number" id="unitDesignCapacityInput" formControlName="designCapacity">
             <app-validation-message [control]="emissionUnitForm.get('designCapacity')"></app-validation-message>
         </div>
         <label for="unitOfMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Design Capacity UoM:</strong></label>
@@ -53,7 +53,7 @@
     <div class="row pb-1">
         <label for="unitCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
         <div class="col-sm-6 col-md-10">
-            <textarea rows="3" class="form-control" style="height:100%;" id="unitCommentsInput" formControlName="comments"></textarea>
+            <textarea rows="3" class="form-control"  maxlength="2000" style="height:100%;" id="unitCommentsInput" formControlName="comments"></textarea>
             <app-validation-message [control]="emissionUnitForm.get('comments')"></app-validation-message>
         </div>
     </div>
