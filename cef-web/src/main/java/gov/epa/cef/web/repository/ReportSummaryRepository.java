@@ -2,6 +2,7 @@ package gov.epa.cef.web.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 
 import gov.epa.cef.web.domain.ReportSummary;
@@ -14,6 +15,6 @@ public interface ReportSummaryRepository extends CrudRepository<ReportSummary, L
      * @param facilitySiteId
      * @return
      */
-    List<ReportSummary> findByReportYearAndFacilitySiteId(Short reportYear, Long facilitySiteId);
+    List<ReportSummary> findByReportYearAndFacilitySiteId(Short reportYear, Long facilitySiteId, Sort sort);
 
 }

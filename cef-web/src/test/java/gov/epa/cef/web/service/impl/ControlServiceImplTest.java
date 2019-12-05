@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,8 +44,8 @@ public class ControlServiceImplTest extends BaseServiceTest {
         controlList.add(control);
         when(controlRepo.findById(1L)).thenReturn(Optional.of(control));
         when(controlRepo.findById(2L)).thenReturn(Optional.empty());
-        when(controlRepo.findByFacilitySiteId(1L)).thenReturn(controlList);
-        when(controlRepo.findByFacilitySiteId(2L)).thenReturn(emptyControlList);
+        when(controlRepo.findByFacilitySiteIdOrderByIdentifier(1L)).thenReturn(controlList);
+        when(controlRepo.findByFacilitySiteIdOrderByIdentifier(2L)).thenReturn(emptyControlList);
 
         controlDto = new ControlPostOrderDto();
         controlDtoList=new ArrayList<>();

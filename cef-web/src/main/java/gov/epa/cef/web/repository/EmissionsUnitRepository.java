@@ -18,7 +18,7 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
      * @param facilitySiteId
      * @return
      */
-    List<EmissionsUnit> findByFacilitySiteId(Long facilitySiteId, Sort sort);
+    List<EmissionsUnit> findByFacilitySiteIdOrderByUnitIdentifier(Long facilitySiteId);
 
     /**
      *

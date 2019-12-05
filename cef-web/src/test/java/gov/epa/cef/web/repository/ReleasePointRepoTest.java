@@ -48,7 +48,7 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
     public void _onJunitBeginTest() {
 
         runWithMockUser();
-        
+    
         this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
     }
     
@@ -56,9 +56,9 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
     public void createReleasePointTest() throws Exception {
     	
     	//delete the all release points from facility 9999992
-    	rpRepo.deleteAll(rpRepo.findByFacilitySiteId(9999992L));
+    	rpRepo.deleteAll(rpRepo.findByFacilitySiteIdOrderByReleasePointIdentifier(9999992L));
     	
-    	List<ReleasePoint> releasePtList = rpRepo.findByFacilitySiteId(9999992L);
+    	List<ReleasePoint> releasePtList = rpRepo.findByFacilitySiteIdOrderByReleasePointIdentifier(9999992L);
     	assertEquals(0, releasePtList.size());
 
     	//create release point
@@ -87,7 +87,7 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
         Optional<ReleasePoint> releasePoint = rpRepo.findById(9999991L);
         assertEquals(true, releasePoint.isPresent());
         
-        List<EmissionsProcess> process = processRepo.findByReleasePointApptsReleasePointId(9999991L);
+        List<EmissionsProcess> process = processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(9999991L);
         assertEquals(true, process.size()>0);
         
         //delete the unit and verify that the processes are gone as well
@@ -97,12 +97,12 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
         releasePoint = rpRepo.findById(9999991L);
         assertEquals(false, releasePoint.isPresent());
         
-        process = processRepo.findByReleasePointApptsReleasePointId(9999991L);
+        process = processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(9999991L);
         assertEquals(0, process.size());
         
     }
     
-    private ReleasePoint newReleasePt() {
+private ReleasePoint newReleasePt() {
     	
     	FacilitySite facilitySite = new FacilitySite();
         facilitySite.setId(9999992L);

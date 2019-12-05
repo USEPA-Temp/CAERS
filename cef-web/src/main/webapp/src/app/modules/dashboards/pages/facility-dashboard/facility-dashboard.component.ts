@@ -20,7 +20,9 @@ export class FacilityDashboardComponent implements OnInit {
 
   getFacilities(): void {
     this.cdxFacilityService.getMyFacilities()
-    .subscribe(facilities => this.facilities = facilities);
+    .subscribe(facilities => 
+      this.facilities = facilities.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1)
+      );
   }
 
 }

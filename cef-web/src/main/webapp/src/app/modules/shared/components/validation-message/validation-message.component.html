@@ -12,7 +12,7 @@
   </div>
 
   <div *ngIf="control.errors?.maxLength">
-      Cannot exceed {{control.errors.maxLength.requiredLength}} characters.
+      Value cannot exceed {{control.errors.maxlength.requiredLength}} characters.
   </div>
 
   <div *ngIf="control.errors?.pattern">
@@ -28,6 +28,14 @@
 
       <div *ngIf="control.errors?.pattern.requiredPattern === '^-?[0-9]{1,3}([\.][0-9]{1,6})?$'">
         Value must be in decimal degrees up to the sixth decimal place.
+      </div>
+
+      <div *ngIf="control.errors?.pattern.requiredPattern == '^[0-9]*$'">
+        Value can only be numeric.
+      </div>
+
+      <div *ngIf="control.errors?.pattern.requiredPattern == '^[a-zA-Z ]*$'">
+        Value can only be alphabetical characters.
       </div>
   </div>
 

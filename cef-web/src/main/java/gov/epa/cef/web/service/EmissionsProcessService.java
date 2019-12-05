@@ -5,6 +5,8 @@ import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
+
 public interface EmissionsProcessService {
 
     /**

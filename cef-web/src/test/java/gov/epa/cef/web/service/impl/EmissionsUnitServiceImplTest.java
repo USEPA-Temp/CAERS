@@ -49,8 +49,8 @@ public class EmissionsUnitServiceImplTest extends BaseServiceTest {
                 .thenReturn(emissionsUnitDtosList);
         when(emissionsUnitMapper.emissionsUnitsToEmissionUnitsDtos(null)).thenReturn(null);
 
-        when(unitRepo.findByFacilitySiteId(1L, Sort.by(Sort.Direction.ASC, "unitIdentifier"))).thenReturn(emissionsUnitsList);
-	    when(unitRepo.findByFacilitySiteId(2L, Sort.by(Sort.Direction.ASC, "unitIdentifier"))).thenReturn(null);
+        when(unitRepo.findByFacilitySiteIdOrderByUnitIdentifier(1L)).thenReturn(emissionsUnitsList);
+	    when(unitRepo.findByFacilitySiteIdOrderByUnitIdentifier(2L)).thenReturn(null);
 
 	}
 

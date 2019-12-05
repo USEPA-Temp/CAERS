@@ -17,7 +17,7 @@ public interface ControlRepository extends CrudRepository<Control, Long>, Progra
      * @param facilitySiteId
      * @return
      */
-    List<Control> findByFacilitySiteId(Long facilitySiteId);
+    List<Control> findByFacilitySiteIdOrderByIdentifier(Long facilitySiteId);
 
     /**
      *
