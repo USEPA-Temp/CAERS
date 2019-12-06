@@ -6,6 +6,8 @@ import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.ProgramSystemCode;
+import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
@@ -139,4 +141,17 @@ public interface LookupService {
      * @return
      */
     FipsStateCode retrieveStateCodeEntityByCode(String code);
+    
+    /**
+     * Retrieve the list of Release Point Type Codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveReleasePointTypeCodes();
+    
+    /**
+     * Retrieve the list of Program System Type Codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveProgramSystemTypeCodes();
+    
 }

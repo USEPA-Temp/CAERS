@@ -22,7 +22,6 @@ import { EmissionsProcessTableComponent } from 'src/app/modules/emissions-report
 import { EmissionsProcessDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emissions-process-details/emissions-process-details.component';
 import { EmissionTableComponent } from 'src/app/modules/emissions-reporting/components/emission-table/emission-table.component';
 import { ReleasePointApptTableComponent } from 'src/app/modules/emissions-reporting/components/release-point-appt-table/release-point-appt-table.component';
-import { EmissionDetailsModalComponent } from 'src/app/modules/emissions-reporting/components/emission-details-modal/emission-details-modal.component';
 import { ControlDeviceDetailsComponent } from 'src/app/modules/emissions-reporting/pages/control-device-details/control-device-details.component';
 import { ControlAssignmentTableComponent } from 'src/app/modules/emissions-reporting/components/control-assignment-table/control-assignment-table.component';
 import { ControlPollutantTableComponent } from 'src/app/modules/emissions-reporting/components/control-pollutant-table/control-pollutant-table.component';
@@ -44,7 +43,8 @@ import { EmissionsReportValidationComponent } from './pages/emissions-report-val
 import { EditFacilityContactComponent } from './pages/edit-facility-contact/edit-facility-contact.component';
 import { EditEmissionUnitInfoPanelComponent } from './components/edit-emission-unit-info-panel/edit-emission-unit-info-panel.component';
 import { CreateEmissionsUnitComponent } from './pages/create-emissions-unit/create-emissions-unit.component';
-
+import { EditReleasePointPanelComponent } from './components/edit-release-point-panel/edit-release-point-panel.component';
+import { CreateReleasePointComponent } from './pages/create-release-point/create-release-point.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,6 @@ import { CreateEmissionsUnitComponent } from './pages/create-emissions-unit/crea
     EmissionsProcessDetailsComponent,
     EmissionTableComponent,
     ReleasePointApptTableComponent,
-    EmissionDetailsModalComponent,
     ControlDeviceDetailsComponent,
     ControlAssignmentTableComponent,
     ControlPollutantTableComponent,
@@ -84,7 +83,9 @@ import { CreateEmissionsUnitComponent } from './pages/create-emissions-unit/crea
     EmissionsReportValidationComponent,
     EditFacilityContactComponent,
     EditEmissionUnitInfoPanelComponent,
-    CreateEmissionsUnitComponent
+    CreateEmissionsUnitComponent,
+    EditReleasePointPanelComponent,
+    CreateReleasePointComponent
   ],
   imports: [
     CommonModule,
@@ -95,7 +96,6 @@ import { CreateEmissionsUnitComponent } from './pages/create-emissions-unit/crea
     FontAwesomeModule
   ],
   entryComponents: [
-    EmissionDetailsModalComponent,
     EmissionFactorModalComponent,
     SccSearchModalComponent
   ]

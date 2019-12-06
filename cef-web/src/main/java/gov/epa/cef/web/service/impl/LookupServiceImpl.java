@@ -15,6 +15,8 @@ import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
+import gov.epa.cef.web.domain.ProgramSystemCode;
+import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
@@ -26,6 +28,8 @@ import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
+import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
+import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
@@ -72,6 +76,12 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private FipsStateCodeRepository stateCodeRepo;
+    
+    @Autowired
+    private ReleasePointTypeCodeRepository releasePtTypeRepository;
+    
+    @Autowired
+    private ProgramSystemCodeRepository programSystemCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -278,6 +288,30 @@ public class LookupServiceImpl implements LookupService {
     	FipsStateCode result= stateCodeRepo
             .findById(code)
             .orElse(null);
+        return result;
+    }
+    
+    @Override
+    public List<CodeLookupDto> retrieveReleasePointTypeCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<ReleasePointTypeCode> entities = releasePtTypeRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
+    
+    @Override
+    public List<CodeLookupDto> retrieveProgramSystemTypeCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<ProgramSystemCode> entities = programSystemCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
         return result;
     }
     

@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +34,22 @@ public class ReleasePointApi {
         this.securityService = securityService;
     }
 
+    /**
+     * Create a release point
+     * @param dto
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<ReleasePointDto> createReleasePoint(
+    		@NotNull @RequestBody ReleasePointDto dto) {
+    	
+    	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	ReleasePointDto result = releasePointService.create(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
     /**
      * Retrieve a release point by ID
      * @param pointId

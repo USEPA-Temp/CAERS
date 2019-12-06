@@ -21,6 +21,16 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     @Autowired
     private ReleasePointMapper releasePointMapper;
 
+    /**
+     * Create a new Release Point from a DTO object
+     */
+    public ReleasePointDto create(ReleasePointDto dto) {
+    	ReleasePoint releasePoint = releasePointMapper.fromDto(dto);
+    	
+    	ReleasePointDto results = releasePointMapper.toDto(releasePointRepo.save(releasePoint));
+    	return results;
+    }
+    
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReleasePointService#retrieveById(java.lang.Long)
      */ 

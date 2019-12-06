@@ -12,6 +12,11 @@ export class ReleasePointService {
 
   constructor(private http: HttpClient) { }
 
+  create(releasePoint: ReleasePoint): Observable<ReleasePoint> {
+    const url = `${this.baseUrl}`;
+    return this.http.post<ReleasePoint>(url, releasePoint);
+  }
+
   /** GET specified release point from the server */
   retrieve(id: number): Observable<ReleasePoint> {
     const url = `${this.baseUrl}/${id}`;

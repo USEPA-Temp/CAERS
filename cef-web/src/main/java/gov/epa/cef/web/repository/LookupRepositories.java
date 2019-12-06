@@ -36,6 +36,12 @@ public class LookupRepositories {
     @Autowired
     private FipsStateCodeRepository stateCodeRepo;
     
+    @Autowired
+    private ReleasePointTypeCodeRepository releasePtCodeRepo;
+    
+    @Autowired
+    private ProgramSystemCodeRepository programSystemCodeRepo;
+    
 
     public CalculationMaterialCodeRepository materialCodeRepo() {
         return materialCodeRepo;
@@ -75,6 +81,14 @@ public class LookupRepositories {
     
     public UnitTypeCodeRepository UnitTypeCodeRepo() {
         return UnitTypeCodeRepo;
+    }
+
+	public ReleasePointTypeCodeRepository releasePtCodeRepo() {
+        return releasePtCodeRepo;
+    }
+	
+	public ProgramSystemCodeRepository programSystemCodeRepo() {
+        return programSystemCodeRepo;
     }
 
 }
