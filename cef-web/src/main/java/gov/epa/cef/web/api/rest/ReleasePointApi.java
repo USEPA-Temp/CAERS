@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,6 +78,23 @@ public class ReleasePointApi {
         this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
 
         List<ReleasePointDto> result = releasePointService.retrieveByFacilitySiteId(facilitySiteId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Update an Release Point by ID
+     * @param pointId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/{pointId}")
+    public ResponseEntity<ReleasePointDto> updateReleasePoint(
+        @NotNull @PathVariable Long pointId, @NotNull @RequestBody ReleasePointDto dto) {
+
+        this.securityService.facilityEnforcer().enforceEntity(pointId, ReleasePointRepository.class);
+
+        ReleasePointDto result = releasePointService.update(dto.withId(pointId));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

@@ -17,6 +17,11 @@ export class ReleasePointService {
     return this.http.post<ReleasePoint>(url, releasePoint);
   }
 
+  update(releasePoint: ReleasePoint): Observable<ReleasePoint> {
+    const url = `${this.baseUrl}/${releasePoint.id}`;
+    return this.http.put<ReleasePoint>(url, releasePoint);
+  }
+
   /** GET specified release point from the server */
   retrieve(id: number): Observable<ReleasePoint> {
     const url = `${this.baseUrl}/${id}`;

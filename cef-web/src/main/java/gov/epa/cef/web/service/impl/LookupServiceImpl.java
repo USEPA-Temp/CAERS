@@ -303,6 +303,13 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
+    public ReleasePointTypeCode retrieveReleasePointTypeCodeEntityByCode(String code) {
+    	ReleasePointTypeCode result= releasePtTypeRepository
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
+    
     @Override
     public List<CodeLookupDto> retrieveProgramSystemTypeCodes() {
 
@@ -312,6 +319,13 @@ public class LookupServiceImpl implements LookupService {
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
         });
+        return result;
+    }
+    
+    public ProgramSystemCode retrieveProgramSystemTypeCodeEntityByCode(String code) {
+    	ProgramSystemCode result= programSystemCodeRepo
+            .findById(code)
+            .orElse(null);
         return result;
     }
     

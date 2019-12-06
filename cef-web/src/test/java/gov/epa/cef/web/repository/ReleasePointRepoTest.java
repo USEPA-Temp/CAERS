@@ -76,6 +76,31 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
     }
     
     /**
+     * Verify that update of a release point works
+     * @throws Exception
+     */
+    @Test
+    public void updateReleasePointTest() throws Exception {
+    	ReleasePoint releasePoint = this.rpRepo.findById(9999991L)
+    		.orElseThrow(() -> new IllegalStateException("Release point 9999991L does not exist."));
+    	
+    	assertEquals("A big smokestack", releasePoint.getDescription());
+    	
+    	releasePoint.setDescription("A big vent");
+    	
+    	rpRepo.save(releasePoint);
+    	
+    	//verify information was updated
+		SqlParameterSource params = new MapSqlParameterSource().addValue("id", releasePoint.getId());
+
+		List<Map<String, Object>> releasePt = this.jdbcTemplate
+				.queryForList("select * from release_point where id = :id", params);
+
+		assertEquals(1, releasePt.size());
+		assertEquals("A big vent", releasePt.get(0).get("description"));
+    }
+    
+    /**
      * Verify that deleting a release point works and any child apportioned processes
      * are also deleted
      * @throws Exception

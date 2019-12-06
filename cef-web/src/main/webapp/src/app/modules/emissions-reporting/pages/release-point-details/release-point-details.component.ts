@@ -3,12 +3,13 @@ import { Process } from 'src/app/shared/models/process';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { EditReleasePointPanelComponent } from '../../components/edit-release-point-panel/edit-release-point-panel.component';
 
 @Component({
   selector: 'app-release-point-details',
@@ -16,12 +17,16 @@ import { ReportStatus } from 'src/app/shared/enums/report-status';
   styleUrls: ['./release-point-details.component.scss']
 })
 export class ReleasePointDetailsComponent implements OnInit {
-  releasePoint: ReleasePoint;
+  @Input() releasePoint: ReleasePoint;
   processes: Process[];
   controlPaths: ControlPath[];
   parentComponentType = 'releasePointAppt';
 
   readOnlyMode = true;
+  editInfo = false;
+
+  @ViewChild(EditReleasePointPanelComponent, { static: false })
+  private releasePointComponent: EditReleasePointPanelComponent;
 
   constructor(
     private releasePointService: ReleasePointService,
@@ -35,7 +40,6 @@ export class ReleasePointDetailsComponent implements OnInit {
       .subscribe(map => {
         this.releasePointService.retrieve(+map.get('releasePointId'))
         .subscribe(point => {
-          console.log('releasePoint', point);
           this.releasePoint = point;
           this.processService.retrieveForReleasePoint(this.releasePoint.id)
           .subscribe(processes => {
@@ -56,6 +60,29 @@ export class ReleasePointDetailsComponent implements OnInit {
 
       this.sharedService.emitChange(data.facilitySite);
     });
+
+  }
+
+  setEditInfo(value: boolean) {
+    this.editInfo = value;
+  }
+
+  updateReleasePoint() {
+    if (!this.releasePointComponent.releasePointForm.valid) {
+      this.releasePointComponent.releasePointForm.markAllAsTouched();
+    } else {
+      const updatedReleasePoint = new ReleasePoint();
+
+      Object.assign(updatedReleasePoint, this.releasePointComponent.releasePointForm.value);
+      updatedReleasePoint.id = this.releasePoint.id;
+
+      this.releasePointService.update(updatedReleasePoint)
+      .subscribe(result => {
+
+        Object.assign(this.releasePoint, result);
+        this.setEditInfo(false);
+      });
+    }
   }
 
 }
