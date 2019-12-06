@@ -11,6 +11,7 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
+import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -20,7 +21,6 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 export class EditFacilityContactComponent implements OnInit {
   @Input() facilityContact: FacilitySiteContact;
   @Input() facilitySite: FacilitySite;
-  @Input() editable = false;
   @Input() createMode = false;
 
   readOnlyMode = true;
@@ -31,26 +31,36 @@ export class EditFacilityContactComponent implements OnInit {
     type: [null, Validators.required],
     phone: ['', [
       Validators.required,
-      Validators.pattern('[0-9]{10,15}')]],
-    phoneExt: [''],
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    email: ['', [
+      Validators.maxLength(15),
+      Validators.pattern('^[0-9]{10,15}$')]],
+    phoneExt: ['', [
+      Validators.maxLength(5),
+      numberValidator()]],
+    prefix: ['', Validators.maxLength(15)],
+    firstName: ['', [
       Validators.required,
+      Validators.maxLength(20)]],
+    lastName: ['', [
+      Validators.required,
+      Validators.maxLength(20)]],
+    email: ['', [
+      Validators.maxLength(255),
       Validators.email]],
-    streetAddress: ['', Validators.required],
-    city: ['', Validators.required],
+    streetAddress: ['', [
+      Validators.maxLength(100),
+      Validators.required]],
+    city: ['', [
+      Validators.required,
+      Validators.maxLength(60)]],
     stateCode: [null, Validators.required],
     postalCode: ['', [
       Validators.required,
       Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')]],
-    mailingStreetAddress: ['', Validators.required],
-    mailingCity: ['', Validators.required],
-    mailingStateCode: [null, Validators.required],
-    mailingPostalCode: ['', [
-      Validators.required,
-      Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')]],
-    county: ['', Validators.required]
+    mailingStreetAddress: [''],
+    mailingCity: [''],
+    mailingStateCode: [null],
+    mailingPostalCode: ['', Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')],
+    county: ['']
   });
 
   facilityContactType: BaseCodeLookup[];
@@ -96,7 +106,7 @@ export class EditFacilityContactComponent implements OnInit {
           .subscribe(result => {
             this.facilityContact = result;
 
-            this.contactForm.disable();
+            this.contactForm.enable();
             this.contactForm.reset(this.facilityContact);
         });
       } else {
@@ -114,10 +124,6 @@ export class EditFacilityContactComponent implements OnInit {
     }
   }
 
-  onEdit() {
-    this.contactForm.enable();
-  }
-
   onSubmit() {
     if (!this.contactForm.valid) {
       this.contactForm.markAllAsTouched();
@@ -131,7 +137,7 @@ export class EditFacilityContactComponent implements OnInit {
         saveContact.facilitySiteId = this.facilitySite.id;
 
         this.contactService.create(saveContact)
-        .subscribe(result => {
+        .subscribe(() => {
 
           this.router.navigate([this.facilityUrl]);
         });
@@ -140,7 +146,7 @@ export class EditFacilityContactComponent implements OnInit {
         saveContact.id = this.facilityContact.id;
 
         this.contactService.update(saveContact)
-        .subscribe(result => {
+        .subscribe(() => {
 
           this.router.navigate([this.facilityUrl]);
         });
