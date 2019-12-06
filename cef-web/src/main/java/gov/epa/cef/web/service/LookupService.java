@@ -149,9 +149,23 @@ public interface LookupService {
     List<CodeLookupDto> retrieveReleasePointTypeCodes();
     
     /**
+     * Retrieve Release Point Type code database object by code
+     * @param code
+     * @return
+     */
+    ReleasePointTypeCode retrieveReleasePointTypeCodeEntityByCode(String code);
+    
+    /**
      * Retrieve the list of Program System Type Codes
      * @return
      */
     List<CodeLookupDto> retrieveProgramSystemTypeCodes();
+    
+    /**
+     * Retrieve Program System Type code database object by code
+     * @param code
+     * @return
+     */
+    ProgramSystemCode retrieveProgramSystemTypeCodeEntityByCode(String code);
     
 }

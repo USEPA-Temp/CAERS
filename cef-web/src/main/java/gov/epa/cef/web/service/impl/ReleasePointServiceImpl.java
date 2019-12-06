@@ -51,6 +51,19 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     }
     
     /**
+     * Update an existing Release Point from a DTO
+     */
+    public ReleasePointDto update(ReleasePointDto dto) {
+    	
+    	ReleasePoint releasePoint = releasePointRepo.findById(dto.getId()).orElse(null);
+    	releasePointMapper.updateFromDto(dto, releasePoint);
+    	
+    	ReleasePointDto result = releasePointMapper.toDto(releasePointRepo.save(releasePoint));
+
+        return result;
+    }
+    
+    /**
      * Delete Release Point for a given id
      * @param releasePointId
      */

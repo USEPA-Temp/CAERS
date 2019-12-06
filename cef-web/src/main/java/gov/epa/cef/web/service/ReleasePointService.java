@@ -28,6 +28,13 @@ public interface ReleasePointService {
     List<ReleasePointDto> retrieveByFacilitySiteId(Long facilitySiteId);
     
     /**
+     * Update an existing Release Point by id
+     * @param dto
+     * @return
+     */
+    ReleasePointDto update(ReleasePointDto dto);
+    
+    /**
      * Delete Release Point by id
      * @param releasePointId
      */
