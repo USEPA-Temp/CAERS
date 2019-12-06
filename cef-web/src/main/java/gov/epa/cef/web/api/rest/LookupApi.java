@@ -157,4 +157,27 @@ public class LookupApi {
         return new ResponseEntity<List<FipsStateCodeDto>>(result, HttpStatus.OK);
     }
 
+    /**
+     * Retrieve Release Point Type codes
+     * @return
+     */
+    @GetMapping(value = "/releaseType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveReleasePointTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveReleasePointTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Program System Type codes
+     * @return
+     */
+    @GetMapping(value = "/programSystemType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveProgramSystemTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveProgramSystemTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 }

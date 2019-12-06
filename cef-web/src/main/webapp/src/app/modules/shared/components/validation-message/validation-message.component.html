@@ -11,11 +11,12 @@
       Value cannot be higher than {{control.errors.max.max}}.
   </div>
 
-  <div *ngIf="control.errors?.maxlength">
-    Value cannot exceed {{control.errors.maxlength.requiredLength}} characters.
+  <div *ngIf="control.errors?.maxLength">
+      Value cannot exceed {{control.errors.maxlength.requiredLength}} characters.
   </div>
 
   <div *ngIf="control.errors?.pattern">
+<<<<<<< .merge_file_a06624
     Value is not in the correct format.
 
     <div *ngIf="control.errors?.pattern.requiredPattern == '^[0-9]*$'">
@@ -45,6 +46,29 @@
     <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{5}([\-]?[0-9]{4})?$'">
       Enter 5 digit (XXXXX) or 9 digit (XXXXX-XXXX) Zip Code.
     </div>
+=======
+      Value is not in the correct format.
+
+      <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{1,5}([\.][0-9]{1,3})?$'">
+        Maxium precision of 3 decimal places.
+      </div>
+
+      <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{1,8}([\.][0-9]{1,8})?$'">
+        Maxium precision of 8 decimal places.
+      </div>
+
+      <div *ngIf="control.errors?.pattern.requiredPattern === '^-?[0-9]{1,3}([\.][0-9]{1,6})?$'">
+        Value must be in decimal degrees up to the sixth decimal place.
+      </div>
+
+      <div *ngIf="control.errors?.pattern.requiredPattern == '^[0-9]*$'">
+        Value can only be numeric.
+      </div>
+
+      <div *ngIf="control.errors?.pattern.requiredPattern == '^[a-zA-Z ]*$'">
+        Value can only be alphabetical characters.
+      </div>
+>>>>>>> .merge_file_a02640
   </div>
 
   <div *ngIf="control.errors?.wholeNumber">
