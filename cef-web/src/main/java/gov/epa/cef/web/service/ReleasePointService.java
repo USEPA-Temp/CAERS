@@ -32,5 +32,11 @@ public interface ReleasePointService {
      * @param releasePointId
      */
     void delete(Long releasePointId);
+    
+    /**
+     * Delete Release Point Apportionment by id
+     * @param releasePointApptId
+     */
+    void deleteAppt(Long releasePointApptId);
 
 }

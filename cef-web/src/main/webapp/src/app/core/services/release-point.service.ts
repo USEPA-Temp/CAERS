@@ -33,4 +33,10 @@ export class ReleasePointService {
     const url = `${this.baseUrl}/${id}`;
     return this.http.delete(url);
   }
+
+  /** Delete specified release point apportionment from the database */
+  deleteAppt(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/appt/${id}`;
+    return this.http.delete(url);
+  }
 }
