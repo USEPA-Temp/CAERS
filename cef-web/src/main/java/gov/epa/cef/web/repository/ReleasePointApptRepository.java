@@ -17,7 +17,7 @@ public interface ReleasePointApptRepository extends CrudRepository<ReleasePointA
     * @param id
     * @return EIS Program ID
     */
-	@Cacheable(value = CacheName.ReleasePointProgramIds)
+	@Cacheable(value = CacheName.ReleasePointApptProgramIds)
 	@Query("select fs.eisProgramId from ReleasePointAppt rpa join rpa.releasePoint rp join rp.facilitySite fs where rpa.id = :id")
 	Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
 
