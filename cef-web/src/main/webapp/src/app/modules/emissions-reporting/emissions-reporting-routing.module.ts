@@ -1,7 +1,6 @@
 import { EmissionUnitDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emission-unit-dashboard/emission-unit-dashboard.component';
 import { EmissionsReportingDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting-dashboard/emissions-reporting-dashboard.component';
 import { EmissionsReportingComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting/emissions-reporting.component';
-import { EmissionInventoryComponent } from 'src/app/modules/emissions-reporting/pages/emission-inventory/emission-inventory.component';
 import { FacilityInformationComponent } from 'src/app/modules/emissions-reporting/pages/facility-information/facility-information.component';
 import { ReleasePointDetailsComponent } from 'src/app/modules/emissions-reporting/pages/release-point-details/release-point-details.component';
 import { EmissionsProcessDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emissions-process-details/emissions-process-details.component';
@@ -35,10 +34,6 @@ const reportRoutes: Routes = [
         },
         children: [
           {
-            path: '',
-            component: EmissionInventoryComponent,
-            data: { title: 'Emission Inventory', breadcrumb: '&year Emissions Report'}
-          }, {
             path: `${BaseReportUrl.FACILITY_INFO}`,
             component: FacilityInformationComponent,
             data: { title: 'Facility Information', breadcrumb: '&year Emissions Report'}
