@@ -12,7 +12,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StepProgressComponent } from 'src/app/modules/emissions-reporting/components/step-progress/step-progress.component';
 
 import { EmissionUnitInfoComponent } from 'src/app/modules/emissions-reporting/components/emission-unit-info/emission-unit-info.component';
-import { EmissionInventoryComponent } from 'src/app/modules/emissions-reporting/pages/emission-inventory/emission-inventory.component';
 import { ReleasePointTableComponent } from 'src/app/modules/emissions-reporting/components/release-point-table/release-point-table.component';
 import { EmissionsUnitTableComponent } from 'src/app/modules/emissions-reporting/components/emissions-unit-table/emissions-unit-table.component';
 import { FacilityInformationComponent } from 'src/app/modules/emissions-reporting/pages/facility-information/facility-information.component';
@@ -53,7 +52,6 @@ import { CreateReleasePointComponent } from './pages/create-release-point/create
     EmissionUnitDashboardComponent,
     StepProgressComponent,
     EmissionUnitInfoComponent,
-    EmissionInventoryComponent,
     ReleasePointTableComponent,
     EmissionsUnitTableComponent,
     FacilityInformationComponent,
