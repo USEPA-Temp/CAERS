@@ -24,6 +24,7 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 
@@ -40,6 +41,9 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
 
     @Autowired
     ReleasePointRepository rpRepo;
+    
+    @Autowired
+    ReleasePointApptRepository rpApptRepo;
     
     @Autowired
     EmissionsProcessRepository processRepo;
@@ -108,23 +112,53 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
     @Test
     public void deletingReleasePoint_should_DeleteChildApportionedProcesses() throws Exception {
         
-        //verify the unit and process exist
+        //verify the release point and process exist
         Optional<ReleasePoint> releasePoint = rpRepo.findById(9999991L);
         assertEquals(true, releasePoint.isPresent());
         
         List<EmissionsProcess> process = processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(9999991L);
         assertEquals(true, process.size()>0);
         
-        //delete the unit and verify that the processes are gone as well
+        //delete the release point and verify that the processes are gone as well
         rpRepo.deleteById(9999991L);
         
-        //verify the unit and process exist
+        //verify the release point and process exist
         releasePoint = rpRepo.findById(9999991L);
         assertEquals(false, releasePoint.isPresent());
         
         process = processRepo.findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(9999991L);
         assertEquals(0, process.size());
+    }
+    
+    /**
+     * Verify that deleting a release point apportionment works
+     * @throws Exception
+     */
+    @Test
+    public void deletingReleasePointAppt() throws Exception {
+    	
+    	//verify the release point apportionment, release point, and process exist
+    	Optional<ReleasePointAppt> releasePtAppt = rpApptRepo.findById(9999991L);
+    	assertEquals(true, releasePtAppt.isPresent());
+    	
+    	Optional<ReleasePoint> releasePoint = rpRepo.findById(9999991L);
+    	assertEquals(true, releasePoint.isPresent());
+    	
+    	Optional<EmissionsProcess> process = processRepo.findById(9999991L);
+    	assertEquals(true, process.isPresent());
+    	
+        //delete the release point apportionment and verify only release point apportionments is deleted.
+        rpApptRepo.deleteById(9999991L);
         
+        //verify the release point and process exist
+        releasePtAppt = rpApptRepo.findById(9999991L);
+        assertEquals(false, releasePtAppt.isPresent());
+        
+        releasePoint = rpRepo.findById(9999991L);
+        assertEquals(true, releasePoint.isPresent());
+        
+        process = processRepo.findById(9999991L);
+        assertEquals(true, process.isPresent());
     }
     
 private ReleasePoint newReleasePt() {

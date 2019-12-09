@@ -1,5 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ReleasePointService;
@@ -110,5 +111,18 @@ public class ReleasePointApi {
         this.securityService.facilityEnforcer().enforceEntity(pointId, ReleasePointRepository.class);
 
         releasePointService.delete(pointId);
+    }
+    
+    /**
+     * Delete a Release Point Apportionment for a given ID
+     * @param releasePointApptId
+     * @return
+     */
+    @DeleteMapping(value = "/appt/{releasePointApptId}")
+    public void deleteReleasePointAppt(@PathVariable Long releasePointApptId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(releasePointApptId, ReleasePointApptRepository.class);
+
+        releasePointService.deleteAppt(releasePointApptId);
     }
 }

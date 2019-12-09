@@ -3,10 +3,10 @@ package gov.epa.cef.web.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.ReleasePointService;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
@@ -19,8 +19,11 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     private ReleasePointRepository releasePointRepo;
     
     @Autowired
+    private ReleasePointApptRepository releasePointApptRepo;
+    
+    @Autowired
     private ReleasePointMapper releasePointMapper;
-
+    
     /**
      * Create a new Release Point from a DTO object
      */
@@ -69,6 +72,14 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      */
     public void delete(Long releasePointId) {
     	releasePointRepo.deleteById(releasePointId);
+    }
+    
+    /**
+     * Delete Release Point Apportionment for a given id
+     * @param releasePointApptId
+     */
+    public void deleteAppt(Long releasePointApptId) {
+    	releasePointApptRepo.deleteById(releasePointApptId);
     }
 
 }
