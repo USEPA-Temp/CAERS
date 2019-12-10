@@ -3,6 +3,7 @@ package gov.epa.cef.web.api.rest;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlService;
+import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +34,21 @@ public class ControlApi {
 
         this.controlService = controlService;
         this.securityService = securityService;
+    }
+    
+    /**
+     * Create a control
+     * @param dto
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<ControlDto> createControl(@NotNull @RequestBody ControlDto dto) {
+    	
+    	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	ControlDto result = controlService.create(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**

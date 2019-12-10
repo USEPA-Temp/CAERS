@@ -146,6 +146,7 @@
         <label for="releaseCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
         <div class="col-sm-6 col-md-10">
             <textarea rows="3" class="form-control" style="height:100%;" id="releaseCommentsInput" formControlName="comments" maxlength="2000"></textarea>
+            <app-validation-message [control]="releasePointForm.get('comments')"></app-validation-message>
         </div>
     </div>
 </form>    

@@ -13,6 +13,11 @@ export class ControlService {
 
   constructor(private http: HttpClient) { }
 
+  create(control: Control): Observable<Control> {
+    const url = `${this.baseUrl}`;
+    return this.http.post<Control>(url, control);
+  }
+
   /** GET specified control from the server */
   retrieve(id: number): Observable<Control> {
     const url = `${this.baseUrl}/${id}`;
@@ -23,10 +28,10 @@ export class ControlService {
     const url = `${this.baseUrl}/facilitySite/${facilitySiteId}`;
     return this.http.get<Control[]>(url);
   }
-  
+
   retrieveComponents(controlId: number): Observable<EmissionsReportItem[]> {
-	  const url = `${this.baseUrl}/components/${controlId}`;
-	  return this.http.get<EmissionsReportItem[]>(url);
+    const url = `${this.baseUrl}/components/${controlId}`;
+    return this.http.get<EmissionsReportItem[]>(url);
   }
 
 }

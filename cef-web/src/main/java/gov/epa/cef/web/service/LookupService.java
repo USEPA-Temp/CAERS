@@ -168,4 +168,10 @@ public interface LookupService {
      */
     ProgramSystemCode retrieveProgramSystemTypeCodeEntityByCode(String code);
     
+    /**
+     * Retrieve Control Measure codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveControlMeasureCodes();
+    
 }

@@ -2,12 +2,18 @@ package gov.epa.cef.web.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
-
+import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 
 public interface ControlService {
+	
+	/**
+     * Create a new Control
+     * @param dto
+     * @return
+     */
+	ControlDto create(ControlDto dto);
 
     /**
      * Retrieve Control by its id
