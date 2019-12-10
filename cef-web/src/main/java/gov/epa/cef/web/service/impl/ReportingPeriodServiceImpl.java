@@ -10,6 +10,7 @@ import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,6 +24,9 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
     @Autowired
     private ReportingPeriodMapper mapper;
+
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
 
     public ReportingPeriodDto update(ReportingPeriodDto dto) {
 
@@ -52,6 +56,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
         }
 
         ReportingPeriodDto result = mapper.toDto(repo.save(period));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReportingPeriodRepository.class);
         return result;
     }
 

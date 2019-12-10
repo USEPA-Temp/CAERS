@@ -7,6 +7,7 @@ import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/d
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { Process } from 'src/app/shared/models/process';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-release-point-appt-table',
@@ -23,7 +24,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     private modalService: NgbModal,
     private processService: EmissionsProcessService,
     private releasePointService: ReleasePointService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private sharedService: SharedService) {
     super();
   }
 
@@ -37,6 +39,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   // delete release point apportionment from the database
   deleteReleasePointApportionment(releasePtApptId: number, emissionProcessId: number) {
     this.releasePointService.deleteAppt(releasePtApptId).subscribe(() => {
+
+      this.sharedService.updateReportStatusAndEmit(this.route);
 
       // update the UI table with the current list of release point apportionments
       this.processService.retrieve(emissionProcessId)

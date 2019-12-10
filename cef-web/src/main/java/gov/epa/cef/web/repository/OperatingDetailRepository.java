@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface OperatingDetailRepository extends CrudRepository<OperatingDetail, Long>, ProgramIdRetriever {
+public interface OperatingDetailRepository extends CrudRepository<OperatingDetail, Long>, ProgramIdRetriever, ReportIdRetriever {
 
     /**
      *
@@ -20,4 +20,13 @@ public interface OperatingDetailRepository extends CrudRepository<OperatingDetai
     @Cacheable(value = CacheName.OperatingDetailProgramIds)
     @Query("select fs.eisProgramId from OperatingDetail od join od.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs where od.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    /**
+     * Retrieve Emissions Report id for an Operating Detail
+     * @param id
+     * @return Emissions Report id
+     */
+    @Cacheable(value = CacheName.OperatingDetailEmissionsReportIds)
+    @Query("select r.id from OperatingDetail od join od.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where od.id = :id")
+    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 }

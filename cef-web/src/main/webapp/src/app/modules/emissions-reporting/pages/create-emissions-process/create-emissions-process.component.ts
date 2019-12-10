@@ -10,6 +10,7 @@ import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissi
 import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ToastrService } from 'ngx-toastr';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-create-emissions-process',
@@ -33,6 +34,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
     private processService: EmissionsProcessService,
     private route: ActivatedRoute,
     private router: Router,
+    private sharedService: SharedService,
     private toastr: ToastrService) { }
 
   ngOnInit() {
@@ -87,6 +89,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
       this.processService.create(process)
       .subscribe(result => {
         // console.log(result);
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.router.navigate(['../..'], { relativeTo: this.route });
       });
     }

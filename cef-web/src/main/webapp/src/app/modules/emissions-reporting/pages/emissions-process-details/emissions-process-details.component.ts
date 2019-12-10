@@ -102,6 +102,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       .subscribe(result => {
 
         Object.assign(this.process, result);
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditInfo(false);
       });
     }
@@ -124,6 +125,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       .subscribe(result => {
 
         Object.assign(detail, result);
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditDetails(false);
       });
     }
@@ -144,6 +146,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       .subscribe(result => {
 
         Object.assign(period, result);
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditPeriod(false);
       });
     }

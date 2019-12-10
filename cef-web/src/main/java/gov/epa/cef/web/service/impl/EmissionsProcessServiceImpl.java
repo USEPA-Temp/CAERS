@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,6 +25,9 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
     @Autowired
     private EmissionsProcessMapper emissionsProcessMapper;
+
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
 
 
     public EmissionsProcessDto create(EmissionsProcessSaveDto dto) {
@@ -59,6 +63,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
         });
 
         EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionsProcessRepository.class);
         return result;
     }
 
@@ -68,6 +73,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
         emissionsProcessMapper.updateFromSaveDto(dto, process);
 
         EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionsProcessRepository.class);
         return result;
     }
 
@@ -107,6 +113,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      * @param id
      */
     public void delete(Long id) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), EmissionsProcessRepository.class);
         processRepo.deleteById(id);
     }
 

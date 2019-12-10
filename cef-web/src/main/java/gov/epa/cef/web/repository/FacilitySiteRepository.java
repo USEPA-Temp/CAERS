@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Long>, ProgramIdRetriever {
+public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Long>, ProgramIdRetriever, ReportIdRetriever {
 
     /**
      * Retrieve facilities by eis program and emissions report
@@ -35,4 +35,13 @@ public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Lon
     @Cacheable(value = CacheName.FacilityProgramIds)
     @Query("select fs.eisProgramId from FacilitySite fs where fs.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    /**
+     * Retrieve Emissions Report id for a Facility Site
+     * @param id
+     * @return Emissions Report id
+     */
+    @Cacheable(value = CacheName.FacilityEmissionsReportIds)
+    @Query("select r.id from FacilitySite fs join fs.emissionsReport r where fs.id = :id")
+    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 }

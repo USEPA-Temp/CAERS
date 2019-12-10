@@ -139,6 +139,7 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.create(saveContact)
         .subscribe(() => {
 
+          this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
       } else {
@@ -148,6 +149,7 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.update(saveContact)
         .subscribe(() => {
 
+          this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
       }

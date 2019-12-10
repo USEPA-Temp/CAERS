@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, EMPTY, Subject } from "rxjs";
+import { ActivatedRoute } from '@angular/router';
+import { ValidationStatus } from 'src/app/shared/enums/validation-status.enum';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Injectable({
     providedIn: 'root'
@@ -12,5 +15,13 @@ export class SharedService {
     // Service message commands
     emitChange(change: any) {
         this.emitChangeSource.next(change);
+    }
+
+    updateReportStatusAndEmit(route: ActivatedRoute) {
+        route.data.subscribe((data: { facilitySite: FacilitySite }) => {
+
+            data.facilitySite.emissionsReport.validationStatus = ValidationStatus.UNVALIDATED;
+            this.emitChange(data.facilitySite);
+          });
     }
 }

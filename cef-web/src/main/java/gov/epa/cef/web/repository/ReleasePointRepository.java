@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Long>, ProgramIdRetriever {
+public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Long>, ProgramIdRetriever, ReportIdRetriever {
 
     /**
      * Retrieve Release Points for a facility
@@ -28,4 +28,13 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
     @Cacheable(value = CacheName.ReleasePointProgramIds)
     @Query("select fs.eisProgramId from ReleasePoint rp join rp.facilitySite fs where rp.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    /**
+     * Retrieve Emissions Report id for a Release Point
+     * @param id
+     * @return Emissions Report id
+     */
+    @Cacheable(value = CacheName.ReleasePointEmissionsReportIds)
+    @Query("select r.id from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r where rp.id = :id")
+    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 }

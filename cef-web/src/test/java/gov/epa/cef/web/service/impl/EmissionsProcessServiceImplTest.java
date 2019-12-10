@@ -9,6 +9,7 @@ import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -37,6 +38,9 @@ public class EmissionsProcessServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ReleasePointApptMapper releasePointApptMapper;
+
+    @Mock
+    private EmissionsReportStatusServiceImpl emissionsReportStatusService;
 
     @InjectMocks
     private EmissionsProcessServiceImpl emissionsProcessServiceImpl;
@@ -69,6 +73,8 @@ public class EmissionsProcessServiceImplTest extends BaseServiceTest {
         when(processRepo.findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(2L)).thenReturn(null);
 
         when(processRepo.save(emissionProcess)).thenReturn(emissionProcess);
+
+        when(emissionsReportStatusService.resetEmissionsReportForEntity(ArgumentMatchers.anyList(), ArgumentMatchers.any())).thenReturn(null);
 
     }
 

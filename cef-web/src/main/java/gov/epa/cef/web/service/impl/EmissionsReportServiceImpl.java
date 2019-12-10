@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
@@ -208,11 +209,12 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                         emissionsReport.getYear().toString());
             }
             return cromerrDocumentId;
-        }catch(Exception e) {
+        } catch(IOException e) {
+            LOGGER.error("submitToCromerr - " + e.toString());
             LOGGER.error("submitToCromerr - " + e.getMessage());
             LOGGER.error("submitToCromerr - " + e.getStackTrace().toString());
             throw ApplicationException.asApplicationException(e);
-        }finally {
+        } finally {
             if(tmp!=null) {
                 FileUtils.deleteQuietly(tmp);
             }
@@ -318,54 +320,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	erRepo.deleteById(id);
     }
 
-
-    /**
-     * Approve the specified reports and move to approved
-     * @param reportIds
-     * @return
-     */
-    public List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds) {
-        return updateEmissionsReportsStatus(reportIds, ReportStatus.APPROVED);
-    }
-
-    /**
-     * Reject the specified reports. Sets report status to in progress and validation status to unvalidated.
-     * @param reportIds
-     * @return
-     */
-    public List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds) {
-    	return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED);
-    }
-
-    /**
-     * Update the status of the specified reports
-     * @param reportIds
-     * @param status
-     * @param validationStatus
-     * @return
-     */
-    private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status, ValidationStatus validationStatus) {
-
-        return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
-            .map(report -> {
-                report.setStatus(status);
-                if(validationStatus != null){
-                	report.setValidationStatus(validationStatus);
-                }
-                return this.emissionsReportMapper.toDto(this.erRepo.save(report));
-            }).collect(Collectors.toList());
-
-    }
-    
-    /**
-     * Update the status of the specified reports
-     * @param reportIds
-     * @param status
-     * @return
-     */
-    private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status) {
-    	return updateEmissionsReportsStatus(reportIds, status, null);
-    }
 
     /**
      * Find the most recent emissions report model object for the given facility

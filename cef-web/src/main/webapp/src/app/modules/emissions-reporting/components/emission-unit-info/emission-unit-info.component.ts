@@ -4,6 +4,7 @@ import { FacilitySiteService } from 'src/app/core/services/facility-site.service
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EditEmissionUnitInfoPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-emission-unit-info-panel/edit-emission-unit-info-panel.component';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-emission-unit-info',
@@ -22,7 +23,8 @@ export class EmissionUnitInfoComponent implements OnInit {
   private infoComponent: EditEmissionUnitInfoPanelComponent;
 
   constructor(private route: ActivatedRoute,
-              private unitService: EmissionUnitService) { }
+              private unitService: EmissionUnitService,
+              private sharedService: SharedService) { }
 
   ngOnInit() {
       this.route.paramMap
@@ -49,6 +51,7 @@ export class EmissionUnitInfoComponent implements OnInit {
       .subscribe(result => {
 
         Object.assign(this.emissionsUnit, result);
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditInfo(false);
       });
     }

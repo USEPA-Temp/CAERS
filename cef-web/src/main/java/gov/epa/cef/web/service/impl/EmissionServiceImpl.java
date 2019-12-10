@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -38,6 +39,9 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Autowired
     private EmissionsReportRepository emissionsReportRepo;
+
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
 
     @Autowired
     private EmissionMapper emissionMapper;
@@ -56,10 +60,11 @@ public class EmissionServiceImpl implements EmissionService {
     public EmissionDto create(EmissionDto dto) {
 
         Emission emission = emissionMapper.fromDto(dto);
-        
+
         emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionRepository.class);
         return result;
     }
 
@@ -83,6 +88,7 @@ public class EmissionServiceImpl implements EmissionService {
         emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionRepository.class);
         return result;
     }
 
@@ -91,6 +97,7 @@ public class EmissionServiceImpl implements EmissionService {
      * @param id
      */
     public void delete(Long id) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), EmissionRepository.class);
         emissionRepo.deleteById(id);
     }
 

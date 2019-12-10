@@ -5,6 +5,7 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class CreateEmissionsUnitComponent implements OnInit {
   constructor(private emissionUnitService: EmissionUnitService,
               private router: Router,
               private route: ActivatedRoute,
+              private sharedService: SharedService,
               private facilitySiteService: FacilitySiteService) { }
 
   ngOnInit() {
@@ -61,6 +63,7 @@ export class CreateEmissionsUnitComponent implements OnInit {
           this.emissionUnitService.create(emissionUnit)
           .subscribe(result => {
             console.log(result)
+            this.sharedService.updateReportStatusAndEmit(this.route);
             this.router.navigate(['../..'], { relativeTo: this.route });
           });
         }
