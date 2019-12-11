@@ -180,4 +180,16 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveProgramSystemTypeCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Control Measure codes
+     * @return
+     */
+    @GetMapping(value = "/controlMeasure")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveControlMeasureCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveControlMeasureCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 }

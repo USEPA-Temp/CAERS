@@ -6,6 +6,9 @@
       <th scope="col" sortable="identifier" (sort)="onSort($event)">Control ID</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Control Description</th>
       <th scope="col" sortable="operatingStatusCode.description" (sort)="onSort($event)">Operating Status</th>
+      <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
+      </ng-container>
     </tr>
     </thead>
     <tbody>
@@ -13,7 +16,16 @@
       <td><a routerLink="{{baseUrl}}/{{item.id}}">{{item.identifier}}</a></td>
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCode.description}}</td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openDeleteModal(item.identifier, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      </ng-container>
     </tr>
+    <ng-container *ngIf="!readOnlyMode">
+      <tr>
+        <td colspan="3"></td>
+        <td><a routerLink="{{baseUrl}}/create"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+      </tr>
+    </ng-container>
     </tbody>
   </table>
 </div>

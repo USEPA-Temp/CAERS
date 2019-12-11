@@ -16,6 +16,7 @@ public class ControlDto implements Serializable {
     private Double percentControl;
     private List<ControlPollutantDto> pollutants;
     private String comments;
+    private CodeLookupDto controlMeasureCode;
 
     public Long getId() {
         return id;
@@ -87,6 +88,19 @@ public class ControlDto implements Serializable {
 
     public void setPollutants(List<ControlPollutantDto> pollutants) {
         this.pollutants = pollutants;
+    }
+    
+    public CodeLookupDto getControlMeasureCode() {
+      return controlMeasureCode;
+  }
+
+  public void setControlMeasureCode(CodeLookupDto controlMeasureCode) {
+      this.controlMeasureCode = controlMeasureCode;
+  }
+  
+    public ControlDto withId(Long id) {
+        setId(id);
+        return this;
     }
 
 }

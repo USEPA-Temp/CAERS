@@ -13,6 +13,7 @@ import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.service.ControlService;
+import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import gov.epa.cef.web.service.mapper.ControlMapper;
@@ -28,6 +29,36 @@ public class ControlServiceImpl implements ControlService {
 
     @Autowired
     private ControlMapper mapper;
+    
+    /**
+     * Create a new Control from a DTO object
+     */
+    public ControlDto create(ControlDto dto) {
+    	Control control = mapper.fromDto(dto);
+    	
+    	ControlDto results = mapper.toDto(repo.save(control));
+    	return results;
+    }
+    
+    /**
+     * Update an existing Control from a DTO
+     */
+    public ControlDto update(ControlDto dto) {
+    	
+    	Control control = repo.findById(dto.getId()).orElse(null);
+    	mapper.updateFromDto(dto, control);
+    	
+    	ControlDto result = mapper.toDto(repo.save(control));
+    	return result;
+    }
+    
+    /**
+     * Delete a Control for a given id
+     * @Param controlId
+     */
+    public void delete(Long controlId) {
+    	repo.deleteById(controlId);
+    }
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ControlService#retrieveById(java.lang.Long)

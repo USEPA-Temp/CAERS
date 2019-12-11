@@ -3,6 +3,7 @@ package gov.epa.cef.web.service;
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -167,5 +168,18 @@ public interface LookupService {
      * @return
      */
     ProgramSystemCode retrieveProgramSystemTypeCodeEntityByCode(String code);
+    
+    /**
+     * Retrieve Control Measure codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveControlMeasureCodes();
+    
+    /**
+    * Retrieve Control Measure code database object by code
+    * @param code
+    * @return
+    */
+    ControlMeasureCode retrieveControlMeasureCodeEntityByCode(String code);
     
 }

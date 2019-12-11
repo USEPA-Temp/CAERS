@@ -33,7 +33,7 @@ public class ControlPath extends BaseAuditEntity {
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlPath")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
     private List<ReleasePointAppt> releasePointAppts = new ArrayList<>();
 
 

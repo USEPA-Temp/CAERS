@@ -7,7 +7,7 @@ import java.util.List;
 public interface ReleasePointService {
 	
 	/**
-     * Create a new Facility Site Contact
+     * Create a new Release Point
      * @param dto
      * @return
      */
