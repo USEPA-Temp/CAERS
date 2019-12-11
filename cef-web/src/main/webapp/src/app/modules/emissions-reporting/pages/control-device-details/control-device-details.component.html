@@ -4,31 +4,43 @@
             <div class="card mb-3">
                 <div class="card-header text-center">
                     <strong>Control Device Information</strong>
+                    <div class="float-right" *ngIf="!editInfo && !readOnlyMode">
+                        <button type="button" class="btn btn-success" (click)="setEditInfo(true)">Edit</button>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Control ID:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{control.identifier}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Control Measure:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{control.controlMeasureCode.description}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Percent Capture:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{control.percentCapture}}%</div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{control.operatingStatusCode.description}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Control Description:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{control.description}}</div>
-                        <div class="col-sm-6 col-md-2"><strong>Percent Control:</strong></div>
-                        <div class="col-sm-6 col-md-2">{{control.percentControl}}%</div>
+                    <div *ngIf="!editInfo">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Control ID:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{control.identifier}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Control Measure:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{control.controlMeasureCode.description}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Percent Capture:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{control.percentCapture}}%</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{control.operatingStatusCode.description}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Control Description:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{control.description}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Percent Control:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{control.percentControl}}%</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
+                            <div class="col-sm-6 col-md-10">{{control.comments}}</div>
+                        </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
-                        <div class="col-sm-6 col-md-10">{{control.comments}}</div>
+                    <div *ngIf="editInfo">
+                        <app-edit-control-device-info-panel [control]="control"></app-edit-control-device-info-panel>
+                        <div class="float-right pb-3 pr-3" *ngIf="controlComponent">
+                            <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
+                            <button type="submit" class="btn btn-success" (click)="updateControl()">Save</button>
+                        </div>
                     </div>
-                    
                 </div>
             </div>
             

@@ -17,7 +17,7 @@
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCode.description}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.identifier, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container>
     </tr>
     <ng-container *ngIf="!readOnlyMode">

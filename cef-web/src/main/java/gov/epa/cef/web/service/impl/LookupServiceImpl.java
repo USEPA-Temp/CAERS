@@ -346,4 +346,10 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
+    public ControlMeasureCode retrieveControlMeasureCodeEntityByCode(String code) {
+    	ControlMeasureCode result = controlMeasureCodeRepo
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
 }

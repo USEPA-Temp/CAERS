@@ -34,4 +34,14 @@ export class ControlService {
     return this.http.get<EmissionsReportItem[]>(url);
   }
 
+  update(control: Control): Observable<Control> {
+    const url = `${this.baseUrl}/${control.id}`;
+    return this.http.put<Control>(url, control);
+  }
+
+  delete(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
+  }
+
 }

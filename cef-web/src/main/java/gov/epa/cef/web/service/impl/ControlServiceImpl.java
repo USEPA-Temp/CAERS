@@ -39,6 +39,26 @@ public class ControlServiceImpl implements ControlService {
     	ControlDto results = mapper.toDto(repo.save(control));
     	return results;
     }
+    
+    /**
+     * Update an existing Control from a DTO
+     */
+    public ControlDto update(ControlDto dto) {
+    	
+    	Control control = repo.findById(dto.getId()).orElse(null);
+    	mapper.updateFromDto(dto, control);
+    	
+    	ControlDto result = mapper.toDto(repo.save(control));
+    	return result;
+    }
+    
+    /**
+     * Delete a Control for a given id
+     * @Param controlId
+     */
+    public void delete(Long controlId) {
+    	repo.deleteById(controlId);
+    }
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ControlService#retrieveById(java.lang.Long)
