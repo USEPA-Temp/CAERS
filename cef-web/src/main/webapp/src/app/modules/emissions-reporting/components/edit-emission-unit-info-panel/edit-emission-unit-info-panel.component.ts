@@ -6,7 +6,6 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 import { ToastrService } from 'ngx-toastr';
-import { UnitTypeCode } from 'src/app/shared/models/unit-type-code';
 
 @Component({
   selector: 'app-edit-emission-unit-info-panel',
@@ -85,9 +84,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
   onChange(newValue) {
     if(newValue){ 
-      if(newValue.code == 'PS' || newValue.code == 'TS'){
-        this.toastr.warning('',"If this emission unit's status is changed to permanently shutdown or temporarily shutdown then all emission processes statuses will also be changed to shutdown automatically.",{positionClass: 'toast-top-right'})      
-      }
+        this.toastr.warning('',"If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated.",{positionClass: 'toast-top-right'})      
     }
   }
 }
