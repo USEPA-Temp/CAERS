@@ -35,7 +35,7 @@
     <div class="row pb-1">
         <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Control Description:</strong></label>
         <div class="col-sm-6 col-md-10">
-            <textarea rows="3" class="form-control" style="height:100%;" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
+            <textarea rows="3" class="form-control" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
             <app-validation-message [control]="controlDeviceForm.get('description')"></app-validation-message>
         </div>
     </div>
