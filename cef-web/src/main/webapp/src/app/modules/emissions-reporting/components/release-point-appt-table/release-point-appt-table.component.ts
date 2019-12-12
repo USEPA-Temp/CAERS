@@ -47,9 +47,9 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   }
 
   openDeleteModal(releasePtApptIdentifier: string, releasePtApptId: number) {
-    const modalMessage = `Are you sure you want to remove ${releasePtApptIdentifier} Release Point from the association of
-      with ${this.process.emissionsProcessIdentifier} Emissions Process?  The apportionment of emissions will need to be updated to
-      total 100% for the remaining release points afterwards.`;
+    const modalMessage = `Are you sure you want to remove the association of Release Point ${releasePtApptIdentifier}
+      with Emission Process ${this.process.emissionsProcessIdentifier}? The apportionment of emissions will need to be
+      updated to total 100% for the remaining release points afterwards.`;
     const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
