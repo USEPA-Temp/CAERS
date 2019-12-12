@@ -101,11 +101,17 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
 
         return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
             .map(report -> {
-                report.setStatus(status);
-                if(validationStatus != null){
-                    report.setValidationStatus(validationStatus);
+                if ((status != null && !status.equals(report.getStatus()))
+                        || (validationStatus != null && !validationStatus.equals(report.getValidationStatus()))) {
+                    if (status != null) {
+                        report.setStatus(status);
+                    }
+                    if(validationStatus != null) {
+                        report.setValidationStatus(validationStatus);
+                    }
+                    return this.emissionsReportMapper.toDto(this.erRepo.save(report));
                 }
-                return this.emissionsReportMapper.toDto(this.erRepo.save(report));
+                return this.emissionsReportMapper.toDto(report);
             }).collect(Collectors.toList());
 
     }

@@ -210,9 +210,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             }
             return cromerrDocumentId;
         } catch(IOException e) {
-            LOGGER.error("submitToCromerr - " + e.toString());
             LOGGER.error("submitToCromerr - " + e.getMessage());
-            LOGGER.error("submitToCromerr - " + e.getStackTrace().toString());
             throw ApplicationException.asApplicationException(e);
         } finally {
             if(tmp!=null) {

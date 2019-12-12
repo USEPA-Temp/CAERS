@@ -8,6 +8,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
 import { ControlService } from 'src/app/core/services/control.service';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-inventory-control-table',
@@ -22,7 +23,8 @@ export class InventoryControlTableComponent extends BaseSortableTable implements
 
   constructor(private modalService: NgbModal,
               private route: ActivatedRoute,
-              private controlService: ControlService) {
+              private controlService: ControlService,
+              private sharedService: SharedService) {
     super();
   }
 
@@ -56,6 +58,7 @@ export class InventoryControlTableComponent extends BaseSortableTable implements
       // update the UI table with the current list of control devices
       this.controlService.retrieveForFacilitySite(facilitySiteId)
         .subscribe(controlResponse => {
+          this.sharedService.updateReportStatusAndEmit(this.route);
           this.tableData = controlResponse;
         });
 
