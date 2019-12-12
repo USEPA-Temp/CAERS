@@ -5,12 +5,12 @@
             <input type="text" class="form-control" maxlength="20" id="controlIdentifierInput" formControlName="identifier">
             <app-validation-message [control]="controlDeviceForm.get('identifier')"></app-validation-message>
         </div>
-        <label for="controlMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Control Measure:</strong></label>
+        <label for="controlStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Status:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="controlMeasureCodeSelect" formControlName="controlMeasureCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of controlMeasureCode" [ngValue]="opt">{{opt.description}}</option>
+            <select type="text" class="form-control" id="controlStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
-            <app-validation-message [control]="controlDeviceForm.get('controlMeasureCode')"></app-validation-message>
+            <app-validation-message [control]="controlDeviceForm.get('operatingStatusCode')"></app-validation-message>
         </div>
         <label for="percentCaptureInput" class="col-sm-6 col-md-2 col-form-label"><strong>Percent Capture:</strong></label>
         <div class="col-sm-6 col-md-2">
@@ -19,22 +19,24 @@
         </div>
     </div>
     <div class="row pb-1">
-        <label for="controlStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Status:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="controlStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+        <label for="controlMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Control Measure:</strong></label>
+        <div class="col-sm-6 col-md-6">
+            <select type="text" class="form-control" id="controlMeasureCodeSelect" formControlName="controlMeasureCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of controlMeasureCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
-            <app-validation-message [control]="controlDeviceForm.get('operatingStatusCode')"></app-validation-message>
-        </div>
-        <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Control Description:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="200" id="descriptionInput" formControlName="description">
-            <app-validation-message [control]="controlDeviceForm.get('description')"></app-validation-message>
+            <app-validation-message [control]="controlDeviceForm.get('controlMeasureCode')"></app-validation-message>
         </div>
         <label for="percentControlInput" class="col-sm-6 col-md-2 col-form-label"><strong>Percent Control:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" maxlength="5" id="percentControlInput" formControlName="percentControl">
             <app-validation-message [control]="controlDeviceForm.get('percentControl')"></app-validation-message>
+        </div>
+    </div>
+    <div class="row pb-1">
+        <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Control Description:</strong></label>
+        <div class="col-sm-6 col-md-10">
+            <textarea rows="3" class="form-control" style="height:100%;" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
+            <app-validation-message [control]="controlDeviceForm.get('description')"></app-validation-message>
         </div>
     </div>
     <div class="row pb-1">
