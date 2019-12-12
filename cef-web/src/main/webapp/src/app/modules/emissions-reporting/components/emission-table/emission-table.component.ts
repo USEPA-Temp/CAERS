@@ -9,6 +9,7 @@ import {ReportingPeriodService} from 'src/app/core/services/reporting-period.ser
 import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-emission-table',
@@ -25,7 +26,8 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
     constructor(private modalService: NgbModal,
                 private emissionService: EmissionService,
                 private reportingPeriodService: ReportingPeriodService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private sharedService: SharedService) {
         super();
     }
 
@@ -50,6 +52,8 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
     // delete an emission from the database
     deleteEmission(emissionId: number) {
         this.emissionService.delete(emissionId).subscribe(() => {
+
+        this.sharedService.updateReportStatusAndEmit(this.route);
 
         // update the UI table with the current list of emissions
         this.reportingPeriodService.retrieve(this.reportingPeriod.id)

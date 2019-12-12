@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +24,25 @@ public class ControlServiceImpl implements ControlService {
 
     @Autowired
     private ControlRepository repo;
-    
+
     @Autowired
     private ControlAssignmentRepository assignmentRepo;
 
     @Autowired
     private ControlMapper mapper;
-    
+
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
+
     /**
      * Create a new Control from a DTO object
      */
     public ControlDto create(ControlDto dto) {
     	Control control = mapper.fromDto(dto);
     	
-    	ControlDto results = mapper.toDto(repo.save(control));
-    	return results;
+    	ControlDto result = mapper.toDto(repo.save(control));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlRepository.class);
+    	return result;
     }
     
     /**
@@ -49,6 +54,7 @@ public class ControlServiceImpl implements ControlService {
     	mapper.updateFromDto(dto, control);
     	
     	ControlDto result = mapper.toDto(repo.save(control));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlRepository.class);
     	return result;
     }
     
@@ -57,6 +63,7 @@ public class ControlServiceImpl implements ControlService {
      * @Param controlId
      */
     public void delete(Long controlId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlId), ControlRepository.class);
     	repo.deleteById(controlId);
     }
 

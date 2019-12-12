@@ -36,7 +36,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
         this.control = control;
         this.control.pollutants = control.pollutants.sort((a, b) => (a.pollutant.pollutantName > b.pollutant.pollutantName ? 1 : -1));
       });
-      
+
       this.controlService.retrieveComponents(+map.get('controlId'))
       .subscribe(emissionsReportItems => {
         this.emissionsReportItems = emissionsReportItems.sort((a, b) => (a.identifier > b.identifier ? 1 : -1));
@@ -69,7 +69,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
       .subscribe(result => {
 
         Object.assign(this.control, result);
-        // this.sharedService.updateReportStatusAndEmit(this.route);
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditInfo(false);
       });
     }

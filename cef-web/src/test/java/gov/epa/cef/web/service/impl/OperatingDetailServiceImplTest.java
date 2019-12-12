@@ -7,6 +7,7 @@ import gov.epa.cef.web.service.mapper.OperatingDetailMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -27,6 +28,9 @@ public class OperatingDetailServiceImplTest extends BaseServiceTest {
     @Mock
     private OperatingDetailMapper operatingDetailMapper;
 
+    @Mock
+    private EmissionsReportStatusServiceImpl emissionsReportStatusService;
+
     @InjectMocks
     private OperatingDetailServiceImpl operatingDetailServiceImpl;
 
@@ -42,6 +46,7 @@ public class OperatingDetailServiceImplTest extends BaseServiceTest {
         when(operatingDetailRepo.findById(1L)).thenReturn(Optional.of(operatingDetail));
         when(operatingDetailRepo.findById(2L)).thenReturn(Optional.empty());
         when(operatingDetailRepo.save(operatingDetail)).thenReturn(operatingDetail);
+        when(emissionsReportStatusService.resetEmissionsReportForEntity(ArgumentMatchers.anyList(), ArgumentMatchers.any())).thenReturn(null);
 
         operatingDetailDto = new OperatingDetailDto();
         operatingDetailDto.setId(1L);

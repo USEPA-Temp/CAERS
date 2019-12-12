@@ -8,6 +8,7 @@ import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/d
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-release-point-table',
@@ -23,7 +24,8 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
 
   constructor(private modalService: NgbModal,
               private releasePointService: ReleasePointService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private sharedService: SharedService) {
     super();
   }
 
@@ -53,6 +55,8 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
   // delete an release point from the database
   deleteReleasePoint(releasePointId: number) {
     this.releasePointService.delete(releasePointId).subscribe(() => {
+
+      this.sharedService.updateReportStatusAndEmit(this.route);
 
       // update the UI table with the current list of release points
       this.releasePointService.retrieveForFacility(this.facilitySiteId)

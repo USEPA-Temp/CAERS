@@ -5,6 +5,7 @@ import { ControlService } from 'src/app/core/services/control.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { Control } from 'src/app/shared/models/control';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-create-control-device',
@@ -22,7 +23,8 @@ export class CreateControlDeviceComponent implements OnInit {
   constructor(
     private controlService: ControlService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private sharedService: SharedService) { }
 
   ngOnInit() {
 
@@ -44,18 +46,19 @@ export class CreateControlDeviceComponent implements OnInit {
 
   onSubmit() {
 
-  if (!this.isValid()) {
-    this.controlDeviceComponent.controlDeviceForm.markAllAsTouched();
-  } else {
-    const saveControlDevice = new Control();
+    if (!this.isValid()) {
+      this.controlDeviceComponent.controlDeviceForm.markAllAsTouched();
+    } else {
+      const saveControlDevice = new Control();
 
-    Object.assign(saveControlDevice, this.controlDeviceComponent.controlDeviceForm.value);
-    saveControlDevice.facilitySiteId = this.facilitySite.id;
+      Object.assign(saveControlDevice, this.controlDeviceComponent.controlDeviceForm.value);
+      saveControlDevice.facilitySiteId = this.facilitySite.id;
 
-    this.controlService.create(saveControlDevice)
-      .subscribe(() => {
-        this.router.navigate([this.controlUrl]);
-      });
+      this.controlService.create(saveControlDevice)
+        .subscribe(() => {
+          this.sharedService.updateReportStatusAndEmit(this.route);
+          this.router.navigate([this.controlUrl]);
+        });
     }
 
   }
