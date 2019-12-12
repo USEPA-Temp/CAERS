@@ -1,0 +1,19 @@
+<div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Control Device Information</strong>
+                </div>
+                <div class="card-body">
+                    <app-edit-control-device-info-panel></app-edit-control-device-info-panel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="float-right pb-3 pr-3">
+        <button type="button" class="btn btn-primary mr-2" [routerLink]="[controlUrl]">Cancel</button>
+        <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
+    </div>
+</div>

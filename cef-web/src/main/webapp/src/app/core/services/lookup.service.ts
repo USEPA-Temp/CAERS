@@ -81,4 +81,9 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
+  retrieveControlMeasureCodes(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/controlMeasure`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
 }

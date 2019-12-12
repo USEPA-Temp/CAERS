@@ -13,7 +13,7 @@ public class EmissionsUnitDto implements Serializable {
     private Long id;
     private Long facilitySiteId;
     private CodeLookupDto unitTypeCode;
-    private CodeLookupDto operatingStatusCode;
+    private OperatingStatusCode operatingStatusCode;
     private String unitTypeCodeDescription;
     private String operatingStatusCodeDescription;
     private String unitIdentifier;
@@ -128,10 +128,10 @@ public class EmissionsUnitDto implements Serializable {
         return this;
     }
     
-	public CodeLookupDto getOperatingStatusCode() {
+	public OperatingStatusCode getOperatingStatusCode() {
 		return operatingStatusCode;
 	}
-	public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
+	public void setOperatingStatusCode(OperatingStatusCode operatingStatusCode) {
 		this.operatingStatusCode = operatingStatusCode;
 	}
 	public CodeLookupDto getUnitTypeCode() {
