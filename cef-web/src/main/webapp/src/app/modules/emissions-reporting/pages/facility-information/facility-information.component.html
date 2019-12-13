@@ -23,11 +23,11 @@
         
         <div class="row  pb-2">
             <div class="col-sm-6 col-md-2"><strong>Facility Address:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
+            <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite?.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
             <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
             <div class="col-sm-6 col-md-2">
                 <span *ngIf="facilitySite.mailingStreetAddress">
-                    {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}
+                    {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite?.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}
                 </span>
             </div>
             <div class="col-sm-6 col-md-2"><strong>County:</strong></div>
@@ -76,11 +76,11 @@
             
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Address:</strong></div>
-                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode.uspsCode}}&nbsp;{{contact.postalCode}}</div>
+                <div class="col-sm-6 col-md-2">{{contact.streetAddress}}<br/>{{contact.city}}, {{contact.stateCode?.uspsCode}}&nbsp;{{contact.postalCode}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
                 <div class="col-sm-6 col-md-2">
                     <span *ngIf="contact.mailingStreetAddress">
-                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode.uspsCode}}&nbsp;{{contact.mailingPostalCode}}
+                        {{contact.mailingStreetAddress}}<br/>{{contact.mailingCity}}, {{contact.mailingStateCode?.uspsCode}}&nbsp;{{contact.mailingPostalCode}}
                     </span>
                 </div>
             <div class="col-sm-6 col-md-2"><strong>County:</strong></div>
