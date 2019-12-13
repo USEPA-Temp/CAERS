@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ControlPathRepository extends CrudRepository<ControlPath, Long>, ProgramIdRetriever {
+public interface ControlPathRepository extends CrudRepository<ControlPath, Long>, ProgramIdRetriever, ReportIdRetriever {
 
     /**
      * Retrieve Control Paths for an emissions process
@@ -44,4 +44,13 @@ public interface ControlPathRepository extends CrudRepository<ControlPath, Long>
 	@Cacheable(value = CacheName.ControlPathProgramIds)
     @Query("select fs.eisProgramId from ControlPath cp join cp.facilitySite fs where cp.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    /**
+     * Retrieve Emissions Report id for a Control Path
+     * @param id
+     * @return Emissions Report id
+     */
+    @Cacheable(value = CacheName.ControlPathEmissionsReportIds)
+    @Query("select r.id from ControlPath cp join cp.facilitySite fs join fs.emissionsReport r where cp.id = :id")
+    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 }

@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.service.ControlService;
+import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import gov.epa.cef.web.service.mapper.ControlMapper;
@@ -22,12 +24,48 @@ public class ControlServiceImpl implements ControlService {
 
     @Autowired
     private ControlRepository repo;
-    
+
     @Autowired
     private ControlAssignmentRepository assignmentRepo;
 
     @Autowired
     private ControlMapper mapper;
+
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
+
+    /**
+     * Create a new Control from a DTO object
+     */
+    public ControlDto create(ControlDto dto) {
+    	Control control = mapper.fromDto(dto);
+    	
+    	ControlDto result = mapper.toDto(repo.save(control));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlRepository.class);
+    	return result;
+    }
+    
+    /**
+     * Update an existing Control from a DTO
+     */
+    public ControlDto update(ControlDto dto) {
+    	
+    	Control control = repo.findById(dto.getId()).orElse(null);
+    	mapper.updateFromDto(dto, control);
+    	
+    	ControlDto result = mapper.toDto(repo.save(control));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlRepository.class);
+    	return result;
+    }
+    
+    /**
+     * Delete a Control for a given id
+     * @Param controlId
+     */
+    public void delete(Long controlId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlId), ControlRepository.class);
+    	repo.deleteById(controlId);
+    }
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ControlService#retrieveById(java.lang.Long)

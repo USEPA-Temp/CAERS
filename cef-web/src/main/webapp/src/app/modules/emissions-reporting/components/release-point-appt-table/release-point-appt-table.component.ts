@@ -9,6 +9,7 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReleasePointApportionmentModalComponent } from 'src/app/modules/emissions-reporting/components/release-point-apportionment-modal/release-point-apportionment-modal.component';
 import { Process } from 'src/app/shared/models/process';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-release-point-appt-table',
@@ -26,7 +27,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     private modalService: NgbModal,
     private processService: EmissionsProcessService,
     private releasePointService: ReleasePointService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private sharedService: SharedService) {
     super();
   }
 
@@ -42,6 +44,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   deleteReleasePointApportionment(releasePtApptId: number, emissionProcessId: number) {
     this.releasePointService.deleteAppt(releasePtApptId).subscribe(() => {
 
+      this.sharedService.updateReportStatusAndEmit(this.route);
+
       // update the UI table with the current list of release point apportionments
       this.processService.retrieve(emissionProcessId)
         .subscribe(processResponse => {
@@ -51,9 +55,9 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   }
 
   openDeleteModal(releasePtApptIdentifier: string, releasePtApptId: number) {
-    const modalMessage = `Are you sure you want to remove ${releasePtApptIdentifier} Release Point from the association of
-      with ${this.process.emissionsProcessIdentifier} Emissions Process?  The apportionment of emissions will need to be updated to
-      total 100% for the remaining release points afterwards.`;
+    const modalMessage = `Are you sure you want to remove the association of Release Point ${releasePtApptIdentifier}
+      with Emission Process ${this.process.emissionsProcessIdentifier}? The apportionment of emissions will need to be
+      updated to total 100% for the remaining release points afterwards.`;
     const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {

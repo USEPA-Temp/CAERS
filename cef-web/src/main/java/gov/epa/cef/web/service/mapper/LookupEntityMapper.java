@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FipsStateCode;
@@ -45,7 +46,7 @@ public abstract class LookupEntityMapper {
     public abstract CodeLookupDto reportingPeriodCodeToDto(ReportingPeriodCode source);
     
     public abstract CodeLookupDto emissionsOperatingTypeCodeToDto(EmissionsOperatingTypeCode source);
-
+    
     public abstract CalculationMethodCodeDto calculationMethodCodeToDto(CalculationMethodCode source);
 
     public abstract FacilityCategoryCodeDto facilityCategoryCodeToDto(FacilityCategoryCode code);
@@ -123,6 +124,14 @@ public abstract class LookupEntityMapper {
     public ProgramSystemCode dtoToProgramSystemCode(CodeLookupDto source) {
         if (source != null) {
             return repos.programSystemCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("ControlMeasureCode")
+    public ControlMeasureCode dtoToControlMeasureCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.controlMeasureCodeRepo().findById(source.getCode()).orElse(null);
         }
         return null;
     }

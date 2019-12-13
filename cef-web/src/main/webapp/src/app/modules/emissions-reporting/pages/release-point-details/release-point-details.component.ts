@@ -80,6 +80,7 @@ export class ReleasePointDetailsComponent implements OnInit {
       .subscribe(result => {
 
         Object.assign(this.releasePoint, result);
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditInfo(false);
       });
     }

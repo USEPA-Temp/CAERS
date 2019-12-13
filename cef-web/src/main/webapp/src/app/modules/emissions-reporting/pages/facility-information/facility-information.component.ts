@@ -72,6 +72,8 @@ export class FacilityInformationComponent implements OnInit {
   deleteContact(contactId: number, facilitySiteId: number) {
     this.contactService.delete(contactId).subscribe(() => {
 
+      this.sharedService.updateReportStatusAndEmit(this.route);
+
       // update the UI table with the current list of emission units
       this.contactService.retrieveForFacility(facilitySiteId)
         .subscribe(contactServiceResponse => {

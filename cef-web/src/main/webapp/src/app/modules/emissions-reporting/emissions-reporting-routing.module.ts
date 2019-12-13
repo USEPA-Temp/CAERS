@@ -13,6 +13,7 @@ import { CreateEmissionsProcessComponent } from 'src/app/modules/emissions-repor
 import { CreateEmissionsUnitComponent } from 'src/app/modules/emissions-reporting/pages/create-emissions-unit/create-emissions-unit.component';
 import { EditFacilityContactComponent } from 'src/app/modules/emissions-reporting/pages/edit-facility-contact/edit-facility-contact.component';
 import { CreateReleasePointComponent } from './pages/create-release-point/create-release-point.component';
+import { CreateControlDeviceComponent } from './pages/create-control-device/create-control-device.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -45,6 +46,10 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.FACILITY_CONTACT}/:contactId`,
             component: EditFacilityContactComponent,
             data: { title: 'Facility Information', breadcrumb: '&year Emissions Report', create: 'false'}
+          }, {
+            path: `${BaseReportUrl.CONTROL_DEVICE}/create`,
+            component: CreateControlDeviceComponent,
+            data: { title: 'Control Device', breadcrumb: '&year Emissions Report', create: 'true'}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}/:controlId`,
             component: ControlDeviceDetailsComponent,

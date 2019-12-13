@@ -42,6 +42,9 @@ public class LookupRepositories {
     @Autowired
     private ProgramSystemCodeRepository programSystemCodeRepo;
     
+    @Autowired
+    private ControlMeasureCodeRepository controlMeasureCodeRepo;
+    
 
     public CalculationMaterialCodeRepository materialCodeRepo() {
         return materialCodeRepo;
@@ -89,6 +92,10 @@ public class LookupRepositories {
 	
 	public ProgramSystemCodeRepository programSystemCodeRepo() {
         return programSystemCodeRepo;
+    }
+	
+	public ControlMeasureCodeRepository controlMeasureCodeRepo() {
+        return controlMeasureCodeRepo;
     }
 
 }

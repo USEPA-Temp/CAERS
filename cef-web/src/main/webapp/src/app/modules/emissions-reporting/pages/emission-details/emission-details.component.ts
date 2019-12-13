@@ -213,11 +213,11 @@ export class EmissionDetailsComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.emissionForm.valid || (this.totalManualEntry && !this.emissionForm.controls.comments.value)){
+    if (!this.emissionForm.valid || (this.totalManualEntry && !this.emissionForm.controls.comments.value)) {
       this.emissionForm.markAllAsTouched();
-        if(this.totalManualEntry && !this.emissionForm.controls.comments.value){
-          this.toastr.error('','Comments field must be populated for this pollutant ',{positionClass: 'toast-top-right'});
-        }
+      if (this.totalManualEntry && !this.emissionForm.controls.comments.value) {
+        this.toastr.error('', 'Comments field must be populated for this pollutant ', {positionClass: 'toast-top-right'});
+      }
     } else {
 
       const saveEmission = new Emission();
@@ -230,6 +230,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionService.create(saveEmission)
         .subscribe(result => {
 
+          this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.processUrl]);
         });
       } else {
@@ -239,6 +240,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionService.update(saveEmission)
         .subscribe(result => {
 
+          this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.processUrl]);
         });
       }

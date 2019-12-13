@@ -13,4 +13,5 @@ export class Control {
   assignments: ControlAssignment[];
   pollutants: ControlPollutant[];
   comments: string;
+  controlMeasureCode: BaseCodeLookup;
 }

@@ -5,6 +5,7 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-create-release-point',
@@ -22,7 +23,8 @@ export class CreateReleasePointComponent implements OnInit {
   constructor(
     private releasePointService: ReleasePointService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private sharedService: SharedService) { }
 
   ngOnInit() {
 
@@ -54,6 +56,7 @@ export class CreateReleasePointComponent implements OnInit {
 
       this.releasePointService.create(saveReleasePoint)
       .subscribe(() => {
+        this.sharedService.updateReportStatusAndEmit(this.route);
         this.router.navigate([this.releaseUrl]);
       });
     }

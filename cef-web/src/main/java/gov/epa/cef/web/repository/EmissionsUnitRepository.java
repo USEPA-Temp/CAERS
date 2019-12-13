@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, Long>, ProgramIdRetriever {
+public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, Long>, ProgramIdRetriever, ReportIdRetriever {
 
     /**
      * Retrieve Emissions Units for a facility
@@ -28,4 +28,13 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
     @Cacheable(value = CacheName.UnitProgramIds)
     @Query("select fs.eisProgramId from EmissionsUnit eu join eu.facilitySite fs where eu.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    /**
+     * Retrieve Emissions Report id for an Emissions Unit 
+     * @param id
+     * @return Emissions Report id
+     */
+    @Cacheable(value = CacheName.UnitEmissionsReportIds)
+    @Query("select r.id from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where eu.id = :id")
+    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 }

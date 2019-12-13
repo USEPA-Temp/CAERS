@@ -11,6 +11,7 @@ import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -24,6 +25,7 @@ import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
+import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
@@ -82,6 +84,9 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private ProgramSystemCodeRepository programSystemCodeRepo;
+    
+    @Autowired
+    private ControlMeasureCodeRepository controlMeasureCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -329,4 +334,22 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
+    @Override
+    public List<CodeLookupDto> retrieveControlMeasureCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<ControlMeasureCode> entities = controlMeasureCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
+    
+    public ControlMeasureCode retrieveControlMeasureCodeEntityByCode(String code) {
+    	ControlMeasureCode result = controlMeasureCodeRepo
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
 }

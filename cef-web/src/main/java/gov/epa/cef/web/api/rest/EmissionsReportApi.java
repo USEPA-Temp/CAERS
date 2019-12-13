@@ -8,6 +8,7 @@ import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
@@ -44,6 +45,8 @@ public class EmissionsReportApi {
 
     private final EmissionsReportService emissionsReportService;
 
+    private final EmissionsReportStatusService emissionsReportStatusService;
+
     private final EmissionsReportValidationService validationService;
 
     private final BulkUploadService uploadService;
@@ -53,11 +56,13 @@ public class EmissionsReportApi {
     @Autowired
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
+                       EmissionsReportStatusService emissionsReportStatusService,
                        EmissionsReportValidationService validationService,
                        BulkUploadService uploadService) {
 
         this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
+        this.emissionsReportStatusService = emissionsReportStatusService;
         this.validationService = validationService;
         this.uploadService = uploadService;
     }
@@ -118,7 +123,7 @@ public class EmissionsReportApi {
 
         this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportService.acceptEmissionsReports(reportIds);
+        List<EmissionsReportDto> result = emissionsReportStatusService.acceptEmissionsReports(reportIds);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -134,7 +139,7 @@ public class EmissionsReportApi {
 
         this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reportIds);
+        List<EmissionsReportDto> result = emissionsReportStatusService.rejectEmissionsReports(reportIds);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

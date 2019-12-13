@@ -5,6 +5,7 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-emission-unit-info-panel',
@@ -46,6 +47,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   constructor(private fb: FormBuilder,
               private lookupService: LookupService,
               public formUtils: FormUtilsService,
+              private toastr: ToastrService
               ) { }
 
   ngOnInit() {
@@ -73,11 +75,16 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         }
         );
       this.unitTypeValues = result;
-    });
-    
+    });    
   }
 
   ngOnChanges() {
     this.emissionUnitForm.reset(this.emissionUnit);
+  }
+
+  onChange(newValue) {
+    if(newValue){ 
+        this.toastr.warning('',"If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated.",{positionClass: 'toast-top-right'})      
+    }
   }
 }

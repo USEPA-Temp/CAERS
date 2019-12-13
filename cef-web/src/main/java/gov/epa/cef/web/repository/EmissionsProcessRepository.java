@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmissionsProcessRepository extends CrudRepository<EmissionsProcess, Long>, ProgramIdRetriever {
+public interface EmissionsProcessRepository extends CrudRepository<EmissionsProcess, Long>, ProgramIdRetriever, ReportIdRetriever {
 
     List<EmissionsProcess> findByReleasePointApptsReleasePointIdOrderByEmissionsProcessIdentifier(Long releasePointId);
 
@@ -24,4 +24,13 @@ public interface EmissionsProcessRepository extends CrudRepository<EmissionsProc
     @Cacheable(value = CacheName.ProcessProgramIds)
     @Query("select fs.eisProgramId from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs where p.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    /**
+     * Retrieve Emissions Report id for an Emissions Process
+     * @param id
+     * @return Emissions Report id
+     */
+    @Cacheable(value = CacheName.ProcessEmissionsReportIds)
+    @Query("select r.id from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where p.id = :id")
+    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 }

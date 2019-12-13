@@ -7,6 +7,7 @@ import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -28,6 +29,9 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ReportingPeriodMapper reportingPeriodMapper;
+
+    @Mock
+    private EmissionsReportStatusServiceImpl emissionsReportStatusService;
 
     @InjectMocks
     private ReportingPeriodServiceImpl reportingPeriodServiceImpl;
@@ -54,6 +58,8 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
         reportingPeriodDtoList=new ArrayList<>();
         when(reportingPeriodMapper.toDto(reportingPeriod)).thenReturn(reportingPeriodDto);
         when(reportingPeriodMapper.toDtoList(reportingPeriodList)).thenReturn(reportingPeriodDtoList);
+
+        when(emissionsReportStatusService.resetEmissionsReportForEntity(ArgumentMatchers.anyList(), ArgumentMatchers.any())).thenReturn(null);
 
     }
 

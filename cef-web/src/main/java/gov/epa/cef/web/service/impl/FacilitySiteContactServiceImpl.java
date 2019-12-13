@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     @Autowired
     private FacilitySiteContactMapper mapper;
 
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
+
     /**
      * Create a new Facility Site Contact from a DTO object
      */
@@ -31,8 +35,9 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     	
     	FacilitySiteContact facilityContact = mapper.fromDto(dto);
     	
-    	FacilitySiteContactDto results = mapper.toDto(contactRepo.save(facilityContact));
-    	return results;
+    	FacilitySiteContactDto result = mapper.toDto(contactRepo.save(facilityContact));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilitySiteContactRepository.class);
+    	return result;
     }
     
     @Override
@@ -58,11 +63,13 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     	mapper.updateFromDto(dto, facilityContact);
     	
     	FacilitySiteContactDto result = mapper.toDto(contactRepo.save(facilityContact));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilitySiteContactRepository.class);
 
         return result;
     }
     
     public void delete(Long id) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), FacilitySiteContactRepository.class);
     	contactRepo.deleteById(id);
     }
 

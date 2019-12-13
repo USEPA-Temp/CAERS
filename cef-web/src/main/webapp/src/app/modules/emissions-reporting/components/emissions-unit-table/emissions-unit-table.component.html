@@ -15,9 +15,9 @@
     <tbody>
     <tr *ngFor="let item of tableData">
       <td><a routerLink="{{baseUrl}}/{{item.id}}">{{item.unitIdentifier}}</a></td>
-      <td>{{item.unitTypeCodeDescription}}</td>
+      <td>{{item.unitTypeCode.description}}</td>
       <td>{{item.description}}</td>
-      <td>{{item.operatingStatusCodeDescription}}</td>
+      <td>{{item.operatingStatusCode.description}}</td>
       <ng-container *ngIf="!readOnlyMode">
         <td><a routerLink="." (click)="openDeleteModal(item.unitIdentifier, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container>

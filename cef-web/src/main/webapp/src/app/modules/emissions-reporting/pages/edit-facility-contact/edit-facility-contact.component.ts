@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
@@ -22,6 +22,7 @@ export class EditFacilityContactComponent implements OnInit {
   @Input() facilityContact: FacilitySiteContact;
   @Input() facilitySite: FacilitySite;
   @Input() createMode = false;
+  mailingStreetAddress: string;
 
   readOnlyMode = true;
 
@@ -61,7 +62,7 @@ export class EditFacilityContactComponent implements OnInit {
     mailingStateCode: [null],
     mailingPostalCode: ['', Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')],
     county: ['']
-  });
+  }, {validators: this.mailingAddressValidator()});
 
   facilityContactType: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
@@ -108,6 +109,7 @@ export class EditFacilityContactComponent implements OnInit {
 
             this.contactForm.enable();
             this.contactForm.reset(this.facilityContact);
+            this.mailingStreetAddress = this.facilityContact.mailingStreetAddress;
         });
       } else {
         this.contactForm.enable();
@@ -139,6 +141,7 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.create(saveContact)
         .subscribe(() => {
 
+          this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
       } else {
@@ -148,9 +151,26 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.update(saveContact)
         .subscribe(() => {
 
+          this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
       }
     }
   }
+
+  mailingAddressValidator(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const addressControl = control.get('mailingStreetAddress');
+      const uspsControl = control.get('mailingStateCode');
+      const cityControl = control.get('mailingCity');
+      const postalCodeControl = control.get('mailingPostalCode');
+
+      if(addressControl.enabled) {
+        if (uspsControl.value === null || cityControl.value === '' || postalCodeControl.value === '') {
+          return addressControl.value === '' ? null : {mailingStreetAddress : {value: this.mailingStreetAddress}};
+      }}
+      return null;
+    }
+  }
+
 }
