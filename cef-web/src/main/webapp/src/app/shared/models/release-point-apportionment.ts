@@ -11,4 +11,5 @@ export class ReleasePointApportionment {
   releasePointTypeCode: BaseCodeLookup;
   releasePoint: ReleasePoint;
   emissionsProcess: Process;
+  emissionsProcessId: number;
 }

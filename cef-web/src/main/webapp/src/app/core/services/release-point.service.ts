@@ -1,4 +1,5 @@
 import { ReleasePoint } from 'src/app/shared/models/release-point';
+import { ReleasePointApportionment } from 'src/app/shared/models/release-point-apportionment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -43,5 +44,11 @@ export class ReleasePointService {
   deleteAppt(id: number): Observable<{}> {
     const url = `${this.baseUrl}/appt/${id}`;
     return this.http.delete(url);
+  }
+
+  /** Create release point apportionment */
+  createAppt(releasePointAppt: ReleasePointApportionment): Observable<{}> {
+    const url = `${this.baseUrl}/appt/`;
+    return this.http.post<ReleasePointApportionment>(url, releasePointAppt);
   }
 }

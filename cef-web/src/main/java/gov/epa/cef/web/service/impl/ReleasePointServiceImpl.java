@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.ReleasePointService;
+import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
+import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 import gov.epa.cef.web.service.mapper.ReleasePointMapper;
 
 @Service
@@ -23,6 +26,9 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     
     @Autowired
     private ReleasePointMapper releasePointMapper;
+    
+    @Autowired
+    private ReleasePointApptMapper releasePointApptMapper;
     
     /**
      * Create a new Release Point from a DTO object
@@ -80,6 +86,16 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      */
     public void deleteAppt(Long releasePointApptId) {
     	releasePointApptRepo.deleteById(releasePointApptId);
+    }
+    
+    /**
+     * Create a new Release Point Apportionment from a DTO object
+     */
+    public ReleasePointApptDto createAppt(ReleasePointApptDto dto) {
+    	ReleasePointAppt releasePointAppt = releasePointApptMapper.fromDto(dto);
+    	
+    	ReleasePointApptDto results = releasePointApptMapper.toDto(releasePointApptRepo.save(releasePointAppt));
+    	return results;
     }
 
 }

@@ -24,6 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
   controlPaths: ControlPath[];
+  facilitySite: FacilitySite;
 
   readOnlyMode = true;
 
@@ -71,7 +72,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
-
+      this.facilitySite = data.facilitySite;
       this.sharedService.emitChange(data.facilitySite);
     });
   }

@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service;
 
+import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 public interface ReleasePointService {
 	
 	/**
-     * Create a new Facility Site Contact
+     * Create a new Release Point
      * @param dto
      * @return
      */
@@ -45,5 +46,12 @@ public interface ReleasePointService {
      * @param releasePointApptId
      */
     void deleteAppt(Long releasePointApptId);
+    
+	/**
+     * Create a new Release Point Apportionment
+     * @param dto
+     * @return
+     */
+	ReleasePointApptDto createAppt(ReleasePointApptDto dto);
 
 }

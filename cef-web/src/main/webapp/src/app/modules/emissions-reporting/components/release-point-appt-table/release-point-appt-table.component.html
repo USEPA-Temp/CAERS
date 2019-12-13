@@ -20,14 +20,12 @@
         <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container> 
     </tr>
-    <!-- Commented out for pilot 
       <ng-container *ngIf="!readOnlyMode">
         <tr>
-          <td colspan="2"></td>
-          <td><a href="#"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td> 
+          <td colspan="3"></td>
+          <td><button style="color:#209c98;border:none;background-color: Transparent;" (click)="openReleasePointAptModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td> 
         </tr>
       </ng-container> 
-    -->
     </tbody>
   </table>
 </div>
