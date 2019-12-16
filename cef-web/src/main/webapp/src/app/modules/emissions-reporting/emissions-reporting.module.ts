@@ -46,6 +46,8 @@ import { CreateEmissionsUnitComponent } from './pages/create-emissions-unit/crea
 import { EditReleasePointPanelComponent } from './components/edit-release-point-panel/edit-release-point-panel.component';
 import { CreateReleasePointComponent } from './pages/create-release-point/create-release-point.component';
 import { ReleasePointApportionmentModalComponent } from './components/release-point-apportionment-modal/release-point-apportionment-modal.component';
+import { EditControlDeviceInfoPanelComponent } from './components/edit-control-device-info-panel/edit-control-device-info-panel.component';
+import { CreateControlDeviceComponent } from './pages/create-control-device/create-control-device.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +88,9 @@ import { ReleasePointApportionmentModalComponent } from './components/release-po
     CreateEmissionsUnitComponent,
     EditReleasePointPanelComponent,
     CreateReleasePointComponent,
-    ReleasePointApportionmentModalComponent
+    ReleasePointApportionmentModalComponent,
+    EditControlDeviceInfoPanelComponent,
+    CreateControlDeviceComponent
   ],
   imports: [
     CommonModule,

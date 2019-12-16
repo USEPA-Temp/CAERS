@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,8 @@ import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.ReleasePointService;
 import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
-import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 import gov.epa.cef.web.service.mapper.ReleasePointMapper;
+import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 
 @Service
 public class ReleasePointServiceImpl implements ReleasePointService {
@@ -26,6 +27,9 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     
     @Autowired
     private ReleasePointMapper releasePointMapper;
+
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
     
     @Autowired
     private ReleasePointApptMapper releasePointApptMapper;
@@ -36,8 +40,10 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     public ReleasePointDto create(ReleasePointDto dto) {
     	ReleasePoint releasePoint = releasePointMapper.fromDto(dto);
     	
-    	ReleasePointDto results = releasePointMapper.toDto(releasePointRepo.save(releasePoint));
-    	return results;
+    	ReleasePointDto result = releasePointMapper.toDto(releasePointRepo.save(releasePoint));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReleasePointRepository.class);
+ 
+    	return result;
     }
     
     /* (non-Javadoc)
@@ -68,6 +74,7 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     	releasePointMapper.updateFromDto(dto, releasePoint);
     	
     	ReleasePointDto result = releasePointMapper.toDto(releasePointRepo.save(releasePoint));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReleasePointRepository.class);
 
         return result;
     }
@@ -77,6 +84,7 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      * @param releasePointId
      */
     public void delete(Long releasePointId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(releasePointId), ReleasePointRepository.class);
     	releasePointRepo.deleteById(releasePointId);
     }
     
@@ -85,17 +93,19 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      * @param releasePointApptId
      */
     public void deleteAppt(Long releasePointApptId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(releasePointApptId), ReleasePointApptRepository.class);
     	releasePointApptRepo.deleteById(releasePointApptId);
     }
-    
+
     /**
      * Create a new Release Point Apportionment from a DTO object
      */
     public ReleasePointApptDto createAppt(ReleasePointApptDto dto) {
     	ReleasePointAppt releasePointAppt = releasePointApptMapper.fromDto(dto);
-    	
+
     	ReleasePointApptDto results = releasePointApptMapper.toDto(releasePointApptRepo.save(releasePointAppt));
+    	
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(results.getReleasePointId()), ReleasePointRepository.class);
     	return results;
     }
-
 }

@@ -74,6 +74,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
         modalRef.result.then(() => {
           this.processService.retrieve(this.process.id)
           .subscribe(processResponse => {
+            this.sharedService.updateReportStatusAndEmit(this.route);
             this.tableData = processResponse.releasePointAppts;
           })
         })
