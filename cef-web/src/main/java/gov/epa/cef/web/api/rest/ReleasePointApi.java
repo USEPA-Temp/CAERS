@@ -4,6 +4,7 @@ import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ReleasePointService;
+import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -124,5 +125,21 @@ public class ReleasePointApi {
         this.securityService.facilityEnforcer().enforceEntity(releasePointApptId, ReleasePointApptRepository.class);
 
         releasePointService.deleteAppt(releasePointApptId);
+    }
+    
+    /**
+     * Create a Release Point Apportionment
+     * @param emissionsProcessId
+     * @return
+     */
+    @PostMapping(value = "/appt/")
+    public ResponseEntity<ReleasePointApptDto> createReleasePointAppt(
+    		@NotNull @RequestBody ReleasePointApptDto dto) {
+    	
+    	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	ReleasePointApptDto result = releasePointService.createAppt(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

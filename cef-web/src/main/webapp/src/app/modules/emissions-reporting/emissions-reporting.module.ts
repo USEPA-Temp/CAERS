@@ -1,7 +1,7 @@
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule} from '@angular/forms';
 
 import { ReportsRoutingModule } from './emissions-reporting-routing.module';
 import { EmissionsReportingDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting-dashboard/emissions-reporting-dashboard.component';
@@ -10,6 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionUnitDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emission-unit-dashboard/emission-unit-dashboard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StepProgressComponent } from 'src/app/modules/emissions-reporting/components/step-progress/step-progress.component';
+
 
 import { EmissionUnitInfoComponent } from 'src/app/modules/emissions-reporting/components/emission-unit-info/emission-unit-info.component';
 import { ReleasePointTableComponent } from 'src/app/modules/emissions-reporting/components/release-point-table/release-point-table.component';
@@ -44,6 +45,7 @@ import { EditEmissionUnitInfoPanelComponent } from './components/edit-emission-u
 import { CreateEmissionsUnitComponent } from './pages/create-emissions-unit/create-emissions-unit.component';
 import { EditReleasePointPanelComponent } from './components/edit-release-point-panel/edit-release-point-panel.component';
 import { CreateReleasePointComponent } from './pages/create-release-point/create-release-point.component';
+import { ReleasePointApportionmentModalComponent } from './components/release-point-apportionment-modal/release-point-apportionment-modal.component';
 import { EditControlDeviceInfoPanelComponent } from './components/edit-control-device-info-panel/edit-control-device-info-panel.component';
 import { CreateControlDeviceComponent } from './pages/create-control-device/create-control-device.component';
 
@@ -86,6 +88,7 @@ import { CreateControlDeviceComponent } from './pages/create-control-device/crea
     CreateEmissionsUnitComponent,
     EditReleasePointPanelComponent,
     CreateReleasePointComponent,
+    ReleasePointApportionmentModalComponent,
     EditControlDeviceInfoPanelComponent,
     CreateControlDeviceComponent
   ],
@@ -99,7 +102,8 @@ import { CreateControlDeviceComponent } from './pages/create-control-device/crea
   ],
   entryComponents: [
     EmissionFactorModalComponent,
-    SccSearchModalComponent
+    SccSearchModalComponent,
+    ReleasePointApportionmentModalComponent
   ]
 })
 export class EmissionsReportingModule { }

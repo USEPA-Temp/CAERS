@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 
+
 public class ReleasePointApptDto implements Serializable{
 
     /**
@@ -13,11 +14,15 @@ public class ReleasePointApptDto implements Serializable{
 
     private Long releasePointId;
     
+    private Long facilitySiteId;
+    
+    private Long emissionsProcessId;
+    
     private String releasePointIdentifier;
     
     private String releasePointDescription;
-    
-    private CodeLookupDto releasePointTypeCode;
+
+	private CodeLookupDto releasePointTypeCode;
     
     private Double percent;
 
@@ -68,6 +73,22 @@ public class ReleasePointApptDto implements Serializable{
     public void setPercent(Double percent) {
         this.percent = percent;
     }
+
+	public Long getEmissionsProcessId() {
+		return emissionsProcessId;
+	}
+
+	public void setEmissionsProcessId(Long emissionsProcessId) {
+		this.emissionsProcessId = emissionsProcessId;
+	}
+
+	public Long getFacilitySiteId() {
+		return facilitySiteId;
+	}
+
+	public void setFacilitySiteId(Long facilitySiteId) {
+		this.facilitySiteId = facilitySiteId;
+	}
     
     
 }

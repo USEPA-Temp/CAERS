@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.ReleasePointService;
+import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
 import gov.epa.cef.web.service.mapper.ReleasePointMapper;
+import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 
 @Service
 public class ReleasePointServiceImpl implements ReleasePointService {
@@ -28,6 +31,9 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
     
+    @Autowired
+    private ReleasePointApptMapper releasePointApptMapper;
+    
     /**
      * Create a new Release Point from a DTO object
      */
@@ -36,6 +42,7 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     	
     	ReleasePointDto result = releasePointMapper.toDto(releasePointRepo.save(releasePoint));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReleasePointRepository.class);
+ 
     	return result;
     }
     
@@ -90,4 +97,15 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     	releasePointApptRepo.deleteById(releasePointApptId);
     }
 
+    /**
+     * Create a new Release Point Apportionment from a DTO object
+     */
+    public ReleasePointApptDto createAppt(ReleasePointApptDto dto) {
+    	ReleasePointAppt releasePointAppt = releasePointApptMapper.fromDto(dto);
+
+    	ReleasePointApptDto results = releasePointApptMapper.toDto(releasePointApptRepo.save(releasePointAppt));
+    	
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(results.getReleasePointId()), ReleasePointRepository.class);
+    	return results;
+    }
 }

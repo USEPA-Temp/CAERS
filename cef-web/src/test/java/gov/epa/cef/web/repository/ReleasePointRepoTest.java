@@ -1,6 +1,6 @@
 package gov.epa.cef.web.repository;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals; 
 
 import java.util.List;
 import java.util.Map;
@@ -160,6 +160,49 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
         process = processRepo.findById(9999991L);
         assertEquals(true, process.isPresent());
     }
+    
+    /**
+     * Verify that creating a release point apportionment works
+     * @throws Exception
+     */
+    @Test
+    public void createReleasePointApptTest() throws Exception {
+    	
+    	//delete the all release point apportionments from Emissions Process 9999992
+    	rpApptRepo.deleteAll(rpApptRepo.findByEmissionsProcessId(9999992L));
+    	
+    	List<ReleasePointAppt> releasePtApptList = rpApptRepo.findByEmissionsProcessId(9999992L);
+    	assertEquals(0, releasePtApptList.size());
+
+    	//create release point apportionment
+    	ReleasePointAppt releasePtAppt = newReleasePtAppt();
+
+        this.rpApptRepo.save(releasePtAppt);
+
+        SqlParameterSource params = new MapSqlParameterSource()
+            .addValue("id", releasePtAppt.getId());
+
+        List<Map<String, Object>> releasePtAppts = this.jdbcTemplate.queryForList(
+            "select * from release_point_appt where id = :id", params);
+
+        assertEquals(1, releasePtAppts.size());
+    }
+    
+private ReleasePointAppt newReleasePtAppt() {
+	EmissionsProcess emissionsProcess = new EmissionsProcess();
+    emissionsProcess.setId(9999992L);
+    
+    ReleasePoint releasePoint = new ReleasePoint();
+    releasePoint.setId(9999992L);
+    
+    ReleasePointAppt releasePtAppt = new ReleasePointAppt();
+	
+    releasePtAppt.setEmissionsProcess(emissionsProcess);
+    releasePtAppt.setPercent(11.00);
+    releasePtAppt.setReleasePoint(releasePoint);
+
+    return releasePtAppt;
+}
     
 private ReleasePoint newReleasePt() {
     	

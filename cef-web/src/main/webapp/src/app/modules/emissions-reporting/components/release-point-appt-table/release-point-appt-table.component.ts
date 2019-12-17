@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
+import { ReleasePointApportionmentModalComponent } from 'src/app/modules/emissions-reporting/components/release-point-apportionment-modal/release-point-apportionment-modal.component';
 import { Process } from 'src/app/shared/models/process';
 import { SharedService } from 'src/app/core/services/shared.service';
 
@@ -18,6 +19,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   @Input() tableData: ReleasePointApportionment[];
   @Input() process: Process;
   @Input() readOnlyMode: boolean;
+  @Input() facilitySiteId: number;
   baseUrl: string;
 
   constructor(
@@ -34,6 +36,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
       .subscribe(map => {
         this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
     });
+    this.tableData.sort((a, b) => (a.releasePointIdentifier > b.releasePointIdentifier? 1 : -1));
   }
 
   // delete release point apportionment from the database
@@ -61,4 +64,20 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     });
   }
 
+  openReleasePointAptModal(){
+        const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+        modalRef.componentInstance.process = this.process;
+        modalRef.componentInstance.releasePointApportionments = this.tableData;
+        modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+  
+        modalRef.result.then((result) => {
+          this.processService.retrieve(this.process.id)
+          .subscribe(processResponse => {
+            if(result !== 'dontUpdate'){
+              this.sharedService.updateReportStatusAndEmit(this.route);
+            }
+            this.tableData = processResponse.releasePointAppts;
+          })
+        })
+  }
 }
