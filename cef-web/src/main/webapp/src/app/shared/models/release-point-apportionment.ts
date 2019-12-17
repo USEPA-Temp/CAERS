@@ -10,6 +10,6 @@ export class ReleasePointApportionment {
   releasePointDescription: string;
   releasePointTypeCode: BaseCodeLookup;
   releasePoint: ReleasePoint;
-  emissionsProcess: Process;
   emissionsProcessId: number;
+  facilitySiteId: number;
 }

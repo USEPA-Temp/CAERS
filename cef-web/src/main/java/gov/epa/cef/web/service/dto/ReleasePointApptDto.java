@@ -14,6 +14,8 @@ public class ReleasePointApptDto implements Serializable{
 
     private Long releasePointId;
     
+    private Long facilitySiteId;
+    
     private Long emissionsProcessId;
     
     private String releasePointIdentifier;
@@ -78,6 +80,14 @@ public class ReleasePointApptDto implements Serializable{
 
 	public void setEmissionsProcessId(Long emissionsProcessId) {
 		this.emissionsProcessId = emissionsProcessId;
+	}
+
+	public Long getFacilitySiteId() {
+		return facilitySiteId;
+	}
+
+	public void setFacilitySiteId(Long facilitySiteId) {
+		this.facilitySiteId = facilitySiteId;
 	}
     
     

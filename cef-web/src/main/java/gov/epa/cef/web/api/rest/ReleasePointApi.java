@@ -136,6 +136,8 @@ public class ReleasePointApi {
     public ResponseEntity<ReleasePointApptDto> createReleasePointAppt(
     		@NotNull @RequestBody ReleasePointApptDto dto) {
     	
+    	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+    	
     	ReleasePointApptDto result = releasePointService.createAppt(dto);
     	
     	return new ResponseEntity<>(result, HttpStatus.OK);

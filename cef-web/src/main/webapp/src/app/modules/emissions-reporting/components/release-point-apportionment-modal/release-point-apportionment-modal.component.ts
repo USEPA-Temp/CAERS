@@ -43,7 +43,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
   }
 
   onClose() {
-    this.activeModal.dismiss();
+    this.activeModal.close('dontUpdate');  
   }
 
   onSubmit() {
@@ -61,8 +61,8 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
           this.selectedReleasePoint.releasePointDescription = releasePoint.description;
           this.selectedReleasePoint.releasePointTypeCode = releasePoint.typeCode;
           this.selectedReleasePoint.releasePoint = releasePoint;
-          this.selectedReleasePoint.emissionsProcess = this.process;
           this.selectedReleasePoint.emissionsProcessId = this.process.id;
+          this.selectedReleasePoint.facilitySiteId = this.facilitySiteId;
         }
       })
 
@@ -71,7 +71,6 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
       } else {
 
         Object.assign(this.selectedReleasePoint, this.releasePointApptForm.value);
-
         this.releasePointService.createAppt(this.selectedReleasePoint)
         .subscribe(() => {
           this.activeModal.close();

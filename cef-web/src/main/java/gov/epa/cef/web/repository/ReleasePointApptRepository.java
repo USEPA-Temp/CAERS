@@ -1,6 +1,7 @@
 package gov.epa.cef.web.repository;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Optional; 
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,13 @@ import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 
 public interface ReleasePointApptRepository extends CrudRepository<ReleasePointAppt, Long>, ProgramIdRetriever, ReportIdRetriever {
+	
+    /**
+     * Retrieve Release Point Apportionments for an EmissionsProcess
+     * @param emissionsProcessId
+     * @return
+     */
+    List<ReleasePointAppt> findByEmissionsProcessId(Long emissionsProcessId);
 	
 	/**
     *
