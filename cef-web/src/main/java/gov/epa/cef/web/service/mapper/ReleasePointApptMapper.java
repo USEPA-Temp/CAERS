@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -32,4 +33,7 @@ public interface ReleasePointApptMapper {
     @Mapping(source = "releasePoint.id", target = "releasePointId")
     @Mapping(source = "emissionsProcess.id", target = "emissionsProcessId")
     ReleasePointApptDto toDto(ReleasePointAppt releasePointAppt);
+    
+    @Mapping(source = "releasePointId", target = "releasePoint.id")
+    void updateFromDto(ReleasePointApptDto source, @MappingTarget ReleasePointAppt target);
 }

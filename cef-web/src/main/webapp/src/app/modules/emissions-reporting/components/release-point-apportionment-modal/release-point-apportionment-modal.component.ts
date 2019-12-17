@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Process } from 'src/app/shared/models/process';
 import { ReleasePointApportionment } from 'src/app/shared/models/release-point-apportionment';
@@ -12,10 +12,11 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './release-point-apportionment-modal.component.html',
   styleUrls: ['./release-point-apportionment-modal.component.scss']
 })
-export class ReleasePointApportionmentModalComponent implements OnInit {
+export class ReleasePointApportionmentModalComponent implements OnInit{
   @Input() process: Process;
   @Input() releasePointApportionments: ReleasePointApportionment[];
   @Input() facilitySiteId: number;
+  edit: boolean;
   duplicateCheck: boolean = true;
   selectedReleasePoint: ReleasePointApportionment;
   releasePoints: ReleasePoint[];
@@ -31,7 +32,13 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
               private toastr: ToastrService) { }
 
   ngOnInit() {
-    this.selectedReleasePoint = new ReleasePointApportionment;
+    if(this.selectedReleasePoint){
+      this.releasePointApptForm.reset(this.selectedReleasePoint);
+    }
+    else{
+      this.selectedReleasePoint = new ReleasePointApportionment;
+    }
+
     this.releasePointService.retrieveForFacility(this.facilitySiteId)
     .subscribe(points => {  
       this.releasePoints = points;
@@ -47,12 +54,13 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
   }
 
   onSubmit() {
-    this.releasePointApportionments.forEach(apportionment => {
-      if(apportionment.releasePointIdentifier === this.releasePointApptForm.get('selectedReleasePointAppt').value.toString()){
-        this.duplicateCheck = false;
-        this.toastr.error('',"This Emissions Process already contains this Release Point Apportionment, duplicates are not allowed.",{positionClass: 'toast-top-right'})
-      }
-    }) 
+      this.releasePointApportionments.forEach(apportionment => {
+        if(apportionment.releasePointIdentifier === this.releasePointApptForm.get('selectedReleasePointAppt').value.toString()){
+          this.duplicateCheck = false;
+          this.toastr.error('',"This Emissions Process already contains this Release Point Apportionment, duplicates are not allowed.",{positionClass: 'toast-top-right'})
+        }
+      }) 
+    
     if(this.duplicateCheck){
       this.releasePoints.forEach(releasePoint => {
         if(releasePoint.releasePointIdentifier === this.releasePointApptForm.get('selectedReleasePointAppt').value.toString()){
@@ -63,18 +71,26 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
           this.selectedReleasePoint.releasePoint = releasePoint;
           this.selectedReleasePoint.emissionsProcessId = this.process.id;
           this.selectedReleasePoint.facilitySiteId = this.facilitySiteId;
+          Object.assign(this.selectedReleasePoint, this.releasePointApptForm.value);
         }
       })
 
       if (!this.isValid()) {
         this.releasePointApptForm.markAllAsTouched();
-      } else {
-
-        Object.assign(this.selectedReleasePoint, this.releasePointApptForm.value);
-        this.releasePointService.createAppt(this.selectedReleasePoint)
-        .subscribe(() => {
-          this.activeModal.close();
-        });
+      } 
+      else {
+        if(!this.edit){
+          this.releasePointService.createAppt(this.selectedReleasePoint)
+          .subscribe(() => {
+            this.activeModal.close();
+          });
+        }
+        else{
+          this.releasePointService.updateAppt(this.selectedReleasePoint)
+          .subscribe(() => {
+            this.activeModal.close();
+          });
+        }
       }
   }
   this.duplicateCheck = true;

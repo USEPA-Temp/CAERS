@@ -7,6 +7,7 @@
       <th scope="col" sortable="percent" (sort)="onSort($event)">Avg. % Emissions</th>
       <ng-container *ngIf="!readOnlyMode">
         <th scope="col"></th>
+        <th scope="col"></th>
       </ng-container>
      
     </tr>
@@ -18,12 +19,13 @@
       <td>{{item.percent}}%</td>
       <ng-container *ngIf="!readOnlyMode">
         <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openEditModal(item)"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
       </ng-container> 
     </tr>
       <ng-container *ngIf="!readOnlyMode">
         <tr>
-          <td colspan="3"></td>
-          <td><button style="color:#209c98;border:none;background-color: Transparent;" (click)="openReleasePointAptModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td> 
+          <td colspan="4"></td>
+          <td><button style="color:#209c98;border:none;background-color: Transparent;" (click)="openReleasePointAptModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td>
         </tr>
       </ng-container> 
     </tbody>

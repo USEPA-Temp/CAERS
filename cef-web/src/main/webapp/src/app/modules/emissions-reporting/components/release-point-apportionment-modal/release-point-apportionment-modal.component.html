@@ -11,7 +11,7 @@
         <br>
         <select id="releasePointSelect" formControlName="selectedReleasePointAppt">
             <option disabled selected value> -- select an option -- </option>
-            <option *ngFor="let rp of releasePoints" >{{rp.releasePointIdentifier}}</option>
+            <option [selected]="rp.releasePointIdentifier === selectedReleasePoint.releasePointIdentifier" *ngFor="let rp of releasePoints" >{{rp.releasePointIdentifier}}</option>
         </select>
         <app-validation-message [control]="releasePointApptForm.get('selectedReleasePointAppt')"></app-validation-message>
         <br>

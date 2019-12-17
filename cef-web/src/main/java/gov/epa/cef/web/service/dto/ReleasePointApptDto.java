@@ -90,5 +90,9 @@ public class ReleasePointApptDto implements Serializable{
 		this.facilitySiteId = facilitySiteId;
 	}
     
+    public ReleasePointApptDto withId(Long id) {
+        setId(id);
+        return this;
+    }
     
 }

@@ -142,4 +142,21 @@ public class ReleasePointApi {
     	
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Update an Release Point Apportionment by ID
+     * @param apportionmentId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/appt/{apportionmentId}")
+    public ResponseEntity<ReleasePointApptDto> updateReleasePointAppt(
+        @NotNull @PathVariable Long apportionmentId, @NotNull @RequestBody ReleasePointApptDto dto) {
+
+        this.securityService.facilityEnforcer().enforceEntity(apportionmentId, ReleasePointApptRepository.class);
+
+        ReleasePointApptDto result = releasePointService.updateAppt(dto.withId(apportionmentId));
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

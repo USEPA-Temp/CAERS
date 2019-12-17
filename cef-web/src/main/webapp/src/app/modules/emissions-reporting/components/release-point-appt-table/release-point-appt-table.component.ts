@@ -80,4 +80,23 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
           })
         })
   }
+
+  openEditModal(selectedApportionment){
+      const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+      modalRef.componentInstance.process = this.process;
+      modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+      modalRef.componentInstance.releasePointApportionments = this.tableData;
+      modalRef.componentInstance.edit = true;
+      modalRef.componentInstance.selectedReleasePoint = selectedApportionment;
+
+        modalRef.result.then((result) => {
+          this.processService.retrieve(this.process.id)
+          .subscribe(processResponse => {
+            if(result !== 'dontUpdate'){
+              this.sharedService.updateReportStatusAndEmit(this.route);
+              this.tableData = processResponse.releasePointAppts;
+            }
+          })
+        })
+  }
 }

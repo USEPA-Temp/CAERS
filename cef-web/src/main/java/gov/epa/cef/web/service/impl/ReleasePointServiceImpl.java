@@ -108,4 +108,21 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(results.getReleasePointId()), ReleasePointRepository.class);
     	return results;
     }
+    
+    /**
+     * Update an existing Release Point Apportionment from a DTO
+     */
+    public ReleasePointApptDto updateAppt(ReleasePointApptDto dto) {
+    	
+    	ReleasePointAppt releasePointAppt = releasePointApptRepo.findById(dto.getId()).orElse(null);
+    	releasePointAppt.setReleasePoint(null);
+    	releasePointApptMapper.updateFromDto(dto, releasePointAppt);
+    	
+    	ReleasePointApptDto result = releasePointApptMapper.toDto(releasePointApptRepo.save(releasePointAppt));
+    	
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReleasePointApptRepository.class);
+
+        return result;
+    }
+    
 }
