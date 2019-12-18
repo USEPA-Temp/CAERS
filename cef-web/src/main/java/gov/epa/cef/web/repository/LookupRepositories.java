@@ -45,6 +45,9 @@ public class LookupRepositories {
     @Autowired
     private ControlMeasureCodeRepository controlMeasureCodeRepo;
     
+    @Autowired
+    private TribalCodeRepository tribalCodeRepo;
+    
 
     public CalculationMaterialCodeRepository materialCodeRepo() {
         return materialCodeRepo;
@@ -86,16 +89,20 @@ public class LookupRepositories {
         return UnitTypeCodeRepo;
     }
 
-	public ReleasePointTypeCodeRepository releasePtCodeRepo() {
+		public ReleasePointTypeCodeRepository releasePtCodeRepo() {
         return releasePtCodeRepo;
     }
-	
-	public ProgramSystemCodeRepository programSystemCodeRepo() {
+		
+		public ProgramSystemCodeRepository programSystemCodeRepo() {
         return programSystemCodeRepo;
     }
-	
-	public ControlMeasureCodeRepository controlMeasureCodeRepo() {
+		
+		public ControlMeasureCodeRepository controlMeasureCodeRepo() {
         return controlMeasureCodeRepo;
     }
+	
+		public TribalCodeRepository tribalCodeRepo() {
+	    	return tribalCodeRepo;
+		}
 
 }

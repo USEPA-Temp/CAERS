@@ -48,6 +48,9 @@ import { CreateReleasePointComponent } from './pages/create-release-point/create
 import { ReleasePointApportionmentModalComponent } from './components/release-point-apportionment-modal/release-point-apportionment-modal.component';
 import { EditControlDeviceInfoPanelComponent } from './components/edit-control-device-info-panel/edit-control-device-info-panel.component';
 import { CreateControlDeviceComponent } from './pages/create-control-device/create-control-device.component';
+import { EditFacilitySiteInfoPanelComponent } from './components/edit-facility-site-info-panel/edit-facility-site-info-panel.component';
+import { FacilityNaicsTableComponent } from './components/facility-naics-table/facility-naics-table.component';
+import { FacilityNaicsModalComponent } from './components/facility-naics-modal/facility-naics-modal.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +93,10 @@ import { CreateControlDeviceComponent } from './pages/create-control-device/crea
     CreateReleasePointComponent,
     ReleasePointApportionmentModalComponent,
     EditControlDeviceInfoPanelComponent,
-    CreateControlDeviceComponent
+    CreateControlDeviceComponent,
+    EditFacilitySiteInfoPanelComponent,
+    FacilityNaicsTableComponent,
+    FacilityNaicsModalComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +109,8 @@ import { CreateControlDeviceComponent } from './pages/create-control-device/crea
   entryComponents: [
     EmissionFactorModalComponent,
     SccSearchModalComponent,
-    ReleasePointApportionmentModalComponent
+    ReleasePointApportionmentModalComponent,
+    FacilityNaicsModalComponent
   ]
 })
 export class EmissionsReportingModule { }

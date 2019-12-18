@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
@@ -190,6 +191,30 @@ public class LookupApi {
     public ResponseEntity<List<CodeLookupDto>> retrieveControlMeasureCodes() {
 
         List<CodeLookupDto> result = lookupService.retrieveControlMeasureCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Tribal Codes
+     * @return
+     */
+    @GetMapping(value = "/tribalCode")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveTribalCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveTribalCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Facility NAICS Codes
+     * @return
+     */
+    @GetMapping(value = "/naicsCode")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveNaicsCode() {
+
+        List<CodeLookupDto> result = lookupService.retrieveNaicsCode();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
 }

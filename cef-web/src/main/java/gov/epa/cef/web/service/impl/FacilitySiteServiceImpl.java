@@ -5,12 +5,16 @@ import gov.epa.cef.web.client.api.FrsFacilityApiTransforms;
 import gov.epa.cef.web.client.api.FrsSubfacilityTransforms;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
+import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
 import gov.epa.client.frs.iptquery.model.Association;
 import gov.epa.client.frs.iptquery.model.Process;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,19 +34,31 @@ import java.util.stream.Collectors;
 public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     private final FacilitySiteRepository facSiteRepo;
+    
+    private final FacilityNAICSXrefRepository facilityNaicsXrefRepo;
+    
+    private final EmissionsReportStatusServiceImpl reportStatusService;
 
     private final FacilitySiteMapper facilitySiteMapper;
+    
+    private final FacilityNAICSMapper facilityNaicsMapper;
 
     private final FrsApiClient frsClient;
 
     @Autowired
     FacilitySiteServiceImpl(FacilitySiteRepository facSiteRepo,
                             FacilitySiteMapper facilitySiteMapper,
+                            FacilityNAICSXrefRepository facilityNaicsXrefRepo,
+                            FacilityNAICSMapper facilityNaicsMapper,
+                            EmissionsReportStatusServiceImpl reportStatusService,
                             FrsApiClient frsClient) {
 
         this.facSiteRepo = facSiteRepo;
         this.facilitySiteMapper = facilitySiteMapper;
         this.frsClient = frsClient;
+        this.facilityNaicsXrefRepo = facilityNaicsXrefRepo;
+        this.facilityNaicsMapper = facilityNaicsMapper;
+        this.reportStatusService = reportStatusService;
     }
 
     @Override
@@ -127,9 +144,42 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             .orElse(null);
     }
 
+    public FacilitySiteDto update(FacilitySiteDto dto) {
+    	
+    	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
+    	facilitySiteMapper.updateFromDto(dto, facilitySite);
+    	
+    	FacilitySiteDto result = facilitySiteMapper.toDto(facSiteRepo.save(facilitySite));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilitySiteRepository.class);
+    	
+    	return result;
+    }
+    
     @Override
     public Optional<ProgramFacility> retrieveFromFrs(String facilityEisProgramId) {
 
         return this.frsClient.queryProgramFacility(facilityEisProgramId);
+    }
+    
+    /**
+     * Create Facility NAICS
+     * @param dto
+     */
+    public FacilityNAICSDto createNaics(FacilityNAICSDto dto) {
+    	FacilityNAICSXref facilityNaics = facilityNaicsMapper.fromDto(dto);
+    	
+    	FacilityNAICSDto results = facilityNaicsMapper.facilityNAICSXrefToFacilityNAICSDto(facilityNaicsXrefRepo.save(facilityNaics));
+			reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(results.getFacilitySiteId()), FacilityNAICSXrefRepository.class);
+    	
+    	return results;
+    }
+    
+    /**
+     * Delete Facility NAICS by id
+     * @param facilityNaicsId
+     */
+    public void deleteFacilityNaics(Long facilityNaicsId) {
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(facilityNaicsId), FacilityNAICSXrefRepository.class);
+    	facilityNaicsXrefRepo.deleteById(facilityNaicsId);
     }
 }

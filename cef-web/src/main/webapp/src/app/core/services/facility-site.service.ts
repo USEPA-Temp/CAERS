@@ -3,6 +3,7 @@ import {FacilitySite} from 'src/app/shared/models/facility-site';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 
 
 @Injectable({
@@ -25,5 +26,22 @@ export class FacilitySiteService {
     retrieveForReport(programId: string, reportId: number): Observable<FacilitySite> {
         const url = `${this.baseUrl}/report/${reportId}/facility/${programId}`;
         return this.http.get<FacilitySite>(url);
+    }
+
+    update(facilitySite: FacilitySite): Observable<FacilitySite> {
+        const url = `${this.baseUrl}/${facilitySite.id}`;
+        return this.http.put<FacilitySite>(url, facilitySite);
+    }
+
+    /** Create facility NAICS */
+    createFacilityNaics(facilityNaics: FacilityNaicsCode): Observable<{}> {
+        const url = `${this.baseUrl}/naics/`;
+        return this.http.post<FacilityNaicsCode>(url, facilityNaics);
+    }
+
+    /** DELETE facility NAICS from the database */
+    deleteFacilityNaics(facilityNaicsId: number): Observable<{}> {
+        const url = `${this.baseUrl}/naics/${facilityNaicsId}`;
+        return this.http.delete(url);
     }
 }

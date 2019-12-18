@@ -20,4 +20,10 @@ public interface FacilityNAICSMapper {
     
     Set<FacilityNAICSDto> facilityNAICSXrefsToFacilityNAICSDtos(Set<FacilityNAICSXref> facilityNAICSs);
 
+    @Mapping(source = "facilitySiteId", target = "facilitySite.id")
+    @Mapping(source = "code", target = "naicsCode.code")
+    @Mapping(source = "description", target = "naicsCode.description")
+    @Mapping(source = "primaryFlag", target = "primaryFlag")
+    FacilityNAICSXref fromDto(FacilityNAICSDto source);
+    
 }

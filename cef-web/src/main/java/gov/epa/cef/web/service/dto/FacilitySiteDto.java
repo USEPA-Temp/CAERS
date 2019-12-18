@@ -250,5 +250,10 @@ public class FacilitySiteDto implements Serializable {
     public void setFacilityNAICS(Set<FacilityNAICSDto> facilityNAICS) {
         this.facilityNAICS = facilityNAICS;
     }
+    
+    public FacilitySiteDto withId(Long id) {
+    	setId(id);
+    	return this;
+    }
 
 }

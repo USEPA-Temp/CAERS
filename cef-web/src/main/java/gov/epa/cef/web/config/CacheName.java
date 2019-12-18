@@ -51,5 +51,9 @@ public class CacheName {
     public static final String ReleasePointApptEmissionsReportIds = "ReleasePointApptEmissionsReportIds";
 
     public static final String ReleasePointApptProgramIds = "ReleasePointApptProgramIds";
+    
+    public static final String FacilityNAICSEmissionsReportIds = "FacilityNAICSEmissionsReportIds";
+    
+    public static final String FacilityNAICSProgramIds = "FacilityNAICSProgramIds";
 }
 

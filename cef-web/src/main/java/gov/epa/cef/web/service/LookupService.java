@@ -10,6 +10,7 @@ import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
+import gov.epa.cef.web.domain.TribalCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
@@ -181,5 +182,24 @@ public interface LookupService {
     * @return
     */
     ControlMeasureCode retrieveControlMeasureCodeEntityByCode(String code);
+    
+    /**
+     * Retrieve Tribal Codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveTribalCodes();
+    
+    /**
+     * Retrieve Tribal code database object by code
+     * @param code
+     * @return
+     */
+    TribalCode retrieveTribalCodeEntityByCode(String code);
+    
+    /**
+     * Retrieve Facility NAICS Codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveNaicsCode();
     
 }

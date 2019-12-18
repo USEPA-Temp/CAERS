@@ -1,6 +1,6 @@
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FacilitySiteContactService } from 'src/app/core/services/facility-site-contact.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
@@ -9,6 +9,8 @@ import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/d
 import { ToastrService } from 'ngx-toastr';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { EditFacilitySiteInfoPanelComponent } from '../../components/edit-facility-site-info-panel/edit-facility-site-info-panel.component';
+import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 
 @Component({
   selector: 'app-facility-information',
@@ -16,15 +18,20 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
   styleUrls: ['./facility-information.component.scss']
 })
 export class FacilityInformationComponent implements OnInit {
-  facilitySite: FacilitySite;
+  @Input() facilitySite: FacilitySite;
   naicsCodes: FacilityNaicsCode[];
   readOnlyMode = true;
+  editInfo = false;
 
   createUrl: string;
+
+  @ViewChild(EditFacilitySiteInfoPanelComponent, { static: false })
+  private facilitySiteComponent: EditFacilitySiteInfoPanelComponent;
 
   constructor(
     private modalService: NgbModal,
     private contactService: FacilitySiteContactService,
+    private facilityService: FacilitySiteService,
     private sharedService: SharedService,
     private toastr: ToastrService,
     private route: ActivatedRoute) { }
@@ -41,9 +48,6 @@ export class FacilityInformationComponent implements OnInit {
         this.facilitySite.contacts = contacts;
       });
 
-      this.naicsCodes = this.facilitySite.facilityNAICS;
-      this.naicsCodes.sort((a, b) => a.primaryFlag && !b.primaryFlag ? -1 : !a.primaryFlag && b.primaryFlag ? 1 : 0);
-
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
     });
 
@@ -52,6 +56,38 @@ export class FacilityInformationComponent implements OnInit {
       this.createUrl = `/facility/${params.get('facilityId')}/report/${params.get('reportId')}/${BaseReportUrl.FACILITY_CONTACT}`;
     });
   }
+
+  setEditInfo(value: boolean) {
+    this.editInfo = value;
+  }
+
+  updateFacilitySite() {
+    if (!this.facilitySiteComponent.facilitySiteForm.valid) {
+      this.facilitySiteComponent.facilitySiteForm.markAllAsTouched();
+    } else {
+      const updatedFacilitySite = new FacilitySite();
+      Object.assign(updatedFacilitySite, this.facilitySiteComponent.facilitySiteForm.value);
+      updatedFacilitySite.id = this.facilitySite.id;
+      updatedFacilitySite.emissionsReport = this.facilitySite.emissionsReport;
+      updatedFacilitySite.frsFacilityId = this.facilitySite.frsFacilityId;
+      updatedFacilitySite.altSiteIdentifier = this.facilitySite.altSiteIdentifier;
+      updatedFacilitySite.facilityCategoryCode = this.facilitySite.facilityCategoryCode;
+      updatedFacilitySite.facilitySourceTypeCode = this.facilitySite.facilitySourceTypeCode;
+      updatedFacilitySite.description = this.facilitySite.description;
+      updatedFacilitySite.programSystemCode = this.facilitySite.programSystemCode;
+
+
+      this.facilityService.update(updatedFacilitySite)
+      .subscribe(result => {
+
+        this.sharedService.updateReportStatusAndEmit(this.route);
+
+        Object.assign(this.facilitySite, result);
+        this.setEditInfo(false);
+      });
+    }
+  }
+
 
   openDeleteModal(contactFirstName: string, contactLastName: string, contactId: number, facilitySiteId: number) {
     if (this.facilitySite.contacts.length > 1) {

@@ -19,6 +19,7 @@ import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
+import gov.epa.cef.web.domain.TribalCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
@@ -135,5 +136,13 @@ public abstract class LookupEntityMapper {
         }
         return null;
     }
-
+    
+    @Named("TribalCode")
+    public TribalCode dtoToTribalCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.tribalCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
 }
