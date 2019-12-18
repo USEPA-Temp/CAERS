@@ -36,7 +36,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             // prevented by db constraints
             result = false;
             context.addFederalError(
-                    ValidationField.FACILITY_EIS_ID.value(),"facilitysite.eisProgramId.required");
+                    ValidationField.FACILITY_EIS_ID.value(), "facilitysite.eisProgramId.required");
         }
 
 

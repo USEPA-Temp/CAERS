@@ -1,11 +1,14 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.service.dto.EntityType;
+import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 
 import org.springframework.stereotype.Component;
 
@@ -29,9 +32,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
             context.addFederalError(
                 ValidationField.EMISSION_CALC_METHOD.value(),
                 "emission.emissionsCalcMethodCode.required", 
-                getEmissionsUnitIdentifier(emission),
-                getEmissionsProcessIdentifier(emission),
-                getPollutantName(emission));
+                createValidationDetails(emission));
 
         } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == true) {
 
@@ -41,9 +42,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 context.addFederalError(
                         ValidationField.EMISSION_COMMENTS.value(),
                         "emission.comments.required.method", 
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        createValidationDetails(emission));
             }
 
             if(emission.getEmissionsFactor() != null) {
@@ -51,10 +50,8 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         ValidationField.EMISSION_EF.value(),
-                        "emission.emissionsFactor.banned.method", 
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        "emission.emissionsFactor.banned.method",
+                        createValidationDetails(emission));
             }
 
             if (emission.getReportingPeriod() != null 
@@ -65,9 +62,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 context.addFederalError(
                         ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
                         "emission.totalEmissions.nonzero.method", 
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        createValidationDetails(emission));
             }
 
         } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false) {
@@ -78,9 +73,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 context.addFederalError(
                         ValidationField.EMISSION_EF.value(),
                         "emission.emissionsFactor.required.method",
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        createValidationDetails(emission));
             }
         }
 
@@ -92,9 +85,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 context.addFederalError(
                         ValidationField.EMISSION_NUM_UOM.value(),
                         "emission.emissionsNumeratorUom.required.emissionsFactor", 
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        createValidationDetails(emission));
             }
 
             if (emission.getEmissionsDenominatorUom() == null) {
@@ -103,9 +94,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 context.addFederalError(
                         ValidationField.EMISSION_DENOM_UOM.value(),
                         "emission.emissionsDenominatorUom.required.emissionsFactor", 
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        createValidationDetails(emission));
             }
 
         } else if (emission.getEmissionsFactor() == null) {
@@ -116,9 +105,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 context.addFederalError(
                         ValidationField.EMISSION_NUM_UOM.value(),
                         "emission.emissionsNumeratorUom.banned.emissionsFactor", 
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        createValidationDetails(emission));
             }
 
             if (emission.getEmissionsDenominatorUom() != null) {
@@ -127,9 +114,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 context.addFederalError(
                         ValidationField.EMISSION_DENOM_UOM.value(),
                         "emission.emissionsDenominatorUom.banned.emissionsFactor", 
-                        getEmissionsUnitIdentifier(emission),
-                        getEmissionsProcessIdentifier(emission),
-                        getPollutantName(emission));
+                        createValidationDetails(emission));
             }
 
         }
@@ -157,5 +142,19 @@ public class EmissionValidator extends BaseValidator<Emission> {
             return emission.getPollutant().getPollutantName();
         }
         return null;
+    }
+
+    private ValidationDetailDto createValidationDetails(Emission source) {
+
+        String description = MessageFormat.format("Emission Unit: {0}, Emission Process: {1}, Pollutant: {2}", 
+                getEmissionsUnitIdentifier(source),
+                getEmissionsProcessIdentifier(source),
+                getPollutantName(source));
+
+        ValidationDetailDto dto = new ValidationDetailDto(source.getId(), getPollutantName(source), EntityType.EMISSION, description);
+        if (source.getReportingPeriod() != null) {
+            dto.getParents().add(new ValidationDetailDto(source.getReportingPeriod().getId(), null, EntityType.REPORTING_PERIOD));
+        }
+        return dto;
     }
 }

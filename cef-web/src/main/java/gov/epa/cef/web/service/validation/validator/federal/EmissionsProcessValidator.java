@@ -2,10 +2,15 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.service.dto.EntityType;
+import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+
+import java.text.MessageFormat;
+
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
@@ -41,8 +46,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
             context.addFederalError(
                     ValidationField.PROCESS_RP_PCT.value(),
                     "emissionsProcess.releasePointAppts.percent.total",
-                    getEmissionsUnitIdentifier(emissionsProcess),
-                    emissionsProcess.getEmissionsProcessIdentifier());
+                    createValidationDetails(emissionsProcess));
         }
 
 
@@ -54,6 +58,16 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
             return process.getEmissionsUnit().getUnitIdentifier();
         }
         return null;
+    }
+
+    private ValidationDetailDto createValidationDetails(EmissionsProcess source) {
+
+        String description = MessageFormat.format("Emission Unit: {0}, Emission Process: {1}", 
+                getEmissionsUnitIdentifier(source),
+                source.getEmissionsProcessIdentifier());
+
+        ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEmissionsProcessIdentifier(), EntityType.EMISSIONS_PROCESS, description);
+        return dto;
     }
 
 }
