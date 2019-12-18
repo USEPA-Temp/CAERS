@@ -6,6 +6,7 @@ import { Pollutant } from 'src/app/shared/models/pollutant';
 import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
+import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,16 @@ export class LookupService {
   retrieveControlMeasureCodes(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/controlMeasure`;
     return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveTribalCode(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/tribalCode`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveNaicsCode(): Observable<FacilityNaicsCode[]> {
+    const url = `${this.baseUrl}/naicsCode`;
+    return this.http.get<FacilityNaicsCode[]>(url);
   }
 
 }

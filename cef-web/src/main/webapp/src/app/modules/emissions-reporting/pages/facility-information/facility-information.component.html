@@ -1,48 +1,67 @@
 <div class="card mb-3">
     <div class="card-header text-center">
         <strong>Facility Information</strong>
+        <div class="float-right" *ngIf="!editInfo && !readOnlyMode">
+            <button type="button" class="btn btn-success" (click)="setEditInfo(true)">Edit</button>
+        </div>
     </div>
     <div *ngIf="facilitySite" class="card-body">
-        <div class="row  pb-2">
-            <div class="col-sm-6 col-md-2"><strong>Facility EIS ID:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.eisProgramId}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Latitude:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.latitude}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.operatingStatusCode.description}}</div>
-        </div>
-        
-        <div class="row  pb-2">
-            <div class="col-sm-6 col-md-2"><strong>Facility Name:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.name}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Longitude:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.longitude}}</div>
-            <div class="col-sm-6 col-md-2"><strong>BIA Code:</strong></div>
-            <div class="col-sm-6 col-md-2"></div>
-        </div>
-        
-        <div class="row  pb-2">
-            <div class="col-sm-6 col-md-2"><strong>Facility Address:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite?.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
-            <div class="col-sm-6 col-md-2">
-                <span *ngIf="facilitySite.mailingStreetAddress">
-                    {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite?.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}
-                </span>
+        <div *ngIf="!editInfo">
+            <div class="row  pb-2">
+                <div class="col-sm-6 col-md-2"><strong>Facility EIS ID:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.eisProgramId}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Latitude:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.latitude}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.operatingStatusCode?.description}}</div>
             </div>
-            <div class="col-sm-6 col-md-2"><strong>County:</strong></div>
-            <div class="col-sm-6 col-md-2">{{facilitySite.county}}</div>
+            
+            <div class="row  pb-2">
+                <div class="col-sm-6 col-md-2"><strong>Facility Name:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.name}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Longitude:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.longitude}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Status Year:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.statusYear}}</div>
+            </div>
+            
+            <div class="row pb-2">
+                <div class="col-sm-6 col-md-2"><strong>Facility Address:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite?.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
+                <div class="col-sm-6 col-md-2">
+                    <span *ngIf="facilitySite.mailingStreetAddress">
+                        {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite?.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}
+                    </span>
+                </div>
+                <div class="col-sm-6 col-md-2"><strong>County:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.county}}</div>
+            </div>
+            
+            <div class="row pb-2">
+                <div class="col-sm-6 col-md-2"><strong>BIA Code:</strong></div>
+                <div class="col-sm-6 col-md-6">{{facilitySite.tribalCode?.description}}</div>
+            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-sm-6 col-md-2"><strong>NAICS Code:</strong></div>
-            <div class="col-sm-6 col-md-10">
-                <span *ngFor="let naics of naicsCodes">
-                        {{naics.code}}&nbsp;-&nbsp;{{naics.description}}<span *ngIf="naics.primaryFlag">&nbsp;(<strong>Primary</strong>)</span><br/>
-                </span>
+        <div *ngIf="editInfo">
+            <app-edit-facility-site-info-panel [facilitySite]="facilitySite"></app-edit-facility-site-info-panel>
+            <div class="float-right pb-3 pr-3" *ngIf="facilitySiteComponent">
+                <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
+                <button type="submit" class="btn btn-success" (click)="updateFacilitySite()">Save</button>
             </div>
         </div>
+    </div>
+</div>
 
+<div *ngIf="facilitySite">
+    <div class="card mb-3">
+        <div class="card-header text-center">
+            <strong>Facility NAICS Codes</strong>
+        </div>
+    <div class="card-body">
+        <app-facility-naics-table [tableData]="facilitySite.facilityNAICS"></app-facility-naics-table>
     </div>
 </div>
 
@@ -60,7 +79,7 @@
         <div class="card-body">
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Contact Type:</strong></div>
-                <div class="col-sm-6 col-md-2">{{contact.type.description}}</div>
+                <div class="col-sm-6 col-md-2">{{contact?.type.description}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Phone Number:</strong></div>
                 <div class="col-sm-6 col-md-2">{{contact.phone | phoneNumber}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Ext:</strong></div>

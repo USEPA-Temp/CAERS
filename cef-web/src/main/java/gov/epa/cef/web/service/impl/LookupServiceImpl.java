@@ -14,11 +14,13 @@ import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
+import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
+import gov.epa.cef.web.domain.TribalCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
@@ -28,11 +30,13 @@ import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
+import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
+import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.LookupService;
@@ -87,6 +91,12 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private ControlMeasureCodeRepository controlMeasureCodeRepo;
+    
+    @Autowired
+    private TribalCodeRepository tribalCodeRepo;
+    
+    @Autowired
+    private NaicsCodeRepository naicsCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -350,6 +360,37 @@ public class LookupServiceImpl implements LookupService {
     	ControlMeasureCode result = controlMeasureCodeRepo
             .findById(code)
             .orElse(null);
+        return result;
+    }
+    
+    @Override
+    public List<CodeLookupDto> retrieveTribalCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<TribalCode> entities = tribalCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
+    
+    public TribalCode retrieveTribalCodeEntityByCode(String code) {
+    	TribalCode result = tribalCodeRepo
+            .findById(code)
+            .orElse(null);
+        return result;
+    }
+    
+    @Override
+    public List<CodeLookupDto> retrieveNaicsCode() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<NaicsCode> entities = naicsCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "code"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.naicsCodeToDto(entity));
+        });
         return result;
     }
 }

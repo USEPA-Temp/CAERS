@@ -46,4 +46,9 @@ public class FacilityNAICSDto implements Serializable{
             this.primaryFlag = primaryFlag;
         }
         
+        public FacilityNAICSDto withId(Long id) {
+        	setId(id);
+        	return this;
+        }
+        
 }

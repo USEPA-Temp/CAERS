@@ -29,4 +29,11 @@ export class FacilitySite {
   releasePoints: ReleasePoint[];
   controls: Control[];
   contacts: FacilitySiteContact[];
+  tribalCode: BaseCodeLookup;
+  programSystemCode: BaseCodeLookup;
+  statusYear: number;
+  altSiteIdentifier: string;
+  facilityCategoryCode: BaseCodeLookup;
+  facilitySourceTypeCode: BaseCodeLookup;
+  description: string;
 }

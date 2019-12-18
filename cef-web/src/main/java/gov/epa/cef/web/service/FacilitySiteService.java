@@ -2,6 +2,7 @@ package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.client.frs.iptquery.model.ProgramFacility;
 
@@ -38,4 +39,23 @@ public interface FacilitySiteService {
      * @return
      */
     Optional<ProgramFacility> retrieveFromFrs(String facilityEisProgramId);
+    
+    /**
+     * Update facility information
+     * @param dto
+     * @return
+     */
+    FacilitySiteDto update(FacilitySiteDto dto);
+    
+    /**
+     * Create Facility NAICS 
+     * @param dto
+     */
+    FacilityNAICSDto createNaics(FacilityNAICSDto dto);
+    
+    /**
+     * Delete Facility NAICS by id
+     * @param facilityNaicsId
+     */
+    void deleteFacilityNaics(Long facilityNaicsId);
 }

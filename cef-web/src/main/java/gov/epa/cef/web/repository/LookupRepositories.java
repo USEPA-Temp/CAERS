@@ -6,96 +6,102 @@ import org.springframework.stereotype.Service;
 @Service
 public class LookupRepositories {
 
-    @Autowired
-    private CalculationMaterialCodeRepository materialCodeRepo;
+	@Autowired
+	private CalculationMaterialCodeRepository materialCodeRepo;
 
-    @Autowired
-    private CalculationMethodCodeRepository methodCodeRepo;
-    
-    @Autowired
-    private UnitTypeCodeRepository UnitTypeCodeRepo;
+	@Autowired
+	private CalculationMethodCodeRepository methodCodeRepo;
 
-    @Autowired
-    private CalculationParameterTypeCodeRepository paramTypeCodeRepo;
+	@Autowired
+	private UnitTypeCodeRepository UnitTypeCodeRepo;
 
-    @Autowired
-    private OperatingStatusCodeRepository operatingStatusRepo;
+	@Autowired
+	private CalculationParameterTypeCodeRepository paramTypeCodeRepo;
 
-    @Autowired
-    private PollutantRepository pollutantRepo;
+	@Autowired
+	private OperatingStatusCodeRepository operatingStatusRepo;
 
-    @Autowired
-    private ReportingPeriodCodeRepository periodCodeRepo;
+	@Autowired
+	private PollutantRepository pollutantRepo;
 
-    @Autowired
-    private UnitMeasureCodeRepository uomRepo;
-    
-    @Autowired
-    private ContactTypeCodeRepository contactTypeRepo;
-    
-    @Autowired
-    private FipsStateCodeRepository stateCodeRepo;
-    
-    @Autowired
-    private ReleasePointTypeCodeRepository releasePtCodeRepo;
-    
-    @Autowired
-    private ProgramSystemCodeRepository programSystemCodeRepo;
-    
-    @Autowired
-    private ControlMeasureCodeRepository controlMeasureCodeRepo;
-    
+	@Autowired
+	private ReportingPeriodCodeRepository periodCodeRepo;
 
-    public CalculationMaterialCodeRepository materialCodeRepo() {
-        return materialCodeRepo;
-    }
+	@Autowired
+	private UnitMeasureCodeRepository uomRepo;
 
-    public CalculationMethodCodeRepository methodCodeRepo() {
-        return methodCodeRepo;
-    }
+	@Autowired
+	private ContactTypeCodeRepository contactTypeRepo;
 
-    public CalculationParameterTypeCodeRepository paramTypeCodeRepo() {
-        return paramTypeCodeRepo;
-    }
+	@Autowired
+	private FipsStateCodeRepository stateCodeRepo;
 
-    public OperatingStatusCodeRepository operatingStatusRepo() {
-        return operatingStatusRepo;
-    }
+	@Autowired
+	private ReleasePointTypeCodeRepository releasePtCodeRepo;
 
-    public PollutantRepository pollutantRepo() {
-        return pollutantRepo;
-    }
+	@Autowired
+	private ProgramSystemCodeRepository programSystemCodeRepo;
 
-    public ReportingPeriodCodeRepository periodCodeRepo() {
-        return periodCodeRepo;
-    }
+	@Autowired
+	private ControlMeasureCodeRepository controlMeasureCodeRepo;
 
-    public UnitMeasureCodeRepository uomRepo() {
-        return uomRepo;
-    }
-    
-    public ContactTypeCodeRepository contactTypeRepo() {
-        return contactTypeRepo;
-    }
-    
-    public FipsStateCodeRepository stateCodeRepo() {
-        return stateCodeRepo;
-    }
-    
-    public UnitTypeCodeRepository UnitTypeCodeRepo() {
-        return UnitTypeCodeRepo;
-    }
+	@Autowired
+	private TribalCodeRepository tribalCodeRepo;
+
+	public CalculationMaterialCodeRepository materialCodeRepo() {
+		return materialCodeRepo;
+	}
+
+	public CalculationMethodCodeRepository methodCodeRepo() {
+		return methodCodeRepo;
+	}
+
+	public CalculationParameterTypeCodeRepository paramTypeCodeRepo() {
+		return paramTypeCodeRepo;
+	}
+
+	public OperatingStatusCodeRepository operatingStatusRepo() {
+		return operatingStatusRepo;
+	}
+
+	public PollutantRepository pollutantRepo() {
+		return pollutantRepo;
+	}
+
+	public ReportingPeriodCodeRepository periodCodeRepo() {
+		return periodCodeRepo;
+	}
+
+	public UnitMeasureCodeRepository uomRepo() {
+		return uomRepo;
+	}
+
+	public ContactTypeCodeRepository contactTypeRepo() {
+		return contactTypeRepo;
+	}
+
+	public FipsStateCodeRepository stateCodeRepo() {
+		return stateCodeRepo;
+	}
+
+	public UnitTypeCodeRepository UnitTypeCodeRepo() {
+		return UnitTypeCodeRepo;
+	}
 
 	public ReleasePointTypeCodeRepository releasePtCodeRepo() {
-        return releasePtCodeRepo;
-    }
-	
+		return releasePtCodeRepo;
+	}
+
 	public ProgramSystemCodeRepository programSystemCodeRepo() {
-        return programSystemCodeRepo;
-    }
-	
+		return programSystemCodeRepo;
+	}
+
 	public ControlMeasureCodeRepository controlMeasureCodeRepo() {
-        return controlMeasureCodeRepo;
-    }
+		return controlMeasureCodeRepo;
+	}
+
+	public TribalCodeRepository tribalCodeRepo() {
+		return tribalCodeRepo;
+	}
 
 }
