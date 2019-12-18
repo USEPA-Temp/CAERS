@@ -1,9 +1,14 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.OperatingDetail;
+import gov.epa.cef.web.service.dto.EntityType;
+import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+
+import java.text.MessageFormat;
+
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
@@ -24,9 +29,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_AVG_HR_PER_DAY.value(),
-                    "operatingDetail.avgHoursPerDay.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.avgHoursPerDay.required",
+                    createValidationDetails(detail));
 
         } else if (detail.getAvgHoursPerDay() > 24 || detail.getAvgHoursPerDay() < .1) {
 
@@ -34,9 +38,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_AVG_HR_PER_DAY.value(),
-                    "operatingDetail.avgHoursPerDay.range", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.avgHoursPerDay.range",
+                    createValidationDetails(detail));
         }
 
         if (detail.getAvgDaysPerWeek() == null) {
@@ -45,9 +48,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_AVG_DAY_PER_WEEK.value(),
-                    "operatingDetail.avgDaysPerWeek.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.avgDaysPerWeek.required",
+                    createValidationDetails(detail));
 
         } else if (detail.getAvgDaysPerWeek() > 7 || detail.getAvgDaysPerWeek() < .1) {
 
@@ -55,9 +57,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_AVG_DAY_PER_WEEK.value(),
-                    "operatingDetail.avgDaysPerWeek.range", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.avgDaysPerWeek.range",
+                    createValidationDetails(detail));
         }
 
         if (detail.getActualHoursPerPeriod() == null) {
@@ -66,9 +67,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_ACT_HR_PER_PERIOD.value(),
-                    "operatingDetail.actualHoursPerPeriod.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.actualHoursPerPeriod.required",
+                    createValidationDetails(detail));
 
         } else if (detail.getActualHoursPerPeriod() > 8784 || detail.getActualHoursPerPeriod() < 1) {
 
@@ -76,9 +76,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_ACT_HR_PER_PERIOD.value(),
-                    "operatingDetail.actualHoursPerPeriod.range", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.actualHoursPerPeriod.range",
+                    createValidationDetails(detail));
         }
 
         
@@ -91,9 +90,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_PCT_SPRING.value(),
-                    "operatingDetail.percentSpring.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.percentSpring.required",
+                    createValidationDetails(detail));
 
         } else if (detail.getPercentSpring() != 0) {
 
@@ -107,9 +105,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_PCT_SUMMER.value(),
-                    "operatingDetail.percentSummer.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.percentSummer.required",
+                    createValidationDetails(detail));
 
         } else if (detail.getPercentSummer() != 0) {
 
@@ -123,9 +120,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_PCT_FALL.value(),
-                    "operatingDetail.percentFall.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.percentFall.required",
+                    createValidationDetails(detail));
 
         } else if (detail.getPercentFall() != 0) {
 
@@ -139,9 +135,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_PCT_WINTER.value(),
-                    "operatingDetail.percentWinter.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.percentWinter.required",
+                    createValidationDetails(detail));
 
         } else if (detail.getPercentWinter() != 0) {
 
@@ -155,9 +150,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             result = false;
             context.addFederalError(
                     ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
-                    "operatingDetail.avgWeeksPerPeriod.required", 
-                    getEmissionsUnitIdentifier(detail),
-                    getEmissionsProcessIdentifier(detail));
+                    "operatingDetail.avgWeeksPerPeriod.required",
+                    createValidationDetails(detail));
         } else {
 
             if (detail.getAvgWeeksPerPeriod() > 52 || detail.getAvgWeeksPerPeriod() < 1) {
@@ -166,9 +160,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 result = false;
                 context.addFederalError(
                         ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
-                        "operatingDetail.avgWeeksPerPeriod.range", 
-                        getEmissionsUnitIdentifier(detail),
-                        getEmissionsProcessIdentifier(detail));
+                        "operatingDetail.avgWeeksPerPeriod.range",
+                        createValidationDetails(detail));
             }
 
             if (detail.getAvgWeeksPerPeriod() > 39 && seasons < 4) {
@@ -177,9 +170,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 result = false;
                 context.addFederalError(
                         ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
-                        "operatingDetail.avgWeeksPerPeriod.seasons.4", 
-                        getEmissionsUnitIdentifier(detail),
-                        getEmissionsProcessIdentifier(detail));
+                        "operatingDetail.avgWeeksPerPeriod.seasons.4",
+                        createValidationDetails(detail));
 
             }  else if (detail.getAvgWeeksPerPeriod() > 26 && seasons < 3) {
 
@@ -187,9 +179,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 result = false;
                 context.addFederalError(
                         ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
-                        "operatingDetail.avgWeeksPerPeriod.seasons.3", 
-                        getEmissionsUnitIdentifier(detail),
-                        getEmissionsProcessIdentifier(detail));
+                        "operatingDetail.avgWeeksPerPeriod.seasons.3",
+                        createValidationDetails(detail));
 
             }  else if (detail.getAvgWeeksPerPeriod() > 13 && seasons < 2) {
 
@@ -197,9 +188,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 result = false;
                 context.addFederalError(
                         ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value(),
-                        "operatingDetail.avgWeeksPerPeriod.seasons.2", 
-                        getEmissionsUnitIdentifier(detail),
-                        getEmissionsProcessIdentifier(detail));
+                        "operatingDetail.avgWeeksPerPeriod.seasons.2",
+                        createValidationDetails(detail));
 
             }
 
@@ -209,9 +199,8 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
                 result = false;
                 context.addFederalError(
                         ValidationField.DETAIL_PCT.value(),
-                        "operatingDetail.percent.total", 
-                        getEmissionsUnitIdentifier(detail),
-                        getEmissionsProcessIdentifier(detail));
+                        "operatingDetail.percent.total",
+                        createValidationDetails(detail));
             }
         }
 
@@ -232,5 +221,22 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
             return source.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier();
         }
         return null;
+    }
+
+    private ValidationDetailDto createValidationDetails(OperatingDetail source) {
+
+        String description = MessageFormat.format("Emission Unit: {0}, Emission Process: {1}", 
+                getEmissionsUnitIdentifier(source),
+                getEmissionsProcessIdentifier(source));
+
+        ValidationDetailDto dto = new ValidationDetailDto(source.getId(), getEmissionsProcessIdentifier(source), EntityType.OPERATING_DETAIL, description);
+        if (source.getReportingPeriod() != null && source.getReportingPeriod().getEmissionsProcess() != null) {
+
+            dto.getParents().add(new ValidationDetailDto(
+                    source.getReportingPeriod().getEmissionsProcess().getId(), 
+                    source.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier(), 
+                    EntityType.EMISSIONS_PROCESS));
+        }
+        return dto;
     }
 }

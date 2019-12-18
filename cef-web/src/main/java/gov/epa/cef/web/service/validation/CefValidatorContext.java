@@ -4,6 +4,8 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Preconditions;
 
+import gov.epa.cef.web.service.dto.ValidationDetailDto;
+
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -41,29 +43,49 @@ public class CefValidatorContext extends ValidatorContext {
 
     public void addFederalError(String field, String code, Object... args) {
 
+        addFederalError(field, code, null, args);
+    }
+
+    public void addFederalError(String field, String code, ValidationDetailDto value, Object... args) {
+
         // use bundle to create error message and set error code to error
-        addError(createValidationError(field, code, args)
+        addError(createValidationError(field, code, value, args)
             .setErrorCode(ValidationResult.FEDERAL_ERROR_CODE));
     }
 
     public void addFederalWarning(String field, String code, Object... args) {
 
+        addFederalWarning(field, code, null, args);
+    }
+
+    public void addFederalWarning(String field, String code, ValidationDetailDto value, Object... args) {
+
         // use bundle to create warning message and set error code to warning
-        addError(createValidationError(field, code, args)
+        addError(createValidationError(field, code, value, args)
             .setErrorCode(ValidationResult.FEDERAL_WARNING_CODE));
     }
 
     public void addStateError(String field, String code, Object... args) {
 
+        addStateError(field, code, null, args);
+    }
+
+    public void addStateError(String field, String code, ValidationDetailDto value, Object... args) {
+
         // use bundle to create error message and set error code to error
-        addError(createValidationError(field, code, args)
+        addError(createValidationError(field, code, value, args)
             .setErrorCode(ValidationResult.STATE_ERROR_CODE));
     }
 
     public void addStateWarning(String field, String code, Object... args) {
 
+        addStateWarning(field, code, null, args);
+    }
+
+    public void addStateWarning(String field, String code, ValidationDetailDto value, Object... args) {
+
         // use bundle to create warning message and set error code to warning
-        addError(createValidationError(field, code, args)
+        addError(createValidationError(field, code, value, args)
             .setErrorCode(ValidationResult.STATE_WARNING_CODE));
     }
 
@@ -129,7 +151,7 @@ public class CefValidatorContext extends ValidatorContext {
         return this;
     }
 
-    private ValidationError createValidationError(String field, String code, Object... args) {
+    private ValidationError createValidationError(String field, String code, ValidationDetailDto value, Object... args) {
 
         if (this.resourceBundle.containsKey(code) == false) {
             String msg = String.format("Validation Message Key %s does not exist in %s.properties file.",
@@ -137,7 +159,7 @@ public class CefValidatorContext extends ValidatorContext {
             throw new IllegalArgumentException(msg);
         }
 
-        ValidationError result = new ValidationError().setField(field);
+        ValidationError result = new ValidationError().setField(field).setInvalidValue(value);
 
         String msg = this.resourceBundle.getString(code);
         if (args != null && args.length > 0) {
