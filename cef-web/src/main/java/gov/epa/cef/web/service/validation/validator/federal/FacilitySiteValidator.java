@@ -23,6 +23,9 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         // add more validators as needed
         validator.onEach(facilitySite.getEmissionsUnits(),
             registry.findOneByType(EmissionsUnitValidator.class));
+
+        validator.onEach(facilitySite.getReleasePoints(),
+                registry.findOneByType(ReleasePointValidator.class));
     }
 
     @Override

@@ -7,5 +7,6 @@ public enum EntityType {
     EMISSIONS_UNIT,
     FACILITY_SITE,
     OPERATING_DETAIL,
+    RELEASE_POINT,
     REPORTING_PERIOD;
 }
