@@ -19,6 +19,7 @@ import gov.epa.cef.web.service.validation.validator.federal.EmissionsReportValid
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsUnitValidator;
 import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
 import gov.epa.cef.web.service.validation.validator.federal.OperatingDetailValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ReleasePointValidator;
 import gov.epa.cef.web.service.validation.validator.federal.ReportingPeriodValidator;
 import gov.epa.cef.web.service.validation.validator.state.GeorgiaValidator;
 import org.junit.Before;
@@ -54,6 +55,9 @@ public class EmissionsReportValidationServiceImplTest {
 
         when(validationRegistry.findOneByType(FacilitySiteValidator.class))
             .thenReturn(new FacilitySiteValidator());
+
+        when(validationRegistry.findOneByType(ReleasePointValidator.class))
+            .thenReturn(new ReleasePointValidator());
 
         when(validationRegistry.findOneByType(EmissionsUnitValidator.class))
             .thenReturn(new EmissionsUnitValidator());
