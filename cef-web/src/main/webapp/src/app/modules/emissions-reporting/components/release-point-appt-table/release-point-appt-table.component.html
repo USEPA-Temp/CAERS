@@ -18,8 +18,8 @@
       <td>{{item.releasePointTypeCode.description}}</td>
       <td>{{item.percent}}%</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
         <td><a routerLink="." (click)="openEditModal(item)"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container> 
     </tr>
       <ng-container *ngIf="!readOnlyMode">

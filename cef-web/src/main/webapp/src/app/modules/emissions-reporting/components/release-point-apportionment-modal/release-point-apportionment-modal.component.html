@@ -1,24 +1,21 @@
 <form [formGroup]="releasePointApptForm" >
     <div class="modal-header">
         <h4 class="modal-title w-100"><strong>Release Point Apportionment</strong></h4>
-        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-            <span aria-hidden="true">&times;</span>
-        </button>
     </div>
 
     <div class="modal-body">
         <strong>Select a Release Point</strong>
         <br>
-        <select id="releasePointSelect" formControlName="selectedReleasePointAppt">
-            <option disabled selected value> -- select an option -- </option>
-            <option [selected]="rp.releasePointIdentifier === selectedReleasePoint.releasePointIdentifier" *ngFor="let rp of releasePoints" >{{rp.releasePointIdentifier}}</option>
+        <select id="releasePointSelect" class="form-control" formControlName="selectedReleasePointAppt">
+            <option disabled selected value></option>
+            <option [selected]="rp.releasePointIdentifier === selectedReleasePoint.releasePointIdentifier" *ngFor="let rp of releasePoints">{{rp.releasePointIdentifier}}</option>
         </select>
         <app-validation-message [control]="releasePointApptForm.get('selectedReleasePointAppt')"></app-validation-message>
         <br>
         <br>
         <strong>Enter the Emission Percentage</strong>
         <br>
-        <input formControlName="percent" id="percentInput">
+        <input type="text" maxlength="3" formControlName="percent" id="percentInput">
         <app-validation-message [control]="releasePointApptForm.get('percent')"></app-validation-message>
     </div>
 
