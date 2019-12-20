@@ -65,7 +65,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   }
 
   openReleasePointAptModal(){
-        const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, { size: 'sm', backdrop: 'static', scrollable: true });
+        const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, {backdrop: 'static', scrollable: true });
         modalRef.componentInstance.process = this.process;
         modalRef.componentInstance.releasePointApportionments = this.tableData;
         modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
@@ -82,7 +82,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   }
 
   openEditModal(selectedApportionment){
-      const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, { size: 'sm', backdrop: 'static', scrollable: true });
+      const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, {backdrop: 'static', scrollable: true });
       modalRef.componentInstance.process = this.process;
       modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
       modalRef.componentInstance.releasePointApportionments = this.tableData;
