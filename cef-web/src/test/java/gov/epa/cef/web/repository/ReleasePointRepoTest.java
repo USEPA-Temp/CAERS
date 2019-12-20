@@ -1,7 +1,8 @@
 package gov.epa.cef.web.repository;
 
-import static org.junit.Assert.assertEquals; 
+import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -186,6 +187,31 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
             "select * from release_point_appt where id = :id", params);
 
         assertEquals(1, releasePtAppts.size());
+    }
+    
+    /**
+     * Verify that update of a release point apportionment works
+     * @throws Exception
+     */
+    @Test
+    public void updateReleasePointApptTest() throws Exception {
+    	ReleasePointAppt releasePointAppt = this.rpApptRepo.findById(9999991L)
+    		.orElseThrow(() -> new IllegalStateException("Release point apportionment 9999991L does not exist."));
+    	
+    	assertEquals(Double.valueOf(33.0), releasePointAppt.getPercent());
+    	
+    	releasePointAppt.setPercent(44.0);
+    	
+    	rpApptRepo.save(releasePointAppt);
+    	
+    	//verify information was updated
+		SqlParameterSource params = new MapSqlParameterSource().addValue("id", releasePointAppt.getId());
+
+		List<Map<String, Object>> releasePtAppt = this.jdbcTemplate
+				.queryForList("select * from release_point_appt where id = :id", params);
+
+		assertEquals(1, releasePtAppt.size());
+		assertEquals(BigDecimal.valueOf(44.0), releasePtAppt.get(0).get("percent"));
     }
     
 private ReleasePointAppt newReleasePtAppt() {

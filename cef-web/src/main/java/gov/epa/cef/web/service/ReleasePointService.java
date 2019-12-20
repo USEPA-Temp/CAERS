@@ -53,5 +53,12 @@ public interface ReleasePointService {
      * @return
      */
 	ReleasePointApptDto createAppt(ReleasePointApptDto dto);
+	
+    /**
+     * Update an existing Release Point Apportionment by id
+     * @param dto
+     * @return
+     */
+    ReleasePointApptDto updateAppt(ReleasePointApptDto dto);
 
 }

@@ -51,4 +51,10 @@ export class ReleasePointService {
     const url = `${this.baseUrl}/appt/`;
     return this.http.post<ReleasePointApportionment>(url, releasePointAppt);
   }
+
+  /** Update release point apportionment */
+  updateAppt(releasePointAppt: ReleasePointApportionment): Observable<ReleasePointApportionment> {
+    const url = `${this.baseUrl}/appt/${releasePointAppt.id}`;
+    return this.http.put<ReleasePointApportionment>(url, releasePointAppt);
+  }
 }
