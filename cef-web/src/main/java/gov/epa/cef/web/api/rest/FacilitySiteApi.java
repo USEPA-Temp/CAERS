@@ -106,6 +106,23 @@ public class FacilitySiteApi {
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
+   /**
+    * Update a Facility NAICS
+    * @param facilityNaicsId
+    * @param dto
+    * @return
+    */
+   @PutMapping(value = "/naics/{facilityNaicsId}")
+   public ResponseEntity<FacilityNAICSDto> updateFacilityNAICS(
+   		@NotNull @PathVariable Long facilityNaicsId, @NotNull @RequestBody FacilityNAICSDto dto) {
+   	
+	   	this.securityService.facilityEnforcer().enforceEntity(facilityNaicsId, FacilityNAICSXrefRepository.class);
+	   	
+	   	FacilityNAICSDto result = facilityService.updateNaics(dto.withId(facilityNaicsId));
+	   	
+	   	return new ResponseEntity<>(result, HttpStatus.OK);
+   }
+    
     /**
      * Delete a Facility NAICS for a given ID
      * @param facilityNaicsId

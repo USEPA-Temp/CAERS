@@ -39,6 +39,12 @@ export class FacilitySiteService {
         return this.http.post<FacilityNaicsCode>(url, facilityNaics);
     }
 
+    /** Update facility NAICS */
+    updateFacilityNaics(facilityNaics: FacilityNaicsCode): Observable<FacilityNaicsCode> {
+        const url = `${this.baseUrl}/naics/${facilityNaics.id}`;
+        return this.http.put<FacilityNaicsCode>(url, facilityNaics);
+    }
+
     /** DELETE facility NAICS from the database */
     deleteFacilityNaics(facilityNaicsId: number): Observable<{}> {
         const url = `${this.baseUrl}/naics/${facilityNaicsId}`;

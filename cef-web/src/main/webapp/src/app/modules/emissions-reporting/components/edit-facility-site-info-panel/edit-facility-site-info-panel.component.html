@@ -57,7 +57,7 @@
             <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of fipsStateCode" [ngValue]="opt">{{opt?.uspsCode}}</option>
             </select>
-            <app-validation-message [control]="facilitySiteForm.get('stateCode')"></app-validation-message>
+            <app-validation-message [control]="facilitySiteForm.controls.stateCode"></app-validation-message>
         </div>
         <label for="postalCodeInput" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
         <div class="col-sm-2 col-lg-2">
@@ -85,7 +85,7 @@
             <select type="text" class="form-control" id="mailingStateCodeSelect" formControlName="mailingStateCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of fipsStateCode" [ngValue]="opt">{{opt?.uspsCode}}</option>
             </select>
-            <app-validation-message [control]="facilitySiteForm.get('mailingStateCode')"></app-validation-message>
+            <app-validation-message [control]="facilitySiteForm.controls.mailingStateCode"></app-validation-message>
         </div>
         <label for="mailingPostalCodeInput" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
         <div class="col-sm-6 col-lg-2">

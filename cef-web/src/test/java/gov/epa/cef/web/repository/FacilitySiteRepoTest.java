@@ -100,6 +100,32 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
     }
     
     /**
+     * Verify update of a facility NAICS
+     * @throws Exception
+     */
+    @Test
+    public void updateFacilityNaicTest() throws Exception {
+    	//update facility NAICS information
+    	FacilityNAICSXref updatefacilityNaic = naicsXrefRepo.findById(9999991L)
+					.orElseThrow(() -> new IllegalStateException("Facility NAICS 9999991L does not exist."));
+	
+			assertEquals(true, updatefacilityNaic.isPrimaryFlag());
+			
+			updatefacilityNaic.setPrimaryFlag(false);
+	
+			naicsXrefRepo.save(updatefacilityNaic);
+	
+			//verify information was updated
+			SqlParameterSource params = new MapSqlParameterSource().addValue("id", updatefacilityNaic.getId());
+	
+			List<Map<String, Object>> facilityNaic = this.jdbcTemplate
+					.queryForList("select * from facility_naics_xref where id = :id", params);
+	
+			assertEquals(1, facilityNaic.size());
+			assertEquals(false, facilityNaic.get(0).get("primary_flag"));
+    }
+    
+    /**
      * Verify deleting an facility NAICS
      * @throws Exception
      */

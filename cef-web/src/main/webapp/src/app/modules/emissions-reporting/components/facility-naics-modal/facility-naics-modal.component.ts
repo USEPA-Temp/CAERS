@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 export class FacilityNaicsModalComponent extends BaseSortableTable implements OnInit {
   @Input() facilitySiteId: number;
   @Input() facilityNaics: FacilityNaicsCode[];
+  updateFacilityNaics: FacilityNaicsCode;
   primaryFlag = false;
   check = true;
 
@@ -63,11 +64,10 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
         {positionClass: 'toast-top-right'});
       }
 
-      if (facilityNaics.primaryFlag && this.primaryFlag) {
-        this.check = false;
-        this.toastr.error('', "Facility must have only one primary NAICS code.",
-        {positionClass: 'toast-top-right'});
+      if (facilityNaics.primaryFlag && this.primaryFlag && this.check) {
+        this.updateFacilityNaics = facilityNaics;
       }
+
     });
 
     if (this.check) {
@@ -75,6 +75,15 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
       if (!this.isValid()) {
         this.naicsForm.markAsTouched();
       } else {
+        if (this.updateFacilityNaics) {
+
+          this.updateFacilityNaics.primaryFlag = false;
+          this.facilityService.updateFacilityNaics(this.updateFacilityNaics)
+          .subscribe(() => {
+
+          });
+        }
+
         const savedFacilityNaics = new FacilityNaicsCode();
 
         savedFacilityNaics.primaryFlag = this.primaryFlag;
