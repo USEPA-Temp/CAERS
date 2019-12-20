@@ -54,6 +54,13 @@ public interface FacilitySiteService {
     FacilityNAICSDto createNaics(FacilityNAICSDto dto);
     
     /**
+     * Update existing facility NAICS
+     * @param dto
+     * @return
+     */
+    FacilityNAICSDto updateNaics(FacilityNAICSDto dto);
+    
+    /**
      * Delete Facility NAICS by id
      * @param facilityNaicsId
      */

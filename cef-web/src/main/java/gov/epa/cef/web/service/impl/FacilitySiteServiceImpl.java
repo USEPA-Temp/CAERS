@@ -168,10 +168,24 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     public FacilityNAICSDto createNaics(FacilityNAICSDto dto) {
     	FacilityNAICSXref facilityNaics = facilityNaicsMapper.fromDto(dto);
     	
-    	FacilityNAICSDto results = facilityNaicsMapper.facilityNAICSXrefToFacilityNAICSDto(facilityNaicsXrefRepo.save(facilityNaics));
-			reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(results.getFacilitySiteId()), FacilityNAICSXrefRepository.class);
+    	FacilityNAICSDto result = facilityNaicsMapper.facilityNAICSXrefToFacilityNAICSDto(facilityNaicsXrefRepo.save(facilityNaics));
+			reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getFacilitySiteId()), FacilityNAICSXrefRepository.class);
     	
-    	return results;
+    	return result;
+    }
+    
+    /**
+     * Update existing Facility NAICS
+     */
+    public FacilityNAICSDto updateNaics(FacilityNAICSDto dto) {
+    	
+    	FacilityNAICSXref facilityNaics = facilityNaicsXrefRepo.findById(dto.getId()).orElse(null);
+    	facilityNaicsMapper.updateFromDto(dto, facilityNaics);
+    	
+    	FacilityNAICSDto result = facilityNaicsMapper.facilityNAICSXrefToFacilityNAICSDto(facilityNaicsXrefRepo.save(facilityNaics));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilityNAICSXrefRepository.class);
+    	
+    	return result;
     }
     
     /**

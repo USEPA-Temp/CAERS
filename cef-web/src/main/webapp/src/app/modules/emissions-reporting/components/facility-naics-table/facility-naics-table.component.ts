@@ -41,10 +41,13 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
         this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
       });
 
+    this.sortTable();
+  }
+
+  sortTable() {
     this.tableData.sort((a, b) => (a.description > b.description ? 1 : -1));
     this.tableData.sort((a, b) => a.primaryFlag && !b.primaryFlag ? -1 : !a.primaryFlag && b.primaryFlag ? 1 : 0);
   }
-
 
   // delete facility NAICS from the database
   deleteFacilityNaics(facilityNaicsId: number, facilitySiteId: number) {
@@ -56,6 +59,7 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
       this.facilityService.retrieve(facilitySiteId)
         .subscribe(facilityResponse => {
           this.tableData = facilityResponse.facilityNAICS;
+          this.sortTable();
         });
     });
   }
@@ -81,6 +85,7 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
           this.sharedService.updateReportStatusAndEmit(this.route);
 
           this.tableData = facilityResponse.facilityNAICS;
+          this.sortTable();
         });
 
     }, () => {

@@ -16,8 +16,6 @@ public interface FacilitySiteMapper {
 
     List<FacilitySiteDto> toDtoList(List<FacilitySite> facilitySites);
     
-    @Mapping(target="stateCode", qualifiedByName = "FipsStateCode")
-    @Mapping(target="mailingStateCode", qualifiedByName = "FipsStateCode")
     @Mapping(target="tribalCode", qualifiedByName = "TribalCode")
     @Mapping(target ="operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
     @Mapping(target = "facilityNAICS", ignore = true)
