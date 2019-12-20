@@ -36,7 +36,7 @@ Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
  * @return Emissions Report id
  */
 @Cacheable(value = CacheName.FacilityNAICSEmissionsReportIds)
-@Query("select r.id from FacilityNAICSXref fn join fn.facilitySite fs join fs.emissionsReport r where fn.id = :id")
+@Query("select er.id from FacilityNAICSXref fn join fn.facilitySite fs join fs.emissionsReport er where fn.id = :id")
 Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 
 }
