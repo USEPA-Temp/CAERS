@@ -2,8 +2,7 @@
     <div class="row pb-1">
         <label for="eisProgramIdInput" class="col-sm-6 col-md-2 col-form-label"><strong>Facility EIS ID:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="20" id="eisProgramIdInput" formControlName="eisProgramId">
-            <app-validation-message [control]="facilitySiteForm.get('eisProgramId')"></app-validation-message>
+            <input type="text" class="form-control" maxlength="20" id="eisProgramIdInput" formControlName="eisProgramId" [value]="facilitySiteForm.value.eisProgramId" readonly>
         </div>
 
         <label for="latitudeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Latitude:</strong></label>
