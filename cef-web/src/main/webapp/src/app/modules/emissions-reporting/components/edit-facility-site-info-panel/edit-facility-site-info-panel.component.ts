@@ -16,7 +16,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   @Input() facilitySite: FacilitySite;
 
   facilitySiteForm = this.fb.group({
-    eisProgramId: ['', Validators.required],
+    eisProgramId: [''],
     name: ['', [
       Validators.maxLength(80),
       Validators.required]],
