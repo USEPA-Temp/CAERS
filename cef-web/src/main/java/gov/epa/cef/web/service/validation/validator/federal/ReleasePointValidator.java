@@ -24,7 +24,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         CefValidatorContext context = getCefValidatorContext(validatorContext);
 
         // Exit Gas Temperature must be between 30 and 3500 degrees Fahrenheit.
-        if (releasePoint.getExitGasTemperature() < 30 || releasePoint.getExitGasTemperature() > 3500) {
+        if (releasePoint.getExitGasTemperature() != null && (releasePoint.getExitGasTemperature() < 30 || releasePoint.getExitGasTemperature() > 3500)) {
 
             result = false;
             context.addFederalError(
