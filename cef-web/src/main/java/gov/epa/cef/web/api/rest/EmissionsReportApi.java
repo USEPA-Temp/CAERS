@@ -1,6 +1,8 @@
 package gov.epa.cef.web.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -10,6 +12,7 @@ import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
+import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
@@ -46,6 +49,8 @@ public class EmissionsReportApi {
     private final EmissionsReportService emissionsReportService;
 
     private final EmissionsReportStatusService emissionsReportStatusService;
+    
+    private final ReportService reportService;
 
     private final EmissionsReportValidationService validationService;
 
@@ -57,12 +62,14 @@ public class EmissionsReportApi {
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
                        EmissionsReportStatusService emissionsReportStatusService,
+                       ReportService reportService,
                        EmissionsReportValidationService validationService,
                        BulkUploadService uploadService) {
 
         this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
         this.emissionsReportStatusService = emissionsReportStatusService;
+        this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
     }
@@ -109,6 +116,8 @@ public class EmissionsReportApi {
             }
         }
 
+        this.reportService.createReportHistory(result.getId(), ReportAction.CREATED);
+        
         return new ResponseEntity<>(result, status);
     }
 
@@ -125,6 +134,8 @@ public class EmissionsReportApi {
 
         List<EmissionsReportDto> result = emissionsReportStatusService.acceptEmissionsReports(reportIds);
 
+        this.reportService.createReportHistory(reportIds, ReportAction.ACCEPTED);
+        
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -141,6 +152,8 @@ public class EmissionsReportApi {
 
         List<EmissionsReportDto> result = emissionsReportStatusService.rejectEmissionsReports(reportIds);
 
+        this.reportService.createReportHistory(reportIds, ReportAction.REJECTED);
+        
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -241,6 +254,8 @@ public class EmissionsReportApi {
 
         String documentId = emissionsReportService.submitToCromerr(reportId, activityId);
 
+        this.reportService.createReportHistory(reportId, ReportAction.SUBMITTED);
+        
         return new ResponseEntity<>(documentId, HttpStatus.OK);
     }
 
@@ -257,6 +272,7 @@ public class EmissionsReportApi {
     // @RolesAllowed(value = {AppRole.ROLE_ADMIN})
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
         EmissionsReportDto savedReport = uploadService.saveBulkEmissionsReport(reportUpload);
+        this.reportService.createReportHistory(savedReport.getId(), ReportAction.CREATED);
         return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
     }
 

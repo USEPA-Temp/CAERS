@@ -8,5 +8,6 @@ export enum BaseReportUrl {
   REPORTING_PERIOD = 'period',
   CONTROL_DEVICE = 'control',
   REPORT_SUMMARY = 'summary',
-  VALIDATION = 'validation'
+  VALIDATION = 'validation',
+  REPORT_HISTORY = 'history'
 }

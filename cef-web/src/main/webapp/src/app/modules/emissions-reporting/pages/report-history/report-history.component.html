@@ -1,0 +1,35 @@
+<div *ngIf="facilitySite">
+    <div class="row">
+        <div class="col-sm-12" *ngIf="tableData">
+            <div class="card  mb-3">
+                <div class="card-header text-center">
+                    <strong>Report History</strong>
+                </div>
+                <div class="card-body">
+                    <div class="mh-100 overflow-auto">
+                        <table class="table table-sm table-striped table-bordered">
+                            <thead class="thead-cef-medium">
+                                <tr>
+                                    <th scope="col" sortable="actionDate" (sort)="onSort($event)">Date</th>
+                                    <th scope="col" sortable="userId" (sort)="onSort($event)">User ID</th>
+                                    <th scope="col" sortable="userFullName" (sort)="onSort($event)">User Name</th>
+                                    <th scope="col" sortable="reportAction" (sort)="onSort($event)">Action</th>
+                                    <th scope="col" sortable="comments" (sort)="onSort($event)">Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let report of tableData">
+                                    <td>{{ report.actionDate | date:'shortDate' }}</td>
+                                    <td>{{ report.userId }}</td>
+                                    <td>{{ report.userFullName }}</td>
+                                    <td>{{ report.reportAction | titlecase }}</td>
+                                    <td>{{ report.comments }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

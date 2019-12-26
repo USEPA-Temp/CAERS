@@ -2,6 +2,7 @@ package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ReportService;
+import gov.epa.cef.web.service.dto.ReportHistoryDto;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,5 +45,21 @@ public class ReportApi {
         List<ReportSummaryDto> reportSummary = reportService.findByReportYearAndFacilitySiteId(year, facilitySiteId);
 
         return new ResponseEntity<>(reportSummary, HttpStatus.OK);
+    }
+    
+    /***
+     * Return list of report history records for the chosen report
+     * @param reportId
+     * @return
+     */
+    @GetMapping(value = "/reportHistory/report/{reportId}/facilitySiteId/{facilitySiteId}")
+    public ResponseEntity<List<ReportHistoryDto>> retrieveReportHistory(
+    		@NotNull @PathVariable Long reportId, @NotNull @PathVariable Long facilitySiteId) {
+
+    		this.securityService.facilityEnforcer().enforceFacilitySite(facilitySiteId);
+
+    		List<ReportHistoryDto> reportHistory = reportService.findByEmissionsReportId(reportId);
+
+        return new ResponseEntity<>(reportHistory, HttpStatus.OK);
     }
 }
