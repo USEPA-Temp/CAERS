@@ -33,7 +33,7 @@ public class ReportHistory extends BaseAuditEntity {
 	private ReportAction reportAction;
 
 	@CreatedDate
-	@Column(name = "action_date", nullable = false, length = 29)
+	@Column(name = "action_date", nullable = false)
 	protected Date actionDate;
 
 	@Column(name = "user_id", nullable = false)
