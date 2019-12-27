@@ -51,6 +51,7 @@ import { CreateControlDeviceComponent } from './pages/create-control-device/crea
 import { EditFacilitySiteInfoPanelComponent } from './components/edit-facility-site-info-panel/edit-facility-site-info-panel.component';
 import { FacilityNaicsTableComponent } from './components/facility-naics-table/facility-naics-table.component';
 import { FacilityNaicsModalComponent } from './components/facility-naics-modal/facility-naics-modal.component';
+import { ReportHistoryComponent } from './pages/report-history/report-history.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { FacilityNaicsModalComponent } from './components/facility-naics-modal/f
     CreateControlDeviceComponent,
     EditFacilitySiteInfoPanelComponent,
     FacilityNaicsTableComponent,
-    FacilityNaicsModalComponent
+    FacilityNaicsModalComponent,
+    ReportHistoryComponent
   ],
   imports: [
     CommonModule,

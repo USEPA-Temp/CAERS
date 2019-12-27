@@ -52,6 +52,9 @@ public class EmissionsReport extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private List<FacilitySite> facilitySites = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
+    private List<ReportHistory> reportHistory = new ArrayList<>();
+    
     /***
      * Default constructor
      */
@@ -137,6 +140,18 @@ public class EmissionsReport extends BaseAuditEntity {
             this.facilitySites.addAll(facilitySites);
         }
     }
+    
+    public List<ReportHistory> getReportHistory() {
+      	return this.reportHistory;
+    }
+
+	  public void setReportHistory(List<ReportHistory> reportHistory) {
+	
+	      this.reportHistory.clear();
+	      if (reportHistory != null) {
+	          this.reportHistory.addAll(reportHistory);
+	      }
+	  }
 
     public String getCromerrActivityId() {
         return cromerrActivityId;

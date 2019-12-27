@@ -24,6 +24,19 @@
         </div>
 
         <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
+                [routerLinkActiveOptions]="{exact: true}" #historyRla="routerLinkActive">
+            <div class="nav-link pl-0 pr-0">
+                <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
+                        [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/history" 
+                        >
+                    <span>Report History
+                          <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !historyRla.isActive}" size="lg"></fa-icon>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
                 [routerLinkActiveOptions]="{exact: true}" #validationRla="routerLinkActive"
                 *ngIf="facilitySite.emissionsReport.status !== 'APPROVED'">
             <div class="nav-link pl-0 pr-0">

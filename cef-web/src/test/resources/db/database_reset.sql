@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS emissions_unit;
 DROP TABLE IF EXISTS facility_naics_xref;
 DROP TABLE IF EXISTS facility_site_contact;
 DROP TABLE IF EXISTS facility_site;
+DROP TABLE IF EXISTS report_history;
 DROP TABLE IF EXISTS emissions_report;
 
 --REFERENCE TABLES

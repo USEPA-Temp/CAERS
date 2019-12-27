@@ -1,6 +1,9 @@
 package gov.epa.cef.web.service;
 
 import java.util.List;
+
+import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.service.dto.ReportHistoryDto;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
 
 public interface ReportService {
@@ -12,5 +15,34 @@ public interface ReportService {
      * @return
      */
     List<ReportSummaryDto> findByReportYearAndFacilitySiteId(Short reportYear, Long facilitySiteId);
+    
+    /***
+     * Return list of report history records for the chosen report id
+     * @param reportId
+     * @return
+     */
+    List<ReportHistoryDto> findByEmissionsReportId(Long reportId);
+    
+    /**
+     * Create Report History record 
+     * @param userIds
+     * @param reportAction
+     * @param comments
+     */
+    void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments);
+    
+    /**
+     * Create Report History record 
+     * @param userIds
+     * @param reportAction
+     */
+    void createReportHistory(List<Long> reportIds, ReportAction reportAction);
+
+    /**
+     * Create Report History record 
+     * @param userId
+     * @param reportAction
+     */
+    void createReportHistory(Long reportId, ReportAction reportAction);
 
 }

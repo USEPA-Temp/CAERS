@@ -1,8 +1,13 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportSummary;
+import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportSummaryRepository;
+import gov.epa.cef.web.service.dto.ReportHistoryDto;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
+import gov.epa.cef.web.service.mapper.ReportHistoryMapper;
 import gov.epa.cef.web.service.mapper.ReportSummaryMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +28,16 @@ public class ReportServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ReportSummaryRepository reportSummaryRepo;
+    
+    @Mock
+    private ReportHistoryRepository reportHistoryRepo;
 
     @Mock
     private ReportSummaryMapper reportSummaryMapper;
+    
+    @Mock
+    private ReportHistoryMapper reportHistoryMapper;
+
 
     @InjectMocks
     private ReportServiceImpl reportServiceImpl;
@@ -35,6 +47,8 @@ public class ReportServiceImplTest extends BaseServiceTest {
         List<ReportSummary> emptyReportSummaryList = new ArrayList<ReportSummary>();
         List<ReportSummaryDto> fullReportSummaryDtoList = new ArrayList<ReportSummaryDto>();
         List<ReportSummary> fullReportSummaryList = new ArrayList<ReportSummary>();
+        List<ReportHistory> reportHistoryList = new ArrayList<ReportHistory>();
+        List<ReportHistoryDto> reportHistoryDtoList = new ArrayList<ReportHistoryDto>();
         when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2000"), 1L,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "pollutantName"))).thenReturn(emptyReportSummaryList);
         when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 2L,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "pollutantName"))).thenReturn(emptyReportSummaryList);
 
@@ -69,6 +83,21 @@ public class ReportServiceImplTest extends BaseServiceTest {
         }
         when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 1L,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "pollutantName"))).thenReturn(fullReportSummaryList);
         when(reportSummaryMapper.toDtoList(fullReportSummaryList)).thenReturn(fullReportSummaryDtoList);
+        
+        ReportHistory rh = new ReportHistory();
+        rh.setReportAction(ReportAction.CREATED);
+        rh.setUserFullName("Test Name");
+        rh.setUserId("testId");
+        reportHistoryList.add(rh);
+        
+        ReportHistoryDto rhDto = new ReportHistoryDto();
+        rhDto.setReportAction(rh.getReportAction().toString());
+        rhDto.setUserFullName(rh.getUserFullName());
+        rhDto.setUserId(rh.getUserId());
+        reportHistoryDtoList.add(rhDto);
+        
+        when(reportHistoryRepo.findByEmissionsReportIdOrderByActionDate(1L)).thenReturn(reportHistoryList);
+        when(reportHistoryMapper.toDtoList(reportHistoryList)).thenReturn(reportHistoryDtoList);
     }
 
     @Test
@@ -93,6 +122,23 @@ public class ReportServiceImplTest extends BaseServiceTest {
     public void findByReportYearAndFacilitySiteId_should_return_empty_when_facility_does_not_exist_for_year() {
         List<ReportSummaryDto> dtoList = reportServiceImpl.findByReportYearAndFacilitySiteId(new Short("2000"), 1L);
         ArrayList<ReportSummaryDto> emptyList = new ArrayList<ReportSummaryDto>();
+        assertEquals(emptyList, dtoList);
+    }
+    
+    @Test
+    public void findByReportId_should_return_history_when_report_exist() {
+        List<ReportHistoryDto> dtoList = reportServiceImpl.findByEmissionsReportId(1L);
+
+        ReportHistoryDto dto = dtoList.get(0);
+        assertEquals(ReportAction.CREATED.toString(), dto.getReportAction());
+        assertEquals("Test Name", dto.getUserFullName());
+        assertEquals("testId", dto.getUserId());
+    }
+    
+    @Test
+    public void findByReportId_should_return_empty_when_report_does_not_exist() {
+        List<ReportHistoryDto> dtoList = reportServiceImpl.findByEmissionsReportId(2L);
+        ArrayList<ReportHistoryDto> emptyList = new ArrayList<ReportHistoryDto>();
         assertEquals(emptyList, dtoList);
     }
 }

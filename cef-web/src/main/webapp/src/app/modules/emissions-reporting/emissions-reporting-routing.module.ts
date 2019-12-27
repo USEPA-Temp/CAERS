@@ -21,6 +21,7 @@ import { FacilitySiteResolverService } from 'src/app/core/services/facility-site
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EmissionDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emission-details/emission-details.component';
 import {EmissionsReportValidationComponent} from "./pages/emissions-report-validation/emissions-report-validation.component";
+import { ReportHistoryComponent } from './pages/report-history/report-history.component';
 
 const reportRoutes: Routes = [
   {
@@ -106,6 +107,10 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.REPORT_SUMMARY}`,
             component: ReportSummaryComponent,
             data: { title: 'Report Summary', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.REPORT_HISTORY}`,
+            component: ReportHistoryComponent,
+            data: { title: 'Report History', breadcrumb: '&year Emissions Report'}
           }, {
             path: `${BaseReportUrl.VALIDATION}`,
             component: EmissionsReportValidationComponent,
