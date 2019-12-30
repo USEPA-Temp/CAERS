@@ -7,11 +7,22 @@
         </div>
         <label for="releaseTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Type:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="releaseTypeCodeSelect" formControlName="typeCode" [compareWith]="formUtils.compareCode">
+            <select type="text" class="form-control" id="releaseTypeCodeSelect" formControlName="typeCode" (change)="releasePointType()" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of releasePointTypeCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('typeCode')"></app-validation-message>
         </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="description" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Description:</strong></label>
+        <div class="col-sm-6 col-md-6">
+            <textarea rows="1" class="form-control" style="height:100%;" id="description" formControlName="description" maxlength="200"></textarea>
+            <app-validation-message [control]="releasePointForm.get('description')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
         <label for="releaseStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Status:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="releaseStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
@@ -19,126 +30,193 @@
             </select>
             <app-validation-message [control]="releasePointForm.get('operatingStatusCode')"></app-validation-message>
         </div>
-    </div>
-
-    <div class="row pb-1">
-        <label for="description" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Description:</strong></label>
-        <div class="col-sm-6 col-md-6">
-            <textarea rows="1" class="form-control" style="height:100%;"  id="description" formControlName="description" maxlength="200"></textarea>
-            <app-validation-message [control]="releasePointForm.get('description')"></app-validation-message>
-        </div>
-        <label for="statusYear" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Year:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="statusYear" formControlName="statusYear" maxlength="4">
-            <app-validation-message [control]="releasePointForm.get('statusYear')"></app-validation-message>
-        </div>
-    </div>
-
-    <div class="row pb-1">
-        <label for="stackHeight" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height Measure:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="stackHeight" formControlName="stackHeight" maxlength="9">
-            <app-validation-message [control]="releasePointForm.get('stackHeight')"></app-validation-message>
-        </div>
-        <label for="exitGasFlowRate" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Flow Rate Measure:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="exitGasFlowRate" formControlName="exitGasFlowRate" maxlength="17">
-            <app-validation-message [control]="releasePointForm.get('exitGasFlowRate')"></app-validation-message>
-        </div>
-        <label for="fugitiveLine1Latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 1 Lat:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="fugitiveLine1Latitude" formControlName="fugitiveLine1Latitude" maxlength="10">
-            <app-validation-message [control]="releasePointForm.get('fugitiveLine1Latitude')"></app-validation-message>
-        </div>
-    </div>
-
-    <div class="row pb-1">
-        <label for="stackHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height UoM:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="stackHeightUomCodeSelect" formControlName="stackHeightUomCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
-            </select>
-            <app-validation-message [control]="releasePointForm.get('stackHeightUomCode')"></app-validation-message>
-        </div>
-        <label for="exitGasFlowUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Flow Rate UoM:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="exitGasFlowUomCodeSelect" formControlName="exitGasFlowUomCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
-            </select>
-            <app-validation-message [control]="releasePointForm.get('exitGasFlowUomCode')"></app-validation-message>
-        </div>
-        <label for="fugitiveLine1Longitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 1 Long:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="fugitiveLine1Longitude" formControlName="fugitiveLine1Longitude" maxlength="11">
-            <app-validation-message [control]="releasePointForm.get('fugitiveLine1Longitude')"></app-validation-message>
-        </div>
-    </div>
-
-    <div class="row pb-1">
-        <label for="stackDiameter" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter Measure:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="stackDiameter" formControlName="stackDiameter" maxlength="7">
-            <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
-        </div>
-        <label for="exitGasTemperature" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Temperature Measure (F):</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="exitGasTemperature" formControlName="exitGasTemperature" maxlength="4">
-            <app-validation-message [control]="releasePointForm.get('exitGasTemperature')"></app-validation-message>
-        </div>
-        <label for="fugitiveLine2Latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 2 Lat:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="fugitiveLine2Latitude" formControlName="fugitiveLine2Latitude" maxlength="10">
-            <app-validation-message [control]="releasePointForm.get('fugitiveLine2Latitude')"></app-validation-message>
-        </div>
-    </div>
-
-    <div class="row pb-1">
-        <label for="stackDiameterUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter UoM:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="stackDiameterUomCodeSelect" formControlName="stackDiameterUomCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
-            </select>
-            <app-validation-message [control]="releasePointForm.get('stackDiameterUomCode')"></app-validation-message>
-        </div>
         <label for="latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Latitude Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="latitude" formControlName="latitude" maxlength="10">
             <app-validation-message [control]="releasePointForm.get('latitude')"></app-validation-message>
         </div>
-        <label for="fugitiveLine2Longitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 2 Long:</strong></label>
+        <label for="fenceLineDistance" class="col-sm-6 col-md-2 col-form-label"><strong>Fence Line Distance Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="fugitiveLine2Longitude" formControlName="fugitiveLine2Longitude" maxlength="11">
-            <app-validation-message [control]="releasePointForm.get('fugitiveLine2Longitude')"></app-validation-message>
+            <input type="text" class="form-control" id="fenceLineDistance" formControlName="fenceLineDistance" maxlength="9">
+            <app-validation-message [control]="releasePointForm.get('fenceLineDistance')"></app-validation-message>
         </div>
     </div>
 
     <div class="row pb-1">
-        <label for="exitGasVelocity" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity Measure:</strong></label>
+        <label for="statusYear" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Year:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="exitGasVelocity" formControlName="exitGasVelocity" maxlength="9">
-            <app-validation-message [control]="releasePointForm.get('exitGasVelocity')"></app-validation-message>
+            <input type="text" class="form-control" id="statusYear" formControlName="statusYear" maxlength="4">
+            <app-validation-message [control]="releasePointForm.get('statusYear')"></app-validation-message>
         </div>
         <label for="longitude" class="col-sm-6 col-md-2 col-form-label"><strong>Longitude Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="longitude" formControlName="longitude" maxlength="11">
             <app-validation-message [control]="releasePointForm.get('longitude')"></app-validation-message>
         </div>
-        <label for="programSystemCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Program System:</strong></label>
+        <label for="fenceLineUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fence Line Distance UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="programSystemCodeSelect" formControlName="programSystemCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of programSystemCode" [ngValue]="opt">{{opt.description}}</option>
+            <select type="text" class="form-control" id="fenceLineUomCodeSelect" formControlName="fenceLineUomCode" [compareWith]="formUtils.compareCode" readonly>
+                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
-            <app-validation-message [control]="releasePointForm.get('programSystemCode')"></app-validation-message>
+            <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>
+        </div>
+    </div>
+
+    <div *ngIf="!releasePointType()">
+        <div class="row pb-1">
+            <label for="stackHeight" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="stackHeight" formControlName="stackHeight" maxlength="9">
+                <app-validation-message [control]="releasePointForm.get('stackHeight')"></app-validation-message>
+            </div>
+            <label for="exitGasVelocity" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="exitGasVelocity" formControlName="exitGasVelocity" maxlength="9">
+                <app-validation-message [control]="releasePointForm.get('exitGasVelocity')"></app-validation-message>
+            </div>
+            <label for="exitGasTemperature" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Temperature Measure (F):</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="exitGasTemperature" formControlName="exitGasTemperature" maxlength="4">
+                <app-validation-message [control]="releasePointForm.get('exitGasTemperature')"></app-validation-message>
+            </div>
+        </div>
+
+        <div class="row pb-1">
+            <label for="stackHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height UoM:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <select type="text" class="form-control" id="stackHeightUomCodeSelect" formControlName="stackHeightUomCode" [compareWith]="formUtils.compareCode" readonly>
+                    <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                </select>
+                <app-validation-message [control]="releasePointForm.get('stackHeightUomCode')"></app-validation-message>
+            </div>
+            <label for="exitGasVelocityUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity UoM:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <select type="text" class="form-control" formControlName="exitGasVelocityUomCode" [compareWith]="formUtils.compareCode" readonly>
+                    <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                </select>
+                <app-validation-message [control]="releasePointForm.get('exitGasVelocityUomCode')"></app-validation-message>
+            </div>
+        </div>
+
+        <div class="row pb-1">
+            <label for="stackDiameter" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="stackDiameter" formControlName="stackDiameter" maxlength="7">
+                <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
+                <div class="validation-message" *ngIf="releasePointForm.getError('stackDiameter')">
+                    Stack diameter must be less than stack height.
+                </div>
+            </div>
+            <label for="exitGasFlowRate" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Flow Rate Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="exitGasFlowRate" formControlName="exitGasFlowRate" maxlength="17">
+                <app-validation-message [control]="releasePointForm.get('exitGasFlowRate')"></app-validation-message>
+                <div class="validation-message" *ngIf="releasePointForm.getError('exitGasFlowRate')">
+                    Exit gas flow rate must be within 5% of calculated exit gas flow rate.
+                </div>
+            </div>
+        </div>
+
+        <div class="row pb-1">
+            <label for="stackDiameterUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter UoM:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <select type="text" class="form-control" id="stackDiameterUomCodeSelect" formControlName="stackDiameterUomCode" [compareWith]="formUtils.compareCode" readonly>
+                    <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                </select>
+                <app-validation-message [control]="releasePointForm.get('stackDiameterUomCode')"></app-validation-message>
+            </div>
+            <label for="exitGasFlowUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Flow Rate UoM:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <select type="text" class="form-control" id="exitGasFlowUomCodeSelect" formControlName="exitGasFlowUomCode" [compareWith]="formUtils.compareCode" readonly>
+                    <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                </select>
+                <app-validation-message [control]="releasePointForm.get('exitGasFlowUomCode')"></app-validation-message>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="releasePointType()">
+        <div class="row pb-1">
+            <label for="fugitiveLine1Latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 1 Lat:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveLine1Latitude" formControlName="fugitiveLine1Latitude" maxlength="10">
+                <app-validation-message [control]="releasePointForm.get('fugitiveLine1Latitude')"></app-validation-message>
+            </div>
+            <label for="fugitiveHeight" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Height Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveHeight" formControlName="fugitiveHeight" maxlength="9">
+                <app-validation-message [control]="releasePointForm.get('fugitiveHeight')"></app-validation-message>
+            </div>
+            <label for="fugitiveLength" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Length Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveLength" formControlName="fugitiveLength" maxlength="9">
+                <app-validation-message [control]="releasePointForm.get('fugitiveLength')"></app-validation-message>
+            </div>
+        </div>
+
+        <div class="row pb-1">
+            <label for="fugitiveLine1Longitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 1 Long:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveLine1Longitude" formControlName="fugitiveLine1Longitude" maxlength="11">
+                <app-validation-message [control]="releasePointForm.get('fugitiveLine1Longitude')"></app-validation-message>
+            </div>
+            <label for="fugitiveHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Height UoM:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <select type="text" class="form-control" id="fugitiveHeightUomCodeSelect" formControlName="fugitiveHeightUomCode" [compareWith]="formUtils.compareCode" readonly>
+                    <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                </select>
+                <app-validation-message [control]="releasePointForm.get('fugitiveHeightUomCode')"></app-validation-message>
+            </div>
+            <label for="fugitiveLengthUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Length UoM:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <select type="text" class="form-control" id="fugitiveLengthUomCodeSelect" formControlName="fugitiveLengthUomCode" [compareWith]="formUtils.compareCode" readonly>
+                    <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                </select>
+                <app-validation-message [control]="releasePointForm.get('fugitiveLengthUomCode')"></app-validation-message>
+            </div>
+        </div>
+
+        <div class="row pb-1">
+            <label for="fugitiveLine2Latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 2 Lat:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveLine2Latitude" formControlName="fugitiveLine2Latitude" maxlength="10">
+                <app-validation-message [control]="releasePointForm.get('fugitiveLine2Latitude')"></app-validation-message>
+            </div>
+            <label for="fugitiveWidth" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveWidth" formControlName="fugitiveWidth" maxlength="9">
+                <app-validation-message [control]="releasePointForm.get('fugitiveWidth')"></app-validation-message>
+            </div>
+            <label for="fugitiveAngle" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width Measure (degrees azimuth):</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveAngle" formControlName="fugitiveAngle" maxlength="3">
+                <app-validation-message [control]="releasePointForm.get('fugitiveAngle')"></app-validation-message>
+            </div>
+        </div>
+
+        <div class="row pb-1">
+            <label for="fugitiveLine2Longitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 2 Long:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="fugitiveLine2Longitude" formControlName="fugitiveLine2Longitude" maxlength="11">
+                <app-validation-message [control]="releasePointForm.get('fugitiveLine2Longitude')"></app-validation-message>
+            </div>
+            <label for="fugitiveWidthUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width UoM:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <select type="text" class="form-control" id="fugitiveWidthUomCodeSelect" formControlName="fugitiveWidthUomCode" [compareWith]="formUtils.compareCode" readonly>
+                    <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+                </select>
+                <app-validation-message [control]="releasePointForm.get('fugitiveWidthUomCode')"></app-validation-message>
+            </div>
         </div>
     </div>
 
     <div class="row pb-3">
-        <label for="exitGasVelocityUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity UoM:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="exitGasVelocityUomCodeSelect" formControlName="exitGasVelocityUomCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+        <label for="programSystemCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Program System:</strong></label>
+        <div class="col-sm-6 col-md-10">
+            <select type="text" class="form-control" id="programSystemCodeSelect" formControlName="programSystemCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of programSystemCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
-            <app-validation-message [control]="releasePointForm.get('exitGasVelocityUomCode')"></app-validation-message>
+            <app-validation-message [control]="releasePointForm.get('programSystemCode')"></app-validation-message>
         </div>
     </div>
 
@@ -149,4 +227,4 @@
             <app-validation-message [control]="releasePointForm.get('comments')"></app-validation-message>
         </div>
     </div>
-</form>    
+</form>

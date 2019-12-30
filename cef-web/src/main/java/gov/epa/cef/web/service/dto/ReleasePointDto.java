@@ -30,6 +30,15 @@ public class ReleasePointDto implements Serializable {
     private Double latitude;
     private Double longitude;
     private String comments;
+    private Double fenceLineDistance;
+    private CodeLookupDto fenceLineUomCode;
+    private Double fugitiveHeight;
+    private CodeLookupDto fugitiveHeightUomCode;
+    private Double fugitiveWidth;
+    private CodeLookupDto fugitiveWidthUomCode;
+    private Double fugitiveLength;
+    private CodeLookupDto fugitiveLengthUomCode;
+    private Short fugitiveAngle;
 
     public Long getId() {
         return id;
@@ -223,7 +232,79 @@ public class ReleasePointDto implements Serializable {
         this.comments = comments;
     }
     
-    public ReleasePointDto withId(Long id) {
+    public Double getFenceLineDistance() {
+			return fenceLineDistance;
+		}
+
+		public void setFenceLineDistance(Double fenceLineDistance) {
+			this.fenceLineDistance = fenceLineDistance;
+		}
+
+		public CodeLookupDto getFenceLineUomCode() {
+			return fenceLineUomCode;
+		}
+
+		public void setFenceLineUomCode(CodeLookupDto fenceLineUomCode) {
+			this.fenceLineUomCode = fenceLineUomCode;
+		}
+
+		public Double getFugitiveHeight() {
+			return fugitiveHeight;
+		}
+
+		public void setFugitiveHeight(Double fugitiveHeight) {
+			this.fugitiveHeight = fugitiveHeight;
+		}
+
+		public CodeLookupDto getFugitiveHeightUomCode() {
+			return fugitiveHeightUomCode;
+		}
+
+		public void setFugitiveHeightUomCode(CodeLookupDto fugitiveHeightUomCode) {
+			this.fugitiveHeightUomCode = fugitiveHeightUomCode;
+		}
+
+		public Double getFugitiveWidth() {
+			return fugitiveWidth;
+		}
+
+		public void setFugitiveWidth(Double fugitiveWidth) {
+			this.fugitiveWidth = fugitiveWidth;
+		}
+
+		public CodeLookupDto getFugitiveWidthUomCode() {
+			return fugitiveWidthUomCode;
+		}
+
+		public void setFugitiveWidthUomCode(CodeLookupDto fugitiveWidthUomCode) {
+			this.fugitiveWidthUomCode = fugitiveWidthUomCode;
+		}
+
+		public Double getFugitiveLength() {
+			return fugitiveLength;
+		}
+
+		public void setFugitiveLength(Double fugitiveLength) {
+			this.fugitiveLength = fugitiveLength;
+		}
+
+		public CodeLookupDto getFugitiveLengthUomCode() {
+			return fugitiveLengthUomCode;
+		}
+
+		public void setFugitiveLengthUomCode(CodeLookupDto fugitiveLengthUomCode) {
+			this.fugitiveLengthUomCode = fugitiveLengthUomCode;
+		}
+
+		public Short getFugitiveAngle() {
+			return fugitiveAngle;
+		}
+
+		public void setFugitiveAngle(Short fugitiveAngle) {
+			this.fugitiveAngle = fugitiveAngle;
+		}
+
+		public ReleasePointDto withId(Long id) {
         setId(id);
         return this;
     }

@@ -45,7 +45,9 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(60)]],
     stateCode: [null, Validators.required],
-    postalCode: ['', Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')],
+    postalCode: ['', [
+      Validators.required,
+      Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')]],
     mailingStreetAddress: [''],
     mailingCity: [''],
     mailingStateCode: [null],
