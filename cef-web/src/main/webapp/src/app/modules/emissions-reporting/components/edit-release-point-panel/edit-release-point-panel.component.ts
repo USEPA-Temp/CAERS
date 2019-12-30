@@ -23,8 +23,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     ]],
     typeCode: [null, Validators.required],
     description: ['', [
-      Validators.required,
-      Validators.maxLength(200)
+      Validators.maxLength(200),
     ]],
     operatingStatusCode: [null, Validators.required],
     statusYear: ['', [
@@ -48,73 +47,88 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     fenceLineDistance: ['', [
       Validators.min(1),
       Validators.max(99999),
-      Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
+      wholeNumberValidator(),
     ]],
     fenceLineUomCode: [{ value: null }],
     comments: ['', Validators.maxLength(2000)],
-    programSystemCode: [null],
+    programSystemCode: [null, Validators.required],
 
-    fugitiveHeight: ['',
-      Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
-    ],
+    fugitiveHeight: ['', [
+      wholeNumberValidator(),
+      Validators.min(0),
+      Validators.max(500),
+    ]],
     fugitiveHeightUomCode: [{ value: null }],
-    fugitiveWidth: ['',
-      Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
-    ],
+    fugitiveWidth: ['', [
+      wholeNumberValidator(),
+      Validators.min(1),
+      Validators.max(10000),
+    ]],
     fugitiveWidthUomCode: [{ value: null }],
-    fugitiveLength: ['',
-      Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
-    ],
+    fugitiveLength: ['', [
+      wholeNumberValidator(),
+      Validators.min(1),
+      Validators.max(10000),
+    ]],
     fugitiveLengthUomCode: [{ value: null }],
     fugitiveAngle: ['', [
-      Validators.max(360),
+      Validators.max(179),
       Validators.min(0),
     ]],
     fugitiveLine1Latitude: ['', [
+      // Validators.required,
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-90),
       Validators.max(90),
     ]],
     fugitiveLine1Longitude: ['', [
+      // Validators.required,
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-180),
       Validators.max(180),
     ]],
     fugitiveLine2Latitude: ['', [
+      // Validators.required,
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-90),
       Validators.max(90),
     ]],
     fugitiveLine2Longitude: ['', [
+      // Validators.required,
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-180),
       Validators.max(180),
     ]],
 
     stackHeight: ['', [
+      // Validators.required,
       Validators.max(1300),
       Validators.min(1),
       Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
     ]],
     stackHeightUomCode: [{ value: null }],
     stackDiameter: ['', [
+      // Validators.required,
       Validators.max(100),
       Validators.min(0.1),
       Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
     ]],
     stackDiameterUomCode: [{ value: null }],
     exitGasVelocity: ['', [
+      // Validators.required,
       Validators.max(600),
       Validators.min(0.1),
       Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
     ]],
     exitGasVelocityUomCode: [{ value: null }],
     exitGasTemperature: ['', [
+      // Validators.required,
       wholeNumberValidator(),
       Validators.min(30),
       Validators.max(3500),
     ]],
     exitGasFlowRate: ['', [
+      // Validators.required,
       Validators.max(200000),
       Validators.min(0.1),
       Validators.pattern('^[0-9]{1,8}([\.][0-9]{1,8})?$'),
@@ -154,6 +168,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.uomValues = result;
     });
 
+    // set default UoM
     this.releasePointForm.controls.fenceLineUomCode.setValue({ code: 'FT' });
     this.releasePointForm.controls.fugitiveLengthUomCode.setValue({ code: 'FT' });
     this.releasePointForm.controls.fugitiveWidthUomCode.setValue({ code: 'FT' });
@@ -171,9 +186,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.releasePointForm.reset(this.releasePoint);
   }
 
+  // reset form fields based on release point type
   releasePointType() {
     if (this.releasePointForm.controls.typeCode.value !== null) {
       const releaseTypeControl = this.releasePointForm.get('typeCode');
+      this.rpTypeRequiredFields();
+
       if (releaseTypeControl.value.description === 'Fugitive') {
         this.releasePointForm.controls.exitGasVelocity.reset();
         this.releasePointForm.controls.exitGasFlowRate.reset();
@@ -194,8 +212,42 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     return false;
   }
 
+  // set form field required based on release point type
+  rpTypeRequiredFields() {
+    const releaseTypeControl = this.releasePointForm.get('typeCode');
+    const exitGasTemperature = this.releasePointForm.get('exitGasTemperature');
+    const stackHeight = this.releasePointForm.get('stackHeight');
+    const stackDiameter = this.releasePointForm.get('stackDiameter');
+    const exitGasFlowRate = this.releasePointForm.get('exitGasFlowRate');
+    const exitGasVelocity = this.releasePointForm.get('exitGasVelocity');
+    const fugitiveLine1Latitude = this.releasePointForm.get('fugitiveLine1Latitude');
+    const fugitiveLine2Latitude = this.releasePointForm.get('fugitiveLine2Latitude');
+    const fugitiveLine1Longitude = this.releasePointForm.get('fugitiveLine1Longitude');
+    const fugitiveLine2Longitude = this.releasePointForm.get('fugitiveLine2Longitude');
 
-  // Custom Validators
+    if (releaseTypeControl.value.description !== 'Fugitive') {
+      stackHeight.setValidators([Validators.required]);
+      stackDiameter.setValidators([Validators.required]);
+      exitGasTemperature.setValidators([Validators.required]);
+      exitGasFlowRate.setValidators([Validators.required]);
+      exitGasVelocity.setValidators([Validators.required]);
+      fugitiveLine1Latitude.setValidators(null);
+      fugitiveLine2Latitude.setValidators(null);
+      fugitiveLine1Longitude.setValidators(null);
+      fugitiveLine2Longitude.setValidators(null);
+    } else {
+      fugitiveLine1Latitude.setValidators([Validators.required]);
+      fugitiveLine2Latitude.setValidators([Validators.required]);
+      fugitiveLine1Longitude.setValidators([Validators.required]);
+      fugitiveLine2Longitude.setValidators([Validators.required]);
+      stackHeight.setValidators(null);
+      stackDiameter.setValidators(null);
+      exitGasTemperature.setValidators(null);
+      exitGasFlowRate.setValidators(null);
+      exitGasVelocity.setValidators(null);
+    }
+  }
+
   // Stack diameter must be less than stack height
   stackDiameterCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {

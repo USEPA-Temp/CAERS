@@ -1,24 +1,24 @@
 -- Add fence line distance and fugitive fields to release_point table
 ALTER TABLE release_point
-    ADD COLUMN fence_line_distance numeric(8,3);
+    ADD COLUMN fence_line_distance numeric(6,0);
 	
 ALTER TABLE release_point
 	ADD COLUMN fence_line_distance_uom_code character varying(20) COLLATE pg_catalog."default";
 	
 ALTER TABLE release_point
-    ADD COLUMN fugitive_height numeric(8,3);
+    ADD COLUMN fugitive_height numeric(3,0);
 	
 ALTER TABLE release_point
 	ADD COLUMN fugitive_height_uom_code character varying(20) COLLATE pg_catalog."default";
 	
 ALTER TABLE release_point
-    ADD COLUMN fugitive_width numeric(8,3);
+    ADD COLUMN fugitive_width numeric(6,0);
     
 ALTER TABLE release_point
 	ADD COLUMN fugitive_width_uom_code character varying(20) COLLATE pg_catalog."default";
 	
 ALTER TABLE release_point
-    ADD COLUMN fugitive_length numeric(8,3);
+    ADD COLUMN fugitive_length numeric(6,0);
     
 ALTER TABLE release_point
 	ADD COLUMN fugitive_length_uom_code character varying(20) COLLATE pg_catalog."default";

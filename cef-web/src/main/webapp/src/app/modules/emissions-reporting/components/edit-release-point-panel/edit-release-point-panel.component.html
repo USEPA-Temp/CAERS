@@ -37,7 +37,7 @@
         </div>
         <label for="fenceLineDistance" class="col-sm-6 col-md-2 col-form-label"><strong>Fence Line Distance Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="fenceLineDistance" formControlName="fenceLineDistance" maxlength="9">
+            <input type="text" class="form-control" id="fenceLineDistance" formControlName="fenceLineDistance" maxlength="6">
             <app-validation-message [control]="releasePointForm.get('fenceLineDistance')"></app-validation-message>
         </div>
     </div>
@@ -144,12 +144,12 @@
             </div>
             <label for="fugitiveHeight" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Height Measure:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="fugitiveHeight" formControlName="fugitiveHeight" maxlength="9">
+                <input type="text" class="form-control" id="fugitiveHeight" formControlName="fugitiveHeight" maxlength="3">
                 <app-validation-message [control]="releasePointForm.get('fugitiveHeight')"></app-validation-message>
             </div>
             <label for="fugitiveLength" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Length Measure:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="fugitiveLength" formControlName="fugitiveLength" maxlength="9">
+                <input type="text" class="form-control" id="fugitiveLength" formControlName="fugitiveLength" maxlength="6">
                 <app-validation-message [control]="releasePointForm.get('fugitiveLength')"></app-validation-message>
             </div>
         </div>
@@ -184,7 +184,7 @@
             </div>
             <label for="fugitiveWidth" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width Measure:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="fugitiveWidth" formControlName="fugitiveWidth" maxlength="9">
+                <input type="text" class="form-control" id="fugitiveWidth" formControlName="fugitiveWidth" maxlength="6">
                 <app-validation-message [control]="releasePointForm.get('fugitiveWidth')"></app-validation-message>
             </div>
             <label for="fugitiveAngle" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width Measure (degrees azimuth):</strong></label>

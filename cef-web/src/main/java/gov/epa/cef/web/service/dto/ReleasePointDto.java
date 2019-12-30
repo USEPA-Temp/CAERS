@@ -30,13 +30,13 @@ public class ReleasePointDto implements Serializable {
     private Double latitude;
     private Double longitude;
     private String comments;
-    private Double fenceLineDistance;
+    private Short fenceLineDistance;
     private CodeLookupDto fenceLineUomCode;
-    private Double fugitiveHeight;
+    private Short fugitiveHeight;
     private CodeLookupDto fugitiveHeightUomCode;
-    private Double fugitiveWidth;
+    private Short fugitiveWidth;
     private CodeLookupDto fugitiveWidthUomCode;
-    private Double fugitiveLength;
+    private Short fugitiveLength;
     private CodeLookupDto fugitiveLengthUomCode;
     private Short fugitiveAngle;
 
@@ -232,11 +232,11 @@ public class ReleasePointDto implements Serializable {
         this.comments = comments;
     }
     
-    public Double getFenceLineDistance() {
+    public Short getFenceLineDistance() {
 			return fenceLineDistance;
 		}
 
-		public void setFenceLineDistance(Double fenceLineDistance) {
+		public void setFenceLineDistance(Short fenceLineDistance) {
 			this.fenceLineDistance = fenceLineDistance;
 		}
 
@@ -248,11 +248,11 @@ public class ReleasePointDto implements Serializable {
 			this.fenceLineUomCode = fenceLineUomCode;
 		}
 
-		public Double getFugitiveHeight() {
+		public Short getFugitiveHeight() {
 			return fugitiveHeight;
 		}
 
-		public void setFugitiveHeight(Double fugitiveHeight) {
+		public void setFugitiveHeight(Short fugitiveHeight) {
 			this.fugitiveHeight = fugitiveHeight;
 		}
 
@@ -264,11 +264,11 @@ public class ReleasePointDto implements Serializable {
 			this.fugitiveHeightUomCode = fugitiveHeightUomCode;
 		}
 
-		public Double getFugitiveWidth() {
+		public Short getFugitiveWidth() {
 			return fugitiveWidth;
 		}
 
-		public void setFugitiveWidth(Double fugitiveWidth) {
+		public void setFugitiveWidth(Short fugitiveWidth) {
 			this.fugitiveWidth = fugitiveWidth;
 		}
 
@@ -280,11 +280,11 @@ public class ReleasePointDto implements Serializable {
 			this.fugitiveWidthUomCode = fugitiveWidthUomCode;
 		}
 
-		public Double getFugitiveLength() {
+		public Short getFugitiveLength() {
 			return fugitiveLength;
 		}
 
-		public void setFugitiveLength(Double fugitiveLength) {
+		public void setFugitiveLength(Short fugitiveLength) {
 			this.fugitiveLength = fugitiveLength;
 		}
 
