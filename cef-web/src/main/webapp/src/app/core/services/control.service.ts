@@ -57,4 +57,10 @@ export class ControlService {
     return this.http.put<ControlPollutant>(url, controlPollutant);
   }
 
+    /** Delete Control Pollutant */
+  deletePollutant(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/pollutant/${id}`;
+    return this.http.delete<ControlPollutant>(url);
+  }
+
 }

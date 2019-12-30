@@ -156,4 +156,17 @@ public class ControlApi {
     		
     		return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Delete a Control Pollutant for given id
+     * @param controlId
+     * @return
+     */
+    @DeleteMapping(value = "/pollutant/{controlPollutantId}")
+    public void deleteControlPollutant(@NotNull @PathVariable Long controlPollutantId) {
+    	
+    	this.securityService.facilityEnforcer().enforceEntity(controlPollutantId, ControlPollutantRepository.class);
+    	
+    	controlService.deleteControlPollutant(controlPollutantId);
+    }
 }

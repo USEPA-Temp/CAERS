@@ -137,6 +137,15 @@ public class ControlServiceImpl implements ControlService {
     	return result;
     }
     
+    /**
+     * Delete a Control Pollutant for a given id
+     * @Param controlId
+     */
+    public void deleteControlPollutant(Long controlPollutantId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPollutantId), ControlPollutantRepository.class);
+    	pollutantRepo.deleteById(controlPollutantId);
+    }
+    
     /***
      * Create and populate the emissions report items for the control's path and parent paths.
      * @param control

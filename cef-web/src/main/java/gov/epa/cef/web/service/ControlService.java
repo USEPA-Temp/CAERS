@@ -63,4 +63,10 @@ public interface ControlService {
      * @return
      */
     ControlPollutantDto updateControlPollutant(ControlPollutantDto dto);
+    
+    /**
+     * Delete a Control Pollutant for a given id
+     * @param controlId
+     */
+    void deleteControlPollutant(Long controlPollutantId);
 }
