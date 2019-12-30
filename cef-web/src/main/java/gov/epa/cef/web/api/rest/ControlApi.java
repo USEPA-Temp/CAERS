@@ -150,7 +150,7 @@ public class ControlApi {
     public ResponseEntity<ControlPollutantDto> updateControlPollutant(
     		@NotNull @PathVariable Long controlPollutantId, @NotNull @RequestBody ControlPollutantDto dto) {
     	
-    		this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+        	this.securityService.facilityEnforcer().enforceEntity(controlPollutantId, ControlPollutantRepository.class);
     	
     		ControlPollutantDto result = controlService.updateControlPollutant(dto.withId(controlPollutantId));
     		

@@ -34,7 +34,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
         const modalRef = this.modalService.open(ControlPollutantModalComponent, {backdrop: 'static', scrollable: true });
         modalRef.componentInstance.controlId = this.controlId;
         modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
-
+        modalRef.componentInstance.controlPollutants = this.tableData;
         modalRef.result.then((result) => {
         this.controlService.retrieve(this.controlId)
         .subscribe(control => {
@@ -51,6 +51,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
     modalRef.componentInstance.controlId = this.controlId;
     modalRef.componentInstance.selectedControlPollutant = selectedPollutant;
+    modalRef.componentInstance.controlPollutants = this.tableData;
     modalRef.componentInstance.edit = true;
   }
 
