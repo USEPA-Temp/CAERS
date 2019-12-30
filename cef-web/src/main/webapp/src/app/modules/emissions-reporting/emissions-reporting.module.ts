@@ -48,6 +48,7 @@ import { CreateReleasePointComponent } from './pages/create-release-point/create
 import { ReleasePointApportionmentModalComponent } from './components/release-point-apportionment-modal/release-point-apportionment-modal.component';
 import { EditControlDeviceInfoPanelComponent } from './components/edit-control-device-info-panel/edit-control-device-info-panel.component';
 import { CreateControlDeviceComponent } from './pages/create-control-device/create-control-device.component';
+import { ControlPollutantModalComponent } from './components/control-pollutant-modal/control-pollutant-modal.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { CreateControlDeviceComponent } from './pages/create-control-device/crea
     CreateReleasePointComponent,
     ReleasePointApportionmentModalComponent,
     EditControlDeviceInfoPanelComponent,
-    CreateControlDeviceComponent
+    CreateControlDeviceComponent,
+    ControlPollutantModalComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +105,8 @@ import { CreateControlDeviceComponent } from './pages/create-control-device/crea
   entryComponents: [
     EmissionFactorModalComponent,
     SccSearchModalComponent,
-    ReleasePointApportionmentModalComponent
+    ReleasePointApportionmentModalComponent,
+    ControlPollutantModalComponent
   ]
 })
 export class EmissionsReportingModule { }
