@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Control } from 'src/app/shared/models/control';
 import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item';
+import { ControlPollutant } from 'src/app/shared/models/control-pollutant';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,18 @@ export class ControlService {
   delete(id: number): Observable<{}> {
     const url = `${this.baseUrl}/${id}`;
     return this.http.delete(url);
+  }
+
+    /** Create Control Pollutant */
+  createPollutant(controlPollutant: ControlPollutant): Observable<{}> {
+    const url = `${this.baseUrl}/pollutant/`;
+    return this.http.post<ControlPollutant>(url, controlPollutant);
+  }
+
+  /** Update Control Pollutant */
+  updatePollutant(controlPollutant: ControlPollutant): Observable<{}> {
+    const url = `${this.baseUrl}/pollutant/${controlPollutant.id}`;
+    return this.http.put<ControlPollutant>(url, controlPollutant);
   }
 
 }

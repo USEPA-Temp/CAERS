@@ -55,5 +55,8 @@ public class CacheName {
     public static final String FacilityNAICSEmissionsReportIds = "FacilityNAICSEmissionsReportIds";
     
     public static final String FacilityNAICSProgramIds = "FacilityNAICSProgramIds";
+
+    public static final String ControlPollutantProgramIds = "ControlPollutantProgramIds";
+
 }
 

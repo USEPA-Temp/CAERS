@@ -52,6 +52,7 @@ import { EditFacilitySiteInfoPanelComponent } from './components/edit-facility-s
 import { FacilityNaicsTableComponent } from './components/facility-naics-table/facility-naics-table.component';
 import { FacilityNaicsModalComponent } from './components/facility-naics-modal/facility-naics-modal.component';
 import { ReportHistoryComponent } from './pages/report-history/report-history.component';
+import { ControlPollutantModalComponent } from './components/control-pollutant-modal/control-pollutant-modal.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { ReportHistoryComponent } from './pages/report-history/report-history.co
     EditFacilitySiteInfoPanelComponent,
     FacilityNaicsTableComponent,
     FacilityNaicsModalComponent,
-    ReportHistoryComponent
+    ReportHistoryComponent,
+    ControlPollutantModalComponent
   ],
   imports: [
     CommonModule,
@@ -112,7 +114,8 @@ import { ReportHistoryComponent } from './pages/report-history/report-history.co
     EmissionFactorModalComponent,
     SccSearchModalComponent,
     ReleasePointApportionmentModalComponent,
-    FacilityNaicsModalComponent
+    FacilityNaicsModalComponent,
+    ControlPollutantModalComponent
   ]
 })
 export class EmissionsReportingModule { }
