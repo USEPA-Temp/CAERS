@@ -8,7 +8,9 @@ export class Emission {
   pollutant: Pollutant;
   totalEmissions: number;
   emissionsUomCode: BaseCodeLookup;
+  formulaIndicator: boolean;
   emissionsFactor: number;
+  emissionsFactorFormula: string;
   emissionsFactorText: string;
   emissionsCalcMethodCode: CalculationMethodCode;
   comments: string;

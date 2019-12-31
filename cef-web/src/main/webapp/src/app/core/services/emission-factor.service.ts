@@ -17,9 +17,9 @@ export class EmissionFactorService {
     const criteriaParams = {
       sccCode: criteria.sccCode.toString(),
       pollutantCode: criteria.pollutantCode,
-      controlIndicator: '' + criteria.controlIndicator,
-      formulaIndicator: '' + criteria.formulaIndicator
+      controlIndicator: '' + criteria.controlIndicator
     };
+
     return this.http.get<EmissionFactor[]>(this.baseUrl, {params: criteriaParams});
   }
 }

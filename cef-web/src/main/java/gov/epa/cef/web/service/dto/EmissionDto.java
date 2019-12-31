@@ -12,7 +12,9 @@ public class EmissionDto implements Serializable {
     private PollutantDto pollutant;
     private BigDecimal totalEmissions;
     private CodeLookupDto emissionsUomCode;
+    private Boolean formulaIndicator;
     private BigDecimal emissionsFactor;
+    private String emissionsFactorFormula;
     private String emissionsFactorText;
     private CalculationMethodCodeDto emissionsCalcMethodCode;
     private String comments;
@@ -60,12 +62,28 @@ public class EmissionDto implements Serializable {
         this.emissionsUomCode = emissionsUomCode;
     }
 
+    public Boolean getFormulaIndicator() {
+        return formulaIndicator;
+    }
+
+    public void setFormulaIndicator(Boolean formulaIndicator) {
+        this.formulaIndicator = formulaIndicator;
+    }
+
     public BigDecimal getEmissionsFactor() {
         return emissionsFactor;
     }
 
     public void setEmissionsFactor(BigDecimal emissionsFactor) {
         this.emissionsFactor = emissionsFactor;
+    }
+
+    public String getEmissionsFactorFormula() {
+        return emissionsFactorFormula;
+    }
+
+    public void setEmissionsFactorFormula(String emissionsFactorFormula) {
+        this.emissionsFactorFormula = emissionsFactorFormula;
     }
 
     public String getEmissionsFactorText() {

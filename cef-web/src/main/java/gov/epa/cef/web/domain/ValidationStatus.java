@@ -1,7 +1,7 @@
 package gov.epa.cef.web.domain;
 
 public enum ValidationStatus {
-    FAILED("Failed Validation"), 
+//    FAILED("Failed Validation"), 
     PASSED("Passed Validaton"),
     PASSED_WARNINGS("Passed Validaton with Warnings"),
     UNVALIDATED("Not Validated");

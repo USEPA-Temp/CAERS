@@ -47,7 +47,9 @@ export class EmissionDetailsComponent implements OnInit {
 
   emissionForm = this.fb.group({
     pollutant: [null, Validators.required],
+    formulaIndicator: [false, Validators.required],
     emissionsFactor: ['', [Validators.required, numberValidator()]],
+    emissionsFactorFormula: [''],
     emissionsFactorText: ['', [Validators.required, Validators.maxLength(100)]],
     emissionsNumeratorUom: [null, Validators.required],
     emissionsDenominatorUom: [null, Validators.required],
@@ -154,6 +156,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsNumeratorUom').disable();
         this.emissionForm.get('emissionsDenominatorUom').disable();
         this.emissionForm.get('emissionsFactor').reset();
+        this.emissionForm.get('emissionsFactorFormula').reset();
         this.emissionForm.get('emissionsFactorText').reset();
         this.emissionForm.get('emissionsNumeratorUom').reset();
         this.emissionForm.get('emissionsDenominatorUom').reset();
@@ -170,8 +173,10 @@ export class EmissionDetailsComponent implements OnInit {
       if (value && value.epaEmissionFactor) {
         this.epaEmissionFactor = true;
       } else {
+        this.emissionForm.get('formulaIndicator').reset(false);
         this.epaEmissionFactor = false;
       }
+
     }
   }
 
@@ -263,9 +268,6 @@ export class EmissionDetailsComponent implements OnInit {
         efCriteria.controlIndicator = false;
       }
 
-      // Emission Factors with formulas are ignored for now
-      efCriteria.formulaIndicator = false;
-
       this.efService.search(efCriteria)
       .subscribe(result => {
         const modalRef = this.modalService.open(EmissionFactorModalComponent, { size: 'xl', backdrop: 'static' });
@@ -274,10 +276,16 @@ export class EmissionDetailsComponent implements OnInit {
         // update form when modal closes successfully
         modalRef.result.then((modalEf: EmissionFactor) => {
           if (modalEf) {
+            this.emissionForm.get('formulaIndicator').setValue(modalEf.formulaIndicator);
             this.emissionForm.get('emissionsFactor').setValue(modalEf.emissionFactor);
+            this.emissionForm.get('emissionsFactorFormula').setValue(modalEf.emissionFactorFormula);
             this.emissionForm.get('emissionsNumeratorUom').setValue(modalEf.emissionsNumeratorUom);
             this.emissionForm.get('emissionsDenominatorUom').setValue(modalEf.emissionsDenominatorUom);
             this.emissionForm.get('emissionsUomCode').setValue(modalEf.emissionsNumeratorUom);
+            // temporary to bypass validation, will be replace when actual values are added.
+            if (modalEf.formulaIndicator) {
+              this.emissionForm.get('emissionsFactor').setValue(1);
+            }
           }
         }, () => {
           // needed for dismissing without errors

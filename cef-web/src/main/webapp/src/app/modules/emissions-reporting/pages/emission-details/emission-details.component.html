@@ -53,7 +53,8 @@
                     <div>
                         <div class="row pb-2">
                             <div class="col-sm-4 col-lg-2"><strong>Emission Factor:</strong></div>
-                            <div class="col-sm-8 col-lg-4">{{emission.emissionsFactor}}</div>
+                            <div class="col-sm-8 col-lg-4" *ngIf="!emission.formulaIndicator">{{emission.emissionsFactor}}</div>
+                            <div class="col-sm-8 col-lg-4" *ngIf="emission.formulaIndicator">{{emission.emissionsFactorFormula}}</div>
                             <div class="col-sm-4 col-lg-2"><strong>Emissions Factor Description:</strong></div>
                             <div class="col-sm-8 col-lg-4">{{emission.emissionsFactorText}}</div>
                         </div>
@@ -124,9 +125,13 @@
 
                     <div class="row pb-2">
                         <label for="emissionFactorInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor:</strong></label>
-                        <div class="col-sm-8 col-lg-4">
+                        <div class="col-sm-8 col-lg-4" *ngIf="!emissionForm.get('formulaIndicator').value">
                             <input type="number" class="form-control" id="emissionFactorInput" formControlName="emissionsFactor" [readonly]="epaEmissionFactor">
                             <app-validation-message [control]="emissionForm.controls.emissionsFactor"></app-validation-message>
+                        </div>
+                        <div class="col-sm-8 col-lg-4" *ngIf="emissionForm.get('formulaIndicator').value">
+                            <input type="text" class="form-control" id="emissionFactorInput" formControlName="emissionsFactorFormula" [readonly]="true">
+                            <app-validation-message [control]="emissionForm.controls.emissionsFactorFormula"></app-validation-message>
                         </div>
                         <label for="emissionsFactorTextInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions Factor Description:</strong></label>
                         <div class="col-sm-8 col-lg-4">

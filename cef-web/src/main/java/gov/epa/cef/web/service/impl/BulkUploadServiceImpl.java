@@ -586,6 +586,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private Emission mapEmission(EmissionBulkUploadDto dto) {
         Emission result = uploadMapper.emissionsFromDto(dto);
 
+        result.setFormulaIndicator(false);
+
         if (dto.getEmissionsCalcMethodCode() != null) {
             result.setEmissionsCalcMethodCode(calcMethodCodeRepo.findById(dto.getEmissionsCalcMethodCode()).orElse(null));
         }
