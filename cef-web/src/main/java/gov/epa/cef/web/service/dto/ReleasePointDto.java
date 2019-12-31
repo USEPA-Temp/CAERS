@@ -30,15 +30,15 @@ public class ReleasePointDto implements Serializable {
     private Double latitude;
     private Double longitude;
     private String comments;
-    private Short fenceLineDistance;
+    private Long fenceLineDistance;
     private CodeLookupDto fenceLineUomCode;
-    private Short fugitiveHeight;
+    private Long fugitiveHeight;
     private CodeLookupDto fugitiveHeightUomCode;
-    private Short fugitiveWidth;
+    private Long fugitiveWidth;
     private CodeLookupDto fugitiveWidthUomCode;
-    private Short fugitiveLength;
+    private Long fugitiveLength;
     private CodeLookupDto fugitiveLengthUomCode;
-    private Short fugitiveAngle;
+    private Long fugitiveAngle;
 
     public Long getId() {
         return id;
@@ -232,11 +232,11 @@ public class ReleasePointDto implements Serializable {
         this.comments = comments;
     }
     
-    public Short getFenceLineDistance() {
+    public Long getFenceLineDistance() {
 			return fenceLineDistance;
 		}
 
-		public void setFenceLineDistance(Short fenceLineDistance) {
+		public void setFenceLineDistance(Long fenceLineDistance) {
 			this.fenceLineDistance = fenceLineDistance;
 		}
 
@@ -248,11 +248,11 @@ public class ReleasePointDto implements Serializable {
 			this.fenceLineUomCode = fenceLineUomCode;
 		}
 
-		public Short getFugitiveHeight() {
+		public Long getFugitiveHeight() {
 			return fugitiveHeight;
 		}
 
-		public void setFugitiveHeight(Short fugitiveHeight) {
+		public void setFugitiveHeight(Long fugitiveHeight) {
 			this.fugitiveHeight = fugitiveHeight;
 		}
 
@@ -264,11 +264,11 @@ public class ReleasePointDto implements Serializable {
 			this.fugitiveHeightUomCode = fugitiveHeightUomCode;
 		}
 
-		public Short getFugitiveWidth() {
+		public Long getFugitiveWidth() {
 			return fugitiveWidth;
 		}
 
-		public void setFugitiveWidth(Short fugitiveWidth) {
+		public void setFugitiveWidth(Long fugitiveWidth) {
 			this.fugitiveWidth = fugitiveWidth;
 		}
 
@@ -280,11 +280,11 @@ public class ReleasePointDto implements Serializable {
 			this.fugitiveWidthUomCode = fugitiveWidthUomCode;
 		}
 
-		public Short getFugitiveLength() {
+		public Long getFugitiveLength() {
 			return fugitiveLength;
 		}
 
-		public void setFugitiveLength(Short fugitiveLength) {
+		public void setFugitiveLength(Long fugitiveLength) {
 			this.fugitiveLength = fugitiveLength;
 		}
 
@@ -296,11 +296,11 @@ public class ReleasePointDto implements Serializable {
 			this.fugitiveLengthUomCode = fugitiveLengthUomCode;
 		}
 
-		public Short getFugitiveAngle() {
+		public Long getFugitiveAngle() {
 			return fugitiveAngle;
 		}
 
-		public void setFugitiveAngle(Short fugitiveAngle) {
+		public void setFugitiveAngle(Long fugitiveAngle) {
 			this.fugitiveAngle = fugitiveAngle;
 		}
 

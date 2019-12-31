@@ -3,25 +3,25 @@ ALTER TABLE release_point
     ADD COLUMN fence_line_distance numeric(6,0);
 	
 ALTER TABLE release_point
-	ADD COLUMN fence_line_distance_uom_code character varying(20) COLLATE pg_catalog."default";
+	ADD COLUMN fence_line_distance_uom_code character varying(20);
 	
 ALTER TABLE release_point
     ADD COLUMN fugitive_height numeric(3,0);
 	
 ALTER TABLE release_point
-	ADD COLUMN fugitive_height_uom_code character varying(20) COLLATE pg_catalog."default";
+	ADD COLUMN fugitive_height_uom_code character varying(20);
 	
 ALTER TABLE release_point
     ADD COLUMN fugitive_width numeric(6,0);
     
 ALTER TABLE release_point
-	ADD COLUMN fugitive_width_uom_code character varying(20) COLLATE pg_catalog."default";
+	ADD COLUMN fugitive_width_uom_code character varying(20);
 	
 ALTER TABLE release_point
     ADD COLUMN fugitive_length numeric(6,0);
     
 ALTER TABLE release_point
-	ADD COLUMN fugitive_length_uom_code character varying(20) COLLATE pg_catalog."default";
+	ADD COLUMN fugitive_length_uom_code character varying(20);
 	
 ALTER TABLE release_point
     ADD COLUMN fugitive_angle numeric(3,0);

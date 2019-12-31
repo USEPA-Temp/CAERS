@@ -49,7 +49,7 @@ public class ReleasePoint extends BaseAuditEntity {
     private String description;
     
     @Column(name = "fence_line_distance", precision = 6, scale = 0)
-    private Short fenceLineDistance;
+    private Long fenceLineDistance;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fence_line_distance_uom_code", nullable = false)
@@ -108,28 +108,28 @@ public class ReleasePoint extends BaseAuditEntity {
     private Double longitude;
     
     @Column(name = "fugitive_height", precision = 3, scale = 0)
-    private Short fugitiveHeight;
+    private Long fugitiveHeight;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_height_uom_code", nullable = false)
     private UnitMeasureCode fugitiveHeightUomCode;
     
     @Column(name = "fugitive_width", precision = 6, scale = 0)
-    private Short fugitiveWidth;
+    private Long fugitiveWidth;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_width_uom_code", nullable = false)
     private UnitMeasureCode fugitiveWidthUomCode;
     
     @Column(name = "fugitive_length", precision = 6, scale = 0)
-    private Short fugitiveLength;
+    private Long fugitiveLength;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_length_uom_code", nullable = false)
     private UnitMeasureCode fugitiveLengthUomCode;
     
     @Column(name = "fugitive_angle", precision = 3, scale = 0)
-    private Short fugitiveAngle;
+    private Long fugitiveAngle;
     
     @Column(name = "comments", length = 200)
     private String comments;
@@ -361,11 +361,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.comments = comments;
     }
 
-    public Short getFenceLineDistance() {
+    public Long getFenceLineDistance() {
 			return fenceLineDistance;
 		}
 
-		public void setFenceLineDistance(Short fenceLineDistance) {
+		public void setFenceLineDistance(Long fenceLineDistance) {
 			this.fenceLineDistance = fenceLineDistance;
 		}
 
@@ -377,11 +377,11 @@ public class ReleasePoint extends BaseAuditEntity {
 			this.fenceLineUomCode = fenceLineUomCode;
 		}
 
-		public Short getFugitiveHeight() {
+		public Long getFugitiveHeight() {
 			return fugitiveHeight;
 		}
 
-		public void setFugitiveHeight(Short fugitiveHeight) {
+		public void setFugitiveHeight(Long fugitiveHeight) {
 			this.fugitiveHeight = fugitiveHeight;
 		}
 
@@ -393,11 +393,11 @@ public class ReleasePoint extends BaseAuditEntity {
 			this.fugitiveHeightUomCode = fugitiveHeightUomCode;
 		}
 
-		public Short getFugitiveWidth() {
+		public Long getFugitiveWidth() {
 			return fugitiveWidth;
 		}
 
-		public void setFugitiveWidth(Short fugitiveWidth) {
+		public void setFugitiveWidth(Long fugitiveWidth) {
 			this.fugitiveWidth = fugitiveWidth;
 		}
 
@@ -409,11 +409,11 @@ public class ReleasePoint extends BaseAuditEntity {
 			this.fugitiveWidthUomCode = fugitiveWidthUomCode;
 		}
 
-		public Short getFugitiveLength() {
+		public Long getFugitiveLength() {
 			return fugitiveLength;
 		}
 
-		public void setFugitiveLength(Short fugitiveLength) {
+		public void setFugitiveLength(Long fugitiveLength) {
 			this.fugitiveLength = fugitiveLength;
 		}
 
@@ -425,11 +425,11 @@ public class ReleasePoint extends BaseAuditEntity {
 			this.fugitiveLengthUomCode = fugitiveLengthUomCode;
 		}
 
-		public Short getFugitiveAngle() {
+		public Long getFugitiveAngle() {
 			return fugitiveAngle;
 		}
 
-		public void setFugitiveAngle(Short fugitiveAngle) {
+		public void setFugitiveAngle(Long fugitiveAngle) {
 			this.fugitiveAngle = fugitiveAngle;
 		}
 
