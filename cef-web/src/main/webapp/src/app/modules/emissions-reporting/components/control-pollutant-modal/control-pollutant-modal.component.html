@@ -1,0 +1,25 @@
+<form [formGroup]="pollutantForm">
+    <div class="modal-header">
+        <h4 class="modal-title w-100"><strong>Control Pollutant</strong></h4>
+    </div>
+
+    <div class="modal-body" style="height: 350px;">
+        <label for="pollutantSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant:</strong></label>
+            <div class="col-sm-8 col-lg-10">
+                <input id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
+                <app-validation-message [control]="pollutantForm.get('pollutant')"></app-validation-message>
+            </div>
+        <br>
+        <label for="percentReductionSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Reduction Percentage:</strong></label>
+            <div class="col-sm-8 col-lg-10">
+                <input id="percentReductionSelect" class="form-control" formControlName="percentReduction"/>
+                <app-validation-message [control]="pollutantForm.get('percentReduction')"></app-validation-message>
+            </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
+        <button type="button" class="btn btn-primary mr-2" (click)="onClose()">Cancel</button>
+    </div>
+
+</form>

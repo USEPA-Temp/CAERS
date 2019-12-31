@@ -16,6 +16,7 @@ import { EditControlDeviceInfoPanelComponent } from '../../components/edit-contr
 export class ControlDeviceDetailsComponent implements OnInit {
   @Input() control: Control;
   emissionsReportItems: EmissionsReportItem[];
+  facilitySite: FacilitySite;
 
   editInfo = false;
   readOnlyMode = true;
@@ -47,7 +48,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
-
+      this.facilitySite = data.facilitySite;
       this.sharedService.emitChange(data.facilitySite);
     });
   }

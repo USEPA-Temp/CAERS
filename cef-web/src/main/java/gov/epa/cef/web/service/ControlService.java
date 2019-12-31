@@ -3,12 +3,13 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.service.dto.ControlDto;
+import gov.epa.cef.web.service.dto.ControlPollutantDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 
 public interface ControlService {
 	
-		/**
+	/**
      * Create a new Control
      * @param dto
      * @return
@@ -48,5 +49,24 @@ public interface ControlService {
      * @param controlId
      */
     void delete(Long controlId);
-
+    
+	/**
+     * Create a new Control Pollutant
+     * @param dto
+     * @return
+     */
+	ControlPollutantDto createPollutant(ControlPollutantDto dto);
+	
+    /**
+     * Update an existing Control Pollutant by id
+     * @param dto
+     * @return
+     */
+    ControlPollutantDto updateControlPollutant(ControlPollutantDto dto);
+    
+    /**
+     * Delete a Control Pollutant for a given id
+     * @param controlId
+     */
+    void deleteControlPollutant(Long controlPollutantId);
 }

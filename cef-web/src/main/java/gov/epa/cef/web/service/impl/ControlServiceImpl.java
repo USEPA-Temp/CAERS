@@ -10,26 +10,36 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
+import gov.epa.cef.web.repository.ControlPollutantRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.ControlDto;
+import gov.epa.cef.web.service.dto.ControlPollutantDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import gov.epa.cef.web.service.mapper.ControlMapper;
+import gov.epa.cef.web.service.mapper.ControlPollutantMapper;
 
 @Service
 public class ControlServiceImpl implements ControlService {
 
     @Autowired
     private ControlRepository repo;
+    
+    @Autowired
+    private ControlPollutantRepository pollutantRepo;
 
     @Autowired
     private ControlAssignmentRepository assignmentRepo;
 
     @Autowired
     private ControlMapper mapper;
+    
+    @Autowired
+    private ControlPollutantMapper pollutantMapper;
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
@@ -102,7 +112,39 @@ public class ControlServiceImpl implements ControlService {
     	}
     	return emissionsReportItems;
     }
-
+    
+    /**
+     * Create a new Control Pollutant from a DTO object
+     */
+    public ControlPollutantDto createPollutant(ControlPollutantDto dto) {
+    	ControlPollutant control = pollutantMapper.fromDto(dto);
+    	
+    	ControlPollutantDto result = pollutantMapper.toDto(pollutantRepo.save(control));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getControlId()), ControlRepository.class);
+    	return result;
+    }
+    
+    /**
+     * Update an existing Control Pollutant from a DTO
+     */
+    public ControlPollutantDto updateControlPollutant(ControlPollutantDto dto) {
+    	
+    	ControlPollutant control = pollutantRepo.findById(dto.getId()).orElse(null);
+    	pollutantMapper.updateFromDto(dto, control);
+    	
+    	ControlPollutantDto result = pollutantMapper.toDto(pollutantRepo.save(control));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getControlId()), ControlRepository.class);
+    	return result;
+    }
+    
+    /**
+     * Delete a Control Pollutant for a given id
+     * @Param controlId
+     */
+    public void deleteControlPollutant(Long controlPollutantId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPollutantId), ControlPollutantRepository.class);
+    	pollutantRepo.deleteById(controlPollutantId);
+    }
     
     /***
      * Create and populate the emissions report items for the control's path and parent paths.

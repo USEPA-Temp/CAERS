@@ -1,9 +1,11 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.repository.ControlPollutantRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.ControlDto;
+import gov.epa.cef.web.service.dto.ControlPollutantDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,5 +123,50 @@ public class ControlApi {
     	this.securityService.facilityEnforcer().enforceEntity(controlId, ControlRepository.class);
     	
     	controlService.delete(controlId);
+    }
+    
+    /**
+     * Create a Control Pollutant
+     * @param dto
+     * @return
+     */
+    @PostMapping(value = "/pollutant/")
+    public ResponseEntity<ControlPollutantDto> createControlPollutant(@NotNull @RequestBody ControlPollutantDto dto) {
+    	
+    	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	ControlPollutantDto result = controlService.createPollutant(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Update a Control Point by id
+     * @param controlPointId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/pollutant/{controlPollutantId}")
+    public ResponseEntity<ControlPollutantDto> updateControlPollutant(
+    		@NotNull @PathVariable Long controlPollutantId, @NotNull @RequestBody ControlPollutantDto dto) {
+    	
+        	this.securityService.facilityEnforcer().enforceEntity(controlPollutantId, ControlPollutantRepository.class);
+    	
+    		ControlPollutantDto result = controlService.updateControlPollutant(dto.withId(controlPollutantId));
+    		
+    		return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete a Control Pollutant for given id
+     * @param controlId
+     * @return
+     */
+    @DeleteMapping(value = "/pollutant/{controlPollutantId}")
+    public void deleteControlPollutant(@NotNull @PathVariable Long controlPollutantId) {
+    	
+    	this.securityService.facilityEnforcer().enforceEntity(controlPollutantId, ControlPollutantRepository.class);
+    	
+    	controlService.deleteControlPollutant(controlPollutantId);
     }
 }
