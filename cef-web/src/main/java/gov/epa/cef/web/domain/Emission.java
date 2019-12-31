@@ -37,8 +37,14 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "emissions_uom_code", nullable = false)
     private UnitMeasureCode emissionsUomCode;
     
+    @Column(name = "formula_indicator")
+    private Boolean formulaIndicator;
+    
     @Column(name = "emissions_factor")
     private BigDecimal emissionsFactor;
+    
+    @Column(name = "emissions_factor_formula", length = 100)
+    private String emissionsFactorFormula;
     
     @Column(name = "emissions_factor_text", length = 100)
     private String emissionsFactorText;
@@ -120,12 +126,28 @@ public class Emission extends BaseAuditEntity {
         this.emissionsUomCode = emissionsUomCode;
     }
 
+    public Boolean getFormulaIndicator() {
+        return formulaIndicator;
+    }
+
+    public void setFormulaIndicator(Boolean formulaIndicator) {
+        this.formulaIndicator = formulaIndicator;
+    }
+
     public BigDecimal getEmissionsFactor() {
         return this.emissionsFactor;
     }
 
     public void setEmissionsFactor(BigDecimal emissionsFactor) {
         this.emissionsFactor = emissionsFactor;
+    }
+
+    public String getEmissionsFactorFormula() {
+        return emissionsFactorFormula;
+    }
+
+    public void setEmissionsFactorFormula(String emissionsFactorFormula) {
+        this.emissionsFactorFormula = emissionsFactorFormula;
     }
 
     public String getEmissionsFactorText() {
