@@ -27,9 +27,7 @@ export class SharedService {
       if (data.facilitySite.emissionsReport.validationStatus !== ValidationStatus.UNVALIDATED) {
         data.facilitySite.emissionsReport.validationStatus = ValidationStatus.UNVALIDATED;
 
-        if (data.facilitySite.emissionsReport.validationStatus !== ValidationStatus.FAILED) {
-          this.toastr.warning('You must run the Quality Checks on your report again since changes have been made to the report data.');
-        }
+        this.toastr.warning('You must run the Quality Checks on your report again since changes have been made to the report data.');
 
         this.emitChange(data.facilitySite);
       }

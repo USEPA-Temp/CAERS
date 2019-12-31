@@ -48,7 +48,7 @@ export class EmissionsReportValidationComponent implements OnInit {
                         data.facilitySite.emissionsReport.validationStatus = ValidationStatus.PASSED;
                       }
                      } else {
-                      data.facilitySite.emissionsReport.validationStatus = ValidationStatus.FAILED;
+                      data.facilitySite.emissionsReport.validationStatus = ValidationStatus.UNVALIDATED;
                     }
                     this.sharedService.emitChange(data.facilitySite);
                   }, 50);

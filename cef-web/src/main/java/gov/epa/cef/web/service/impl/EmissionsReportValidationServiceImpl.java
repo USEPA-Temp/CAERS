@@ -77,7 +77,7 @@ public class EmissionsReportValidationServiceImpl implements EmissionsReportVali
 
             } else {
 
-                report.setValidationStatus(ValidationStatus.FAILED);
+                report.setValidationStatus(ValidationStatus.UNVALIDATED);
             }
 
             this.emissionsReportRepository.save(report);
