@@ -22,6 +22,11 @@
 						class="text-dark font-weight-bold pipe-item"
 						*ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 
+					<a [routerLink]="['.']"
+						class="text-dark font-weight-bold pipe-item"
+						(click)="reopenReport(report)"
+						*ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">Reopen Report</a>
+
 					<a href="#" class="text-dark font-weight-bold pipe-item"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Certifier'">Certify</a>
 

@@ -31,6 +31,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { TimeoutModalComponent } from './shared/components/timeout-modal/timeout-modal.component';
 import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
+import { ConfirmationDialogComponent } from './shared/components/confirmation-dialog/confirmation-dialog.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
     BusyModalComponent,
     DeleteDialogComponent,
     RejectSubmissionModalComponent,
-    TimeoutModalComponent
+    TimeoutModalComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +75,8 @@ import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
     BusyModalComponent,
     DeleteDialogComponent,
     RejectSubmissionModalComponent,
-    TimeoutModalComponent
+    TimeoutModalComponent,
+    ConfirmationDialogComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},

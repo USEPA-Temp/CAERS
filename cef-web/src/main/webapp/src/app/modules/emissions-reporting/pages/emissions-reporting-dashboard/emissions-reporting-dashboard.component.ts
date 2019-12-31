@@ -8,6 +8,7 @@ import { BusyModalComponent } from 'src/app/shared/components/busy-modal/busy-mo
 import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -145,5 +146,24 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalRef.componentInstance.continue.subscribe(() => {
             this.deleteReport(reportId);
         });
+    }
+
+    reopenReport(report){
+        const modalMessage = `Do you wish to reopen the ${report.year} report for 
+        ${this.facility.facilityName}? This will reset the status of the report to "In progress" and you 
+        will need to resubmit the report to the S/L/T authority for review. `;
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+        modalRef.componentInstance.message = modalMessage;
+        modalRef.componentInstance.continue.subscribe(() => {
+            let ids = [report.id];
+            this.resetReport(ids, report);
+        });
+    }
+
+    resetReport(reportIds: number[],report) {
+        this.reportService.resetReports(reportIds).subscribe(result => {
+            this.router.navigate(['/facility/' + report.eisProgramId + '/report/' + report.id + '/summary']);
+        });
+
     }
 }
