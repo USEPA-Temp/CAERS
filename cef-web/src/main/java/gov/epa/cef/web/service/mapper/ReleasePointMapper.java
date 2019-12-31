@@ -31,5 +31,9 @@ public interface ReleasePointMapper {
     @Mapping(target="stackDiameterUomCode", qualifiedByName="UnitMeasureCode")
     @Mapping(target="exitGasVelocityUomCode", qualifiedByName="UnitMeasureCode")
     @Mapping(target="exitGasFlowUomCode", qualifiedByName="UnitMeasureCode")
+    @Mapping(target="fenceLineUomCode", qualifiedByName="UnitMeasureCode")
+    @Mapping(target="fugitiveHeightUomCode", qualifiedByName="UnitMeasureCode")
+    @Mapping(target="fugitiveLengthUomCode", qualifiedByName="UnitMeasureCode")
+    @Mapping(target="fugitiveWidthUomCode", qualifiedByName="UnitMeasureCode")
     void updateFromDto(ReleasePointDto source, @MappingTarget ReleasePoint target);
 }

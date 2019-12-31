@@ -22,6 +22,7 @@ export class ReleasePointDetailsComponent implements OnInit {
   controlPaths: ControlPath[];
   parentComponentType = 'releasePointAppt';
 
+  fugitive = false;
   readOnlyMode = true;
   editInfo = false;
 
@@ -41,6 +42,11 @@ export class ReleasePointDetailsComponent implements OnInit {
         this.releasePointService.retrieve(+map.get('releasePointId'))
         .subscribe(point => {
           this.releasePoint = point;
+
+          if (this.releasePoint.typeCode.description === 'Fugitive') {
+            this.fugitive = true;
+          }
+
           this.processService.retrieveForReleasePoint(this.releasePoint.id)
           .subscribe(processes => {
             this.processes = processes;
@@ -78,6 +84,12 @@ export class ReleasePointDetailsComponent implements OnInit {
 
       this.releasePointService.update(updatedReleasePoint)
       .subscribe(result => {
+
+        if (updatedReleasePoint.typeCode.description === 'Fugitive') {
+          this.fugitive = true;
+        } else {
+          this.fugitive = false;
+        }
 
         Object.assign(this.releasePoint, result);
         this.sharedService.updateReportStatusAndEmit(this.route);

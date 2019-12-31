@@ -25,4 +25,13 @@ export class ReleasePoint {
   latitude: number;
   longitude: number;
   comments: string;
+  fugitiveLength: number;
+  fugitiveHeight: number;
+  fugitiveWidth: number;
+  fugitiveAngle: number;
+  fenceLineDistance: number;
+  fugitiveLengthUomCode: BaseCodeLookup;
+  fugitiveHeightUomCode: BaseCodeLookup;
+  fugitiveWidthUomCode: BaseCodeLookup;
+  fenceLineDistanceUomCode: BaseCodeLookup;
 }
