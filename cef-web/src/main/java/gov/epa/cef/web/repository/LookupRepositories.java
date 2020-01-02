@@ -47,6 +47,9 @@ public class LookupRepositories {
 
 	@Autowired
 	private TribalCodeRepository tribalCodeRepo;
+	
+	@Autowired
+  private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
 
 	public CalculationMaterialCodeRepository materialCodeRepo() {
 		return materialCodeRepo;
@@ -102,6 +105,10 @@ public class LookupRepositories {
 
 	public TribalCodeRepository tribalCodeRepo() {
 		return tribalCodeRepo;
+	}
+	
+	public AircraftEngineTypeCodeRepository aircraftEngCodeRepo() {
+		return aircraftEngCodeRepo;
 	}
 
 }

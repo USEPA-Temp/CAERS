@@ -12,6 +12,7 @@ import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.TribalCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
@@ -201,5 +202,11 @@ public interface LookupService {
      * @return
      */
     List<CodeLookupDto> retrieveNaicsCode();
+    
+    /**
+     * Retrieve Aircraft Engine Type Codes
+     * @return
+     */
+    List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes();
     
 }

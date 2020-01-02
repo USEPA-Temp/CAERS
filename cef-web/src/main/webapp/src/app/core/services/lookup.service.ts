@@ -7,6 +7,7 @@ import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
+import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
 
 @Injectable({
   providedIn: 'root'
@@ -95,6 +96,11 @@ export class LookupService {
   retrieveNaicsCode(): Observable<FacilityNaicsCode[]> {
     const url = `${this.baseUrl}/naicsCode`;
     return this.http.get<FacilityNaicsCode[]>(url);
+  }
+
+  retrieveAircraftEngineCodes(): Observable<AircraftEngineTypeCode[]> {
+    const url = `${this.baseUrl}/aircraftEngineCode`;
+    return this.http.get<AircraftEngineTypeCode[]>(url);
   }
 
 }

@@ -24,8 +24,8 @@
                             <div class="col-sm-6 col-md-2">{{process.description}}</div>
                             <div class="col-sm-6 col-md-2"><strong>SCC:</strong></div>
                             <div class="col-sm-6 col-md-2">{{process.sccCode}}</div>
-                            <div class="col-sm-6 col-md-2"><strong>Aircraft Engine Code:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{process.aircraftEngineTypeCodeCode}}</div>
+                            <div class="col-sm-6 col-md-2" *ngIf="hasAircraftCode"><strong>Aircraft Engine Code:</strong></div>
+                            <div class="col-sm-6 col-md-2" *ngIf="hasAircraftCode">{{process.aircraftEngineTypeCode?.code}}</div>
                         </div>
 
                         <div class="row">

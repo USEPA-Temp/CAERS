@@ -26,6 +26,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   controlPaths: ControlPath[];
   facilitySite: FacilitySite;
 
+  hasAircraftCode = false;
   readOnlyMode = true;
 
   editInfo = false;
@@ -56,6 +57,11 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.processService.retrieve(+map.get('processId'))
       .subscribe(process => {
         this.process = process;
+
+        if (this.process.aircraftEngineTypeCode) {
+          this.hasAircraftCode = true;
+        }
+
         this.reportingPeriodService.retrieveForEmissionsProcess(this.process.id)
         .subscribe(periods => {
           this.process.reportingPeriods = periods;
@@ -101,6 +107,12 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
       this.processService.update(updatedProcess)
       .subscribe(result => {
+
+        if (updatedProcess.aircraftEngineTypeCode) {
+          this.hasAircraftCode = true;
+        } else {
+          this.hasAircraftCode = false;
+        }
 
         Object.assign(this.process, result);
         this.sharedService.updateReportStatusAndEmit(this.route);
