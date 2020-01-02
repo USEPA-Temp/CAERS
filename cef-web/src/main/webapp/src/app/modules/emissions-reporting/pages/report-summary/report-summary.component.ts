@@ -8,6 +8,9 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 
 declare const initCromerrWidget: any;
 
@@ -31,7 +34,9 @@ export class ReportSummaryComponent implements OnInit {
         private toastr: ToastrService,
         private sharedService: SharedService,
         private userService: UserService,
-        private userContextService: UserContextService) { }
+        private userContextService: UserContextService,
+        private modalService: NgbModal,
+        private emissionsReportingService: EmissionsReportingService) { }
 
     ngOnInit() {
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
@@ -59,6 +64,7 @@ export class ReportSummaryComponent implements OnInit {
                 });
             }
         });
+        console.log("emissions report ",this.facilitySite.emissionsReport)
     }
 
 
@@ -70,6 +76,25 @@ export class ReportSummaryComponent implements OnInit {
         let reportId = this.facilitySite.emissionsReport.id;
 
         this.router.navigateByUrl(`/facility/${this.facilitySite.eisProgramId}/report/${reportId}/validation`);
+    }
+
+    reopenReport(){
+        const modalMessage = `Do you wish to reopen the ${this.facilitySite.emissionsReport.year} report for 
+        ${this.facilitySite.name}? This will reset the status of the report to "In progress" and you 
+        will need to resubmit the report to the S/L/T authority for review. `;
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+        modalRef.componentInstance.message = modalMessage;
+        modalRef.componentInstance.continue.subscribe(() => {
+            let ids = [this.facilitySite.emissionsReport.id];
+            this.resetReport(ids);
+        });
+    }
+
+    resetReport(reportIds: number[]) {
+        this.emissionsReportingService.resetReports(reportIds).subscribe(result => {
+            location.reload();
+        });
+
     }
 
 }
