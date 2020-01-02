@@ -7,6 +7,7 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SccSearchModalComponent } from 'src/app/modules/emissions-reporting/components/scc-search-modal/scc-search-modal.component';
 import { SccCode } from 'src/app/shared/models/scc-code';
+import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -15,8 +16,10 @@ import { SccCode } from 'src/app/shared/models/scc-code';
 })
 export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
+  aircraftSCCcheck = false;
+
   processForm = this.fb.group({
-    aircraftEngineTypeCodeCode: [''],
+    aircraftEngineTypeCode: [null],
     operatingStatusCode: [null, Validators.required],
     emissionsProcessIdentifier: ['', [
       Validators.required,
@@ -44,6 +47,9 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   });
 
   operatingStatusValues: BaseCodeLookup[];
+  aircraftEngineTypeValue: AircraftEngineTypeCode[];
+  selectedAircraftEngineType: AircraftEngineTypeCode[];
+  aircraftEngineSCC: string[];
 
   constructor(
     private lookupService: LookupService,
@@ -58,6 +64,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       this.operatingStatusValues = result;
     });
 
+    // SCC codes associated with Aircraft Engine Type Codes
+    this.aircraftEngineSCC = [
+      '2275001000', '2275020000', '2275050011', '2275050012', '2275060011', '2275060012'
+    ];
+
+    this.checkAircraftSCC();
   }
 
   ngOnChanges() {
@@ -73,10 +85,37 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       if (modalScc) {
         this.processForm.get('sccCode').setValue(modalScc.code);
         this.processForm.get('sccDescription').setValue(modalScc.description);
+
+        this.checkAircraftSCC();
       }
     }, () => {
       // needed for dismissing without errors
     });
+  }
+
+  checkAircraftSCC() {
+    const formSccCode = this.processForm.get('sccCode');
+    for (let scc of this.aircraftEngineSCC) {
+      if (scc === formSccCode.value) {
+
+        this.aircraftSCCcheck = true;
+
+        this.lookupService.retrieveAircraftEngineCodes()
+        .subscribe(result => {
+          this.aircraftEngineTypeValue = result.filter(val => (val.scc === this.processForm.get('sccCode').value));
+        });
+
+        // form field is required if selected SCC is aircraft
+        this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
+
+        break;
+      }
+
+      // reset form field if selected SCC is not aircraft
+      this.processForm.controls.aircraftEngineTypeCode.reset();
+      this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
+      this.aircraftSCCcheck = false;
+    }
   }
 
   onSubmit() {

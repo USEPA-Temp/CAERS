@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
@@ -23,6 +24,7 @@ import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.TribalCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
+import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
@@ -40,6 +42,7 @@ import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.LookupService;
+import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
@@ -97,6 +100,9 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private NaicsCodeRepository naicsCodeRepo;
+    
+    @Autowired
+    private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -393,4 +399,17 @@ public class LookupServiceImpl implements LookupService {
         });
         return result;
     }
+    
+    @Override
+    public List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes() {
+
+        List<AircraftEngineTypeCodeDto> result = new ArrayList<AircraftEngineTypeCodeDto>();
+        Iterable<AircraftEngineTypeCode> entities = aircraftEngCodeRepo.findAll(Sort.by(Sort.DEFAULT_DIRECTION.ASC, "faaAircraftType"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.aircraftEngCodeToDto(entity));
+        });
+        return result;
+    }
+    
 }

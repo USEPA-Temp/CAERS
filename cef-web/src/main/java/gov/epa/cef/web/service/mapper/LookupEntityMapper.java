@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
@@ -24,6 +25,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.repository.LookupRepositories;
+import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
@@ -57,6 +59,8 @@ public abstract class LookupEntityMapper {
     public abstract PollutantDto pollutantToDto(Pollutant source);
     
     public abstract FipsStateCodeDto fipsStateCodeToDto(FipsStateCode source);
+    
+    public abstract AircraftEngineTypeCodeDto aircraftEngCodeToDto(AircraftEngineTypeCode source);
 
     @Named("CalculationMethodCode")
     public CalculationMethodCode dtoToCalculationMethodCode(CodeLookupDto source) {
@@ -141,6 +145,14 @@ public abstract class LookupEntityMapper {
     public TribalCode dtoToTribalCode(CodeLookupDto source) {
         if (source != null) {
             return repos.tribalCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("AircraftEngineTypeCode")
+    public AircraftEngineTypeCode dtoToAircraftEngCode(AircraftEngineTypeCodeDto source) {
+        if (source != null) {
+            return repos.aircraftEngCodeRepo().findById(source.getCode()).orElse(null);
         }
         return null;
     }

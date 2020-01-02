@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.service.LookupService;
+import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
@@ -216,5 +217,17 @@ public class LookupApi {
 
         List<CodeLookupDto> result = lookupService.retrieveNaicsCode();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Aircraft Engine Type codes
+     * @return
+     */
+    @GetMapping(value = "/aircraftEngineCode")
+    @ResponseBody
+    public ResponseEntity<List<AircraftEngineTypeCodeDto>> retrieveAircraftEngineCodes() {
+
+        List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes();
+        return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
     }
 }
