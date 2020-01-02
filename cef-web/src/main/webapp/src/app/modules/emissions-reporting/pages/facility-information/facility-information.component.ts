@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ToastrService } from 'ngx-toastr';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
@@ -92,7 +92,7 @@ export class FacilityInformationComponent implements OnInit {
 
   openDeleteModal(contactFirstName: string, contactLastName: string, contactId: number, facilitySiteId: number) {
     if (this.facilitySite.contacts.length > 1) {
-      const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+      const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
       const modalMessage = `Are you sure you want to delete ${contactFirstName} ${contactLastName} from this facility's contact information?`;
       modalRef.componentInstance.message = modalMessage;
       modalRef.componentInstance.continue.subscribe(() => {

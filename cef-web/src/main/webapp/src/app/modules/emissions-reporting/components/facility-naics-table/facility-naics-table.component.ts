@@ -7,7 +7,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilityNaicsModalComponent } from '../facility-naics-modal/facility-naics-modal.component';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
@@ -66,7 +66,7 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
 
   openDeleteModal(naicsCode: string, facilityNaicsId: number, facilitySiteId: number) {
         const modalMessage = `Are you sure you want to delete NAICS Code ${naicsCode} from this facility?`;
-        const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
             this.deleteFacilityNaics(facilityNaicsId, facilitySiteId);

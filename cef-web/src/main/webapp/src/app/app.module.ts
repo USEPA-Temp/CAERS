@@ -25,7 +25,6 @@ import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-ha
 import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.interceptor';
 import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
 import { BusyModalComponent } from './shared/components/busy-modal/busy-modal.component';
-import { DeleteDialogComponent } from './shared/components/delete-dialog/delete-dialog.component';
 import { RejectSubmissionModalComponent } from './modules/dashboards/components/reject-submission-modal/reject-submission-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -50,7 +49,6 @@ import { ConfirmationDialogComponent } from './shared/components/confirmation-di
     FacilityDataReviewComponent,
     ReportSummaryModalComponent,
     BusyModalComponent,
-    DeleteDialogComponent,
     RejectSubmissionModalComponent,
     TimeoutModalComponent,
     ConfirmationDialogComponent
@@ -73,7 +71,6 @@ import { ConfirmationDialogComponent } from './shared/components/confirmation-di
   entryComponents: [
     ReportSummaryModalComponent,
     BusyModalComponent,
-    DeleteDialogComponent,
     RejectSubmissionModalComponent,
     TimeoutModalComponent,
     ConfirmationDialogComponent

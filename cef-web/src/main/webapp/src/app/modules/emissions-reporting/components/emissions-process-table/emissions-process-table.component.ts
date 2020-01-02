@@ -1,7 +1,7 @@
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { Process } from 'src/app/shared/models/process';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -52,7 +52,7 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
     openDeleteModal(processName: string, processId: number, parentId: number) {
         const modalMessage = `Are you sure you want to delete ${processName}? This will also remove any
             Emissions, Control Assignments, and Release Point Assignments associated with this Emissions Process.`;
-        const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
             this.deleteProcess(processId, parentId);

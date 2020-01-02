@@ -3,7 +3,7 @@ import { ReleasePointApportionment } from 'src/app/shared/models/release-point-a
 import { ActivatedRoute } from '@angular/router';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { ReleasePointApportionmentModalComponent } from 'src/app/modules/emissions-reporting/components/release-point-apportionment-modal/release-point-apportionment-modal.component';
@@ -35,8 +35,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     this.route.paramMap
       .subscribe(map => {
         this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
-    });
-    this.tableData.sort((a, b) => (a.releasePointIdentifier > b.releasePointIdentifier? 1 : -1));
+      });
+    this.tableData.sort((a, b) => (a.releasePointIdentifier > b.releasePointIdentifier ? 1 : -1));
   }
 
   // delete release point apportionment from the database
@@ -57,45 +57,45 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     const modalMessage = `Are you sure you want to remove the association of Release Point ${releasePtApptIdentifier}
       with Emission Process ${this.process.emissionsProcessIdentifier}? The apportionment of emissions will need to be
       updated to total 100% for the remaining release points afterwards.`;
-    const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
       this.deleteReleasePointApportionment(releasePtApptId, this.process.id);
     });
   }
 
-  openReleasePointAptModal(){
-        const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, {backdrop: 'static', scrollable: true });
-        modalRef.componentInstance.process = this.process;
-        modalRef.componentInstance.releasePointApportionments = this.tableData;
-        modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
-  
-        modalRef.result.then((result) => {
-          this.processService.retrieve(this.process.id)
-          .subscribe(processResponse => {
-            if(result !== 'dontUpdate'){
-              this.sharedService.updateReportStatusAndEmit(this.route);
-            }
-            this.tableData = processResponse.releasePointAppts;
-          })
+  openReleasePointAptModal() {
+    const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, { backdrop: 'static', scrollable: true });
+    modalRef.componentInstance.process = this.process;
+    modalRef.componentInstance.releasePointApportionments = this.tableData;
+    modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+
+    modalRef.result.then((result) => {
+      this.processService.retrieve(this.process.id)
+        .subscribe(processResponse => {
+          if (result !== 'dontUpdate') {
+            this.sharedService.updateReportStatusAndEmit(this.route);
+          }
+          this.tableData = processResponse.releasePointAppts;
         })
+    })
   }
 
-  openEditModal(selectedApportionment){
-      const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, {backdrop: 'static', scrollable: true });
-      modalRef.componentInstance.process = this.process;
-      modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
-      modalRef.componentInstance.releasePointApportionments = this.tableData;
-      modalRef.componentInstance.edit = true;
-      modalRef.componentInstance.selectedReleasePoint = selectedApportionment;
-        modalRef.result.then((result) => {
-          this.processService.retrieve(this.process.id)
-          .subscribe(processResponse => {
-            if(result !== 'dontUpdate'){
-              this.sharedService.updateReportStatusAndEmit(this.route);
-              this.tableData = processResponse.releasePointAppts;
-            }
-          })
+  openEditModal(selectedApportionment) {
+    const modalRef = this.modalService.open(ReleasePointApportionmentModalComponent, { backdrop: 'static', scrollable: true });
+    modalRef.componentInstance.process = this.process;
+    modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+    modalRef.componentInstance.releasePointApportionments = this.tableData;
+    modalRef.componentInstance.edit = true;
+    modalRef.componentInstance.selectedReleasePoint = selectedApportionment;
+    modalRef.result.then((result) => {
+      this.processService.retrieve(this.process.id)
+        .subscribe(processResponse => {
+          if (result !== 'dontUpdate') {
+            this.sharedService.updateReportStatusAndEmit(this.route);
+            this.tableData = processResponse.releasePointAppts;
+          }
         })
+    })
   }
 }

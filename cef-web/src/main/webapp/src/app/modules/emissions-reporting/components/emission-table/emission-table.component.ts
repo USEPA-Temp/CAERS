@@ -6,7 +6,7 @@ import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
 import { EmissionService } from 'src/app/core/services/emission.service';
 import {ReportingPeriodService} from 'src/app/core/services/reporting-period.service';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { SharedService } from 'src/app/core/services/shared.service';
@@ -42,7 +42,7 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
 
     openDeleteModal(emissionName: string, emissionId: number) {
         const modalMessage = `Are you sure you want to delete the pollutant ${emissionName} from this process?`;
-        const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
             this.deleteEmission(emissionId);

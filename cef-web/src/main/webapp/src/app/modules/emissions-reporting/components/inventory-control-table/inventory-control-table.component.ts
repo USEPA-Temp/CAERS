@@ -6,7 +6,7 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ControlService } from 'src/app/core/services/control.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 
@@ -44,7 +44,7 @@ export class InventoryControlTableComponent extends BaseSortableTable implements
   openDeleteModal(controlName: string, controlId: number, facilitySiteId: number) {
     const modalMessage = `Are you sure you want to remove Control Device ${controlName}? This will delete
           the control device along with any associated control assignments and control paths.`;
-    const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
       this.deleteControl(controlId, facilitySiteId);
