@@ -4,7 +4,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
@@ -45,7 +45,7 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
   openDeleteModal(releasePointIdentifier: string, releasePointId: number) {
     const modalMessage = `Are you sure you want to delete the Release Point ${releasePointIdentifier} from this facility?
       This will also remove any Emission Process apportionments associated with this Release Point.`;
-    const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
       this.deleteReleasePoint(releasePointId);
