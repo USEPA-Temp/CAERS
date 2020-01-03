@@ -26,7 +26,7 @@ export class ControlPollutantModalComponent implements OnInit {
 
   pollutantForm = this.fb.group({
       pollutant: [null , Validators.required],
-      percentReduction: ['', [Validators.required,Validators.max(100),Validators.min(1)]]
+      percentReduction: ['', [Validators.required,Validators.max(100),Validators.min(0)]]
   });
 
   constructor(private lookupService: LookupService,
