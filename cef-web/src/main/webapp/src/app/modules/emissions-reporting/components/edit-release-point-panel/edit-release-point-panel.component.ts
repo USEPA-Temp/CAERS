@@ -200,15 +200,15 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       exitGasVelocity.setValidators(null);
     } else {
       stackHeight.setValidators([Validators.required,
-        Validators.max(1300), Validators.min(1), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+        Validators.min(1), Validators.max(1300), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
       stackDiameter.setValidators([Validators.required,
-        Validators.max(100), Validators.min(0.1), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+        Validators.min(0.1), Validators.max(100), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
       exitGasTemperature.setValidators([Validators.required,
-        Validators.min(30), Validators.max(3500), wholeNumberValidator()]);
+        Validators.min(-30), Validators.max(4000), Validators.pattern('^\-?[0-9]+$')]);
       exitGasFlowRate.setValidators([Validators.required,
-        Validators.max(200000), Validators.min(0.1), Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+        Validators.min(0.1), Validators.max(200000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
       exitGasVelocity.setValidators([Validators.required,
-        Validators.max(600), Validators.min(0.1), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+        Validators.min(0.001), Validators.max(1500), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
       fugitiveLine1Latitude.setValidators(null);
       fugitiveLine2Latitude.setValidators(null);
       fugitiveLine1Longitude.setValidators(null);
