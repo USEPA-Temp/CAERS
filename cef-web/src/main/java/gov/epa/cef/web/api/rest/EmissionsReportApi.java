@@ -128,13 +128,13 @@ public class EmissionsReportApi {
      */
     @PostMapping(value = "/accept")
     @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
-    public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody List<Long> reportIds) {
+    public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody ReviewDTO reviewDTO) {
 
-        this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
+        this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportStatusService.acceptEmissionsReports(reportIds);
+        List<EmissionsReportDto> result = emissionsReportStatusService.acceptEmissionsReports(reviewDTO.reportIds);
 
-        this.reportService.createReportHistory(reportIds, ReportAction.ACCEPTED);
+        this.reportService.createReportHistory(reviewDTO.reportIds, ReportAction.ACCEPTED, reviewDTO.comments);
         
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -146,13 +146,13 @@ public class EmissionsReportApi {
      */
     @PostMapping(value = "/reject")
     @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
-    public ResponseEntity<List<EmissionsReportDto>> rejectReports(@NotNull @RequestBody List<Long> reportIds) {
+    public ResponseEntity<List<EmissionsReportDto>> rejectReports(@NotNull @RequestBody ReviewDTO reviewDTO) {
 
-        this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
+        this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportStatusService.rejectEmissionsReports(reportIds);
+        List<EmissionsReportDto> result = emissionsReportStatusService.rejectEmissionsReports(reviewDTO.reportIds);
 
-        this.reportService.createReportHistory(reportIds, ReportAction.REJECTED);
+        this.reportService.createReportHistory(reviewDTO.reportIds, ReportAction.REJECTED, reviewDTO.comments);
         
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -309,6 +309,25 @@ public class EmissionsReportApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    static class ReviewDTO {
+    	private List<Long> reportIds;
+    	
+    	private String comments;
+    	
+		public List<Long> getReportIds() {
+			return reportIds;
+		}
+		public void setReportIds(List<Long> reportIds) {
+			this.reportIds = reportIds;
+		}
+		public String getComments() {
+			return comments;
+		}
+		public void setComments(String comments) {
+			this.comments = comments;
+		}
+    	
+    }
 
     static class EmissionsReportStarterDto {
 

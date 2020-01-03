@@ -4,8 +4,7 @@ import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-re
 import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/components/submission-review-list/submission-review-list.component';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RejectSubmissionModalComponent } from 'src/app/modules/dashboards/components/reject-submission-modal/reject-submission-modal.component';
-import { BaseConfirmationModalComponent } from 'src/app/modules/shared/components/base-confirmation-modal/base-confirmation-modal.component';
+import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -31,18 +30,17 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     onApprove() {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
-        console.log(selectedSubmissions);
 
         if (!selectedSubmissions.length) {
             this.invalidSelection = true;
         } else {
             this.invalidSelection = false;
-            const modalRef = this.modalService.open(BaseConfirmationModalComponent, { size: 'lg', backdrop: 'static' });
+            const modalRef = this.modalService.open(SubmissionReviewModalComponent, { size: 'lg', backdrop: 'static' });
             modalRef.componentInstance.title = 'Accept Submissions';
             modalRef.componentInstance.message = 'Would you like to accept the selected submissions?';
 
-            modalRef.result.then(() => {
-                this.emissionReportService.acceptReports(selectedSubmissions)
+            modalRef.result.then((comments) => {
+                this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
                     this.getSubmissionsUnderReview();
                 });
@@ -54,15 +52,17 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     onReject() {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
-        console.log(selectedSubmissions);
 
         if (!selectedSubmissions.length) {
             this.invalidSelection = true;
         } else {
             this.invalidSelection = false;
-            const modalRef = this.modalService.open(RejectSubmissionModalComponent, { size: 'lg', backdrop: 'static' });
-            modalRef.result.then(() => {
-                this.emissionReportService.rejectReports(selectedSubmissions)
+            const modalRef = this.modalService.open(SubmissionReviewModalComponent, { size: 'lg', backdrop: 'static' });
+            modalRef.componentInstance.title = 'Reject Submissions';
+            modalRef.componentInstance.message = 'Would you like to reject the selected submissions?';
+
+            modalRef.result.then((comments) => {
+                this.emissionReportService.rejectReports(selectedSubmissions,comments)
                 .subscribe(() => {
                     this.getSubmissionsUnderReview();
                 });

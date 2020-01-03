@@ -26,14 +26,16 @@ export class EmissionsReportingService {
         return this.http.get<EmissionsReport>(url);
     }
 
-    acceptReports(reportIds: number[]): Observable<EmissionsReport[]> {
+    acceptReports(reportIds: number[], comments: String): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/accept`;
-        return this.http.post<EmissionsReport[]>(url, reportIds);
+        return this.http.post<EmissionsReport[]>(url, {reportIds: reportIds,
+                                                       comments: comments });
     }
 
-    rejectReports(reportIds: number[]): Observable<EmissionsReport[]> {
+    rejectReports(reportIds: number[], comments: String): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/reject`;
-        return this.http.post<EmissionsReport[]>(url, reportIds);
+        return this.http.post<EmissionsReport[]>(url, {reportIds: reportIds,
+                                                       comments: comments });
     }
 
     resetReports(reportIds: number[]): Observable<EmissionsReport[]> {
