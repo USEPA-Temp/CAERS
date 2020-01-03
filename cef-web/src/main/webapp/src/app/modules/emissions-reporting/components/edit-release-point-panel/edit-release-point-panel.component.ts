@@ -23,6 +23,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     ]],
     typeCode: [null, Validators.required],
     description: ['', [
+      Validators.required,
       Validators.maxLength(200),
     ]],
     operatingStatusCode: [null, Validators.required],
@@ -74,67 +75,24 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     fugitiveAngle: ['', [
       Validators.max(179),
       Validators.min(0),
+      wholeNumberValidator()
     ]],
-    fugitiveLine1Latitude: ['', [
-      // Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-90),
-      Validators.max(90),
-    ]],
-    fugitiveLine1Longitude: ['', [
-      // Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-180),
-      Validators.max(180),
-    ]],
-    fugitiveLine2Latitude: ['', [
-      // Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-90),
-      Validators.max(90),
-    ]],
-    fugitiveLine2Longitude: ['', [
-      // Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-180),
-      Validators.max(180),
-    ]],
+    fugitiveLine1Latitude: [''],
+    fugitiveLine1Longitude: [''],
+    fugitiveLine2Latitude: [''],
+    fugitiveLine2Longitude: [''],
 
-    stackHeight: ['', [
-      // Validators.required,
-      Validators.max(1300),
-      Validators.min(1),
-      Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
-    ]],
+    stackHeight: [''],
     stackHeightUomCode: [{ value: null }],
-    stackDiameter: ['', [
-      // Validators.required,
-      Validators.max(100),
-      Validators.min(0.1),
-      Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
-    ]],
+    stackDiameter: [''],
     stackDiameterUomCode: [{ value: null }],
-    exitGasVelocity: ['', [
-      // Validators.required,
-      Validators.max(600),
-      Validators.min(0.1),
-      Validators.pattern('^[0-9]{1,5}([\.][0-9]{1,3})?$')
-    ]],
+    exitGasVelocity: [''],
     exitGasVelocityUomCode: [{ value: null }],
-    exitGasTemperature: ['', [
-      // Validators.required,
-      wholeNumberValidator(),
-      Validators.min(30),
-      Validators.max(3500),
-    ]],
-    exitGasFlowRate: ['', [
-      // Validators.required,
-      Validators.max(200000),
-      Validators.min(0.1),
-      Validators.pattern('^[0-9]{1,8}([\.][0-9]{1,8})?$'),
-    ]],
+    exitGasTemperature: [''],
+    exitGasFlowRate: [''],
     exitGasFlowUomCode: [{ value: null }]
-  }, { validators: [this.exitFlowCheck(), this.stackDiameterCheck()] });
+  }, { validators: [this.exitFlowCheck(), this.stackDiameterCheck()]
+  });
 
   releasePointTypeCode: BaseCodeLookup[];
   programSystemCode: BaseCodeLookup[];
@@ -188,9 +146,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   // reset form fields based on release point type
   releasePointType() {
+    this.rpTypeRequiredFields();
+
     if (this.releasePointForm.controls.typeCode.value !== null) {
       const releaseTypeControl = this.releasePointForm.get('typeCode');
-      this.rpTypeRequiredFields();
 
       if (releaseTypeControl.value.description === 'Fugitive') {
         this.releasePointForm.controls.exitGasVelocity.reset();
@@ -225,26 +184,35 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     const fugitiveLine1Longitude = this.releasePointForm.get('fugitiveLine1Longitude');
     const fugitiveLine2Longitude = this.releasePointForm.get('fugitiveLine2Longitude');
 
-    if (releaseTypeControl.value.description !== 'Fugitive') {
-      stackHeight.setValidators([Validators.required]);
-      stackDiameter.setValidators([Validators.required]);
-      exitGasTemperature.setValidators([Validators.required]);
-      exitGasFlowRate.setValidators([Validators.required]);
-      exitGasVelocity.setValidators([Validators.required]);
-      fugitiveLine1Latitude.setValidators(null);
-      fugitiveLine2Latitude.setValidators(null);
-      fugitiveLine1Longitude.setValidators(null);
-      fugitiveLine2Longitude.setValidators(null);
-    } else {
-      fugitiveLine1Latitude.setValidators([Validators.required]);
-      fugitiveLine2Latitude.setValidators([Validators.required]);
-      fugitiveLine1Longitude.setValidators([Validators.required]);
-      fugitiveLine2Longitude.setValidators([Validators.required]);
+    if (releaseTypeControl.value !== null && releaseTypeControl.value.description === 'Fugitive') {
+      fugitiveLine1Latitude.setValidators([Validators.required,
+        Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-90), Validators.max(90)]);
+      fugitiveLine2Latitude.setValidators([Validators.required,
+        Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-180), Validators.max(180)]);
+      fugitiveLine1Longitude.setValidators([Validators.required,
+        Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-90), Validators.max(90)]);
+      fugitiveLine2Longitude.setValidators([Validators.required,
+         Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-180), Validators.max(180)]);
       stackHeight.setValidators(null);
       stackDiameter.setValidators(null);
       exitGasTemperature.setValidators(null);
       exitGasFlowRate.setValidators(null);
       exitGasVelocity.setValidators(null);
+    } else {
+      stackHeight.setValidators([Validators.required,
+        Validators.max(1300), Validators.min(1), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+      stackDiameter.setValidators([Validators.required,
+        Validators.max(100), Validators.min(0.1), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+      exitGasTemperature.setValidators([Validators.required,
+        Validators.min(30), Validators.max(3500), wholeNumberValidator()]);
+      exitGasFlowRate.setValidators([Validators.required,
+        Validators.max(200000), Validators.min(0.1), Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+      exitGasVelocity.setValidators([Validators.required,
+        Validators.max(600), Validators.min(0.1), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+      fugitiveLine1Latitude.setValidators(null);
+      fugitiveLine2Latitude.setValidators(null);
+      fugitiveLine1Longitude.setValidators(null);
+      fugitiveLine2Longitude.setValidators(null);
     }
   }
 
@@ -254,10 +222,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const diameter = control.get('stackDiameter'); // ft
       const height = control.get('stackHeight'); // ft
 
-      if (Number(height.value) > 0) {
-        if ((Number(diameter.value) === 0) || (Number(height.value) <= Number(diameter.value))) {
-          return diameter.value === '' ? null : { stackDiameter: { value: this.releasePoint.stackDiameter } };
-        }
+      if (diameter.value > 0 && height.value > 0) {
+        return (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: true } : null;
       }
       return null;
     };
@@ -269,23 +235,29 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const diameter = control.get('stackDiameter'); // ft
       const exitVelocity = control.get('exitGasVelocity'); // fps
       const exitFlowRate = control.get('exitGasFlowRate'); // acfs
+      let valid = true;
 
-      const computedArea = (((1/4)*Math.PI)*(Math.pow(diameter.value, 2))); // sf
+      if (diameter.value !== null && exitVelocity.value !== null && exitFlowRate.value !== null) {
 
-      const computedFlow = (computedArea*exitVelocity.value); // cfs
+        const computedArea = (((1/4)*Math.PI)*(Math.pow(diameter.value, 2))); // sf
+        const computedFlow = (computedArea*exitVelocity.value); // cfs
 
-      // Compare to value with 0.1 precision
-      const upperLimit = (Math.round((computedFlow*1.05)*10))/10; // cfs
-      const lowerLimit = (Math.round((computedFlow*0.95)*10))/10; // cfs
+        // Compare to value with 0.1 precision
+        const upperLimit = (Math.round((computedFlow*1.05)*10))/10; // cfs
+        const lowerLimit = (Math.round((computedFlow*0.95)*10))/10; // cfs
 
-      const actualFlowRate = (Math.round(exitFlowRate.value*10))/10; // acfs
+        const actualFlowRate = (Math.round(exitFlowRate.value*10))/10; // acfs
 
-      if (exitFlowRate.value > 0) {
-        if ((actualFlowRate > upperLimit || actualFlowRate < lowerLimit)) {
-          return exitFlowRate.value === '' ? null : { exitGasFlowRate: { value: this.releasePoint.exitGasFlowRate } };
+        if (actualFlowRate > upperLimit || actualFlowRate < lowerLimit) {
+          valid = false;
+
+          if ((actualFlowRate === 0.1 && upperLimit < 0.1)) {
+            valid = true;
+          }
+          return valid ? null : { invalidFlowRate: true };
         }
-        return null;
       }
+      return null;
     };
   }
 }

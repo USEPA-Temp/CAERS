@@ -103,7 +103,7 @@
             <div class="col-sm-6 col-md-2">
                 <input type="text" class="form-control" id="stackDiameter" formControlName="stackDiameter" maxlength="7">
                 <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
-                <div class="validation-message" *ngIf="releasePointForm.getError('stackDiameter')">
+                <div class="validation-message" *ngIf="releasePointForm.errors?.invalidDiameter">
                     Stack diameter must be less than stack height.
                 </div>
             </div>
@@ -111,7 +111,7 @@
             <div class="col-sm-6 col-md-2">
                 <input type="text" class="form-control" id="exitGasFlowRate" formControlName="exitGasFlowRate" maxlength="17">
                 <app-validation-message [control]="releasePointForm.get('exitGasFlowRate')"></app-validation-message>
-                <div class="validation-message" *ngIf="releasePointForm.getError('exitGasFlowRate')">
+                <div class="validation-message" *ngIf="releasePointForm.errors?.invalidFlowRate">
                     Exit gas flow rate must be within 5% of calculated exit gas flow rate.
                 </div>
             </div>
@@ -187,7 +187,7 @@
                 <input type="text" class="form-control" id="fugitiveWidth" formControlName="fugitiveWidth" maxlength="6">
                 <app-validation-message [control]="releasePointForm.get('fugitiveWidth')"></app-validation-message>
             </div>
-            <label for="fugitiveAngle" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width Measure (degrees azimuth):</strong></label>
+            <label for="fugitiveAngle" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Angle Measure (degrees azimuth):</strong></label>
             <div class="col-sm-6 col-md-2">
                 <input type="text" class="form-control" id="fugitiveAngle" formControlName="fugitiveAngle" maxlength="3">
                 <app-validation-message [control]="releasePointForm.get('fugitiveAngle')"></app-validation-message>
