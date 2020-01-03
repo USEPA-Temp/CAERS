@@ -48,7 +48,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
   operatingStatusValues: BaseCodeLookup[];
   aircraftEngineTypeValue: AircraftEngineTypeCode[];
-  selectedAircraftEngineType: AircraftEngineTypeCode[];
   aircraftEngineSCC: string[];
 
   constructor(
@@ -103,6 +102,13 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
         this.lookupService.retrieveAircraftEngineCodes()
         .subscribe(result => {
           this.aircraftEngineTypeValue = result.filter(val => (val.scc === this.processForm.get('sccCode').value));
+
+          for (let item of result) {
+            if (this.process.aircraftEngineTypeCode && (item.code === this.process.aircraftEngineTypeCode.code)) {
+              this.processForm.controls['aircraftEngineTypeCode'].setValue(item);
+              break
+            }
+          }
         });
 
         // form field is required if selected SCC is aircraft
