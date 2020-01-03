@@ -147,30 +147,21 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         });
     }
 
-    reopenReport(report: EmissionsReport) {
+    reopenReport(report) {
         const modalMessage = `Do you wish to reopen the ${report.year} report for
-        ${this.facility.facilityName}? This will reset the status of the report to "In progress" and you 
+        ${this.facility.facilityName}? This will reset the status of the report to "In progress" and you
         will need to resubmit the report to the S/L/T authority for review.`;
         const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
             let ids = [report.id];
-            this.resetReport(ids);
+            this.resetReport(ids, report);
         });
     }
 
-    resetReport(reportIds: number[]) {
-        this.reportService.resetReports(reportIds).subscribe(() => {
-            this.route.data
-            .subscribe((data: { facility: CdxFacility }) => {
-                this.facility = data.facility;
-                if (this.facility) {
-                    this.reportService.getFacilityReports(this.facility.programId)
-                    .subscribe(reports => {
-                        this.reports = reports.sort((a, b) => b.year - a.year);
-                    });
-                }
-            });
+    resetReport(reportIds: number[], report) {
+        this.reportService.resetReports(reportIds).subscribe(result => {
+            this.router.navigate(['/facility/' + report.eisProgramId + '/report/' + report.id + '/summary']);
         });
 
     }
