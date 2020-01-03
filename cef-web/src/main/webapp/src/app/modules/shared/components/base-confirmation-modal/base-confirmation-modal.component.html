@@ -1,18 +1,13 @@
-<form [formGroup]="reviewForm">
-  <div class="modal-header">
-    <h4 class="modal-title">{{title}}</h4>
-  </div>
-  <div class="modal-body">
-    {{message}}
-    <br>
-    <label for="commentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
-    <div class="col-sm-6 col-md-10">
-      <textarea rows="3" class="form-control" id="commentsInput" formControlName="comments"></textarea>
-      <app-validation-message [control]="reviewForm.get('comments')"></app-validation-message>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" (click)="onClose()" class="btn btn-success">{{cancelButtonText}}</button>
-    <button type="button" (click)="onSubmit()" class="btn btn-primary">{{confirmButtonText}}</button>
-  </div>
-</form>
+<div class="modal-header">
+  <h4 class="modal-title">{{title}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  {{message}}
+</div>
+<div class="modal-footer">
+  <button type="button" (click)="onClose()" class="btn btn-success">{{cancelButtonText}}</button>
+  <button type="button" (click)="onSubmit()" class="btn btn-primary">{{confirmButtonText}}</button>
+</div>
