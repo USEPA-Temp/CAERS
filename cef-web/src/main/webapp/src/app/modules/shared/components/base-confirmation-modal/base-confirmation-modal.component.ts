@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Validators, FormBuilder, ValidatorFn, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-base-confirmation-modal',
@@ -13,7 +14,12 @@ export class BaseConfirmationModalComponent implements OnInit {
   @Input() cancelButtonText = 'Cancel';
   @Input() confirmButtonText = 'OK';
 
-  constructor(public activeModal: NgbActiveModal) { }
+  reviewForm = this.fb.group({
+    comments: ['', Validators.maxLength(2000)]
+  });
+
+  constructor(public activeModal: NgbActiveModal,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
   }
@@ -23,7 +29,7 @@ export class BaseConfirmationModalComponent implements OnInit {
   }
 
   onSubmit() {
-    this.activeModal.close();
+    this.activeModal.close(this.reviewForm.get('comments').value);
   }
 
 }

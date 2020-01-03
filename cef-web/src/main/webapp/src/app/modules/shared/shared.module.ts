@@ -25,6 +25,7 @@ import { WholeNumberValidatorDirective } from './directives/whole-number-validat
 import { NumberValidatorDirective } from './directives/number-validator.directive';
 import { BaseConfirmationModalComponent } from './components/base-confirmation-modal/base-confirmation-modal.component';
 import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -64,7 +65,9 @@ import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bu
     CommonModule,
     FontAwesomeModule,
     NgbModule,
-    SharedRoutingModule
+    SharedRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   entryComponents: [
     BaseConfirmationModalComponent

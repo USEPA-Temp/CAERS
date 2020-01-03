@@ -31,7 +31,6 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     onApprove() {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
-        console.log(selectedSubmissions);
 
         if (!selectedSubmissions.length) {
             this.invalidSelection = true;
@@ -41,8 +40,8 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.componentInstance.title = 'Accept Submissions';
             modalRef.componentInstance.message = 'Would you like to accept the selected submissions?';
 
-            modalRef.result.then(() => {
-                this.emissionReportService.acceptReports(selectedSubmissions)
+            modalRef.result.then((comments) => {
+                this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
                     this.getSubmissionsUnderReview();
                 });
@@ -60,9 +59,12 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.invalidSelection = true;
         } else {
             this.invalidSelection = false;
-            const modalRef = this.modalService.open(RejectSubmissionModalComponent, { size: 'lg', backdrop: 'static' });
-            modalRef.result.then(() => {
-                this.emissionReportService.rejectReports(selectedSubmissions)
+            const modalRef = this.modalService.open(BaseConfirmationModalComponent, { size: 'lg', backdrop: 'static' });
+            modalRef.componentInstance.title = 'Reject Submissions';
+            modalRef.componentInstance.message = 'Would you like to reject the selected submissions?';
+
+            modalRef.result.then((comments) => {
+                this.emissionReportService.rejectReports(selectedSubmissions,comments)
                 .subscribe(() => {
                     this.getSubmissionsUnderReview();
                 });
