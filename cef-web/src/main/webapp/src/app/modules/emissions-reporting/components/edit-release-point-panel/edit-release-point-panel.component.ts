@@ -251,6 +251,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         if (actualFlowRate > upperLimit || actualFlowRate < lowerLimit) {
           valid = false;
 
+          // If user enters 0.1 and calculated flow is less than 0.1
+          // Min allowable actual flow rate user can enter is 0.1
           if ((actualFlowRate === 0.1 && upperLimit < 0.1)) {
             valid = true;
           }
