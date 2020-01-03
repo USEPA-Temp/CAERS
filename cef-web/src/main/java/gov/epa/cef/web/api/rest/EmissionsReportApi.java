@@ -128,7 +128,7 @@ public class EmissionsReportApi {
      */
     @PostMapping(value = "/accept")
     @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
-    public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody reviewDTO reviewDTO) {
+    public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody ReviewDTO reviewDTO) {
 
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
@@ -146,7 +146,7 @@ public class EmissionsReportApi {
      */
     @PostMapping(value = "/reject")
     @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
-    public ResponseEntity<List<EmissionsReportDto>> rejectReports(@NotNull @RequestBody reviewDTO reviewDTO) {
+    public ResponseEntity<List<EmissionsReportDto>> rejectReports(@NotNull @RequestBody ReviewDTO reviewDTO) {
 
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
@@ -309,7 +309,7 @@ public class EmissionsReportApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    static class reviewDTO {
+    static class ReviewDTO {
     	private List<Long> reportIds;
     	
     	private String comments;
