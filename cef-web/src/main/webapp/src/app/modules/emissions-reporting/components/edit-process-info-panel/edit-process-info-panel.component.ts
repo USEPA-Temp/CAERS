@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
@@ -99,28 +99,29 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
         this.aircraftSCCcheck = true;
 
+        // form field is required if selected SCC is aircraft
+        this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
+
         this.lookupService.retrieveAircraftEngineCodes()
         .subscribe(result => {
           this.aircraftEngineTypeValue = result.filter(val => (val.scc === this.processForm.get('sccCode').value));
 
           for (let item of this.aircraftEngineTypeValue) {
-            if (this.process.aircraftEngineTypeCode && (item.code === this.process.aircraftEngineTypeCode.code)) {
+            if (this.process.aircraftEngineTypeCode !== null && (item.code === this.process.aircraftEngineTypeCode.code)) {
               this.processForm.controls['aircraftEngineTypeCode'].setValue(item);
               break
             }
           }
         });
-
-        // form field is required if selected SCC is aircraft
-        this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
-
         break;
       }
-
-      // reset form field if selected SCC is not aircraft
-      this.processForm.controls.aircraftEngineTypeCode.reset();
-      this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
       this.aircraftSCCcheck = false;
+      }
+
+    if (!this.aircraftSCCcheck) {
+      // reset form field if selected SCC is not aircraft
+      this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
+      this.processForm.controls.aircraftEngineTypeCode.reset();
     }
   }
 

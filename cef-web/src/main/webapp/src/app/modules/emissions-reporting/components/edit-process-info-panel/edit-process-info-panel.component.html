@@ -28,7 +28,7 @@
         <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label" *ngIf="aircraftSCCcheck"><strong>Aircraft Engine Code:</strong></label>
         <div class="col-sm-6 col-md-6" *ngIf="aircraftSCCcheck">
             <select type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCode">
-                <option disabled [ngValue]="null"> -- select an option -- </option>
+                <option disabled [ngValue]="null"></option>
                 <option [selected]="opt.code === process.aircraftEngineTypeCode?.code" *ngFor="let opt of aircraftEngineTypeValue" [ngValue]="opt">{{opt?.faaAircraftType}}&nbsp;-&nbsp;{{opt?.engine}}</option>
             </select>
             <app-validation-message [control]="processForm.controls.aircraftEngineTypeCode"></app-validation-message>
