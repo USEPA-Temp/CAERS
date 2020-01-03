@@ -103,7 +103,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
         .subscribe(result => {
           this.aircraftEngineTypeValue = result.filter(val => (val.scc === this.processForm.get('sccCode').value));
 
-          for (let item of result) {
+          for (let item of this.aircraftEngineTypeValue) {
             if (this.process.aircraftEngineTypeCode && (item.code === this.process.aircraftEngineTypeCode.code)) {
               this.processForm.controls['aircraftEngineTypeCode'].setValue(item);
               break
