@@ -58,12 +58,14 @@ export class ControlPollutantModalComponent implements OnInit {
     if (!this.isValid()) {
         this.pollutantForm.markAllAsTouched();
     } else {
-      this.controlPollutants.forEach(pollutant => {
-        if (pollutant.pollutant.pollutantName === this.pollutantForm.get('pollutant').value.pollutantName) {
-          this.duplicateCheck = false;
-          this.toastr.error('', 'This Control already contains this Control Pollutant, duplicates are not allowed.', {positionClass: 'toast-top-right'});
-        }
-      });
+      if(!this.edit){
+        this.controlPollutants.forEach(pollutant => {
+          if (pollutant.pollutant.pollutantName === this.pollutantForm.get('pollutant').value.pollutantName) {
+            this.duplicateCheck = false;
+            this.toastr.error('', 'This Control already contains this Control Pollutant, duplicates are not allowed.', {positionClass: 'toast-top-right'});
+          }
+        });
+      }
       if (this.duplicateCheck) {
         this.selectedPollutant = this.pollutantForm.get('pollutant').value;
         this.selectedControlPollutant.pollutant = this.selectedPollutant;
@@ -100,3 +102,4 @@ export class ControlPollutantModalComponent implements OnInit {
     
 
 }
+
