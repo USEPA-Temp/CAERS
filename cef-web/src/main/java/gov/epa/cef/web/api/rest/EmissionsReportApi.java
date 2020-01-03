@@ -156,6 +156,24 @@ public class EmissionsReportApi {
         
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Reset report status. Sets report status to in progress and validation status to unvalidated.
+     * @param reportIds
+     * @return
+     */
+    @PostMapping(value = "/reset")
+    @RolesAllowed(value = {AppRole.ROLE_CERTIFIER})
+    public ResponseEntity<List<EmissionsReportDto>> resetReports(@NotNull @RequestBody List<Long> reportIds) {
+
+        this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
+
+        List<EmissionsReportDto> result = emissionsReportStatusService.resetEmissionsReport(reportIds);
+
+        this.reportService.createReportHistory(reportIds, ReportAction.REOPENED);
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve current report for a given facility

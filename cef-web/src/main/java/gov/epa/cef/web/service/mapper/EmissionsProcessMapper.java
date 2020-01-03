@@ -15,17 +15,16 @@ import gov.epa.cef.web.service.dto.postOrder.EmissionsProcessPostOrderDto;
 public interface EmissionsProcessMapper {
     
     @Mapping(source="emissionsUnit.id", target="emissionsUnitId")
-    @Mapping(source="aircraftEngineTypeCode.code", target="aircraftEngineTypeCodeCode")
     EmissionsProcessDto emissionsProcessToEmissionsProcessDto(EmissionsProcess emissionsProcess);
     
     List<EmissionsProcessDto> emissionsProcessesToEmissionsProcessDtos(List<EmissionsProcess> emissionsProcesses);
     
     @Mapping(source="emissionsUnitId", target="emissionsUnit.id")
-//    @Mapping(source="aircraftEngineTypeCodeCode", target="aircraftEngineTypeCode.code")
     @Mapping(target = "operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
     EmissionsProcess fromSaveDto(EmissionsProcessSaveDto source);
     
     @Mapping(target = "operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
+    @Mapping(target = "aircraftEngineTypeCode", qualifiedByName = "AircraftEngineTypeCode")
     @Mapping(target = "releasePointAppts", ignore = true)
     @Mapping(target = "reportingPeriods", ignore = true)
     void updateFromSaveDto(EmissionsProcessSaveDto source, @MappingTarget EmissionsProcess target);

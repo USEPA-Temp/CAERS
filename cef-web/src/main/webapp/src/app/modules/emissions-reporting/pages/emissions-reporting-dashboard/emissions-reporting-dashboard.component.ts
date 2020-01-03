@@ -5,9 +5,9 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { BusyModalComponent } from 'src/app/shared/components/busy-modal/busy-modal.component';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -137,7 +137,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
     openDeleteModal(eisProgramId: string, reportId: number, reportYear: number) {
 
-        const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         const modalMessage = `Are you sure you want to delete the ${reportYear} Emissions Report from this Facility
             (EIS Id ${eisProgramId})? This will also remove any Facility Information, Emission Units, Control Devices,
             and Release Point associated with this report.`;
@@ -145,5 +145,33 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalRef.componentInstance.continue.subscribe(() => {
             this.deleteReport(reportId);
         });
+    }
+
+    reopenReport(report: EmissionsReport) {
+        const modalMessage = `Do you wish to reopen the ${report.year} report for
+        ${this.facility.facilityName}? This will reset the status of the report to "In progress" and you 
+        will need to resubmit the report to the S/L/T authority for review.`;
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+        modalRef.componentInstance.message = modalMessage;
+        modalRef.componentInstance.continue.subscribe(() => {
+            let ids = [report.id];
+            this.resetReport(ids);
+        });
+    }
+
+    resetReport(reportIds: number[]) {
+        this.reportService.resetReports(reportIds).subscribe(() => {
+            this.route.data
+            .subscribe((data: { facility: CdxFacility }) => {
+                this.facility = data.facility;
+                if (this.facility) {
+                    this.reportService.getFacilityReports(this.facility.programId)
+                    .subscribe(reports => {
+                        this.reports = reports.sort((a, b) => b.year - a.year);
+                    });
+                }
+            });
+        });
+
     }
 }

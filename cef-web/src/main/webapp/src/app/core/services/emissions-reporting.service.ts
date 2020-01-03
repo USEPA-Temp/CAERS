@@ -38,6 +38,11 @@ export class EmissionsReportingService {
                                                        comments: comments });
     }
 
+    resetReports(reportIds: number[]): Observable<EmissionsReport[]> {
+        const url = `${this.baseUrl}/reset`;
+        return this.http.post<EmissionsReport[]>(url, reportIds);
+    }
+
     /** POST request to the server to create a report for the current year */
     createReport(eisFacilityId: string, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
         const url = `${this.baseUrl}/facility/${eisFacilityId}`;

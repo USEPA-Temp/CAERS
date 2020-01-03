@@ -3,7 +3,7 @@ import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base
 import { ControlPollutant } from 'src/app/shared/models/control-pollutant';
 import { ControlService } from 'src/app/core/services/control.service';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { DeleteDialogComponent } from 'src/app/shared/components/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ControlPollutantModalComponent } from 'src/app/modules/emissions-reporting/components/control-pollutant-modal/control-pollutant-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -59,7 +59,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
   openDeleteModal(selectedPollutant){
     const modalMessage = `Are you sure you want to remove the association of Control Device ${this.controlId}
       with Control Pollutant ${selectedPollutant.pollutant.pollutantName}?`;
-    const modalRef = this.modalService.open(DeleteDialogComponent, { size: 'sm' });
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
       this.deleteControlPollutant(selectedPollutant);

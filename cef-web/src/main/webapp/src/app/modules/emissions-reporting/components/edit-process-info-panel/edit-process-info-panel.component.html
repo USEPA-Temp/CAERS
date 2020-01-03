@@ -25,18 +25,19 @@
             <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
             <app-validation-message [control]="processForm.get('description')"></app-validation-message>
         </div>
-        <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Aircraft Engine Code:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCodeCode">
-            <app-validation-message [control]="processForm.get('aircraftEngineTypeCodeCode')"></app-validation-message>
+        <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label" *ngIf="aircraftSCCcheck"><strong>Aircraft Engine Code:</strong></label>
+        <div class="col-sm-6 col-md-6" *ngIf="aircraftSCCcheck">
+            <select type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of aircraftEngineTypeValue" [ngValue]="opt">{{opt?.faaAircraftType}}&nbsp;-&nbsp;{{opt?.engine}}</option>
+            </select>
+            <app-validation-message [control]="processForm.controls.aircraftEngineTypeCode"></app-validation-message>
         </div>
-        
     </div>
 
     <div class="row pb-1">
         <label for="processSccInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode">
+            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()">
             <app-validation-message [control]="processForm.get('sccCode')"></app-validation-message>
         </div>
         <div class="col-sm-6 col-md-3">

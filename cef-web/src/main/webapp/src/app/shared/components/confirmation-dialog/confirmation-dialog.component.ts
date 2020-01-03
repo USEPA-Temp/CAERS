@@ -3,11 +3,11 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-delete-dialog',
-  templateUrl: './delete-dialog.component.html',
-  styleUrls: ['./delete-dialog.component.scss']
+  selector: 'app-confirmation-dialog',
+  templateUrl: './confirmation-dialog.component.html',
+  styleUrls: ['./confirmation-dialog.component.scss']
 })
-export class DeleteDialogComponent implements OnInit {
+export class ConfirmationDialogComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal) { }
   @Input() message: string;
@@ -24,5 +24,4 @@ export class DeleteDialogComponent implements OnInit {
   onClose() {
     this.activeModal.close();
   }
-
 }
