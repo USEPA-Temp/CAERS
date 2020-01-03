@@ -32,7 +32,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
 
 
   openCreateModal() {
-        const modalRef = this.modalService.open(ControlPollutantModalComponent, {backdrop: 'static', scrollable: true });
+        const modalRef = this.modalService.open(ControlPollutantModalComponent, {size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.controlId = this.controlId;
         modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
         modalRef.componentInstance.controlPollutants = this.tableData;
@@ -48,7 +48,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
   }
 
   openEditModal(selectedPollutant){
-    const modalRef = this.modalService.open(ControlPollutantModalComponent, {backdrop: 'static', scrollable: true });
+    const modalRef = this.modalService.open(ControlPollutantModalComponent, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
     modalRef.componentInstance.controlId = this.controlId;
     modalRef.componentInstance.selectedControlPollutant = selectedPollutant;
