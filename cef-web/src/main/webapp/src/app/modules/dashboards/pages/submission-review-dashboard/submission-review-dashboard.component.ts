@@ -17,6 +17,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     private listComponent: SubmissionReviewListComponent;
 
     submissions: SubmissionUnderReview[] = [];
+    hideButtons: boolean;
     invalidSelection = false;
 
     constructor(
@@ -75,6 +76,16 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     getSubmissionsUnderReview(): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
             .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === 'SUBMITTED') );
+    }
+
+    onStatusSelected(value: string) {
+        if (value === 'Submitted') {
+            this.hideButtons = false;
+        } else {
+            this.hideButtons = true;
+        }
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
+            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === value.toUpperCase()) );
     }
 
 }

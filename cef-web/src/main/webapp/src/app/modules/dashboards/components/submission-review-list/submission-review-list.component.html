@@ -1,14 +1,10 @@
-<div class="pt-3 pb-3"  *ngIf="userContext.user">
-    The following table shows industry submissions of the Combined Air Emissions Report for your agency (&nbsp;{{ userContext.user.agencyCode }}&nbsp;) that are awaiting review.
-</div>
-
 <form>
 
   <div class="mh-100 overflow-auto">
     <table class="table table-sm table-striped table-bordered">
       <thead>
       <tr>
-        <th scope="col">Select</th>
+        <th *ngIf="!hideSelectColumn" scope="col">Select</th>
         <th scope="col" sortable="facilityName" (sort)="onSort($event)">Facility Name</th>
         <th scope="col" sortable="altFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
         <th scope="col" sortable="operatingStatus" (sort)="onSort($event)">Operating Status</th>
@@ -20,7 +16,7 @@
       </thead>
       <tbody>
       <tr *ngFor="let submission of tableData">
-        <th scope="row"><input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"></th>
+        <th *ngIf="!hideSelectColumn" scope="row"><input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"></th>
         <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
