@@ -174,6 +174,15 @@ public class ReleasePoint extends BaseAuditEntity {
         this.latitude = originalReleasePoint.getLatitude();
         this.longitude = originalReleasePoint.getLongitude();
         this.comments = originalReleasePoint.getComments();
+        this.fugitiveHeight = originalReleasePoint.getFugitiveHeight();
+        this.fugitiveHeightUomCode = originalReleasePoint.getFugitiveHeightUomCode();
+        this.fugitiveLength = originalReleasePoint.getFugitiveLength();
+        this.fugitiveLengthUomCode = originalReleasePoint.getFugitiveLengthUomCode();
+        this.fugitiveWidth = originalReleasePoint.getFugitiveWidth();
+        this.fugitiveWidthUomCode = originalReleasePoint.getFugitiveWidthUomCode();
+        this.fugitiveAngle = originalReleasePoint.getFugitiveAngle();
+        this.fenceLineDistance = originalReleasePoint.getFenceLineDistance();
+        this.fenceLineUomCode = originalReleasePoint.getFenceLineUomCode();
     }
     
     // Property accessors
