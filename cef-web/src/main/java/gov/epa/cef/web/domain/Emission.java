@@ -93,6 +93,7 @@ public class Emission extends BaseAuditEntity {
         this.emissionsDenominatorUom = originalEmission.getEmissionsDenominatorUom();
         this.calculatedEmissionsTons = originalEmission.getCalculatedEmissionsTons();
         this.formulaIndicator = originalEmission.getFormulaIndicator();
+        this.emissionsFactorFormula = originalEmission.getEmissionsFactorFormula();
     }
 
     public ReportingPeriod getReportingPeriod() {
