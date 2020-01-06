@@ -8,8 +8,10 @@
     <div *ngIf="facilitySite" class="card-body">
         <div *ngIf="!editInfo">
             <div class="row  pb-2">
-                <div class="col-sm-6 col-md-2"><strong>Facility EIS ID:</strong></div>
-                <div class="col-sm-6 col-md-2">{{facilitySite.eisProgramId}}</div>
+                <div class="col-sm-6 col-md-2" hidden><strong>Facility EIS ID:</strong></div>
+                <div class="col-sm-6 col-md-2" hidden>{{facilitySite.eisProgramId}}</div>
+                <div class="col-sm-6 col-md-2" ><strong>Agency Facility ID:</strong></div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.altSiteIdentifier}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Latitude:</strong></div>
                 <div class="col-sm-6 col-md-2">{{facilitySite.latitude}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>

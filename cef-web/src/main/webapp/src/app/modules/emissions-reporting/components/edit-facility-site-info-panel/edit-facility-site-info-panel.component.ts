@@ -17,6 +17,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
 
   facilitySiteForm = this.fb.group({
     eisProgramId: [''],
+    altSiteIdentifier: [''],
     name: ['', [
       Validators.maxLength(80),
       Validators.required]],

@@ -1,10 +1,13 @@
 <form [formGroup]="facilitySiteForm">
     <div class="row pb-1">
-        <label for="eisProgramIdInput" class="col-sm-6 col-md-2 col-form-label"><strong>Facility EIS ID:</strong></label>
-        <div class="col-sm-6 col-md-2">
+        <label for="eisProgramIdInput" class="col-sm-6 col-md-2 col-form-label" hidden><strong>Facility EIS ID:</strong></label>
+        <div class="col-sm-6 col-md-2" hidden>
             <input type="text" class="form-control" maxlength="20" id="eisProgramIdInput" formControlName="eisProgramId" [value]="facilitySiteForm.value.eisProgramId" readonly>
         </div>
-
+        <label for="altSiteIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Agency Facility ID:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <input type="text" class="form-control" maxlength="30" id="altSiteIdentifierInput" formControlName="altSiteIdentifier" [value]="facilitySiteForm.value.altSiteIdentifier" readonly>
+        </div>
         <label for="latitudeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Latitude:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" maxlength="10" id="latitudeInput" formControlName="latitude">
