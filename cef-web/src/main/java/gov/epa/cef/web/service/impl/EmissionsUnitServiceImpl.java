@@ -83,7 +83,12 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
 
          ){
         	OperatingStatusCode tempOperatingStatusCode = dto.getOperatingStatusCode();
-        	unit.getEmissionsProcesses().forEach((process) -> process.setOperatingStatusCode(tempOperatingStatusCode));
+        	Short tempStatusYear = dto.getStatusYear();
+        	
+        	unit.getEmissionsProcesses().forEach(process -> {
+	        	process.setOperatingStatusCode(tempOperatingStatusCode);
+	        	process.setStatusYear(tempStatusYear);
+        	});
         }
         
         emissionsUnitMapper.updateFromDto(dto, unit);

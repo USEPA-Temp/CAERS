@@ -76,6 +76,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     this.processForm.reset(this.process);
   }
 
+  onChange(newValue) {
+    if(newValue) {
+      this.processForm.controls.statusYear.reset();
+    }
+  }
+
   openSccSearchModal() {
     const modalRef = this.modalService.open(SccSearchModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
 

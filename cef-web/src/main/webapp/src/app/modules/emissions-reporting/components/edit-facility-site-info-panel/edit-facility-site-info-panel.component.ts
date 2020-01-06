@@ -99,6 +99,12 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     this.facilitySiteForm.reset(this.facilitySite);
   }
 
+  onChange(newValue) {
+    if(newValue) {
+      this.facilitySiteForm.controls.statusYear.reset();
+    }
+  }
+
   mailingAddressValidator(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const addressControl = control.get('mailingStreetAddress');

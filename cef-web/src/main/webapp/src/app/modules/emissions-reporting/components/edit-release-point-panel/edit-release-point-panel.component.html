@@ -17,7 +17,7 @@
     <div class="row pb-1">
         <label for="description" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Description:</strong></label>
         <div class="col-sm-6 col-md-6">
-            <textarea rows="1" class="form-control" style="height:100%;" id="description" formControlName="description" maxlength="200"></textarea>
+            <textarea rows="1" class="form-control" id="description" formControlName="description" maxlength="200"></textarea>
             <app-validation-message [control]="releasePointForm.get('description')"></app-validation-message>
         </div>
     </div>
@@ -25,7 +25,7 @@
     <div class="row pb-1">
         <label for="releaseStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Status:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="releaseStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
+            <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="releaseStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('operatingStatusCode')"></app-validation-message>
