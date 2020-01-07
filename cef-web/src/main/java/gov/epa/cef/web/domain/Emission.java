@@ -53,7 +53,7 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "emissions_calc_method_code", nullable = false)
     private CalculationMethodCode emissionsCalcMethodCode;
 
-    @Column(name = "comments", length = 200)
+    @Column(name = "comments", length = 400)
     private String comments;
     
     @ManyToOne(fetch = FetchType.LAZY)

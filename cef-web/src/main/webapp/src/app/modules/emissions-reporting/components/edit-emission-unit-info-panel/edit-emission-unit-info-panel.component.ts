@@ -37,7 +37,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(100)
     ]],
-    comments: ['', Validators.maxLength(2000)]
+    comments: ['', Validators.maxLength(400)]
   });
 
   operatingStatusValues: BaseCodeLookup[];

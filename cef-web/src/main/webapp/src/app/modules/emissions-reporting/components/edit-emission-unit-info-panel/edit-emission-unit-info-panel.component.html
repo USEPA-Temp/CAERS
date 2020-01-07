@@ -53,7 +53,7 @@
     <div class="row pb-1">
         <label for="unitCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
         <div class="col-sm-6 col-md-10">
-            <textarea rows="3" class="form-control"  maxlength="2000" style="height:100%;" id="unitCommentsInput" formControlName="comments"></textarea>
+            <textarea rows="3" class="form-control"  maxlength="400" style="height:100%;" id="unitCommentsInput" formControlName="comments"></textarea>
             <app-validation-message [control]="emissionUnitForm.get('comments')"></app-validation-message>
         </div>
     </div>

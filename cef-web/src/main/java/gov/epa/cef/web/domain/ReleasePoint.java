@@ -131,7 +131,7 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "fugitive_angle", precision = 3, scale = 0)
     private Long fugitiveAngle;
     
-    @Column(name = "comments", length = 200)
+    @Column(name = "comments", length = 400)
     private String comments;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")

@@ -191,7 +191,7 @@
                     <div class="row">
                         <label for="emissionCommentsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Comments:</strong></label>
                         <div class="col-sm-8 col-lg-10">
-                            <textarea rows="3" class="form-control" id="emissionCommentsInput" formControlName="comments"></textarea>
+                            <textarea rows="3" class="form-control" maxlength="400" id="emissionCommentsInput" formControlName="comments"></textarea>
                             <app-validation-message [control]="emissionForm.controls.comments"></app-validation-message>
                         </div>
                     </div>

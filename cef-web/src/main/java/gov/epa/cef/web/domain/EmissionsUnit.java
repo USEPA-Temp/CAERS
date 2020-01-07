@@ -58,7 +58,7 @@ public class EmissionsUnit extends BaseAuditEntity {
     @JoinColumn(name = "unit_measure_cd")
     private UnitMeasureCode unitOfMeasureCode;
 
-    @Column(name = "comments", length = 200)
+    @Column(name = "comments", length = 400)
     private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
