@@ -13,8 +13,5 @@ ALTER TABLE emissions_unit
 ALTER TABLE release_point
     ALTER COLUMN comments TYPE character varying(400);
     
-ALTER TABLE report_history
-    ALTER COLUMN comments TYPE character varying(400);
-    
 ALTER TABLE reporting_period
     ALTER COLUMN comments TYPE character varying(400);

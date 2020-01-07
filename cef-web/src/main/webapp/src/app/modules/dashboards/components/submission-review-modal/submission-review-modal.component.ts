@@ -15,7 +15,7 @@ export class SubmissionReviewModalComponent implements OnInit {
   @Input() confirmButtonText = 'OK';
 
   reviewForm = this.fb.group({
-    comments: ['', [Validators.maxLength(400)]]
+    comments: ['', [Validators.maxLength(2000)]]
   });
 
   constructor(public activeModal: NgbActiveModal,

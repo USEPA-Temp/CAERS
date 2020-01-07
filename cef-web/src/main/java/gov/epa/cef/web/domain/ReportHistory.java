@@ -42,7 +42,7 @@ public class ReportHistory extends BaseAuditEntity {
 	@Column(name = "user_full_name", nullable = false)
 	private String userFullName;
 
-	@Column(name = "comments", length = 400)
+	@Column(name = "comments", length = 2000)
 	private String comments;
 
 	/**
