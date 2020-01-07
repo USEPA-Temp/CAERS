@@ -77,19 +77,64 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.min(0),
       wholeNumberValidator()
     ]],
-    fugitiveLine1Latitude: [''],
-    fugitiveLine1Longitude: [''],
-    fugitiveLine2Latitude: [''],
-    fugitiveLine2Longitude: [''],
+    fugitiveLine1Latitude: ['', [
+      Validators.required,
+      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
+      Validators.min(-90),
+      Validators.max(90)
+    ]],
+    fugitiveLine1Longitude: ['', [
+      Validators.required,
+      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
+      Validators.min(-180),
+      Validators.max(180)
+    ]],
+    fugitiveLine2Latitude: ['', [
+      Validators.required,
+      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
+      Validators.min(-90),
+      Validators.max(90)
+      ]],
+    fugitiveLine2Longitude: ['', [
+      Validators.required,
+      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
+      Validators.min(-180),
+      Validators.max(180)
+    ]],
 
-    stackHeight: [''],
+    stackHeight: ['', [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(1300),
+      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
+    ]],
     stackHeightUomCode: [{ value: null }],
-    stackDiameter: [''],
+    stackDiameter: ['', [
+      Validators.required,
+      Validators.min(0.1),
+      Validators.max(100),
+      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
+    ]],
     stackDiameterUomCode: [{ value: null }],
-    exitGasVelocity: [''],
+    exitGasVelocity: ['', [
+      Validators.required,
+      Validators.min(0.001),
+      Validators.max(1500),
+      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
+    ]],
     exitGasVelocityUomCode: [{ value: null }],
-    exitGasTemperature: [''],
-    exitGasFlowRate: [''],
+    exitGasTemperature: ['', [
+      Validators.required,
+      Validators.min(-30),
+      Validators.max(4000),
+      Validators.pattern('^\-?[0-9]+$')
+    ]],
+    exitGasFlowRate: ['', [
+      Validators.required,
+      Validators.min(0.1),
+      Validators.max(200000),
+      Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')
+    ]],
     exitGasFlowUomCode: [{ value: null }]
   }, { validators: [this.exitFlowCheck(), this.stackDiameterCheck()]
   });
@@ -144,75 +189,53 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.releasePointForm.reset(this.releasePoint);
   }
 
-  // reset form fields based on release point type
+  // reset form fields and set validation based on release point type
   releasePointType() {
-    this.rpTypeRequiredFields();
 
     if (this.releasePointForm.controls.typeCode.value !== null) {
       const releaseTypeControl = this.releasePointForm.get('typeCode');
 
       if (releaseTypeControl.value.description === 'Fugitive') {
-        this.releasePointForm.controls.exitGasVelocity.reset();
-        this.releasePointForm.controls.exitGasFlowRate.reset();
-        this.releasePointForm.controls.stackDiameter.reset();
+        this.releasePointForm.controls.fugitiveLine1Latitude.enable();
+        this.releasePointForm.controls.fugitiveLine2Latitude.enable();
+        this.releasePointForm.controls.fugitiveLine1Longitude.enable();
+        this.releasePointForm.controls.fugitiveLine2Longitude.enable();
+        this.releasePointForm.controls.stackHeight.disable();
+        this.releasePointForm.controls.stackDiameter.disable();
+        this.releasePointForm.controls.exitGasTemperature.disable();
+        this.releasePointForm.controls.exitGasFlowRate.disable();
+        this.releasePointForm.controls.exitGasVelocity.disable();
         this.releasePointForm.controls.stackHeight.reset();
+        this.releasePointForm.controls.stackDiameter.reset();
+        this.releasePointForm.controls.exitGasFlowRate.reset();
+        this.releasePointForm.controls.exitGasVelocity.reset();
         this.releasePointForm.controls.exitGasTemperature.reset();
         return true;
       }
-      this.releasePointForm.controls.fugitiveLength.reset();
-      this.releasePointForm.controls.fugitiveWidth.reset();
-      this.releasePointForm.controls.fugitiveHeight.reset();
-      this.releasePointForm.controls.fugitiveAngle.reset();
+      this.releasePointForm.controls.stackHeight.enable();
+      this.releasePointForm.controls.stackDiameter.enable();
+      this.releasePointForm.controls.exitGasTemperature.enable();
+      this.releasePointForm.controls.exitGasFlowRate.enable();
+      this.releasePointForm.controls.exitGasVelocity.enable();
+      this.releasePointForm.controls.fugitiveLine1Latitude.disable();
+      this.releasePointForm.controls.fugitiveLine2Latitude.disable();
+      this.releasePointForm.controls.fugitiveLine1Longitude.disable();
+      this.releasePointForm.controls.fugitiveLine2Longitude.disable();
       this.releasePointForm.controls.fugitiveLine1Latitude.reset();
       this.releasePointForm.controls.fugitiveLine2Latitude.reset();
       this.releasePointForm.controls.fugitiveLine1Longitude.reset();
       this.releasePointForm.controls.fugitiveLine2Longitude.reset();
+      this.releasePointForm.controls.fugitiveLength.reset();
+      this.releasePointForm.controls.fugitiveWidth.reset();
+      this.releasePointForm.controls.fugitiveHeight.reset();
+      this.releasePointForm.controls.fugitiveAngle.reset();
     }
     return false;
   }
 
-  // set form field required based on release point type
-  rpTypeRequiredFields() {
-    const releaseTypeControl = this.releasePointForm.get('typeCode');
-    const exitGasTemperature = this.releasePointForm.get('exitGasTemperature');
-    const stackHeight = this.releasePointForm.get('stackHeight');
-    const stackDiameter = this.releasePointForm.get('stackDiameter');
-    const exitGasFlowRate = this.releasePointForm.get('exitGasFlowRate');
-    const exitGasVelocity = this.releasePointForm.get('exitGasVelocity');
-    const fugitiveLine1Latitude = this.releasePointForm.get('fugitiveLine1Latitude');
-    const fugitiveLine2Latitude = this.releasePointForm.get('fugitiveLine2Latitude');
-    const fugitiveLine1Longitude = this.releasePointForm.get('fugitiveLine1Longitude');
-    const fugitiveLine2Longitude = this.releasePointForm.get('fugitiveLine2Longitude');
-
-    if (releaseTypeControl.value !== null && releaseTypeControl.value.description === 'Fugitive') {
-      fugitiveLine1Latitude.setValidators([Validators.required,
-        Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-90), Validators.max(90)]);
-      fugitiveLine2Latitude.setValidators([Validators.required,
-        Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-180), Validators.max(180)]);
-      fugitiveLine1Longitude.setValidators([Validators.required,
-        Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-90), Validators.max(90)]);
-      fugitiveLine2Longitude.setValidators([Validators.required,
-         Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'), Validators.min(-180), Validators.max(180)]);
-      stackHeight.setValidators(null);
-      stackDiameter.setValidators(null);
-      exitGasTemperature.setValidators(null);
-      exitGasFlowRate.setValidators(null);
-      exitGasVelocity.setValidators(null);
-    } else {
-      stackHeight.setValidators([Validators.required,
-        Validators.min(1), Validators.max(1300), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
-      stackDiameter.setValidators([Validators.required,
-        Validators.min(0.1), Validators.max(100), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
-      exitGasTemperature.setValidators([Validators.required,
-        Validators.min(-30), Validators.max(4000), Validators.pattern('^\-?[0-9]+$')]);
-      exitGasFlowRate.setValidators([Validators.required,
-        Validators.min(0.1), Validators.max(200000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
-      exitGasVelocity.setValidators([Validators.required,
-        Validators.min(0.001), Validators.max(1500), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
-      fugitiveLine1Latitude.setValidators(null);
-      fugitiveLine2Latitude.setValidators(null);
-      fugitiveLine1Longitude.setValidators(null);
-      fugitiveLine2Longitude.setValidators(null);
+  onChange(newValue) {
+    if(newValue) {
+      this.releasePointForm.controls.statusYear.reset();
     }
   }
 
