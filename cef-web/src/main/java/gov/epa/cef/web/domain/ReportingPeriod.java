@@ -54,7 +54,7 @@ public class ReportingPeriod extends BaseAuditEntity {
     @JoinColumn(name = "calculation_material_code", nullable = false)
     private CalculationMaterialCode calculationMaterialCode;
     
-    @Column(name = "comments", length = 200)
+    @Column(name = "comments", length = 400)
     private String comments;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportingPeriod")

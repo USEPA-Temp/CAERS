@@ -52,7 +52,7 @@ public class EmissionsProcess extends BaseAuditEntity {
     @Column(name = "description", length = 200)
     private String description;
 
-    @Column(name = "comments", length = 200)
+    @Column(name = "comments", length = 400)
     private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")

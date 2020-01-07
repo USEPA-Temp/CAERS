@@ -24,7 +24,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     ]],
     calculationParameterUom: [null, Validators.required],
     calculationMaterialCode: [null, Validators.required],
-    comments: ['', Validators.maxLength(2000)]
+    comments: ['', Validators.maxLength(400)]
   });
 
   materialValues: BaseCodeLookup[];

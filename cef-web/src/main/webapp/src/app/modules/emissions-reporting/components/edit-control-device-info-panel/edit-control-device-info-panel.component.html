@@ -42,7 +42,7 @@
     <div class="row pb-1">
         <label for="controlCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
         <div class="col-sm-6 col-md-10">
-            <textarea rows="3" class="form-control" style="height:100%;" maxlength="2000" id="controlCommentsInput" formControlName="comments"></textarea>
+            <textarea rows="3" class="form-control" style="height:100%;" maxlength="400" id="controlCommentsInput" formControlName="comments"></textarea>
             <app-validation-message [control]="controlDeviceForm.get('comments')"></app-validation-message>
         </div>
     </div>

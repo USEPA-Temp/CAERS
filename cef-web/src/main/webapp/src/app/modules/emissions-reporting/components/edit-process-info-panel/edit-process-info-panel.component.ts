@@ -43,7 +43,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(200)
     ]],
-    comments: ['', Validators.maxLength(2000)]
+    comments: ['', Validators.maxLength(400)]
   });
 
   operatingStatusValues: BaseCodeLookup[];

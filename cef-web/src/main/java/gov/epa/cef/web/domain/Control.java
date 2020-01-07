@@ -40,7 +40,7 @@ public class Control extends BaseAuditEntity {
     @Column(name = "percent_control", precision = 4, scale = 1)
     private Double percentControl;
     
-    @Column(name = "comments", length = 200)
+    @Column(name = "comments", length = 400)
     private String comments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
