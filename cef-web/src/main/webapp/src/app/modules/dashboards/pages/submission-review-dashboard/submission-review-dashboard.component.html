@@ -7,11 +7,20 @@
       </div>
 
       <div class="list-group list-group-flush">
-        <app-submission-review-list [tableData]="submissions"></app-submission-review-list>
-
+        <br>
+        <div class="row">
+          <strong style="margin-left: 25px;">Report Status:</strong>
+          <select style="width: 150px; margin-left: 10px;" class="select-option" #mySelect (change)="onStatusSelected(mySelect.value)">
+              <option value="Submitted">Submitted</option>
+              <option value="In_Progress">In_Progress</option>
+              <option value="Approved">Approved</option>
+          </select>
+        </div>
+        <br>
+        <app-submission-review-list [hideSelectColumn]="hideButtons" [tableData]="submissions"></app-submission-review-list>
         <div class="text-right">
-          <button class="btn btn-primary btn-md m-3" (click)="onReject()">Reject and Return to Facility</button>
-          <button class="btn btn-success btn-md m-3" (click)="onApprove()">Accept and Submit to EIS</button>
+          <button *ngIf="!hideButtons" class="btn btn-primary btn-md m-3" (click)="onReject()">Reject and Return to Facility</button>
+          <button *ngIf="!hideButtons" class="btn btn-success btn-md m-3" (click)="onApprove()">Accept and Submit to EIS</button>
           <div class="validation-message p-3" *ngIf="invalidSelection">
             At least one submission must be selected.
           </div>

@@ -14,6 +14,7 @@ import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/componen
 export class SubmissionReviewListComponent extends BaseSortableTable implements OnInit {
 
   @Input() tableData: SubmissionUnderReview[];
+  @Input() hideSelectColumn: boolean;
 
   constructor(public userContext: UserContextService, private modalService: NgbModal) {
     super();
