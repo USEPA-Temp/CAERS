@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
 import { SubmissionsReviewDashboardService } from 'src/app/core/services/submissions-review-dashboard.service';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
+import { User } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-notification-list',
@@ -17,8 +19,10 @@ export class NotificationListComponent implements OnInit {
   inProgressCount: number;
   approved: SubmissionUnderReview[];
   approvedCount: number;
+  currentUser: User;
   constructor(private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
-              private sharedService: SharedService) {      
+              private sharedService: SharedService,
+              public userContext: UserContextService) {
       this.sharedService.submissionReviewChangeEmitted$
       .subscribe(submissions => {
         this.approved = submissions.filter(item => item.reportStatus === 'APPROVED');
@@ -27,7 +31,11 @@ export class NotificationListComponent implements OnInit {
         this.submittedCount = this.submitted.length;
         this.inProgress = submissions.filter(item => item.reportStatus === 'IN_PROGRESS');
         this.inProgressCount = this.inProgress.length;
-      });  }
+      });
+      this.userContext.getUser().subscribe(user => {
+        this.currentUser = user;
+      });
+    }
 
   ngOnInit() {
     this.retrieveReviewSubmissions();
