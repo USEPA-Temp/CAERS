@@ -145,61 +145,61 @@ INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag, 
     VALUES('9999996', '9999994', '322130', true,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --EMISSION UNITS
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year, unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year, unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999991', '9999991', 'Boiler 001', '63JJJJ', 'Gas Boiler - Industrial Size', '206', 'Air Gas Furnace', 'OP', '1985', 'LB/DAY', 'THOMAS.FESPERMAN', 
+    VALUES('9999991', '9999991', 'Boiler 001', '63JJJJ', 'Gas Boiler - Industrial Size', '206', 'OP', '1985', 'LB/DAY', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Boiler 001', 647); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999992', '9999991', 'Boiler 002', '63JJJJ', 'Coal Boiler - Industrial Size', '100', 'Boiler', 'OP', '1985', 'TON/HR', 'THOMAS.FESPERMAN', 
+    VALUES('9999992', '9999991', 'Boiler 002', '63JJJJ', 'Coal Boiler - Industrial Size', '100', 'OP', '1985', 'TON/HR', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Boiler 002', 34); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999993', '9999991', 'Dryer 001', '63JJJJ', 'Big Dryer', '1252', 'Primary Tube Dryer', 'OP', '1985', 'TON', 'THOMAS.FESPERMAN', 
+    VALUES('9999993', '9999991', 'Dryer 001', '63JJJJ', 'Big Dryer', '1252', 'OP', '1985', 'TON', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Dryer 001', 72);
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999994', '9999992', 'PGM-530263', '63U-SBRubber', 'Heater in Boiler Room', '180', 'Process Heater', 'OP', '1977', 'MMBTU/HR', 'THOMAS.FESPERMAN', 
+    VALUES('9999994', '9999992', 'PGM-530263', '63U-SBRubber', 'Heater in Boiler Room', '180', 'OP', '1977', 'MMBTU/HR', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  'Sample Comments for PGM-530263', 1);
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999995', '9999993', 'Boiler 01', 'GADNR', '6PB (U706)', '100', 'Boiler', 'OP', NULL, 'MMBTU/HR', 'THOMAS.FESPERMAN', 
+    VALUES('9999995', '9999993', 'Boiler 01', 'GADNR', '6PB (U706)', '100', 'OP', NULL, 'MMBTU/HR', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  'Sample Comments for PGM-530263', 353); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999996', '9999993', 'Incinerator 01', 'GADNR', 'PRIMARY INCINERATOR (R488)', '610', 'Oxidation Unit', 'OP', NULL, NULL, 'THOMAS.FESPERMAN', 
+    VALUES('9999996', '9999993', 'Incinerator 01', 'GADNR', 'PRIMARY INCINERATOR (R488)', '610', 'OP', NULL, NULL, 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', null); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999997', '9999993', 'Kiln', 'GADNR', '5LK GROUP (LG07)', '210', 'Kiln', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
+    VALUES('9999997', '9999993', 'Kiln', 'GADNR', '5LK GROUP (LG07)', '210', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', null); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999998', '9999993', 'Hardwood Washers', 'GADNR', 'HARDWOOD WASHERS (P115-P117)', '690', 'Other Process Equipment', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
+    VALUES('9999998', '9999993', 'Hardwood Washers', 'GADNR', 'HARDWOOD WASHERS (P115-P117)', '690', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', 985); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999999', '9999993', 'Digester Exhausts', 'GADNR', 'DIGESTER FILL EXHAUSTS--FUGITIVE', '690', 'Other Process Equipment', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
+    VALUES('9999999', '9999993', 'Digester Exhausts', 'GADNR', 'DIGESTER FILL EXHAUSTS--FUGITIVE', '690', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', 9000); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999980', '9999994', 'Boiler 01', 'GADNR', '6PB (U706)', '100', 'Boiler', 'OP', NULL, 'MMBTU/HR', 'THOMAS.FESPERMAN', 
+    VALUES('9999980', '9999994', 'Boiler 01', 'GADNR', '6PB (U706)', '100', 'OP', NULL, 'MMBTU/HR', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  'Sample Comments for PGM-530263', 353); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999981', '9999994', 'Incinerator 01', 'GADNR', 'PRIMARY INCINERATOR (R488)', '610', 'Oxidation Unit', 'OP', NULL, NULL, 'THOMAS.FESPERMAN', 
+    VALUES('9999981', '9999994', 'Incinerator 01', 'GADNR', 'PRIMARY INCINERATOR (R488)', '610', 'OP', NULL, NULL, 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', null); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999982', '9999994', 'Kiln', 'GADNR', '5LK GROUP (LG07)', '210', 'Kiln', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
+    VALUES('9999982', '9999994', 'Kiln', 'GADNR', '5LK GROUP (LG07)', '210', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', null); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999983', '9999994', 'Hardwood Wasers', 'GADNR', 'HARDWOOD WASHERS (P115-P117)', '690', 'Other Process Equipment', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
+    VALUES('9999983', '9999994', 'Hardwood Wasers', 'GADNR', 'HARDWOOD WASHERS (P115-P117)', '690', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', 985); 
-INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, type_code_description, status_code, status_year,  unit_measure_cd,
+INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, program_system_code, description, type_code, status_code, status_year,  unit_measure_cd,
     created_by, created_date, last_modified_by, last_modified_date, comments, design_capacity)
-    VALUES('9999984', '9999994', 'Digester Exhausts', 'GADNR', 'DIGESTER FILL EXHAUSTS--FUGATIVE', '690', 'Other Process Equipment', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
+    VALUES('9999984', '9999994', 'Digester Exhausts', 'GADNR', 'DIGESTER FILL EXHAUSTS--FUGATIVE', '690', 'OP', NULL, 'TON/DAY', 'THOMAS.FESPERMAN', 
         current_timestamp, 'THOMAS.FESPERMAN', current_timestamp,  '', 9000); 
         
 
