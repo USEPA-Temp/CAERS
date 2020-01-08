@@ -13,7 +13,6 @@ public class EmissionsUnitBulkUploadDto implements Serializable {
     private String programSystemCode;
     private String description;
     private String typeCode;
-    private String typeCodeDescription;
     private String operatingStatusCodeDescription;
     private Short statusYear;
     private String unitOfMeasureCode;
@@ -67,13 +66,6 @@ public class EmissionsUnitBulkUploadDto implements Serializable {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getTypeCodeDescription() {
-        return this.typeCodeDescription;
-    }
-    public void setTypeCodeDescription(String typeCodeDescription) {
-        this.typeCodeDescription = typeCodeDescription;
     }
 
     public Short getStatusYear() {

@@ -9,7 +9,6 @@ export class EmissionUnit {
   unitTypeCode: BaseCodeLookup;
   operatingStatusCode: BaseCodeLookup;
   programSystemCode: string;
-  typeCodeDescription: string;
   statusYear: number;
   unitOfMeasureCode: BaseCodeLookup;
   designCapacity: number;

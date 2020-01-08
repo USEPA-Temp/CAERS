@@ -511,7 +511,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         emissionsUnit.setUnitIdentifier(bulkEmissionsUnit.getUnitIdentifier());
         emissionsUnit.setProgramSystemCode(bulkEmissionsUnit.getProgramSystemCode());
         emissionsUnit.setDescription(bulkEmissionsUnit.getDescription());
-        emissionsUnit.setTypeCodeDescription(bulkEmissionsUnit.getTypeCodeDescription());
         emissionsUnit.setStatusYear(bulkEmissionsUnit.getStatusYear());
         emissionsUnit.setDesignCapacity(bulkEmissionsUnit.getDesignCapacity());
         emissionsUnit.setComments(bulkEmissionsUnit.getComments());
