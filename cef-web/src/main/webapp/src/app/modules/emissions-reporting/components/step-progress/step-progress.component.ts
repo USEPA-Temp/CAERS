@@ -16,7 +16,6 @@ export class StepProgressComponent implements OnInit {
       .subscribe(facilitySite => {
           this.facilitySite = facilitySite;
       }); 
-      
   }
   ngOnInit() {
      

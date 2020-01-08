@@ -3,6 +3,36 @@
     <strong>My Notifications</strong>
   </div>
   <div class="card-body">
-  
+	<tbody>
+    <tr>
+      <td>
+        <fa-layers [fixedWidth]="true">
+            <fa-icon style="color: #ff1a1a;font-size:150%;" [icon]="['fas', 'circle']"></fa-icon>
+            <fa-layers-text content="{{inProgressCount}}" style="color: white;" transform="shrink-4"></fa-layers-text>
+        </fa-layers>
+        <strong style="padding-left: 10px;font-size:130%;">In Progress</strong>
+      </td>
+    </tr>
+    <br>
+		<tr>
+      <td>
+        <fa-layers [fixedWidth]="true">
+            <fa-icon style="color: #ffb90f;font-size:150%;" [icon]="['fas', 'circle']"></fa-icon>
+            <fa-layers-text content="{{submittedCount}}" style="color: white;font-size:125%;" transform="shrink-4"></fa-layers-text>
+        </fa-layers>
+        <strong style="padding-left:10px;font-size:130%;">Pending Review</strong>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+        <fa-layers [fixedWidth]="true">
+            <fa-icon style="color:#209c98;font-size:150%;" [icon]="['fas', 'circle']"></fa-icon>
+            <fa-layers-text content="{{approvedCount}}" style="color: white;font-size:125%;text-align: center" transform="shrink-4"></fa-layers-text>
+        </fa-layers>
+        <strong style="padding-left:10px;font-size:130%;">Accepted</strong>
+      </td>
+    </tr>
+	</tbody>
   </div>
 </div>
