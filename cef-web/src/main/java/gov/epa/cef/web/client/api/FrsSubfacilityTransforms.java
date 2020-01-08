@@ -68,8 +68,6 @@ public class FrsSubfacilityTransforms {
                 result.setUnitTypeCode(unitTypeCode);
             }
 
-//            result.setTypeCodeDescription(unit.getUnitTypeDescription());
-
             result.setUnitOfMeasureCode(createUnitMeasure(unit.getUnitDesignCapacityUomCode()));
 
             return result;
