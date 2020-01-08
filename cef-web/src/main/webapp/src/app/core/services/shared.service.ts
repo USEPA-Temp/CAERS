@@ -11,12 +11,17 @@ import { ToastrService } from 'ngx-toastr';
 export class SharedService {
   // Observable string sources
   private emitChangeSource = new Subject<any>();
+  private emitSubmissionReviewChangeSource = new Subject<any>();
 
   constructor(private toastr: ToastrService) { }
 
   // Observable string streams
   changeEmitted$ = this.emitChangeSource.asObservable();
+  submissionReviewChangeEmitted$ = this.emitSubmissionReviewChangeSource.asObservable();
   // Service message commands
+  emitSubmissionChange(change: any){
+    this.emitSubmissionReviewChangeSource.next(change);
+  }
   emitChange(change: any) {
     this.emitChangeSource.next(change);
   }

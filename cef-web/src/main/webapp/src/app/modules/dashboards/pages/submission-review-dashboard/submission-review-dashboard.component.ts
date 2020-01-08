@@ -5,6 +5,7 @@ import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/compon
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
+import {SharedService} from "../../../../core/services/shared.service";
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -23,7 +24,8 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     constructor(
         private emissionReportService: EmissionsReportingService,
         private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
-        private modalService: NgbModal ) { }
+        private modalService: NgbModal,
+        private sharedService: SharedService ) { }
 
     ngOnInit() {
         this.getSubmissionsUnderReview();
@@ -44,6 +46,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
                     this.getSubmissionsUnderReview();
+                    this.emitAllSubmissions();
                 });
             }, () => {
                 // needed for dismissing without errors
@@ -66,6 +69,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 this.emissionReportService.rejectReports(selectedSubmissions,comments)
                 .subscribe(() => {
                     this.getSubmissionsUnderReview();
+                    this.emitAllSubmissions();
                 });
             }, () => {
                 // needed for dismissing without errors
@@ -86,6 +90,14 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
             .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === value.toUpperCase()) );
+    }
+
+    //emits the updated submission list to the notification component
+    emitAllSubmissions(): void {
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview().subscribe(submissions => {
+            console.log("emitted submissions ",submissions)
+            this.sharedService.emitSubmissionChange(submissions);
+        });
     }
 
 }
