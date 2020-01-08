@@ -88,6 +88,9 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         } else {
             this.hideButtons = true;
         }
+        if (value === 'In Progress') {
+            value = 'IN_PROGRESS'
+        }
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
             .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === value.toUpperCase()) );
     }
