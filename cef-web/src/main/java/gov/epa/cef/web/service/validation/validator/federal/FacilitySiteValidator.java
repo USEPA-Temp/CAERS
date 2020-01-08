@@ -14,6 +14,7 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -51,10 +52,12 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         
         
         // Facility must have an Emissions Inventory Contact
-        List<FacilitySiteContact> contactList = facilitySite.getContacts();
+        List<FacilitySiteContact> contactList = facilitySite.getContacts().stream()
+        .filter(fc -> fc.getType().getCode().equals("EI"))
+        .collect(Collectors.toList());
         
         if (contactList.size() == 0) {
-        	// prevented by db constraints
+
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.required",
         			createValidationDetails(facilitySite));

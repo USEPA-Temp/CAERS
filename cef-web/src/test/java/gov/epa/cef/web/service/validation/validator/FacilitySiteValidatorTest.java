@@ -38,6 +38,22 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
+    
+    @Test
+    public void simpleValidateContactTypeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+
+        for (FacilitySiteContact contact: testData.getContacts()) {
+        	ContactTypeCode contactTypeCode = new ContactTypeCode();
+          contactTypeCode.setCode("FAC");
+        	contact.setType(contactTypeCode);
+        }
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
 
     @Test
     public void nullEisProgramIdTest() {
@@ -61,7 +77,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         result.setEisProgramId("1");
         
         ContactTypeCode contactTypeCode = new ContactTypeCode();
-        contactTypeCode.setCode("FAC");
+        contactTypeCode.setCode("EI");
         
         FipsStateCode stateCode = new FipsStateCode();
         stateCode.setCode("13");
@@ -85,14 +101,11 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         contact.setStateCode(stateCode);
         contact.setPostalCode("31750");
         contact.setCounty("Whitfield");
-        contact.setMailingStreetAddress("123 Test Street");
-        contact.setMailingCity("Fitzgerald");
-        contact.setMailingStateCode(mailingStateCode);
-        contact.setMailingPostalCode("31750");
         contactList.add(contact);
         
         result.setContacts(contactList);
 
         return result;
     }
+    
 }
