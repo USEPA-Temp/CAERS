@@ -47,7 +47,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
 
         for (FacilitySiteContact contact: testData.getContacts()) {
         	ContactTypeCode contactTypeCode = new ContactTypeCode();
-          contactTypeCode.setCode("FAC");
+        	contactTypeCode.setCode("FAC");
         	contact.setType(contactTypeCode);
         }
         
