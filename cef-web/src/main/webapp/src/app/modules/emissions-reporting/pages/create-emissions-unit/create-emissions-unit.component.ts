@@ -6,6 +6,7 @@ import { FacilitySiteService } from 'src/app/core/services/facility-site.service
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class CreateEmissionsUnitComponent implements OnInit {
   facilitySiteId: number;
   eisProgramId: string;
   reportId: number;
+  programSysCode: string;
 
   constructor(private emissionUnitService: EmissionUnitService,
               private router: Router,
@@ -42,6 +44,7 @@ export class CreateEmissionsUnitComponent implements OnInit {
       this.facilitySiteService.retrieveForReport(this.eisProgramId,this.reportId)
       .subscribe(result => {
         this.facilitySiteId = result.id;
+        this.programSysCode = result.programSystemCode.code;
       })
   }
 
@@ -58,6 +61,7 @@ export class CreateEmissionsUnitComponent implements OnInit {
 
           Object.assign(emissionUnit, this.infoComponent.emissionUnitForm.value);
           emissionUnit.facilitySiteId = this.facilitySiteId;
+          emissionUnit.programSystemCode = this.programSysCode;
 
           console.log(emissionUnit)
           this.emissionUnitService.create(emissionUnit)

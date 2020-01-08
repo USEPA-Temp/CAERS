@@ -14,13 +14,11 @@ public class EmissionsUnitDto implements Serializable {
     private Long facilitySiteId;
     private CodeLookupDto unitTypeCode;
     private OperatingStatusCode operatingStatusCode;
-    private String unitTypeCodeDescription;
     private String operatingStatusCodeDescription;
     private String unitIdentifier;
     private String programSystemCode;
     private String description;
-    private String typeCodeDescription;
-	private Short statusYear;
+    private Short statusYear;
     private CodeLookupDto unitOfMeasureCode;
     private Double designCapacity;
     private String unitOfMeasureDescription;
@@ -35,13 +33,7 @@ public class EmissionsUnitDto implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getUnitTypeCodeDescription() {
-        return this.unitTypeCodeDescription;
-    }
-    public void setUnitTypeCodeDescription(String unitTypeCodeDescription) {
-        this.unitTypeCodeDescription = unitTypeCodeDescription;
-    }
-    
+
     public String getOperatingStatusCodeDescription() {
         return this.operatingStatusCodeDescription;
     }
@@ -75,13 +67,6 @@ public class EmissionsUnitDto implements Serializable {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getTypeCodeDescription() {
-        return this.typeCodeDescription;
-    }
-    public void setTypeCodeDescription(String typeCodeDescription) {
-        this.typeCodeDescription = typeCodeDescription;
     }
 
     public Short getStatusYear() {

@@ -45,9 +45,6 @@ public class EmissionsUnit extends BaseAuditEntity {
     @Column(name = "description", length = 100)
     private String description;
 
-    @Column(name = "type_code_description", length = 100)
-    private String typeCodeDescription;
-
     @Column(name = "status_year")
     private Short statusYear;
 
@@ -83,7 +80,6 @@ public class EmissionsUnit extends BaseAuditEntity {
         this.unitIdentifier = originalUnit.getUnitIdentifier();
         this.programSystemCode = originalUnit.getProgramSystemCode();
         this.description = originalUnit.getDescription();
-        this.typeCodeDescription = originalUnit.getTypeCodeDescription();
         this.statusYear = originalUnit.getStatusYear();
         this.designCapacity = originalUnit.getDesignCapacity();
         this.unitOfMeasureCode = originalUnit.getUnitOfMeasureCode();
@@ -134,13 +130,6 @@ public class EmissionsUnit extends BaseAuditEntity {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getTypeCodeDescription() {
-        return this.typeCodeDescription;
-    }
-    public void setTypeCodeDescription(String typeCodeDescription) {
-        this.typeCodeDescription = typeCodeDescription;
     }
 
     public Short getStatusYear() {

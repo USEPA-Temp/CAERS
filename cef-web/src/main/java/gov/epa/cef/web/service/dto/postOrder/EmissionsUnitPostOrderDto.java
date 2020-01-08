@@ -17,7 +17,6 @@ public class EmissionsUnitPostOrderDto implements Serializable {
     private Long id;
     private String unitIdentifier;
     private String description;
-    private String typeCodeDescription;
     private String comments;
 
 
@@ -42,13 +41,6 @@ public class EmissionsUnitPostOrderDto implements Serializable {
         this.description = description;
     }
 
-    public String getTypeCodeDescription() {
-        return this.typeCodeDescription;
-    }
-    public void setTypeCodeDescription(String typeCodeDescription) {
-        this.typeCodeDescription = typeCodeDescription;
-    }
-    
     public String getComments() {
         return comments;
     }
