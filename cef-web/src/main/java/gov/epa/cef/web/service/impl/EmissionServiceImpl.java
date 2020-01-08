@@ -92,6 +92,7 @@ public class EmissionServiceImpl implements EmissionService {
         Emission emission = emissionRepo.findById(dto.getId()).orElse(null);
         emissionMapper.updateFromDto(dto, emission);
 
+        // Match up variables with the existing value if it exists to preserve id, created_by, etc.
         List<EmissionFormulaVariable> variables = new ArrayList<>();
         dto.getVariables().forEach(v -> {
             Optional<EmissionFormulaVariable> variable = emission.getVariables().stream().filter(ov -> ov.getId().equals(v.getId())).findFirst();

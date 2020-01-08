@@ -237,6 +237,7 @@ export class EmissionDetailsComponent implements OnInit {
 
       saveEmission.variables = this.generateFormulaVariableDtos();
       if (this.emission) {
+        // Match variable with existing id for variable
         saveEmission.variables.forEach(sv => {
           const oldVar = this.emission.variables.find(ov => {
             return sv.emissionFactorVariableCode.code === ov.emissionFactorVariableCode.code;
@@ -335,6 +336,7 @@ export class EmissionDetailsComponent implements OnInit {
       return v.code;
     });
 
+    // Remove unneeded variables while leaving existing values
     formKeys.forEach(key => {
       if (!varCodes.includes(key)) {
         this.getFormulaVariableForm().removeControl(key);

@@ -50,6 +50,8 @@ public class EmissionFactorServiceImpl implements EmissionFactorService {
     }
 
     private List<EfVariableCodeDto> parseFormulaVariables(String formula) {
+        // Sorting by code length in descending order will ensure that variables are identified correctly. 
+        // Should also be able to add new variables without code changes.
         List<EmissionFactorVariableCode> variables = efVariableRepo.findAll(JpaSort.unsafe(Sort.Direction.DESC, "LENGTH(code)"));
         List<EfVariableCodeDto> result = new ArrayList<EfVariableCodeDto>();
 

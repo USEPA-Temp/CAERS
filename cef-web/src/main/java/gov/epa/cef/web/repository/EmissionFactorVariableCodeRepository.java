@@ -13,6 +13,7 @@ import gov.epa.cef.web.domain.EmissionFactorVariableCode;
 
 public interface EmissionFactorVariableCodeRepository extends JpaRepository<EmissionFactorVariableCode, String> {
 
+    // Explicitly defined query is required to use sql functions in sort
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     @Query(value = "select c from EmissionFactorVariableCode c")
