@@ -40,6 +40,20 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void nullEisProgramIdTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setEisProgramId(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_EIS_ID.value()) && errorMap.get(ValidationField.FACILITY_EIS_ID.value()).size() == 1);
+    }
+    
+    @Test
     public void simpleValidateContactTypeFailTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -54,22 +68,21 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
-
+    
     @Test
-    public void nullEisProgramIdTest() {
+    public void nullFacilityContactTest() {
 
         CefValidatorContext cefContext = createContext();
         FacilitySite testData = createBaseFacilitySite();
-        testData.setEisProgramId(null);
         testData.setContacts(null);
 
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.FACILITY_EIS_ID.value()) && errorMap.get(ValidationField.FACILITY_EIS_ID.value()).size() == 1);
         assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT.value()) && errorMap.get(ValidationField.FACILITY_CONTACT.value()).size() == 1);
     }
+
 
     private FacilitySite createBaseFacilitySite() {
 
