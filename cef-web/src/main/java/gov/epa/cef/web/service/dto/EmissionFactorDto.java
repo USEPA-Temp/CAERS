@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class EmissionFactorDto {
 
@@ -19,6 +20,7 @@ public class EmissionFactorDto {
     private String description;
     private String note;
     private String source;
+    private List<EfVariableCodeDto> variables;
 
     public Long getId() {
         return id;
@@ -138,6 +140,14 @@ public class EmissionFactorDto {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public List<EfVariableCodeDto> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<EfVariableCodeDto> variables) {
+        this.variables = variables;
     }
     
 }

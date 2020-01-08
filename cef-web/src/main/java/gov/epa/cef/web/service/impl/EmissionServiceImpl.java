@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.repository.EmissionRepository;
@@ -23,8 +24,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmissionServiceImpl implements EmissionService {
@@ -61,6 +64,10 @@ public class EmissionServiceImpl implements EmissionService {
 
         Emission emission = emissionMapper.fromDto(dto);
 
+        emission.getVariables().forEach(v -> {
+            v.setEmission(emission);
+        });
+
         emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
@@ -84,6 +91,21 @@ public class EmissionServiceImpl implements EmissionService {
 
         Emission emission = emissionRepo.findById(dto.getId()).orElse(null);
         emissionMapper.updateFromDto(dto, emission);
+
+        List<EmissionFormulaVariable> variables = new ArrayList<>();
+        dto.getVariables().forEach(v -> {
+            Optional<EmissionFormulaVariable> variable = emission.getVariables().stream().filter(ov -> ov.getId().equals(v.getId())).findFirst();
+            if (variable.isPresent()) {
+                variables.add(emissionMapper.updateFormulaVariableFromDto(v, variable.get()));
+            } else {
+                variables.add(emissionMapper.formulaVariableFromDto(v));
+            }
+        });
+        emission.setVariables(variables);
+
+        emission.getVariables().forEach(v -> {
+            v.setEmission(emission);
+        });
 
         emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 

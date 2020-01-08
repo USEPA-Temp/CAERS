@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class EmissionDto implements Serializable {
 
@@ -21,6 +22,7 @@ public class EmissionDto implements Serializable {
     private BigDecimal calculatedEmissionsTons;
     private CodeLookupDto emissionsNumeratorUom;
     private CodeLookupDto emissionsDenominatorUom;
+    private List<EmissionFormulaVariableDto> variables;
 
     public Long getId() {
         return id;
@@ -132,6 +134,14 @@ public class EmissionDto implements Serializable {
 
     public void setEmissionsDenominatorUom(CodeLookupDto emissionsDenominatorUom) {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
+    }
+
+    public List<EmissionFormulaVariableDto> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<EmissionFormulaVariableDto> variables) {
+        this.variables = variables;
     }
 
     public EmissionDto withId(Long id) {
