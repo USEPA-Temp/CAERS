@@ -23,9 +23,9 @@ import { EmissionFactorModalComponent } from 'src/app/modules/emissions-reportin
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
-import { EfVariable } from 'src/app/shared/models/ef-variable';
 import { EmissionFormulaVariable } from 'src/app/shared/models/emission-formula-variable';
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
+import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
 
 @Component({
   selector: 'app-emission-details',
@@ -43,7 +43,7 @@ export class EmissionDetailsComponent implements OnInit {
   efNumeratorMismatch = false;
   efDenominatorMismatch = false;
   calculatedEf: number;
-  formulaVariables: EfVariable[] = [];
+  formulaVariables: EmissionFormulaVariableCode[] = [];
 
   readOnlyMode = true;
 
@@ -240,7 +240,7 @@ export class EmissionDetailsComponent implements OnInit {
         // Match variable with existing id for variable
         saveEmission.variables.forEach(sv => {
           const oldVar = this.emission.variables.find(ov => {
-            return sv.emissionFactorVariableCode.code === ov.emissionFactorVariableCode.code;
+            return sv.variableCode.code === ov.variableCode.code;
           });
           if (oldVar) {
             sv.id = oldVar.id;
@@ -322,14 +322,14 @@ export class EmissionDetailsComponent implements OnInit {
   }
 
   private setupVariableFormFromValues(values: EmissionFormulaVariable[]) {
-    this.setupVariableForm(values.map(v => v.emissionFactorVariableCode));
+    this.setupVariableForm(values.map(v => v.variableCode));
 
     values.forEach(v => {
-      this.getFormulaVariableForm().get(v.emissionFactorVariableCode.code).reset(v.value);
+      this.getFormulaVariableForm().get(v.variableCode.code).reset(v.value);
     });
   }
 
-  private setupVariableForm(newVars: EfVariable[]) {
+  private setupVariableForm(newVars: EmissionFormulaVariableCode[]) {
 
     const formKeys = Object.keys(this.getFormulaVariableForm().controls);
     const varCodes = newVars.map(v => {

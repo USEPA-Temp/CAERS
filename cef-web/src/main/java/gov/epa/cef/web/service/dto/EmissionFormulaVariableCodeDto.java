@@ -2,7 +2,7 @@ package gov.epa.cef.web.service.dto;
 
 import gov.epa.cef.web.domain.EfVariableValidationType;
 
-public class EfVariableCodeDto extends CodeLookupDto {
+public class EmissionFormulaVariableCodeDto extends CodeLookupDto {
 
     private static final long serialVersionUID = 1L;
 

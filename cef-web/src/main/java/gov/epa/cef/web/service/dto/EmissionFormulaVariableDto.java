@@ -9,7 +9,7 @@ public class EmissionFormulaVariableDto implements Serializable {
 
     private Long id;
     private Long emissionId;
-    private EfVariableCodeDto emissionFactorVariableCode;
+    private EmissionFormulaVariableCodeDto variableCode;
     private BigDecimal value;
 
     public Long getId() {
@@ -28,12 +28,12 @@ public class EmissionFormulaVariableDto implements Serializable {
         this.emissionId = emissionId;
     }
 
-    public EfVariableCodeDto getEmissionFactorVariableCode() {
-        return emissionFactorVariableCode;
+    public EmissionFormulaVariableCodeDto getVariableCode() {
+        return variableCode;
     }
 
-    public void setEmissionFactorVariableCode(EfVariableCodeDto variable) {
-        this.emissionFactorVariableCode = variable;
+    public void setVariableCode(EmissionFormulaVariableCodeDto variable) {
+        this.variableCode = variable;
     }
 
     public BigDecimal getValue() {

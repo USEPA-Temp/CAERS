@@ -1,13 +1,13 @@
-import { EfVariable } from 'src/app/shared/models/ef-variable';
+import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
 
 export class EmissionFormulaVariable {
   id: number;
   value: number;
-  emissionFactorVariableCode: EfVariable;
+  variableCode: EmissionFormulaVariableCode;
 
-  constructor(value: number, variable: EfVariable) {
+  constructor(value: number, variable: EmissionFormulaVariableCode) {
     this.value = value;
-    this.emissionFactorVariableCode = variable;
+    this.variableCode = variable;
   }
 }
 

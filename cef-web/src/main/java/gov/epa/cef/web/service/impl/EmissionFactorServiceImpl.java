@@ -9,12 +9,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
-import gov.epa.cef.web.domain.EmissionFactorVariableCode;
+import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.repository.EmissionFactorRepository;
-import gov.epa.cef.web.repository.EmissionFactorVariableCodeRepository;
+import gov.epa.cef.web.repository.EmissionFormulaVariableCodeRepository;
 import gov.epa.cef.web.service.EmissionFactorService;
 import gov.epa.cef.web.service.dto.EmissionFactorDto;
-import gov.epa.cef.web.service.dto.EfVariableCodeDto;
+import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
 import gov.epa.cef.web.service.mapper.EmissionFactorMapper;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 
@@ -25,7 +25,7 @@ public class EmissionFactorServiceImpl implements EmissionFactorService {
     private EmissionFactorRepository efRepo;
 
     @Autowired
-    private EmissionFactorVariableCodeRepository efVariableRepo;
+    private EmissionFormulaVariableCodeRepository efVariableRepo;
 
     @Autowired
     private EmissionFactorMapper mapper;
@@ -49,13 +49,13 @@ public class EmissionFactorServiceImpl implements EmissionFactorService {
         return result;
     }
 
-    private List<EfVariableCodeDto> parseFormulaVariables(String formula) {
+    private List<EmissionFormulaVariableCodeDto> parseFormulaVariables(String formula) {
         // Sorting by code length in descending order will ensure that variables are identified correctly. 
         // Should also be able to add new variables without code changes.
-        List<EmissionFactorVariableCode> variables = efVariableRepo.findAll(JpaSort.unsafe(Sort.Direction.DESC, "LENGTH(code)"));
-        List<EfVariableCodeDto> result = new ArrayList<EfVariableCodeDto>();
+        List<EmissionFormulaVariableCode> variables = efVariableRepo.findAll(JpaSort.unsafe(Sort.Direction.DESC, "LENGTH(code)"));
+        List<EmissionFormulaVariableCodeDto> result = new ArrayList<EmissionFormulaVariableCodeDto>();
 
-        for (EmissionFactorVariableCode variable : variables) {
+        for (EmissionFormulaVariableCode variable : variables) {
             if (formula.contains(variable.getCode())) {
                 formula = formula.replaceAll(variable.getCode(), "");
                 result.add(lookupMapper.emissionFactorVariableCodeToDto(variable));

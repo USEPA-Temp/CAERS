@@ -11,7 +11,7 @@ import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
-import gov.epa.cef.web.domain.EmissionFactorVariableCode;
+import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FipsStateCode;
@@ -29,7 +29,7 @@ import gov.epa.cef.web.repository.LookupRepositories;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
-import gov.epa.cef.web.service.dto.EfVariableCodeDto;
+import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -50,7 +50,7 @@ public abstract class LookupEntityMapper {
 
     public abstract CodeLookupDto reportingPeriodCodeToDto(ReportingPeriodCode source);
 
-    public abstract EfVariableCodeDto emissionFactorVariableCodeToDto(EmissionFactorVariableCode source);
+    public abstract EmissionFormulaVariableCodeDto emissionFactorVariableCodeToDto(EmissionFormulaVariableCode source);
 
     public abstract CodeLookupDto emissionsOperatingTypeCodeToDto(EmissionsOperatingTypeCode source);
     

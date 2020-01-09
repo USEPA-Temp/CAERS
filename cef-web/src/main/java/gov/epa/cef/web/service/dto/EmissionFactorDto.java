@@ -20,7 +20,7 @@ public class EmissionFactorDto {
     private String description;
     private String note;
     private String source;
-    private List<EfVariableCodeDto> variables;
+    private List<EmissionFormulaVariableCodeDto> variables;
 
     public Long getId() {
         return id;
@@ -142,11 +142,11 @@ public class EmissionFactorDto {
         this.source = source;
     }
 
-    public List<EfVariableCodeDto> getVariables() {
+    public List<EmissionFormulaVariableCodeDto> getVariables() {
         return variables;
     }
 
-    public void setVariables(List<EfVariableCodeDto> variables) {
+    public void setVariables(List<EmissionFormulaVariableCodeDto> variables) {
         this.variables = variables;
     }
     

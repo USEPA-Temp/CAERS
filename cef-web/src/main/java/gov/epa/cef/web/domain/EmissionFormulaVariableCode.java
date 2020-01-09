@@ -13,11 +13,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "emission_factor_variable_code")
+@Table(name = "emission_formula_variable_code")
 @Immutable
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class EmissionFactorVariableCode extends BaseLookupEntity {
+public class EmissionFormulaVariableCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
 

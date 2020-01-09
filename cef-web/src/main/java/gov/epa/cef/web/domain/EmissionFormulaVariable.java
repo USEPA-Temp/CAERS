@@ -22,8 +22,8 @@ public class EmissionFormulaVariable extends BaseAuditEntity {
     private Emission emission;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "emission_factor_variable_code", nullable = false)
-    private EmissionFactorVariableCode emissionFactorVariableCode;
+    @JoinColumn(name = "emission_formula_variable_code", nullable = false)
+    private EmissionFormulaVariableCode variableCode;
 
     @Column(name = "value")
     private BigDecimal value;
@@ -41,7 +41,7 @@ public class EmissionFormulaVariable extends BaseAuditEntity {
     public EmissionFormulaVariable(Emission emission, EmissionFormulaVariable originalVariable) {
         this.id = originalVariable.getId();
         this.emission = emission;
-        this.emissionFactorVariableCode = originalVariable.getEmissionFactorVariableCode();
+        this.variableCode = originalVariable.getVariableCode();
         this.value = originalVariable.getValue();
     }
 
@@ -53,12 +53,12 @@ public class EmissionFormulaVariable extends BaseAuditEntity {
         this.emission = emission;
     }
 
-    public EmissionFactorVariableCode getEmissionFactorVariableCode() {
-        return emissionFactorVariableCode;
+    public EmissionFormulaVariableCode getVariableCode() {
+        return variableCode;
     }
 
-    public void setEmissionFactorVariableCode(EmissionFactorVariableCode emissionFactorVariableCode) {
-        this.emissionFactorVariableCode = emissionFactorVariableCode;
+    public void setVariableCode(EmissionFormulaVariableCode emissionFactorVariableCode) {
+        this.variableCode = emissionFactorVariableCode;
     }
 
     public BigDecimal getValue() {

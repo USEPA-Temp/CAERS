@@ -30,6 +30,6 @@ public interface EmissionMapper {
     EmissionFormulaVariable formulaVariableFromDto(EmissionFormulaVariableDto source);
 
     @Mapping(target = "emission", ignore = true)
-    @Mapping(target = "emissionFactorVariableCode", ignore = true)
+    @Mapping(target = "variableCode", ignore = true)
     EmissionFormulaVariable updateFormulaVariableFromDto(EmissionFormulaVariableDto source, @MappingTarget EmissionFormulaVariable target);
 }
