@@ -1,12 +1,16 @@
 package gov.epa.cef.web.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
@@ -66,6 +70,9 @@ public class Emission extends BaseAuditEntity {
     
     @Column(name = "calculated_emissions_tons")
     private BigDecimal calculatedEmissionsTons;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "emission")
+    private List<EmissionFormulaVariable> variables = new ArrayList<>();
 
     
     /***
@@ -94,6 +101,10 @@ public class Emission extends BaseAuditEntity {
         this.calculatedEmissionsTons = originalEmission.getCalculatedEmissionsTons();
         this.formulaIndicator = originalEmission.getFormulaIndicator();
         this.emissionsFactorFormula = originalEmission.getEmissionsFactorFormula();
+
+        for (EmissionFormulaVariable variable : originalEmission.getVariables()) {
+            this.variables.add(new EmissionFormulaVariable(this, variable));
+        }
     }
 
     public ReportingPeriod getReportingPeriod() {
@@ -199,8 +210,20 @@ public class Emission extends BaseAuditEntity {
     public void setEmissionsDenominatorUom(UnitMeasureCode emissionsDenominatorUom) {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
-    
-    
+
+    public List<EmissionFormulaVariable> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<EmissionFormulaVariable> variables) {
+
+        this.variables.clear();
+        if (variables != null) {
+            this.variables.addAll(variables);
+        }
+    }
+
+
     /***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */

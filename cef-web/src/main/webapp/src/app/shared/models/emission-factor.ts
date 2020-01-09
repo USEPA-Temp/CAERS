@@ -1,4 +1,5 @@
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
 
 export class EmissionFactor {
   id: number;
@@ -16,4 +17,5 @@ export class EmissionFactor {
   description: string;
   note: string;
   source: string;
+  variables: EmissionFormulaVariableCode[];
 }
