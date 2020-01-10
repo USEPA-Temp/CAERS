@@ -113,6 +113,16 @@ public class BulkUploadServiceImplTest extends BaseServiceDatabaseTest {
                 "select * from control_pollutant", new MapSqlParameterSource());
 
         assertEquals(3, controlPollutants.size());
+        
+        List<Map<String, Object>> facilityContacts = this.jdbcTemplate.queryForList(
+        				"select * from facility_site_contact", new MapSqlParameterSource());
+        
+        assertEquals(2, facilityContacts.size());
+        
+        List<Map<String, Object>> facilityNAICS = this.jdbcTemplate.queryForList(
+        				"select * from facility_naics_xref", new MapSqlParameterSource());
+        
+        assertEquals(2, facilityNAICS.size());
     }
 
     private <T> Optional<T> hydrateJsonObject(String resourceName, Class<T> clazz) throws Exception {

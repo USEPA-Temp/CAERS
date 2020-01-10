@@ -23,6 +23,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -33,11 +34,13 @@ import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
+import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
+import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
@@ -57,7 +60,9 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilityNAICSBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteContactBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
@@ -126,6 +131,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private NaicsCodeRepository naicsCodeRepo;
+    
+    @Autowired
+    private ContactTypeCodeRepository contactTypeRepo;
+    
+    @Autowired
+    private FipsStateCodeRepository stateCodeRepo;
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
@@ -150,6 +161,31 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             Map<Long, EmissionsProcess> processMap = new HashMap<>();
             Map<Long, ControlPath> controlPathMap = new HashMap<>();
             Map<Long, Control> controlMap = new HashMap<>();
+            Map<Long, FacilityNAICSXref> facilityNaicsMap = new HashMap<>();
+            Map<Long, FacilitySiteContact> facilityContactMap = new HashMap<>();
+            
+            // Map Facility Contacts
+            for (FacilitySiteContactBulkUploadDto bulkFacilityContact: bulkEmissionsReport.getFacilityContacts()) {
+            	FacilitySiteContact facilityContact = mapFacilityContact(bulkFacilityContact);
+            	
+            	if (bulkFacilityContact.getFacilitySiteId().equals(bulkFacility.getId())) {
+            		facilityContact.setFacilitySite(facility);
+            		facility.getContacts().add(facilityContact);
+            		facilityContactMap.put(bulkFacilityContact.getId(), facilityContact);
+            	}
+            }
+            
+            
+            // Map Facility NAICS
+            for (FacilityNAICSBulkUploadDto bulkFacilityNAICS: bulkEmissionsReport.getFacilityNAICS()) {
+            	FacilityNAICSXref facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
+            	
+            	if (bulkFacilityNAICS.getFacilitySiteId().equals(bulkFacility.getId())) {
+            		facilityNAICS.setFacilitySite(facility);
+            		facility.getFacilityNAICS().add(facilityNAICS);
+            		facilityNaicsMap.put(bulkFacilityNAICS.getId(), facilityNAICS);
+            	}
+            }
 
             // Map Release Points
             for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
@@ -362,6 +398,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         List<ControlPollutant> controlPollutants = controls.stream()
                 .flatMap(c -> c.getPollutants().stream())
                 .collect(Collectors.toList());
+        List<FacilityNAICSXref> facilityNacis = facilitySites.stream()
+		            .flatMap(fn -> fn.getFacilityNAICS().stream())
+		            .collect(Collectors.toList());
+        List<FacilitySiteContact> facilityContacts = facilitySites.stream()
+            .flatMap(fc -> fc.getContacts().stream())
+            .collect(Collectors.toList());
 
         EmissionsReportBulkUploadDto reportDto = uploadMapper.emissionsReportToDto(report);
         reportDto.setFacilitySites(uploadMapper.facilitySiteToDtoList(facilitySites));
@@ -376,6 +418,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         reportDto.setControls(uploadMapper.controlToDtoList(controls));
         reportDto.setControlAssignments(uploadMapper.controlAssignmentToDtoList(controlAssignments));
         reportDto.setControlPollutants(uploadMapper.controlPollutantToDtoList(controlPollutants));
+        reportDto.setFacilityNAICS(uploadMapper.faciliytNAICSToDtoList(facilityNacis));
+        reportDto.setFacilityContacts(uploadMapper.facilitySiteContactToDtoList(facilityContacts));
 
         return reportDto;
     }
@@ -425,15 +469,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
         facility.setEisProgramId(bulkFacility.getEisProgramId());
 
-        if (bulkFacility.getNaicsCode() != null) {
-            naicsCodeRepo.findById(bulkFacility.getNaicsCode()).ifPresent(code -> {
-                FacilityNAICSXref naics = new FacilityNAICSXref();
-                naics.setFacilitySite(facility);
-                naics.setNaicsCode(code);
-                naics.setPrimaryFlag(true);
-                facility.getFacilityNAICS().add(naics);
-            });
-        }
         if (bulkFacility.getFacilityCategoryCode() != null) {
             facility.setFacilityCategoryCode(facilityCategoryRepo.findById(bulkFacility.getFacilityCategoryCode()).orElse(null));
         }
@@ -451,6 +486,56 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
 
         return facility;
+    }
+    
+    /**
+     * Map an FacilitySiteContactBulkUploadDto to an FacilitySiteContact domain model
+     */
+    private FacilitySiteContact mapFacilityContact(FacilitySiteContactBulkUploadDto bulkFacilityContact) {
+	    	FacilitySiteContact facilityContact = new FacilitySiteContact();
+	
+	    	facilityContact.setPrefix(bulkFacilityContact.getPrefix());
+	    	facilityContact.setFirstName(bulkFacilityContact.getFirstName());
+	    	facilityContact.setLastName(bulkFacilityContact.getLastName());
+	    	facilityContact.setEmail(bulkFacilityContact.getEmail());
+	    	facilityContact.setPhone(bulkFacilityContact.getPhone());
+	    	facilityContact.setPhoneExt(bulkFacilityContact.getPhoneExt());
+	    	facilityContact.setStreetAddress(bulkFacilityContact.getStreetAddress());
+	    	facilityContact.setCity(bulkFacilityContact.getCity());
+	    	facilityContact.setCounty(bulkFacilityContact.getCounty());
+	    	facilityContact.setCountryCode(bulkFacilityContact.getCountryCode());
+	    	facilityContact.setPostalCode(bulkFacilityContact.getPostalCode());
+	    	facilityContact.setMailingStreetAddress(bulkFacilityContact.getMailingStreetAddress());
+	    	facilityContact.setMailingCity(bulkFacilityContact.getMailingCity());
+	    	facilityContact.setMailingPostalCode(bulkFacilityContact.getMailingPostalCode());
+	    	facilityContact.setMailingCountryCode(bulkFacilityContact.getMailingCountryCode());
+
+	      if (bulkFacilityContact.getType() != null) {
+	      	facilityContact.setType((contactTypeRepo.findById(bulkFacilityContact.getType())).orElse(null));
+	      }
+	      if (bulkFacilityContact.getStateCode() != null) {
+	      	facilityContact.setStateCode((stateCodeRepo.findById(bulkFacilityContact.getStateCode())).orElse(null));
+	      }
+	      if (bulkFacilityContact.getMailingStateCode() != null) {
+	      	facilityContact.setMailingStateCode((stateCodeRepo.findById(bulkFacilityContact.getMailingStateCode())).orElse(null));
+	      }
+	
+	      return facilityContact;
+    }
+    
+    /**
+     * Map an FacilityNAICSBulkUploadDto to an FacilityNAICS domain model
+     */
+    private FacilityNAICSXref mapFacilityNAICS(FacilityNAICSBulkUploadDto bulkFacilityNAICS) {
+    		FacilityNAICSXref facilityNAICS = new FacilityNAICSXref();
+
+        facilityNAICS.setPrimaryFlag(bulkFacilityNAICS.isPrimaryFlag());
+
+        if (bulkFacilityNAICS.getCode() != null) {
+        	facilityNAICS.setNaicsCode((naicsCodeRepo.findById(bulkFacilityNAICS.getCode())).orElse(null));
+        }
+
+        return facilityNAICS;
     }
 
 
@@ -475,6 +560,11 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         releasePoint.setLatitude(bulkReleasePoint.getLatitude());
         releasePoint.setLongitude(bulkReleasePoint.getLongitude());
         releasePoint.setComments(bulkReleasePoint.getComments());
+        releasePoint.setFugitiveHeight(bulkReleasePoint.getFugitiveHeight());
+        releasePoint.setFugitiveWidth(bulkReleasePoint.getFugitiveWidth());
+        releasePoint.setFugitiveLength(bulkReleasePoint.getFugitiveLength());
+        releasePoint.setFugitiveAngle(bulkReleasePoint.getFugitiveAngle());
+        releasePoint.setFenceLineDistance(bulkReleasePoint.getFenceLineDistance());
 
         if (bulkReleasePoint.getProgramSystemCode() != null) {
             releasePoint.setProgramSystemCode(programSystemCodeRepo.findById(bulkReleasePoint.getProgramSystemCode()).orElse(null));
@@ -496,6 +586,18 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
         if (bulkReleasePoint.getExitGasFlowUomCode() != null) {
             releasePoint.setExitGasFlowUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getExitGasFlowUomCode()).orElse(null));
+        }
+        if (bulkReleasePoint.getFenceLineUomCode() != null) {
+          releasePoint.setFenceLineUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getFenceLineUomCode()).orElse(null));
+        }
+        if (bulkReleasePoint.getFugitiveHeightUomCode() != null) {
+            releasePoint.setFugitiveHeightUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getFugitiveHeightUomCode()).orElse(null));
+        }
+        if (bulkReleasePoint.getFugitiveWidthUomCode() != null) {
+            releasePoint.setFugitiveWidthUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getFugitiveWidthUomCode()).orElse(null));
+        }
+        if (bulkReleasePoint.getFugitiveLengthUomCode() != null) {
+            releasePoint.setFugitiveLengthUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getFugitiveLengthUomCode()).orElse(null));
         }
 
         return releasePoint;

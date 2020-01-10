@@ -2,6 +2,8 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import java.io.Serializable;
 
+import gov.epa.cef.web.service.dto.CodeLookupDto;
+
 public class ReleasePointBulkUploadDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,6 +32,16 @@ public class ReleasePointBulkUploadDto implements Serializable {
     private Double fugitiveLine2Latitude;
     private Double fugitiveLine2Longitude;
     private String comments;
+    private Long fenceLineDistance;
+    private String fenceLineUomCode;
+    private Long fugitiveHeight;
+    private String fugitiveHeightUomCode;
+    private Long fugitiveWidth;
+    private String fugitiveWidthUomCode;
+    private Long fugitiveLength;
+    private String fugitiveLengthUomCode;
+    private Long fugitiveAngle;
+
 
     public Long getId() {
         return id;
@@ -198,4 +210,59 @@ public class ReleasePointBulkUploadDto implements Serializable {
     public void setComments(String comments) {
         this.comments = comments;
     }
+		public Long getFenceLineDistance() {
+			return fenceLineDistance;
+		}
+		public void setFenceLineDistance(Long fenceLineDistance) {
+			this.fenceLineDistance = fenceLineDistance;
+		}
+		public String getFenceLineUomCode() {
+			return fenceLineUomCode;
+		}
+		public void setFenceLineUomCode(String fenceLineUomCode) {
+			this.fenceLineUomCode = fenceLineUomCode;
+		}
+		public Long getFugitiveHeight() {
+			return fugitiveHeight;
+		}
+		public void setFugitiveHeight(Long fugitiveHeight) {
+			this.fugitiveHeight = fugitiveHeight;
+		}
+		public String getFugitiveHeightUomCode() {
+			return fugitiveHeightUomCode;
+		}
+		public void setFugitiveHeightUomCode(String fugitiveHeightUomCode) {
+			this.fugitiveHeightUomCode = fugitiveHeightUomCode;
+		}
+		public Long getFugitiveWidth() {
+			return fugitiveWidth;
+		}
+		public void setFugitiveWidth(Long fugitiveWidth) {
+			this.fugitiveWidth = fugitiveWidth;
+		}
+		public String getFugitiveWidthUomCode() {
+			return fugitiveWidthUomCode;
+		}
+		public void setFugitiveWidthUomCode(String fugitiveWidthUomCode) {
+			this.fugitiveWidthUomCode = fugitiveWidthUomCode;
+		}
+		public Long getFugitiveLength() {
+			return fugitiveLength;
+		}
+		public void setFugitiveLength(Long fugitiveLength) {
+			this.fugitiveLength = fugitiveLength;
+		}
+		public String getFugitiveLengthUomCode() {
+			return fugitiveLengthUomCode;
+		}
+		public void setFugitiveLengthUomCode(String fugitiveLengthUomCode) {
+			this.fugitiveLengthUomCode = fugitiveLengthUomCode;
+		}
+		public Long getFugitiveAngle() {
+			return fugitiveAngle;
+		}
+		public void setFugitiveAngle(Long fugitiveAngle) {
+			this.fugitiveAngle = fugitiveAngle;
+		}
+    
 }

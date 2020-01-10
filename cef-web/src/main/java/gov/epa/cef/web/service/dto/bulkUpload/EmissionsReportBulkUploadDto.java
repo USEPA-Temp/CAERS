@@ -27,6 +27,8 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     private List<ControlBulkUploadDto> controls = new ArrayList<>();
     private List<ControlAssignmentBulkUploadDto> controlAssignments = new ArrayList<>();
     private List<ControlPollutantBulkUploadDto> controlPollutants = new ArrayList<>();
+    private List<FacilityNAICSBulkUploadDto> facilityNAICS = new ArrayList<>();
+    private List<FacilitySiteContactBulkUploadDto> facilityContacts = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -155,4 +157,17 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     public void setControlPollutants(List<ControlPollutantBulkUploadDto> controlPollutants) {
         this.controlPollutants = controlPollutants;
     }
+    public List<FacilityNAICSBulkUploadDto> getFacilityNAICS() {
+    	return facilityNAICS;
+    }
+    public void setFacilityNAICS(List<FacilityNAICSBulkUploadDto> facilityNAICS) {
+    	this.facilityNAICS = facilityNAICS;
+    }
+    public List<FacilitySiteContactBulkUploadDto> getFacilityContacts() {
+    	return facilityContacts;
+    }
+    public void setFacilityContacts(List<FacilitySiteContactBulkUploadDto> facilityContacts) {
+    	this.facilityContacts = facilityContacts;
+    }
+    
 }
