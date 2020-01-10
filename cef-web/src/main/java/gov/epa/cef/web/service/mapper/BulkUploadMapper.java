@@ -13,7 +13,9 @@ import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -26,7 +28,9 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilityNAICSBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteContactBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
@@ -131,6 +135,10 @@ public interface BulkUploadMapper {
     @Mapping(source="exitGasVelocityUomCode.code", target="exitGasVelocityUomCode")
     @Mapping(source="exitGasFlowUomCode.code", target="exitGasFlowUomCode")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
+    @Mapping(source="fugitiveHeightUomCode.code", target="fugitiveHeightUomCode")
+    @Mapping(source="fugitiveWidthUomCode.code", target="fugitiveWidthUomCode")
+    @Mapping(source="fugitiveLengthUomCode.code", target="fugitiveLengthUomCode")
+    @Mapping(source="fenceLineUomCode.code", target="fenceLineUomCode")
     ReleasePointBulkUploadDto releasePointToDto(ReleasePoint source);
 
     List<ReleasePointBulkUploadDto> releasePointToDtoList(List<ReleasePoint> source);
@@ -193,5 +201,18 @@ public interface BulkUploadMapper {
     ControlPollutantBulkUploadDto controlPollutantToDto(ControlPollutant source);
 
     List<ControlPollutantBulkUploadDto> controlPollutantToDtoList(List<ControlPollutant> source);
+
+    @Mapping(source="naicsCode.code", target="code")
+    FacilityNAICSBulkUploadDto faciliytNAICSToDto(FacilityNAICSXref source);
+
+    List<FacilityNAICSBulkUploadDto> faciliytNAICSToDtoList(List<FacilityNAICSXref> source);
+    
+    @Mapping(source="facilitySite.id", target="facilitySiteId")
+    @Mapping(source="type.code", target="type")
+    @Mapping(source="stateCode.code", target="stateCode")
+    @Mapping(source="mailingStateCode.code", target="mailingStateCode")
+    FacilitySiteContactBulkUploadDto facilitySiteContactToDto(FacilitySiteContact source);
+
+    List<FacilitySiteContactBulkUploadDto> facilitySiteContactToDtoList(List<FacilitySiteContact> source);
 
 }
