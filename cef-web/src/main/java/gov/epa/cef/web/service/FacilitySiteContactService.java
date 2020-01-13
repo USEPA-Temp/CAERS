@@ -40,4 +40,6 @@ public interface FacilitySiteContactService {
      */
     void delete(Long id);
 
+	List<FacilitySiteContactDto> retrieveInventoryContactsForFacility(Long facilitySiteId);
+
 }
