@@ -20,6 +20,8 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     submissions: SubmissionUnderReview[] = [];
     hideButtons: boolean;
     invalidSelection = false;
+    currentYear: number;
+    selectedYear: string;
 
     constructor(
         private emissionReportService: EmissionsReportingService,
@@ -28,6 +30,8 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         private sharedService: SharedService ) { }
 
     ngOnInit() {
+        this.currentYear = new Date().getFullYear() - 1;
+        this.selectedYear = 'currentYear';
         this.getSubmissionsUnderReview();
     }
 
@@ -79,7 +83,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     getSubmissionsUnderReview(): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === 'SUBMITTED') );
+            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === 'SUBMITTED' && item.year === this.currentYear));
     }
 
     onStatusSelected(value: string) {
@@ -88,17 +92,25 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         } else {
             this.hideButtons = true;
         }
-        if (value === 'In Progress') {
-            value = 'IN_PROGRESS'
+        if (this.selectedYear === 'currentYear') {
+            this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
+            .subscribe( submissions =>{ this.submissions = submissions.filter(item => (item.reportStatus === value.toUpperCase()) && (item.year === this.currentYear)) 
+            });
+        } else {
+            this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
+            .subscribe( submissions =>{ this.submissions = submissions.filter(item => item.reportStatus === value.toUpperCase())
+            });
         }
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === value.toUpperCase()) );
     }
 
-    //emits the updated submission list to the notification component
+    onYearSelected(year: string, value: string) {
+        this.selectedYear = year;
+        this.onStatusSelected(value);
+    }
+
+    // emits the updated submission list to the notification component
     emitAllSubmissions(): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview().subscribe(submissions => {
-            console.log("emitted submissions ",submissions)
             this.sharedService.emitSubmissionChange(submissions);
         });
     }

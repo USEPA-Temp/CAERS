@@ -13,7 +13,12 @@
           <select style="width: 150px; margin-left: 10px;" class="select-option" #mySelect (change)="onStatusSelected(mySelect.value)">
               <option value="Submitted">Submitted</option>
               <option value="In_Progress">In Progress</option>
-              <option value="Approved">Approved</option>
+              <option value="Approved">Accepted</option>
+          </select>
+          <strong style="margin-left: 25px;">Report Year:</strong>
+          <select id="select" style="width: 150px; margin-left: 10px;" class="select-option" #yearSelect (change)="onYearSelected(yearSelect.value, mySelect.value)">
+              <option value="currentYear" selected="selected">Current Year</option>
+              <option value="previousYears">All Previous Years</option>
           </select>
         </div>
         <br>
