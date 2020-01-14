@@ -11,14 +11,14 @@
         <div class="row">
           <strong style="margin-left: 25px;">Report Status:</strong>
           <select style="width: 150px; margin-left: 10px;" class="select-option" #mySelect (change)="onStatusSelected(mySelect.value)">
-              <option value="Submitted">Submitted</option>
-              <option value="In_Progress">In Progress</option>
-              <option value="Approved">Accepted</option>
+              <option value="SUBMITTED">Submitted</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="APPROVED">Accepted</option>
           </select>
           <strong style="margin-left: 25px;">Report Year:</strong>
           <select id="select" style="width: 150px; margin-left: 10px;" class="select-option" #yearSelect (change)="onYearSelected(yearSelect.value, mySelect.value)">
               <option value="currentYear" selected="selected">Current Year</option>
-              <option value="previousYears">All Previous Years</option>
+              <option value="allYears">All Years</option>
           </select>
         </div>
         <br>

@@ -6,6 +6,7 @@ import { EmissionsReportingService } from 'src/app/core/services/emissions-repor
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
 import {SharedService} from "../../../../core/services/shared.service";
+import { faTheaterMasks } from '@fortawesome/free-solid-svg-icons';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -32,7 +33,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     ngOnInit() {
         this.currentYear = new Date().getFullYear() - 1;
         this.selectedYear = 'currentYear';
-        this.getSubmissionsUnderReview();
+        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
     }
 
     onApprove() {
@@ -49,7 +50,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
-                    this.getSubmissionsUnderReview();
+                    this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -72,7 +73,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.rejectReports(selectedSubmissions,comments)
                 .subscribe(() => {
-                    this.getSubmissionsUnderReview();
+                    this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -81,25 +82,26 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    getSubmissionsUnderReview(): void {
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === 'SUBMITTED' && item.year === this.currentYear));
+    retrieveFacilitiesReportsByYearAndStatus(year,reportStatus): void{
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus)
+            .subscribe( submissions => this.submissions = submissions);
+    }
+
+    retrieveFacilitiesReportsByReportStatus(reportStatus): void{
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus)
+            .subscribe(submissions => this.submissions = submissions);
     }
 
     onStatusSelected(value: string) {
-        if (value === 'Submitted') {
+        if (value === 'SUBMITTED') {
             this.hideButtons = false;
         } else {
             this.hideButtons = true;
         }
         if (this.selectedYear === 'currentYear') {
-            this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions =>{ this.submissions = submissions.filter(item => (item.reportStatus === value.toUpperCase()) && (item.year === this.currentYear)) 
-            });
+            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,value);
         } else {
-            this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions =>{ this.submissions = submissions.filter(item => item.reportStatus === value.toUpperCase())
-            });
+            this.retrieveFacilitiesReportsByReportStatus(value);
         }
     }
 
@@ -110,7 +112,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     // emits the updated submission list to the notification component
     emitAllSubmissions(): void {
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview().subscribe(submissions => {
+        this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear).subscribe(submissions =>{
             this.sharedService.emitSubmissionChange(submissions);
         });
     }

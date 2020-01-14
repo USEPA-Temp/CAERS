@@ -14,11 +14,11 @@ export class NotificationListComponent implements OnInit {
 
   summarySubmissions: SubmissionUnderReview[];
   submitted: SubmissionUnderReview[];
-  submittedCount: number;
+  submittedCount: number = 0;
   inProgress: SubmissionUnderReview[];
-  inProgressCount: number;
+  inProgressCount: number = 0;
   approved: SubmissionUnderReview[];
-  approvedCount: number;
+  approvedCount: number = 0;
   currentUser: User;
   currentYear: any;
 
@@ -28,12 +28,8 @@ export class NotificationListComponent implements OnInit {
       this.currentYear = new Date().getFullYear() - 1;
       this.sharedService.submissionReviewChangeEmitted$
       .subscribe(submissions => {
-        this.approved = submissions.filter(item => (item.reportStatus === 'APPROVED')  && (item.year === this.currentYear));
-        this.approvedCount = this.approved.length;
-        this.submitted = submissions.filter(item => (item.reportStatus === 'SUBMITTED') && (item.year === this.currentYear));
-        this.submittedCount = this.submitted.length;
-        this.inProgress = submissions.filter(item => (item.reportStatus === 'IN_PROGRESS') && (item.year === this.currentYear));
-        this.inProgressCount = this.inProgress.length;
+        this.approvedCount = this.submittedCount = this.inProgressCount = 0;
+        this.filterAndCountSubmissions(submissions);
       });
       this.userContext.getUser().subscribe(user => {
         this.currentUser = user;
@@ -41,18 +37,23 @@ export class NotificationListComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.retrieveReviewSubmissions();
+    this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear).subscribe(submissions => {
+      this.filterAndCountSubmissions(submissions);
+    })
   }
 
-  retrieveReviewSubmissions(){
-    this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview().subscribe(submissions => {
-      this.approved = submissions.filter(item => (item.reportStatus === 'APPROVED')  && (item.year === this.currentYear));
-      this.approvedCount = this.approved.length;
-      this.submitted = submissions.filter(item => (item.reportStatus === 'SUBMITTED') && (item.year === this.currentYear));
-      this.submittedCount = this.submitted.length;
-      this.inProgress = submissions.filter(item => (item.reportStatus === 'IN_PROGRESS') && (item.year === this.currentYear));
-      this.inProgressCount = this.inProgress.length;
-    });
+  filterAndCountSubmissions(submissions){
+      submissions.forEach(submission => { 
+        if (submission.reportStatus === 'APPROVED') {
+          this.approvedCount++; 
+        }
+        if (submission.reportStatus === 'SUBMITTED') {
+          this.submittedCount++;
+        }
+        if (submission.reportStatus === 'IN_PROGRESS'){
+          this.inProgressCount++;
+        }
+      });
   }
 
 }

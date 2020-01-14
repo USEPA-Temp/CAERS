@@ -16,9 +16,19 @@ export class SubmissionsReviewDashboardService {
     constructor( private http: HttpClient ) {
     }
 
-    retrieveFacilitiesReportsUnderReview(): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard`;
+    retrieveFacilitiesReportsUnderReviewByStatus(reportStatus: string): Observable<SubmissionUnderReview[]> {
+        const url = `${this.baseUrl}/dashboard/byStatus/${reportStatus}`;
         return this.http.get<SubmissionUnderReview[]>( url );
     }
 
-}
+    retrieveFacilitiesReportsByYearAndStatus(reportYear: number, reportStatus: string): Observable<SubmissionUnderReview[]> {
+        const url = `${this.baseUrl}/dashboard/${reportYear}/${reportStatus}`;
+        return this.http.get<SubmissionUnderReview[]>( url );
+    }
+
+    retrieveAllFacilitiesReportsForCurrentReportingYear(reportYear: number): Observable<SubmissionUnderReview[]> {
+        const url = `${this.baseUrl}/dashboard/${reportYear}`;
+        return this.http.get<SubmissionUnderReview[]>( url );
+    }
+    }
+
