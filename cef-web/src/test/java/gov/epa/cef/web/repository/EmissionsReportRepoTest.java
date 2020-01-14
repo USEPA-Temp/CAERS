@@ -119,6 +119,10 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		assertEquals(false, unit.isPresent());
 	}
 
+	// Test to confirm copy emissions report functionality works and does not result in an error due to 
+	// missing required fields. Purpose of test is not confirm copy of every field. 
+	// 
+	// If new required fields are created, the fields should be added to createHydratedEmissionsReport.
 	@Test
 	public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() throws Exception {
 
