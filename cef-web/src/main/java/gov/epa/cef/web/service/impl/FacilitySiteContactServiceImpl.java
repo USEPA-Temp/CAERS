@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.FacilitySiteContactRepository;
@@ -27,7 +28,12 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
-
+    
+    @Autowired
+    private LookupServiceImpl lookupService;
+    
+    private static final String EMISSIONS_INVENTORY_CONTACT_TYPE_CODE = "EI";
+    
     /**
      * Create a new Facility Site Contact from a DTO object
      */
@@ -71,6 +77,13 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     public void delete(Long id) {
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), FacilitySiteContactRepository.class);
     	contactRepo.deleteById(id);
+    }
+    
+    @Override
+    public List<FacilitySiteContactDto> retrieveInventoryContactsForFacility(Long facilitySiteId) {
+    	ContactTypeCode eiContactType = lookupService.retrieveContactTypeEntityByCode(EMISSIONS_INVENTORY_CONTACT_TYPE_CODE);
+        List<FacilitySiteContact> result = contactRepo.findByFacilitySiteIdAndType(facilitySiteId, eiContactType);
+        return mapper.toDtoList(result);
     }
 
 

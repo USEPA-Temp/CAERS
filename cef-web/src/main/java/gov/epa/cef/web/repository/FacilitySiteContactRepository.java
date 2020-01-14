@@ -1,6 +1,7 @@
 package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
+import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,14 @@ public interface FacilitySiteContactRepository extends CrudRepository<FacilitySi
      * @return
      */
     List<FacilitySiteContact> findByFacilitySiteId(Long facilitySiteId);
+    
+    /**
+     * Retrieve Facility Site Contacts for a facility site
+     * @param facilitySiteId
+     * @param contactTypeCode
+     * @return
+     */
+    List<FacilitySiteContact> findByFacilitySiteIdAndType(Long facilitySiteId, ContactTypeCode contactTypeCode);
 
     /**
      *
