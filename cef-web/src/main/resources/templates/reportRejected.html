@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+	<p>The <span th:text="${reportingYear}" /> emissions report for <span th:text="${facilityName}" /> has been rejected by the SLT agency. </p>
+	<p th:if="${!#strings.isEmpty(comments)}">
+		<strong>Additional Comments:</strong><br/>
+		<span th:text="${comments}"></span>
+	</p>
+</body>
+</html>
