@@ -15,6 +15,7 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     private String frsFacilityId;
     private String facilityName;
     private Short year;
+    private String reportStatus;
     private String chemical;
     private String casNumber;
     private BigDecimal stackEmissions;
@@ -51,7 +52,13 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     public void setYear(Short year) {
         this.year = year;
     }
-    public String getChemical() {
+	public String getReportStatus() {
+		return reportStatus;
+	}
+	public void setReportStatus(String reportStatus) {
+		this.reportStatus = reportStatus;
+	}
+	public String getChemical() {
         return chemical;
     }
     public void setChemical(String chemical) {
