@@ -361,10 +361,6 @@ export class EmissionDetailsComponent implements OnInit {
             this.emissionForm.get('emissionsNumeratorUom').setValue(modalEf.emissionsNumeratorUom);
             this.emissionForm.get('emissionsDenominatorUom').setValue(modalEf.emissionsDenominatorUom);
             this.emissionForm.get('emissionsUomCode').setValue(modalEf.emissionsNumeratorUom);
-            // temporary to bypass validation, will be replace when actual values are added.
-            if (modalEf.formulaIndicator) {
-              this.emissionForm.get('emissionsFactor').setValue(1);
-            }
 
             this.setupVariableForm(modalEf.variables || []);
           }
@@ -411,6 +407,9 @@ export class EmissionDetailsComponent implements OnInit {
       } else if (VariableValidationType.CASU === v.validationType) {
         this.getFormulaVariableForm().addControl(v.code,
             new FormControl(null, [Validators.required, Validators.min(1.5), Validators.max(7)]));
+      } else if (VariableValidationType.DAY_PER_YEAR === v.validationType) {
+        this.getFormulaVariableForm().addControl(v.code,
+            new FormControl(null, [Validators.required, Validators.min(0), Validators.max(365)]));
       }
       this.getFormulaVariableForm().addControl(v.code, new FormControl(null, Validators.required));
     });
