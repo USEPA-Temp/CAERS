@@ -1,10 +1,18 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
+import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReportingPeriodRepository;
+import gov.epa.cef.web.service.dto.EmissionDto;
+import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
+import gov.epa.cef.web.service.dto.EmissionFormulaVariableDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
+import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -32,10 +41,19 @@ public class EmissionServiceImplTest extends BaseServiceTest {
     private EmissionsReportRepository emissionsReportRepo;
 
     @Mock
+    private ReportingPeriodRepository periodRepo;
+
+    @Mock
     EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
+
+    @Mock
+    private EmissionMapper emissionMapper;
 
     @InjectMocks
     EmissionServiceImpl emissionServiceImpl;
+    
+    private List<EmissionFormulaVariableDto> variableDtoList;
+    private List<EmissionFormulaVariable> variableList;
 
     @Before
     public void init(){
@@ -108,6 +126,23 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emissionsByFacilityAndCASDto.setYear(new Short("2019"));
         emissionsByFacilityAndCASDto.setUom("TON");
 
+        ReportingPeriod rp = new ReportingPeriod();
+        rp.setCalculationParameterValue(new BigDecimal(10));
+
+        variableDtoList = new ArrayList<EmissionFormulaVariableDto>();
+        variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(1), "A"));
+        variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(2), "S"));
+        variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(3), "U"));
+        variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(4), "SU"));
+        variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(5), "CaSu"));
+        
+        variableList = new ArrayList<EmissionFormulaVariable>();
+        variableList.add(createEmissionFormulaVariable(new BigDecimal(1), "A"));
+        variableList.add(createEmissionFormulaVariable(new BigDecimal(2), "S"));
+        variableList.add(createEmissionFormulaVariable(new BigDecimal(3), "U"));
+        variableList.add(createEmissionFormulaVariable(new BigDecimal(4), "SU"));
+        variableList.add(createEmissionFormulaVariable(new BigDecimal(5), "CaSu"));
+
         when(emissionsReportRepo.findByFrsFacilityId("12345", Sort.by(Sort.Direction.DESC, "year"))).thenReturn(emptyEmissionsReportList);
         when(emissionsReportRepo.findByFrsFacilityId("110015680799", Sort.by(Sort.Direction.DESC, "year"))).thenReturn(emissionsReportList2019);
         when(emissionsByFacilityAndCASRepo.findByFrsFacilityIdAndPollutantCasIdAndYear("110015680799", "71-43-1", new Short("2019")))
@@ -115,6 +150,50 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         when(emissionsByFacilityAndCASRepo.findByFrsFacilityIdAndPollutantCasIdAndYear("110015680799", "71-43-2", new Short("2019")))
         .thenReturn(emissionsList);
         when(emissionsByFacilityAndCASMapper.toDto(emission1)).thenReturn(emissionsByFacilityAndCASDto);
+        when(emissionMapper.formulaVariableFromDtoList(variableDtoList)).thenReturn(variableList);
+        when(periodRepo.findById(1L)).thenReturn(Optional.of(rp));
+    }
+
+    @Test
+    public void calculateTotalEmissions_should_return_dto_with_ef_when_formulaIndicator_true() {
+        EmissionDto emission = new EmissionDto();
+        emission.setFormulaIndicator(true);
+        emission.setReportingPeriodId(1L);
+        emission.setEmissionsFactorFormula("A+(CaSu*U)^(SU/S)");
+
+        emission.setVariables(variableDtoList);
+
+        EmissionDto result = emissionServiceImpl.calculateTotalEmissions(emission);
+
+        assertEquals(0, new BigDecimal(226).compareTo(result.getEmissionsFactor()));
+        assertEquals(0, new BigDecimal(2260).compareTo(result.getTotalEmissions()));
+    }
+
+    @Test
+    public void calculateTotalEmissions_should_return_dto_with_ef_when_formulaIndicator_true_unit_conversion() {
+        EmissionDto emission = new EmissionDto();
+        emission.setFormulaIndicator(true);
+        emission.setReportingPeriodId(1L);
+        emission.setEmissionsFactorFormula("(A+(CaSu*U)^(SU/S)) * [km]/[m]");
+
+        emission.setVariables(variableDtoList);
+
+        EmissionDto result = emissionServiceImpl.calculateTotalEmissions(emission);
+
+        assertEquals(0, new BigDecimal(226000).compareTo(result.getEmissionsFactor()));
+        assertEquals(0, new BigDecimal(2260000).compareTo(result.getTotalEmissions()));
+    }
+
+    @Test
+    public void calculateTotalEmissions_should_return_dto_with_ef_when_formulaIndicator_false() {
+        EmissionDto emission = new EmissionDto();
+        emission.setFormulaIndicator(false);
+        emission.setReportingPeriodId(1L);
+        emission.setEmissionsFactor(new BigDecimal(2.5));
+
+        EmissionDto result = emissionServiceImpl.calculateTotalEmissions(emission);
+
+        assertEquals(0, new BigDecimal(25).compareTo(result.getTotalEmissions()));
     }
 
     @Test
@@ -159,5 +238,27 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         assertEquals(new BigDecimal("816.90"), emissions.getStackEmissions());
         assertEquals(new BigDecimal("391.11"), emissions.getFugitiveEmissions());
         assertEquals("TON", emissions.getUom());
+    }
+
+    private EmissionFormulaVariableDto createEmissionFormulaVariableDto(BigDecimal value, String name) {
+        EmissionFormulaVariableDto variable = new EmissionFormulaVariableDto();
+        EmissionFormulaVariableCodeDto code = new EmissionFormulaVariableCodeDto();
+
+        code.setCode(name);
+        variable.setValue(value);
+        variable.setVariableCode(code);
+
+        return variable;
+    }
+
+    private EmissionFormulaVariable createEmissionFormulaVariable(BigDecimal value, String name) {
+        EmissionFormulaVariable variable = new EmissionFormulaVariable();
+        EmissionFormulaVariableCode code = new EmissionFormulaVariableCode();
+
+        code.setCode(name);
+        variable.setValue(value);
+        variable.setVariableCode(code);
+
+        return variable;
     }
 }
