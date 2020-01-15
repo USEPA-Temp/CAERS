@@ -24,8 +24,8 @@
         <br>
         <app-submission-review-list [hideSelectColumn]="hideButtons" [tableData]="submissions"></app-submission-review-list>
         <div class="text-right">
-          <button *ngIf="!hideButtons" class="btn btn-primary btn-md m-3" (click)="onReject()">Reject and Return to Facility</button>
-          <button *ngIf="!hideButtons" class="btn btn-success btn-md m-3" (click)="onApprove()">Accept and Submit to EIS</button>
+          <button *ngIf="!hideButtons" class="btn btn-primary btn-md m-3" (click)="onReject(yearSelect.value)">Reject and Return to Facility</button>
+          <button *ngIf="!hideButtons" class="btn btn-success btn-md m-3" (click)="onApprove(yearSelect.value)">Accept and Submit to EIS</button>
           <div class="validation-message p-3" *ngIf="invalidSelection">
             At least one submission must be selected.
           </div>

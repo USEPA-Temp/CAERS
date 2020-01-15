@@ -37,7 +37,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
     }
 
-    onApprove() {
+    onApprove(year) {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
 
         if (!selectedSubmissions.length) {
@@ -51,7 +51,12 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
-                    this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                    if (year === 'ALL_YEARS') {
+                        this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
+                    }
+                    if (year === 'CURRENT_REPORTING_YEAR') {
+                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                    }
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -60,7 +65,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    onReject() {
+    onReject(year) {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
 
         if (!selectedSubmissions.length) {
@@ -74,7 +79,12 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.rejectReports(selectedSubmissions,comments)
                 .subscribe(() => {
-                    this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                    if (year === 'ALL_YEARS') {
+                        this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
+                    }
+                    if (year === 'CURRENT_REPORTING_YEAR') {
+                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                    }
                     this.emitAllSubmissions();
                 });
             }, () => {
