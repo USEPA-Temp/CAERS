@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.SubmissionsReviewDashboardView;
 

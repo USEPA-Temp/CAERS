@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.List;
+import java.util.List; 
 
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.service.SubmissionsReviewDasboardService;
-import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 import gov.epa.cef.web.service.dto.SubmissionsReviewDashboardDto;
 
 @RestController

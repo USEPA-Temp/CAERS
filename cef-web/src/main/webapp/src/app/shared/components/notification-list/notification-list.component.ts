@@ -28,7 +28,6 @@ export class NotificationListComponent implements OnInit {
       this.currentYear = new Date().getFullYear() - 1;
       this.sharedService.submissionReviewChangeEmitted$
       .subscribe(submissions => {
-        this.approvedCount = this.submittedCount = this.inProgressCount = 0;
         this.filterAndCountSubmissions(submissions);
       });
       this.userContext.getUser().subscribe(user => {
@@ -43,6 +42,7 @@ export class NotificationListComponent implements OnInit {
   }
 
   filterAndCountSubmissions(submissions){
+      this.approvedCount = this.submittedCount = this.inProgressCount = 0;
       submissions.forEach(submission => { 
         if (submission.reportStatus === 'APPROVED') {
           this.approvedCount++; 

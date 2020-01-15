@@ -31,8 +31,9 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         private sharedService: SharedService ) { }
 
     ngOnInit() {
+        const CURRENT_REPORTING_YEAR = 'CURRENT_REPORTING_YEAR';
         this.currentYear = new Date().getFullYear() - 1;
-        this.selectedYear = 'currentYear';
+        this.selectedYear = CURRENT_REPORTING_YEAR;
         this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
     }
 
@@ -98,7 +99,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         } else {
             this.hideButtons = true;
         }
-        if (this.selectedYear === 'currentYear') {
+        if (this.selectedYear === 'CURRENT_REPORTING_YEAR') {
             this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,value);
         } else {
             this.retrieveFacilitiesReportsByReportStatus(value);
