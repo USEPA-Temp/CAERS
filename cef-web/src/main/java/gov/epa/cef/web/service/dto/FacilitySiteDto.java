@@ -33,6 +33,7 @@ public class FacilitySiteDto implements Serializable {
     private Double latitude;
     private Double longitude;
     private String tribalCodeDesc;
+    private String comments;
     private Set<FacilityNAICSDto> facilityNAICS;
 
     public Long getId() {
@@ -233,6 +234,14 @@ public class FacilitySiteDto implements Serializable {
 
     public void setMailingPostalCode(String mailingPostalCode) {
         this.mailingPostalCode = mailingPostalCode;
+    }
+    
+    public String getComments() {
+    	return comments;
+    }
+    
+    public void setComments(String comments) {
+    	this.comments = comments;
     }
 
     public String getTribalCodeDesc() {

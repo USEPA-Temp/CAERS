@@ -52,9 +52,8 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     mailingCity: [''],
     mailingStateCode: [null],
     mailingPostalCode: ['', Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')],
-    county: ['', [
-      Validators.maxLength(43)
-    ]],
+    county: ['', Validators.maxLength(43)],
+    comments: ['', Validators.maxLength(400)]
   }, {validators: this.mailingAddressValidator()});
 
   operatingStatusValues: BaseCodeLookup[];
