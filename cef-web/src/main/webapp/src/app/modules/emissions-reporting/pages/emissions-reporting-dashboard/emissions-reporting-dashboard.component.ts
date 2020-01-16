@@ -8,6 +8,10 @@ import { BusyModalComponent } from 'src/app/shared/components/busy-modal/busy-mo
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { LookupService } from 'src/app/core/services/lookup.service';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -16,7 +20,10 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 })
 export class EmissionsReportingDashboardComponent implements OnInit {
     facility: CdxFacility;
+    facilitySite: FacilitySite;
     reports: EmissionsReport[];
+    emissionsReport: EmissionsReport;
+    operatingStatusValues: BaseCodeLookup[];
 
     @ViewChild('FailedToCreateMessageBox', {static: true})
     _failedToCreateTemplate: TemplateRef<any>;
@@ -29,7 +36,9 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         private sharedService: SharedService,
         private modalService: NgbModal,
         public router: Router,
-        public userContext: UserContextService) { }
+        public userContext: UserContextService,
+        private facilitySiteService: FacilitySiteService,
+        private lookupService: LookupService) { }
 
 
     ngOnInit() {
@@ -39,10 +48,17 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                 this.facility = data.facility;
                 if (this.facility) {
                     this.reportService.getFacilityReports(this.facility.programId)
-                    .subscribe(reports => this.reports = reports.sort((a, b) => b.year - a.year));
+                    .subscribe(reports => {this.reports = reports.sort((a, b) => b.year - a.year);
+                    });
                 }
             });
         this.sharedService.emitChange(null);
+        this.facilitySite = new FacilitySite;
+
+        this.lookupService.retrieveOperatingStatus()
+        .subscribe(result => {
+            this.operatingStatusValues = result;
+        });
     }
 
     isOneOf(baseValue: string, testValues: string[]): boolean {
@@ -68,42 +84,51 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalWindow.componentInstance.message = 'Please wait while we generate your new report.';
 
         const reportingYear = new Date().getFullYear() - 1;
-        this.reportService.createReport(this.facility.programId, reportingYear)
-        .subscribe(reportResp => {
+        if (this.reports[0].status !== 'NEW') {
+            this.reportService.createReportFromPreviousCopy(this.facility.programId, reportingYear)
+            .subscribe(reportResp => {
+                if (reportResp.status === 204) {
 
-            if (reportResp.status === 204) {
-
-                // 204 No Content
-                // no previous report, no FRS data
-                modalWindow.dismiss();
-
-                this._failedToCreateRef = this.modalService.open(
-                    this._failedToCreateTemplate, {backdrop: 'static'});
-
-            } else if (reportResp.status === 200) {
-
-                // 200 OK
-                // previous report was copied
-                modalWindow.dismiss();
-
-                this.reportCompleted(reportResp.body);
-
-            } else if (reportResp.status === 202) {
-
-                // 202 Accepted
-                // pull more data from FRS
-                modalWindow.componentInstance.message =
-                    'Please wait: Searching for Facility Data in EPA\'s Facility Registry System to populate your Emissions Report';
-
-                this.reportService.createReportFromFrs(this.facility.programId, reportingYear)
-                .subscribe(newReport => {
-
+                    // 204 No Content
+                    // no previous report, no FRS data
                     modalWindow.dismiss();
-                    this.reportCompleted(newReport);
-                });
-            }
-        });
 
+                    this._failedToCreateRef = this.modalService.open(
+                        this._failedToCreateTemplate, {backdrop: 'static'});
+
+                } else if (reportResp.status === 200) {
+
+                    // 200 OK
+                    // previous report was copied
+                    modalWindow.dismiss();
+
+                    this.reportCompleted(reportResp.body);
+
+                } else if (reportResp.status === 202) {
+
+                    // 202 Accepted
+                    // pull more data from FRS
+                    modalWindow.componentInstance.message =
+                        'Please wait: Searching for Facility Data in EPA\'s Facility Registry System to populate your Emissions Report';
+
+                    this.reportService.createReportFromFrs(this.facility.programId, reportingYear)
+                    .subscribe(newReport => {
+                        modalWindow.dismiss();
+                        this.reportCompleted(newReport);
+                    });
+                }
+            });
+        } else {
+            this.reportService.createReportFromScratch(this.facility.programId, reportingYear, this.facility.epaRegistryId,
+            this.facility.state)
+            .subscribe(reportResp => {
+              this.copyFacilitySiteFromCdxModel(reportResp.body);
+              this.facilitySiteService.create(this.facilitySite).subscribe(() => {
+                    modalWindow.dismiss();
+                    this.reportCompleted(reportResp.body);
+                });
+            });
+        }
     }
 
     /**
@@ -113,6 +138,29 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
         this.router.navigateByUrl(`/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
     }
+
+    copyFacilitySiteFromCdxModel(emissionsReport: EmissionsReport) {
+              this.emissionsReport = emissionsReport;
+              Object.assign(this.facilitySite, this.facility);
+              this.facilitySite.emissionsReport = this.emissionsReport;
+              this.facilitySite.name = this.facility.facilityName;
+              this.operatingStatusValues.forEach(opStatus => {
+                  if (opStatus.code === 'OP') {
+                      this.facilitySite.operatingStatusCode = opStatus;
+                  }
+              });
+              this.facilitySite.streetAddress = this.facility.address;
+              this.facilitySite.stateCode = this.facility.state;
+              this.facilitySite.eisProgramId = emissionsReport.eisProgramId;
+              this.facilitySite.statusYear = new Date().getFullYear();
+              this.facilitySite.frsFacilityId = this.facility.epaRegistryId;
+              this.facilitySite.postalCode = this.facility.zipCode;
+              this.facilitySite.mailingStreetAddress = this.facility.address;
+              this.facilitySite.mailingStateCode = this.facility.state;
+              this.facilitySite.mailingCity = this.facility.city;
+              this.facilitySite.mailingPostalCode = this.facility.zipCode;
+    }
+
 
     onFailedToCreateCloseClick() {
 

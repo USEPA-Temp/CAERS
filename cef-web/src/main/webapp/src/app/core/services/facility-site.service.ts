@@ -16,6 +16,12 @@ export class FacilitySiteService {
     constructor(private http: HttpClient) {
     }
 
+    /** Create new facility site */
+    create(facilitySite: FacilitySite): Observable<FacilitySite> {
+        const url = `${this.baseUrl}`;
+        return this.http.post<FacilitySite>(url, facilitySite);
+    }
+
     /** GET specified facility site from the server */
     retrieve(id: number): Observable<FacilitySite> {
         const url = `${this.baseUrl}/${id}`;

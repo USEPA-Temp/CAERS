@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -43,13 +42,27 @@ export class EmissionsReportingService {
         return this.http.post<EmissionsReport[]>(url, reportIds);
     }
 
-    /** POST request to the server to create a report for the current year */
-    createReport(eisFacilityId: string, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
+    /** POST request to the server to create a report for the current year from most previous copy */
+    createReportFromPreviousCopy(eisFacilityId: string, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
         const url = `${this.baseUrl}/facility/${eisFacilityId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
             eisProgramId: eisFacilityId,
             source: "previous"
+        }, {
+            observe: "response"
+        });
+    }
+
+    /** POST request to the server to create a report for the current year from scratch */
+    createReportFromScratch(eisFacilityId: string, reportYear: number, frsFacilityId: string, stateCode: string): Observable<HttpResponse<EmissionsReport>> {
+        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
+        return this.http.post<EmissionsReport>(url, {
+            year: reportYear,
+            eisProgramId: eisFacilityId,
+            frsFacilityId: frsFacilityId,
+            stateCode: stateCode,
+            source: "fromScratch"
         }, {
             observe: "response"
         });

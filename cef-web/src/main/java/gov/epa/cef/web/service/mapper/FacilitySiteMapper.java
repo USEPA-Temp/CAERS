@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.mapper;
 
-import java.util.List;
+import java.util.List; 
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,4 +21,5 @@ public interface FacilitySiteMapper {
     @Mapping(target = "facilityNAICS", ignore = true)
     void updateFromDto(FacilitySiteDto source, @MappingTarget FacilitySite target);
     
+    FacilitySite fromDto(FacilitySiteDto facilitySite);
 }

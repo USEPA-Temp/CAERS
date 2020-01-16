@@ -2,6 +2,7 @@ package gov.epa.cef.web.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
@@ -94,10 +95,16 @@ public class EmissionsReportApi {
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
-
-        EmissionsReportDto result = reportDto.isSourceFrs()
-            ? this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear())
-            : this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+        EmissionsReportDto result = new EmissionsReportDto();
+        if(reportDto.isSourceFrs()){
+        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
+        }
+        if(reportDto.isSourceNew()){
+        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto.getYear(), reportDto.getFrsFacilityId(), reportDto.getStateCode());
+        }
+        else{
+        	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+        }
 
         /*
         If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
@@ -332,14 +339,20 @@ public class EmissionsReportApi {
     static class EmissionsReportStarterDto {
 
         enum SourceType {
-            previous, frs
+            previous, frs, fromScratch
         }
 
         private String eisProgramId;
+        
+        private String frsFacilityId;
+        
+        private String stateCode;
 
-        private SourceType source;
+		private SourceType source;
 
         private Short year;
+        
+        private FacilitySite facilitySite;
 
         public String getEisProgramId() {
 
@@ -355,6 +368,14 @@ public class EmissionsReportApi {
 
             return source;
         }
+        
+        public String getFrsFacilityId() {
+			return frsFacilityId;
+		}
+
+		public void setFrsFacilityId(String frsFacilityId) {
+			this.frsFacilityId = frsFacilityId;
+		}
 
         public void setSource(SourceType source) {
 
@@ -376,6 +397,26 @@ public class EmissionsReportApi {
 
             return this.source != null && this.source.equals(SourceType.frs);
         }
+        
+        boolean isSourceNew() {
+        	return this.source != null && this.source.equals(SourceType.fromScratch);
+        }
+
+		public String getStateCode() {
+			return stateCode;
+		}
+
+		public void setStateCode(String stateCode) {
+			this.stateCode = stateCode;
+		}
+
+		public FacilitySite getFacilitySite() {
+			return facilitySite;
+		}
+
+		public void setFacilitySite(FacilitySite facilitySite) {
+			this.facilitySite = facilitySite;
+		}
     }
 
 }

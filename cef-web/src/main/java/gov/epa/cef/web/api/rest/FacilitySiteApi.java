@@ -1,6 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
+
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.security.SecurityService;
@@ -40,6 +41,19 @@ public class FacilitySiteApi {
 
         this.securityService = securityService;
         this.facilityService = facilityService;
+    }
+    /**
+     * Create a new Facility Site
+     * @param dto
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<FacilitySiteDto> createFacilitySite(
+        @RequestBody FacilitySiteDto dto) {
+    	
+        FacilitySiteDto result = facilityService.create(dto);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
     /**

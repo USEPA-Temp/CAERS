@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import java.io.ByteArrayInputStream;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -227,10 +228,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      */
     @Override
     public EmissionsReportDto createEmissionReportCopy(String facilityEisProgramId, short reportYear) {
-
         return findMostRecentEmissionsReport(facilityEisProgramId)
             .map(mostRecentReport -> {
-
                 EmissionsReport cloneReport = new EmissionsReport(mostRecentReport);
                 cloneReport.setYear(reportYear);
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
@@ -240,9 +239,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
             .orElse(null);
-
+        
         /*
-
         // FIXME
         This code is being commented out until after the pilot and FRS integration can be solidified.
 
@@ -268,8 +266,22 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 .orElse(null)
             );
          */
-    }
 
+    }
+    @Override
+    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, short reportYear, String frsFacilityId, String stateCode) {
+    	
+        EmissionsReport newReport = new EmissionsReport();
+        newReport.setEisProgramId(facilityEisProgramId);
+        newReport.setYear(reportYear);
+        newReport.setStatus(ReportStatus.IN_PROGRESS);
+        newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+        newReport.setFrsFacilityId(frsFacilityId);
+        newReport.setAgencyCode(stateCode);
+        
+        return this.emissionsReportMapper.toDto(this.erRepo.save(newReport));
+
+    }
     @Override
     public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {
 
