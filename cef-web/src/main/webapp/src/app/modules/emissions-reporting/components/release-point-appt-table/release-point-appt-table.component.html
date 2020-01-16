@@ -4,7 +4,7 @@
     <tr>
       <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point ID</th>
       <th scope="col" sortable="releasePointTypeCode" (sort)="onSort($event)">Release Type</th>
-      <th scope="col" sortable="percent" (sort)="onSort($event)">Avg. % Emissions</th>
+      <th scope="col" sortable="percent" (sort)="onSort($event)">% Apportionment of Emissions</th>
       <ng-container *ngIf="!readOnlyMode">
         <th scope="col"></th>
         <th scope="col"></th>
@@ -13,21 +13,29 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let item of tableData">
-      <td><a routerLink="{{baseUrl}}/release/{{item.releasePointId}}">{{item.releasePointIdentifier}}</a></td>
-      <td>{{item.releasePointTypeCode.description}}</td>
-      <td>{{item.percent}}%</td>
-      <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openEditModal(item)"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
-        <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
-      </ng-container> 
-    </tr>
+      <tr *ngFor="let item of tableData">
+        <td><a routerLink="{{baseUrl}}/release/{{item.releasePointId}}">{{item.releasePointIdentifier}}</a></td>
+        <td>{{item.releasePointTypeCode.description}}</td>
+        <td>{{item.percent}}%</td>
+        <ng-container *ngIf="!readOnlyMode">
+          <td><a routerLink="." (click)="openEditModal(item)"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
+          <td><a routerLink="." (click)="openDeleteModal(item.releasePointIdentifier, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        </ng-container> 
+      </tr>
+      <tr>
+        <td colspan="2"><strong>Total % Apportionment of Emissions</strong></td>
+        <td colspan="3">{{totalApptPct}}%</td>
+      </tr>
       <ng-container *ngIf="!readOnlyMode">
         <tr>
           <td colspan="4"></td>
           <td><button style="color:#209c98;border:none;background-color: Transparent;" (click)="openReleasePointAptModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td>
         </tr>
       </ng-container> 
+      <tr>
+        <td colspan="5"><i>Note: Each process must allocate exactly 100% of its emissions to one or more release points before the report can be submitted.</i></td>
+      </tr>
     </tbody>
   </table>
+  
 </div>
