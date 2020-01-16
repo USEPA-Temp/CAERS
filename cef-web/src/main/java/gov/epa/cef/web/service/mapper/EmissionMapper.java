@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -28,6 +30,8 @@ public interface EmissionMapper {
     EmissionFormulaVariableDto formulaVariableToDto(EmissionFormulaVariable source);
 
     EmissionFormulaVariable formulaVariableFromDto(EmissionFormulaVariableDto source);
+
+    List<EmissionFormulaVariable> formulaVariableFromDtoList(List<EmissionFormulaVariableDto> source);
 
     @Mapping(target = "emission", ignore = true)
     @Mapping(target = "variableCode", ignore = true)

@@ -33,4 +33,9 @@ export class EmissionService {
     return this.http.delete(url);
   }
 
+  calculateEmissionTotal(emission: Emission): Observable<Emission> {
+    const url = `${this.baseUrl}/calculate`;
+    return this.http.post<Emission>(url, emission);
+  }
+
 }

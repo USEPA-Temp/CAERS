@@ -42,7 +42,7 @@ export class EmissionDetailsComponent implements OnInit {
   epaEmissionFactor = false;
   efNumeratorMismatch = false;
   efDenominatorMismatch = false;
-  calculatedEf: number;
+  needsCalculation = false;
   formulaVariables: EmissionFormulaVariableCode[] = [];
 
   readOnlyMode = true;
@@ -122,11 +122,57 @@ export class EmissionDetailsComponent implements OnInit {
 
           this.emissionForm.reset(this.emission);
           this.setupVariableFormFromValues(this.emission.variables);
-          this.calculatedEf = this.emission.emissionsFactor;
           this.emissionForm.disable();
+
+          // Make user calculate total emissions after changes
+          this.emissionForm.get('emissionsFactor').valueChanges
+          .subscribe(value => {
+            if (this.emissionForm.enabled) {
+              this.needsCalculation = true;
+            }
+          });
+
+          this.emissionForm.get('emissionsFactorFormula').valueChanges
+          .subscribe(value => {
+            if (this.emissionForm.enabled) {
+              this.needsCalculation = true;
+            }
+          });
+
+          this.emissionForm.get('formulaVariables').valueChanges
+          .subscribe(value => {
+            if (this.emissionForm.enabled) {
+              this.needsCalculation = true;
+            }
+          });
+
         });
       } else {
+
         this.emissionForm.enable();
+
+        // Make user calculate total emissions after changes
+        this.emissionForm.get('emissionsFactor').valueChanges
+        .subscribe(value => {
+          if (this.emissionForm.enabled) {
+            this.needsCalculation = true;
+          }
+        });
+
+        this.emissionForm.get('emissionsFactorFormula').valueChanges
+        .subscribe(value => {
+          if (this.emissionForm.enabled) {
+            this.needsCalculation = true;
+          }
+        });
+
+        this.emissionForm.get('formulaVariables').valueChanges
+        .subscribe(value => {
+          if (this.emissionForm.enabled) {
+            this.needsCalculation = true;
+          }
+        });
+
       }
 
       this.periodService.retrieve(+params.get('periodId'))
@@ -142,15 +188,16 @@ export class EmissionDetailsComponent implements OnInit {
       });
     });
 
-    this.emissionForm.controls.emissionsCalcMethodCode.valueChanges
+    this.emissionForm.get('emissionsCalcMethodCode').valueChanges
     .subscribe(value => {
-      this.onMethodChange(value, this.emissionForm.controls.emissionsCalcMethodCode.status);
+      this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status);
     });
 
-    this.emissionForm.controls.emissionsCalcMethodCode.statusChanges
+    this.emissionForm.get('emissionsCalcMethodCode').statusChanges
     .subscribe(status => {
-      this.onMethodChange(this.emissionForm.controls.emissionsCalcMethodCode.value, status);
+      this.onMethodChange(this.emissionForm.get('emissionsCalcMethodCode').value, status);
     });
+
   }
 
   private onMethodChange(value: CalculationMethodCode, status: string) {
@@ -202,14 +249,26 @@ export class EmissionDetailsComponent implements OnInit {
       this.efNumeratorMismatch = false;
     }
 
-    if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.reportingPeriod.calculationParameterValue
-          && this.emissionForm.get('emissionsFactor').valid) {
-      const calculatedValue = this.reportingPeriod.calculationParameterValue * +this.emissionForm.get('emissionsFactor').value;
-      this.toastr.success('','Total emissions successfully calculated',{positionClass: 'toast-top-right'});
-      if (calculatedValue) {
-        this.calculatedEf = this.emissionForm.get('emissionsFactor').value;
-        this.emissionForm.get('totalEmissions').setValue(calculatedValue);
-      }
+    if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.reportingPeriod.calculationParameterValue) {
+
+      const calcEmission = new Emission();
+      Object.assign(calcEmission, this.emissionForm.value);
+
+      calcEmission.variables = this.generateFormulaVariableDtos();
+      calcEmission.reportingPeriodId = this.reportingPeriod.id;
+
+      this.emissionService.calculateEmissionTotal(calcEmission)
+        .subscribe(result => {
+
+          this.needsCalculation = false;
+          if (result.formulaIndicator) {
+            this.emissionForm.get('emissionsFactor').setValue(result.emissionsFactor, {emitEvent: false});
+          }
+          this.emissionForm.get('totalEmissions').setValue(result.totalEmissions);
+          this.toastr.success('', 'Total emissions successfully calculated', {positionClass: 'toast-top-right'});
+
+        });
+
     }
   }
 
@@ -221,7 +280,7 @@ export class EmissionDetailsComponent implements OnInit {
   }
 
   onEdit() {
-    this.emissionForm.enable();
+    this.emissionForm.enable({emitEvent: false});
   }
 
   onSubmit() {
@@ -302,10 +361,6 @@ export class EmissionDetailsComponent implements OnInit {
             this.emissionForm.get('emissionsNumeratorUom').setValue(modalEf.emissionsNumeratorUom);
             this.emissionForm.get('emissionsDenominatorUom').setValue(modalEf.emissionsDenominatorUom);
             this.emissionForm.get('emissionsUomCode').setValue(modalEf.emissionsNumeratorUom);
-            // temporary to bypass validation, will be replace when actual values are added.
-            if (modalEf.formulaIndicator) {
-              this.emissionForm.get('emissionsFactor').setValue(1);
-            }
 
             this.setupVariableForm(modalEf.variables || []);
           }
@@ -352,6 +407,9 @@ export class EmissionDetailsComponent implements OnInit {
       } else if (VariableValidationType.CASU === v.validationType) {
         this.getFormulaVariableForm().addControl(v.code,
             new FormControl(null, [Validators.required, Validators.min(1.5), Validators.max(7)]));
+      } else if (VariableValidationType.DAY_PER_YEAR === v.validationType) {
+        this.getFormulaVariableForm().addControl(v.code,
+            new FormControl(null, [Validators.required, Validators.min(0), Validators.max(365)]));
       }
       this.getFormulaVariableForm().addControl(v.code, new FormControl(null, Validators.required));
     });
@@ -383,7 +441,8 @@ export class EmissionDetailsComponent implements OnInit {
     return (control: FormGroup): {[key: string]: any} | null => {
       const efControl = control.get('emissionsFactor');
       if (efControl.enabled) {
-        return this.calculatedEf === efControl.value ? null : {emissionsCalculated: {value: this.calculatedEf}};
+        return this.needsCalculation ? {emissionsCalculated: true} : null;
+        // return this.calculatedEf === efControl.value ? null : {emissionsCalculated: {value: this.calculatedEf}};
       }
 
       return null;
