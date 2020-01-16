@@ -6,9 +6,11 @@
     <div class="modal-body">
         <strong>Select a Release Point</strong>
         <br>
-        <select id="releasePointSelect" class="form-control" formControlName="selectedReleasePointAppt">
+        <select [(ngModel)]="rpApptSelected" type="text" id="releasePointSelect" class="form-control" formControlName="selectedReleasePointAppt">
             <option disabled selected value></option>
-            <option [selected]="rp.releasePointIdentifier === selectedReleasePoint.releasePointIdentifier" *ngFor="let rp of releasePoints">{{rp.releasePointIdentifier}}</option>
+            <option *ngFor="let rp of releasePoints" [ngValue]="rp.releasePointIdentifier">
+                {{rp.releasePointIdentifier}}&nbsp;-&nbsp;{{rp.description}}
+            </option>
         </select>
         <app-validation-message [control]="releasePointApptForm.get('selectedReleasePointAppt')"></app-validation-message>
         <br>

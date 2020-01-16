@@ -20,10 +20,11 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
   duplicateCheck = true;
   selectedReleasePoint: ReleasePointApportionment;
   releasePoints: ReleasePoint[];
+  rpApptSelected: String;
 
   releasePointApptForm = this.fb.group({
     percent: ['', [Validators.required, Validators.max(100), Validators.pattern('[0-9]*')]],
-    selectedReleasePointAppt: ['', Validators.required],
+    selectedReleasePointAppt: ['', Validators.required]
   });
 
   constructor(public activeModal: NgbActiveModal,
@@ -35,6 +36,14 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
     if (this.edit) {
       const releasePointApptControl = this.releasePointApptForm.get('selectedReleasePointAppt');
       releasePointApptControl.setValidators(null);
+
+      // sets default value in dropdown
+      for (let releasePt of this.releasePointApportionments) {
+        if (releasePt.releasePointIdentifier === this.selectedReleasePoint.releasePointIdentifier) {
+        this.rpApptSelected = releasePt.releasePointIdentifier;
+        break;
+        }
+      }
     }
 
     if (this.selectedReleasePoint) {
@@ -61,9 +70,11 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
     if (!this.isValid()) {
         this.releasePointApptForm.markAllAsTouched();
       } else {
+        // check for duplicate selection
         this.releasePointApportionments.forEach(apportionment => {
-          if (!this.edit || this.releasePointApptForm.get('selectedReleasePointAppt').value) {
-            if (apportionment.releasePointIdentifier === this.releasePointApptForm.get('selectedReleasePointAppt').value.toString()) {
+          if (this.releasePointApptForm.get('selectedReleasePointAppt').value) {
+            if ((this.selectedReleasePoint.releasePointIdentifier !== this.releasePointApptForm.get('selectedReleasePointAppt').value.toString())
+            && (apportionment.releasePointIdentifier === this.releasePointApptForm.get('selectedReleasePointAppt').value.toString())) {
               this.duplicateCheck = false;
               // tslint:disable-next-line: max-line-length
               this.toastr.error('', 'This Emissions Process already contains this Release Point Apportionment, duplicates are not allowed.', {positionClass: 'toast-top-right'});
