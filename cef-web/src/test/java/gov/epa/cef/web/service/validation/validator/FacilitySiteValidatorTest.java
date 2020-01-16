@@ -70,11 +70,28 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void nullFacilityContactTest() {
+    public void nullFacilityContactEmissionsInventoryTypeTest() {
 
         CefValidatorContext cefContext = createContext();
         FacilitySite testData = createBaseFacilitySite();
         testData.setContacts(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT.value()) && errorMap.get(ValidationField.FACILITY_CONTACT.value()).size() == 1);
+    }
+    
+    @Test
+    public void nullFacilityContactEmailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        
+        for (FacilitySiteContact contact: testData.getContacts()) {
+        	contact.setEmail(null);
+        };
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);

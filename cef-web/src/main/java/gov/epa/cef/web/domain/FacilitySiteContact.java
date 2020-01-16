@@ -32,7 +32,7 @@ public class FacilitySiteContact extends BaseAuditEntity {
     @Column(name = "last_name", length = 20)
     private String lastName;
 
-    @Column(name = "email", length = 255)
+    @Column(name = "email", length = 255, nullable = false)
     private String email;
 
     @Column(name = "phone", length = 15)

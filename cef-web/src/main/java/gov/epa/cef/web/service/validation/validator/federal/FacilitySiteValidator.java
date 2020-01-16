@@ -62,6 +62,16 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         	context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.required",
         			createValidationDetails(facilitySite));
         }
+        
+        // Facility contact must have an email
+        for (FacilitySiteContact contact: facilitySite.getContacts()) {
+        	if (contact.getEmail() == null || contact.getEmail().contentEquals("")) {
+        		
+        		result = false;
+        		context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.email.required",
+          			createValidationDetails(facilitySite));
+        	}
+        }
 
         return result;
     }

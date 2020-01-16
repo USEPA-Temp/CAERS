@@ -182,6 +182,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		fsc.setFacilitySite(fs);
 		fsc.setFirstName("John");
 		fsc.setLastName("Doe");
+		fsc.setEmail("");
 
 		ContactTypeCode contactTypeCode = new ContactTypeCode();
 		contactTypeCode.setCode("FAC");
