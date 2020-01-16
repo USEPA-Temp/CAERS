@@ -13,6 +13,11 @@
                         <div class="row">
                             <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
                             <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Process Description:</strong></div>
+                            <div class="col-sm-6 col-md-6">{{process.description}}</div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-sm-6 col-md-2"><strong>Process Status:</strong></div>
                             <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
                             <div class="col-sm-6 col-md-2"><strong>Process Status Year:</strong></div>
@@ -20,19 +25,16 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6 col-md-2"><strong>Process Description:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{process.description}}</div>
                             <div class="col-sm-6 col-md-2"><strong>SCC:</strong></div>
                             <div class="col-sm-6 col-md-2">{{process.sccCode}}</div>
-                            <div class="col-sm-6 col-md-2" *ngIf="hasAircraftCode"><strong>Aircraft Engine Code:</strong></div>
-                            <div class="col-sm-6 col-md-2" *ngIf="hasAircraftCode">{{process.aircraftEngineTypeCode?.code}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>SCC Description:</strong></div>
+                            <div class="col-sm-6 col-md-6">{{process.sccDescription}}</div>
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6 col-md-2"><strong>SCC Description:</strong></div>
-                            <div class="col-sm-6 col-md-10">{{process.sccDescription}}</div>
+                            <div class="col-sm-6 col-md-2" *ngIf="hasAircraftCode"><strong>Aircraft Engine Code:</strong></div>
+                            <div class="col-sm-6 col-md-6" *ngIf="hasAircraftCode">{{process.aircraftEngineTypeCode?.faaAircraftType}}&nbsp;-&nbsp;{{process.aircraftEngineTypeCode?.engine}}</div>
                         </div>
-
                         <div class="row">
                             <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
                             <div class="col-sm-6 col-md-10">{{process.comments}}</div>

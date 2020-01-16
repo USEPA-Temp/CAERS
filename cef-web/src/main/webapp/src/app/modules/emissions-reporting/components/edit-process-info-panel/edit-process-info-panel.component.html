@@ -5,6 +5,14 @@
             <input type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier">
             <app-validation-message [control]="processForm.get('emissionsProcessIdentifier')"></app-validation-message>
         </div>
+        <label for="processDescriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Description:</strong></label>
+        <div class="col-sm-6 col-md-6">
+            <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
+            <app-validation-message [control]="processForm.get('description')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-3">
         <label for="processStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Process Status:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="processStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
@@ -19,22 +27,6 @@
         </div>
     </div>
 
-    <div class="row pb-3">
-        <label for="processDescriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Description:</strong></label>
-        <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
-            <app-validation-message [control]="processForm.get('description')"></app-validation-message>
-        </div>
-        <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label" *ngIf="aircraftSCCcheck"><strong>Aircraft Engine Code:</strong></label>
-        <div class="col-sm-6 col-md-6" *ngIf="aircraftSCCcheck">
-            <select type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCode">
-                <option disabled [ngValue]="null"></option>
-                <option [selected]="opt.code === process.aircraftEngineTypeCode?.code" *ngFor="let opt of aircraftEngineTypeValue" [ngValue]="opt">{{opt?.faaAircraftType}}&nbsp;-&nbsp;{{opt?.engine}}</option>
-            </select>
-            <app-validation-message [control]="processForm.controls.aircraftEngineTypeCode"></app-validation-message>
-        </div>
-    </div>
-
     <div class="row pb-1">
         <label for="processSccInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC:</strong></label>
         <div class="col-sm-6 col-md-2">
@@ -44,7 +36,6 @@
         <div class="col-sm-6 col-md-3">
             <button type="button" class="btn btn-success mr-2" (click)="openSccSearchModal()">Search for SCC Code</button>
         </div>
-        
     </div>
 
     <div class="row pb-1">
@@ -52,6 +43,19 @@
         <div class="col-sm-6 col-md-10">
             <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription"></textarea>
             <app-validation-message [control]="processForm.get('sccDescription')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label" *ngIf="aircraftSCCcheck"><strong>Aircraft Engine Code:</strong></label>
+        <div class="col-sm-6 col-md-10" *ngIf="aircraftSCCcheck">
+            <select type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCode">
+                <option disabled [ngValue]="null"></option>
+                <option [selected]="opt.code === process.aircraftEngineTypeCode?.code" *ngFor="let opt of aircraftEngineTypeValue" [ngValue]="opt">
+                    {{opt?.faaAircraftType}}&nbsp;-&nbsp;{{opt?.engine}}
+                </option>
+            </select>
+            <app-validation-message [control]="processForm.controls.aircraftEngineTypeCode"></app-validation-message>
         </div>
     </div>
 
