@@ -12,7 +12,7 @@ export class EmissionsReportContainerComponent implements OnInit {
   constructor(private userContext: UserContextService) { }
 
   ngOnInit() {
-    if (this.userContext.user.role === 'Certifier' || this.userContext.user.role === 'Preparer') {
+    if (this.userContext.user.role === 'NEI Certifier' || this.userContext.user.role === 'Preparer') {
       this.showProgressBar = true;
     }
   }

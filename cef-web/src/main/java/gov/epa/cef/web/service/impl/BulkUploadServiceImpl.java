@@ -468,6 +468,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setMailingStateCode(bulkFacility.getMailingStateCode());
         facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
         facility.setEisProgramId(bulkFacility.getEisProgramId());
+        facility.setComments(bulkFacility.getComments());
 
         if (bulkFacility.getFacilityCategoryCode() != null) {
             facility.setFacilityCategoryCode(facilityCategoryRepo.findById(bulkFacility.getFacilityCategoryCode()).orElse(null));

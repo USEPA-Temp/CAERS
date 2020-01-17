@@ -5,6 +5,7 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { EditEmissionUnitInfoPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-emission-unit-info-panel/edit-emission-unit-info-panel.component';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-emission-unit-info',
@@ -12,11 +13,11 @@ import { SharedService } from 'src/app/core/services/shared.service';
   styleUrls: ['./emission-unit-info.component.scss']
 })
 export class EmissionUnitInfoComponent implements OnInit {
-  @Input() 
-  emissionsUnit: EmissionUnit;
-  @Input()
-  facilitySiteId: number;
+  @Input() emissionsUnit: EmissionUnit;
+  @Input() facilitySiteId: number;
+  @Input() emissionsReport: ReportStatus;
   editInfo = false;
+  readOnlyMode = true;
   unitId: number;
 
   @ViewChild(EditEmissionUnitInfoPanelComponent, { static: false })
@@ -31,6 +32,8 @@ export class EmissionUnitInfoComponent implements OnInit {
       .subscribe(map => {
         this.unitId = parseInt(map.get('unitId'));
       });
+
+      this.readOnlyMode = ReportStatus.IN_PROGRESS !== this.emissionsReport;
   }
 
   setEditInfo(value: boolean) {
