@@ -39,19 +39,34 @@ export class EmissionsReportValidationComponent implements OnInit {
 
                   console.log(validationResult);
                   this.validationResult = validationResult;
-                  setTimeout(() => {
-                    this.validationComplete = true;
-                    if (validationResult['valid']) {
-                      if (this.hasWarnings()) {
-                        data.facilitySite.emissionsReport.validationStatus = ValidationStatus.PASSED_WARNINGS;
-                      } else {
-                        data.facilitySite.emissionsReport.validationStatus = ValidationStatus.PASSED;
-                      }
-                     } else {
-                      data.facilitySite.emissionsReport.validationStatus = ValidationStatus.UNVALIDATED;
+
+                  this.validationComplete = true;
+                  if (validationResult.valid) {
+                    if (this.hasWarnings()) {
+                      data.facilitySite.emissionsReport.validationStatus = ValidationStatus.PASSED_WARNINGS;
+                    } else {
+                      data.facilitySite.emissionsReport.validationStatus = ValidationStatus.PASSED;
                     }
-                    this.sharedService.emitChange(data.facilitySite);
-                  }, 50);
+                  } else {
+                    data.facilitySite.emissionsReport.validationStatus = ValidationStatus.UNVALIDATED;
+                  }
+                  this.sharedService.emitChange(data.facilitySite);
+
+                  this.validationResult.federalErrors.forEach(item => {
+                    item.url = this.generateUrl(item.invalidValue);
+                  });
+                  this.validationResult.stateErrors.forEach(item => {
+                    item.url = this.generateUrl(item.invalidValue);
+                  });
+                  this.validationResult.federalWarnings.forEach(item => {
+                    item.url = this.generateUrl(item.invalidValue);
+                  });
+                  this.validationResult.stateWarnings.forEach(item => {
+                    item.url = this.generateUrl(item.invalidValue);
+                  });
+
+
+                  this.sharedService.emitValidationResultChange(this.validationResult);
               });
       });
   }

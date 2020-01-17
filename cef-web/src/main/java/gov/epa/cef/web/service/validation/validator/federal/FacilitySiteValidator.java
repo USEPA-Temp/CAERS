@@ -51,7 +51,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         }
         
         // if facility operation status is not operating, status year is required
-        if (!facilitySite.getOperatingStatusCode().getCode().equals("OP")) {
+        if (facilitySite.getOperatingStatusCode() != null && !"OP".contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
         	
         	result = false;
         	context.addFederalError(

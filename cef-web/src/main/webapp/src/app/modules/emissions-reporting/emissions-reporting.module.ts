@@ -53,6 +53,8 @@ import { FacilityNaicsTableComponent } from './components/facility-naics-table/f
 import { FacilityNaicsModalComponent } from './components/facility-naics-modal/facility-naics-modal.component';
 import { ReportHistoryComponent } from './pages/report-history/report-history.component';
 import { ControlPollutantModalComponent } from './components/control-pollutant-modal/control-pollutant-modal.component';
+import { EmissionsReportContainerComponent } from './pages/emissions-report-container/emissions-report-container.component';
+import { ValidationReminderComponent } from './components/validation-reminder/validation-reminder.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +102,9 @@ import { ControlPollutantModalComponent } from './components/control-pollutant-m
     FacilityNaicsTableComponent,
     FacilityNaicsModalComponent,
     ReportHistoryComponent,
-    ControlPollutantModalComponent
+    ControlPollutantModalComponent,
+    EmissionsReportContainerComponent,
+    ValidationReminderComponent
   ],
   imports: [
     CommonModule,

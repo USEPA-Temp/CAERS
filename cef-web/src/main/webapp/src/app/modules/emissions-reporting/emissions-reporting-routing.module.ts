@@ -22,6 +22,7 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EmissionDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emission-details/emission-details.component';
 import {EmissionsReportValidationComponent} from "./pages/emissions-report-validation/emissions-report-validation.component";
 import { ReportHistoryComponent } from './pages/report-history/report-history.component';
+import { EmissionsReportContainerComponent } from 'src/app/modules/emissions-reporting/pages/emissions-report-container/emissions-report-container.component';
 
 const reportRoutes: Routes = [
   {
@@ -31,6 +32,7 @@ const reportRoutes: Routes = [
     children: [
       {
         path: ':reportId',
+        component: EmissionsReportContainerComponent,
         resolve: {
           facilitySite: FacilitySiteResolverService
         },

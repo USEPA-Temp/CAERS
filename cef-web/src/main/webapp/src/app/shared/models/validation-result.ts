@@ -6,6 +6,7 @@ export interface ValidationResult {
     federalWarnings: ValidationItem[];
     stateErrors: ValidationItem[];
     stateWarnings: ValidationItem[];
+    valid: boolean;
 }
 
 export interface ValidationItem {
@@ -13,4 +14,5 @@ export interface ValidationItem {
     errorMsg: string;
     field: string;
     invalidValue: ValidationDetail;
+    url: string;
 }

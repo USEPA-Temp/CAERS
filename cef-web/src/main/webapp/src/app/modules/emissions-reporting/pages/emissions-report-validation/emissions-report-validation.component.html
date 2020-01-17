@@ -21,13 +21,13 @@
                 <ol class="pl-3">
                     <li *ngFor="let item of validationResult.federalErrors">
                         <span *ngIf="item.invalidValue">
-                            <a [routerLink]="[generateUrl(item.invalidValue)]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
+                            <a [routerLink]="[item.url]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
                         </span>
                         {{ item.errorMsg }}
                     </li>
                     <li *ngFor="let item of validationResult.stateErrors">
                         <span *ngIf="item.invalidValue">
-                            <a [routerLink]="[generateUrl(item.invalidValue)]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
+                            <a [routerLink]="[item.url]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
                         </span>
                         {{ item.errorMsg }}
                     </li>
@@ -39,13 +39,13 @@
                 <ol class="pl-3">
                     <li *ngFor="let item of validationResult.federalWarnings">
                         <span *ngIf="item.invalidValue">
-                            <a [routerLink]="[generateUrl(item.invalidValue)]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
+                            <a [routerLink]="[item.url]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
                         </span>
                         {{ item.errorMsg }}
                     </li>
                     <li *ngFor="let item of validationResult.stateWarnings">
                         <span *ngIf="item.invalidValue">
-                            <a [routerLink]="[generateUrl(item.invalidValue)]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
+                            <a [routerLink]="[item.url]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
                         </span>
                         {{ item.errorMsg }}
                     </li>

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, EMPTY, Subject } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { ValidationStatus } from 'src/app/shared/enums/validation-status.enum';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
+import { ValidationResult } from 'src/app/shared/models/validation-result';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +13,26 @@ export class SharedService {
   // Observable string sources
   private emitChangeSource = new Subject<any>();
   private emitSubmissionReviewChangeSource = new Subject<any>();
+  private emitValidationResultChangeSource = new Subject<ValidationResult>();
 
   constructor(private toastr: ToastrService) { }
 
   // Observable string streams
   changeEmitted$ = this.emitChangeSource.asObservable();
   submissionReviewChangeEmitted$ = this.emitSubmissionReviewChangeSource.asObservable();
+  validationResultChangeEmitted$ = this.emitValidationResultChangeSource.asObservable();
+
   // Service message commands
-  emitSubmissionChange(change: any){
-    this.emitSubmissionReviewChangeSource.next(change);
-  }
   emitChange(change: any) {
     this.emitChangeSource.next(change);
+  }
+
+  emitSubmissionChange(change: any) {
+    this.emitSubmissionReviewChangeSource.next(change);
+  }
+
+  emitValidationResultChange(change: ValidationResult) {
+    this.emitValidationResultChangeSource.next(change);
   }
 
   updateReportStatusAndEmit(route: ActivatedRoute) {
