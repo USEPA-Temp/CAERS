@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedService } from 'src/app/core/services/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 
@@ -11,15 +10,16 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 export class StepProgressComponent implements OnInit {
   facilitySite: FacilitySite;
 
-  constructor(private sharedService: SharedService) { 
-      sharedService.changeEmitted$
-      .subscribe(facilitySite => {
-          this.facilitySite = facilitySite;
-      }); 
-  }
+  constructor(private route: ActivatedRoute) { }
+
   ngOnInit() {
-     
+    this.route.data
+    .subscribe(data => {
+
+      this.facilitySite = data.facilitySite;
+    });
   }
+
   isOneOf(baseValue: string, testValues: string[]): boolean {
     for (const value of testValues) {
       if (baseValue === value) {

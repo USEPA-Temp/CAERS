@@ -1,36 +1,28 @@
-import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import { CdxFacility } from 'src/app/shared/models/cdx-facility';
-import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from "src/app/shared/models/user";
-import { UserContextService } from "src/app/core/services/user-context.service";
-import { ChangeDetectorRef } from "@angular/core";
 
 @Component( {
     selector: 'app-emissions-reporting',
     templateUrl: './emissions-reporting.component.html',
     styleUrls: ['./emissions-reporting.component.scss']
 } )
-export class EmissionsReportingComponent implements OnInit {
+export class EmissionsReportingComponent implements OnInit, AfterViewChecked {
     facility: CdxFacility;
-    showProgressBar: boolean=false;
 
-    constructor( private route: ActivatedRoute,
-        private reportService: EmissionsReportingService, private userContext: UserContextService, private cdRef : ChangeDetectorRef ) {
-    }
+    constructor( private route: ActivatedRoute, private cdRef: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.route.data
-            .subscribe(( data: { facility: CdxFacility } ) => {
-                this.facility = data.facility;
-            } );
+        .subscribe(( data: { facility: CdxFacility } ) => {
+            this.facility = data.facility;
+        });
     }
+
+    // This might be bad coding practices allowing questionable code to work.
+    // We should look at removing this and updating our code so it isn't needed at some point.
     ngAfterViewChecked() {
-        if ( this.userContext.user.role == 'Certifier' || this.userContext.user.role == 'Preparer' ) {
-            this.showProgressBar = true;
-            this.cdRef.detectChanges();
-        }
-      }
-    
+        this.cdRef.detectChanges();
+    }
+
 }
