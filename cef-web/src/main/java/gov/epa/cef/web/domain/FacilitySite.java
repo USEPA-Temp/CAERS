@@ -96,7 +96,10 @@ public class FacilitySite extends BaseAuditEntity {
 
     @Column(name = "longitude", precision = 10, scale = 6)
     private BigDecimal longitude;
-
+    
+    @Column(name = "comments", length = 400)
+    private String comments;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tribal_code")
     private TribalCode tribalCode;
@@ -157,6 +160,7 @@ public class FacilitySite extends BaseAuditEntity {
         this.latitude = originalFacilitySite.getLatitude();
         this.longitude = originalFacilitySite.getLongitude();
         this.tribalCode = originalFacilitySite.getTribalCode();
+        this.comments = originalFacilitySite.getComments();
 
         for (FacilityNAICSXref naicsXref : originalFacilitySite.getFacilityNAICS()) {
         	this.facilityNAICS.add(new FacilityNAICSXref(this, naicsXref));
@@ -365,6 +369,14 @@ public class FacilitySite extends BaseAuditEntity {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+    
+    public String getComments() {
+    	return comments;
+    }
+    
+    public void setComments(String comments) {
+    	this.comments = comments;
     }
 
     public TribalCode getTribalCode() {
