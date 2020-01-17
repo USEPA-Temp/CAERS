@@ -50,6 +50,14 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                     ValidationField.FACILITY_EIS_ID.value(), "facilitysite.eisProgramId.required");
         }
         
+        // if facility operation status is not operating, status year is required
+        if (!facilitySite.getOperatingStatusCode().getCode().equals("OP")) {
+        	
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.FACILITY_STATUS.value(), "facilitysite.status.required",
+        			createValidationDetails(facilitySite));
+        }
         
         // Facility must have an Emissions Inventory Contact
         List<FacilitySiteContact> contactList = facilitySite.getContacts().stream()
@@ -60,16 +68,16 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.required",
-        			createValidationDetails(facilitySite));
+        			createContactValidationDetails(facilitySite));
         }
         
         // Facility contact must have an email
         for (FacilitySiteContact contact: facilitySite.getContacts()) {
-        	if (contact.getEmail() == null || contact.getEmail().contentEquals("")) {
+        	if (Strings.emptyToNull(contact.getEmail()) == null) {
         		
         		result = false;
         		context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.email.required",
-          			createValidationDetails(facilitySite));
+        				createContactValidationDetails(facilitySite));
         	}
         }
 
@@ -77,6 +85,14 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
     }
     
     private ValidationDetailDto createValidationDetails(FacilitySite source) {
+    	
+    	String description = MessageFormat.format("Facility Site ", source.getEisProgramId());
+    	
+    	ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEisProgramId(), EntityType.FACILITY_SITE, description);
+    	return dto;
+    }
+    
+    private ValidationDetailDto createContactValidationDetails(FacilitySite source) {
     	
     	String description = MessageFormat.format("Facility Contact ", source.getEisProgramId());
     	
