@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/**")
             .hasAnyRole(
                 AppRole.RoleType.PREPARER.roleName(),
-                AppRole.RoleType.CERTIFIER.roleName(),
+                AppRole.RoleType.NEI_CERTIFIER.roleName(),
                 AppRole.RoleType.REVIEWER.roleName())
             .anyRequest().denyAll().and()
             .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(logoutUrl));
