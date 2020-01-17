@@ -36,4 +36,5 @@ export class FacilitySite {
   facilityCategoryCode: BaseCodeLookup;
   facilitySourceTypeCode: BaseCodeLookup;
   description: string;
+  comments: string;
 }
