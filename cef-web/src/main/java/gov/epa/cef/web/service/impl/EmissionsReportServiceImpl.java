@@ -10,17 +10,14 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.activation.DataHandler;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,62 +30,27 @@ import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
-import gov.epa.cef.web.domain.Control;
-import gov.epa.cef.web.domain.ControlAssignment;
-import gov.epa.cef.web.domain.ControlPath;
-import gov.epa.cef.web.domain.ControlPollutant;
-import gov.epa.cef.web.domain.Emission;
-import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.EmissionsUnit;
-import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
-import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
-import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
-import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
-import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
-import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
-import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
-import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
-import gov.epa.cef.web.repository.NaicsCodeRepository;
-import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
-import gov.epa.cef.web.repository.PollutantRepository;
-import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
-import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
-import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
-import gov.epa.cef.web.repository.TribalCodeRepository;
-import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
-import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.EmissionsReportStatusService;
+import gov.epa.cef.web.service.FacilitySiteContactService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
-import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
-import gov.epa.cef.web.service.mapper.BulkUploadMapper;
+import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
@@ -134,6 +96,12 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private EmissionsReportStatusService statusService;
+    
+    @Autowired
+    private FacilitySiteContactService contactService;
+    
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
@@ -209,7 +177,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getAgencyCode());
 
                 //send an email notification to the SLT's predefined address that a report has been submitted
-                notificationService.sentReportSubmittedNotification(sltConfig.getSltEmail(),
+                notificationService.sendReportSubmittedNotification(sltConfig.getSltEmail(),
                         cefConfig.getDefaultEmailAddress(),
                         emissionsReport.getFacilitySites().get(0).getName(),
                         emissionsReport.getYear().toString());
@@ -353,6 +321,78 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         return erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
             .stream().findFirst();
+    }
+    
+    /**
+     * Approve the specified reports and move to approved
+     * @param reportIds
+     * @param comments
+     * @return
+     */
+    @Override
+    public List<EmissionsReportDto>acceptEmissionsReports(List<Long> reportIds, String comments) {
+    	List<EmissionsReportDto> updatedReports = statusService.acceptEmissionsReports(reportIds);
+        reportService.createReportHistory(reportIds, ReportAction.ACCEPTED, comments);
+             
+    	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+	      .forEach(report -> {
+	    	  
+	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at 
+	    	  //some point in the future if different report types are included in the system
+	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
+	    	  
+	    	  //check for "Emission Inventory" contacts in the facility site and send them a notification that their report 
+	    	  //has been accepted
+	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
+	    	  	    	  
+	    	  eiContacts.forEach(contact -> {
+	    		  //if the EI contact has a email address - send them the notification
+	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
+			          notificationService.sendReportAcceptedNotification(contact.getEmail(),
+			        		  cefConfig.getDefaultEmailAddress(),
+			        		  reportFacilitySite.getName(),
+			        		  report.getYear().toString(),
+			        		  comments);
+	    		  }
+	    	  });
+	      });
+    	return updatedReports;
+    }
+    
+    /**
+     * Approve the specified reports and move to approved
+     * @param reportIds
+     * @param comments
+     * @return
+     */
+    @Override
+    public List<EmissionsReportDto>rejectEmissionsReports(List<Long> reportIds, String comments) {
+    	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reportIds);
+        reportService.createReportHistory(reportIds, ReportAction.REJECTED, comments);
+             
+    	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+	      .forEach(report -> {
+	    	  
+	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at 
+	    	  //some point in the future if different report types are included in the system
+	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
+	    	  
+	    	  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report 
+	    	  //has been accepted
+	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
+	    	  
+	    	  eiContacts.forEach(contact -> {
+	    		  //if the EI contact has a email address - send them the notification
+	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
+			          notificationService.sendReportRejectedNotification(contact.getEmail(),
+			        		  cefConfig.getDefaultEmailAddress(),
+			        		  reportFacilitySite.getName(),
+			        		  report.getYear().toString(),
+			        		  comments);
+	    		  }
+	    	  });
+	      });
+    	return updatedReports;
     }
 
 

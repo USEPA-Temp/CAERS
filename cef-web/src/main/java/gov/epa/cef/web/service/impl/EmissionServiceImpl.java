@@ -1,11 +1,14 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
@@ -23,8 +26,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmissionServiceImpl implements EmissionService {
@@ -39,6 +44,9 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Autowired
     private EmissionsReportRepository emissionsReportRepo;
+
+    @Autowired
+    private ReportingPeriodRepository periodRepo;
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
@@ -60,6 +68,10 @@ public class EmissionServiceImpl implements EmissionService {
     public EmissionDto create(EmissionDto dto) {
 
         Emission emission = emissionMapper.fromDto(dto);
+
+        emission.getVariables().forEach(v -> {
+            v.setEmission(emission);
+        });
 
         emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
@@ -85,6 +97,22 @@ public class EmissionServiceImpl implements EmissionService {
         Emission emission = emissionRepo.findById(dto.getId()).orElse(null);
         emissionMapper.updateFromDto(dto, emission);
 
+        // Match up variables with the existing value if it exists to preserve id, created_by, etc.
+        List<EmissionFormulaVariable> variables = new ArrayList<>();
+        dto.getVariables().forEach(v -> {
+            Optional<EmissionFormulaVariable> variable = emission.getVariables().stream().filter(ov -> ov.getId().equals(v.getId())).findFirst();
+            if (variable.isPresent()) {
+                variables.add(emissionMapper.updateFormulaVariableFromDto(v, variable.get()));
+            } else {
+                variables.add(emissionMapper.formulaVariableFromDto(v));
+            }
+        });
+        emission.setVariables(variables);
+
+        emission.getVariables().forEach(v -> {
+            v.setEmission(emission);
+        });
+
         emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
         EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
@@ -99,6 +127,27 @@ public class EmissionServiceImpl implements EmissionService {
     public void delete(Long id) {
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), EmissionRepository.class);
         emissionRepo.deleteById(id);
+    }
+
+    /**
+     * Calculate total emissions for an emission and emission factor if it uses a formula
+     * @param dto
+     * @return
+     */
+    public EmissionDto calculateTotalEmissions(EmissionDto dto) {
+
+        ReportingPeriod rp = periodRepo.findById(dto.getReportingPeriodId()).orElse(null);
+        if (dto.getFormulaIndicator()) {
+            List<EmissionFormulaVariable> variables = emissionMapper.formulaVariableFromDtoList(dto.getVariables());
+
+            BigDecimal ef = CalculationUtils.calculateEmissionFormula(dto.getEmissionsFactorFormula(), variables);
+            dto.setEmissionsFactor(ef);
+        }
+
+        BigDecimal totalEmissions = dto.getEmissionsFactor().multiply(rp.getCalculationParameterValue());
+        dto.setTotalEmissions(totalEmissions);
+
+        return dto;
     }
 
     /**

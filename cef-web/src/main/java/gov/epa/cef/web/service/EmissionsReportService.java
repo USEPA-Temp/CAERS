@@ -81,4 +81,8 @@ public interface EmissionsReportService {
      * @param id
      */
     void delete(Long id);
+
+	List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds, String comments);
+
+	List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds, String comments);
 }

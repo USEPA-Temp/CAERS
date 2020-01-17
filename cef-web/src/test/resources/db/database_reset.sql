@@ -5,6 +5,7 @@ DROP VIEW IF EXISTS vw_report_summary;
 
 --REPORTING TABLES
 DROP TABLE IF EXISTS emission;
+DROP TABLE IF EXISTS emission_formula_variable;
 DROP TABLE IF EXISTS release_point_appt;
 DROP TABLE IF EXISTS control_assignment;
 DROP TABLE IF EXISTS control_path;
@@ -22,6 +23,7 @@ DROP TABLE IF EXISTS report_history;
 DROP TABLE IF EXISTS emissions_report;
 
 --REFERENCE TABLES
+DROP TABLE IF EXISTS emission_formula_variable_code;
 DROP TABLE IF EXISTS emission_factor;
 DROP TABLE IF EXISTS agency;
 DROP TABLE IF EXISTS aircraft_engine_type_code;

@@ -11,16 +11,21 @@
         <div class="row">
           <strong style="margin-left: 25px;">Report Status:</strong>
           <select style="width: 150px; margin-left: 10px;" class="select-option" #mySelect (change)="onStatusSelected(mySelect.value)">
-              <option value="Submitted">Submitted</option>
-              <option value="In_Progress">In Progress</option>
-              <option value="Approved">Approved</option>
+              <option value="SUBMITTED">Submitted</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="APPROVED">Accepted</option>
+          </select>
+          <strong style="margin-left: 25px;">Report Year:</strong>
+          <select id="select" style="width: 150px; margin-left: 10px;" class="select-option" #yearSelect (change)="onYearSelected(yearSelect.value, mySelect.value)">
+              <option value="CURRENT_REPORTING_YEAR" selected="selected">Current Year</option>
+              <option value="ALL_YEARS">All Years</option>
           </select>
         </div>
         <br>
         <app-submission-review-list [hideSelectColumn]="hideButtons" [tableData]="submissions"></app-submission-review-list>
         <div class="text-right">
-          <button *ngIf="!hideButtons" class="btn btn-primary btn-md m-3" (click)="onReject()">Reject and Return to Facility</button>
-          <button *ngIf="!hideButtons" class="btn btn-success btn-md m-3" (click)="onApprove()">Accept and Submit to EIS</button>
+          <button *ngIf="!hideButtons" class="btn btn-primary btn-md m-3" (click)="onReject(yearSelect.value)">Reject and Return to Facility</button>
+          <button *ngIf="!hideButtons" class="btn btn-success btn-md m-3" (click)="onApprove(yearSelect.value)">Accept and Submit to EIS</button>
           <div class="validation-message p-3" *ngIf="invalidSelection">
             At least one submission must be selected.
           </div>

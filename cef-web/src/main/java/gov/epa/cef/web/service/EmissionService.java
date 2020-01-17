@@ -27,6 +27,19 @@ public interface EmissionService {
     public EmissionDto update(EmissionDto dto);
 
     /**
+     * Delete an Emission for a given id
+     * @param id
+     */
+    public void delete(Long id);
+
+    /**
+     * Calculate total emissions for an emission and emission factor if it uses a formula
+     * @param dto
+     * @return
+     */
+    public EmissionDto calculateTotalEmissions(EmissionDto dto);
+
+    /**
      * Find Emission by Facility and CAS Number.
      * This method is primarily intended to provide the interface to TRIMEweb so that TRI users can
      * see what emissions have been reported to the Common Emissions Form for the current
@@ -37,11 +50,5 @@ public interface EmissionService {
      * @return
      */
     public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId);
-
-    /**
-     * Delete an Emission for a given id
-     * @param id
-     */
-    public void delete(Long id);
 
 }

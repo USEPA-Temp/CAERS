@@ -233,7 +233,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	er.setId(1L);
     	er.setStatus(ReportStatus.APPROVED);
     	er.setValidationStatus(ValidationStatus.PASSED);
-    	er.setYear((short) 2020);
+    	er.setYear((short) 2018);
 
     	List<FacilitySite> facilitySites = new ArrayList<>();
     	FacilitySite fs = new FacilitySite();

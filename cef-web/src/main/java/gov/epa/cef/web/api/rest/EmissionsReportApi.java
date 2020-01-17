@@ -78,7 +78,6 @@ public class EmissionsReportApi {
         this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
-        this.facilitySiteService = facilitySiteService;
     }
 
     /**
@@ -143,9 +142,7 @@ public class EmissionsReportApi {
 
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportStatusService.acceptEmissionsReports(reviewDTO.reportIds);
-
-        this.reportService.createReportHistory(reviewDTO.reportIds, ReportAction.ACCEPTED, reviewDTO.comments);
+        List<EmissionsReportDto> result = emissionsReportService.acceptEmissionsReports(reviewDTO.reportIds, reviewDTO.comments);
         
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -161,9 +158,7 @@ public class EmissionsReportApi {
 
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportStatusService.rejectEmissionsReports(reviewDTO.reportIds);
-
-        this.reportService.createReportHistory(reviewDTO.reportIds, ReportAction.REJECTED, reviewDTO.comments);
+        List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reviewDTO.reportIds, reviewDTO.comments);
         
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -174,7 +169,7 @@ public class EmissionsReportApi {
      * @return
      */
     @PostMapping(value = "/reset")
-    @RolesAllowed(value = {AppRole.ROLE_CERTIFIER})
+    @RolesAllowed(value = {AppRole.ROLE_NEI_CERTIFIER})
     public ResponseEntity<List<EmissionsReportDto>> resetReports(@NotNull @RequestBody List<Long> reportIds) {
 
         this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
@@ -275,7 +270,7 @@ public class EmissionsReportApi {
      * @return
      */
     @GetMapping(value = "/submitToCromerr")
-    @RolesAllowed(AppRole.ROLE_CERTIFIER)
+    @RolesAllowed(AppRole.ROLE_NEI_CERTIFIER)
     public ResponseEntity<String> submitToCromerr(
         @NotBlank @RequestParam String activityId, @NotNull @RequestParam Long reportId) {
 

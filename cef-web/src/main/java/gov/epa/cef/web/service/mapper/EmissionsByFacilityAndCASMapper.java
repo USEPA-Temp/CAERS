@@ -12,6 +12,7 @@ public interface EmissionsByFacilityAndCASMapper {
     @Mapping(source="pollutantCasId", target="casNumber")
     @Mapping(source="pollutantName", target="chemical")
     @Mapping(source="emissionsUomCode", target="uom")
+    @Mapping(source="status", target="reportStatus")
     EmissionsByFacilityAndCASDto toDto(EmissionsByFacilityAndCAS emissionsByFacilityAndCAS);
 
 }

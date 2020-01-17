@@ -95,4 +95,18 @@ public class EmissionApi {
 
         emissionService.delete(id);
     }
+
+    /**
+     * Calculate total emissions and emission factor
+     * @param dto
+     * @return
+     */
+    @PostMapping(value = "/calculate")
+    public ResponseEntity<EmissionDto> calculateTotalEmissions(@NotNull @RequestBody EmissionDto dto) {
+
+
+        EmissionDto result = emissionService.calculateTotalEmissions(dto);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

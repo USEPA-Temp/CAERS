@@ -16,7 +16,7 @@ public class AppRole {
 
     public enum RoleType {
         PREPARER(142710L, ROLE_PREPARER),
-        CERTIFIER(142720L, ROLE_CERTIFIER),
+        NEI_CERTIFIER(142720L, ROLE_NEI_CERTIFIER),
         REVIEWER(142730L, ROLE_REVIEWER),
         ADMIN(-1, ROLE_ADMIN),
         UNKNOWN(-9999, "UNKNOWN");
@@ -151,7 +151,7 @@ public class AppRole {
 
     public static final String ROLE_PREPARER = "ROLE_Preparer";
 
-    public static final String ROLE_CERTIFIER = "ROLE_Certifier";
+    public static final String ROLE_NEI_CERTIFIER = "ROLE_NEI Certifier";
 
     public static final String ROLE_REVIEWER = "ROLE_Reviewer";
 

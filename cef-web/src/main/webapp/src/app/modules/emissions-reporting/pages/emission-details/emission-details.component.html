@@ -140,6 +140,16 @@
                         </div>
                     </div>
 
+                    <div class="pb-2" *ngIf="emissionForm.get('formulaIndicator').value" formGroupName="formulaVariables">
+                        <div class="row" *ngFor="let variable of formulaVariables">
+                            <label for="{{variable.code + 'Input'}}" class="col-sm-4 col-lg-2 col-form-label"><strong>{{variable.code}} - {{variable.description}}:</strong></label>
+                            <div class="col-sm-8 col-lg-4">
+                                <input type="number" class="form-control" id="{{variable.code + 'Input'}}" [formControlName]="variable.code">
+                                <app-validation-message [control]="getFormulaVariableForm().get(variable.code)"></app-validation-message>
+                            </div>
+                        </div>
+                    </div>
+
                     <fieldset [disabled]="epaEmissionFactor">
                         <div class="row pb-2">
                             <label for="emissionsNumeratorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Numerator UoM:</strong></label>

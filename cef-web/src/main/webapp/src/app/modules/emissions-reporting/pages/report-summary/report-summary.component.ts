@@ -50,7 +50,7 @@ export class ReportSummaryComponent implements OnInit {
                 this.userService.getCurrentUserNaasToken()
                 .subscribe(userToken => {
                     this.userContextService.getUser().subscribe( user => {
-                            if (user.role === 'Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                            if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
                                 this.showCertify = true;
                                 initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                     this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr);

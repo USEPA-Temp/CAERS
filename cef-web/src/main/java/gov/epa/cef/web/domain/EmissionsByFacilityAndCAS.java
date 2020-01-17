@@ -29,6 +29,9 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
     @Column(name = "year")
     private Short year;
     
+    @Column(name = "status")
+    private String status;
+    
     @Column(name = "pollutant_name")
     private String pollutantName;
     
@@ -72,7 +75,15 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
         this.year = year;
     }
 
-    public String getPollutantName() {
+    public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getPollutantName() {
         return pollutantName;
     }
 

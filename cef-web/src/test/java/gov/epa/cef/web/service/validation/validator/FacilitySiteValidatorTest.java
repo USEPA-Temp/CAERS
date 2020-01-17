@@ -19,6 +19,7 @@ import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FipsStateCode;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
@@ -54,6 +55,20 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void simpleValidateOperationStatusTypeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        
+        OperatingStatusCode opStatusCode = new OperatingStatusCode();
+        opStatusCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatusCode);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
     public void simpleValidateContactTypeFailTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -70,11 +85,28 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void nullFacilityContactTest() {
+    public void nullFacilityContactEmissionsInventoryTypeTest() {
 
         CefValidatorContext cefContext = createContext();
         FacilitySite testData = createBaseFacilitySite();
         testData.setContacts(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT.value()) && errorMap.get(ValidationField.FACILITY_CONTACT.value()).size() == 1);
+    }
+    
+    @Test
+    public void nullFacilityContactEmailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        
+        for (FacilitySiteContact contact: testData.getContacts()) {
+        	contact.setEmail(null);
+        };
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -88,6 +120,11 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
 
         FacilitySite result = new FacilitySite();
         result.setEisProgramId("1");
+        result.setStatusYear(null);
+        
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        result.setOperatingStatusCode(opStatCode);
         
         ContactTypeCode contactTypeCode = new ContactTypeCode();
         contactTypeCode.setCode("EI");

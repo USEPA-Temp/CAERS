@@ -21,6 +21,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   @Input() readOnlyMode: boolean;
   @Input() facilitySiteId: number;
   baseUrl: string;
+  totalApptPct = 0;
 
   constructor(
     private modalService: NgbModal,
@@ -37,6 +38,20 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
         this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
       });
     this.tableData.sort((a, b) => (a.releasePointIdentifier > b.releasePointIdentifier ? 1 : -1));
+
+    this.calcTotalPercent();
+  }
+
+  calcTotalPercent() {
+    // calculate total percent apportionment of emissions
+    let sum = 0;
+    for (let rpa of this.tableData) {
+      sum += rpa.percent;
+    }
+    this.totalApptPct = sum;
+
+    // sort table by release point identifier
+    this.tableData.sort((a, b) => (a.releasePointIdentifier > b.releasePointIdentifier ? 1 : -1));
   }
 
   // delete release point apportionment from the database
@@ -49,6 +64,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
       this.processService.retrieve(emissionProcessId)
         .subscribe(processResponse => {
           this.tableData = processResponse.releasePointAppts;
+          this.calcTotalPercent();
         });
     });
   }
@@ -77,8 +93,9 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
             this.sharedService.updateReportStatusAndEmit(this.route);
           }
           this.tableData = processResponse.releasePointAppts;
-        })
-    })
+          this.calcTotalPercent();
+        });
+    });
   }
 
   openEditModal(selectedApportionment) {
@@ -88,14 +105,16 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     modalRef.componentInstance.releasePointApportionments = this.tableData;
     modalRef.componentInstance.edit = true;
     modalRef.componentInstance.selectedReleasePoint = selectedApportionment;
+
     modalRef.result.then((result) => {
       this.processService.retrieve(this.process.id)
         .subscribe(processResponse => {
           if (result !== 'dontUpdate') {
             this.sharedService.updateReportStatusAndEmit(this.route);
             this.tableData = processResponse.releasePointAppts;
+            this.calcTotalPercent();
           }
-        })
-    })
+        });
+    });
   }
 }

@@ -45,6 +45,7 @@ export class EditFacilityContactComponent implements OnInit {
       Validators.required,
       Validators.maxLength(20)]],
     email: ['', [
+      Validators.required,
       Validators.maxLength(255),
       Validators.email]],
     streetAddress: ['', [

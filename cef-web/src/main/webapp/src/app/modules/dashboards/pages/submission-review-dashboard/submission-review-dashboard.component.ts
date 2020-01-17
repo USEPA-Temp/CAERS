@@ -6,6 +6,7 @@ import { EmissionsReportingService } from 'src/app/core/services/emissions-repor
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
 import {SharedService} from "../../../../core/services/shared.service";
+import { faTheaterMasks } from '@fortawesome/free-solid-svg-icons';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -20,6 +21,8 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     submissions: SubmissionUnderReview[] = [];
     hideButtons: boolean;
     invalidSelection = false;
+    currentYear: number;
+    selectedYear: string;
 
     constructor(
         private emissionReportService: EmissionsReportingService,
@@ -28,10 +31,13 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         private sharedService: SharedService ) { }
 
     ngOnInit() {
-        this.getSubmissionsUnderReview();
+        const CURRENT_REPORTING_YEAR = 'CURRENT_REPORTING_YEAR';
+        this.currentYear = new Date().getFullYear() - 1;
+        this.selectedYear = CURRENT_REPORTING_YEAR;
+        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
     }
 
-    onApprove() {
+    onApprove(year) {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
 
         if (!selectedSubmissions.length) {
@@ -45,7 +51,12 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
-                    this.getSubmissionsUnderReview();
+                    if (year === 'ALL_YEARS') {
+                        this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
+                    }
+                    if (year === 'CURRENT_REPORTING_YEAR') {
+                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                    }
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -54,7 +65,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    onReject() {
+    onReject(year) {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
 
         if (!selectedSubmissions.length) {
@@ -68,7 +79,12 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.rejectReports(selectedSubmissions,comments)
                 .subscribe(() => {
-                    this.getSubmissionsUnderReview();
+                    if (year === 'ALL_YEARS') {
+                        this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
+                    }
+                    if (year === 'CURRENT_REPORTING_YEAR') {
+                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                    }
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -77,28 +93,37 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    getSubmissionsUnderReview(): void {
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === 'SUBMITTED') );
+    retrieveFacilitiesReportsByYearAndStatus(year,reportStatus): void{
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus)
+            .subscribe( submissions => this.submissions = submissions);
+    }
+
+    retrieveFacilitiesReportsByReportStatus(reportStatus): void{
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus)
+            .subscribe(submissions => this.submissions = submissions);
     }
 
     onStatusSelected(value: string) {
-        if (value === 'Submitted') {
+        if (value === 'SUBMITTED') {
             this.hideButtons = false;
         } else {
             this.hideButtons = true;
         }
-        if (value === 'In Progress') {
-            value = 'IN_PROGRESS'
+        if (this.selectedYear === 'CURRENT_REPORTING_YEAR') {
+            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,value);
+        } else {
+            this.retrieveFacilitiesReportsByReportStatus(value);
         }
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview()
-            .subscribe( submissions => this.submissions = submissions.filter(item => item.reportStatus === value.toUpperCase()) );
     }
 
-    //emits the updated submission list to the notification component
+    onYearSelected(year: string, value: string) {
+        this.selectedYear = year;
+        this.onStatusSelected(value);
+    }
+
+    // emits the updated submission list to the notification component
     emitAllSubmissions(): void {
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReview().subscribe(submissions => {
-            console.log("emitted submissions ",submissions)
+        this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear).subscribe(submissions =>{
             this.sharedService.emitSubmissionChange(submissions);
         });
     }
