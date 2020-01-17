@@ -53,8 +53,6 @@ public class EmissionsReportApi {
 
     private final EmissionsReportService emissionsReportService;
     
-    private final FacilitySiteService facilitySiteService;
-
     private final EmissionsReportStatusService emissionsReportStatusService;
     
     private final ReportService reportService;
@@ -108,18 +106,7 @@ public class EmissionsReportApi {
         	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
         }
         if(reportDto.isSourceNew()){
-        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto.getYear(), reportDto.getFrsFacilityId(), reportDto.getStateCode());
-        	EmissionsReport newReport = new EmissionsReport();
-            newReport.setEisProgramId(facilityEisProgramId);
-            newReport.setYear(reportDto.year);
-            newReport.setStatus(ReportStatus.IN_PROGRESS);
-            newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
-            newReport.setFrsFacilityId(reportDto.frsFacilityId);
-            newReport.setAgencyCode(reportDto.stateCode);
-            newReport.setId(result.getId());
-            reportDto.getFacilitySite().setEmissionsReport(newReport);
-            reportDto.getFacilitySite().setEisProgramId(facilityEisProgramId);
-            this.facilitySiteService.create(reportDto.getFacilitySite());
+        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto.getYear(), reportDto.getFrsFacilityId(), reportDto.getStateCode(),reportDto.getFacilitySite());
         }
         else{
         	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
@@ -139,7 +126,6 @@ public class EmissionsReportApi {
                 status = HttpStatus.ACCEPTED;
             } else {
                 status = HttpStatus.OK;
-            	this.reportService.createReportHistory(result.getId(), ReportAction.CREATED);
             }
         }
         

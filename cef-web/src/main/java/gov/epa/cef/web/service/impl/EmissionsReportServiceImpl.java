@@ -46,6 +46,7 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
@@ -72,6 +73,7 @@ import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.NotificationService;
+import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
@@ -128,6 +130,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private NotificationService notificationService;
+    
+    @Autowired
+    private ReportService reportService;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -236,6 +241,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.clearId();
 
+            	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.CREATED);
+
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
             .orElse(null);
@@ -269,7 +276,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     }
     @Override
-    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, short reportYear, String frsFacilityId, String stateCode) {
+    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, short reportYear, String frsFacilityId, String stateCode, FacilitySite facilitySite) {
     	
         EmissionsReport newReport = new EmissionsReport();
         newReport.setEisProgramId(facilityEisProgramId);
@@ -278,9 +285,15 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setFrsFacilityId(frsFacilityId);
         newReport.setAgencyCode(stateCode);
+        newReport.setId(this.emissionsReportMapper.toDto(this.erRepo.save(newReport)).getId());
+        
+        facilitySite.setEmissionsReport(newReport);
+        facilitySite.setEisProgramId(facilityEisProgramId);
+        this.facilitySiteService.create(facilitySite);
+        
+    	this.reportService.createReportHistory(newReport.getId(), ReportAction.CREATED);
         
         return this.emissionsReportMapper.toDto(this.erRepo.save(newReport));
-
     }
     @Override
     public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {

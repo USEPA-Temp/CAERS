@@ -27,7 +27,7 @@ public interface EmissionsReportService {
      * @param year
      * @return
      */
-    EmissionsReportDto createEmissionReport(String facilityEisProgramId, short year, String frsFacilityId, String stateCode);
+    EmissionsReportDto createEmissionReport(String facilityEisProgramId, short year, String frsFacilityId, String stateCode, FacilitySite facilitySite);
     
     /**
      * Find reports for a given facility
