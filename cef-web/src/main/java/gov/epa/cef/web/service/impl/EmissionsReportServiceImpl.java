@@ -50,6 +50,7 @@ import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
@@ -208,7 +209,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.clearId();
-
+                
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.CREATED);
 
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
@@ -243,21 +244,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
          */
 
     }
-    @Override
-    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, short reportYear, String frsFacilityId, String stateCode, FacilitySite facilitySite) {
+
+    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
     	
         EmissionsReport newReport = new EmissionsReport();
         newReport.setEisProgramId(facilityEisProgramId);
-        newReport.setYear(reportYear);
+        newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
-        newReport.setFrsFacilityId(frsFacilityId);
-        newReport.setAgencyCode(stateCode);
+        newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
+        newReport.setAgencyCode(reportDto.getStateCode());
         newReport.setId(this.emissionsReportMapper.toDto(this.erRepo.save(newReport)).getId());
         
-        facilitySite.setEmissionsReport(newReport);
-        facilitySite.setEisProgramId(facilityEisProgramId);
-        this.facilitySiteService.create(facilitySite);
+        reportDto.getFacilitySite().setEmissionsReport(newReport);
+        reportDto.getFacilitySite().setEisProgramId(facilityEisProgramId);
+        this.facilitySiteService.create(reportDto.getFacilitySite());
         
     	this.reportService.createReportHistory(newReport.getId(), ReportAction.CREATED);
         
