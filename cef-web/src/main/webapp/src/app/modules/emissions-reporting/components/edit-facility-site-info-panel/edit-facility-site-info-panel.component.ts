@@ -34,6 +34,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     ]],
     operatingStatusCode: [null, Validators.required],
     statusYear: ['', [
+      Validators.required,
       Validators.min(1900),
       Validators.max(2050),
       numberValidator()]],

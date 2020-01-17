@@ -32,7 +32,8 @@
             "mailingPostalCode": "31750",
             "mailingCountryCode": null,
             "eisProgramId": "9758611",
-            "tribalCode": null
+            "tribalCode": null,
+            "comments": "Sample Comments for Facility Site"
         }
     ],
     "facilityNAICS": [{
