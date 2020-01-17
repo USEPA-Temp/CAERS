@@ -159,7 +159,7 @@ public class EmissionsReportApi {
      * @return
      */
     @PostMapping(value = "/reset")
-    @RolesAllowed(value = {AppRole.ROLE_CERTIFIER})
+    @RolesAllowed(value = {AppRole.ROLE_NEI_CERTIFIER})
     public ResponseEntity<List<EmissionsReportDto>> resetReports(@NotNull @RequestBody List<Long> reportIds) {
 
         this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
@@ -260,7 +260,7 @@ public class EmissionsReportApi {
      * @return
      */
     @GetMapping(value = "/submitToCromerr")
-    @RolesAllowed(AppRole.ROLE_CERTIFIER)
+    @RolesAllowed(AppRole.ROLE_NEI_CERTIFIER)
     public ResponseEntity<String> submitToCromerr(
         @NotBlank @RequestParam String activityId, @NotNull @RequestParam Long reportId) {
 

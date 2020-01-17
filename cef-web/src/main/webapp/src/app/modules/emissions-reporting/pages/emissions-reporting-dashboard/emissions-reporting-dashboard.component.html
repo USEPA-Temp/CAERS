@@ -16,7 +16,7 @@
 						*ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
 
 					<a href="#" class="text-dark font-weight-bold pipe-item"
-						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify Certifier</a>
+						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>
 
 					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
 						class="text-dark font-weight-bold pipe-item"
@@ -28,10 +28,10 @@
 						*ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">Reopen Report</a>
 
 					<a href="#" class="text-dark font-weight-bold pipe-item"
-						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Certifier'">Certify</a>
+						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Certify</a>
 
 					<a href="#" class="text-dark font-weight-bold pipe-item"
-						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Certifier'">Return to Preparer</a>
+						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Return to Preparer</a>
 
 					<a href="#" class="text-dark font-weight-bold pipe-item"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>

@@ -38,7 +38,7 @@ public class SecurityServiceTest extends BaseSecurityTest {
         when(authentication.getPrincipal()).thenReturn(applicationUser);
 
         List<GrantedAuthority> authorities=new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(AppRole.ROLE_CERTIFIER));
+        authorities.add(new SimpleGrantedAuthority(AppRole.ROLE_NEI_CERTIFIER));
         when(applicationUser.getAuthorities()).thenReturn(authorities);
     }
 
@@ -67,7 +67,7 @@ public class SecurityServiceTest extends BaseSecurityTest {
 
     @Test
     public void hasRole_Should_ReturnTrue_When_TheUserHasTheRolePassed() {
-        assertEquals(Boolean.FALSE, securityService.hasRole(AppRole.RoleType.CERTIFIER));
+        assertEquals(Boolean.FALSE, securityService.hasRole(AppRole.RoleType.NEI_CERTIFIER));
     }
 
 }
