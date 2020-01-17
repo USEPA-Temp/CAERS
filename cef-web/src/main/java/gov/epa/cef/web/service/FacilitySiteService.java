@@ -22,7 +22,7 @@ public interface FacilitySiteService {
      * @param dto
      * @return
      */
-	FacilitySiteDto create(FacilitySiteDto facilitySite);
+	FacilitySiteDto create(FacilitySite facilitySite);
 
     /**
      * Find facility by ID

@@ -165,10 +165,8 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
      * Create Facility Site
      * @param dto
      */
-	public FacilitySiteDto create(FacilitySiteDto dto){
+	public FacilitySiteDto create(FacilitySite facilitySite){
     	
-    	FacilitySite facilitySite = facilitySiteMapper.fromDto(dto);
-
     	FacilitySiteDto result = facilitySiteMapper.toDto(facSiteRepo.save(facilitySite));
     	
     	return result;

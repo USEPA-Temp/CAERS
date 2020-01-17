@@ -59,6 +59,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         .subscribe(result => {
             this.operatingStatusValues = result;
         });
+
     }
 
     isOneOf(baseValue: string, testValues: string[]): boolean {
@@ -84,51 +85,42 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalWindow.componentInstance.message = 'Please wait while we generate your new report.';
 
         const reportingYear = new Date().getFullYear() - 1;
-        if (this.reports[0].status !== 'NEW') {
-            this.reportService.createReportFromPreviousCopy(this.facility.programId, reportingYear)
-            .subscribe(reportResp => {
-                if (reportResp.status === 204) {
+        this.reportService.createReportFromPreviousCopy(this.facility.programId, reportingYear)
+                .subscribe(reportResp => {
+                    if (reportResp.status === 204) {
+                        // 204 No Content
+                        // no previous report, no FRS data
 
-                    // 204 No Content
-                    // no previous report, no FRS data
-                    modalWindow.dismiss();
+                        this.copyFacilitySiteFromCdxModel();
+                        this.reportService.createReportFromScratch(this.facility.programId, reportingYear, this.facility.epaRegistryId,
+                        this.facility.state, this.facilitySite)
+                        .subscribe(reportResp => {
+                            modalWindow.dismiss();
+                            this.reportCompleted(reportResp.body);
+                        });
+                    } else if (reportResp.status === 200) {
+                        // 200 OK
+                        // previous report was copied
 
-                    this._failedToCreateRef = this.modalService.open(
-                        this._failedToCreateTemplate, {backdrop: 'static'});
-
-                } else if (reportResp.status === 200) {
-
-                    // 200 OK
-                    // previous report was copied
-                    modalWindow.dismiss();
-
-                    this.reportCompleted(reportResp.body);
-
-                } else if (reportResp.status === 202) {
-
-                    // 202 Accepted
-                    // pull more data from FRS
-                    modalWindow.componentInstance.message =
-                        'Please wait: Searching for Facility Data in EPA\'s Facility Registry System to populate your Emissions Report';
-
-                    this.reportService.createReportFromFrs(this.facility.programId, reportingYear)
-                    .subscribe(newReport => {
                         modalWindow.dismiss();
-                        this.reportCompleted(newReport);
-                    });
-                }
-            });
-        } else {
-            this.reportService.createReportFromScratch(this.facility.programId, reportingYear, this.facility.epaRegistryId,
-            this.facility.state)
-            .subscribe(reportResp => {
-              this.copyFacilitySiteFromCdxModel(reportResp.body);
-              this.facilitySiteService.create(this.facilitySite).subscribe(() => {
-                    modalWindow.dismiss();
-                    this.reportCompleted(reportResp.body);
+
+                        this.reportCompleted(reportResp.body);
+
+                    } else if (reportResp.status === 202) {
+                        // 202 Accepted
+                        // pull more data from FRS
+
+                        // commented out for future mvp
+                        // modalWindow.componentInstance.message =
+                        //     'Please wait: Searching for Facility Data in EPA\'s Facility Registry System to populate your Emissions Report';
+
+                        // this.reportService.createReportFromFrs(this.facility.programId, reportingYear)
+                        // .subscribe(newReport => {
+                        //     modalWindow.dismiss();
+                        //     this.reportCompleted(newReport);
+                        // });
+                    }
                 });
-            });
-        }
     }
 
     /**
@@ -139,8 +131,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         this.router.navigateByUrl(`/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
     }
 
-    copyFacilitySiteFromCdxModel(emissionsReport: EmissionsReport) {
-              this.emissionsReport = emissionsReport;
+    copyFacilitySiteFromCdxModel() {
               Object.assign(this.facilitySite, this.facility);
               this.facilitySite.emissionsReport = this.emissionsReport;
               this.facilitySite.name = this.facility.facilityName;
@@ -151,7 +142,6 @@ export class EmissionsReportingDashboardComponent implements OnInit {
               });
               this.facilitySite.streetAddress = this.facility.address;
               this.facilitySite.stateCode = this.facility.state;
-              this.facilitySite.eisProgramId = emissionsReport.eisProgramId;
               this.facilitySite.statusYear = new Date().getFullYear();
               this.facilitySite.frsFacilityId = this.facility.epaRegistryId;
               this.facilitySite.postalCode = this.facility.zipCode;
@@ -159,13 +149,14 @@ export class EmissionsReportingDashboardComponent implements OnInit {
               this.facilitySite.mailingStateCode = this.facility.state;
               this.facilitySite.mailingCity = this.facility.city;
               this.facilitySite.mailingPostalCode = this.facility.zipCode;
+              this.facilitySite.altSiteIdentifier = this.facility.stateFacilityId;
     }
 
 
     onFailedToCreateCloseClick() {
 
-        this._failedToCreateRef.dismiss();
-    }
+            this._failedToCreateRef.dismiss();
+        }
 
     deleteReport(reportId: number) {
 

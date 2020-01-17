@@ -42,19 +42,6 @@ public class FacilitySiteApi {
         this.securityService = securityService;
         this.facilityService = facilityService;
     }
-    /**
-     * Create a new Facility Site
-     * @param dto
-     * @return
-     */
-    @PostMapping
-    public ResponseEntity<FacilitySiteDto> createFacilitySite(
-        @RequestBody FacilitySiteDto dto) {
-    	
-        FacilitySiteDto result = facilityService.create(dto);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
     
     /**
      * Update an existing facility site by ID

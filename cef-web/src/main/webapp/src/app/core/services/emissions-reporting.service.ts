@@ -3,6 +3,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Injectable({
     providedIn: 'root'
@@ -55,14 +56,15 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a report for the current year from scratch */
-    createReportFromScratch(eisFacilityId: string, reportYear: number, frsFacilityId: string, stateCode: string): Observable<HttpResponse<EmissionsReport>> {
+    createReportFromScratch(eisFacilityId: string, reportYear: number, frsFacilityId: string, stateCode: string, facilitySite: FacilitySite): Observable<HttpResponse<EmissionsReport>> {
         const url = `${this.baseUrl}/facility/${eisFacilityId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
             eisProgramId: eisFacilityId,
             frsFacilityId: frsFacilityId,
             stateCode: stateCode,
-            source: "fromScratch"
+            source: "fromScratch",
+            facilitySite: facilitySite
         }, {
             observe: "response"
         });
