@@ -515,14 +515,15 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 	      	facilityContact.setType((contactTypeRepo.findById(bulkFacilityContact.getType())).orElse(null));
 	      }
 	      if (bulkFacilityContact.getStateCode() != null) {
-	      	facilityContact.setStateCode((stateCodeRepo.findById(bulkFacilityContact.getStateCode())).orElse(null));
+	      	facilityContact.setStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getStateCode())).orElse(null));
 	      }
 	      if (bulkFacilityContact.getMailingStateCode() != null) {
-	      	facilityContact.setMailingStateCode((stateCodeRepo.findById(bulkFacilityContact.getMailingStateCode())).orElse(null));
+	      	facilityContact.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getMailingStateCode())).orElse(null));
 	      }
 	
 	      return facilityContact;
     }
+    
     
     /**
      * Map an FacilityNAICSBulkUploadDto to an FacilityNAICS domain model
