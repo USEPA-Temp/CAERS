@@ -1,5 +1,7 @@
 package gov.epa.cef.web.repository;
 
+import java.util.Optional;
+
 import javax.persistence.QueryHint;
 
 import org.springframework.data.domain.Sort;
@@ -13,4 +15,7 @@ public interface FipsStateCodeRepository extends CrudRepository<FipsStateCode, S
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Iterable<FipsStateCode> findAll(Sort sort);
+    
+    Optional<FipsStateCode> findByUspsCode(String uspsCode);
+    
 }

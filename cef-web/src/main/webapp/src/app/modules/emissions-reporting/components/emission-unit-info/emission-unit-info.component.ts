@@ -33,7 +33,10 @@ export class EmissionUnitInfoComponent implements OnInit {
         this.unitId = parseInt(map.get('unitId'));
       });
 
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== this.emissionsReport;
+      this.route.data
+      .subscribe(data => {
+        this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      });
   }
 
   setEditInfo(value: boolean) {
