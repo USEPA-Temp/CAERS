@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore; 
 
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
@@ -24,6 +24,8 @@ import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+
+import org.hibernate.annotations.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,16 +103,8 @@ public class EmissionsReportApi {
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
-        EmissionsReportDto result = new EmissionsReportDto();
-        if(reportDto.isSourceFrs()){
-        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
-        }
-        if(reportDto.isSourceNew()){
-        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto);
-        }
-        else{
-        	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
-        }
+        
+        EmissionsReportDto result = createEmissionsReportDto(facilityEisProgramId, reportDto);
 
         /*
         If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
@@ -130,6 +124,26 @@ public class EmissionsReportApi {
         }
         
         return new ResponseEntity<>(result, status);
+    }
+    
+    private EmissionsReportDto createEmissionsReportDto(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
+        EmissionsReportDto result;
+        
+        switch (reportDto.getSource()) {
+	        case previous:
+	        	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+	        	break;
+	        case frs:
+	        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
+	        	break;
+	        case fromScratch:
+	        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto);
+	        	break;
+	        default:
+	        	result = null;
+        }
+        
+        return result;
     }
 
     /**

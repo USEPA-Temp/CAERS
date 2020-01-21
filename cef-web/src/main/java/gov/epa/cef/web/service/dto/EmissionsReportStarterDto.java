@@ -6,7 +6,7 @@ import gov.epa.cef.web.domain.FacilitySite;
 
 public class EmissionsReportStarterDto {
 
-    enum SourceType {
+    public enum SourceType {
         previous, frs, fromScratch
     }
 
