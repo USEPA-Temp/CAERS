@@ -3,6 +3,8 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
+
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.service.dto.EntityType;
@@ -56,6 +58,27 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         	result = false;
         	context.addFederalError(
         			ValidationField.FACILITY_STATUS.value(), "facilitysite.status.required",
+        			createValidationDetails(facilitySite));
+        }
+        
+        // Facility must have a facility NAICS code reported
+        List<FacilityNAICSXref> fsNAICSList = facilitySite.getFacilityNAICS();
+        
+        if (fsNAICSList.size() == 0) {
+        	
+        	result = false;
+        	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.required",
+        			createValidationDetails(facilitySite));
+        }
+        
+        // Facility NAICS must have one and only one primary assigned
+        fsNAICSList = facilitySite.getFacilityNAICS().stream()
+            .filter(fn -> fn.isPrimaryFlag() == true)
+            .collect(Collectors.toList());
+        
+        if (fsNAICSList.size() != 1) {
+        	result = false;
+        	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.primary.required",
         			createValidationDetails(facilitySite));
         }
         
