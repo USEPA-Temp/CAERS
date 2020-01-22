@@ -56,6 +56,7 @@ export class SidebarComponent{
     items.push(new SideNavItem(null, 'Emissions Units', BaseReportUrl.EMISSIONS_UNIT, null));
     items.push(new SideNavItem(null, 'Release Points', BaseReportUrl.RELEASE_POINT, null));
     items.push(new SideNavItem(null, 'Control Devices', BaseReportUrl.CONTROL_DEVICE, null));
+    items.push(new SideNavItem(null, 'Control Paths', BaseReportUrl.CONTROL_PATH, null));
     this.facilityNavItems = items;
 
   }

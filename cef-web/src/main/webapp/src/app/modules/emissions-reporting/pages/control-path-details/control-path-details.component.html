@@ -1,0 +1,34 @@
+<div *ngIf="controlPath">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Control Path Information</strong>
+                    <div class="float-right" *ngIf="!editInfo && !readOnlyMode">
+                        <button type="button" class="btn btn-success" (click)="setEditInfo(true)">Edit</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="!editInfo">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3"><strong>Path ID:</strong></div>
+							<div class="col-sm-6 col-md-2" style="margin-bottom: 10px;">{{controlPath.pathId}}</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3"><strong>Path Description:</strong></div>
+                            <div class="col-sm-6 col-md-6">{{controlPath.description}}</div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="editInfo">
+                        <app-edit-control-path-info-panel [controlPath]="controlPath"></app-edit-control-path-info-panel>
+                        <div class="float-right pb-3 pr-3" *ngIf="controlPathComponent">
+                            <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
+                            <button type="submit" class="btn btn-success" (click)="updateControlPath()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

@@ -261,6 +261,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		cp.setId(1L);
 		cp.setFacilitySite(fs);
 		cp.setDescription("Test ControlPath");
+		cp.setPathId("Test ControlPath");
 		ca.setControlPath(cp);
 		assignments.add(ca);
 

@@ -10,7 +10,9 @@ public class ControlPathDto implements Serializable {
 
     private Long id;
     private String description;
+    private String pathId;
     private List<ControlAssignmentDto> assignments;
+    private Long facilitySiteId;
 
     public Long getId() {
         return id;
@@ -35,5 +37,26 @@ public class ControlPathDto implements Serializable {
     public void setAssignments(List<ControlAssignmentDto> assignments) {
         this.assignments = assignments;
     }
+
+	public String getPathId() {
+		return pathId;
+	}
+
+	public void setPathId(String pathId) {
+		this.pathId = pathId;
+	}
+	
+    public ControlPathDto withId(Long id) {
+        setId(id);
+        return this;
+    }
+
+	public Long getFacilitySiteId() {
+		return facilitySiteId;
+	}
+
+	public void setFacilitySiteId(Long facilitySiteId) {
+		this.facilitySiteId = facilitySiteId;
+	}
 
 }

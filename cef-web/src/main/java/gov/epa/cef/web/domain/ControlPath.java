@@ -22,6 +22,9 @@ public class ControlPath extends BaseAuditEntity {
 
     @Column(name = "description", nullable = false, length = 200)
     private String description;
+    
+    @Column(name = "path_id", nullable = false, length = 20)
+    private String pathId;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
     private List<ControlAssignment> assignments = new ArrayList<>();
@@ -51,6 +54,7 @@ public class ControlPath extends BaseAuditEntity {
     	this.id = originalControlPath.getId();
     	this.facilitySite = facilitySite;
     	this.description = originalControlPath.getDescription();
+    	this.pathId = originalControlPath.getPathId();
 //    	this.assignments = new HashSet<ControlAssignment>();
 
         for (ControlAssignment originalControlAssignment : originalControlPath.getAssignments()) {
@@ -83,6 +87,14 @@ public class ControlPath extends BaseAuditEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getPathId() {
+        return pathId;
+    }
+
+    public void setPathId(String pathId) {
+        this.pathId = pathId;
     }
 
     public List<ControlAssignment> getAssignments() {

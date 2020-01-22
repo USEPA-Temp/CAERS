@@ -374,14 +374,14 @@ INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, create
 INSERT INTO control_pollutant(id, control_id, pollutant_code, created_by, created_date, last_modified_by, last_modified_date, percent_reduction)
     VALUES ('9999993', '9999992', '75070', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 1.3);
 
-INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
-	VALUES ('9999991', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
-INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
-	VALUES ('9999992', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
-INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
-	VALUES ('9999993', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
-INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id)
-	VALUES ('9999994', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991');
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id, path_id)
+	VALUES ('9999991', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991', 'Path A');
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id, path_id)
+	VALUES ('9999992', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991', 'Path B');
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id, path_id)
+	VALUES ('9999993', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991', 'Path C');
+INSERT INTO control_path (id, description, created_by, created_date, last_modified_by, last_modified_date, facility_site_id, path_id)
+	VALUES ('9999994', 'Path Description', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '9999991', 'Path D');
 
 INSERT INTO control_assignment (id, control_id, control_path_id, created_by, created_date, last_modified_by, last_modified_date, control_path_child_id, sequence_number, percent_apportionment)
 	VALUES ('9999991', '9999991', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, null, 1, 100);

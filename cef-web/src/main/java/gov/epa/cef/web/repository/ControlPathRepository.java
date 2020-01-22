@@ -1,6 +1,6 @@
 package gov.epa.cef.web.repository;
 
-import gov.epa.cef.web.config.CacheName;
+import gov.epa.cef.web.config.CacheName; 
 import gov.epa.cef.web.domain.ControlPath;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
@@ -53,4 +53,11 @@ public interface ControlPathRepository extends CrudRepository<ControlPath, Long>
     @Cacheable(value = CacheName.ControlPathEmissionsReportIds)
     @Query("select r.id from ControlPath cp join cp.facilitySite fs join fs.emissionsReport r where cp.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve Control Paths for a facility site
+     * @param facilitySiteId
+     * @return
+     */
+    List<ControlPath> findByFacilitySiteIdOrderByDescription(Long facilitySiteId);
 }
