@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import java.io.ByteArrayInputStream;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +32,9 @@ import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingDetail;
+import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
@@ -46,6 +50,7 @@ import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
@@ -91,7 +96,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     
     @Autowired
     private ReportService reportService;
-    
+
     @Autowired
     private EmissionsReportStatusService statusService;
     
@@ -197,22 +202,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      */
     @Override
     public EmissionsReportDto createEmissionReportCopy(String facilityEisProgramId, short reportYear) {
-
         return findMostRecentEmissionsReport(facilityEisProgramId)
             .map(mostRecentReport -> {
-
                 EmissionsReport cloneReport = new EmissionsReport(mostRecentReport);
                 cloneReport.setYear(reportYear);
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.clearId();
+                
+            	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.CREATED);
 
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
             .orElse(null);
-
+        
         /*
-
         // FIXME
         This code is being commented out until after the pilot and FRS integration can be solidified.
 
@@ -238,8 +242,28 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 .orElse(null)
             );
          */
+
     }
 
+    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
+    	
+        EmissionsReport newReport = new EmissionsReport();
+        newReport.setEisProgramId(facilityEisProgramId);
+        newReport.setYear(reportDto.getYear());
+        newReport.setStatus(ReportStatus.IN_PROGRESS);
+        newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+        newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
+        newReport.setAgencyCode(reportDto.getStateCode());
+        newReport.setId(this.emissionsReportMapper.toDto(this.erRepo.save(newReport)).getId());
+        
+        reportDto.getFacilitySite().setEmissionsReport(newReport);
+        reportDto.getFacilitySite().setEisProgramId(facilityEisProgramId);
+        this.facilitySiteService.create(reportDto.getFacilitySite());
+        
+    	this.reportService.createReportHistory(newReport.getId(), ReportAction.CREATED);
+        
+        return this.emissionsReportMapper.toDto(this.erRepo.save(newReport));
+    }
     @Override
     public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {
 

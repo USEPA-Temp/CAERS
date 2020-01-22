@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service;
 
-import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsReport; 
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
@@ -16,6 +16,13 @@ public interface FacilitySiteService {
      * @return
      */
     FacilitySite copyFromFrs(EmissionsReport report);
+    
+    /**
+     * Create a new facilitySite 
+     * @param dto
+     * @return
+     */
+	FacilitySiteDto create(FacilitySite facilitySite);
 
     /**
      * Find facility by ID

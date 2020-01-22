@@ -1,8 +1,10 @@
 package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
 import java.util.List;
@@ -17,6 +19,17 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short year);
 
+    
+    /**
+     * Creates an emissions report from scratch
+     * @param facilityEisProgramId
+     * @param frsFacilityId
+     * @param stateCode
+     * @param year
+     * @return
+     */
+    EmissionsReportDto createEmissionReport(String facilityEisProgramId, EmissionsReportStarterDto reportDto);
+    
     /**
      * Find reports for a given facility
      * @param facilityEisProgramId {@link ProgramFacility}'s programId
