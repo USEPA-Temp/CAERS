@@ -9,4 +9,5 @@ export class CdxFacility {
   state: string;
   county: string;
   zipCode: string;
+  stateFacilityId: string;
 }
