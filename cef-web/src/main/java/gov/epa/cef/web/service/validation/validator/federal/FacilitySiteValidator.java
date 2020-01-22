@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
@@ -64,7 +65,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         // Facility must have a facility NAICS code reported
         List<FacilityNAICSXref> fsNAICSList = facilitySite.getFacilityNAICS();
         
-        if (fsNAICSList.isEmpty()) {
+        if (CollectionUtils.isEmpty(fsNAICSList)) {
         	
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.required",
@@ -76,7 +77,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             .filter(fn -> fn.isPrimaryFlag() == true)
             .collect(Collectors.toList());
         
-        if (fsNAICSList == null || fsNAICSList.size() != 1) {
+        if (CollectionUtils.isEmpty(fsNAICSList) || fsNAICSList.size() != 1) {
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.primary.required",
         			createValidationDetails(facilitySite));
@@ -87,7 +88,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         .filter(fc -> fc.getType().getCode().equals("EI"))
         .collect(Collectors.toList());
         
-        if (contactList.isEmpty() ) {
+        if (CollectionUtils.isEmpty(contactList)) {
 
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.required",
