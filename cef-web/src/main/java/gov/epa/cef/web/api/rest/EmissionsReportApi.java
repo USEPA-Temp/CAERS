@@ -1,8 +1,12 @@
 package gov.epa.cef.web.api.rest;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore; 
 
+import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.domain.ReportStatus;
+import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -12,12 +16,16 @@ import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
+import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
+
+import org.hibernate.annotations.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +55,7 @@ public class EmissionsReportApi {
     Logger LOGGER = LoggerFactory.getLogger(EmissionsReportApi.class);
 
     private final EmissionsReportService emissionsReportService;
-
+    
     private final EmissionsReportStatusService emissionsReportStatusService;
     
     private final ReportService reportService;
@@ -61,6 +69,7 @@ public class EmissionsReportApi {
     @Autowired
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
+                       FacilitySiteService facilitySiteService,
                        EmissionsReportStatusService emissionsReportStatusService,
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
@@ -94,10 +103,8 @@ public class EmissionsReportApi {
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
-
-        EmissionsReportDto result = reportDto.isSourceFrs()
-            ? this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear())
-            : this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+        
+        EmissionsReportDto result = createEmissionsReportDto(facilityEisProgramId, reportDto);
 
         /*
         If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
@@ -115,10 +122,28 @@ public class EmissionsReportApi {
                 status = HttpStatus.OK;
             }
         }
-
-        this.reportService.createReportHistory(result.getId(), ReportAction.CREATED);
         
         return new ResponseEntity<>(result, status);
+    }
+    
+    private EmissionsReportDto createEmissionsReportDto(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
+        EmissionsReportDto result;
+        
+        switch (reportDto.getSource()) {
+	        case previous:
+	        	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+	        	break;
+	        case frs:
+	        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
+	        	break;
+	        case fromScratch:
+	        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto);
+	        	break;
+	        default:
+	        	result = null;
+        }
+        
+        return result;
     }
 
     /**
@@ -323,55 +348,6 @@ public class EmissionsReportApi {
 			this.comments = comments;
 		}
     	
-    }
-
-    static class EmissionsReportStarterDto {
-
-        enum SourceType {
-            previous, frs
-        }
-
-        private String eisProgramId;
-
-        private SourceType source;
-
-        private Short year;
-
-        public String getEisProgramId() {
-
-            return eisProgramId;
-        }
-
-        public void setEisProgramId(String eisProgramId) {
-
-            this.eisProgramId = eisProgramId;
-        }
-
-        public SourceType getSource() {
-
-            return source;
-        }
-
-        public void setSource(SourceType source) {
-
-            this.source = source;
-        }
-
-        public Short getYear() {
-
-            return year;
-        }
-
-        public void setYear(Short year) {
-
-            this.year = year;
-        }
-
-        @JsonIgnore
-        boolean isSourceFrs() {
-
-            return this.source != null && this.source.equals(SourceType.frs);
-        }
     }
 
 }

@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.client.api.FrsApiClient;
+import gov.epa.cef.web.client.api.FrsApiClient; 
 import gov.epa.cef.web.client.api.FrsFacilityApiTransforms;
 import gov.epa.cef.web.client.api.FrsSubfacilityTransforms;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -70,7 +70,7 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             .map(FrsFacilityApiTransforms.toFacilitySite(report))
             .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
                 String.format("EIS Program ID %s does not exist in FRS.", report.getEisProgramId())));
-
+        
         this.frsClient.queryProgramGis(eisProgramId)
             .ifPresent(gis -> {
 
@@ -161,6 +161,17 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
         return this.frsClient.queryProgramFacility(facilityEisProgramId);
     }
     
+    /**
+     * Create Facility Site
+     * @param dto
+     */
+	public FacilitySiteDto create(FacilitySite facilitySite){
+    	
+    	FacilitySiteDto result = facilitySiteMapper.toDto(facSiteRepo.save(facilitySite));
+    	
+    	return result;
+	}
+
     /**
      * Create Facility NAICS
      * @param dto

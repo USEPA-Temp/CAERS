@@ -22,6 +22,7 @@ import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
@@ -59,7 +60,10 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Mock
     private EmissionsReportMapper emissionsReportMapper;
-
+    
+    @Mock
+    private ReportService reportService;
+    
     @Mock
     private CefConfig cefConfig;
 
