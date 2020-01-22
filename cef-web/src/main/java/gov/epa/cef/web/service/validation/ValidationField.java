@@ -9,6 +9,7 @@ public enum ValidationField {
     FACILITY_CONTACT("report.facilitySite.contacts"),
     FACILITY_STATUS("report.facilitySite.status"),
     RP_GAS_TEMP("report.facilitySite.releasePoint.exitGasTemperature"),
+    RP_GAS_FLOW("report.facilitySite.releasePoint.exitGasFlowRate"),
     PROCESS_RP_PCT("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.percent"),
     PERIOD_CALC_VALUE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue"),
     PERIOD_CALC_MAT_CODE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationMaterialCode"),
