@@ -80,10 +80,10 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         }
         
         assertFalse(this.validator.validate(cefContext, testData));
-    		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-    
-		    Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-		    assertTrue(errorMap.containsKey(ValidationField.FACILITY_NAICS.value()) && errorMap.get(ValidationField.FACILITY_NAICS.value()).size() == 1);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_NAICS.value()) && errorMap.get(ValidationField.FACILITY_NAICS.value()).size() == 1);
     }
     
     @Test

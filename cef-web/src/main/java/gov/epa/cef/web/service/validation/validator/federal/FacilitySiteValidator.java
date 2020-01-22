@@ -64,7 +64,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         // Facility must have a facility NAICS code reported
         List<FacilityNAICSXref> fsNAICSList = facilitySite.getFacilityNAICS();
         
-        if (fsNAICSList.size() == 0) {
+        if (fsNAICSList.isEmpty()) {
         	
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.required",
@@ -76,7 +76,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             .filter(fn -> fn.isPrimaryFlag() == true)
             .collect(Collectors.toList());
         
-        if (fsNAICSList.size() != 1) {
+        if (fsNAICSList == null || fsNAICSList.size() != 1) {
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.primary.required",
         			createValidationDetails(facilitySite));
@@ -87,7 +87,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         .filter(fc -> fc.getType().getCode().equals("EI"))
         .collect(Collectors.toList());
         
-        if (contactList.size() == 0) {
+        if (contactList.isEmpty() ) {
 
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.required",
