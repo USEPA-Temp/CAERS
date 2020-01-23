@@ -48,6 +48,11 @@ export class FacilityInformationComponent implements OnInit {
         this.facilitySite.contacts = contacts;
       });
 
+      this.facilityService.retrieve(this.facilitySite.id)
+      .subscribe(fs => {
+        this.facilitySite.facilityNAICS = fs.facilityNAICS;
+      });
+
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
     });
 

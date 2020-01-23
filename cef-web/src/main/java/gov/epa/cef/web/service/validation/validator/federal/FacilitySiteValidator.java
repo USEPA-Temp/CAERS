@@ -3,6 +3,8 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
+
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.service.dto.EntityType;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
@@ -59,12 +62,33 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         			createValidationDetails(facilitySite));
         }
         
+        // Facility must have a facility NAICS code reported
+        List<FacilityNAICSXref> fsNAICSList = facilitySite.getFacilityNAICS();
+        
+        if (CollectionUtils.isEmpty(fsNAICSList)) {
+        	
+        	result = false;
+        	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.required",
+        			createValidationDetails(facilitySite));
+        }
+        
+        // Facility NAICS must have one and only one primary assigned
+        fsNAICSList = facilitySite.getFacilityNAICS().stream()
+            .filter(fn -> fn.isPrimaryFlag() == true)
+            .collect(Collectors.toList());
+        
+        if (CollectionUtils.isEmpty(fsNAICSList) || fsNAICSList.size() != 1) {
+        	result = false;
+        	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.primary.required",
+        			createValidationDetails(facilitySite));
+        }
+        
         // Facility must have an Emissions Inventory Contact
         List<FacilitySiteContact> contactList = facilitySite.getContacts().stream()
         .filter(fc -> fc.getType().getCode().equals("EI"))
         .collect(Collectors.toList());
         
-        if (contactList.size() == 0) {
+        if (CollectionUtils.isEmpty(contactList)) {
 
         	result = false;
         	context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.required",
