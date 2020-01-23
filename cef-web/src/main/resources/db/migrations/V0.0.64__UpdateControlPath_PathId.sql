@@ -1,0 +1,3 @@
+ALTER TABLE control_path
+	ADD COLUMN path_id VARCHAR(20) NOT NULL;
+	

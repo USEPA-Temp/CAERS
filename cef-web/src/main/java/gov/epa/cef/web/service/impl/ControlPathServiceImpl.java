@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,10 @@ public class ControlPathServiceImpl implements ControlPathService {
 
     @Autowired
     private ControlPathMapper mapper;
-
+    
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
+    
     @Override
     public ControlPathDto retrieveById(Long id) {
         ControlPath result = getPathById(id);
@@ -34,7 +38,12 @@ public class ControlPathServiceImpl implements ControlPathService {
         result.addAll(getChildren(result));
         return mapper.toDtoList(result);
     }
-
+    
+    @Override
+    public List<ControlPathDto> retrieveForFacilitySite(Long facilitySiteId) {
+    	List<ControlPath> result = repo.findByFacilitySiteIdOrderByDescription(facilitySiteId);
+        return mapper.toDtoList(result);    }
+    
 	@Override
     public List<ControlPathDto> retrieveForEmissionsUnit(Long unitId) {
         List<ControlPath> result = repo.findByEmissionsUnitId(unitId);
@@ -49,7 +58,16 @@ public class ControlPathServiceImpl implements ControlPathService {
         return mapper.toDtoList(result);
     }
     
-
+    /**
+     * Create a new Control Path from a DTO object
+     */
+    public ControlPathDto create(ControlPathDto dto) {
+    	ControlPath controlPath = mapper.fromDto(dto);
+    	
+    	ControlPathDto result = mapper.toDto(repo.save(controlPath));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlPathRepository.class);
+    	return result;
+    }
 
 	/***
 	 * Get child paths associated with the ControlPaths in the paths list
@@ -68,6 +86,19 @@ public class ControlPathServiceImpl implements ControlPathService {
 		
 		return childPaths;
 	}
+	
+    /**
+     * Update an existing Control Path from a DTO
+     */
+    public ControlPathDto update(ControlPathDto dto) {
+    	
+    	ControlPath controlPath = repo.findById(dto.getId()).orElse(null);
+    	mapper.updateFromDto(dto, controlPath);
+    	
+    	ControlPathDto result = mapper.toDto(repo.save(controlPath));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlPathRepository.class);
+    	return result;
+    }
 	
 
     /***
@@ -102,6 +133,15 @@ public class ControlPathServiceImpl implements ControlPathService {
     	return repo
     			.findById(id)
     			.orElse(null);
+    }
+    
+    /**
+     * Delete a Control Path for a given id
+     * @Param controlId
+     */
+    public void delete(Long controlPathId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPathId), ControlPathRepository.class);
+    	repo.deleteById(controlPathId);
     }
 
 }

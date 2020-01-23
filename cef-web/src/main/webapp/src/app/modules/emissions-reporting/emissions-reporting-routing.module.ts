@@ -14,6 +14,9 @@ import { CreateEmissionsUnitComponent } from 'src/app/modules/emissions-reportin
 import { EditFacilityContactComponent } from 'src/app/modules/emissions-reporting/pages/edit-facility-contact/edit-facility-contact.component';
 import { CreateReleasePointComponent } from './pages/create-release-point/create-release-point.component';
 import { CreateControlDeviceComponent } from './pages/create-control-device/create-control-device.component';
+import { ControlPathsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/control-paths-summary/control-paths-summary.component';
+import { ControlPathDetailsComponent } from 'src/app/modules/emissions-reporting/pages/control-path-details/control-path-details.component';
+import { CreateControlPathComponent } from 'src/app/modules/emissions-reporting/pages/create-control-path/create-control-path.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -61,6 +64,18 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.CONTROL_DEVICE}`,
             component: ControlDevicesSummaryComponent,
             data: { title: 'Control Devices Summary', breadcrumb: '&year Emissions Report'}
+          }, {
+          path: `${BaseReportUrl.CONTROL_PATH}/create`,
+            component: CreateControlPathComponent,
+            data: { title: 'Control Path', breadcrumb: '&year Emissions Report', create: 'true'}
+          }, {
+            path: `${BaseReportUrl.CONTROL_PATH}/:controlPathId`,
+            component: ControlPathDetailsComponent,
+            data: { title: 'Control Path Details', breadcrumb: '&year Emissions Report'}
+          }, {
+            path: `${BaseReportUrl.CONTROL_PATH}`,
+            component: ControlPathsSummaryComponent,
+            data: { title: 'Control Paths Summary', breadcrumb: '&year Emissions Report'}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId/process/create`,
             component: CreateEmissionsProcessComponent,

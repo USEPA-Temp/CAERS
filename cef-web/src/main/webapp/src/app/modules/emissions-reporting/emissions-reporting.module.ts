@@ -55,6 +55,11 @@ import { ReportHistoryComponent } from './pages/report-history/report-history.co
 import { ControlPollutantModalComponent } from './components/control-pollutant-modal/control-pollutant-modal.component';
 import { EmissionsReportContainerComponent } from './pages/emissions-report-container/emissions-report-container.component';
 import { ValidationReminderComponent } from './components/validation-reminder/validation-reminder.component';
+import { ControlPathsSummaryComponent } from './pages/control-paths-summary/control-paths-summary.component';
+import { ControlPathsTableComponent } from './components/control-paths-table/control-paths-table.component';
+import { ControlPathDetailsComponent } from './pages/control-path-details/control-path-details.component';
+import { EditControlPathInfoPanelComponent } from './components/edit-control-path-info-panel/edit-control-path-info-panel.component';
+import { CreateControlPathComponent } from './pages/create-control-path/create-control-path.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +109,12 @@ import { ValidationReminderComponent } from './components/validation-reminder/va
     ReportHistoryComponent,
     ControlPollutantModalComponent,
     EmissionsReportContainerComponent,
-    ValidationReminderComponent
+    ValidationReminderComponent,
+    ControlPathsSummaryComponent,
+    ControlPathsTableComponent,
+    ControlPathDetailsComponent,
+    EditControlPathInfoPanelComponent,
+    CreateControlPathComponent
   ],
   imports: [
     CommonModule,
