@@ -16,9 +16,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FipsStateCode;
+import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -66,6 +68,36 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void simpleValidateFacilityNAICSPrimaryFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        for (FacilityNAICSXref naicsFlag: testData.getFacilityNAICS()) {
+        	naicsFlag.setPrimaryFlag(false);
+        }
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_NAICS.value()) && errorMap.get(ValidationField.FACILITY_NAICS.value()).size() == 1);
+    }
+    
+    @Test
+    public void simpleValidateFacilityNAICSCodeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setFacilityNAICS(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+    		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+    
+		    Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		    assertTrue(errorMap.containsKey(ValidationField.FACILITY_NAICS.value()) && errorMap.get(ValidationField.FACILITY_NAICS.value()).size() == 2);
     }
     
     @Test
@@ -154,6 +186,19 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         contactList.add(contact);
         
         result.setContacts(contactList);
+        
+        List<FacilityNAICSXref> naicsList = new ArrayList<FacilityNAICSXref>();
+        FacilityNAICSXref facilityNaics = new FacilityNAICSXref();
+      	
+        NaicsCode naics = new NaicsCode();
+        naics.setCode(332116);
+        naics.setDescription("Metal Stamping");
+        
+      	facilityNaics.setNaicsCode(naics);
+      	facilityNaics.setPrimaryFlag(true);
+      	naicsList.add(facilityNaics);
+      	
+      	result.setFacilityNAICS(naicsList);
 
         return result;
     }
