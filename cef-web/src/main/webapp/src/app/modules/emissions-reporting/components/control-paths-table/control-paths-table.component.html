@@ -1,0 +1,28 @@
+<div class="mh-100 overflow-auto">
+  <table class="table table-sm table-striped table-bordered">
+    <thead>
+    <tr>
+      <th scope="col" sortable="identifier" (sort)="onSort($event)">Path Id</th>
+      <th scope="col" sortable="description" (sort)="onSort($event)">Path Description</th>
+      <ng-container *ngIf="!readOnlyMode">
+      <th scope="col"></th>
+      </ng-container>
+    </tr>
+    </thead>
+    <tbody>
+	<tr *ngFor="let item of tableData">
+      <td><a routerLink="{{baseUrl}}/{{item.id}}">{{item.pathId}}</a></td>
+      <td>{{item.description}}</td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openDeleteModal(item.pathId, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      </ng-container>
+	</tr>
+	<ng-container *ngIf="!readOnlyMode">
+      <tr>
+        <td colspan="2"></td>
+        <td><a routerLink="{{baseUrl}}/create"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+      </tr>
+    </ng-container>
+	</tbody>
+  </table>
+</div>

@@ -1,0 +1,14 @@
+<div *ngIf="facilitySite">
+    <div class="row">
+        <div class="col-sm-12" *ngIf="controlPaths">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Control Paths</strong>
+                </div>
+                <div class="card-body">
+                    <app-control-paths-table [tableData]="controlPaths"></app-control-paths-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,6 +7,7 @@ export enum BaseReportUrl {
   RELEASE_POINT = 'release',
   REPORTING_PERIOD = 'period',
   CONTROL_DEVICE = 'control',
+  CONTROL_PATH = 'path',
   REPORT_SUMMARY = 'summary',
   VALIDATION = 'validation',
   REPORT_HISTORY = 'history'
