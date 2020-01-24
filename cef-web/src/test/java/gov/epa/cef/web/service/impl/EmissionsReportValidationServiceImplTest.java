@@ -7,8 +7,11 @@ import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingDetail;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
@@ -31,7 +34,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -92,6 +97,23 @@ public class EmissionsReportValidationServiceImplTest {
         ReportingPeriod reportingPeriod = new ReportingPeriod();
         OperatingDetail detail = new OperatingDetail();
         Emission emission = new Emission();
+        
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        
+        List<FacilityNAICSXref> naicsList = new ArrayList<FacilityNAICSXref>();
+        FacilityNAICSXref facilityNaics = new FacilityNAICSXref();
+      	
+        NaicsCode naics = new NaicsCode();
+        naics.setCode(332116);
+        naics.setDescription("Metal Stamping");
+        
+        facilityNaics.setNaicsCode(naics);
+        facilityNaics.setPrimaryFlag(true);
+        naicsList.add(facilityNaics);
+        
+        facilitySite.setFacilityNAICS(naicsList);
+        facilitySite.setOperatingStatusCode(opStatCode);
 
         reportingPeriod.getEmissions().add(emission);
         reportingPeriod.getOperatingDetails().add(detail);

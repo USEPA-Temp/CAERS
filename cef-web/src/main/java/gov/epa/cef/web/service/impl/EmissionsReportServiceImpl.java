@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayInputStream; 
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +47,7 @@ import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.FacilitySiteContactService;
 import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
@@ -60,7 +61,7 @@ import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
-
+	
     private static final Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
 
     // TODO: Remove hard coded value
@@ -102,6 +103,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     
     @Autowired
     private FacilitySiteContactService contactService;
+    
+    @Autowired
+    private LookupService lookupService;
     
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -255,9 +259,14 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setAgencyCode(reportDto.getStateCode());
         newReport.setId(this.emissionsReportMapper.toDto(this.erRepo.save(newReport)).getId());
-        
+
         reportDto.getFacilitySite().setEmissionsReport(newReport);
         reportDto.getFacilitySite().setEisProgramId(facilityEisProgramId);
+        
+        //TODO: 
+        //For current mvp program system code will be hardcoded to GAGNR for creating new facility sites
+        //need to raise issue with Julia and Kevin to determine how we will obtain program system code in future
+        reportDto.getFacilitySite().setProgramSystemCode(this.lookupService.retrieveProgramSystemTypeCodeEntityByCode("GADNR"));
         this.facilitySiteService.create(reportDto.getFacilitySite());
         
     	this.reportService.createReportHistory(newReport.getId(), ReportAction.CREATED);
