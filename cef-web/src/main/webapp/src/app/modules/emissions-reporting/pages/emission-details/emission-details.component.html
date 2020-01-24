@@ -4,22 +4,36 @@
             <strong>Process Information</strong>
         </div>
         <div class="card-body">
-          <div class="row pb-2" *ngIf="process && reportingPeriod">
-            <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
-            <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
-            <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode.shortName}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
-            <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
+          <div *ngIf="process && reportingPeriod">
+            <div class="row pb-2">
+                <div class="col-sm-6 col-md-2"><strong>Unit ID:</strong></div>
+                <div class="col-sm-6 col-md-6">{{unitIdentifier}}</div>
+            </div>
+
+            <div class="row pb-2">
+                <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
+                <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode.shortName}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
+                <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
+            </div>
           </div>
 
-          <div class="row" *ngIf="reportingPeriod">
-            <div class="col-sm-6 col-md-2"><strong>Calculation Parameter:</strong></div>
-            <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode.description}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Calculation Value:</strong></div>
-            <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterValue}}</div>
-            <div class="col-sm-6 col-md-2"><strong>Calculation UoM:</strong></div>
-            <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom.description}}</div>
+          <div *ngIf="reportingPeriod">
+            <div class="row pb-2">
+                <div class="col-sm-6 col-md-2"><strong>Calculation Material:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationMaterialCode.description}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Calculation Value:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterValue}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Calculation UoM:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom.description}}</div>
+            </div>
+                
+            <div class="row">
+                <div class="col-sm-6 col-md-2"><strong>Calculation Parameter:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode.description}}</div>
+            </div>
           </div>
         </div>
     </div>
