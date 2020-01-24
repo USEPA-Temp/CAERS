@@ -8,6 +8,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.dto.EmissionDto;
@@ -28,6 +29,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,9 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Autowired
     private ReportingPeriodRepository periodRepo;
+    
+    @Autowired
+    private ReportHistoryRepository historyRepo;
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
@@ -195,7 +200,10 @@ public class EmissionServiceImpl implements EmissionService {
             //populate the common parts of the DTO object by mapping the first result.
             //since we're matching on facility and CAS, all of these fields should be the same for each instance of the list
             emissionsByFacilityDto = emissionsByFacilityAndCASMapper.toDto(emissionsByFacilityAndCAS.get(0));
-
+            
+            //query the report history table to find the most recent SUBMITTED date for the report we're returning data for
+            emissionsByFacilityDto.setCertificationDate(historyRepo.retrieveMaxSubmissionDateByReportId(emissionsByFacilityDto.getReportId()).orElse(null));
+            
             BigDecimal stackEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
             BigDecimal fugitiveEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
 

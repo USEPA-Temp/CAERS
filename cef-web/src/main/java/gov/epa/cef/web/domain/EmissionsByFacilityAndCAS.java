@@ -50,7 +50,9 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
     @Column(name = "emissions_uom_code")
     private String emissionsUomCode;
     
-
+    @Column(name = "report_id")
+    private Long reportId;
+    
     public String getFrsFacilityId() {
         return frsFacilityId;
     }
@@ -130,5 +132,13 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
     public void setReleasePointType(String releasePointType) {
         this.releasePointType = releasePointType;
     }
+
+	public Long getReportId() {
+		return reportId;
+	}
+
+	public void setReportId(Long reportId) {
+		this.reportId = reportId;
+	}
     
 }

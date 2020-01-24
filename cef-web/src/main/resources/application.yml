@@ -34,3 +34,4 @@ spring:
           use_lite_member: true
           instance_name: cef-hazelcast-cache
   jackson.serialization.FAIL_ON_EMPTY_BEANS: false
+  jackson.date-format: yyyy-MM-dd HH:mm:ss
