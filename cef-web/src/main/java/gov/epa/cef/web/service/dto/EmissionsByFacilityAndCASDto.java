@@ -2,6 +2,9 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class EmissionsByFacilityAndCASDto implements Serializable {
     
@@ -21,6 +24,10 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     private BigDecimal stackEmissions;
     private BigDecimal fugitiveEmissions;
     private String uom;
+    private Date certificationDate;
+    
+    @JsonIgnore
+    private Long reportId;
     
     public String getMessage() {
         return message;
@@ -88,4 +95,16 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     public void setUom(String uom) {
         this.uom = uom;
     }
+	public Date getCertificationDate() {
+		return certificationDate;
+	}
+	public void setCertificationDate(Date certificationDate) {
+		this.certificationDate = certificationDate;
+	}
+	public Long getReportId() {
+		return reportId;
+	}
+	public void setReportId(Long reportId) {
+		this.reportId = reportId;
+	}
 }
