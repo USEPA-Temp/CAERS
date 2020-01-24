@@ -20,11 +20,10 @@ public interface ReportHistoryRepository extends CrudRepository<ReportHistory, L
     List<ReportHistory> findByEmissionsReportIdOrderByActionDate(Long emissionsReportId);
     
     /**
-    *
-    * @param id
-    * @return EIS Program ID
-    */
-    
+    * Return the latest submission date for a given report
+    * @param id Report ID
+    * @return 
+    */ 
    @Query("select max(actionDate) from ReportHistory rp where rp.emissionsReport.id = :id and rp.reportAction = gov.epa.cef.web.domain.ReportAction.SUBMITTED")
    Optional<Date> retrieveMaxSubmissionDateByReportId(@Param("id") Long id);
 
