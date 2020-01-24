@@ -11,6 +11,10 @@
                 <div class="card-body">
                     <div *ngIf="!editInfo">
                         <div class="row">
+                            <div class="col-sm-6 col-md-2"><strong>Unit ID:</strong></div>
+                            <div class="col-sm-6 col-md-6">{{unitIdentifier}}</div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
                             <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
                             <div class="col-sm-6 col-md-2"><strong>Process Description:</strong></div>
@@ -42,7 +46,7 @@
                     </div>
                     
                     <div *ngIf="editInfo">
-                        <app-edit-process-info-panel [process]="process"></app-edit-process-info-panel>
+                        <app-edit-process-info-panel [process]="process" [unitIdentifier]="unitIdentifier"></app-edit-process-info-panel>
                         <div class="float-right pb-3 pr-3" *ngIf="infoComponent">
                             <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
                             <button type="submit" class="btn btn-success" (click)="updateProcess()">Save</button>

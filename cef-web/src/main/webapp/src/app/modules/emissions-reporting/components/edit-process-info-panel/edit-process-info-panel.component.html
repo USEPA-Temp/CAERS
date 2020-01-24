@@ -1,5 +1,9 @@
 <form [formGroup]="processForm" (ngSubmit)="onSubmit()">
     <div class="row pb-1">
+        <div class="col-sm-6 col-md-2"><strong>Unit ID:</strong></div>
+		<div class="col-sm-6 col-md-6">{{unitIdentifier}}</div>
+    </div>
+    <div class="row pb-1">
         <label for="processIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process ID:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier">

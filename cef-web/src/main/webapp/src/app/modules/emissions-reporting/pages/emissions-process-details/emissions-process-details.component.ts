@@ -15,6 +15,7 @@ import { OperatingDetailService } from 'src/app/core/services/operating-detail.s
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ToastrService } from 'ngx-toastr';
+import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -25,6 +26,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
   controlPaths: ControlPath[];
   facilitySite: FacilitySite;
+  unitIdentifier: string;
 
   hasAircraftCode = false;
   readOnlyMode = true;
@@ -43,6 +45,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   reportingPeriodComponent: EditProcessReportingPeriodPanelComponent;
 
   constructor(
+    private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
     private reportingPeriodService: ReportingPeriodService,
     private operatingDetailService: OperatingDetailService,
@@ -61,6 +64,11 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         if (this.process.aircraftEngineTypeCode) {
           this.hasAircraftCode = true;
         }
+
+        this.emissionUnitService.retrieve(process.emissionsUnitId)
+        .subscribe(unit => {
+          this.unitIdentifier = unit.unitIdentifier;
+        });
 
         this.reportingPeriodService.retrieveForEmissionsProcess(this.process.id)
         .subscribe(periods => {
