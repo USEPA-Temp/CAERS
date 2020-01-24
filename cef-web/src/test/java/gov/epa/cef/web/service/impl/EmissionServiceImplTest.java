@@ -7,6 +7,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
@@ -23,7 +24,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +46,9 @@ public class EmissionServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ReportingPeriodRepository periodRepo;
+    
+    @Mock
+    private ReportHistoryRepository historyRepo;
 
     @Mock
     EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
@@ -64,6 +71,15 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emissionsReportList2019.add(emissionsReport);
         List<EmissionsByFacilityAndCAS> emptyEmissions = new ArrayList<EmissionsByFacilityAndCAS>();
         List<EmissionsByFacilityAndCAS> emissionsList = new ArrayList<EmissionsByFacilityAndCAS>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date testMaxDate = new Date();
+        try {
+        	testMaxDate = sdf.parse("2019-05-26 19:20:51");
+        } 
+        catch (ParseException pe) {
+        	testMaxDate = null;
+        }
+        Optional<Date> returnDate = Optional.of(testMaxDate);
 
         EmissionsByFacilityAndCAS emission1 = new EmissionsByFacilityAndCAS();
         emission1.setId(1L);
@@ -72,10 +88,12 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emission1.setPollutantCasId("71-43-2");
         emission1.setPollutantName("Benzene");
         emission1.setYear(new Short("2019"));
+        emission1.setStatus("ACCEPTED");
         emission1.setReleasePointIdentifier("RP-1234");
         emission1.setReleasePointType("stack");
         emission1.setApportionedEmissions(new BigDecimal("51.75"));
         emission1.setEmissionsUomCode("TON");
+        emission1.setReportId(37L);
 
         EmissionsByFacilityAndCAS emission2 = new EmissionsByFacilityAndCAS();
         emission2.setId(2L);
@@ -84,10 +102,12 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emission2.setPollutantCasId("71-43-2");
         emission2.setPollutantName("Benzene");
         emission2.setYear(new Short("2019"));
+        emission2.setStatus("ACCEPTED");
         emission2.setReleasePointIdentifier("RP-3456");
         emission2.setReleasePointType("stack");
         emission2.setApportionedEmissions(new BigDecimal("765.15"));
         emission2.setEmissionsUomCode("TON");
+        emission2.setReportId(37L);
 
         EmissionsByFacilityAndCAS emission3 = new EmissionsByFacilityAndCAS();
         emission3.setId(3L);
@@ -96,10 +116,12 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emission3.setPollutantCasId("71-43-2");
         emission3.setPollutantName("Benzene");
         emission3.setYear(new Short("2019"));
+        emission3.setStatus("ACCEPTED");
         emission3.setReleasePointIdentifier("RP-2345");
         emission3.setReleasePointType("fugitive");
         emission3.setApportionedEmissions(new BigDecimal("276.25"));
         emission3.setEmissionsUomCode("TON");
+        emission3.setReportId(37L);
 
         EmissionsByFacilityAndCAS emission4 = new EmissionsByFacilityAndCAS();
         emission4.setId(4L);
@@ -108,10 +130,12 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emission4.setPollutantCasId("71-43-2");
         emission4.setPollutantName("Benzene");
         emission4.setYear(new Short("2019"));
+        emission4.setStatus("ACCEPTED");
         emission4.setReleasePointIdentifier("RP-2345");
         emission4.setReleasePointType("fugitive");
         emission4.setApportionedEmissions(new BigDecimal("114.86"));
         emission4.setEmissionsUomCode("TON");
+        emission4.setReportId(37L);
 
         emissionsList.add(emission1);
         emissionsList.add(emission2);
@@ -125,6 +149,8 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emissionsByFacilityAndCASDto.setFacilityName("Test Facility 1");
         emissionsByFacilityAndCASDto.setYear(new Short("2019"));
         emissionsByFacilityAndCASDto.setUom("TON");
+        emissionsByFacilityAndCASDto.setReportStatus("ACCEPTED");
+        emissionsByFacilityAndCASDto.setReportId(37L);
 
         ReportingPeriod rp = new ReportingPeriod();
         rp.setCalculationParameterValue(new BigDecimal(10));
@@ -152,6 +178,7 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         when(emissionsByFacilityAndCASMapper.toDto(emission1)).thenReturn(emissionsByFacilityAndCASDto);
         when(emissionMapper.formulaVariableFromDtoList(variableDtoList)).thenReturn(variableList);
         when(periodRepo.findById(1L)).thenReturn(Optional.of(rp));
+        when(historyRepo.retrieveMaxSubmissionDateByReportId(37L)).thenReturn(returnDate);
     }
 
     @Test
@@ -238,6 +265,10 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         assertEquals(new BigDecimal("816.90"), emissions.getStackEmissions());
         assertEquals(new BigDecimal("391.11"), emissions.getFugitiveEmissions());
         assertEquals("TON", emissions.getUom());
+        assertEquals("ACCEPTED", emissions.getReportStatus());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        assertEquals("2019-05-26 19:20:51", sdf.format(emissions.getCertificationDate()));
+        
     }
 
     private EmissionFormulaVariableDto createEmissionFormulaVariableDto(BigDecimal value, String name) {
