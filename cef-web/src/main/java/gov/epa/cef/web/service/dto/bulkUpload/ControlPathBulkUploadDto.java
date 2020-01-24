@@ -9,6 +9,7 @@ public class ControlPathBulkUploadDto implements Serializable {
     private Long id;
     private Long facilitySiteId;
     private String description;
+    private String pathId;
 
     public Long getId() {
         return id;
@@ -33,5 +34,13 @@ public class ControlPathBulkUploadDto implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public String getPathId() {
+		return pathId;
+	}
+
+	public void setPathId(String pathId) {
+		this.pathId = pathId;
+	}
 
 }
