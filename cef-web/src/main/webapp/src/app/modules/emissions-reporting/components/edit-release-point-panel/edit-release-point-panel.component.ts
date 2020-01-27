@@ -210,13 +210,16 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.releasePointForm.controls.fenceLineUomCode.setValue({ code: 'FT' });
 
     if (this.releaseType === 'Fugitive') {
-      this.releasePointForm.controls.fugitiveLengthUomCode.setValue({ code: 'FT' });
-      this.releasePointForm.controls.fugitiveWidthUomCode.setValue({ code: 'FT' });
-      this.releasePointForm.controls.fugitiveHeightUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.fugitiveLine1Latitude.enable();
       this.releasePointForm.controls.fugitiveLine2Latitude.enable();
       this.releasePointForm.controls.fugitiveLine1Longitude.enable();
       this.releasePointForm.controls.fugitiveLine2Longitude.enable();
+      this.releasePointForm.controls.fugitiveLengthUomCode.enable();
+      this.releasePointForm.controls.fugitiveWidthUomCode.enable();
+      this.releasePointForm.controls.fugitiveHeightUomCode.enable();
+      this.releasePointForm.controls.fugitiveLengthUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.fugitiveWidthUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.fugitiveHeightUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.stackHeight.disable();
       this.releasePointForm.controls.stackDiameter.disable();
       this.releasePointForm.controls.exitGasTemperature.disable();
@@ -228,11 +231,13 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.releasePointForm.controls.stackHeightUomCode.reset();
       this.releasePointForm.controls.stackDiameterUomCode.reset();
     } else {
-      this.releasePointForm.controls.stackHeightUomCode.setValue({ code: 'FT' });
-      this.releasePointForm.controls.stackDiameterUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.stackHeight.enable();
       this.releasePointForm.controls.stackDiameter.enable();
       this.releasePointForm.controls.exitGasTemperature.enable();
+      this.releasePointForm.controls.stackHeightUomCode.enable();
+      this.releasePointForm.controls.stackDiameterUomCode.enable();
+      this.releasePointForm.controls.stackHeightUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.stackDiameterUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.fugitiveLine1Latitude.disable();
       this.releasePointForm.controls.fugitiveLine2Latitude.disable();
       this.releasePointForm.controls.fugitiveLine1Longitude.disable();
