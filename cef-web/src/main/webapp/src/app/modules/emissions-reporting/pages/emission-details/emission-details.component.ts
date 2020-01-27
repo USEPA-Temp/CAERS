@@ -295,7 +295,9 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.emissionForm.valid || (this.totalManualEntry && !this.emissionForm.controls.comments.value)) {
       this.emissionForm.markAllAsTouched();
       if (this.totalManualEntry && !this.emissionForm.controls.comments.value) {
-        this.toastr.error('', 'Comments field must be populated for this pollutant ', {positionClass: 'toast-top-right'});
+        this.toastr.error('', 'You must enter an explanation of the total emissions calculation when the ' +
+        this.emissionForm.controls.emissionsCalcMethodCode.value.description +
+        ' calculation method is selected.', {positionClass: 'toast-top-right'});
       }
     } else {
 
