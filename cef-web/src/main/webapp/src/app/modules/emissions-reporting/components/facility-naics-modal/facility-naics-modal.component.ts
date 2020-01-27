@@ -6,6 +6,8 @@ import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-facility-naics-modal',
@@ -20,7 +22,7 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
   check = true;
 
   naicsForm = this.fb.group({
-    selectedNaics: ['', Validators.required],
+    selectedNaics: [null, Validators.required],
   });
 
   facilityNaicsCode: FacilityNaicsCode[];
@@ -99,4 +101,15 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
     }
     this.check = true;
   }
+
+  searchNAICS = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term => this.facilityNaicsCode.filter(v => v.code.toLowerCase().indexOf(term.toLowerCase()) > -1
+                                        || (v.description ? v.description.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
+                                        .slice(0, 20))
+    )
+
+    naicsFormatter = (result: FacilityNaicsCode) => `${result.code}  -  ${result.description}`;
 }
