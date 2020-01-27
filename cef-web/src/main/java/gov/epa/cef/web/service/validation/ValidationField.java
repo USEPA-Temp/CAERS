@@ -11,6 +11,8 @@ public enum ValidationField {
     FACILITY_NAICS("report.facilitysite.naics"),
     RP_GAS_TEMP("report.facilitySite.releasePoint.exitGasTemperature"),
     RP_GAS_FLOW("report.facilitySite.releasePoint.exitGasFlowRate"),
+    RP_GAS_VELOCITY("report.facilitySite.releasePoint.exitGasVelocity"),
+    RP_GAS_RELEASE("report.facilitySite.releasePoint.release"),
     PROCESS_RP_PCT("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.percent"),
     PERIOD_CALC_VALUE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue"),
     PERIOD_CALC_MAT_CODE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationMaterialCode"),

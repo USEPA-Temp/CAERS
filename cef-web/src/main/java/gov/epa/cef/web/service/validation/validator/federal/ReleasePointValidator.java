@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
+    private static final String FUGITIVE_RELEASE_POINT_CODE = "1"; 
+    
     @Override
     public boolean validate(ValidatorContext validatorContext, ReleasePoint releasePoint) {
 
@@ -23,9 +25,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
-        // Release point validations for non fugitive type release point.
-        if (!releasePoint.getTypeCode().getCode().equals("1")) {
-
+        if (!releasePoint.getTypeCode().getCode().equals(FUGITIVE_RELEASE_POINT_CODE)) {
 	        if (releasePoint.getExitGasTemperature() == null) {
 	        	
 	            // Exit Gas Temperature is required.
@@ -45,26 +45,148 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	                    createValidationDetails(releasePoint));
 	        } 
 	        
-	        if ((releasePoint.getExitGasFlowRate() == null || releasePoint.getExitGasFlowUomCode() == null)) {
+	        // Exit Gas Flow Rate OR Exit Gas Velocity is required.
+	        if ((releasePoint.getExitGasFlowRate() == null && releasePoint.getExitGasVelocity() == null)) {
+	        	result = false;
 	        	
-	            // Exit Gas Flow Rate and Exit Gas Flow Rate UoM.
-	            result = false;
-	            context.addFederalError(
-	                    ValidationField.RP_GAS_FLOW.value(),
-	                    "releasePoint.exitGasFlowRate.required",
-	                    createValidationDetails(releasePoint));
-	            
-	        } else if (releasePoint.getExitGasFlowRate() != null && (releasePoint.getExitGasFlowRate() < 0.1 || releasePoint.getExitGasFlowRate() > 200000)) {
-	        	
-	            // Exit Gas Flow Rate must be between 0.1 and 200000 ACFS.
-	            result = false;
-	            context.addFederalError(
-	                    ValidationField.RP_GAS_FLOW.value(),
-	                    "releasePoint.exitGasFlowRate.range",
-	                    createValidationDetails(releasePoint));
+	        	context.addFederalError(
+                		ValidationField.RP_GAS_RELEASE.value(),
+                		"releasePoint.release.required",
+                		createValidationDetails(releasePoint));
 	        }
         }
-
+              
+        if ((releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowUomCode() == null) ||
+        	(releasePoint.getExitGasFlowRate() == null && releasePoint.getExitGasFlowUomCode() != null)) {
+       
+        	// Exit Gas Flow Rate and Exit Gas Flow Rate UoM must be reported together.
+        	result = false;
+        	context.addFederalError(
+                  ValidationField.RP_GAS_FLOW.value(),
+                  "releasePoint.exitGasFlowRate.required",
+                  createValidationDetails(releasePoint));
+          
+        } else if (releasePoint.getExitGasFlowUomCode() != null && (
+        	!"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+        	!"ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()))) {
+        		
+        	// Exit Gas Flow Rate UoM must be in ACFS or ACFM.
+        	result = false;
+        	context.addFederalError(
+                  ValidationField.RP_GAS_FLOW.value(),
+                  "releasePoint.exitGasFlowRate.required",
+                  createValidationDetails(releasePoint));
+        }
+        
+        // Exit Gas Flow Rate Ranges
+        if (releasePoint.getExitGasFlowUomCode() != null && releasePoint.getExitGasFlowRate() != null) {
+        	if (FUGITIVE_RELEASE_POINT_CODE.contentEquals(releasePoint.getTypeCode().getCode())) {
+        		if ("ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+        				(releasePoint.getExitGasFlowRate() < 0 || releasePoint.getExitGasFlowRate() > 200000)) {
+        			
+        				result = false;
+        				context.addFederalError(
+			                  ValidationField.RP_GAS_FLOW.value(),
+			                  "releasePoint.exitGasFlowRate.fugitiveACFS.range",
+			                  createValidationDetails(releasePoint));
+			        	
+	        	} else if ("ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+	        			(releasePoint.getExitGasFlowRate() < 0 || releasePoint.getExitGasFlowRate() > 12000000)) {
+		        		result = false;
+			        	context.addFederalError(
+			                  ValidationField.RP_GAS_FLOW.value(),
+			                  "releasePoint.exitGasFlowRate.fugitiveACFM.range",
+			                  createValidationDetails(releasePoint));
+		        	
+	        	}
+        	} else {
+        		if ("ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+        				(releasePoint.getExitGasFlowRate() < 0.00000001 || releasePoint.getExitGasFlowRate() > 200000)) {
+        			
+        				result = false;
+        				context.addFederalError(
+			                  ValidationField.RP_GAS_FLOW.value(),
+			                  "releasePoint.exitGasFlowRate.stackACFS.range",
+			                  createValidationDetails(releasePoint));
+			        	
+        		} else if ("ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+	        			(releasePoint.getExitGasFlowRate() < 0.00000001 || releasePoint.getExitGasFlowRate() > 12000000)) {
+		        		
+        				result = false;
+			        	context.addFederalError(
+			                  ValidationField.RP_GAS_FLOW.value(),
+			                  "releasePoint.exitGasFlowRate.stackACFM.range",
+			                  createValidationDetails(releasePoint));
+	        	}
+        	}
+        }
+        
+     // Exit Gas Velocity Ranges
+        if (releasePoint.getExitGasVelocityUomCode() != null && releasePoint.getExitGasVelocity() != null) {
+        	if (FUGITIVE_RELEASE_POINT_CODE.contentEquals(releasePoint.getTypeCode().getCode())) {
+        		if ("FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+        				(releasePoint.getExitGasVelocity() < 0 || releasePoint.getExitGasVelocity() > 400)) {
+        			
+        				result = false;
+        				context.addFederalError(
+			                  ValidationField.RP_GAS_VELOCITY.value(),
+			                  "releasePoint.exitGasVelocity.fugitiveFPS.range",
+			                  createValidationDetails(releasePoint));
+			        	
+	        	} else if ("FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+	        			(releasePoint.getExitGasVelocity() < 0 || releasePoint.getExitGasVelocity() > 24000)) {
+	        		
+		        		result = false;
+			        	context.addFederalError(
+			                  ValidationField.RP_GAS_VELOCITY.value(),
+			                  "releasePoint.exitGasVelocity.fugitiveFPM.range",
+			                  createValidationDetails(releasePoint));
+		        	
+	        	}
+        	} else {
+        		if ("FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+        				(releasePoint.getExitGasVelocity() < 0.001 || releasePoint.getExitGasVelocity() > 1500)) {
+        			
+        				result = false;
+        				context.addFederalError(
+			                  ValidationField.RP_GAS_VELOCITY.value(),
+			                  "releasePoint.exitGasVelocity.stackFPS.range",
+			                  createValidationDetails(releasePoint));
+			        	
+        		} else if ("FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+	        			(releasePoint.getExitGasVelocity() < 0.060 || releasePoint.getExitGasVelocity() > 90000)) {
+		        		
+        				result = false;
+			        	context.addFederalError(
+			                  ValidationField.RP_GAS_VELOCITY.value(),
+			                  "releasePoint.exitGasVelocity.stackFPM.range",
+			                  createValidationDetails(releasePoint));
+	        	}
+        	}
+        }
+        
+        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocityUomCode() == null) ||
+          	(releasePoint.getExitGasVelocity() == null && releasePoint.getExitGasVelocityUomCode() != null)) {
+         
+          	// Exit Gas Velocity and Exit Gas Velocity UoM must be reported together.
+          	result = false;
+          	context.addFederalError(
+                    ValidationField.RP_GAS_VELOCITY.value(),
+                    "releasePoint.exitGasVelocity.required",
+                    createValidationDetails(releasePoint));
+            
+          } else if (releasePoint.getExitGasVelocityUomCode() != null && (
+          	!"FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+          	!"FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()))) {
+          		
+          	// Exit Gas Velocity UoM must be in FPM or FPS.
+          	result = false;
+          	context.addFederalError(
+                    ValidationField.RP_GAS_VELOCITY.value(),
+                    "releasePoint.exitGasVelocity.required",
+                    createValidationDetails(releasePoint));
+          }
+        
         return result;
     }
 

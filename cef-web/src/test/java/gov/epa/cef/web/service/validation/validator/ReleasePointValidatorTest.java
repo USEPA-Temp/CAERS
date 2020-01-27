@@ -62,39 +62,84 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_TEMP.value()) && errorMap.get(ValidationField.RP_GAS_TEMP.value()).size() == 1);
     }
 
-	@Test
-	public void exitGasTemperatureTest() {
-		
-		CefValidatorContext cefContext = createContext();
-		ReleasePoint testData = createBaseReleasePoint();
-		testData.setExitGasTemperature((short) -30);
-
-		assertTrue(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-
-		cefContext = createContext();
-		testData.setExitGasTemperature((short) 4000);
-
-		assertTrue(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+		@Test
+		public void exitGasTemperatureTest() {
+			
+			CefValidatorContext cefContext = createContext();
+			ReleasePoint testData = createBaseReleasePoint();
+			testData.setExitGasTemperature((short) -30);
+	
+			assertTrue(this.validator.validate(cefContext, testData));
+			assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+	
+			cefContext = createContext();
+			testData.setExitGasTemperature((short) 4000);
+	
+			assertTrue(this.validator.validate(cefContext, testData));
+			assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
     
     @Test
-    public void exitGasFlowRateMaxMinFailTest() {
+    public void exitGasFlowRateOrVelocityRequiredFailTest() {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
-        testData.setExitGasFlowRate(0.01);
+        testData.setExitGasFlowRate(null);
+        testData.setExitGasVelocity(null);
+        testData.setExitGasFlowUomCode(null);
+        testData.setExitGasVelocityUomCode(null);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
-
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_RELEASE.value()) && errorMap.get(ValidationField.RP_GAS_RELEASE.value()).size() == 1);
+        
         cefContext = createContext();
-        testData.setExitGasFlowRate(200000.1);
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("1");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_RELEASE.value()) && errorMap.get(ValidationField.RP_GAS_RELEASE.value()).size() == 1);
+    }
+    
+    @Test
+    public void exitGasFlowRateRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        testData.setExitGasFlowRate(0.0);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+        
+        cefContext = createContext();
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("1");
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setExitGasFlowRate(200000.1);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+        
+        cefContext = createContext();
+        UnitMeasureCode flowUom = new UnitMeasureCode();
+        flowUom.setCode("ACFM");
+        UnitMeasureCode velocityUom = new UnitMeasureCode();
+        velocityUom.setCode("FPM");    
+        testData.setExitGasFlowUomCode(flowUom);
+        testData.setExitGasVelocityUomCode(velocityUom);
+        testData.setExitGasFlowRate(12000000.1);
+        
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
@@ -103,63 +148,159 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void exitGasFlowRateMaxMinTest() {
-    	
-    	CefValidatorContext cefContext = createContext();
-    	ReleasePoint testData = createBaseReleasePoint();
-    	testData.setExitGasFlowRate(0.1);
-    	
-    	assertTrue(this.validator.validate(cefContext, testData));
-    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-    	
-    	cefContext = createContext();
-    	testData.setExitGasFlowRate(200000.0);
-    	
-    	assertTrue(this.validator.validate(cefContext, testData));
-    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-    }
-    
-    @Test
-    public void exitGasFlowRateRequiredFailTest() {
+    public void exitGasFlowRateAndUomRequiredFailTest() {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
         testData.setExitGasFlowRate(null);
-
+        
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.setExitGasFlowUomCode(null);
+        testData.setExitGasFlowRate(1000.0);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
     }
     
     @Test
-    public void exitGasFlowRateUomRequiredFailTest() {
+    public void exitGasVelocityRangeFailTest() {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
-        testData.setExitGasFlowUomCode(null);
-
+        testData.setExitGasVelocity(0.0);
+        
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+        
+        cefContext = createContext();
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("1");
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setExitGasVelocity(1500.1);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+        
+        cefContext = createContext();
+        UnitMeasureCode flowUom = new UnitMeasureCode();
+        flowUom.setCode("ACFM");
+        UnitMeasureCode velocityUom = new UnitMeasureCode();
+        velocityUom.setCode("FPM");    
+        testData.setExitGasFlowUomCode(flowUom);
+        testData.setExitGasVelocityUomCode(velocityUom);
+        testData.setExitGasVelocity(90000.1);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
     }
     
+    @Test
+    public void exitGasVelocityAndUomRequiredFailTest() {
 
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        testData.setExitGasVelocity(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.setExitGasVelocityUomCode(null);
+        testData.setExitGasVelocity(1000.0);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+    }
+    
+    @Test
+    public void exitGasFlowRateUomAndVelocityUomTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+    	ReleasePoint testData = createBaseReleasePoint();
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void exitGasVelocityUomFailTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+    	ReleasePoint testData = createBaseReleasePoint();
+    	
+    	UnitMeasureCode uom = new UnitMeasureCode();
+    	uom.setCode("BTU");
+    	
+    	testData.setExitGasVelocityUomCode(uom);
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+
+    }
+    
+    @Test
+    public void exitGasFlowRateUomFailTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+    	ReleasePoint testData = createBaseReleasePoint();
+    	
+    	UnitMeasureCode uom = new UnitMeasureCode();
+    	uom.setCode("BTU");
+    	
+    	testData.setExitGasFlowUomCode(uom);
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+
+    }
+    
     private ReleasePoint createBaseReleasePoint() {
     	
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("2");
         
         UnitMeasureCode flowUom = new UnitMeasureCode();
-        flowUom.setCode("FT3/HR");        
+        flowUom.setCode("ACFS");     
+        
+        UnitMeasureCode velUom = new UnitMeasureCode();
+        velUom.setCode("FPS");    
         
         ReleasePoint result = new ReleasePoint();
         result.setExitGasTemperature((short) 50);
         result.setExitGasFlowRate(1000.0);
         result.setExitGasFlowUomCode(flowUom);
+        result.setExitGasVelocity(100.0);
+        result.setExitGasVelocityUomCode(velUom);
         result.setTypeCode(releasePointTypeCode);
 
         return result;

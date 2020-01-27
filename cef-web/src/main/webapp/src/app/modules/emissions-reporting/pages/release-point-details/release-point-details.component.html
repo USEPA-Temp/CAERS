@@ -29,7 +29,7 @@
                             <div class="col-sm-6 col-md-2">{{releasePoint.fenceLineDistance}}</div>
                         </div>
 
-                        <div class="row pb-3">
+                        <div class="row pb-2">
                             <div class="col-sm-6 col-md-2"><strong>Release Point Status Year:</strong></div>
                             <div class="col-sm-6 col-md-2">{{releasePoint.statusYear}}</div>
                             <div class="col-sm-6 col-md-2"><strong>Longitude Measure:</strong></div>
@@ -37,13 +37,27 @@
                             <div class="col-sm-6 col-md-2"><strong>Fence Line Distance UoM:</strong></div>
                             <div class="col-sm-6 col-md-2">{{releasePoint.fenceLineUomCode?.description}}</div>
                         </div>
+
+                        <div class="row pb-2">
+                            <div class="col-sm-6 col-md-2"><strong>Gas Velocity Measure:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{releasePoint.exitGasVelocity}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate Measure:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowRate}}</div>
+                        </div>
+
+                        <div class="row pb-3">
+                            <div class="col-sm-6 col-md-2"><strong>Gas Velocity UoM:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{releasePoint.exitGasVelocityUomCode?.description}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate UoM:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowUomCode?.description}}</div>
+                        </div>
                         
                         <div *ngIf="!fugitive">
                             <div class="row pb-2">
                                 <div class="col-sm-6 col-md-2"><strong>Stack Height Measure:</strong></div>
                                 <div class="col-sm-6 col-md-2">{{releasePoint.stackHeight}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Gas Velocity Measure:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.exitGasVelocity}}</div>
+                                <div class="col-sm-6 col-md-2"><strong>Stack Diameter Measure:</strong></div>
+                                <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameter}}</div>
                                 <div class="col-sm-6 col-md-2"><strong>Exit Gas Temperature Measure (F):</strong></div>
                                 <div class="col-sm-6 col-md-2">{{releasePoint.exitGasTemperature}}</div>
                             </div>
@@ -51,22 +65,8 @@
                             <div class="row pb-2">
                                 <div class="col-sm-6 col-md-2"><strong>Stack Height UoM:</strong></div>
                                 <div class="col-sm-6 col-md-2">{{releasePoint.stackHeightUomCode?.description}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Gas Velocity UoM:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.exitGasVelocityUomCode?.description}}</div>
-                            </div>
-
-                            <div class="row pb-2">
-                                <div class="col-sm-6 col-md-2"><strong>Stack Diameter Measure:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameter}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate Measure:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowRate}}</div>
-                            </div>
-
-                            <div class="row pb-2">
                                 <div class="col-sm-6 col-md-2"><strong>Stack Diameter UoM:</strong></div>
                                 <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameterUomCode?.description}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate UoM:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowUomCode?.description}}</div>
                             </div>
                         </div>
                         

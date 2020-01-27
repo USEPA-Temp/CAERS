@@ -15,6 +15,7 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
 })
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   @Input() releasePoint: ReleasePoint;
+  releaseType: string;
 
   releasePointForm = this.fb.group({
     releasePointIdentifier: ['', [
@@ -50,28 +51,36 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.max(99999),
       wholeNumberValidator(),
     ]],
-    fenceLineUomCode: [{ value: null }],
+    fenceLineUomCode: [null],
     comments: ['', Validators.maxLength(400)],
     programSystemCode: [null, Validators.required],
+    exitGasVelocity: [null, [
+      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$'),
+    ]],
+    exitGasVelocityUomCode: [null],
+    exitGasFlowRate: [null, [
+      Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$'),
+    ]],
+    exitGasFlowUomCode: [null],
 
     fugitiveHeight: ['', [
       wholeNumberValidator(),
       Validators.min(0),
       Validators.max(500),
     ]],
-    fugitiveHeightUomCode: [{ value: null }],
+    fugitiveHeightUomCode: [null],
     fugitiveWidth: ['', [
       wholeNumberValidator(),
       Validators.min(1),
       Validators.max(10000),
     ]],
-    fugitiveWidthUomCode: [{ value: null }],
+    fugitiveWidthUomCode: [null],
     fugitiveLength: ['', [
       wholeNumberValidator(),
       Validators.min(1),
       Validators.max(10000),
     ]],
-    fugitiveLengthUomCode: [{ value: null }],
+    fugitiveLengthUomCode: [null],
     fugitiveAngle: ['', [
       Validators.max(179),
       Validators.min(0),
@@ -108,41 +117,34 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.max(1300),
       Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
     ]],
-    stackHeightUomCode: [{ value: null }],
+    stackHeightUomCode: [null],
     stackDiameter: ['', [
       Validators.required,
       Validators.min(0.1),
       Validators.max(100),
       Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
     ]],
-    stackDiameterUomCode: [{ value: null }],
-    exitGasVelocity: ['', [
-      Validators.required,
-      Validators.min(0.001),
-      Validators.max(1500),
-      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
-    ]],
-    exitGasVelocityUomCode: [{ value: null }],
+    stackDiameterUomCode: [null],
     exitGasTemperature: ['', [
       Validators.required,
       Validators.min(-30),
       Validators.max(4000),
       Validators.pattern('^\-?[0-9]+$')
-    ]],
-    exitGasFlowRate: ['', [
-      Validators.required,
-      Validators.min(0.1),
-      Validators.max(200000),
-      Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')
-    ]],
-    exitGasFlowUomCode: [{ value: null }]
-  }, { validators: [this.exitFlowCheck(), this.stackDiameterCheck()]
+    ]]
+  }, { validators: [
+    this.exitFlowConsistencyCheck(),
+    this.stackDiameterCheck(),
+    this.exitGasFlowCheck(),
+    this.uomCheck()
+    ]
   });
 
   releasePointTypeCode: BaseCodeLookup[];
   programSystemCode: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
+  flowUomValues: UnitMeasureCode[];
+  velocityUomValues: UnitMeasureCode[];
 
   constructor(
     private lookupService: LookupService,
@@ -168,20 +170,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     this.lookupService.retrieveUom()
     .subscribe(result => {
-      this.uomValues = result;
+      this.uomValues = result.filter(val => String(val.code) === 'FT');
+      this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
+      this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
     });
 
-    // set default UoM
-    this.releasePointForm.controls.fenceLineUomCode.setValue({ code: 'FT' });
-    this.releasePointForm.controls.fugitiveLengthUomCode.setValue({ code: 'FT' });
-    this.releasePointForm.controls.fugitiveWidthUomCode.setValue({ code: 'FT' });
-    this.releasePointForm.controls.fugitiveHeightUomCode.setValue({ code: 'FT' });
-    this.releasePointForm.controls.exitGasVelocityUomCode.setValue({ code: 'FPS' });
-    this.releasePointForm.controls.exitGasFlowUomCode.setValue({ code: 'ACFS' });
-    this.releasePointForm.controls.stackHeightUomCode.setValue({ code: 'FT' });
-    this.releasePointForm.controls.stackDiameterUomCode.setValue({ code: 'FT' });
-
-    this.releasePointType();
+    this.setFormValidation();
   }
 
   ngOnChanges() {
@@ -189,34 +183,56 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.releasePointForm.reset(this.releasePoint);
   }
 
-  // reset form fields and set validation based on release point type
+  onChange(newValue) {
+    if (newValue) {
+      this.releasePointForm.controls.statusYear.reset();
+    }
+  }
+
   releasePointType() {
-
     if (this.releasePointForm.controls.typeCode.value !== null) {
-      const releaseTypeControl = this.releasePointForm.get('typeCode');
-
-      if (releaseTypeControl.value.description === 'Fugitive') {
-        this.releasePointForm.controls.fugitiveLine1Latitude.enable();
-        this.releasePointForm.controls.fugitiveLine2Latitude.enable();
-        this.releasePointForm.controls.fugitiveLine1Longitude.enable();
-        this.releasePointForm.controls.fugitiveLine2Longitude.enable();
-        this.releasePointForm.controls.stackHeight.disable();
-        this.releasePointForm.controls.stackDiameter.disable();
-        this.releasePointForm.controls.exitGasTemperature.disable();
-        this.releasePointForm.controls.exitGasFlowRate.disable();
-        this.releasePointForm.controls.exitGasVelocity.disable();
-        this.releasePointForm.controls.stackHeight.reset();
-        this.releasePointForm.controls.stackDiameter.reset();
-        this.releasePointForm.controls.exitGasFlowRate.reset();
-        this.releasePointForm.controls.exitGasVelocity.reset();
-        this.releasePointForm.controls.exitGasTemperature.reset();
+      this.releaseType = this.releasePointForm.get('typeCode').value.description;
+      if (this.releaseType === 'Fugitive') {
         return true;
       }
+      return false;
+    }
+  }
+
+  // reset form fields and set validation based on release point type
+  setFormValidation() {
+    this.releasePointType();
+    this.setGasFlowUomValidation();
+    this.setVelocityUomValidation();
+    this.setGasFlowRangeValidation();
+    this.setGasVelocityRangeValidation();
+
+    this.releasePointForm.controls.fenceLineUomCode.setValue({ code: 'FT' });
+
+    if (this.releaseType === 'Fugitive') {
+      this.releasePointForm.controls.fugitiveLengthUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.fugitiveWidthUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.fugitiveHeightUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.fugitiveLine1Latitude.enable();
+      this.releasePointForm.controls.fugitiveLine2Latitude.enable();
+      this.releasePointForm.controls.fugitiveLine1Longitude.enable();
+      this.releasePointForm.controls.fugitiveLine2Longitude.enable();
+      this.releasePointForm.controls.stackHeight.disable();
+      this.releasePointForm.controls.stackDiameter.disable();
+      this.releasePointForm.controls.exitGasTemperature.disable();
+      this.releasePointForm.controls.stackHeightUomCode.disable();
+      this.releasePointForm.controls.stackDiameterUomCode.disable();
+      this.releasePointForm.controls.stackHeight.reset();
+      this.releasePointForm.controls.stackDiameter.reset();
+      this.releasePointForm.controls.exitGasTemperature.reset();
+      this.releasePointForm.controls.stackHeightUomCode.reset();
+      this.releasePointForm.controls.stackDiameterUomCode.reset();
+    } else {
+      this.releasePointForm.controls.stackHeightUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.stackDiameterUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.stackHeight.enable();
       this.releasePointForm.controls.stackDiameter.enable();
       this.releasePointForm.controls.exitGasTemperature.enable();
-      this.releasePointForm.controls.exitGasFlowRate.enable();
-      this.releasePointForm.controls.exitGasVelocity.enable();
       this.releasePointForm.controls.fugitiveLine1Latitude.disable();
       this.releasePointForm.controls.fugitiveLine2Latitude.disable();
       this.releasePointForm.controls.fugitiveLine1Longitude.disable();
@@ -229,17 +245,112 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.releasePointForm.controls.fugitiveWidth.reset();
       this.releasePointForm.controls.fugitiveHeight.reset();
       this.releasePointForm.controls.fugitiveAngle.reset();
-    }
-    return false;
-  }
-
-  onChange(newValue) {
-    if(newValue) {
-      this.releasePointForm.controls.statusYear.reset();
+      this.releasePointForm.controls.fugitiveLengthUomCode.reset();
+      this.releasePointForm.controls.fugitiveWidthUomCode.reset();
+      this.releasePointForm.controls.fugitiveHeightUomCode.reset();
     }
   }
 
-  // Stack diameter must be less than stack height
+  setGasFlowUomValidation() {
+    if (this.releasePointForm.controls.exitGasFlowRate.value !== null && this.releasePointForm.controls.exitGasFlowRate.value !== '') {
+      this.releasePointForm.controls.exitGasFlowUomCode.setValidators([Validators.required]);
+      this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
+      this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
+    } else {
+      this.releasePointForm.controls.exitGasFlowUomCode.setValidators([]);
+      this.releasePointForm.controls.exitGasFlowUomCode.reset();
+    }
+  }
+
+  setVelocityUomValidation() {
+    if (this.releasePointForm.controls.exitGasVelocity.value !== null && this.releasePointForm.controls.exitGasVelocity.value !== '') {
+      this.releasePointForm.controls.exitGasVelocityUomCode.setValidators([Validators.required]);
+      this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
+      this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
+    } else {
+      this.releasePointForm.controls.exitGasVelocityUomCode.setValidators([]);
+      this.releasePointForm.controls.exitGasVelocityUomCode.reset();
+    }
+  }
+
+  setGasFlowRangeValidation() {
+    if (this.releasePointForm.controls.exitGasFlowUomCode.value !== null) {
+      this.releasePointType();
+
+      if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
+        if (this.releaseType === 'Fugitive') {
+          this.releasePointForm.controls.exitGasFlowRate.setValidators([Validators.min(0), Validators.max(200000)]);
+        } else {
+          this.releasePointForm.controls.exitGasFlowRate.setValidators([Validators.min(0.00000001), Validators.max(200000)]);
+        }
+        this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
+        this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
+      } else {
+        if (this.releaseType === 'Fugitive') {
+          this.releasePointForm.controls.exitGasFlowRate.setValidators([Validators.min(0), Validators.max(12000000)]);
+        } else {
+          this.releasePointForm.controls.exitGasFlowRate.setValidators([Validators.min(0.00000001), Validators.max(12000000)]);
+        }
+        this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
+        this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
+      }
+    }
+  }
+
+  setGasVelocityRangeValidation() {
+    if (this.releasePointForm.controls.exitGasVelocityUomCode.value !== null) {
+      this.releasePointType();
+
+      if (this.releasePointForm.controls.exitGasVelocityUomCode.value.code === 'FPS') {
+        if (this.releaseType === 'Fugitive') {
+          this.releasePointForm.controls.exitGasVelocity.setValidators([Validators.min(0), Validators.max(400)]);
+        } else {
+          this.releasePointForm.controls.exitGasVelocity.setValidators([Validators.min(0.001), Validators.max(1500)]);
+        }
+        this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
+        this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
+      } else {
+        if (this.releaseType === 'Fugitive') {
+          this.releasePointForm.controls.exitGasVelocity.setValidators([Validators.min(0), Validators.max(24000)]);
+        } else {
+          this.releasePointForm.controls.exitGasVelocity.setValidators([Validators.min(0.060), Validators.max(90000)]);
+        }
+        this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
+        this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
+      }
+    }
+  }
+
+  // Check flow and velocity uom
+  uomCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const velocityUom = control.get('exitGasVelocityUomCode');
+      const flowUom = control.get('exitGasFlowUomCode');
+
+      if ((velocityUom.value !== null && flowUom.value !== null) &&
+        (velocityUom.value.code.charAt(velocityUom.value.code.length-1) !== flowUom.value.code.charAt(flowUom.value.code.length-1))) {
+          return { invalidUnits: true };
+        }
+      return null;
+    };
+  }
+
+  // Exit gas flow rate or Exit gas velocity must be entered
+  exitGasFlowCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const flowRate = control.get('exitGasFlowRate');
+      const velocity = control.get('exitGasVelocity');
+
+      if (this.releaseType !== 'Fugitive') {
+        if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
+          return { invalidVelocity: true };
+        }
+        return null;
+      }
+    };
+  }
+
+  // Stack diameter must be less than stack height.
   stackDiameterCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const diameter = control.get('stackDiameter'); // ft
@@ -253,14 +364,16 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   }
 
   // Exit gas flow input must be within +/-5% of computed flow
-  exitFlowCheck(): ValidatorFn {
+  exitFlowConsistencyCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const diameter = control.get('stackDiameter'); // ft
-      const exitVelocity = control.get('exitGasVelocity'); // fps
-      const exitFlowRate = control.get('exitGasFlowRate'); // acfs
+      const exitVelocity = control.get('exitGasVelocity'); // fps/fpm
+      const exitFlowRate = control.get('exitGasFlowRate'); // acfs/acfm
       let valid = true;
 
-      if (diameter.value !== null && exitVelocity.value !== null && exitFlowRate.value !== null) {
+      if ((diameter.value !== null) &&
+        (exitVelocity.value !== null && exitVelocity.value !== '') &&
+        (exitFlowRate.value !== null && exitFlowRate.value !== '')) {
 
         const computedArea = (((1/4)*Math.PI)*(Math.pow(diameter.value, 2))); // sf
         const computedFlow = (computedArea*exitVelocity.value); // cfs
