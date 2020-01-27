@@ -2,6 +2,8 @@ package gov.epa.cef.web.service.impl;
 
 import java.util.ArrayList; 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -391,11 +393,14 @@ public class LookupServiceImpl implements LookupService {
     
     @Override
     public List<CodeLookupDto> retrieveNaicsCode() {
-
+    	
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
         Iterable<NaicsCode> entities = naicsCodeRepo.findAll(Sort.by(Direction.ASC, "code"));
+        List<NaicsCode> sixDigitCode = StreamSupport.stream(entities.spliterator(), false)
+            .filter(entity ->  entity.getCode().toString().length() == 6)
+            .collect(Collectors.toList());
 
-        entities.forEach(entity -> {
+        sixDigitCode.forEach(entity -> {
             result.add(lookupMapper.naicsCodeToDto(entity));
         });
         return result;
