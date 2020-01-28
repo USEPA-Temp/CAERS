@@ -74,7 +74,7 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
     }
 
   openFacilityNaicsModal() {
-    const modalRef = this.modalService.open(FacilityNaicsModalComponent, { size: 'xl', backdrop: 'static', scrollable: true });
+    const modalRef = this.modalService.open(FacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
     modalRef.componentInstance.facilityNaics = this.tableData;
 

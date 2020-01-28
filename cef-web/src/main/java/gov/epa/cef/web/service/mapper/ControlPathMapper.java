@@ -14,8 +14,6 @@ import gov.epa.cef.web.service.dto.postOrder.ControlPathPostOrderDto;
 @Mapper(componentModel = "spring", uses = {ReleasePointApptMapper.class})
 public interface ControlPathMapper {
 
-    ControlPathPostOrderDto toPostOrderDto(ControlPath source);
-
     List<ControlPathPostOrderDto> toPostOrderDtoList(List<ControlPath> source);
     
     @Mapping(source="facilitySite.id", target="facilitySiteId")

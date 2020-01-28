@@ -21,11 +21,11 @@ public class ControlAssignment extends BaseAuditEntity {
     @JoinColumn(name = "control_id", nullable = false)
     private Control control;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_path_id", nullable = false)
     private ControlPath controlPath;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_path_child_id", nullable = false)
     private ControlPath controlPathChild;
     

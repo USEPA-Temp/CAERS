@@ -16,6 +16,7 @@ import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-ty
 })
 export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
+  @Input() unitIdentifier: string;
   aircraftSCCcheck = false;
 
   processForm = this.fb.group({

@@ -6,7 +6,7 @@
         </div>
         <label for="latitudeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Latitude:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="10" id="latitudeInput" formControlName="latitude">
+            <input type="text" class="form-control" maxlength="10" id="latitudeInput" formControlName="latitude" readonly>
             <app-validation-message [control]="facilitySiteForm.get('latitude')"></app-validation-message>
         </div>
         <label for="facilityStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Status:</strong></label>
@@ -21,12 +21,12 @@
     <div class="row pb-1">
         <label for="facilityNameInput" class="col-sm-6 col-md-2 col-form-label"><strong>Facility Name:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="80" id="facilityNameInput" formControlName="name">
+            <input type="text" class="form-control" maxlength="80" id="facilityNameInput" formControlName="name" readonly>
             <app-validation-message [control]="facilitySiteForm.get('name')"></app-validation-message>
         </div>
         <label for="longitudeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Longitude:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="11" id="longitudeInput" formControlName="longitude">
+            <input type="text" class="form-control" maxlength="11" id="longitudeInput" formControlName="longitude" readonly>
             <app-validation-message [control]="facilitySiteForm.get('longitude')"></app-validation-message>
         </div>
         <label for="statusYearInput" class="col-sm-6 col-md-2 col-form-label"><strong>Status Year:</strong></label>
@@ -39,7 +39,7 @@
     <div class="row pb-1">
         <label for="streetAddressInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Facility Address:</strong></label>
         <div class="col-sm-8 col-lg-10">
-            <input type="text" class="form-control"  maxlength="100" id="streetAddressInput" formControlName="streetAddress">
+            <input type="text" class="form-control"  maxlength="100" id="streetAddressInput" formControlName="streetAddress" readonly>
             <app-validation-message [control]="facilitySiteForm.get('streetAddress')"></app-validation-message>
         </div>
     </div>
@@ -47,19 +47,19 @@
     <div class="row pb-1">
         <label for="cityInput" class="col-sm-4 col-lg-2 col-form-label"><strong>City:</strong></label>
         <div class="col-sm-6 col-lg-2">
-            <input type="text" maxlength="60" class="form-control" id="city" formControlName="city">
+            <input type="text" maxlength="60" class="form-control" id="city" formControlName="city" readonly>
             <app-validation-message [control]="facilitySiteForm.get('city')"></app-validation-message>
         </div>
         <label for="stateCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>State:</strong></label>
         <div class="col-sm-6 col-lg-2">
-            <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode">
+            <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode" disabled>
                 <option *ngFor="let opt of fipsStateCode" [ngValue]="opt">{{opt?.uspsCode}}</option>
             </select>
             <app-validation-message [control]="facilitySiteForm.controls.stateCode"></app-validation-message>
         </div>
         <label for="postalCodeInput" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
         <div class="col-sm-2 col-lg-2">
-            <input type="text" maxlength="10" class="form-control" id="postalCodeInput" formControlName="postalCode">
+            <input type="text" maxlength="10" class="form-control" id="postalCodeInput" formControlName="postalCode" readonly>
             <app-validation-message [control]="facilitySiteForm.get('postalCode')"></app-validation-message>
         </div>
     </div>

@@ -26,6 +26,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EmissionFormulaVariable } from 'src/app/shared/models/emission-formula-variable';
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
+import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 
 @Component({
   selector: 'app-emission-details',
@@ -48,6 +49,7 @@ export class EmissionDetailsComponent implements OnInit {
   readOnlyMode = true;
 
   processUrl: string;
+  unitIdentifier: string;
 
   emissionForm = this.fb.group({
     pollutant: [null, Validators.required],
@@ -72,6 +74,7 @@ export class EmissionDetailsComponent implements OnInit {
 
   constructor(
     private emissionService: EmissionService,
+    private emissionUnitService: EmissionUnitService,
     private periodService: ReportingPeriodService,
     private processService: EmissionsProcessService,
     private efService: EmissionFactorService,
@@ -184,6 +187,11 @@ export class EmissionDetailsComponent implements OnInit {
           this.process = process;
 
           this.processUrl = `/facility/${params.get('facilityId')}/report/${params.get('reportId')}/${BaseReportUrl.EMISSIONS_PROCESS}/${this.process.id}`;
+
+          this.emissionUnitService.retrieve(process.emissionsUnitId)
+          .subscribe(unit => {
+            this.unitIdentifier = unit.unitIdentifier;
+          });
         });
       });
     });
@@ -287,7 +295,9 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.emissionForm.valid || (this.totalManualEntry && !this.emissionForm.controls.comments.value)) {
       this.emissionForm.markAllAsTouched();
       if (this.totalManualEntry && !this.emissionForm.controls.comments.value) {
-        this.toastr.error('', 'Comments field must be populated for this pollutant ', {positionClass: 'toast-top-right'});
+        this.toastr.error('', 'You must enter an explanation of the total emissions calculation when the ' +
+        this.emissionForm.controls.emissionsCalcMethodCode.value.description +
+        ' calculation method is selected.', {positionClass: 'toast-top-right'});
       }
     } else {
 

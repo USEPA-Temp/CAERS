@@ -7,16 +7,15 @@
   </div>
 
   <div class="modal-body">
-      Select NAICS Code: 
-      <select id="facilityNAICS" class="form-control" formControlName="selectedNaics">
-        <option *ngFor="let opt of facilityNaicsCode" [ngValue]="opt">{{opt?.code}}&nbsp;-&nbsp;{{opt?.description}}</option>
-      </select>
-      <app-validation-message [control]="naicsForm.get('selectedNaics')"></app-validation-message>
-    
-      <div class="checkbox">
-        Make this Primary NAICS for facility?
-        <input id="primaryFlag" type="checkbox" [checked]="primaryFlag" (change)="setPrimary()">
-      </div>
+    Select NAICS Code: 
+    <input id="facilityNAICS" type="text" class="form-control" formControlName="selectedNaics"
+    [ngbTypeahead]="searchNAICS" [inputFormatter]="naicsFormatter" [editable]="false" [resultFormatter]="naicsFormatter"/>
+    <app-validation-message [control]="naicsForm.get('selectedNaics')"></app-validation-message>
+  
+    <div class="checkbox">
+      Make this Primary NAICS for facility?
+      <input id="primaryFlag" type="checkbox" [checked]="primaryFlag" (change)="setPrimary()">
+    </div>
   </div>
 
   <div class="modal-footer">

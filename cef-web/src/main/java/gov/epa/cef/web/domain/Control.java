@@ -46,7 +46,7 @@ public class Control extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
     private List<ControlAssignment> assignments = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "control")
     private List<ControlPollutant> pollutants = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

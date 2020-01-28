@@ -1,0 +1,45 @@
+<form [formGroup]="controlPathAssignmentForm" >
+    <div class="modal-header">
+        <h4 class="modal-title w-100"><strong>Control Path Assignment</strong></h4>
+    </div>
+
+    <div class="modal-body">
+        <strong>You must select either a Control or a Control Path</strong>
+		<br>
+		<br>
+		<strong>Control</strong>
+        <select type="text" id="controlSelect" class="form-control" formControlName="control">
+            <option [ngValue]="null">Control</option>
+            <option *ngFor="let c of controls" [ngValue]="c">
+                {{c.identifier}}
+            </option>
+        </select>
+        <app-validation-message [control]="controlPathAssignmentForm.get('control')"></app-validation-message>
+		<br>
+		<Strong>Control Path</Strong>
+		<select type="text" id="controlPathSelect" class="form-control" formControlName="controlPathChild">
+            <option [ngValue]="null">Control Path</option>
+            <option *ngFor="let cp of controlPaths" [ngValue]="cp">
+                {{cp.pathId}}
+            </option>
+		</select>
+		<span [hidden]="!controlPathAssignmentForm.hasError('controlAndPathSelected')" style="color:red">You can only select a control OR a path, not both</span>
+        <app-validation-message [control]="controlPathAssignmentForm.get('controlPathChild')"></app-validation-message>
+        <br>
+        <strong>Enter the Apportionment Percentage</strong>
+        <br>
+        <input type="text" maxlength="3" formControlName="percentApportionment" id="percentInput">
+		<app-validation-message [control]="controlPathAssignmentForm.get('percentApportionment')"></app-validation-message>
+		<br>
+		<br>
+		<strong>Enter the Sequence Number</strong>
+        <br>
+        <input formControlName="sequenceNumber" id="sequenceNumberInput">
+        <app-validation-message [control]="controlPathAssignmentForm.get('sequenceNumber')"></app-validation-message>
+    </div>
+
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
+        <button type="button" class="btn btn-primary mr-2" (click)="onClose()">Cancel</button>
+    </div>
+</form> 

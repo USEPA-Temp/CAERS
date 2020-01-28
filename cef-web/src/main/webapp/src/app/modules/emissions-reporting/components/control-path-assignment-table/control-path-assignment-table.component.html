@@ -1,0 +1,35 @@
+
+<div class="mh-100 overflow-auto">
+  <table class="table table-sm table-striped table-bordered">
+    <thead class="thead-cef-medium">
+    <tr>
+      <th scope="col" sortable="pollutantName" (sort)="onSort($event)">Sequence Number</th>
+      <th scope="col" sortable="pollutantCode" (sort)="onSort($event)">Assignment</th>
+      <th scope="col" sortable="pollutantCasId" (sort)="onSort($event)">Percent Apportionment</th>
+      <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
+		<th scope="col"></th>
+      </ng-container>
+     
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of tableData">
+      <td>{{item.sequenceNumber}}</td>
+      <td>{{item?.control?.identifier}}{{item?.controlPathChild?.pathId}}</td>
+      <td>{{item.percentApportionment}}</td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openEditModal(item)"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item?.control?.identifier, item.id, item?.controlPathChild?.pathId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+      </ng-container>
+     
+    </tr>
+      <ng-container *ngIf="!readOnlyMode">
+        <tr>
+          <td colspan="4"></td>
+          <td><button style="color:#209c98;border:none;background-color: Transparent;float: right;" (click)="openCreateModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td> 
+        </tr>
+      </ng-container> 
+    </tbody>
+  </table>
+</div>
