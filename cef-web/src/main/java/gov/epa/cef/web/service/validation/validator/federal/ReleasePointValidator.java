@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 
 import gov.epa.cef.web.domain.ReleasePoint;
+import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -121,7 +122,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         	}
         }
         
-     // Exit Gas Velocity Ranges
+        // Exit Gas Velocity Ranges
         if (releasePoint.getExitGasVelocityUomCode() != null && releasePoint.getExitGasVelocity() != null) {
         	if (FUGITIVE_RELEASE_POINT_CODE.contentEquals(releasePoint.getTypeCode().getCode())) {
         		if ("FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
@@ -165,6 +166,60 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         	}
         }
         
+        if (releasePoint.getTypeCode().getCode().equals(FUGITIVE_RELEASE_POINT_CODE)) {
+        	if (releasePoint.getFugitiveHeight() != null
+        		&& (releasePoint.getFugitiveHeight() < 0 || releasePoint.getFugitiveHeight() > 500)) {
+        	
+	        	result = false;
+	        	context.addFederalError(
+	        			ValidationField.RP_FUGITIVE.value(),
+	        			"releasePoint.fugitive.heightRange",
+	        			createValidationDetails(releasePoint));
+        	}
+        	
+        	if (releasePoint.getFugitiveLength() != null
+          		&& (releasePoint.getFugitiveLength() < 1 || releasePoint.getFugitiveLength() > 10000)) {
+          	
+  	        	result = false;
+  	        	context.addFederalError(
+  	        			ValidationField.RP_FUGITIVE.value(),
+  	        			"releasePoint.fugitive.lengthRange",
+  	        			createValidationDetails(releasePoint));
+          }
+        	
+        	if (releasePoint.getFugitiveWidth() != null
+          		&& (releasePoint.getFugitiveWidth() < 1 || releasePoint.getFugitiveWidth() > 10000)) {
+          	
+  	        	result = false;
+  	        	context.addFederalError(
+  	        			ValidationField.RP_FUGITIVE.value(),
+  	        			"releasePoint.fugitive.widthRange",
+  	        			createValidationDetails(releasePoint));
+          }
+        	
+        	if (releasePoint.getFugitiveAngle() != null
+          		&& (releasePoint.getFugitiveAngle() < 0 || releasePoint.getFugitiveAngle() > 89)) {
+          	
+  	        	result = false;
+  	        	context.addFederalError(
+  	        			ValidationField.RP_FUGITIVE.value(),
+  	        			"releasePoint.fugitive.angleRange",
+  	        			createValidationDetails(releasePoint));
+          }
+        	
+        	if (!validateUomFt(validatorContext, releasePoint, releasePoint.getFugitiveWidth(), releasePoint.getFugitiveWidthUomCode(), "Fugitive Width")) {
+        		result = false;
+        	}
+        	
+        	if (!validateUomFt(validatorContext, releasePoint, releasePoint.getFugitiveLength(), releasePoint.getFugitiveLengthUomCode(), "Fugitive Length")) {
+        		result = false;
+        	}
+        	
+        	if (!validateUomFt(validatorContext, releasePoint, releasePoint.getFugitiveHeight(), releasePoint.getFugitiveHeightUomCode(), "Fugitive Height")) {
+        		result = false;
+        	}
+        }
+        
         if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocityUomCode() == null) ||
           	(releasePoint.getExitGasVelocity() == null && releasePoint.getExitGasVelocityUomCode() != null)) {
          
@@ -186,10 +241,42 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                     "releasePoint.exitGasVelocity.required",
                     createValidationDetails(releasePoint));
           }
+
+        if (releasePoint.getFenceLineDistance() != null
+        		&& (releasePoint.getFenceLineDistance() < 0 || releasePoint.getFenceLineDistance() > 99999)) {
+        	
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_FENCELINE.value(),
+        			"releasePoint.fenceLine.range",
+        			createValidationDetails(releasePoint));
+      	}
+        
+        if (!validateUomFt(validatorContext, releasePoint, releasePoint.getFenceLineDistance(), releasePoint.getFenceLineUomCode(), "Fence Line Distance")) {
+        	result = false;
+      	}
         
         return result;
     }
+    
+    public boolean validateUomFt(ValidatorContext validatorContext, ReleasePoint releasePoint, Long measure, UnitMeasureCode uom, String uomField) {
 
+      CefValidatorContext context = getCefValidatorContext(validatorContext);
+      boolean result = true;
+      
+      if ((uom != null && !"FT".contentEquals(uom.getCode())) || (uom == null && measure != null)) {
+      	
+      	result = false;
+      	context.addFederalError(
+      			ValidationField.RP_UOM_FT.value(),
+      			"releasePoint.uom.ft",
+      			createValidationDetails(releasePoint),
+      			uomField);
+  		  }
+      
+      return result;
+    }
+    
     private ValidationDetailDto createValidationDetails(ReleasePoint source) {
 
         String description = MessageFormat.format("Release Point: {0}", source.getReleasePointIdentifier());
