@@ -112,7 +112,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
         testData.setExitGasFlowRate(0.0);
-        
+
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
@@ -127,7 +127,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
+    
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
         
@@ -281,8 +281,162 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	
     	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
     	assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
-
     }
+    
+    @Test
+    public void fenceLineDistanceRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+
+        cefContext = createContext();
+        testData.setFenceLineDistance((long) -1);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_FENCELINE.value()) && errorMap.get(ValidationField.RP_FENCELINE.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setFenceLineDistance((long) 100000);
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void fugitiveHeightRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+
+        cefContext = createContext();
+        testData.setFugitiveHeight((long) -1);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setFugitiveHeight((long) 600);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void fugitiveLengthRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+
+        cefContext = createContext();
+        testData.setFugitiveLength((long) 0);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setFugitiveLength((long) 20000);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void fugitiveWidthRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+
+        cefContext = createContext();
+        testData.setFugitiveWidth((long) 0);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setFugitiveWidth((long) 20000);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void fugitiveAngleRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+
+        cefContext = createContext();
+        testData.setFugitiveAngle((long) -1);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setFugitiveWidth((long) 90);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void uomFeetFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+
+        UnitMeasureCode uomFT = new UnitMeasureCode();
+        uomFT.setCode("FT");  
+        UnitMeasureCode uomM = new UnitMeasureCode();
+        uomM.setCode("M");  
+        
+        cefContext = createContext();
+        testData.setFenceLineUomCode(uomM);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+   
+        cefContext = createContext();
+        testData.setFenceLineUomCode(uomFT);
+        testData.setFugitiveLengthUomCode(uomM);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.setFugitiveLengthUomCode(uomFT);
+        testData.setFugitiveWidthUomCode(uomM);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData.setFugitiveWidthUomCode(uomFT);
+        testData.setFugitiveHeightUomCode(uomM);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
     
     private ReleasePoint createBaseReleasePoint() {
     	
@@ -295,14 +449,40 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         UnitMeasureCode velUom = new UnitMeasureCode();
         velUom.setCode("FPS");    
         
+        UnitMeasureCode distUom = new UnitMeasureCode();
+        distUom.setCode("FT");    
+        
         ReleasePoint result = new ReleasePoint();
         result.setExitGasTemperature((short) 50);
         result.setExitGasFlowRate(1000.0);
         result.setExitGasFlowUomCode(flowUom);
         result.setExitGasVelocity(100.0);
         result.setExitGasVelocityUomCode(velUom);
+        result.setFenceLineUomCode(distUom);
         result.setTypeCode(releasePointTypeCode);
 
         return result;
     }
+    
+    private ReleasePoint createBaseFugitiveReleasePoint() {
+    	
+    	ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+    	releasePointTypeCode.setCode("1");
+    	
+    	UnitMeasureCode distUom = new UnitMeasureCode();
+    	distUom.setCode("FT");
+    	
+    	ReleasePoint result = new ReleasePoint();
+    	result.setTypeCode(releasePointTypeCode);
+    	result.setFenceLineUomCode(distUom);
+    	result.setFugitiveLengthUomCode(distUom);
+    	result.setFugitiveWidthUomCode(distUom);
+    	result.setFugitiveHeightUomCode(distUom);
+    	result.setFenceLineDistance((long) 1);
+    	result.setFugitiveLength((long) 1);
+    	result.setFugitiveWidth((long) 1);
+    	result.setFugitiveHeight((long) 1);
+    	
+    	return result;
+  }
 }

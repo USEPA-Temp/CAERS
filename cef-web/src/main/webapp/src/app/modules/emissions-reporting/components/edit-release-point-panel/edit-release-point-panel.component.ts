@@ -47,7 +47,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.max(180),
     ]],
     fenceLineDistance: ['', [
-      Validators.min(1),
+      Validators.min(0),
       Validators.max(99999),
       wholeNumberValidator(),
     ]],
@@ -82,7 +82,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     ]],
     fugitiveLengthUomCode: [null],
     fugitiveAngle: ['', [
-      Validators.max(179),
+      Validators.max(89),
       Validators.min(0),
       wholeNumberValidator()
     ]],
