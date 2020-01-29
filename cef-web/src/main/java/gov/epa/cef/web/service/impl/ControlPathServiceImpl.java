@@ -15,6 +15,7 @@ import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.mapper.ControlAssignmentMapper;
+import gov.epa.cef.web.service.mapper.ControlMapper;
 import gov.epa.cef.web.service.mapper.ControlPathMapper;
 
 @Service
@@ -35,6 +36,12 @@ public class ControlPathServiceImpl implements ControlPathService {
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
     
+    @Autowired
+    private ControlPathServiceImpl controlPathservice;
+    
+    @Autowired
+    private ControlPathMapper controlPathMapper;
+      
     @Override
     public ControlPathDto retrieveById(Long id) {
         ControlPath result = getPathById(id);
@@ -184,10 +191,29 @@ public class ControlPathServiceImpl implements ControlPathService {
      * Update an existing Control Path Assignment from a DTO
      */
     public ControlAssignmentDto updateAssignment(ControlAssignmentDto dto) {
-    	
+    	ControlPathDto controlPathDto = new ControlPathDto();
+    	ControlPathDto controlPathChildDto = new ControlPathDto();
+    	if(dto.getControlPath() != null){
+        	controlPathDto = controlPathservice.retrieveById(dto.getControlPath().getId());	
+    	}
+    	if(dto.getControlPathChild() != null){
+    		controlPathChildDto = controlPathservice.retrieveById(dto.getControlPathChild().getId());
+    	}
+
     	ControlAssignment controlPathAssignment = assignmentRepo.findById(dto.getId()).orElse(null);
+    	dto.setControlPath(null);
+    	dto.setControlPathChild(null);
     	assignmentMapper.updateFromDto(dto, controlPathAssignment);
     	
+    	if(controlPathDto.getId() != null){
+        	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
+        	controlPathAssignment.setControlPath(controlPath);
+    	}
+    	if(controlPathChildDto.getId() != null){
+        	ControlPath controlPathChild = controlPathMapper.fromDto(controlPathChildDto);
+        	controlPathAssignment.setControlPathChild(controlPathChild);
+    	}
+
     	ControlAssignmentDto result = assignmentMapper.toDto(assignmentRepo.save(controlPathAssignment));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlAssignmentRepository.class);
     	return result;

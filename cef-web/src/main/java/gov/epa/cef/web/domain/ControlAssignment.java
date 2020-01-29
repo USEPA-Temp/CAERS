@@ -18,7 +18,7 @@ public class ControlAssignment extends BaseAuditEntity {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "control_id", nullable = false)
+    @JoinColumn(name = "control_id")
     private Control control;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,7 +26,7 @@ public class ControlAssignment extends BaseAuditEntity {
     private ControlPath controlPath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "control_path_child_id", nullable = false)
+    @JoinColumn(name = "control_path_child_id")
     private ControlPath controlPathChild;
     
     @Column(name = "sequence_number", nullable = false)

@@ -206,7 +206,7 @@ public class ControlPathApi {
     @DeleteMapping(value = "/controlAssignment/{controlPathAssignmentId}")
     public void deleteControlPathAssignment(@NotNull @PathVariable Long controlPathAssignmentId) {
     	
-//    	this.securityService.facilityEnforcer().enforceEntity(controlAssignmentId, ControlPathRepository.class);
+    	this.securityService.facilityEnforcer().enforceEntity(controlPathAssignmentId, ControlAssignmentRepository.class);
     	
     	controlPathService.deleteAssignment(controlPathAssignmentId);
     }
