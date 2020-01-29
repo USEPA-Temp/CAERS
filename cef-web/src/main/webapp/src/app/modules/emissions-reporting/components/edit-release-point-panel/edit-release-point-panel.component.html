@@ -55,7 +55,7 @@
         </div>
         <label for="fenceLineUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fence Line Distance UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" id="fenceLineUomCodeSelect" formControlName="fenceLineUomCode" [compareWith]="formUtils.compareCode" disabled>
+            <select type="text" class="form-control" id="fenceLineUomCodeSelect" formControlName="fenceLineUomCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>
@@ -112,7 +112,14 @@
                 <input type="text" class="form-control" id="stackHeight" formControlName="stackHeight" maxlength="9">
                 <app-validation-message [control]="releasePointForm.get('stackHeight')"></app-validation-message>
             </div>
-            
+            <label for="stackDiameter" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter Measure:</strong></label>
+            <div class="col-sm-6 col-md-2">
+                <input type="text" class="form-control" id="stackDiameter" formControlName="stackDiameter" maxlength="7">
+                <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
+                <div class="validation-warning" *ngIf="stackDiameterWarning?.invalidDiameter">
+                    Stack diameter should be less than stack height.
+                </div>
+            </div>
             <label for="exitGasTemperature" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Temperature Measure (F):</strong></label>
             <div class="col-sm-6 col-md-2">
                 <input type="text" class="form-control" id="exitGasTemperature" formControlName="exitGasTemperature" maxlength="4">
@@ -123,34 +130,18 @@
         <div class="row pb-1">
             <label for="stackHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <select type="text" class="form-control" id="stackHeightUomCodeSelect" formControlName="stackHeightUomCode" [compareWith]="formUtils.compareCode" disabled>
+                <select type="text" class="form-control" id="stackHeightUomCodeSelect" formControlName="stackHeightUomCode" [compareWith]="formUtils.compareCode">
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('stackHeightUomCode')"></app-validation-message>
             </div>
-            
-        </div>
-
-        <div class="row pb-1">
-            <label for="stackDiameter" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter Measure:</strong></label>
-            <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="stackDiameter" formControlName="stackDiameter" maxlength="7">
-                <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
-                <div class="validation-message" *ngIf="releasePointForm.errors?.invalidDiameter">
-                    Stack diameter must be less than stack height.
-                </div>
-            </div>
-        </div>
-
-        <div class="row pb-1">
             <label for="stackDiameterUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <select type="text" class="form-control" id="stackDiameterUomCodeSelect" formControlName="stackDiameterUomCode" [compareWith]="formUtils.compareCode" disabled>
+                <select type="text" class="form-control" id="stackDiameterUomCodeSelect" formControlName="stackDiameterUomCode" [compareWith]="formUtils.compareCode">
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('stackDiameterUomCode')"></app-validation-message>
             </div>
-            
         </div>
     </div>
 
@@ -181,14 +172,14 @@
             </div>
             <label for="fugitiveHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Height UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <select type="text" class="form-control" id="fugitiveHeightUomCodeSelect" formControlName="fugitiveHeightUomCode" [compareWith]="formUtils.compareCode" disabled>
+                <select type="text" class="form-control" id="fugitiveHeightUomCodeSelect" formControlName="fugitiveHeightUomCode" [compareWith]="formUtils.compareCode">
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('fugitiveHeightUomCode')"></app-validation-message>
             </div>
             <label for="fugitiveLengthUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Length UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <select type="text" class="form-control" id="fugitiveLengthUomCodeSelect" formControlName="fugitiveLengthUomCode" [compareWith]="formUtils.compareCode" disabled>
+                <select type="text" class="form-control" id="fugitiveLengthUomCodeSelect" formControlName="fugitiveLengthUomCode" [compareWith]="formUtils.compareCode">
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('fugitiveLengthUomCode')"></app-validation-message>
@@ -221,7 +212,7 @@
             </div>
             <label for="fugitiveWidthUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
-                <select type="text" class="form-control" id="fugitiveWidthUomCodeSelect" formControlName="fugitiveWidthUomCode" [compareWith]="formUtils.compareCode" disabled>
+                <select type="text" class="form-control" id="fugitiveWidthUomCodeSelect" formControlName="fugitiveWidthUomCode" [compareWith]="formUtils.compareCode">
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('fugitiveWidthUomCode')"></app-validation-message>

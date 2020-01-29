@@ -16,6 +16,7 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   @Input() releasePoint: ReleasePoint;
   releaseType: string;
+  stackDiameterWarning: any;
 
   releasePointForm = this.fb.group({
     releasePointIdentifier: ['', [
@@ -120,8 +121,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     stackHeightUomCode: [null],
     stackDiameter: ['', [
       Validators.required,
-      Validators.min(0.1),
-      Validators.max(100),
+      Validators.min(0.001),
+      Validators.max(300),
       Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
     ]],
     stackDiameterUomCode: [null],
@@ -362,7 +363,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const height = control.get('stackHeight'); // ft
 
       if (diameter.value > 0 && height.value > 0) {
-        return (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: true } : null;
+        this.stackDiameterWarning = (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: {diameter} } : null;
       }
       return null;
     };

@@ -393,6 +393,64 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void stackHeightRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+
+        cefContext = createContext();
+        testData.setStackHeight(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setStackHeight(0.5);
+        testData.setStackDiameter(0.001);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData.setStackHeight(1400.0);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void stackDiameterRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+
+        cefContext = createContext();
+        testData.setStackDiameter(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setStackDiameter(0.0);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData.setStackDiameter(400.0);
+        testData.setStackHeight(1300.0);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
     public void uomFeetFailTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -435,7 +493,42 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData = createBaseReleasePoint();
+        testData.setStackHeightUomCode(uomM);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+   
+        cefContext = createContext();
+        testData.setStackHeightUomCode(uomFT);
+        testData.setStackDiameterUomCode(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
+    
+    @Test
+    public void stackDiameterCheckCalculationFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+
+        cefContext = createContext();
+        testData.setStackDiameter(10.0);
+        testData.setStackHeight(5.0);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
+    }
+
     
     
     private ReleasePoint createBaseReleasePoint() {
@@ -458,7 +551,12 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         result.setExitGasFlowUomCode(flowUom);
         result.setExitGasVelocity(100.0);
         result.setExitGasVelocityUomCode(velUom);
+        result.setFenceLineDistance((long) 1);
         result.setFenceLineUomCode(distUom);
+        result.setStackHeightUomCode(distUom);
+        result.setStackDiameterUomCode(distUom);
+        result.setStackHeight(1.0);
+        result.setStackDiameter(0.5);
         result.setTypeCode(releasePointTypeCode);
 
         return result;
