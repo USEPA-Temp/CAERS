@@ -3,16 +3,22 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
+import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
+import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
 import org.junit.Before;
@@ -46,9 +52,12 @@ public class EmissionServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ReportingPeriodRepository periodRepo;
-    
+
     @Mock
     private ReportHistoryRepository historyRepo;
+
+    @Mock
+    private UnitMeasureCodeRepository uomRepo;
 
     @Mock
     EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
@@ -58,7 +67,7 @@ public class EmissionServiceImplTest extends BaseServiceTest {
 
     @InjectMocks
     EmissionServiceImpl emissionServiceImpl;
-    
+
     private List<EmissionFormulaVariableDto> variableDtoList;
     private List<EmissionFormulaVariable> variableList;
 
@@ -152,8 +161,25 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emissionsByFacilityAndCASDto.setReportStatus("ACCEPTED");
         emissionsByFacilityAndCASDto.setReportId(37L);
 
+        UnitMeasureCode lbUom = new UnitMeasureCode();
+        lbUom.setCode("LB");
+        lbUom.setDescription("POUNDS");
+        lbUom.setUnitType("MASS");
+        lbUom.setCalculationVariable("[lb]");
+
+        UnitMeasureCode tonUom = new UnitMeasureCode();
+        tonUom.setCode("TON");
+        tonUom.setDescription("TONS");
+        tonUom.setUnitType("MASS");
+        tonUom.setCalculationVariable("sTon");
+
         ReportingPeriod rp = new ReportingPeriod();
         rp.setCalculationParameterValue(new BigDecimal(10));
+        rp.setCalculationParameterUom(lbUom);
+        rp.setEmissionsProcess(new EmissionsProcess());
+        rp.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
+        rp.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
+        rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(emissionsReport);
 
         variableDtoList = new ArrayList<EmissionFormulaVariableDto>();
         variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(1), "A"));
@@ -161,7 +187,7 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(3), "U"));
         variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(4), "SU"));
         variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(5), "CaSu"));
-        
+
         variableList = new ArrayList<EmissionFormulaVariable>();
         variableList.add(createEmissionFormulaVariable(new BigDecimal(1), "A"));
         variableList.add(createEmissionFormulaVariable(new BigDecimal(2), "S"));
@@ -179,6 +205,8 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         when(emissionMapper.formulaVariableFromDtoList(variableDtoList)).thenReturn(variableList);
         when(periodRepo.findById(1L)).thenReturn(Optional.of(rp));
         when(historyRepo.retrieveMaxSubmissionDateByReportId(37L)).thenReturn(returnDate);
+        when(uomRepo.findById("LB")).thenReturn(Optional.of(lbUom));
+        when(uomRepo.findById("TON")).thenReturn(Optional.of(tonUom));
     }
 
     @Test
@@ -189,6 +217,13 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emission.setEmissionsFactorFormula("A+(CaSu*U)^(SU/S)");
 
         emission.setVariables(variableDtoList);
+
+        UnitMeasureCodeDto uomDto = new UnitMeasureCodeDto();
+        uomDto.setCode("LB");
+
+        emission.setEmissionsNumeratorUom(uomDto);
+        emission.setEmissionsDenominatorUom(uomDto);
+        emission.setEmissionsUomCode(uomDto);
 
         EmissionDto result = emissionServiceImpl.calculateTotalEmissions(emission);
 
@@ -201,14 +236,23 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         EmissionDto emission = new EmissionDto();
         emission.setFormulaIndicator(true);
         emission.setReportingPeriodId(1L);
-        emission.setEmissionsFactorFormula("(A+(CaSu*U)^(SU/S)) * [km]/[m]");
+        emission.setEmissionsFactorFormula("(A+(CaSu*U)^(SU/S))");
 
         emission.setVariables(variableDtoList);
 
+        UnitMeasureCodeDto lbUomDto = new UnitMeasureCodeDto();
+        lbUomDto.setCode("LB");
+        UnitMeasureCodeDto tonUomDto = new UnitMeasureCodeDto();
+        tonUomDto.setCode("TON");
+
+        emission.setEmissionsNumeratorUom(tonUomDto);
+        emission.setEmissionsDenominatorUom(lbUomDto);
+        emission.setEmissionsUomCode(lbUomDto);
+
         EmissionDto result = emissionServiceImpl.calculateTotalEmissions(emission);
 
-        assertEquals(0, new BigDecimal(226000).compareTo(result.getEmissionsFactor()));
-        assertEquals(0, new BigDecimal(2260000).compareTo(result.getTotalEmissions()));
+        assertEquals(0, new BigDecimal(226).compareTo(result.getEmissionsFactor()));
+        assertEquals(0, new BigDecimal(4520000).compareTo(result.getTotalEmissions()));
     }
 
     @Test
@@ -217,6 +261,13 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         emission.setFormulaIndicator(false);
         emission.setReportingPeriodId(1L);
         emission.setEmissionsFactor(new BigDecimal(2.5));
+
+        UnitMeasureCodeDto uomDto = new UnitMeasureCodeDto();
+        uomDto.setCode("LB");
+
+        emission.setEmissionsNumeratorUom(uomDto);
+        emission.setEmissionsDenominatorUom(uomDto);
+        emission.setEmissionsUomCode(uomDto);
 
         EmissionDto result = emissionServiceImpl.calculateTotalEmissions(emission);
 

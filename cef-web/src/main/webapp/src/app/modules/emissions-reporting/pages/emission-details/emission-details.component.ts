@@ -244,14 +244,14 @@ export class EmissionDetailsComponent implements OnInit {
 
   onCalculate() {
     if (!(this.reportingPeriod.calculationParameterUom && this.emissionForm.get('emissionsDenominatorUom').value
-          && this.reportingPeriod.calculationParameterUom.code === this.emissionForm.get('emissionsDenominatorUom').value.code)) {
+          && this.reportingPeriod.calculationParameterUom.unitType === this.emissionForm.get('emissionsDenominatorUom').value.unitType)) {
       this.efDenominatorMismatch = true;
     } else {
       this.efDenominatorMismatch = false;
     }
 
     if (!(this.emissionForm.get('emissionsUomCode').value && this.emissionForm.get('emissionsNumeratorUom').value
-          && this.emissionForm.get('emissionsUomCode').value.code === this.emissionForm.get('emissionsNumeratorUom').value.code)) {
+          && this.emissionForm.get('emissionsUomCode').value.unitType === this.emissionForm.get('emissionsNumeratorUom').value.unitType)) {
       this.efNumeratorMismatch = true;
     } else {
       this.efNumeratorMismatch = false;
