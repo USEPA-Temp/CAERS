@@ -105,7 +105,7 @@
         </div>
     </div>
 
-    <div *ngIf="!releasePointType()">
+    <div *ngIf="!isReleasePointFugitiveType()">
         <div class="row pb-1">
             <label for="stackHeight" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height Measure:</strong></label>
             <div class="col-sm-6 col-md-2">
@@ -145,7 +145,7 @@
         </div>
     </div>
 
-    <div *ngIf="releasePointType()">
+    <div *ngIf="isReleasePointFugitiveType()">
         <div class="row pb-1">
             <label for="fugitiveLine1Latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 1 Lat:</strong></label>
             <div class="col-sm-6 col-md-2">

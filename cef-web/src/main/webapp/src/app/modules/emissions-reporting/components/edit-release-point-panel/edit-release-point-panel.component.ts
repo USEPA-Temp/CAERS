@@ -190,7 +190,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  releasePointType() {
+  isReleasePointFugitiveType() {
     if (this.releasePointForm.controls.typeCode.value !== null) {
       this.releaseType = this.releasePointForm.get('typeCode').value.description;
       if (this.releaseType === 'Fugitive') {
@@ -202,7 +202,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   // reset form fields and set validation based on release point type
   setFormValidation() {
-    this.releasePointType();
+    this.isReleasePointFugitiveType();
     this.setGasFlowUomValidation();
     this.setVelocityUomValidation();
     this.setGasFlowRangeValidation();
@@ -281,7 +281,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   setGasFlowRangeValidation() {
     if (this.releasePointForm.controls.exitGasFlowUomCode.value !== null) {
-      this.releasePointType();
+      this.isReleasePointFugitiveType();
 
       if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
         if (this.releaseType === 'Fugitive') {
@@ -305,7 +305,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   setGasVelocityRangeValidation() {
     if (this.releasePointForm.controls.exitGasVelocityUomCode.value !== null) {
-      this.releasePointType();
+      this.isReleasePointFugitiveType();
 
       if (this.releasePointForm.controls.exitGasVelocityUomCode.value.code === 'FPS') {
         if (this.releaseType === 'Fugitive') {
