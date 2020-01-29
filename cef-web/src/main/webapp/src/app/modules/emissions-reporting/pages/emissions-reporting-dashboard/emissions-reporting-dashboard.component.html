@@ -8,7 +8,14 @@
 				<div>{{report.year}} Report</div>
 
 				<div class="pipe-list">
-					<a class="underline-on-hover cursor-pointer text-dark font-weight-bold pipe-item"
+                    <a [routerLink]="['/facility', report.eisProgramId, 'report', 'upload', report.year]"
+                       class="text-dark font-weight-bold pipe-item"
+                       *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'VALIDATED'])">
+                        <span>Upload Report</span>
+                    </a>
+
+                    <a href="javascript:void(0);"
+                       class="text-dark font-weight-bold pipe-item"
 						(click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
 
 					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
@@ -18,9 +25,9 @@
 					<a href="#" class="text-dark font-weight-bold pipe-item"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>
 
-					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
-						class="text-dark font-weight-bold pipe-item"
-						*ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
+                    <a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
+                       class="text-dark font-weight-bold pipe-item"
+                       *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 
 					<a [routerLink]="['.']"
 						class="text-dark font-weight-bold pipe-item"
@@ -36,7 +43,7 @@
 					<a href="#" class="text-dark font-weight-bold pipe-item"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
 
-					<a href="#" class="text-dark font-weight-bold pipe-item" 
+					<a href="#" class="text-dark font-weight-bold pipe-item"
 						*ngIf="report.status !== 'NEW'"
 						[routerLink]="['.']" (click)="openDeleteModal(report.eisProgramId, report.id, report.year)">Delete</a>
 				</div>
@@ -54,8 +61,8 @@
 						<button type="button" class="btn btn-primary" (click)="onFailedToCreateCloseClick()">OK</button>
 					</div>
 				</ng-template>
-			</div>		
+			</div>
 		</div>
-		
+
 	</div>
 </div>

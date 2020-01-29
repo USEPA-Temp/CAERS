@@ -60,6 +60,7 @@ import { ControlPathsTableComponent } from './components/control-paths-table/con
 import { ControlPathDetailsComponent } from './pages/control-path-details/control-path-details.component';
 import { EditControlPathInfoPanelComponent } from './components/edit-control-path-info-panel/edit-control-path-info-panel.component';
 import { CreateControlPathComponent } from './pages/create-control-path/create-control-path.component';
+import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bulk-upload.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { CreateControlPathComponent } from './pages/create-control-path/create-c
     ControlPathsTableComponent,
     ControlPathDetailsComponent,
     EditControlPathInfoPanelComponent,
-    CreateControlPathComponent
+    CreateControlPathComponent,
+    ReportBulkUploadComponent
   ],
   imports: [
     CommonModule,

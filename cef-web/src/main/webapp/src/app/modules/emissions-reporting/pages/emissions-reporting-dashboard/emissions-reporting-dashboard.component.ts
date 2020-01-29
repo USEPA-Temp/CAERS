@@ -204,4 +204,5 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         });
 
     }
+
 }
