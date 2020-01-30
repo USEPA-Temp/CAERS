@@ -16,6 +16,7 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   @Input() releasePoint: ReleasePoint;
   releaseType: string;
+  stackDiameterWarning: any;
 
   releasePointForm = this.fb.group({
     releasePointIdentifier: ['', [
@@ -120,8 +121,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     stackHeightUomCode: [null],
     stackDiameter: ['', [
       Validators.required,
-      Validators.min(0.1),
-      Validators.max(100),
+      Validators.min(0.001),
+      Validators.max(300),
       Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
     ]],
     stackDiameterUomCode: [null],
@@ -189,7 +190,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  releasePointType() {
+  isReleasePointFugitiveType() {
     if (this.releasePointForm.controls.typeCode.value !== null) {
       this.releaseType = this.releasePointForm.get('typeCode').value.description;
       if (this.releaseType === 'Fugitive') {
@@ -201,7 +202,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   // reset form fields and set validation based on release point type
   setFormValidation() {
-    this.releasePointType();
+    this.isReleasePointFugitiveType();
     this.setGasFlowUomValidation();
     this.setVelocityUomValidation();
     this.setGasFlowRangeValidation();
@@ -280,7 +281,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   setGasFlowRangeValidation() {
     if (this.releasePointForm.controls.exitGasFlowUomCode.value !== null) {
-      this.releasePointType();
+      this.isReleasePointFugitiveType();
 
       if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
         if (this.releaseType === 'Fugitive') {
@@ -304,7 +305,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   setGasVelocityRangeValidation() {
     if (this.releasePointForm.controls.exitGasVelocityUomCode.value !== null) {
-      this.releasePointType();
+      this.isReleasePointFugitiveType();
 
       if (this.releasePointForm.controls.exitGasVelocityUomCode.value.code === 'FPS') {
         if (this.releaseType === 'Fugitive') {
@@ -362,7 +363,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const height = control.get('stackHeight'); // ft
 
       if (diameter.value > 0 && height.value > 0) {
-        return (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: true } : null;
+        this.stackDiameterWarning = (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: {diameter} } : null;
       }
       return null;
     };
