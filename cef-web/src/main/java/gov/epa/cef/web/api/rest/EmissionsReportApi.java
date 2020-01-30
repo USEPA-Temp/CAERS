@@ -17,6 +17,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.validation.ValidationResult;
+import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -100,8 +102,16 @@ public class EmissionsReportApi {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
 
-        LOGGER.debug("Workbook filename {}", workbook.getOriginalFilename());
-        LOGGER.debug("ReportDto {}", reportDto);
+        try (TempFile tempFile = TempFile.from(workbook.getInputStream(), workbook.getOriginalFilename())) {
+
+            LOGGER.debug("Workbook filename {}", tempFile.getFileName());
+            LOGGER.debug("ReportDto {}", reportDto);
+
+
+        } catch (IOException e) {
+
+
+        }
 
         return ResponseEntity.noContent().build();
     }
