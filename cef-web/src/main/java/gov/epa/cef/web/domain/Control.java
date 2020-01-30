@@ -43,7 +43,7 @@ public class Control extends BaseAuditEntity {
     @Column(name = "comments", length = 400)
     private String comments;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "control")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
     private List<ControlAssignment> assignments = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "control")
