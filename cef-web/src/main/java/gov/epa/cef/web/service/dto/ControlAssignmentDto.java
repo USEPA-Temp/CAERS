@@ -9,9 +9,12 @@ public class ControlAssignmentDto implements Serializable {
 
     private Long id;
     private ControlDto control;
+    private ControlDto controlPath;
     private Integer sequenceNumber;
     private ControlPathDto controlPathChild;
-
+    private Double percentApportionment;
+    private Long facilitySiteId;
+    
     public Long getId() {
         return id;
     }
@@ -42,6 +45,34 @@ public class ControlAssignmentDto implements Serializable {
 
     public void setControlPathChild(ControlPathDto controlPathChild) {
         this.controlPathChild = controlPathChild;
+    }
+
+	public Double getPercentApportionment() {
+		return percentApportionment;
+	}
+
+	public void setPercentApportionment(Double percentApportionment) {
+		this.percentApportionment = percentApportionment;
+	}
+
+	public Long getFacilitySiteId() {
+		return facilitySiteId;
+	}
+
+	public void setFacilitySiteId(Long facilitySiteId) {
+		this.facilitySiteId = facilitySiteId;
+	}
+
+	public ControlDto getControlPath() {
+		return controlPath;
+	}
+
+	public void setControlPath(ControlDto controlPath) {
+		this.controlPath = controlPath;
+	}
+    public ControlAssignmentDto withId(Long id) {
+        setId(id);
+        return this;
     }
 
 }

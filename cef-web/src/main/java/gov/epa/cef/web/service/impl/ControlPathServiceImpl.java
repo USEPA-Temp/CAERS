@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.Collections;
 import java.util.List;
 
@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.service.ControlPathService;
+import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
+import gov.epa.cef.web.service.mapper.ControlAssignmentMapper;
+import gov.epa.cef.web.service.mapper.ControlMapper;
 import gov.epa.cef.web.service.mapper.ControlPathMapper;
 
 @Service
@@ -19,13 +23,25 @@ public class ControlPathServiceImpl implements ControlPathService {
 
     @Autowired
     private ControlPathRepository repo;
+    
+    @Autowired
+    private ControlAssignmentRepository assignmentRepo;
 
     @Autowired
     private ControlPathMapper mapper;
     
     @Autowired
+    private ControlAssignmentMapper assignmentMapper;
+    
+    @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
     
+    @Autowired
+    private ControlPathServiceImpl controlPathservice;
+    
+    @Autowired
+    private ControlPathMapper controlPathMapper;
+      
     @Override
     public ControlPathDto retrieveById(Long id) {
         ControlPath result = getPathById(id);
@@ -50,6 +66,12 @@ public class ControlPathServiceImpl implements ControlPathService {
         result.addAll(getChildren(result));
         return mapper.toDtoList(result);
     }
+	
+	@Override
+    public List<ControlAssignmentDto> retrieveForControlPath(Long controlPathId) {
+        List<ControlAssignment> result = assignmentRepo.findByControlPathId(controlPathId);
+        return assignmentMapper.toDtoList(result);
+    }
 
     @Override
     public List<ControlPathDto> retrieveForReleasePoint(Long pointId) {
@@ -68,7 +90,7 @@ public class ControlPathServiceImpl implements ControlPathService {
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlPathRepository.class);
     	return result;
     }
-
+    
 	/***
 	 * Get child paths associated with the ControlPaths in the paths list
      * 
@@ -142,6 +164,59 @@ public class ControlPathServiceImpl implements ControlPathService {
     public void delete(Long controlPathId) {
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPathId), ControlPathRepository.class);
     	repo.deleteById(controlPathId);
+    }
+    
+    /**
+     * Create a new Control Path Assignment from a DTO object
+     */
+    public ControlAssignmentDto createAssignment(ControlAssignmentDto dto){
+    	ControlAssignment controlAssignment = assignmentMapper.fromDto(dto);
+
+    	ControlAssignmentDto result = assignmentMapper.toDto(assignmentRepo.save(controlAssignment));
+
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlAssignmentRepository.class);
+    	return result;
+    }
+    
+    /**
+     * Delete a Control Path Assignment for a given id
+     * @Param controlId
+     */
+    public void deleteAssignment(Long controlPathAssignmentId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPathAssignmentId), ControlAssignmentRepository.class);
+    	assignmentRepo.deleteById(controlPathAssignmentId);
+    }
+    
+    /**
+     * Update an existing Control Path Assignment from a DTO
+     */
+    public ControlAssignmentDto updateAssignment(ControlAssignmentDto dto) {
+    	ControlPathDto controlPathDto = new ControlPathDto();
+    	ControlPathDto controlPathChildDto = new ControlPathDto();
+    	if(dto.getControlPath() != null){
+        	controlPathDto = controlPathservice.retrieveById(dto.getControlPath().getId());	
+    	}
+    	if(dto.getControlPathChild() != null){
+    		controlPathChildDto = controlPathservice.retrieveById(dto.getControlPathChild().getId());
+    	}
+
+    	ControlAssignment controlPathAssignment = assignmentRepo.findById(dto.getId()).orElse(null);
+    	dto.setControlPath(null);
+    	dto.setControlPathChild(null);
+    	assignmentMapper.updateFromDto(dto, controlPathAssignment);
+    	
+    	if(controlPathDto.getId() != null){
+        	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
+        	controlPathAssignment.setControlPath(controlPath);
+    	}
+    	if(controlPathChildDto.getId() != null){
+        	ControlPath controlPathChild = controlPathMapper.fromDto(controlPathChildDto);
+        	controlPathAssignment.setControlPathChild(controlPathChild);
+    	}
+
+    	ControlAssignmentDto result = assignmentMapper.toDto(assignmentRepo.save(controlPathAssignment));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlAssignmentRepository.class);
+    	return result;
     }
 
 }

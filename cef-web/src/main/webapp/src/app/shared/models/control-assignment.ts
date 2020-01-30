@@ -7,4 +7,6 @@ export class ControlAssignment {
   controlPath: ControlPath;
   sequenceNumber: string;
   controlPathChild: ControlPath;
+  percentApportionment: number;
+  facilitySiteId: number;
 }

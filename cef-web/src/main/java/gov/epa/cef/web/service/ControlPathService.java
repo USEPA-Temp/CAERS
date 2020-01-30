@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 
+import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 
 public interface ControlPathService {
@@ -14,7 +15,7 @@ public interface ControlPathService {
      * @return
      */
 	ControlPathDto create(ControlPathDto dto);
-	
+
     /**
      * Retrieve Control Path by its id
      * @param id
@@ -62,4 +63,32 @@ public interface ControlPathService {
      * @param controlId
      */
     void delete(Long controlPathId);
+    
+	/**
+     * Create a new Control Path Assignment
+     * @param dto
+	 * @return 
+     * @return
+     */
+    ControlAssignmentDto createAssignment(ControlAssignmentDto dto);
+    
+    /**
+     * Retrieve Control Path Assignments by control path id
+     * @param controlPathId
+     * @return
+     */
+	List<ControlAssignmentDto> retrieveForControlPath(Long controlPathId);
+	
+    /**
+     * Delete a Control Path Assignment for a given id
+     * @param controlId
+     */
+    void deleteAssignment(Long controlPathAssignmentId);
+    
+    /**
+     * Update an existing Control Path Assignment by id
+     * @param dto
+     * @return
+     */
+    ControlAssignmentDto updateAssignment(ControlAssignmentDto dto);
 }
