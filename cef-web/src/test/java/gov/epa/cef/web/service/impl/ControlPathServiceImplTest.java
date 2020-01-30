@@ -1,8 +1,11 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
+import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlPathDto;
+import gov.epa.cef.web.service.mapper.ControlAssignmentMapper;
 import gov.epa.cef.web.service.mapper.ControlPathMapper;
 
 import org.junit.Before;
@@ -27,13 +30,13 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ControlPathRepository repo;
-
+   
     @Mock
-    private ControlPathMapper controlMapper;
-
+    private ControlPathMapper mapper;
+    
     @InjectMocks
     private ControlPathServiceImpl serviceImpl;
-
+    
     private ControlPathDto controlPathDto;
     private List<ControlPathDto> controlPathDtoList;
 
@@ -51,11 +54,10 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
         when(repo.findByEmissionsUnitId(6L)).thenReturn(emptyControlList);
         when(repo.findByReleasePointId(7L)).thenReturn(controlList);
         when(repo.findByReleasePointId(8L)).thenReturn(emptyControlList);
-
         controlPathDto = new ControlPathDto();
         controlPathDtoList=new ArrayList<>();
-        when(controlMapper.toDto(control)).thenReturn(controlPathDto);
-        when(controlMapper.toDtoList(controlList)).thenReturn(controlPathDtoList);
+        when(mapper.toDto(control)).thenReturn(controlPathDto);
+        when(mapper.toDtoList(controlList)).thenReturn(controlPathDtoList);
     }
 
     @Test
