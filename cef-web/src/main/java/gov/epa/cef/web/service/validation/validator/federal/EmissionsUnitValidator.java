@@ -45,7 +45,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
  	
         	result = false;
         	context.addFederalError(
-        			ValidationField.EMISSIONS_UNIT_STATUS.value(), "emissionsUnit.status.required",
+        			ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(), "emissionsUnit.statusTypeCode.required",
         			createValidationDetails(emissionsUnit));
         }
         
@@ -54,7 +54,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         	
         	result = false;
         	context.addFederalError(
-        			ValidationField.EMISSIONS_UNIT_STATUS.value(), "emissionsUnit.status.range",
+        			ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value(), "emissionsUnit.statusYear.range",
         			createValidationDetails(emissionsUnit));
         }
         

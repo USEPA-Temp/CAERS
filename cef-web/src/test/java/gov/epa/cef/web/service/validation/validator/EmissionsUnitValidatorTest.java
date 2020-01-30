@@ -54,7 +54,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
     }
     
     @Test
@@ -87,7 +87,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()).size() == 1);
         
         cefContext = createContext();
         testData.setStatusYear((short) 2051);
@@ -96,7 +96,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
         
         errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()).size() == 1);
     }
     
     @Test

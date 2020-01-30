@@ -14,7 +14,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   @Input() emissionUnit: EmissionUnit;
-  typeCodeDesignCapacity: string[];
   designCapacityWarning: any;
 
   emissionUnitForm = this.fb.group({
@@ -49,6 +48,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   operatingStatusValues: BaseCodeLookup[];
   unitTypeValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
+
+  // Unit type codes that should have a design capacity
+  typeCodeDesignCapacity = ['100', '120', '140', '160', '180'];
 
   constructor(private fb: FormBuilder,
               private lookupService: LookupService,
@@ -110,7 +112,6 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   // Design capacity should be entered if type code is 100, 120, 140, 160, or 180.
   unitTypeCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      this.typeCodeDesignCapacity = ['100', '120', '140', '160', '180'];
       const type = control.get('unitTypeCode');
       const designCapacity = control.get('designCapacity');
 
