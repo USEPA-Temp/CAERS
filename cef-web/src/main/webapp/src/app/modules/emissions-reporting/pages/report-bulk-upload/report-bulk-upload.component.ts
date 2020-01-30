@@ -3,6 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {CdxFacility} from "src/app/shared/models/cdx-facility";
 
 import bsCustomFileInput from "bs-custom-file-input";
+import {EmissionsReportingService} from "../../../../core/services/emissions-reporting.service";
 
 @Component({
     selector: 'app-report-bulk-upload',
@@ -13,8 +14,10 @@ export class ReportBulkUploadComponent implements OnInit {
 
     reportingYear: number;
     facility: CdxFacility;
+    selectedFile: File;
 
-    constructor(private route: ActivatedRoute) {
+    constructor(private emissionsReportingService: EmissionsReportingService,
+                private route: ActivatedRoute) {
     }
 
     ngOnInit() {
@@ -33,4 +36,19 @@ export class ReportBulkUploadComponent implements OnInit {
             });
     }
 
+    onUploadClick() {
+
+        this.emissionsReportingService.createReportFromUpload(this.facility.programId, this.reportingYear,
+            this.facility.epaRegistryId, this.facility.state, this.selectedFile)
+            .subscribe(report => {
+
+                console.log(report);
+            });
+
+    }
+
+    onFileChanged(files: FileList) {
+
+        this.selectedFile = files.item(0);
+    }
 }
