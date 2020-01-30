@@ -7,4 +7,5 @@ export class ControlPath {
   releasePointAppts: ReleasePointApportionment[];
   assignments: ControlAssignment[];
   facilitySiteId: number;
+  pathId: string;
 }

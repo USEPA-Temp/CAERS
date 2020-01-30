@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
@@ -14,10 +14,12 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   @Input() emissionUnit: EmissionUnit;
+  designCapacityWarning: any;
+
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
     operatingStatusCode: [null, Validators.required],
-    unitOfMeasureCode: [null, Validators.required],
+    unitOfMeasureCode: [null],
     unitIdentifier: ['', [
       Validators.required,
       Validators.maxLength(20)
@@ -29,7 +31,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.pattern('[0-9]*')
     ]],
     designCapacity: ['', [
-      Validators.required,
+      Validators.min(0.01),
+      Validators.max(100000000),
       Validators.pattern('[0-9]*'),
       Validators.maxLength(20)
     ]],
@@ -38,11 +41,16 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.maxLength(100)
     ]],
     comments: ['', Validators.maxLength(400)]
+  }, { validators: [
+    this.unitTypeCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
   unitTypeValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
+
+  // Unit type codes that should have a design capacity
+  typeCodeDesignCapacity = ['100', '120', '140', '160', '180'];
 
   constructor(private fb: FormBuilder,
               private lookupService: LookupService,
@@ -51,7 +59,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
               ) { }
 
   ngOnInit() {
-    
+
     this.lookupService.retrieveUom()
     .subscribe(result => {
       this.uomValues = result;
@@ -71,11 +79,12 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
           if (a.description > b.description) {
             return 1;
           }
-            return 0;
-        }
-        );
-      this.unitTypeValues = result;
-    });    
+          return 0;
+        });
+        this.unitTypeValues = result;
+    });
+
+    this.uomCapacityCheck();
   }
 
   ngOnChanges() {
@@ -83,9 +92,42 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   }
 
   onChange(newValue) {
-    if(newValue) {
+    if (newValue) {
       this.emissionUnitForm.controls.statusYear.reset();
-      this.toastr.warning('',"If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated.",{positionClass: 'toast-top-right'})      
+      this.toastr.warning('', 'If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated.', {positionClass: 'toast-top-right'});
     }
+  }
+
+  uomCapacityCheck() {
+    if (this.emissionUnitForm.controls.designCapacity.value !== null && this.emissionUnitForm.controls.designCapacity.value !== '') {
+      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([Validators.required]);
+      this.emissionUnitForm.controls.designCapacity.updateValueAndValidity();
+      this.emissionUnitForm.controls.unitOfMeasureCode.updateValueAndValidity();
+    } else {
+      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([]);
+      this.emissionUnitForm.controls.unitOfMeasureCode.reset();
+    }
+  }
+
+  // Design capacity should be entered if type code is 100, 120, 140, 160, or 180.
+  unitTypeCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const type = control.get('unitTypeCode');
+      const designCapacity = control.get('designCapacity');
+
+      if ((designCapacity.value === null || designCapacity.value === '') && type.value !== null) {
+        for (let item of this.typeCodeDesignCapacity) {
+          if (type.value.code === item) {
+            this.designCapacityWarning = { invalidDesignCapacity: {designCapacity} };
+            break;
+          } else {
+            this.designCapacityWarning = null;
+          }
+        }
+      } else {
+        this.designCapacityWarning = null;
+      }
+      return null;
+    };
   }
 }

@@ -12,7 +12,7 @@ public class EmissionDto implements Serializable {
     private Long reportingPeriodId;
     private PollutantDto pollutant;
     private BigDecimal totalEmissions;
-    private CodeLookupDto emissionsUomCode;
+    private UnitMeasureCodeDto emissionsUomCode;
     private Boolean formulaIndicator;
     private BigDecimal emissionsFactor;
     private String emissionsFactorFormula;
@@ -20,8 +20,8 @@ public class EmissionDto implements Serializable {
     private CalculationMethodCodeDto emissionsCalcMethodCode;
     private String comments;
     private BigDecimal calculatedEmissionsTons;
-    private CodeLookupDto emissionsNumeratorUom;
-    private CodeLookupDto emissionsDenominatorUom;
+    private UnitMeasureCodeDto emissionsNumeratorUom;
+    private UnitMeasureCodeDto emissionsDenominatorUom;
     private List<EmissionFormulaVariableDto> variables;
 
     public Long getId() {
@@ -56,11 +56,11 @@ public class EmissionDto implements Serializable {
         this.totalEmissions = totalEmissions;
     }
 
-    public CodeLookupDto getEmissionsUomCode() {
+    public UnitMeasureCodeDto getEmissionsUomCode() {
         return emissionsUomCode;
     }
 
-    public void setEmissionsUomCode(CodeLookupDto emissionsUomCode) {
+    public void setEmissionsUomCode(UnitMeasureCodeDto emissionsUomCode) {
         this.emissionsUomCode = emissionsUomCode;
     }
 
@@ -116,11 +116,11 @@ public class EmissionDto implements Serializable {
         return calculatedEmissionsTons;
     }
 
-    public CodeLookupDto getEmissionsNumeratorUom() {
+    public UnitMeasureCodeDto getEmissionsNumeratorUom() {
         return emissionsNumeratorUom;
     }
 
-    public CodeLookupDto getEmissionsDenominatorUom() {
+    public UnitMeasureCodeDto getEmissionsDenominatorUom() {
         return emissionsDenominatorUom;
     }
 
@@ -128,11 +128,11 @@ public class EmissionDto implements Serializable {
         this.calculatedEmissionsTons = calculatedEmissionsTons;
     }
 
-    public void setEmissionsNumeratorUom(CodeLookupDto emissionsNumeratorUom) {
+    public void setEmissionsNumeratorUom(UnitMeasureCodeDto emissionsNumeratorUom) {
         this.emissionsNumeratorUom = emissionsNumeratorUom;
     }
 
-    public void setEmissionsDenominatorUom(CodeLookupDto emissionsDenominatorUom) {
+    public void setEmissionsDenominatorUom(UnitMeasureCodeDto emissionsDenominatorUom) {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 
