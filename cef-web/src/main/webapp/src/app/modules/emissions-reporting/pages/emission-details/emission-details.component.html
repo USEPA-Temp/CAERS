@@ -173,7 +173,9 @@
                                 </select>
                                 <app-validation-message [control]="emissionForm.controls.emissionsNumeratorUom"></app-validation-message>
                                 <div class="validation-message" *ngIf="efNumeratorMismatch">
-                                    The Emission Factor Numerator UoM and the Total Emissions UoM do not match - Calculation cannot be completed.
+                                    The Emission Factor Numerator UoM ({{failedNumDesc}}) 
+                                    cannot be converted into the Total Emissions UoM ({{failedTotalDesc}}) - 
+                                    Calculation cannot be completed.
                                 </div>
                             </div>
                             <label for="emissionsDenominatorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
@@ -183,7 +185,9 @@
                                 </select>
                                 <app-validation-message [control]="emissionForm.controls.emissionsDenominatorUom"></app-validation-message>
                                 <div class="validation-message" *ngIf="efDenominatorMismatch">
-                                    The Emission Factor Denominator UoM and the Reporting Period Calculation UoM do not match - Calculation cannot be completed.
+                                    The Reporting Period Calculation UoM ({{failedRpCalcDesc}}) 
+                                    cannot be converted into the Emission Factor Denominator UoM ({{failedDenomDesc}}) - 
+                                    Calculation cannot be completed.
                                 </div>
                             </div>
                         </div>
@@ -207,7 +211,9 @@
                             </select>
                             <app-validation-message [control]="emissionForm.controls.emissionsUomCode"></app-validation-message>
                             <div class="validation-message" *ngIf="efNumeratorMismatch">
-                                The Emission Factor Numerator UoM and the Total Emissions UoM do not match - Calculation cannot be completed.
+                                The Emission Factor Numerator UoM ({{failedNumDesc}}) 
+                                cannot be converted into the Total Emissions UoM ({{failedTotalDesc}}) - 
+                                Calculation cannot be completed.
                             </div>
                         </div>
                     </div>
