@@ -34,8 +34,8 @@ public class SubmissionsReviewDasboardServiceImpl implements SubmissionsReviewDa
      * @see gov.epa.cef.web.service.SubmissionsReviewDasboardService#retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear()
      */
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatus(ReportStatus reportStatus) {
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByReportStatus(reportStatus);
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndAgencyCode(ReportStatus reportStatus, String agencyCode) {
+        List<SubmissionsReviewDashboardView> reportsList=repo.findByReportStatusAndAgencyCode(reportStatus, agencyCode);
         return mapper.toDtoList(reportsList);
     }
 
@@ -47,14 +47,14 @@ public class SubmissionsReviewDasboardServiceImpl implements SubmissionsReviewDa
     }
     
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatus(Short reportYear, ReportStatus reportStatus){
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndReportStatus(reportYear, reportStatus);
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(Short reportYear, ReportStatus reportStatus, String agencyCode){
+        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndReportStatusAndAgencyCode(reportYear, reportStatus, agencyCode);
         return mapper.toDtoList(reportsList);
     }
     
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYear(Short reportYear){
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByYear(reportYear);
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndAgencyCode(Short reportYear, String agencyCode){
+        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndAgencyCode(reportYear, agencyCode);
         return mapper.toDtoList(reportsList);
     }
     

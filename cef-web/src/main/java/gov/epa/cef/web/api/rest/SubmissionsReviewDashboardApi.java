@@ -29,10 +29,10 @@ public class SubmissionsReviewDashboardApi {
      * Retrieve the submissions under review for the reviewer agency and for the current fiscal year
      * @return
      */
-    @GetMapping(value = "/dashboard/byStatus/{reportStatus}")
+    @GetMapping(value = "/dashboard/byStatus/{reportStatus}/{agencyCode}")
     @ResponseBody
-    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable ReportStatus reportStatus) {
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByReportStatus(reportStatus);
+    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable ReportStatus reportStatus, @NotNull @PathVariable String agencyCode) {
+        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByReportStatusAndAgencyCode(reportStatus, agencyCode);
         return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
     }
     
@@ -47,11 +47,11 @@ public class SubmissionsReviewDashboardApi {
      * Retrieve the submissions under review for the inputed year/report status
      * @return
      */
-    @GetMapping(value = "/dashboard/{reportYear}/{reportStatus}")
+    @GetMapping(value = "/dashboard/byStatusAndYear/{reportYear}/{reportStatus}/{agencyCode}")
     @ResponseBody
-    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable Short reportYear, @NotNull @PathVariable ReportStatus reportStatus) {
+    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable Short reportYear, @NotNull @PathVariable ReportStatus reportStatus, @NotNull @PathVariable String agencyCode) {
 
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByYearAndReportStatus(reportYear, reportStatus);
+        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(reportYear, reportStatus, agencyCode);
         return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
     }
     
@@ -59,11 +59,11 @@ public class SubmissionsReviewDashboardApi {
      * Retrieve all submissions under review for the current reporting year
      * @return
      */
-    @GetMapping(value = "/dashboard/{reportYear}")
+    @GetMapping(value = "/dashboard/forCurrentReportingYear/{reportYear}/{agencyCode}")
     @ResponseBody
-    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable Short reportYear) {
+    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable Short reportYear, @NotNull @PathVariable String agencyCode) {
 
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByYear(reportYear);
+        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByYearAndAgencyCode(reportYear, agencyCode);
         return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
     }
 }

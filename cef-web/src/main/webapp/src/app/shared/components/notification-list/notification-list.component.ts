@@ -33,7 +33,7 @@ export class NotificationListComponent implements OnInit {
       this.userContext.getUser().subscribe(user => {
         this.currentUser = user;
         if (this.currentUser.role === 'Reviewer') {
-          this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear)
+          this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear, this.currentUser.agencyCode)
           .subscribe(submissions => {
             this.filterAndCountSubmissions(submissions);
           });
