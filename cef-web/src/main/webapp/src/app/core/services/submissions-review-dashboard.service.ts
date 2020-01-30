@@ -16,18 +16,18 @@ export class SubmissionsReviewDashboardService {
     constructor( private http: HttpClient ) {
     }
 
-    retrieveFacilitiesReportsUnderReviewByStatus(reportStatus: string, agencyCode: string): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/byStatus/${reportStatus}/${agencyCode}`;
+    retrieveFacilitiesReportsUnderReviewByStatus(reportStatus: string): Observable<SubmissionUnderReview[]> {
+        const url = `${this.baseUrl}/dashboard/byStatus/${reportStatus}`;
         return this.http.get<SubmissionUnderReview[]>( url );
     }
 
-    retrieveFacilitiesReportsByYearAndStatus(reportYear: number, reportStatus: string, agencyCode: string): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/byStatusAndYear/${reportYear}/${reportStatus}/${agencyCode}`;
+    retrieveFacilitiesReportsByYearAndStatus(reportYear: number, reportStatus: string): Observable<SubmissionUnderReview[]> {
+        const url = `${this.baseUrl}/dashboard/byStatusAndYear/${reportYear}/${reportStatus}`;
         return this.http.get<SubmissionUnderReview[]>( url );
     }
 
-    retrieveAllFacilitiesReportsForCurrentReportingYear(reportYear: number, agencyCode: string): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/forCurrentReportingYear/${reportYear}/${agencyCode}`;
+    retrieveAllFacilitiesReportsForCurrentReportingYear(reportYear: number): Observable<SubmissionUnderReview[]> {
+        const url = `${this.baseUrl}/dashboard/forCurrentReportingYear/${reportYear}`;
         return this.http.get<SubmissionUnderReview[]>( url );
     }
     }

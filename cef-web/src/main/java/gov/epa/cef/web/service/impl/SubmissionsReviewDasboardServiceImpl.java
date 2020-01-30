@@ -34,8 +34,9 @@ public class SubmissionsReviewDasboardServiceImpl implements SubmissionsReviewDa
      * @see gov.epa.cef.web.service.SubmissionsReviewDasboardService#retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear()
      */
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndAgencyCode(ReportStatus reportStatus, String agencyCode) {
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByReportStatusAndAgencyCode(reportStatus, agencyCode);
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndAgencyCode(ReportStatus reportStatus) {
+    	UserDto currentUser=userService.getCurrentUser();
+    	List<SubmissionsReviewDashboardView> reportsList=repo.findByReportStatusAndAgencyCode(reportStatus, currentUser.getAgencyCode());
         return mapper.toDtoList(reportsList);
     }
 
@@ -47,14 +48,16 @@ public class SubmissionsReviewDasboardServiceImpl implements SubmissionsReviewDa
     }
     
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(Short reportYear, ReportStatus reportStatus, String agencyCode){
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndReportStatusAndAgencyCode(reportYear, reportStatus, agencyCode);
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(Short reportYear, ReportStatus reportStatus){
+        UserDto currentUser=userService.getCurrentUser();
+    	List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndReportStatusAndAgencyCode(reportYear, reportStatus, currentUser.getAgencyCode());
         return mapper.toDtoList(reportsList);
     }
     
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndAgencyCode(Short reportYear, String agencyCode){
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndAgencyCode(reportYear, agencyCode);
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndAgencyCode(Short reportYear){
+        UserDto currentUser=userService.getCurrentUser();
+        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndAgencyCode(reportYear, currentUser.getAgencyCode());
         return mapper.toDtoList(reportsList);
     }
     

@@ -7,8 +7,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
 import {SharedService} from "../../../../core/services/shared.service";
 import { faTheaterMasks } from '@fortawesome/free-solid-svg-icons';
-import { UserContextService } from 'src/app/core/services/user-context.service';
-import { User } from 'src/app/shared/models/user';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -25,24 +23,18 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     invalidSelection = false;
     currentYear: number;
     selectedYear: string;
-    currentUser: User;
 
     constructor(
         private emissionReportService: EmissionsReportingService,
         private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
         private modalService: NgbModal,
-        private sharedService: SharedService,
-        public userContext: UserContextService) { }
+        private sharedService: SharedService) { }
 
     ngOnInit() {
         const CURRENT_REPORTING_YEAR = 'CURRENT_REPORTING_YEAR';
         this.currentYear = new Date().getFullYear() - 1;
         this.selectedYear = CURRENT_REPORTING_YEAR;
-        this.userContext.getUser()
-        .subscribe(user => {
-            this.currentUser = user;
             this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
-        });
     }
 
     onApprove(year) {
@@ -102,12 +94,12 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     }
 
     retrieveFacilitiesReportsByYearAndStatus(year,reportStatus): void{
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus, this.currentUser.agencyCode)
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus)
             .subscribe( submissions => this.submissions = submissions);
     }
 
     retrieveFacilitiesReportsByReportStatus(reportStatus): void{
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus, this.currentUser.agencyCode )
+        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus)
             .subscribe(submissions => this.submissions = submissions);
     }
 
@@ -131,7 +123,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     // emits the updated submission list to the notification component
     emitAllSubmissions(): void {
-        this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear,this.currentUser.agencyCode)
+        this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear)
         .subscribe(submissions =>{
             this.sharedService.emitSubmissionChange(submissions);
         });

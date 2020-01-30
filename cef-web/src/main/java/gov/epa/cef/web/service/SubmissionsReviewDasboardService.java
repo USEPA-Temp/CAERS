@@ -17,20 +17,20 @@ public interface SubmissionsReviewDasboardService {
      * Retrieves all the facilities reports for review by report status
      * 
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndAgencyCode(ReportStatus reportStatus, String agencyCode);
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndAgencyCode(ReportStatus reportStatus);
     
     /**
      * Retrieves all the facilities reports for review based on reportYear and reportStatus
      * @param reportYear
      * @param reportStatus
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(Short reportYear, ReportStatus reportStatus, String agencyCode);
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(Short reportYear, ReportStatus reportStatus);
     
     /**
      * Retrieves all the facilities reports for review for current reporting year
      * @param reportYear
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndAgencyCode(Short reportYear, String agencyCode);
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndAgencyCode(Short reportYear);
     
     
 }
