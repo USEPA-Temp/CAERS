@@ -42,7 +42,11 @@ export class EmissionDetailsComponent implements OnInit {
   totalManualEntry = false;
   epaEmissionFactor = false;
   efNumeratorMismatch = false;
+  failedNumDesc: string;
+  failedTotalDesc: string;
   efDenominatorMismatch = false;
+  failedRpCalcDesc: string;
+  failedDenomDesc: string;
   needsCalculation = false;
   formulaVariables: EmissionFormulaVariableCode[] = [];
 
@@ -245,16 +249,24 @@ export class EmissionDetailsComponent implements OnInit {
   onCalculate() {
     if (!(this.reportingPeriod.calculationParameterUom && this.emissionForm.get('emissionsDenominatorUom').value
           && this.reportingPeriod.calculationParameterUom.unitType === this.emissionForm.get('emissionsDenominatorUom').value.unitType)) {
+      this.failedRpCalcDesc = this.reportingPeriod.calculationParameterUom.description;
+      this.failedDenomDesc = this.emissionForm.get('emissionsDenominatorUom').value.description;
       this.efDenominatorMismatch = true;
     } else {
       this.efDenominatorMismatch = false;
+      this.failedRpCalcDesc = null;
+      this.failedDenomDesc = null;
     }
 
     if (!(this.emissionForm.get('emissionsUomCode').value && this.emissionForm.get('emissionsNumeratorUom').value
           && this.emissionForm.get('emissionsUomCode').value.unitType === this.emissionForm.get('emissionsNumeratorUom').value.unitType)) {
+      this.failedNumDesc = this.emissionForm.get('emissionsNumeratorUom').value.description;
+      this.failedTotalDesc = this.emissionForm.get('emissionsUomCode').value.description;
       this.efNumeratorMismatch = true;
     } else {
       this.efNumeratorMismatch = false;
+      this.failedNumDesc = null;
+      this.failedTotalDesc = null;
     }
 
     if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.reportingPeriod.calculationParameterValue) {
