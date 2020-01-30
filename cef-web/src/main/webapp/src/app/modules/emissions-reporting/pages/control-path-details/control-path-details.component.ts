@@ -6,6 +6,7 @@ import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { EditControlPathInfoPanelComponent } from '../../components/edit-control-path-info-panel/edit-control-path-info-panel.component';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 
 @Component({
   selector: 'app-control-path-details',
@@ -14,8 +15,10 @@ import { SharedService } from 'src/app/core/services/shared.service';
 })
 export class ControlPathDetailsComponent implements OnInit {
   @Input() controlPath: ControlPath;
+  controlPathAssignments: ControlAssignment[];
   editInfo = false;
   readOnlyMode = true;
+  facilitySite: FacilitySite;
 
   @ViewChild(EditControlPathInfoPanelComponent, { static: false })
   private controlPathComponent: EditControlPathInfoPanelComponent;
@@ -30,13 +33,20 @@ export class ControlPathDetailsComponent implements OnInit {
       this.controlPathService.retrieve(+map.get('controlPathId'))
       .subscribe(controlPath => {
         this.controlPath = controlPath;
+        this.controlPathService.retrieveAssignmentsForControlPath(this.controlPath.id)
+        .subscribe(assignments => {
+          this.controlPathAssignments = assignments;
+        });
       });
     });
 
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.facilitySite = data.facilitySite;
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
     });
+
+
   }
 
   setEditInfo(value: boolean) {

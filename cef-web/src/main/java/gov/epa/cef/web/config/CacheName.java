@@ -60,5 +60,9 @@ public class CacheName {
 
     public static final String ControlPollutantProgramIds = "ControlPollutantProgramIds";
 
+    public static final String ControlAssignmentsEmissionsReportIds = "ControlAssignmentsEmissionsReportIds";
+    
+    public static final String ControlAssignmentsProgramIds = "ControlAssignmentsProgramIds";
+
 }
 
