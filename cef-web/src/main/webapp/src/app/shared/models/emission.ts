@@ -8,6 +8,7 @@ export class Emission {
   id: number;
   reportingPeriodId: number;
   pollutant: Pollutant;
+  totalManualEntry: boolean;
   totalEmissions: number;
   emissionsUomCode: UnitMeasureCode;
   formulaIndicator: boolean;
@@ -16,6 +17,7 @@ export class Emission {
   emissionsFactorText: string;
   emissionsCalcMethodCode: CalculationMethodCode;
   comments: string;
+  calculationComment: string;
   emissionsNumeratorUom: UnitMeasureCode;
   emissionsDenominatorUom: UnitMeasureCode;
   calculatedEmissionsTons: number;
