@@ -17,7 +17,7 @@
         <strong>Select a Control Path (optional)</strong>
         <br>
         <select [(ngModel)]="controlPathSelected" type="text" id="controlPathSelect" class="form-control" formControlName="controlPath">
-            <option disabled selected value></option>
+            <option [ngValue]="null"></option>
             <option *ngFor="let cp of controlPaths" [ngValue]="cp">
                 {{cp.pathId}}
             </option>
