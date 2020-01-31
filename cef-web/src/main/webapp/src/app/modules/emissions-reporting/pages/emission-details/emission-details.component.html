@@ -218,15 +218,16 @@
                         </div>
                     </div>
 
-                    <div class="row  pb-2">
-                        <label for="emissionCommentsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Comments:</strong></label>
-                        <div class="col-sm-8 col-lg-10">
-                            <textarea rows="3" class="form-control" maxlength="400" id="emissionCommentsInput" formControlName="comments"></textarea>
-                            <app-validation-message [control]="emissionForm.controls.comments"></app-validation-message>
+                    <div class="row">
+                        <div class="col">
+                            <div class="float-right form-group form-check" *ngIf="!emissionForm.value?.emissionsCalcMethodCode?.totalDirectEntry">
+                                <input type="checkbox" class="form-check-input" id="manualEntryCb" formControlName="totalManualEntry" >
+                                <label for="manualEntryCb" class="form-check-label"><strong>I prefer to calculate the total emissions of this pollutant</strong></label>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row" *ngIf="!emissionForm.value?.emissionsCalcMethodCode?.totalDirectEntry && getTotalManualEntry().value">
+                    <div class="row pb-2" *ngIf="!emissionForm.value?.emissionsCalcMethodCode?.totalDirectEntry && getTotalManualEntry().value">
                         <label for="emissionCalcCommentInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Description of Calculation:</strong></label>
                         <div class="col-sm-8 col-lg-10">
                             <textarea rows="3" class="form-control" maxlength="4000" id="emissionCalcCommentInput" formControlName="calculationComment"></textarea>
@@ -234,10 +235,14 @@
                         </div>
                     </div>
 
-                    <div class="float-right form-group form-check" *ngIf="!emissionForm.value?.emissionsCalcMethodCode?.totalDirectEntry">
-                        <input type="checkbox" class="form-check-input" id="manualEntryCb" formControlName="totalManualEntry" >
-                        <label for="manualEntryCb" class="form-check-label"><strong>I prefer to calculate the total emissions of this pollutant</strong></label>
+                    <div class="row">
+                        <label for="emissionCommentsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Comments:</strong></label>
+                        <div class="col-sm-8 col-lg-10">
+                            <textarea rows="3" class="form-control" maxlength="400" id="emissionCommentsInput" formControlName="comments"></textarea>
+                            <app-validation-message [control]="emissionForm.controls.comments"></app-validation-message>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
