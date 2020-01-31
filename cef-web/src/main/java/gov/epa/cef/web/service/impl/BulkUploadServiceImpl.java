@@ -183,7 +183,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 bulkEmissionsReport.setEisProgramId(metadata.getEisProgramId());
                 bulkEmissionsReport.setFrsFacilityId(metadata.getFrsFacilityId());
                 bulkEmissionsReport.setYear(metadata.getYear());
-                bulkEmissionsReport.setStatus(ReportStatus.NEW.name());
+                bulkEmissionsReport.setStatus(ReportStatus.IN_PROGRESS.name());
+                bulkEmissionsReport.setValidationStatus(ValidationStatus.UNVALIDATED.name());
 
                 result = saveBulkEmissionsReport(bulkEmissionsReport);
 
