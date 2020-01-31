@@ -60,6 +60,7 @@ DROP TABLE IF EXISTS vertical_reference_datum_code;
 DROP TABLE IF EXISTS schema_version_cef;
 DROP TABLE IF EXISTS naics_code_industry;
 DROP TABLE IF EXISTS pollutant;
+DROP TABLE IF EXISTS point_source_scc_code;
 
 --SEQUENCES
 DROP SEQUENCE IF EXISTS emission_factor_id_seq;
