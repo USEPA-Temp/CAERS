@@ -27,7 +27,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     percentApportionment: ['', [Validators.required, Validators.max(100), Validators.pattern('[0-9]*')]],
     control: [''],
     controlPathChild: [''],
-    sequenceNumber: ['', Validators.required]
+    sequenceNumber: ['', [Validators.required,Validators.pattern('[0-9]*')]]
   }, {validator: this.customValidationFunction});
 
   constructor(private controlService: ControlService,
@@ -67,8 +67,9 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.isValid()) {
-        this.controlPathAssignmentForm.markAllAsTouched();
+    if (!this.isValid() || ((this.controlPathAssignmentForm.controls.control.touched === false) &&
+    (this.controlPathAssignmentForm.controls.controlPathChild.touched === false))) {
+      this.controlPathAssignmentForm.setErrors({controlAndPathNotSelected: true});
     } else {
         if (this.controlPathAssignmentForm.controls.controlPathChild.value) {
           this.controlPathAssignmentForm.controls.control.reset();
@@ -126,6 +127,11 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     const percentApportionment = formGroup.controls.percentApportionment.value;
     if (controlField && controlPathChildField) {
       return { controlAndPathSelected: true };
+    }
+    if ((formGroup.controls.control.touched === true) || (formGroup.controls.controlPathChild.touched === true)) {
+      if (!controlField && !controlPathChildField) {
+        return { controlAndPathNotSelected: true};
+      }
     }
     if ((controlField || controlPathChildField) && (sequenceNumber && percentApportionment)) {
       formGroup.status = 'VALID';
