@@ -6,6 +6,7 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ControlPath } from 'src/app/shared/models/control-path';
 
 @Component({
   selector: 'app-release-point-apportionment-modal',
@@ -16,15 +17,19 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
   @Input() process: Process;
   @Input() releasePointApportionments: ReleasePointApportionment[];
   @Input() facilitySiteId: number;
+  controlPaths: ControlPath[];
   edit: boolean;
   duplicateCheck = true;
   selectedReleasePoint: ReleasePointApportionment;
   releasePoints: ReleasePoint[];
   rpApptSelected: String;
+  controlPathSelected: ControlPath;
+  controlPathId: number;
 
   releasePointApptForm = this.fb.group({
     percent: ['', [Validators.required, Validators.max(100), Validators.pattern('[0-9]*')]],
-    selectedReleasePointAppt: ['', Validators.required]
+    selectedReleasePointAppt: ['', Validators.required],
+    controlPath: ['']
   });
 
   constructor(public activeModal: NgbActiveModal,
@@ -42,6 +47,12 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
         if (releasePt.releasePointIdentifier === this.selectedReleasePoint.releasePointIdentifier) {
         this.rpApptSelected = releasePt.releasePointIdentifier;
         break;
+        }
+      }
+      for (let controlPath of this.controlPaths) {
+        if (controlPath.id === this.selectedReleasePoint.controlPath.id) {
+          this.controlPathSelected = controlPath;
+          break;
         }
       }
     }
@@ -96,6 +107,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
                 this.selectedReleasePoint.emissionsProcessId = this.process.id;
                 this.selectedReleasePoint.facilitySiteId = this.facilitySiteId;
                 this.selectedReleasePoint.percent = this.releasePointApptForm.get('percent').value;
+                this.selectedReleasePoint.controlPath = this.releasePointApptForm.get('controlPath').value;
               }
           }
         });

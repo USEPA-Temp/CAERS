@@ -14,7 +14,7 @@ public class ReportingPeriodDto implements Serializable {
     private CodeLookupDto emissionsOperatingTypeCode;
     private CodeLookupDto calculationParameterTypeCode;
     private BigDecimal calculationParameterValue;
-    private CodeLookupDto calculationParameterUom;
+    private UnitMeasureCodeDto calculationParameterUom;
     private CodeLookupDto calculationMaterialCode;
     private String comments;
     private List<EmissionDto> emissions;
@@ -68,11 +68,11 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationParameterValue = calculationParameterValue;
     }
 
-    public CodeLookupDto getCalculationParameterUom() {
+    public UnitMeasureCodeDto getCalculationParameterUom() {
         return calculationParameterUom;
     }
 
-    public void setCalculationParameterUom(CodeLookupDto calculationParameterUom) {
+    public void setCalculationParameterUom(UnitMeasureCodeDto calculationParameterUom) {
         this.calculationParameterUom = calculationParameterUom;
     }
 

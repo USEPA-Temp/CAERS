@@ -22,12 +22,12 @@ export class SubmissionsReviewDashboardService {
     }
 
     retrieveFacilitiesReportsByYearAndStatus(reportYear: number, reportStatus: string): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/${reportYear}/${reportStatus}`;
+        const url = `${this.baseUrl}/dashboard/byStatusAndYear/${reportYear}/${reportStatus}`;
         return this.http.get<SubmissionUnderReview[]>( url );
     }
 
     retrieveAllFacilitiesReportsForCurrentReportingYear(reportYear: number): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/${reportYear}`;
+        const url = `${this.baseUrl}/dashboard/forCurrentReportingYear/${reportYear}`;
         return this.http.get<SubmissionUnderReview[]>( url );
     }
     }

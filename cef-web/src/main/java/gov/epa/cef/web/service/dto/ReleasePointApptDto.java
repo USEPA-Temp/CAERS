@@ -1,6 +1,8 @@
 package gov.epa.cef.web.service.dto;
 
-import java.io.Serializable;
+import java.io.Serializable; 
+
+import gov.epa.cef.web.domain.ControlPath; 
 
 
 public class ReleasePointApptDto implements Serializable{
@@ -23,6 +25,8 @@ public class ReleasePointApptDto implements Serializable{
     private String releasePointDescription;
 
 	private CodeLookupDto releasePointTypeCode;
+	
+	private ControlPathDto controlPath;
     
     private Double percent;
 
@@ -94,5 +98,13 @@ public class ReleasePointApptDto implements Serializable{
         setId(id);
         return this;
     }
+
+	public ControlPathDto getControlPath() {
+		return controlPath;
+	}
+
+	public void setControlPath(ControlPathDto controlPath) {
+		this.controlPath = controlPath;
+	}
     
 }

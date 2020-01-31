@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
+import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-number-validator.directive';
 
 @Component({
   selector: 'app-edit-process-operating-detail-panel',
@@ -12,27 +13,27 @@ export class EditProcessOperatingDetailPanelComponent implements OnInit, OnChang
   operatingDetailsForm = this.fb.group({
     actualHoursPerPeriod: ['', [
       Validators.required,
-      Validators.min(0),
-      Validators.max(8760),
-      Validators.pattern('[0-9]*')
+      Validators.min(1),
+      Validators.max(8784),
+      wholeNumberValidator(),
     ]],
     avgHoursPerDay: ['', [
       Validators.required,
-      Validators.min(0),
+      Validators.min(0.1),
       Validators.max(24),
-      Validators.pattern('[0-9]*')
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
     ]],
     avgDaysPerWeek: ['', [
       Validators.required,
-      Validators.min(0),
+      Validators.min(0.1),
       Validators.max(7),
-      Validators.pattern('[0-9]*')
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
     ]],
     avgWeeksPerPeriod: ['', [
       Validators.required,
-      Validators.min(0),
+      Validators.min(1),
       Validators.max(52),
-      Validators.pattern('[0-9]*')
+      wholeNumberValidator()
     ]],
     percentWinter: ['', [
       Validators.required,

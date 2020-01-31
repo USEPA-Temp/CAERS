@@ -97,6 +97,16 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 
             seasons++;
             total += detail.getPercentSpring();
+            
+            // Spring Season % range
+            if (detail.getPercentSpring() > 100 || detail.getPercentSpring() < 0) {
+            
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.DETAIL_PCT_SPRING.value(),
+	                    "operatingDetail.percentSpring.range",
+	                    createValidationDetails(detail));
+            }
         }
 
         if (detail.getPercentSummer() == null) {
@@ -112,6 +122,16 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 
             seasons++;
             total += detail.getPercentSummer();
+            
+            // Summer Season % range
+            if (detail.getPercentSummer() > 100 || detail.getPercentSummer() < 0) {
+            
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.DETAIL_PCT_SUMMER.value(),
+	                    "operatingDetail.percentSummer.range",
+	                    createValidationDetails(detail));
+            }
         }
 
         if (detail.getPercentFall() == null) {
@@ -127,6 +147,16 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 
             seasons++;
             total += detail.getPercentFall();
+            
+            // Fall Season % range
+            if (detail.getPercentFall() > 100 || detail.getPercentFall() < 0) {
+            
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.DETAIL_PCT_FALL.value(),
+	                    "operatingDetail.percentFall.range",
+	                    createValidationDetails(detail));
+            }
         }
 
         if (detail.getPercentWinter() == null) {
@@ -142,6 +172,16 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 
             seasons++;
             total += detail.getPercentWinter();
+            
+            // Winter Season % range
+            if (detail.getPercentWinter() > 100 || detail.getPercentWinter() < 0) {
+            
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.DETAIL_PCT_WINTER.value(),
+	                    "operatingDetail.percentWinter.range",
+	                    createValidationDetails(detail));
+            }
         }
 
         if (detail.getAvgWeeksPerPeriod() == null) {
