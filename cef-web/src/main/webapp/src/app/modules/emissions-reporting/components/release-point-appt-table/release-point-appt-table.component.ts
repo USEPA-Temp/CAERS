@@ -45,8 +45,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
 
     this.calcTotalPercent();
     this.controlPathService.retrieveForFacilitySite(this.facilitySiteId)
-    .subscribe(controls => {
-      this.controlPaths = controls;
+    .subscribe(controlPaths => {
+      this.controlPaths = controlPaths;
     });
   }
 
