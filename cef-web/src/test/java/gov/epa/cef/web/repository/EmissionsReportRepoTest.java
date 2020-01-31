@@ -341,6 +341,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		e.setTotalEmissions(new BigDecimal(1000.0));
 		e.setFormulaIndicator(false);
 		e.setComments("Test Emission Comments");
+		e.setTotalManualEntry(true);
 
 		uom = new UnitMeasureCode();
 		uom.setCode("LB");

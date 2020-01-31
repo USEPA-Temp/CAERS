@@ -11,6 +11,7 @@ public class EmissionDto implements Serializable {
     private Long id;
     private Long reportingPeriodId;
     private PollutantDto pollutant;
+    private Boolean totalManualEntry;
     private BigDecimal totalEmissions;
     private UnitMeasureCodeDto emissionsUomCode;
     private Boolean formulaIndicator;
@@ -19,6 +20,7 @@ public class EmissionDto implements Serializable {
     private String emissionsFactorText;
     private CalculationMethodCodeDto emissionsCalcMethodCode;
     private String comments;
+    private String calculationComment;
     private BigDecimal calculatedEmissionsTons;
     private UnitMeasureCodeDto emissionsNumeratorUom;
     private UnitMeasureCodeDto emissionsDenominatorUom;
@@ -46,6 +48,14 @@ public class EmissionDto implements Serializable {
 
     public void setPollutant(PollutantDto pollutant) {
         this.pollutant = pollutant;
+    }
+
+    public Boolean getTotalManualEntry() {
+        return totalManualEntry;
+    }
+
+    public void setTotalManualEntry(Boolean totalManualEntry) {
+        this.totalManualEntry = totalManualEntry;
     }
 
     public BigDecimal getTotalEmissions() {
@@ -110,6 +120,14 @@ public class EmissionDto implements Serializable {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getCalculationComment() {
+        return calculationComment;
+    }
+
+    public void setCalculationComment(String calculationComment) {
+        this.calculationComment = calculationComment;
     }
 
     public BigDecimal getCalculatedEmissionsTons() {
