@@ -58,36 +58,6 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	sccList.add(ps2);
     	sccList.add(ps3);
     	
-//    	EmissionsReport report = new EmissionsReport();
-//      report.setYear(new Short("2020"));
-//      report.setId(1L);
-//      
-//      FacilitySite facility = new FacilitySite();
-//      facility.setId(1L);
-//      facility.setEmissionsReport(report);
-//      
-//      EmissionsUnit unit = new EmissionsUnit();
-//      unit.setId(1L);
-//      unit.setFacilitySite(facility);
-//      
-//      EmissionsProcess result = new EmissionsProcess();
-//      
-//      OperatingStatusCode os = new OperatingStatusCode();
-//      os.setCode("OP");
-//      
-//      ReleasePointAppt rpa1 = new ReleasePointAppt();
-//      ReleasePointAppt rpa2 = new ReleasePointAppt();
-//      rpa1.setPercent((double) 50);
-//      rpa2.setPercent((double) 50);
-//      result.getReleasePointAppts().add(rpa1);
-//      result.getReleasePointAppts().add(rpa2);
-//      result.setId(1L);
-//      result.setEmissionsUnit(unit);
-//      result.setAircraftEngineTypeCode(null);
-//      result.setOperatingStatusCode(os);
-//      result.setEmissionsProcessIdentifier("Boiler 001");
-//      result.setSccCode("30503506");
-      
       when(sccRepo.findById("30503506")).thenReturn(Optional.of(ps1));
       when(sccRepo.findById("40500701")).thenReturn(Optional.of(ps2));
       when(sccRepo.findById("2862000000")).thenReturn(Optional.of(ps3));
