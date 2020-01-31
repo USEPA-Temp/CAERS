@@ -102,18 +102,21 @@ public class EmissionsReportApi {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
 
+        EmissionsReportDto result = null;
+
         try (TempFile tempFile = TempFile.from(workbook.getInputStream(), workbook.getOriginalFilename())) {
 
             LOGGER.debug("Workbook filename {}", tempFile.getFileName());
             LOGGER.debug("ReportDto {}", reportDto);
 
+            result = this.uploadService.uploadBulkReport(reportDto, tempFile);
 
         } catch (IOException e) {
 
 
         }
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(result);
     }
 
     /**

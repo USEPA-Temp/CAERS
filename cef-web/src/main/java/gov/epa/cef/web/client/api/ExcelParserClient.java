@@ -6,12 +6,12 @@ import com.google.common.io.ByteStreams;
 import gov.epa.cef.web.util.TempFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.profiler.Profiler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -20,47 +20,37 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.UUID;
 
 @Component
-//@ConstructorBinding
-@Valid
-@ConfigurationProperties(prefix = "excel-parser")
 public class ExcelParserClient {
 
-    private final ObjectMapper objectMapper;
+    private final ExcelParserClientConfig config;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @NotNull
-    private URL baseUrl;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    ExcelParserClient(ObjectMapper objectMapper) {
+    ExcelParserClient(ExcelParserClientConfig config, ObjectMapper objectMapper) {
 
+        this.config = config;
         this.objectMapper = objectMapper;
     }
 
-    public URL getBaseUrl() {
-
-        return baseUrl;
-    }
-
-    public void setBaseUrl(URL baseUrl) {
-
-        this.baseUrl = baseUrl;
-    }
-
-    public JsonNode parseWorkbook(TempFile tempFile) {
+    public ExcelParserResponse parseWorkbook(TempFile tempFile) {
 
         return parseWorkbook(tempFile.getFileName(), tempFile.getFile());
     }
 
-    public JsonNode parseWorkbook(String filename, File workbook) {
+    ExcelParserResponse parseWorkbook(String filename, File workbook) {
 
         JsonNode result = null;
+        int responseCode = -1;
+
+        Profiler profiler = new Profiler("ExcelParser");
+        profiler.setLogger(logger);
 
         URL url = makeUrl("/parse");
         HttpURLConnection connection = null;
@@ -96,7 +86,8 @@ public class ExcelParserClient {
                 request.flush();
             }
 
-            int responseCode = connection.getResponseCode();
+            responseCode = connection.getResponseCode();
+
             logger.debug("Parser returned response code {}", responseCode);
 
             try (InputStream inputStream = connection.getInputStream()) {
@@ -110,18 +101,14 @@ public class ExcelParserClient {
 
         } finally {
 
+            profiler.stop().log();
+
             if (connection != null) {
                 connection.disconnect();
             }
         }
 
-        return result;
-    }
-
-    public ExcelParserClient withBaseUrl(final URL baseUrl) {
-
-        setBaseUrl(baseUrl);
-        return this;
+        return new ExcelParserResponse(responseCode, result);
     }
 
     private URL makeUrl(String path) {
@@ -130,16 +117,38 @@ public class ExcelParserClient {
 
         try {
 
-            result = new URL(UriComponentsBuilder
-                .fromUri(this.baseUrl.toURI())
-                .path(path)
-                .toUriString());
+            result = new URL(String.format("%s%s", this.config.getBaseUrl().toString(), path));
 
-        } catch (URISyntaxException | MalformedURLException e) {
+        } catch (MalformedURLException e) {
 
             throw new IllegalArgumentException(e);
         }
 
         return result;
+    }
+
+    @Component
+    @Validated
+    @ConfigurationProperties(prefix = "excel-parser")
+    public static class ExcelParserClientConfig {
+
+        @NotNull
+        private URL baseUrl;
+
+        public URL getBaseUrl() {
+
+            return baseUrl;
+        }
+
+        public void setBaseUrl(URL baseUrl) {
+
+            this.baseUrl = baseUrl;
+        }
+
+        public ExcelParserClientConfig withBaseUrl(final URL baseUrl) {
+
+            setBaseUrl(baseUrl);
+            return this;
+        }
     }
 }

@@ -1,18 +1,9 @@
 package gov.epa.cef.web.service.impl;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.epa.cef.web.client.api.ExcelParserClient;
+import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
@@ -30,6 +21,7 @@ import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
@@ -37,7 +29,6 @@ import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
-import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
@@ -51,7 +42,9 @@ import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.BulkUploadService;
+import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
@@ -71,6 +64,20 @@ import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
+import gov.epa.cef.web.util.TempFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -79,7 +86,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private EmissionsReportRepository erRepo;
+    private EmissionsReportService emissionsReportService;
 
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngineRepo;
@@ -131,10 +138,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private NaicsCodeRepository naicsCodeRepo;
-    
+
     @Autowired
     private ContactTypeCodeRepository contactTypeRepo;
-    
+
     @Autowired
     private FipsStateCodeRepository stateCodeRepo;
 
@@ -142,7 +149,58 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private EmissionsReportMapper emissionsReportMapper;
 
     @Autowired
+    private ExcelParserClient excelParserClient;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private BulkUploadMapper uploadMapper;
+
+    public EmissionsReportDto uploadBulkReport(EmissionsReportStarterDto metadata, TempFile workbook) {
+
+        EmissionsReportDto result =  null;
+
+        this.emissionsReportService.retrieveByEisProgramIdAndYear(metadata.getEisProgramId(), metadata.getYear())
+            .ifPresent(report -> {
+
+                this.emissionsReportService.delete(report.getId());
+            });
+
+
+        ExcelParserResponse response = this.excelParserClient.parseWorkbook(workbook);
+
+        if (response.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+            try {
+
+                logger.debug("ExcelJsonParser Result {}", response.getJson().toString());
+
+                EmissionsReportBulkUploadDto bulkEmissionsReport =
+                    this.objectMapper.treeToValue(response.getJson(), EmissionsReportBulkUploadDto.class);
+
+                bulkEmissionsReport.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
+                bulkEmissionsReport.setEisProgramId(metadata.getEisProgramId());
+                bulkEmissionsReport.setFrsFacilityId(metadata.getFrsFacilityId());
+                bulkEmissionsReport.setYear(metadata.getYear());
+                bulkEmissionsReport.setStatus(ReportStatus.NEW.name());
+
+                result = saveBulkEmissionsReport(bulkEmissionsReport);
+
+            } catch (JsonProcessingException e) {
+
+                // not happy path
+                throw new IllegalStateException(e);
+            }
+
+        } else {
+
+            // not happy path
+            throw new IllegalArgumentException("what does the fox say?");
+        }
+
+        return result;
+    }
 
     /**
      * Save the emissions report to the database.
@@ -163,23 +221,23 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             Map<Long, Control> controlMap = new HashMap<>();
             Map<Long, FacilityNAICSXref> facilityNaicsMap = new HashMap<>();
             Map<Long, FacilitySiteContact> facilityContactMap = new HashMap<>();
-            
+
             // Map Facility Contacts
             for (FacilitySiteContactBulkUploadDto bulkFacilityContact: bulkEmissionsReport.getFacilityContacts()) {
             	FacilitySiteContact facilityContact = mapFacilityContact(bulkFacilityContact);
-            	
+
             	if (bulkFacilityContact.getFacilitySiteId().equals(bulkFacility.getId())) {
             		facilityContact.setFacilitySite(facility);
             		facility.getContacts().add(facilityContact);
             		facilityContactMap.put(bulkFacilityContact.getId(), facilityContact);
             	}
             }
-            
-            
+
+
             // Map Facility NAICS
             for (FacilityNAICSBulkUploadDto bulkFacilityNAICS: bulkEmissionsReport.getFacilityNAICS()) {
             	FacilityNAICSXref facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
-            	
+
             	if (bulkFacilityNAICS.getFacilitySiteId().equals(bulkFacility.getId())) {
             		facilityNAICS.setFacilitySite(facility);
             		facility.getFacilityNAICS().add(facilityNAICS);
@@ -350,8 +408,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
 
 
-        EmissionsReport savedReport = erRepo.save(emissionsReport);
-        return emissionsReportMapper.toDto(savedReport);
+        return this.emissionsReportService.saveEmissionReport(emissionsReport);
     }
 
     /**
@@ -362,7 +419,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     @Override
     public EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId) {
 
-        EmissionsReport report = erRepo.findById(reportId).orElse(null);
+        EmissionsReport report = this.emissionsReportService.retrieve(reportId)
+            .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
+
         List<FacilitySite> facilitySites = report.getFacilitySites();
         List<EmissionsUnit> units = facilitySites.stream()
                 .flatMap(f -> f.getEmissionsUnits().stream())
@@ -423,7 +482,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         return reportDto;
     }
-    
+
     /**
      * Map an EmissionsReportBulkUploadDto to an EmissionsReport domain model
      */
@@ -488,13 +547,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         return facility;
     }
-    
+
     /**
      * Map an FacilitySiteContactBulkUploadDto to an FacilitySiteContact domain model
      */
     private FacilitySiteContact mapFacilityContact(FacilitySiteContactBulkUploadDto bulkFacilityContact) {
 	    	FacilitySiteContact facilityContact = new FacilitySiteContact();
-	
+
 	    	facilityContact.setPrefix(bulkFacilityContact.getPrefix());
 	    	facilityContact.setFirstName(bulkFacilityContact.getFirstName());
 	    	facilityContact.setLastName(bulkFacilityContact.getLastName());
@@ -520,11 +579,11 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 	      if (bulkFacilityContact.getMailingStateCode() != null) {
 	      	facilityContact.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getMailingStateCode())).orElse(null));
 	      }
-	
+
 	      return facilityContact;
     }
-    
-    
+
+
     /**
      * Map an FacilityNAICSBulkUploadDto to an FacilityNAICS domain model
      */
@@ -777,8 +836,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      */
     private BigDecimal calculateEmissionTons(Emission emission) {
         try {
-            BigDecimal calculatedEmissionsTons = CalculationUtils.convertMassUnits(emission.getTotalEmissions(), 
-                    MassUomConversion.valueOf(emission.getEmissionsUomCode().getCode()), 
+            BigDecimal calculatedEmissionsTons = CalculationUtils.convertMassUnits(emission.getTotalEmissions(),
+                    MassUomConversion.valueOf(emission.getEmissionsUomCode().getCode()),
                     MassUomConversion.TON);
             return calculatedEmissionsTons;
         } catch (IllegalArgumentException ex) {

@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +52,7 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @param year
      * @return
      */
-    EmissionsReport findByEisProgramIdAndYear(String eisProgramId, Short year);
+    Optional<EmissionsReport> findByEisProgramIdAndYear(@NotBlank String eisProgramId, @NotNull Short year);
 
     /**
      *

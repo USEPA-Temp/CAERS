@@ -1,15 +1,20 @@
 package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Optional;
 
 public interface EmissionsReportService {
+
+    // TODO: Remove hard coded value
+    // https://alm.cgifederal.com/projects/browse/CEF-319
+    String __HARD_CODED_AGENCY_CODE__ = "GA";
 
     /**
      * Creates an emissions report from FRS data
@@ -19,17 +24,15 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short year);
 
-    
+
     /**
      * Creates an emissions report from scratch
      * @param facilityEisProgramId
-     * @param frsFacilityId
-     * @param stateCode
-     * @param year
+     * @param reportDto
      * @return
      */
     EmissionsReportDto createEmissionReport(String facilityEisProgramId, EmissionsReportStarterDto reportDto);
-    
+
     /**
      * Find reports for a given facility
      * @param facilityEisProgramId {@link ProgramFacility}'s programId
@@ -50,6 +53,19 @@ public interface EmissionsReportService {
      * @return
      */
     EmissionsReportDto findById(Long id);
+
+    /**
+     * Find report by ID
+     * @param id
+     * @return
+     */
+    Optional<EmissionsReport> retrieve(long id);
+
+    /**
+     * Find report by facility id and year
+     * @return
+     */
+    Optional<EmissionsReport> retrieveByEisProgramIdAndYear(@NotBlank String facilityEisProgramId, int year);
 
     /**
      * Find the most recent report for a given facility
