@@ -27,7 +27,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     percentApportionment: ['', [Validators.required, Validators.max(100), Validators.pattern('[0-9]*')]],
     control: [''],
     controlPathChild: [''],
-    sequenceNumber: ['', Validators.required]
+    sequenceNumber: ['', [Validators.required,Validators.pattern('[0-9]*')]]
   }, {validator: this.customValidationFunction});
 
   constructor(private controlService: ControlService,
@@ -120,12 +120,16 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   }
 
   customValidationFunction(formGroup): any {
+    console.log("form group ",formGroup)
     const controlField = formGroup.controls.control.value;
     const controlPathChildField = formGroup.controls.controlPathChild.value;
     const sequenceNumber = formGroup.controls.sequenceNumber.value;
     const percentApportionment = formGroup.controls.percentApportionment.value;
     if (controlField && controlPathChildField) {
       return { controlAndPathSelected: true };
+    }
+    if (!controlField && !controlPathChildField) {
+      return { controlAndPathNotSelected: true};
     }
     if ((controlField || controlPathChildField) && (sequenceNumber && percentApportionment)) {
       formGroup.status = 'VALID';

@@ -32,7 +32,7 @@ export class ControlPathAssignmentTableComponent extends BaseSortableTable imple
   }
 
   openCreateModal() {
-    const modalRef = this.modalService.open(ControlPathAssignmentModalComponent, { backdrop: 'static', scrollable: true });
+    const modalRef = this.modalService.open(ControlPathAssignmentModalComponent, { backdrop: 'static', scrollable: true, size: 'lg' });
     modalRef.componentInstance.controlPath = this.controlPath;
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
     modalRef.result.then((result) => {
@@ -72,7 +72,7 @@ export class ControlPathAssignmentTableComponent extends BaseSortableTable imple
   }
 
   openEditModal(selectedControlPathAssignment) {
-      const modalRef = this.modalService.open(ControlPathAssignmentModalComponent, { backdrop: 'static', scrollable: true });
+      const modalRef = this.modalService.open(ControlPathAssignmentModalComponent, { backdrop: 'static', scrollable: true, size: 'lg' });
       modalRef.componentInstance.controlPath = this.controlPath;
       modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
       modalRef.componentInstance.edit = true;
