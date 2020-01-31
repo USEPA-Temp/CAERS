@@ -1,8 +1,9 @@
 package gov.epa.cef.web.service.mapper;
 
-import java.util.List;
+import java.util.List; 
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
@@ -15,8 +16,13 @@ public interface ControlAssignmentMapper {
     ControlAssignmentPostOrderDto toPostOrderDto(ControlAssignment source);
 
     List<ControlAssignmentPostOrderDto> toPostOrderDtoList(List<ControlAssignment> source);
-
+    
     ControlAssignmentDto toDto(ControlAssignment source);
 
     List<ControlAssignmentDto> toDtoList(List<ControlAssignment> source);
+    
+    ControlAssignment fromDto(ControlAssignmentDto source);
+    
+    void updateFromDto(ControlAssignmentDto source, @MappingTarget ControlAssignment target);
+
 }

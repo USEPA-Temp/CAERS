@@ -21,12 +21,34 @@ import javax.persistence.Table;
 public class UnitMeasureCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
+    
+    @Column(name = "unit_type", nullable = false)
+    private String unitType;
+    
+    @Column(name = "calculation_variable")
+    private String calculationVariable;
 
     @Column(name = "ef_numerator", nullable = false)
     private Boolean efNumerator;
 
     @Column(name = "ef_denominator", nullable = false)
     private Boolean efDenominator;
+
+    public String getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
+    }
+
+    public String getCalculationVariable() {
+        return calculationVariable;
+    }
+
+    public void setCalculationVariable(String calculationVariable) {
+        this.calculationVariable = calculationVariable;
+    }
 
     public Boolean getEfNumerator() {
         return efNumerator;

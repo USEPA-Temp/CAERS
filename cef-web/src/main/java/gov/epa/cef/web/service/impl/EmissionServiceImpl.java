@@ -5,11 +5,15 @@ import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
+import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
@@ -52,6 +56,9 @@ public class EmissionServiceImpl implements EmissionService {
     
     @Autowired
     private ReportHistoryRepository historyRepo;
+
+    @Autowired
+    private UnitMeasureCodeRepository uomRepo;
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
@@ -142,6 +149,36 @@ public class EmissionServiceImpl implements EmissionService {
     public EmissionDto calculateTotalEmissions(EmissionDto dto) {
 
         ReportingPeriod rp = periodRepo.findById(dto.getReportingPeriodId()).orElse(null);
+
+        UnitMeasureCode totalEmissionUom = uomRepo.findById(dto.getEmissionsUomCode().getCode()).orElse(null);
+        UnitMeasureCode efNumerator = uomRepo.findById(dto.getEmissionsNumeratorUom().getCode()).orElse(null);
+        UnitMeasureCode efDenom = uomRepo.findById(dto.getEmissionsDenominatorUom().getCode()).orElse(null);
+
+        if (rp.getCalculationParameterUom() == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Period Calculation Unit of Measure must be set.");
+        }
+        if (totalEmissionUom == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Total Emissions Unit of Measure must be set.");
+        }
+        if (efNumerator == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Numerator Unit of Measure must be set.");
+        }
+        if (efDenom == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Denominator Unit of Measure must be set.");
+        }
+
+        if (!rp.getCalculationParameterUom().getUnitType().equals(efDenom.getUnitType())) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
+                    String.format("Reporting Period Calculation Unit of Measure %s cannot be converted into Emission Factor Denominator Unit of Measure %s.",
+                            rp.getCalculationParameterUom().getDescription(), efDenom.getDescription()));
+        }
+
+        if (!totalEmissionUom.getUnitType().equals(efNumerator.getUnitType())) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
+                    String.format("Emission Factor Numerator Unit of Measure %s cannot be converted into Total Emissions Unit of Measure %s.",
+                            efNumerator.getDescription(), totalEmissionUom.getDescription()));
+        }
+
         if (dto.getFormulaIndicator()) {
             List<EmissionFormulaVariable> variables = emissionMapper.formulaVariableFromDtoList(dto.getVariables());
 
@@ -149,7 +186,21 @@ public class EmissionServiceImpl implements EmissionService {
             dto.setEmissionsFactor(ef);
         }
 
+        // check if the year is divisible by 4 which would make it a leap year
+        boolean leapYear = rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;
+
         BigDecimal totalEmissions = dto.getEmissionsFactor().multiply(rp.getCalculationParameterValue());
+
+        // convert units for denominator and throughput
+        if (efDenom != null && rp.getCalculationParameterUom() != null 
+                && !rp.getCalculationParameterUom().getCode().equals(efDenom.getCode())) {
+            totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
+        }
+
+        // convert units for numerator and total emissions
+        if (efNumerator != null && totalEmissionUom != null && !totalEmissionUom.getCode().equals(efNumerator.getCode())) {
+            totalEmissions = CalculationUtils.convertUnits(efNumerator.getCalculationVariable(), totalEmissionUom.getCalculationVariable(), leapYear).multiply(totalEmissions);
+        }
         dto.setTotalEmissions(totalEmissions);
 
         return dto;

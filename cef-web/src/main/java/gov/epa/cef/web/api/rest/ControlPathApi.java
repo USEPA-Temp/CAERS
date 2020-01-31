@@ -1,10 +1,13 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.repository.ControlAssignmentRepository;
+
 import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
+import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,4 +165,66 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Create a Control Path Assignment
+     * @param controlPathAssignment
+     * @return
+     */
+    @PostMapping(value = "/controlAssignment/")
+    public ResponseEntity<ControlAssignmentDto> createControlPathAssignment(
+    		@NotNull @RequestBody ControlAssignmentDto dto) {
+    	
+    	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	ControlAssignmentDto result = controlPathService.createAssignment(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Control Path Assignments for a Control Path
+     * @param facilitySiteId
+     * @return
+     */
+    @GetMapping(value = "/controlAssignment/{controlPathId}")
+    public ResponseEntity<List<ControlAssignmentDto>> retrieveControlPathAssignmentsForControlPath(
+        @NotNull @PathVariable Long controlPathId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(controlPathId, ControlPathRepository.class);
+
+        List<ControlAssignmentDto> result = controlPathService.retrieveForControlPath(controlPathId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete a Control Path Assignment for given id
+     * @param controlPathId
+     * @return
+     */
+    @DeleteMapping(value = "/controlAssignment/{controlPathAssignmentId}")
+    public void deleteControlPathAssignment(@NotNull @PathVariable Long controlPathAssignmentId) {
+    	
+    	this.securityService.facilityEnforcer().enforceEntity(controlPathAssignmentId, ControlAssignmentRepository.class);
+    	
+    	controlPathService.deleteAssignment(controlPathAssignmentId);
+    }
+    
+    /**
+     * Update a control path assignment by id
+     * @param controlPathAssignmentId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/controlAssignment/{controlPathAssignmentId}")
+    public ResponseEntity<ControlAssignmentDto> updateControlPathAssignment(
+    		@NotNull @PathVariable Long controlPathAssignmentId, @NotNull @RequestBody ControlAssignmentDto dto) {
+    		
+    		this.securityService.facilityEnforcer().enforceEntity(controlPathAssignmentId, ControlAssignmentRepository.class);
+    	
+    		ControlAssignmentDto result = controlPathService.updateAssignment(dto.withId(controlPathAssignmentId));
+    		
+    		return new ResponseEntity<>(result, HttpStatus.OK);
+    } 
 }

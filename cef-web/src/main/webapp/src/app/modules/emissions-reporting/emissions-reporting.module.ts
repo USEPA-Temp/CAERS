@@ -60,6 +60,8 @@ import { ControlPathsTableComponent } from './components/control-paths-table/con
 import { ControlPathDetailsComponent } from './pages/control-path-details/control-path-details.component';
 import { EditControlPathInfoPanelComponent } from './components/edit-control-path-info-panel/edit-control-path-info-panel.component';
 import { CreateControlPathComponent } from './pages/create-control-path/create-control-path.component';
+import { ControlPathAssignmentTableComponent } from './components/control-path-assignment-table/control-path-assignment-table.component';
+import { ControlPathAssignmentModalComponent } from './components/control-path-assignment-modal/control-path-assignment-modal.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +116,9 @@ import { CreateControlPathComponent } from './pages/create-control-path/create-c
     ControlPathsTableComponent,
     ControlPathDetailsComponent,
     EditControlPathInfoPanelComponent,
-    CreateControlPathComponent
+    CreateControlPathComponent,
+    ControlPathAssignmentTableComponent,
+    ControlPathAssignmentModalComponent
   ],
   imports: [
     CommonModule,
@@ -129,7 +133,8 @@ import { CreateControlPathComponent } from './pages/create-control-path/create-c
     SccSearchModalComponent,
     ReleasePointApportionmentModalComponent,
     FacilityNaicsModalComponent,
-    ControlPollutantModalComponent
+    ControlPollutantModalComponent,
+    ControlPathAssignmentModalComponent
   ]
 })
 export class EmissionsReportingModule { }

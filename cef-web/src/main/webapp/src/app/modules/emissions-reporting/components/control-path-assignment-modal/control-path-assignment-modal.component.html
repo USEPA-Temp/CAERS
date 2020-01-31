@@ -1,0 +1,53 @@
+<form [formGroup]="controlPathAssignmentForm" >
+    <div class="modal-header">
+        <h4 class="modal-title w-100"><strong>Control Path Assignment</strong></h4>
+    </div>
+
+    <div class="modal-body">
+        <strong>You must select either a Control or a Control Path</strong>
+        <div class="ml-2 mb-2 mt-1">
+            <label><b>Control</b></label>
+            <select style="width: 300px;" type="text" id="controlSelect" class="form-control" formControlName="control">
+                <option [ngValue]="null">Control</option>
+                <option *ngFor="let c of controls" [ngValue]="c">
+                    {{c.identifier}}
+                </option>
+            </select>
+            <app-validation-message [control]="controlPathAssignmentForm.get('control')"></app-validation-message>
+        </div>
+        <div class="ml-2 mb-2">
+            <label><b>Control Path</b></label>
+            <select style="width: 300px;" type="text" id="controlPathSelect" class="form-control" formControlName="controlPathChild">
+                <option [ngValue]="null">Control Path</option>
+                <option *ngFor="let cp of controlPaths" [ngValue]="cp">
+                    {{cp.pathId}}
+                </option>
+            </select>
+            <span [hidden]="!controlPathAssignmentForm.hasError('controlAndPathSelected')" style="color:red">You can only select a control OR a path, not both</span>
+            <app-validation-message [control]="controlPathAssignmentForm.get('controlPathChild')"></app-validation-message>
+        </div>
+        <div class="ml-1 mb-2">
+            <div class="row ml-1">
+                <label><b>Enter the Apportionment Percentage</b></label>
+            </div>
+            <div class="ml-1">
+                <input type="text" maxlength="3" formControlName="percentApportionment" id="percentInput">
+                <app-validation-message [control]="controlPathAssignmentForm.get('percentApportionment')"></app-validation-message>
+            </div>
+        </div>
+        <div class="ml-1">
+            <div class="row ml-1">
+                <label><b>Enter the Sequence Number</b></label>
+            </div>
+            <div class="ml-1">
+                <input formControlName="sequenceNumber" id="sequenceNumberInput">
+                <app-validation-message [control]="controlPathAssignmentForm.get('sequenceNumber')"></app-validation-message>
+            </div>
+        </div>
+    </div>
+
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
+        <button type="button" class="btn btn-primary mr-2" (click)="onClose()">Cancel</button>
+    </div>
+</form> 
