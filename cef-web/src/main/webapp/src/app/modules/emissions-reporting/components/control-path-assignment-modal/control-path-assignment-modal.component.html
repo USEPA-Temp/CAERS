@@ -35,7 +35,7 @@
                     </option>
                 </select>
                 <span class="validation-message" [hidden]="!controlPathAssignmentForm.hasError('controlAndPathSelected')" >You can only select a control OR a path, not both</span>
-                <span class="validation-message" [hidden]="!controlPathAssignmentForm.hasError('controlAndPathNotSelected') || !(controlPathAssignmentForm.dirty || controlPathAssignmentForm.touched)" >You must select either a control or a path</span>
+                <span class="validation-message" [hidden]="!controlPathAssignmentForm.hasError('controlAndPathNotSelected') || !(controlPathAssignmentForm.controls.control.dirty || controlPathAssignmentForm.controls.controlPathChild.dirty)">You must select either a control or a path</span>
                 <app-validation-message [control]="controlPathAssignmentForm.get('controlPathChild')"></app-validation-message>
             </div>
             <div class="row ml-1 mt-2">

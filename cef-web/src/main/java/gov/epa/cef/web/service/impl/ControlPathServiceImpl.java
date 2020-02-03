@@ -1,18 +1,20 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;  
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
+import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.mapper.ControlAssignmentMapper;
 import gov.epa.cef.web.service.mapper.ControlMapper;
@@ -34,6 +36,9 @@ public class ControlPathServiceImpl implements ControlPathService {
     private ControlAssignmentMapper assignmentMapper;
     
     @Autowired
+    private ControlMapper controlMapper;
+    
+    @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
     
     @Autowired
@@ -41,6 +46,9 @@ public class ControlPathServiceImpl implements ControlPathService {
     
     @Autowired
     private ControlPathMapper controlPathMapper;
+    
+    @Autowired
+    private ControlServiceImpl controlService;
       
     @Override
     public ControlPathDto retrieveById(Long id) {
@@ -193,21 +201,27 @@ public class ControlPathServiceImpl implements ControlPathService {
     public ControlAssignmentDto updateAssignment(ControlAssignmentDto dto) {
     	ControlPathDto controlPathDto = new ControlPathDto();
     	ControlPathDto controlPathChildDto = new ControlPathDto();
-    	if(dto.getControlPath() != null){
-        	controlPathDto = controlPathservice.retrieveById(dto.getControlPath().getId());	
+    	ControlDto controlDto = new ControlDto();
+    	
+    	if(dto.getControl() != null){
+        	controlDto = controlService.retrieveById(dto.getControl().getId());	
     	}
     	if(dto.getControlPathChild() != null){
     		controlPathChildDto = controlPathservice.retrieveById(dto.getControlPathChild().getId());
     	}
+    	controlPathDto = controlPathservice.retrieveById(dto.getControlPath().getId());	
 
     	ControlAssignment controlPathAssignment = assignmentRepo.findById(dto.getId()).orElse(null);
     	dto.setControlPath(null);
     	dto.setControlPathChild(null);
+    	dto.setControl(null);
     	assignmentMapper.updateFromDto(dto, controlPathAssignment);
+    	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
+    	controlPathAssignment.setControlPath(controlPath);
     	
-    	if(controlPathDto.getId() != null){
-        	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
-        	controlPathAssignment.setControlPath(controlPath);
+    	if(controlDto.getId() != null){
+        	Control control = controlMapper.fromDto(controlDto);
+        	controlPathAssignment.setControl(control);
     	}
     	if(controlPathChildDto.getId() != null){
         	ControlPath controlPathChild = controlPathMapper.fromDto(controlPathChildDto);
