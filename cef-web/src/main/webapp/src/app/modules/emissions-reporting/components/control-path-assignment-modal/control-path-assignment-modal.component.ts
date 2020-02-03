@@ -69,6 +69,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   onSubmit() {
     if (!this.isValid()) {
         this.controlPathAssignmentForm.markAllAsTouched();
+        this.controlPathAssignmentForm.controls.control.markAsDirty();
     } else {
         if (this.controlPathAssignmentForm.controls.controlPathChild.value) {
           this.controlPathAssignmentForm.controls.control.reset();
@@ -120,7 +121,6 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   }
 
   customValidationFunction(formGroup): any {
-    console.log("form group ",formGroup)
     const controlField = formGroup.controls.control.value;
     const controlPathChildField = formGroup.controls.controlPathChild.value;
     const sequenceNumber = formGroup.controls.sequenceNumber.value;
