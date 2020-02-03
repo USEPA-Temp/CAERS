@@ -49,12 +49,15 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
         break;
         }
       }
-      for (let controlPath of this.controlPaths) {
-        if (controlPath.id === this.selectedReleasePoint.controlPath.id) {
-          this.controlPathSelected = controlPath;
-          break;
+      if(this.selectedReleasePoint.controlPath){
+        for (let controlPath of this.controlPaths) {
+          if (controlPath.id === this.selectedReleasePoint.controlPath.id) {
+            this.controlPathSelected = controlPath;
+            break;
+          }
         }
       }
+
     }
 
     if (this.selectedReleasePoint) {
@@ -100,6 +103,9 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
               this.selectedReleasePoint.emissionsProcessId = this.process.id;
               this.selectedReleasePoint.facilitySiteId = this.facilitySiteId;
               Object.assign(this.selectedReleasePoint, this.releasePointApptForm.value);
+              if (!this.selectedReleasePoint.controlPath) {
+                this.selectedReleasePoint.controlPath = null;
+              }
             }
           } else {
               if (releasePoint.releasePointIdentifier === this.selectedReleasePoint.releasePointIdentifier) {
@@ -107,7 +113,6 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
                 this.selectedReleasePoint.emissionsProcessId = this.process.id;
                 this.selectedReleasePoint.facilitySiteId = this.facilitySiteId;
                 this.selectedReleasePoint.percent = this.releasePointApptForm.get('percent').value;
-                this.selectedReleasePoint.controlPath = this.releasePointApptForm.get('controlPath').value;
               }
           }
         });
