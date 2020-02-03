@@ -2,10 +2,10 @@
   <table class="table table-sm table-striped table-bordered">
     <thead class="thead-cef-medium">
     <tr>
-      <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point ID</th>
+      <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point</th>
       <th scope="col" sortable="releasePointTypeCode" (sort)="onSort($event)">Release Type</th>
       <th scope="col" sortable="controlPath" (sort)="onSort($event)">Control Path</th>
-      <th scope="col" sortable="percent" (sort)="onSort($event)">% Apportionment of Emissions</th>
+      <th scope="col" sortable="percent" (sort)="onSort($event)">%</th>
       <ng-container *ngIf="!readOnlyMode">
         <th scope="col"></th>
         <th scope="col"></th>
