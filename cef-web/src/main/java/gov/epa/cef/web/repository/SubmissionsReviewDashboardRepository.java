@@ -9,11 +9,11 @@ import gov.epa.cef.web.domain.SubmissionsReviewDashboardView;
 
 public interface SubmissionsReviewDashboardRepository extends JpaRepository<SubmissionsReviewDashboardView, Long> {
 
-    List<SubmissionsReviewDashboardView> findByReportStatus(ReportStatus reportStatus);
+    List<SubmissionsReviewDashboardView> findByReportStatusAndAgencyCode(ReportStatus reportStatus, String agencyCode);
     
-    List<SubmissionsReviewDashboardView> findByYearAndReportStatus(Short year, ReportStatus reportStatus);
+    List<SubmissionsReviewDashboardView> findByYearAndReportStatusAndAgencyCode(Short year, ReportStatus reportStatus, String agencyCode);
     
-    List<SubmissionsReviewDashboardView> findByYear(Short year); 
+    List<SubmissionsReviewDashboardView> findByYearAndAgencyCode(Short year, String agencyCode); 
     
     List<SubmissionsReviewDashboardView> findByAgencyCode(String agencyCode);
 

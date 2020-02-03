@@ -258,11 +258,12 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		List<ControlAssignment> caSet = new ArrayList<>();
 		caSet.add(ca);
 		cp.setAssignments(caSet);
-		cp.setId(1L);
+		cp.setId(9999991L);
 		cp.setFacilitySite(fs);
 		cp.setDescription("Test ControlPath");
 		cp.setPathId("Test ControlPath");
 		ca.setControlPath(cp);
+		ca.setControlPathChild(cp);
 		assignments.add(ca);
 
 		control.setAssignments(assignments);
@@ -340,6 +341,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		e.setTotalEmissions(new BigDecimal(1000.0));
 		e.setFormulaIndicator(false);
 		e.setComments("Test Emission Comments");
+		e.setTotalManualEntry(true);
 
 		uom = new UnitMeasureCode();
 		uom.setCode("LB");

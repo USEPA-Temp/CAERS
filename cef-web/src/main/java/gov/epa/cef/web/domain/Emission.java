@@ -34,6 +34,9 @@ public class Emission extends BaseAuditEntity {
     @JoinColumn(name = "pollutant_code", nullable = false)
     private Pollutant pollutant;
     
+    @Column(name = "total_manual_entry", nullable = false)
+    private Boolean totalManualEntry;
+    
     @Column(name = "total_emissions", nullable = false)
     private BigDecimal totalEmissions;
     
@@ -59,7 +62,10 @@ public class Emission extends BaseAuditEntity {
 
     @Column(name = "comments", length = 400)
     private String comments;
-    
+
+    @Column(name = "calculation_comment", length = 4000)
+    private String calculationComment;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emissions_numerator_uom")
     private UnitMeasureCode emissionsNumeratorUom;
@@ -90,12 +96,14 @@ public class Emission extends BaseAuditEntity {
 		this.id = originalEmission.getId();
         this.reportingPeriod = reportingPeriod;
         this.pollutant = originalEmission.getPollutant();
+        this.totalManualEntry = originalEmission.getTotalManualEntry();
         this.totalEmissions = originalEmission.getTotalEmissions();
         this.emissionsUomCode = originalEmission.getEmissionsUomCode();
         this.emissionsFactor = originalEmission.getEmissionsFactor();
         this.emissionsFactorText = originalEmission.getEmissionsFactorText();
         this.emissionsCalcMethodCode = originalEmission.getEmissionsCalcMethodCode();
         this.comments = originalEmission.getComments();
+        this.calculationComment = originalEmission.getCalculationComment();
         this.emissionsNumeratorUom = originalEmission.getEmissionsNumeratorUom();
         this.emissionsDenominatorUom = originalEmission.getEmissionsDenominatorUom();
         this.calculatedEmissionsTons = originalEmission.getCalculatedEmissionsTons();
@@ -122,6 +130,16 @@ public class Emission extends BaseAuditEntity {
     public void setPollutant(Pollutant pollutant) {
         this.pollutant = pollutant;
     }
+
+    public Boolean getTotalManualEntry() {
+        return totalManualEntry;
+    }
+
+
+    public void setTotalManualEntry(Boolean totalManualEntry) {
+        this.totalManualEntry = totalManualEntry;
+    }
+
 
     public BigDecimal getTotalEmissions() {
         return this.totalEmissions;
@@ -185,6 +203,14 @@ public class Emission extends BaseAuditEntity {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getCalculationComment() {
+        return calculationComment;
+    }
+
+    public void setCalculationComment(String calculationComment) {
+        this.calculationComment = calculationComment;
     }
 
     public BigDecimal getCalculatedEmissionsTons() {

@@ -1,14 +1,17 @@
 package gov.epa.cef.web.repository;
+ 
+import java.util.List; 
+import java.util.Optional;
 
-import java.util.List;
-
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.ControlAssignment;
 
-public interface ControlAssignmentRepository extends CrudRepository<ControlAssignment, Long> {
+public interface ControlAssignmentRepository extends CrudRepository<ControlAssignment, Long>, ProgramIdRetriever,ReportIdRetriever  {
 
 	/***
 	 * Retrieves all control assignments that belong to the parent path (e.g. Path B has several control assignment records; one of those records has Path A as a child; this method 
@@ -18,4 +21,24 @@ public interface ControlAssignmentRepository extends CrudRepository<ControlAssig
 	 */
 	List<ControlAssignment> findByControlPathChildId(Long controlPathChildId);
 
+	List<ControlAssignment> findByControlPathId(Long controlPathId);
+	
+    /**
+     * Retrieve Emissions Report id for a Control Assignment
+     * @param id
+     * @return Emissions Report id
+     */
+    @Cacheable(value = CacheName.ControlAssignmentsEmissionsReportIds)
+    @Query("select r.id from ControlAssignment ca join ca.controlPath cp join cp.facilitySite fs join fs.emissionsReport r where ca.id = :id")
+    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+    *
+    * @param id
+    * @return EIS Program ID
+    */
+    @Cacheable(value = CacheName.ControlAssignmentsProgramIds)
+    @Query("select fs.eisProgramId from ControlAssignment ca join ca.controlPath cp join cp.facilitySite fs where ca.id = :id")
+    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+    
 }

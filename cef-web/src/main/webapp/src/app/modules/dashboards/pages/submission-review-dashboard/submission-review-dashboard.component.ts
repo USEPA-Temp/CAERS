@@ -28,13 +28,13 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         private emissionReportService: EmissionsReportingService,
         private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
         private modalService: NgbModal,
-        private sharedService: SharedService ) { }
+        private sharedService: SharedService) { }
 
     ngOnInit() {
         const CURRENT_REPORTING_YEAR = 'CURRENT_REPORTING_YEAR';
         this.currentYear = new Date().getFullYear() - 1;
         this.selectedYear = CURRENT_REPORTING_YEAR;
-        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
+            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
     }
 
     onApprove(year) {
@@ -123,7 +123,8 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     // emits the updated submission list to the notification component
     emitAllSubmissions(): void {
-        this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear).subscribe(submissions =>{
+        this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear)
+        .subscribe(submissions =>{
             this.sharedService.emitSubmissionChange(submissions);
         });
     }

@@ -14,6 +14,15 @@
         </select>
         <app-validation-message [control]="releasePointApptForm.get('selectedReleasePointAppt')"></app-validation-message>
         <br>
+        <strong>Select a Control Path (optional)</strong>
+        <br>
+        <select [(ngModel)]="controlPathSelected" type="text" id="controlPathSelect" class="form-control" formControlName="controlPath">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let cp of controlPaths" [ngValue]="cp">
+                {{cp.pathId}}
+            </option>
+        </select>
+        <br>
         <br>
         <strong>Enter the Emission Percentage</strong>
         <br>

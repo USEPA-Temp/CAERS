@@ -1,19 +1,23 @@
 package gov.epa.cef.web.service.impl;
 
-import java.util.Collections;
+import java.util.Collections;  
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.ReleasePointService;
+import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
 import gov.epa.cef.web.service.mapper.ReleasePointMapper;
+import gov.epa.cef.web.service.mapper.ControlPathMapper;
 import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 
 @Service
@@ -33,6 +37,12 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     
     @Autowired
     private ReleasePointApptMapper releasePointApptMapper;
+    
+    @Autowired
+    private ControlPathServiceImpl controlPathService;
+    
+    @Autowired
+    private ControlPathMapper controlPathMapper;
     
     /**
      * Create a new Release Point from a DTO object
@@ -114,9 +124,14 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      */
     public ReleasePointApptDto updateAppt(ReleasePointApptDto dto) {
     	
+    	ControlPathDto controlPathDto = controlPathService.retrieveById(dto.getControlPath().getId());
     	ReleasePointAppt releasePointAppt = releasePointApptRepo.findById(dto.getId()).orElse(null);
     	releasePointAppt.setReleasePoint(null);
+    	dto.setControlPath(null);
     	releasePointApptMapper.updateFromDto(dto, releasePointAppt);
+    	
+    	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
+    	releasePointAppt.setControlPath(controlPath);
     	
     	ReleasePointApptDto result = releasePointApptMapper.toDto(releasePointApptRepo.save(releasePointAppt));
     	

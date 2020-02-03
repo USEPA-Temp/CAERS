@@ -25,7 +25,6 @@ export class ControlPathsSummaryComponent implements OnInit {
       this.sharedService.emitChange(data.facilitySite);
       this.controlPathService.retrieveForFacilitySite(this.facilitySite.id)
       .subscribe(controls => {
-        console.log("controls ",controls)
         this.controlPaths = controls;
       });
     });

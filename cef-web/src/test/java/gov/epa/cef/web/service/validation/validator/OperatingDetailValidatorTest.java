@@ -225,9 +225,81 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_WINTER.value()) && errorMap.get(ValidationField.DETAIL_PCT_WINTER.value()).size() == 1);
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
     }
+    
+    @Test
+    public void seasonalPercentsRangeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        OperatingDetail testData = createBaseOperatingDetail();
+
+        cefContext = createContext();
+        testData.setPercentSpring(Double.valueOf(110));
+        testData.setPercentSummer(Double.valueOf(110));
+        testData.setPercentFall(Double.valueOf(110));
+        testData.setPercentWinter(Double.valueOf(110));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 5);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_SPRING.value()) && errorMap.get(ValidationField.DETAIL_PCT_SPRING.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_SUMMER.value()) && errorMap.get(ValidationField.DETAIL_PCT_SUMMER.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_FALL.value()) && errorMap.get(ValidationField.DETAIL_PCT_FALL.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_WINTER.value()) && errorMap.get(ValidationField.DETAIL_PCT_WINTER.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData = createBaseOperatingDetail();
+
+        testData.setPercentSpring(Double.valueOf(-10));
+        testData.setPercentSummer(Double.valueOf(-10));
+        testData.setPercentFall(Double.valueOf(-10));
+        testData.setPercentWinter(Double.valueOf(-10));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 5);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_SPRING.value()) && errorMap.get(ValidationField.DETAIL_PCT_SPRING.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_SUMMER.value()) && errorMap.get(ValidationField.DETAIL_PCT_SUMMER.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_FALL.value()) && errorMap.get(ValidationField.DETAIL_PCT_FALL.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT_WINTER.value()) && errorMap.get(ValidationField.DETAIL_PCT_WINTER.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
+    }
+    
+    @Test
+    public void seasonalPercentsBoundaryTest() {
+
+        CefValidatorContext cefContext = createContext();
+        OperatingDetail testData = createBaseOperatingDetail();
+
+        cefContext = createContext();
+        testData.setPercentSpring(Double.valueOf(100));
+        testData.setPercentSummer(Double.valueOf(100));
+        testData.setPercentFall(Double.valueOf(100));
+        testData.setPercentWinter(Double.valueOf(100));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setPercentSpring(Double.valueOf(0));
+        testData.setPercentSummer(Double.valueOf(0));
+        testData.setPercentFall(Double.valueOf(0));
+        testData.setPercentWinter(Double.valueOf(0));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
+    }
 
     @Test
-    public void percentsRangeFailTest() {
+    public void sumPercentsRangeFailTest() {
 
         CefValidatorContext cefContext = createContext();
         OperatingDetail testData = createBaseOperatingDetail();
@@ -252,7 +324,7 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void percentsBoundaryTest() {
+    public void sumPercentsBoundaryTest() {
 
         CefValidatorContext cefContext = createContext();
         OperatingDetail testData = createBaseOperatingDetail();

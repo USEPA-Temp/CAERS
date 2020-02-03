@@ -1,6 +1,6 @@
 import { ReleasePoint } from 'src/app/shared/models/release-point';
-import { Process } from 'src/app/shared/models/process';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { ControlPath } from './control-path';
 
 export class ReleasePointApportionment {
   id: number;
@@ -12,4 +12,5 @@ export class ReleasePointApportionment {
   releasePoint: ReleasePoint;
   emissionsProcessId: number;
   facilitySiteId: number;
+  controlPath: ControlPath;
 }

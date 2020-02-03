@@ -6,8 +6,8 @@ import java.util.List;
 public class EmissionFactorDto {
 
     private Long id;
-    private CodeLookupDto emissionsNumeratorUom;
-    private CodeLookupDto emissionsDenominatorUom;
+    private UnitMeasureCodeDto emissionsNumeratorUom;
+    private UnitMeasureCodeDto emissionsDenominatorUom;
     private CodeLookupDto calculationParameterTypeCode;
     private CodeLookupDto calculationMaterialCode;
     private CodeLookupDto controlMeasureCode;
@@ -30,19 +30,19 @@ public class EmissionFactorDto {
         this.id = id;
     }
 
-    public CodeLookupDto getEmissionsNumeratorUom() {
+    public UnitMeasureCodeDto getEmissionsNumeratorUom() {
         return emissionsNumeratorUom;
     }
 
-    public void setEmissionsNumeratorUom(CodeLookupDto emissionsNumeratorUom) {
+    public void setEmissionsNumeratorUom(UnitMeasureCodeDto emissionsNumeratorUom) {
         this.emissionsNumeratorUom = emissionsNumeratorUom;
     }
 
-    public CodeLookupDto getEmissionsDenominatorUom() {
+    public UnitMeasureCodeDto getEmissionsDenominatorUom() {
         return emissionsDenominatorUom;
     }
 
-    public void setEmissionsDenominatorUom(CodeLookupDto emissionsDenominatorUom) {
+    public void setEmissionsDenominatorUom(UnitMeasureCodeDto emissionsDenominatorUom) {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 

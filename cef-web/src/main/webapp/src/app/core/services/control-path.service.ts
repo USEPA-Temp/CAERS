@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,26 @@ export class ControlPathService {
   create(controlPath: ControlPath): Observable<ControlPath> {
     const url = `${this.baseUrl}`;
     return this.http.post<ControlPath>(url, controlPath);
+  }
+
+  retrieveAssignmentsForControlPath(controlPathId: number): Observable<ControlAssignment[]> {
+    const url = `${this.baseUrl}/controlAssignment/${controlPathId}`;
+    return this.http.get<ControlAssignment[]>(url);
+  }
+
+  createAssignmentForControlPath(controlAssignment: ControlAssignment): Observable<ControlAssignment> {
+    const url = `${this.baseUrl}/controlAssignment/`;
+    return this.http.post<ControlAssignment>(url, controlAssignment);
+  }
+
+  deleteAssignmentForControlPath(controlPathAssignmentId: number): Observable<{}> {
+    const url = `${this.baseUrl}/controlAssignment/${controlPathAssignmentId}`;
+    return this.http.delete(url);
+  }
+
+  updateAssignmentForControlPath(controlPathAssignment: ControlAssignment): Observable<ControlAssignment> {
+    const url = `${this.baseUrl}/controlAssignment/${controlPathAssignment.id}`;
+    return this.http.put<ControlAssignment>(url, controlPathAssignment);
   }
 
 }

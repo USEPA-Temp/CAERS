@@ -9,6 +9,8 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { ReleasePointApportionmentModalComponent } from 'src/app/modules/emissions-reporting/components/release-point-apportionment-modal/release-point-apportionment-modal.component';
 import { Process } from 'src/app/shared/models/process';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ControlPathService } from 'src/app/core/services/control-path.service';
+import { ControlPath } from 'src/app/shared/models/control-path';
 
 @Component({
   selector: 'app-release-point-appt-table',
@@ -20,6 +22,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   @Input() process: Process;
   @Input() readOnlyMode: boolean;
   @Input() facilitySiteId: number;
+  controlPaths: ControlPath[];
   baseUrl: string;
   totalApptPct = 0;
 
@@ -28,7 +31,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     private processService: EmissionsProcessService,
     private releasePointService: ReleasePointService,
     private route: ActivatedRoute,
-    private sharedService: SharedService) {
+    private sharedService: SharedService,
+    private controlPathService: ControlPathService) {
     super();
   }
 
@@ -40,6 +44,10 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     this.tableData.sort((a, b) => (a.releasePointIdentifier > b.releasePointIdentifier ? 1 : -1));
 
     this.calcTotalPercent();
+    this.controlPathService.retrieveForFacilitySite(this.facilitySiteId)
+    .subscribe(controlPaths => {
+      this.controlPaths = controlPaths;
+    });
   }
 
   calcTotalPercent() {
@@ -85,6 +93,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     modalRef.componentInstance.process = this.process;
     modalRef.componentInstance.releasePointApportionments = this.tableData;
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+    modalRef.componentInstance.controlPaths = this.controlPaths;
 
     modalRef.result.then((result) => {
       this.processService.retrieve(this.process.id)
@@ -105,6 +114,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
     modalRef.componentInstance.releasePointApportionments = this.tableData;
     modalRef.componentInstance.edit = true;
     modalRef.componentInstance.selectedReleasePoint = selectedApportionment;
+    modalRef.componentInstance.controlPaths = this.controlPaths;
 
     modalRef.result.then((result) => {
       this.processService.retrieve(this.process.id)

@@ -60,6 +60,8 @@ import { ControlPathsTableComponent } from './components/control-paths-table/con
 import { ControlPathDetailsComponent } from './pages/control-path-details/control-path-details.component';
 import { EditControlPathInfoPanelComponent } from './components/edit-control-path-info-panel/edit-control-path-info-panel.component';
 import { CreateControlPathComponent } from './pages/create-control-path/create-control-path.component';
+import { ControlPathAssignmentTableComponent } from './components/control-path-assignment-table/control-path-assignment-table.component';
+import { ControlPathAssignmentModalComponent } from './components/control-path-assignment-modal/control-path-assignment-modal.component';
 import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bulk-upload.component';
 
 @NgModule({
@@ -116,6 +118,8 @@ import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bul
     ControlPathDetailsComponent,
     EditControlPathInfoPanelComponent,
     CreateControlPathComponent,
+    ControlPathAssignmentTableComponent,
+    ControlPathAssignmentModalComponent,
     ReportBulkUploadComponent
   ],
   imports: [
@@ -131,7 +135,8 @@ import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bul
     SccSearchModalComponent,
     ReleasePointApportionmentModalComponent,
     FacilityNaicsModalComponent,
-    ControlPollutantModalComponent
+    ControlPollutantModalComponent,
+    ControlPathAssignmentModalComponent
   ]
 })
 export class EmissionsReportingModule { }
