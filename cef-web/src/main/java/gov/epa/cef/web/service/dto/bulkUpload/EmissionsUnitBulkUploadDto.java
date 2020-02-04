@@ -1,7 +1,5 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -15,7 +13,6 @@ public class EmissionsUnitBulkUploadDto implements Serializable {
     private String programSystemCode;
     private String description;
     private String typeCode;
-    @JsonProperty("operatingStatusCode") // Json Key "Emissions Unit"$H13
     private String operatingStatusCodeDescription;
     private Short statusYear;
     private String unitOfMeasureCode;

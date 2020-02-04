@@ -1,7 +1,5 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
 
 public class FacilitySiteContactBulkUploadDto implements Serializable {
@@ -10,7 +8,6 @@ public class FacilitySiteContactBulkUploadDto implements Serializable {
 
 	private Long id;
 	private Long facilitySiteId;
-	@JsonProperty("contactType") // Json Key "Facility Contacts"$D13
 	private String type;
 	private String prefix;
 	private String firstName;
