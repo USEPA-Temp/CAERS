@@ -79,8 +79,20 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         			ValidationField.PROCESS_INFO_SCC.value(),
         			"emissionsProcess.information.scc.expired",
         			createValidationDetails(emissionsProcess),
-        			emissionsProcess.getSccCode());
-        	}
+        			emissionsProcess.getSccCode(),
+        			isPointSourceSccCode.getLastInventoryYear().toString());
+        		
+        	} else if (isPointSourceSccCode.getLastInventoryYear() != null
+        		&& isPointSourceSccCode.getLastInventoryYear() >= reportYear) {
+        		
+        		result = false;
+        		context.addFederalWarning(
+        			ValidationField.PROCESS_INFO_SCC.value(),
+        			"emissionsProcess.information.scc.retired",
+        			createValidationDetails(emissionsProcess),
+        			emissionsProcess.getSccCode(),
+        			isPointSourceSccCode.getLastInventoryYear().toString());
+          }
         }
 
         return result;

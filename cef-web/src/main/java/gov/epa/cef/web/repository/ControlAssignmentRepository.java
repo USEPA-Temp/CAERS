@@ -21,7 +21,7 @@ public interface ControlAssignmentRepository extends CrudRepository<ControlAssig
 	 */
 	List<ControlAssignment> findByControlPathChildId(Long controlPathChildId);
 
-	List<ControlAssignment> findByControlPathId(Long controlPathId);
+	List<ControlAssignment> findByControlPathIdOrderBySequenceNumber(Long controlPathId);
 	
     /**
      * Retrieve Emissions Report id for a Control Assignment
