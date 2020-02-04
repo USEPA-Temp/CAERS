@@ -47,12 +47,13 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	List<PointSourceSccCode> sccList = new ArrayList<PointSourceSccCode>();
     	
     	PointSourceSccCode ps1 = new PointSourceSccCode();
-    	ps1.setCode("30503506");
+    	ps1.setCode("30503506"); // point source scc code
     	PointSourceSccCode ps2 = new PointSourceSccCode();
-    	ps2.setCode("40500701");
+    	ps2.setCode("40500701"); // point source scc code
     	ps2.setLastInventoryYear((short)2016);
     	PointSourceSccCode ps3 = new PointSourceSccCode();
-    	ps3.setCode("2862000000");
+    	ps3.setCode("30700599"); // point source scc code
+    	ps3.setLastInventoryYear((short)2019);
     	
     	sccList.add(ps1);
     	sccList.add(ps2);
@@ -60,7 +61,8 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	
       when(sccRepo.findById("30503506")).thenReturn(Optional.of(ps1));
       when(sccRepo.findById("40500701")).thenReturn(Optional.of(ps2));
-      when(sccRepo.findById("2862000000")).thenReturn(Optional.of(ps3));
+      when(sccRepo.findById("2862000000")).thenReturn(Optional.empty());
+      when(sccRepo.findById("30700599")).thenReturn(Optional.of(ps3));
     	
     }
 
@@ -100,12 +102,30 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_INFO_SCC.value()) && errorMap.get(ValidationField.PROCESS_INFO_SCC.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.setSccCode("2862000000");
+     
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_INFO_SCC.value()) && errorMap.get(ValidationField.PROCESS_INFO_SCC.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.setSccCode("30700599");
+     
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_INFO_SCC.value()) && errorMap.get(ValidationField.PROCESS_INFO_SCC.value()).size() == 1);
     }
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
         EmissionsReport report = new EmissionsReport();
-        report.setYear(new Short("2020"));
+        report.setYear(new Short("2019"));
         report.setId(1L);
         
         FacilitySite facility = new FacilitySite();
