@@ -3,20 +3,29 @@ package gov.epa.cef.web.service.validation.validator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
+import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ReleasePointValidator;
@@ -26,6 +35,24 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     @InjectMocks
     private ReleasePointValidator validator;
+    
+    @Mock
+    private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+    
+    @Before
+    public void init(){
+    	
+    	List<EisLatLongToleranceLookup> toleranceList = new ArrayList<EisLatLongToleranceLookup>();
+    	
+    	EisLatLongToleranceLookup fsTolerance = new EisLatLongToleranceLookup();
+    	fsTolerance.setEisProgramId("536411");
+    	fsTolerance.setCoordinateTolerance(new BigDecimal(0.0055));
+
+    	toleranceList.add(fsTolerance);
+    	
+    	when(latLongToleranceRepo.findById("536411")).thenReturn(Optional.of(fsTolerance));
+    	when(latLongToleranceRepo.findById("111111")).thenReturn(Optional.empty());
+    }
 
     @Test
     public void simpleValidatePassTest() {
@@ -529,10 +556,76 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
     }
 
+    @Test
+    public void coordinateToleranceFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+        
+        cefContext = createContext();
+        testData.setLatitude(32.959000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.setLongitude(-84.888000);
+        testData.setLatitude(33.951000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData.setFugitiveLine1Latitude(32.959000);
+        testData.setLongitude(-84.388000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData.setFugitiveLine1Latitude(33.951000);
+        testData.setFugitiveLine1Longitude(-84.888000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData.setFugitiveLine2Latitude(32.959000);
+        testData.setFugitiveLine1Longitude(-84.388000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData.setFugitiveLine2Latitude(33.951000);
+        testData.setFugitiveLine2Longitude(-84.888000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        testData = createBaseReleasePoint();
+        testData.setLatitude(32.959000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
+    }
     
     
     private ReleasePoint createBaseReleasePoint() {
     	
+        FacilitySite facility = new FacilitySite();
+        facility.setId(1L);
+        facility.setEisProgramId("111111");
+        facility.setLatitude(new BigDecimal(33.949000));
+        facility.setLongitude(new BigDecimal(-84.388000));
+        
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("2");
         
@@ -558,11 +651,24 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         result.setStackHeight(1.0);
         result.setStackDiameter(0.5);
         result.setTypeCode(releasePointTypeCode);
+        result.setLatitude(33.949000);
+        result.setLongitude(-84.388000);
+        result.setFacilitySite(facility);
+        result.setFugitiveLine1Latitude(33.949000);
+        result.setFugitiveLine1Longitude(-84.388000);
+        result.setFugitiveLine2Latitude(33.949000);
+        result.setFugitiveLine2Longitude(-84.388000);
 
         return result;
     }
     
     private ReleasePoint createBaseFugitiveReleasePoint() {
+    	
+    	FacilitySite facility = new FacilitySite();
+    	facility.setId(1L);
+    	facility.setEisProgramId("536411");
+    	facility.setLatitude(new BigDecimal(33.949000));
+    	facility.setLongitude(new BigDecimal(-84.388000));
     	
     	ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
     	releasePointTypeCode.setCode("1");
@@ -580,6 +686,13 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	result.setFugitiveLength((long) 1);
     	result.setFugitiveWidth((long) 1);
     	result.setFugitiveHeight((long) 1);
+    	result.setLatitude(33.949000);
+    	result.setLongitude(-84.388000);
+    	result.setFacilitySite(facility);
+    	result.setFugitiveLine1Latitude(33.949000);
+    	result.setFugitiveLine1Longitude(-84.388000);
+    	result.setFugitiveLine2Latitude(33.949000);
+    	result.setFugitiveLine2Longitude(-84.388000);
     	
     	return result;
   }

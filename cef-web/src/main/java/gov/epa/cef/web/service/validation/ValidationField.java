@@ -17,6 +17,7 @@ public enum ValidationField {
     RP_UOM_FT("report.facilitySite.releasePoint.uom"),
     RP_FUGITIVE("report.facilitySite.releasePoint.fugitive"),
     RP_STACK("report.facilitySite.releasePoint.stack"),
+    RP_COORDINATE("report.facilitySite.releasePoint.coordinate"),
     PROCESS_RP_PCT("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.percent"),
     PROCESS_INFO_SCC("report.facilitySite.emissionsUnit.emissionsProcess.information.scc"),
     PERIOD_CALC_VALUE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue"),
