@@ -3,8 +3,8 @@
     <thead class="thead-cef-medium">
     <tr>
       <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point</th>
-      <th scope="col">Release Type</th>
-      <th scope="col">Control Path</th>
+      <th scope="col" sortable="releasePointTypeCode" (sort)="onSort($event)">Release Type</th>
+      <th scope="col" sortable="controlPath" (sort)="onSort($event)">Control Path</th>
       <th scope="col" sortable="percent" (sort)="onSort($event)">%</th>
       <ng-container *ngIf="!readOnlyMode">
         <th scope="col"></th>
@@ -25,8 +25,8 @@
         </ng-container> 
       </tr>
       <tr>
-        <td colspan="3"><strong>Total % Apportionment of Emissions</strong></td>
-        <td colspan="3">{{totalApptPct}}%</td>
+        <td colspan="2"><strong>Total % Apportionment of Emissions</strong></td>
+        <td colspan="4">{{totalApptPct}}%</td>
       </tr>
       <ng-container *ngIf="!readOnlyMode">
         <tr>
