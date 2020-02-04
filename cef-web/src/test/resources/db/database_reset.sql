@@ -61,6 +61,7 @@ DROP TABLE IF EXISTS schema_version_cef;
 DROP TABLE IF EXISTS naics_code_industry;
 DROP TABLE IF EXISTS pollutant;
 DROP TABLE IF EXISTS point_source_scc_code;
+DROP TABLE IF EXISTS eis_latlong_tolerance_lookup;
 
 --SEQUENCES
 DROP SEQUENCE IF EXISTS emission_factor_id_seq;

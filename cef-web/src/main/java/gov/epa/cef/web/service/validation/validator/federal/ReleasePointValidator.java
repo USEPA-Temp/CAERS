@@ -4,20 +4,28 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.MessageFormat;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
+    @Autowired
+    private EisLatLongToleranceLookupRepository latLongToleranceRepo; 
+    
     private static final String FUGITIVE_RELEASE_POINT_CODE = "1"; 
+    private static final BigDecimal DEFAULT_TOLERANCE = new BigDecimal(0.003).setScale(6, RoundingMode.DOWN);
     
     @Override
     public boolean validate(ValidatorContext validatorContext, ReleasePoint releasePoint) {
@@ -327,6 +335,36 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
       		result = false;
       	}
         
+        // Latitude/Longitude Tolerance Check
+        BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
+        BigDecimal facilitySiteLong = releasePoint.getFacilitySite().getLongitude();
+       
+        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLatitude(), facilitySiteLat, "latitude", "latitude")) {
+        	result = false;
+        }
+        
+        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLongitude(), facilitySiteLong, "longitude", "longitude")) {
+        	result = false;
+        }
+        
+        if (releasePoint.getTypeCode().getCode().equals(FUGITIVE_RELEASE_POINT_CODE)) {
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine1Latitude(), facilitySiteLat, "fugitive line1 latitude", "latitude")) {
+	        	result = false;
+	        }
+	        
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine2Latitude(), facilitySiteLat, "fugitive line2 latitude", "latitude")) {
+	        	result = false;
+	        }
+	        
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine1Longitude(), facilitySiteLong, "fugitive line1 longitude", "longitude")) {
+	        	result = false;
+	        }
+	        
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine2Longitude(), facilitySiteLong, "fugitive line2 longitude", "longitude")) {
+	        	result = false;
+	        }
+        }
+        
         return result;
     }
     
@@ -355,6 +393,54 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	} else {
     		return validateUomFT(validatorContext, releasePoint, null, uom, uomField);
     	}
+    }
+    
+    public boolean validateCoordinateTolerance(ValidatorContext validatorContext, ReleasePoint releasePoint, Double rpCoordinate,  BigDecimal facilityCoordinate, String rpLatLongField, String facilityLatLongField) {
+    	
+      CefValidatorContext context = getCefValidatorContext(validatorContext);
+      boolean result = true;
+      
+      String facilityEisId = releasePoint.getFacilitySite().getEisProgramId();
+      
+      if (latLongToleranceRepo.findById(facilityEisId).orElse(null) == null) {
+      	BigDecimal maxRange = facilityCoordinate.add(DEFAULT_TOLERANCE).setScale(6, RoundingMode.DOWN);
+      	BigDecimal minRange = facilityCoordinate.subtract(DEFAULT_TOLERANCE).setScale(6, RoundingMode.DOWN);
+      	
+      	if (rpCoordinate == null ||
+      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(maxRange) == 1) ||
+      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(minRange) == -1)){
+      		
+      		result = false;
+      		context.addFederalError(
+      				ValidationField.RP_COORDINATE.value(),
+      				"releasePoint.coordinate.tolerance.facilityRange",
+      				createValidationDetails(releasePoint),
+      				rpLatLongField,
+      				Double.valueOf(DEFAULT_TOLERANCE.toString()).toString(),
+      				facilityLatLongField,
+      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
+      	}
+      } else {
+      	BigDecimal facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.DOWN);
+      	BigDecimal maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.DOWN);
+      	BigDecimal minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.DOWN);
+      	
+      	if (rpCoordinate == null ||
+      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(maxRange) == 1) ||
+      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(minRange) == -1)){
+      		
+      		result = false;
+      		context.addFederalError(
+      				ValidationField.RP_COORDINATE.value(),
+      				"releasePoint.coordinate.tolerance.facilityRange",
+      				createValidationDetails(releasePoint),
+      				rpLatLongField,
+      				Double.valueOf(facilityTolerance.toString()).toString(),
+      				facilityLatLongField,
+      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
+      	}
+      }
+    	return result;
     }
     
     private ValidationDetailDto createValidationDetails(ReleasePoint source) {
