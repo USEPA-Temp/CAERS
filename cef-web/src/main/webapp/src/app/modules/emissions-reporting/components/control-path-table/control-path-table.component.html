@@ -1,10 +1,9 @@
 <table class="table table-sm table-striped table-bordered">
     <thead class="thead-cef-medium">
     <tr>
-        <th scope="col">Type</th>
-        <th scope="col">Control ID</th>
+        <th scope="col">Control</th>
         <th scope="col">Description</th>
-        <th scope="col" sortable="sequenceNumber" (sort)="onSort($event)">Sequence Number</th>
+        <th scope="col">Control Path</th>
         <!-- Commented out for pilot 
             <ng-container *ngIf="!readOnlyMode">
                 <th scope="col"></th>
@@ -14,28 +13,23 @@
     </thead>
     <tbody>
         <ng-container *ngFor="let item of tableData">
-            <tr *ngIf="item.control">
-                <td>Control</td>
-                <td><a routerLink="{{baseUrl}}/{{item.control.id}}">{{item.control.identifier}}</a></td>
-                <td>{{item.control.description}}</td>
-                <td>{{item.sequenceNumber}}</td>
-                <!-- Commented out for pilot 
-                    <ng-container *ngIf="!readOnlyMode">
-                        <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-                    </ng-container> 
-                -->
-            </tr>
-            <tr *ngIf="item.controlPathChild">
-                <td>Path</td>
-                <td></td>
-                <td>{{item.controlPathChild.description}}</td>
-                <td>{{item.sequenceNumber}}</td>
-                <!-- Commented out for pilot 
-                    <ng-container *ngIf="!readOnlyMode">
-                        <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-                    </ng-container> 
-                -->
-            </tr>
+            <ng-container *ngFor="let assignment of item.assignments">
+                <tr *ngIf="assignment.control">
+                    <td><a routerLink="{{baseUrl}}/{{assignment.control.id}}">{{assignment.control.identifier}}</a></td>
+                    <td>{{assignment.control.description}}</td>
+                    <td><a routerLink="{{controlPathUrl}}/{{item.id}}">{{item.pathId}}</a></td>
+                    <!-- Commented out for pilot 
+                        <ng-container *ngIf="!readOnlyMode">
+                            <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+                        </ng-container> 
+                    -->
+                </tr>
+                    <!-- Commented out for pilot 
+                        <ng-container *ngIf="!readOnlyMode">
+                            <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
+                        </ng-container> 
+                    -->
+            </ng-container>
         </ng-container>
         <!-- Commented out for pilot 
             <ng-container *ngIf="!readOnlyMode">

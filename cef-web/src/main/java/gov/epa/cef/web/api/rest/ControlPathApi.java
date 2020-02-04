@@ -89,7 +89,7 @@ public class ControlPathApi {
     }
 
     /**
-     * Retrieve Control Paths for a facility site
+     * Retrieve Control Paths for a process
      * @param processId
      * @return
      */
