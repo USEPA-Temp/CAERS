@@ -252,30 +252,37 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     }
 
-    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
+    public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
 
         EmissionsReport newReport = new EmissionsReport();
-        newReport.setEisProgramId(facilityEisProgramId);
+        newReport.setEisProgramId(reportDto.getEisProgramId());
         newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setAgencyCode(reportDto.getStateCode());
-        newReport.setId(this.emissionsReportMapper.toDto(this.erRepo.save(newReport)).getId());
 
-        reportDto.getFacilitySite().setEmissionsReport(newReport);
-        reportDto.getFacilitySite().setEisProgramId(facilityEisProgramId);
+        FacilitySite facilitySite = this.facilitySiteService.transform(reportDto.getFacilitySite());
+        facilitySite.setEmissionsReport(newReport);
+        facilitySite.setEisProgramId(reportDto.getEisProgramId());
 
         //TODO:
-        //For current mvp program system code will be hardcoded to GAGNR for creating new facility sites
+        //For current mvp program system code will be hardcoded to GADNR for creating new facility sites
         //need to raise issue with Julia and Kevin to determine how we will obtain program system code in future
-        reportDto.getFacilitySite().setProgramSystemCode(this.lookupService.retrieveProgramSystemTypeCodeEntityByCode("GADNR"));
-        this.facilitySiteService.create(reportDto.getFacilitySite());
+        facilitySite.setProgramSystemCode(
+            this.lookupService.retrieveProgramSystemTypeCodeEntityByCode("GADNR"));
+
+        newReport.getFacilitySites().add(facilitySite);
+
+        newReport = this.erRepo.save(newReport);
+
+        LOGGER.debug("New Report {} created.", newReport.getId());
 
     	this.reportService.createReportHistory(newReport.getId(), ReportAction.CREATED);
 
-        return this.emissionsReportMapper.toDto(this.erRepo.save(newReport));
+        return this.emissionsReportMapper.toDto(newReport);
     }
+
     @Override
     public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {
 

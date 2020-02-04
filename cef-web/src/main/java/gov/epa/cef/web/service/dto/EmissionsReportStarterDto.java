@@ -1,9 +1,6 @@
 package gov.epa.cef.web.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import com.google.common.base.MoreObjects;
-import gov.epa.cef.web.domain.FacilitySite;
 
 public class EmissionsReportStarterDto {
 
@@ -13,7 +10,7 @@ public class EmissionsReportStarterDto {
 
     private String eisProgramId;
 
-    private FacilitySite facilitySite;
+    private FacilitySiteDto facilitySite;
 
     private String frsFacilityId;
 
@@ -33,12 +30,12 @@ public class EmissionsReportStarterDto {
         this.eisProgramId = eisProgramId;
     }
 
-    public FacilitySite getFacilitySite() {
+    public FacilitySiteDto getFacilitySite() {
 
         return facilitySite;
     }
 
-    public void setFacilitySite(FacilitySite facilitySite) {
+    public void setFacilitySite(FacilitySiteDto facilitySite) {
 
         this.facilitySite = facilitySite;
     }
@@ -81,17 +78,6 @@ public class EmissionsReportStarterDto {
     public void setYear(Short year) {
 
         this.year = year;
-    }
-
-    @JsonIgnore
-    public boolean isSourceFrs() {
-
-        return this.source != null && this.source.equals(SourceType.frs);
-    }
-
-    public boolean isSourceNew() {
-
-        return this.source != null && this.source.equals(SourceType.fromScratch);
     }
 
     @Override

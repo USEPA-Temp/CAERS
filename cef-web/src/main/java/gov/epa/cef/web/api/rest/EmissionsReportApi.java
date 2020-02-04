@@ -10,7 +10,6 @@ import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
-import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
@@ -65,7 +64,6 @@ public class EmissionsReportApi {
     @Autowired
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
-                       FacilitySiteService facilitySiteService,
                        EmissionsReportStatusService emissionsReportStatusService,
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
@@ -103,6 +101,7 @@ public class EmissionsReportApi {
         }
 
         EmissionsReportDto result = null;
+        HttpStatus status = HttpStatus.NO_CONTENT;
 
         try (TempFile tempFile = TempFile.from(workbook.getInputStream(), workbook.getOriginalFilename())) {
 
@@ -111,12 +110,14 @@ public class EmissionsReportApi {
 
             result = this.uploadService.uploadBulkReport(reportDto, tempFile);
 
+            status = HttpStatus.OK;
+
         } catch (IOException e) {
 
-
+            throw new IllegalStateException(e);
         }
 
-        return ResponseEntity.ok(result);
+        return new ResponseEntity<>(result, status);
     }
 
     /**
@@ -140,7 +141,7 @@ public class EmissionsReportApi {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
 
-        EmissionsReportDto result = createEmissionsReportDto(facilityEisProgramId, reportDto);
+        EmissionsReportDto result = createEmissionsReportDto(reportDto);
 
         /*
         If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
@@ -162,8 +163,10 @@ public class EmissionsReportApi {
         return new ResponseEntity<>(result, status);
     }
 
-    private EmissionsReportDto createEmissionsReportDto(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
+    private EmissionsReportDto createEmissionsReportDto(EmissionsReportStarterDto reportDto) {
         EmissionsReportDto result;
+
+        String facilityEisProgramId = reportDto.getEisProgramId();
 
         switch (reportDto.getSource()) {
 	        case previous:
@@ -173,7 +176,7 @@ public class EmissionsReportApi {
 	        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
 	        	break;
 	        case fromScratch:
-	        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto);
+	        	result = this.emissionsReportService.createEmissionReport(reportDto);
 	        	break;
 	        default:
 	        	result = null;

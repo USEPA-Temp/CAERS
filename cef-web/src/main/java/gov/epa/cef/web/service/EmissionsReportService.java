@@ -27,11 +27,10 @@ public interface EmissionsReportService {
 
     /**
      * Creates an emissions report from scratch
-     * @param facilityEisProgramId
      * @param reportDto
      * @return
      */
-    EmissionsReportDto createEmissionReport(String facilityEisProgramId, EmissionsReportStarterDto reportDto);
+    EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto);
 
     /**
      * Find reports for a given facility

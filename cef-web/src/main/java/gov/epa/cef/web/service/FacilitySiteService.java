@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service;
 
-import gov.epa.cef.web.domain.EmissionsReport; 
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
@@ -16,10 +16,10 @@ public interface FacilitySiteService {
      * @return
      */
     FacilitySite copyFromFrs(EmissionsReport report);
-    
+
     /**
-     * Create a new facilitySite 
-     * @param dto
+     * Create a new facilitySite
+     * @param facilitySite
      * @return
      */
 	FacilitySiteDto create(FacilitySite facilitySite);
@@ -46,30 +46,37 @@ public interface FacilitySiteService {
      * @return
      */
     Optional<ProgramFacility> retrieveFromFrs(String facilityEisProgramId);
-    
+
     /**
      * Update facility information
      * @param dto
      * @return
      */
     FacilitySiteDto update(FacilitySiteDto dto);
-    
+
     /**
-     * Create Facility NAICS 
+     * Create Facility NAICS
      * @param dto
      */
     FacilityNAICSDto createNaics(FacilityNAICSDto dto);
-    
+
     /**
      * Update existing facility NAICS
      * @param dto
      * @return
      */
     FacilityNAICSDto updateNaics(FacilityNAICSDto dto);
-    
+
     /**
      * Delete Facility NAICS by id
      * @param facilityNaicsId
      */
     void deleteFacilityNaics(Long facilityNaicsId);
+
+
+    /**
+     * Transform from DTO to new instance FacilitySite
+     * @return
+     */
+    FacilitySite transform(FacilitySiteDto dto);
 }

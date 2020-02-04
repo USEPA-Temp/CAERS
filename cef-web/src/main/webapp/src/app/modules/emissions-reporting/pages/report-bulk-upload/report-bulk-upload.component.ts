@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {CdxFacility} from "src/app/shared/models/cdx-facility";
 
 import bsCustomFileInput from "bs-custom-file-input";
-import {EmissionsReportingService} from "../../../../core/services/emissions-reporting.service";
+import {EmissionsReportingService} from "src/app/core/services/emissions-reporting.service";
+import {BusyModalComponent} from "src/app/shared/components/busy-modal/busy-modal.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-report-bulk-upload',
@@ -17,6 +19,8 @@ export class ReportBulkUploadComponent implements OnInit {
     selectedFile: File;
 
     constructor(private emissionsReportingService: EmissionsReportingService,
+                private modalService: NgbModal,
+                public router: Router,
                 private route: ActivatedRoute) {
     }
 
@@ -38,11 +42,28 @@ export class ReportBulkUploadComponent implements OnInit {
 
     onUploadClick() {
 
+        const modalWindow = this.modalService.open(BusyModalComponent, {
+            backdrop: 'static',
+            size: 'lg'
+        });
+
+        modalWindow.componentInstance.message = 'Please wait while we parse the workbook and create your report.';
+
         this.emissionsReportingService.createReportFromUpload(this.facility.programId, this.reportingYear,
             this.facility.epaRegistryId, this.facility.state, this.selectedFile)
-            .subscribe(report => {
+            .subscribe(reportResp => {
 
-                console.log(report);
+                if (reportResp.status === 200) {
+
+                    // 200 OK
+
+                    modalWindow.dismiss();
+
+                    let newReport = reportResp.body;
+
+                    return this.router.navigateByUrl(
+                        `/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
+                }
             });
 
     }
