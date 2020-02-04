@@ -417,8 +417,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
       				createValidationDetails(releasePoint),
       				rpLatLongField,
       				Double.valueOf(DEFAULT_TOLERANCE.toString()).toString(),
-      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString(),
-      				facilityLatLongField);
+      				facilityLatLongField,
+      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
       	}
       } else {
       	BigDecimal facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.DOWN);
@@ -436,8 +436,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
       				createValidationDetails(releasePoint),
       				rpLatLongField,
       				Double.valueOf(facilityTolerance.toString()).toString(),
-      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString(),
-      				facilityLatLongField);
+      				facilityLatLongField,
+      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
       	}
       }
     	return result;
