@@ -123,18 +123,23 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      * Update an existing Release Point Apportionment from a DTO
      */
     public ReleasePointApptDto updateAppt(ReleasePointApptDto dto) {
+    	ControlPathDto controlPathDto = new ControlPathDto();
     	
-    	ControlPathDto controlPathDto = controlPathService.retrieveById(dto.getControlPath().getId());
+    	if(dto.getControlPath() != null){
+        	controlPathDto = controlPathService.retrieveById(dto.getControlPath().getId());
+    	}
+    	
     	ReleasePointAppt releasePointAppt = releasePointApptRepo.findById(dto.getId()).orElse(null);
     	releasePointAppt.setReleasePoint(null);
     	dto.setControlPath(null);
     	releasePointApptMapper.updateFromDto(dto, releasePointAppt);
     	
-    	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
-    	releasePointAppt.setControlPath(controlPath);
+    	if(controlPathDto.getId() != null){
+        	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
+        	releasePointAppt.setControlPath(controlPath);
+    	}
     	
     	ReleasePointApptDto result = releasePointApptMapper.toDto(releasePointApptRepo.save(releasePointAppt));
-    	
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReleasePointApptRepository.class);
 
         return result;
