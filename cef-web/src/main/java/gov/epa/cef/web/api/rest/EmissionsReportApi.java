@@ -369,7 +369,7 @@ public class EmissionsReportApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    private static class ReviewDTO {
+    static class ReviewDTO {
     	private List<Long> reportIds;
 
     	private String comments;
