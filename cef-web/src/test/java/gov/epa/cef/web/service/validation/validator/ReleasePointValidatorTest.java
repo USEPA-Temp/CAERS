@@ -579,34 +579,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
         
         cefContext = createContext();
-        testData.setFugitiveLine1Latitude(32.959000);
-        testData.setLongitude(-84.388000);
-        
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-        
-        cefContext = createContext();
-        testData.setFugitiveLine1Latitude(33.951000);
-        testData.setFugitiveLine1Longitude(-84.888000);
-        
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-        
-        cefContext = createContext();
-        testData.setFugitiveLine2Latitude(32.959000);
-        testData.setFugitiveLine1Longitude(-84.388000);
-        
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-        
-        cefContext = createContext();
-        testData.setFugitiveLine2Latitude(33.951000);
-        testData.setFugitiveLine2Longitude(-84.888000);
-        
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-        
-        cefContext = createContext();
         testData = createBaseReleasePoint();
         testData.setLatitude(32.959000);
         

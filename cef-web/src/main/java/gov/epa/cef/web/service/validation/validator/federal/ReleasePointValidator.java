@@ -347,24 +347,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         	result = false;
         }
         
-        if (releasePoint.getTypeCode().getCode().equals(FUGITIVE_RELEASE_POINT_CODE)) {
-	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine1Latitude(), facilitySiteLat, "fugitive line1 latitude", "latitude")) {
-	        	result = false;
-	        }
-	        
-	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine2Latitude(), facilitySiteLat, "fugitive line2 latitude", "latitude")) {
-	        	result = false;
-	        }
-	        
-	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine1Longitude(), facilitySiteLong, "fugitive line1 longitude", "longitude")) {
-	        	result = false;
-	        }
-	        
-	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveLine2Longitude(), facilitySiteLong, "fugitive line2 longitude", "longitude")) {
-	        	result = false;
-	        }
-        }
-        
         return result;
     }
     
