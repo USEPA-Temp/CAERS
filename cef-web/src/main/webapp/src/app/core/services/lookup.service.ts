@@ -8,6 +8,7 @@ import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
+import { PointSourceSccCode } from 'src/app/shared/models/point-source-scc-code';
 
 @Injectable({
   providedIn: 'root'
@@ -101,6 +102,11 @@ export class LookupService {
   retrieveAircraftEngineCodes(): Observable<AircraftEngineTypeCode[]> {
     const url = `${this.baseUrl}/aircraftEngineCode`;
     return this.http.get<AircraftEngineTypeCode[]>(url);
+  }
+
+  retrievePointSourceSccCodes(): Observable<PointSourceSccCode[]> {
+    const url = `${this.baseUrl}/pointSourceSccCodes`;
+    return this.http.get<PointSourceSccCode[]>(url);
   }
 
 }

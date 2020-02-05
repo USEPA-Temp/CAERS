@@ -16,6 +16,7 @@ import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -230,4 +231,17 @@ public class LookupApi {
         List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes();
         return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Point Source SCC codes
+     * @return
+     */
+    @GetMapping(value = "/pointSourceSccCodes")
+    @ResponseBody
+    public ResponseEntity<List<PointSourceSccCodeDto>> retrievePointSourceSccCodes() {
+
+        List<PointSourceSccCodeDto> result = lookupService.retrievePointSourceSccCodes();
+        return new ResponseEntity<List<PointSourceSccCodeDto>>(result, HttpStatus.OK);
+    }
+    
 }

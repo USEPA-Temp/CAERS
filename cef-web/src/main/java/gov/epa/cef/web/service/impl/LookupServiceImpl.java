@@ -20,6 +20,7 @@ import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
@@ -37,6 +38,7 @@ import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
+import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
@@ -49,6 +51,7 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
@@ -106,6 +109,9 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+    
+    @Autowired
+    private PointSourceSccCodeRepository pointSourceSccCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -416,6 +422,18 @@ public class LookupServiceImpl implements LookupService {
             result.add(lookupMapper.aircraftEngCodeToDto(entity));
         });
         return result;
+    }
+    
+    @Override
+    public List<PointSourceSccCodeDto> retrievePointSourceSccCodes() {
+    	
+    	List<PointSourceSccCodeDto> result = new ArrayList<PointSourceSccCodeDto>();
+			Iterable<PointSourceSccCode> entities = pointSourceSccCodeRepo.findAll(Sort.by(Direction.ASC, "code"));
+			
+			entities.forEach(entity -> {
+        result.add(lookupMapper.pointSourceSccCodeToDto(entity));
+	    });
+	    return result;
     }
     
 }

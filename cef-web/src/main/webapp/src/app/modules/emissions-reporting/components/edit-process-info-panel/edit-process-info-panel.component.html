@@ -34,7 +34,7 @@
     <div class="row pb-1">
         <label for="processSccInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()">
+            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkPointSourceSccCode()">
             <app-validation-message [control]="processForm.get('sccCode')"></app-validation-message>
         </div>
         <div class="col-sm-6 col-md-3">

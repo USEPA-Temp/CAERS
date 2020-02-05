@@ -16,6 +16,7 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -208,5 +209,11 @@ public interface LookupService {
      * @return
      */
     List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes();
+    
+    /**
+     * Retrieve Point Source SCC Codes
+     * @return
+     */
+    List<PointSourceSccCodeDto> retrievePointSourceSccCodes();
     
 }
