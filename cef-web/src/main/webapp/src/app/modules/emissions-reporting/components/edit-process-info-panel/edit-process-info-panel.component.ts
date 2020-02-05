@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
-import { FormBuilder, Validators, ValidatorFn, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
@@ -55,8 +55,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   operatingStatusValues: BaseCodeLookup[];
   aircraftEngineTypeValue: AircraftEngineTypeCode[];
   aircraftEngineSCC: string[];
-  pointSourceSccCode: PointSourceSccCode[];
-  validSccCodeCheck: PointSourceSccCode[];
 
   constructor(
     private lookupService: LookupService,
@@ -78,11 +76,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       this.operatingStatusValues = result;
     });
 
-    this.lookupService.retrievePointSourceSccCodes()
-    .subscribe(result => {
-      this.pointSourceSccCode = result;
-    });
-
     // SCC codes associated with Aircraft Engine Type Codes
     this.aircraftEngineSCC = [
       '2275001000', '2275020000', '2275050011', '2275050012', '2275060011', '2275060012'
@@ -90,7 +83,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
       this.emissionsReportYear = data.facilitySite.emissionsReport.year;
-      console.log(this.emissionsReportYear);
     });
 
     this.checkAircraftSCC();
@@ -124,18 +116,23 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   }
 
   checkPointSourceSccCode() {
-    this.validSccCodeCheck = this.pointSourceSccCode.filter(value => (value.code === this.processForm.get('sccCode').value));
+    if (this.processForm.get('sccCode').value !== null && this.processForm.get('sccCode').value !== '') {
 
-    if (this.validSccCodeCheck.length > 0) {
-      for (let item of this.validSccCodeCheck) {
-        if (item.lastInventoryYear !== null && (item.lastInventoryYear >= this.emissionsReportYear)) {
-          this.toastr.warning('', item.code + ' has a retirement date of ' + item.lastInventoryYear + '. If applicable, you may want to add a more recent code.', {positionClass: 'toast-top-right'});
-        } else if (item.lastInventoryYear !== null && (item.lastInventoryYear < this.emissionsReportYear)) {
-          this.toastr.error('', item.code + ' was retired in ' + item.lastInventoryYear + '. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year', {positionClass: 'toast-top-right'});
+      this.lookupService.retrievePointSourceSccCode(this.processForm.get('sccCode').value)
+      .subscribe(result => {
+
+        if (result !== null) {
+          if (result.lastInventoryYear !== null && (result.lastInventoryYear >= this.emissionsReportYear)) {
+            this.toastr.warning('', result.code + ' has a retirement date of ' + result.lastInventoryYear + '. If applicable, you may want to add a more recent code.', {positionClass: 'toast-top-right'});
+          } else if (result.lastInventoryYear !== null && (result.lastInventoryYear < this.emissionsReportYear)) {
+            this.toastr.error('', result.code + ' was retired in ' + result.lastInventoryYear + '. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year', {positionClass: 'toast-top-right'});
+            this.processForm.controls['sccCode'].setErrors({'invalid': true});
+          }
+        } else if (result === null) {
+          this.toastr.error('', this.processForm.get('sccCode').value + ' is not a valid point source SCC. Please choose a valid code.', {positionClass: 'toast-top-right'});
+          this.processForm.controls['sccCode'].setErrors({'invalid': true});
         }
-      }
-    } else if (this.validSccCodeCheck.length === 0) {
-      this.toastr.error('', this.processForm.get('sccCode').value + ' is not a valid point source SCC. Please choose a valid code.', {positionClass: 'toast-top-right'});
+      });
     }
 
     this.checkAircraftSCC();

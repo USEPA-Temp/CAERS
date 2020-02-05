@@ -104,9 +104,9 @@ export class LookupService {
     return this.http.get<AircraftEngineTypeCode[]>(url);
   }
 
-  retrievePointSourceSccCodes(): Observable<PointSourceSccCode[]> {
-    const url = `${this.baseUrl}/pointSourceSccCodes`;
-    return this.http.get<PointSourceSccCode[]>(url);
+  retrievePointSourceSccCode(code: string): Observable<PointSourceSccCode> {
+    const url = `${this.baseUrl}/pointSourceSccCode/${code}`;
+    return this.http.get<PointSourceSccCode>(url);
   }
 
 }

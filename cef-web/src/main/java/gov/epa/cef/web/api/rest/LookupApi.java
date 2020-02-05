@@ -2,10 +2,13 @@ package gov.epa.cef.web.api.rest;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -233,15 +236,16 @@ public class LookupApi {
     }
     
     /**
-     * Retrieve Point Source SCC codes
+     * Retrieve Point Source SCC code
+     * @param code
      * @return
      */
-    @GetMapping(value = "/pointSourceSccCodes")
+    @GetMapping(value = "/pointSourceSccCode/{code}")
     @ResponseBody
-    public ResponseEntity<List<PointSourceSccCodeDto>> retrievePointSourceSccCodes() {
-
-        List<PointSourceSccCodeDto> result = lookupService.retrievePointSourceSccCodes();
-        return new ResponseEntity<List<PointSourceSccCodeDto>>(result, HttpStatus.OK);
-    }
+    public ResponseEntity<PointSourceSccCodeDto> retrievePointSourceSccCode(@NotNull @PathVariable String code) {
+    	
+    	PointSourceSccCodeDto result = lookupService.retrievePointSourceSccCode(code);
+    	return new ResponseEntity<PointSourceSccCodeDto>(result, HttpStatus.OK);
+    }   
     
 }

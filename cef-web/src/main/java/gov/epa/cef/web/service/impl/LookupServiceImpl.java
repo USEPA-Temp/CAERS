@@ -424,16 +424,9 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
-    @Override
-    public List<PointSourceSccCodeDto> retrievePointSourceSccCodes() {
-    	
-    	List<PointSourceSccCodeDto> result = new ArrayList<PointSourceSccCodeDto>();
-			Iterable<PointSourceSccCode> entities = pointSourceSccCodeRepo.findAll(Sort.by(Direction.ASC, "code"));
-			
-			entities.forEach(entity -> {
-        result.add(lookupMapper.pointSourceSccCodeToDto(entity));
-	    });
-	    return result;
+    public PointSourceSccCodeDto retrievePointSourceSccCode(String code) {
+
+    	PointSourceSccCode entity = pointSourceSccCodeRepo.findById(code).orElse(null);
+    	return lookupMapper.pointSourceSccCodeToDto(entity);
     }
-    
 }
