@@ -12,7 +12,9 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 export class ControlPathTableComponent extends BaseSortableTable implements OnInit {
     @Input() tableData: ControlAssignment[];
     @Input() readOnlyMode: boolean;
+    @Input() pathDescription: string;
     baseUrl: string;
+    controlPathUrl: string;
 
   constructor(private route: ActivatedRoute) {
       super();
@@ -22,6 +24,7 @@ export class ControlPathTableComponent extends BaseSortableTable implements OnIn
     this.route.paramMap
       .subscribe(map => {
         this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_DEVICE}`;
+        this.controlPathUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_PATH}`;
     });
   }
 

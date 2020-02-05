@@ -55,7 +55,7 @@ export class ReleasePointDetailsComponent implements OnInit {
 
         this.controlPathService.retrieveForReleasePoint(+map.get('releasePointId'))
         .subscribe(controlPaths => {
-          this.controlPaths = controlPaths;
+          this.controlPaths = controlPaths.sort((a, b) => (a.pathId > b.pathId) ? 1 : -1);
         });
     });
 

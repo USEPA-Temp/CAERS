@@ -74,12 +74,13 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         .subscribe(periods => {
           this.process.reportingPeriods = periods;
         });
+
+        this.controlPathService.retrieveForEmissionsProcess(+map.get('processId'))
+        .subscribe(controlPaths => {
+          this.controlPaths = controlPaths.sort((a, b) => (a.pathId > b.pathId) ? 1 : -1);
+        });
       });
 
-      this.controlPathService.retrieveForEmissionsProcess(+map.get('processId'))
-      .subscribe(controlPaths => {
-        this.controlPaths = controlPaths;
-      });
     });
 
     // emits the report info to the sidebar

@@ -73,6 +73,7 @@
       <xs:element minOccurs="0" name="ProgramAcronym" type="xs:string"/>
       <xs:element minOccurs="0" name="ProgramId" type="xs:string"/>
       <xs:element minOccurs="0" name="StateFacilityId" type="xs:string"/>
+      <xs:element minOccurs="0" name="ResponsibleAgency" type="xs:string"/>
       <xs:element minOccurs="0" name="BiaCode" type="xs:string"/>
       <xs:element minOccurs="0" name="IsFederal" type="xs:boolean"/>
       <xs:element minOccurs="0" name="MailingAddresses">
