@@ -2,7 +2,7 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import java.io.Serializable;
 
-public class FacilitySiteContactBulkUploadDto implements Serializable {
+public class FacilitySiteContactBulkUploadDto implements IWorksheetAware, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

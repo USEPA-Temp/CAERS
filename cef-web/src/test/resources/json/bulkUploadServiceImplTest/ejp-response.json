@@ -1,0 +1,914 @@
+{
+    "_config": {
+        "sheetConfigs": [
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "frsFacilityId",
+                    "altSiteIdentifier",
+                    "facilityCategoryCode",
+                    "facilitySourceTypeCode",
+                    "_ignore",
+                    "name",
+                    "description",
+                    "operatingStatusCode",
+                    "_ignore",
+                    "statusYear",
+                    "programSystemCode",
+                    "_ignore",
+                    "streetAddress",
+                    "city",
+                    "stateCode",
+                    "county",
+                    "countryCode",
+                    "postalCode",
+                    "latitude",
+                    "longitude",
+                    "mailingStreetAddress",
+                    "mailingCity",
+                    "mailingStateCode",
+                    "mailingPostalCode",
+                    "mailingCountryCode",
+                    "eisProgramId",
+                    "tribalCode",
+                    "_ignore"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "facilitySites",
+                "numOfHeaderRows": 23,
+                "sheetName": "Facility"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "facilitySiteId",
+                    "unitIdentifier",
+                    "id",
+                    "description",
+                    "typeCode",
+                    "_ignore",
+                    "operatingStatusCodeDescription",
+                    "_ignore",
+                    "statusYear",
+                    "designCapacity",
+                    "unitOfMeasureCode",
+                    "comments"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "emissionsUnits",
+                "numOfHeaderRows": 23,
+                "sheetName": "Emission Units"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "facilitySiteId",
+                    "releasePointIdentifier",
+                    "id",
+                    "typeCode",
+                    "_ignore",
+                    "description",
+                    "operatingStatusCode",
+                    "_ignore",
+                    "statusYear",
+                    "latitude",
+                    "longitude",
+                    "fugitiveLine1Latitude",
+                    "fugitiveLine1Longitude",
+                    "fugitiveLine2Latitude",
+                    "fugitiveLine2Longitude",
+                    "stackHeight",
+                    "stackHeightUomCode",
+                    "stackDiameter",
+                    "stackDiameterUomCode",
+                    "exitGasVelocity",
+                    "exitGasVelocityUomCode",
+                    "exitGasTemperature",
+                    "exitGasFlowRate",
+                    "exitGasFlowUomCode",
+                    "fenceLineDistance",
+                    "fenceLineUomCode",
+                    "fugitiveHeight",
+                    "fugitiveHeightUomCode",
+                    "fugitiveWidth",
+                    "fugitiveWidthUomCode",
+                    "fugitiveLength",
+                    "fugitiveLengthUomCode",
+                    "fugitiveAngle",
+                    "comments"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "releasePoints",
+                "numOfHeaderRows": 23,
+                "sheetName": "Release Points"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "emissionsUnitId",
+                    "_ignore",
+                    "emissionsProcessIdentifier",
+                    "id",
+                    "description",
+                    "operatingStatusCode",
+                    "_ignore",
+                    "statusYear",
+                    "sccDescription",
+                    "sccCode",
+                    "aircraftEngineTypeCode",
+                    "_ignore",
+                    "comments"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "emissionsProcesses",
+                "numOfHeaderRows": 23,
+                "sheetName": "Emission Processes"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "emissionsProcessId",
+                    "_ignore",
+                    "_ignore",
+                    "id",
+                    "reportingPeriodTypeCode",
+                    "_ignore",
+                    "emissionsOperatingTypeCode",
+                    "_ignore",
+                    "calculationParameterTypeCode",
+                    "_ignore",
+                    "calculationParameterValue",
+                    "calculationParameterUom",
+                    "calculationMaterialCode",
+                    "_ignore",
+                    "comments"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "reportingPeriods",
+                "numOfHeaderRows": 23,
+                "sheetName": "Reporting Period"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "reportingPeriodId",
+                    "_ignore",
+                    "pollutantCode",
+                    "_ignore",
+                    "totalEmissions",
+                    "emissionsUomCode",
+                    "emissionsFactor",
+                    "emissionsFactorText",
+                    "_ignore",
+                    "id",
+                    "emissionsFactorFormula",
+                    "emissionsCalcMethodCode",
+                    "_ignore",
+                    "emissionsNumeratorUom",
+                    "emissionsDenominatorUom",
+                    "comments"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "emissions",
+                "numOfHeaderRows": 23,
+                "sheetName": "Emissions"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "releasePointId",
+                    "_ignore",
+                    "emissionProcessId",
+                    "_ignore",
+                    "controlPathId",
+                    "_ignore",
+                    "percent"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "releasePointAppts",
+                "numOfHeaderRows": 23,
+                "sheetName": "Apportionment"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "reportingPeriodId",
+                    "_ignore",
+                    "actualHoursPerPeriod",
+                    "averageHoursPerDay",
+                    "averageDaysPerWeek",
+                    "averageWeeksPerPeriod",
+                    "percentWinter",
+                    "percentSpring",
+                    "percentSummer",
+                    "percentFall"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "operatingDetails",
+                "numOfHeaderRows": 23,
+                "sheetName": "Operating Details"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "facilitySiteId",
+                    "pathId",
+                    "description",
+                    "id"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "controlPaths",
+                "numOfHeaderRows": 23,
+                "sheetName": "Control Paths"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "facilitySiteId",
+                    "identifier",
+                    "id",
+                    "description",
+                    "percentCapture",
+                    "percentControl",
+                    "operatingStatusCode",
+                    "_ignore",
+                    "controlMeasureCode",
+                    "_ignore",
+                    "comments"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "controls",
+                "numOfHeaderRows": 23,
+                "sheetName": "Controls"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "controlPathId",
+                    "_ignore",
+                    "controlId",
+                    "_ignore",
+                    "controlPathChildId",
+                    "_ignore",
+                    "sequenceNumber",
+                    "percentApportionment"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "controlAssignments",
+                "numOfHeaderRows": 23,
+                "sheetName": "Control Assignments"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "controlId",
+                    "_ignore",
+                    "pollutantCode",
+                    "_ignore",
+                    "percentReduction"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "controlPollutants",
+                "numOfHeaderRows": 23,
+                "sheetName": "Control Pollutants"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "facilitySiteId",
+                    "type",
+                    "_ignore",
+                    "prefix",
+                    "firstName",
+                    "lastName",
+                    "email",
+                    "phone",
+                    "phoneExt",
+                    "streetAddress",
+                    "city",
+                    "stateCode",
+                    "county",
+                    "countryCode",
+                    "postalCode",
+                    "mailingStreetAddress",
+                    "mailingCity",
+                    "mailingStateCode",
+                    "mailingCountryCode",
+                    "mailingPostalCode"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "facilityContacts",
+                "numOfHeaderRows": 23,
+                "sheetName": "Facility Contacts"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "facilitySiteId",
+                    "code",
+                    "_ignore",
+                    "primaryFlag"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "facilityNAICS",
+                "numOfHeaderRows": 23,
+                "sheetName": "NAICS"
+            },
+            {
+                "columns": [
+                    "_ignore",
+                    "id",
+                    "emissionId",
+                    "_ignore",
+                    "_ignore",
+                    "emissionFormulaVariableCode",
+                    "_ignore",
+                    "value"
+                ],
+                "fieldHeaderRow": 9,
+                "ignoreOnEmptyCheck": [],
+                "jsonKeyRow": 12,
+                "jsonSheetKey": "emissionFormulaVariables",
+                "numOfHeaderRows": 23,
+                "sheetName": "Emission Formula Variables"
+            }
+        ]
+    },
+    "facilitySites": [
+        {
+            "facilitySourceTypeCode": "133",
+            "statusYear": "1985",
+            "city": "Fitzgerald",
+            "mailingCity": "Fitzgerald",
+            "eisProgramId": "2610711",
+            "postalCode": "31750",
+            "latitude": "33.749",
+            "county": "Whitfield",
+            "description": "Pulp and Paper Processing Plant",
+            "programSystemCode": null,
+            "facilityCategoryCode": "CAP",
+            "mailingStateCode": "GA",
+            "mailingPostalCode": "31750",
+            "mailingStreetAddress": "173 Peachtree Rd",
+            "altSiteIdentifier": "1301700008",
+            "streetAddress": "173 Peachtree Rd",
+            "_row": 24,
+            "name": "Cottrell, Inc.",
+            "operatingStatusCode": "OP",
+            "stateCode": "GA",
+            "id": "24",
+            "frsFacilityId": "110002377892",
+            "longitude": "-84.388"
+        }
+    ],
+    "emissionsUnits": [
+        {
+            "comments": "Sample Comments for Boiler 001",
+            "statusYear": "1985",
+            "operatingStatusCodeDescription": "OP",
+            "_row": 24,
+            "description": "Gas Boiler - Industrial Size",
+            "designCapacity": "647",
+            "id": "24",
+            "facilitySiteId": "24",
+            "unitOfMeasureCode": "LB/DAY",
+            "unitIdentifier": "Boiler 001",
+            "typeCode": "200"
+        },
+        {
+            "comments": "Sample Comments for Boiler 002",
+            "statusYear": "1985",
+            "operatingStatusCodeDescription": "OP",
+            "_row": 25,
+            "description": "Coal Boiler - Industrial Size",
+            "designCapacity": "34",
+            "id": "25",
+            "facilitySiteId": "24",
+            "unitOfMeasureCode": "TON/HR",
+            "unitIdentifier": "Boiler 002",
+            "typeCode": "100"
+        },
+        {
+            "comments": "Sample Comments for Dryer 001",
+            "statusYear": "1985",
+            "operatingStatusCodeDescription": "OP",
+            "_row": 26,
+            "description": "Big Dryer",
+            "designCapacity": "72",
+            "id": "26",
+            "facilitySiteId": "24",
+            "unitOfMeasureCode": "TON",
+            "unitIdentifier": "Dryer 001",
+            "typeCode": "1252"
+        }
+    ],
+    "releasePoints": [
+        {
+            "releasePointIdentifier": "Smokestack 1",
+            "stackDiameter": "7",
+            "exitGasTemperature": "75",
+            "comments": "Sample Comments for Smokestack 1",
+            "fugitiveLine2Longitude": "85.388",
+            "statusYear": "1985",
+            "latitude": "31.173147",
+            "fugitiveLine1Latitude": "32.749",
+            "description": "A big smokestack",
+            "stackDiameterUomCode": "FT",
+            "exitGasVelocity": "20",
+            "exitGasFlowUomCode": "ACFM",
+            "exitGasVelocityUomCode": "FPM",
+            "facilitySiteId": "24",
+            "typeCode": null,
+            "stackHeight": "40",
+            "fugitiveLine2Latitude": "34.749",
+            "_row": 24,
+            "operatingStatusCode": "OP",
+            "id": "24",
+            "exitGasFlowRate": "25",
+            "fugitiveLine1Longitude": "83.388",
+            "longitude": "-81.519247",
+            "stackHeightUomCode": "FT"
+        },
+        {
+            "releasePointIdentifier": "Smokestack 2",
+            "stackDiameter": "14",
+            "exitGasTemperature": "100",
+            "comments": "Sample Comments for Smokestack 2",
+            "statusYear": "1985",
+            "latitude": "31.173147",
+            "description": "Another big smokestack",
+            "stackDiameterUomCode": "FT",
+            "exitGasVelocity": "154",
+            "exitGasFlowUomCode": "ACFM",
+            "exitGasVelocityUomCode": "FPM",
+            "facilitySiteId": "24",
+            "typeCode": null,
+            "stackHeight": "7",
+            "_row": 25,
+            "operatingStatusCode": "OP",
+            "id": "25",
+            "exitGasFlowRate": "35",
+            "longitude": "-81.519247",
+            "stackHeightUomCode": "FT"
+        },
+        {
+            "releasePointIdentifier": "Vent 1",
+            "stackDiameter": "25",
+            "exitGasTemperature": "123",
+            "comments": "Sample Comments for Vent 1",
+            "statusYear": "1985",
+            "latitude": "31.173147",
+            "description": "A big vent",
+            "stackDiameterUomCode": "FT",
+            "exitGasVelocity": "627",
+            "exitGasFlowUomCode": "ACFS",
+            "exitGasVelocityUomCode": "FPS",
+            "facilitySiteId": "24",
+            "typeCode": "3",
+            "stackHeight": "25",
+            "_row": 26,
+            "operatingStatusCode": "OP",
+            "id": "26",
+            "exitGasFlowRate": "76",
+            "longitude": "-81.519247",
+            "stackHeightUomCode": "FT"
+        }
+    ],
+    "emissionsProcesses": [
+        {
+            "emissionsUnitId": "0",
+            "comments": "Sample Comments for Drying Process",
+            "statusYear": "1985",
+            "sccDescription": null,
+            "emissionsProcessIdentifier": "Drying Process",
+            "aircraftEngineTypeCode": "204812",
+            "_row": 24,
+            "operatingStatusCode": "OP",
+            "description": "Softwood Veneer Dryer: Direct Natural Gas-fired: Heated Zones",
+            "id": "24"
+        },
+        {
+            "emissionsUnitId": "0",
+            "comments": "Sample Comments for Disposal Process",
+            "statusYear": "1985",
+            "sccDescription": null,
+            "emissionsProcessIdentifier": "Disposal Process",
+            "aircraftEngineTypeCode": null,
+            "_row": 25,
+            "operatingStatusCode": "OP",
+            "description": "Air Curtain Combustor: Wood",
+            "id": "25"
+        },
+        {
+            "emissionsUnitId": "0",
+            "comments": "Sample Comments for Storage Process",
+            "statusYear": "1985",
+            "sccDescription": null,
+            "emissionsProcessIdentifier": "Storage Process",
+            "aircraftEngineTypeCode": null,
+            "_row": 26,
+            "operatingStatusCode": "OP",
+            "description": "Chip Storage Piles: Hardwood",
+            "id": "26"
+        }
+    ],
+    "reportingPeriods": [
+        {
+            "calculationParameterValue": "351",
+            "comments": "Reporting Period Comment",
+            "calculationParameterUom": "LB",
+            "_row": 24,
+            "id": "24",
+            "calculationMaterialCode": "698",
+            "reportingPeriodTypeCode": "A",
+            "emissionsOperatingTypeCode": null,
+            "emissionsProcessId": "24",
+            "calculationParameterTypeCode": "I"
+        },
+        {
+            "calculationParameterValue": "15876",
+            "comments": "Reporting Period Comment",
+            "calculationParameterUom": "TON",
+            "_row": 25,
+            "id": "25",
+            "calculationMaterialCode": "70",
+            "reportingPeriodTypeCode": "A",
+            "emissionsOperatingTypeCode": null,
+            "emissionsProcessId": "26",
+            "calculationParameterTypeCode": "O"
+        },
+        {
+            "calculationParameterValue": "466",
+            "comments": "Reporting Period Comment",
+            "calculationParameterUom": "TON",
+            "_row": 26,
+            "id": "26",
+            "calculationMaterialCode": "956",
+            "reportingPeriodTypeCode": "A",
+            "emissionsOperatingTypeCode": null,
+            "emissionsProcessId": "25",
+            "calculationParameterTypeCode": "E"
+        }
+    ],
+    "emissions": [
+        {
+            "emissionsDenominatorUom": "E3FT3S",
+            "pollutantCode": "75070",
+            "emissionsCalcMethodCode": "1",
+            "comments": "Sample comments for Acetaldehyde",
+            "reportingPeriodId": "24",
+            "_row": 24,
+            "id": "24",
+            "emissionsFactorText": "6.200E-2 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced",
+            "totalEmissions": "1000",
+            "emissionsUomCode": "TON",
+            "emissionsNumeratorUom": "TON"
+        },
+        {
+            "pollutantCode": "71432",
+            "emissionsFactor": "0.592",
+            "comments": "AP42 Text: Section 1.7 - WebFIRE (ID:1557)",
+            "reportingPeriodId": "25",
+            "emissionsDenominatorUom": "E3FT3S",
+            "emissionsCalcMethodCode": "8",
+            "_row": 25,
+            "id": "25",
+            "emissionsFactorFormula": "((0.1*SU)-0.03)*16",
+            "emissionsFactorText": "5.900E-2 Lb per 1000 Square Feet 3/8-inch Thick Veneer Produced",
+            "totalEmissions": "1007.75",
+            "emissionsUomCode": "TON",
+            "emissionsNumeratorUom": "TON"
+        },
+        {
+            "emissionsDenominatorUom": "E3FT3S",
+            "pollutantCode": "NOX",
+            "emissionsFactor": "0.6",
+            "emissionsCalcMethodCode": "9",
+            "comments": "Sample comments for Benzene",
+            "reportingPeriodId": "26",
+            "_row": 26,
+            "id": "26",
+            "totalEmissions": "2015.6",
+            "emissionsUomCode": "TON",
+            "emissionsNumeratorUom": "TON"
+        }
+    ],
+    "releasePointAppts": [
+        {
+            "emissionProcessId": "24",
+            "controlPathId": "24",
+            "releasePointId": "24",
+            "_row": 24,
+            "id": "24",
+            "percent": "33"
+        },
+        {
+            "emissionProcessId": "24",
+            "controlPathId": "24",
+            "releasePointId": "25",
+            "_row": 25,
+            "id": "25",
+            "percent": "33"
+        },
+        {
+            "emissionProcessId": "24",
+            "controlPathId": "24",
+            "releasePointId": "26",
+            "_row": 26,
+            "id": "26",
+            "percent": "34"
+        },
+        {
+            "emissionProcessId": "25",
+            "controlPathId": null,
+            "releasePointId": "24",
+            "_row": 27,
+            "id": "27",
+            "percent": "60"
+        },
+        {
+            "emissionProcessId": "25",
+            "controlPathId": null,
+            "releasePointId": "25",
+            "_row": 28,
+            "id": "28",
+            "percent": "40"
+        },
+        {
+            "emissionProcessId": "26",
+            "controlPathId": null,
+            "releasePointId": "26",
+            "_row": 29,
+            "id": "29",
+            "percent": "10"
+        },
+        {
+            "emissionProcessId": "26",
+            "controlPathId": null,
+            "releasePointId": "24",
+            "_row": 30,
+            "id": "30",
+            "percent": "20"
+        },
+        {
+            "emissionProcessId": "26",
+            "controlPathId": null,
+            "releasePointId": "25",
+            "_row": 31,
+            "id": "31",
+            "percent": "70"
+        }
+    ],
+    "operatingDetails": [
+        {
+            "averageWeeksPerPeriod": "52",
+            "reportingPeriodId": "24",
+            "percentFall": "25",
+            "percentSummer": "25",
+            "averageHoursPerDay": "24",
+            "percentWinter": "25",
+            "averageDaysPerWeek": "7",
+            "_row": 24,
+            "actualHoursPerPeriod": "8700",
+            "id": "24",
+            "percentSpring": "25"
+        },
+        {
+            "averageWeeksPerPeriod": "52",
+            "reportingPeriodId": "25",
+            "percentFall": "30",
+            "percentSummer": "50",
+            "averageHoursPerDay": "20",
+            "percentWinter": "10",
+            "averageDaysPerWeek": "6",
+            "_row": 25,
+            "actualHoursPerPeriod": "8700",
+            "id": "25",
+            "percentSpring": "10"
+        },
+        {
+            "averageWeeksPerPeriod": "52",
+            "reportingPeriodId": "26",
+            "percentFall": "25",
+            "percentSummer": "25",
+            "averageHoursPerDay": "18",
+            "percentWinter": "45",
+            "averageDaysPerWeek": "5",
+            "_row": 26,
+            "actualHoursPerPeriod": "8700",
+            "id": "26",
+            "percentSpring": "5"
+        }
+    ],
+    "controlPaths": [
+        {
+            "_row": 24,
+            "description": "Primary Control Flow",
+            "pathId": "Primary",
+            "id": "24",
+            "facilitySiteId": "24"
+        },
+        {
+            "_row": 25,
+            "description": "Secondary Control Flow",
+            "pathId": "Secondary",
+            "id": "25",
+            "facilitySiteId": "24"
+        }
+    ],
+    "controls": [
+        {
+            "identifier": "Control 001",
+            "comments": "Sample comments for Control 001",
+            "controlMeasureCode": "1",
+            "_row": 24,
+            "percentControl": "50",
+            "operatingStatusCode": "OP",
+            "description": "Acetaldehyde and Benzene Control",
+            "percentCapture": "50",
+            "id": "24",
+            "facilitySiteId": "24"
+        },
+        {
+            "identifier": "Control 002",
+            "comments": "Sample comments for Control 002",
+            "controlMeasureCode": "2",
+            "_row": 25,
+            "percentControl": "75",
+            "operatingStatusCode": "OP",
+            "description": "Acetaldehyde Control",
+            "percentCapture": "25",
+            "id": "25",
+            "facilitySiteId": "24"
+        },
+        {
+            "identifier": "NOX Control",
+            "comments": "Sample comments for NOX Control",
+            "controlMeasureCode": "13",
+            "_row": 26,
+            "percentControl": "75",
+            "operatingStatusCode": "OP",
+            "description": "NOX Capture Device",
+            "percentCapture": "25",
+            "id": "26",
+            "facilitySiteId": "24"
+        }
+    ],
+    "controlAssignments": [
+        {
+            "controlPathId": "24",
+            "sequenceNumber": "1",
+            "_row": 24,
+            "controlPathChildId": null,
+            "id": "24",
+            "controlId": "0",
+            "percentApportionment": "75"
+        },
+        {
+            "controlPathId": "24",
+            "sequenceNumber": "1",
+            "_row": 25,
+            "controlPathChildId": "25",
+            "id": "25",
+            "controlId": null,
+            "percentApportionment": "25"
+        },
+        {
+            "controlPathId": "25",
+            "sequenceNumber": "1",
+            "_row": 26,
+            "controlPathChildId": null,
+            "id": "26",
+            "controlId": "0",
+            "percentApportionment": "100"
+        },
+        {
+            "controlPathId": "25",
+            "sequenceNumber": "2",
+            "_row": 27,
+            "controlPathChildId": null,
+            "id": "27",
+            "controlId": "0",
+            "percentApportionment": "100"
+        }
+    ],
+    "controlPollutants": [
+        {
+            "pollutantCode": "75070",
+            "_row": 24,
+            "id": "24",
+            "controlId": "0",
+            "percentReduction": "100"
+        },
+        {
+            "pollutantCode": "71432",
+            "_row": 25,
+            "id": "25",
+            "controlId": "0",
+            "percentReduction": "99.9"
+        },
+        {
+            "pollutantCode": "75070",
+            "_row": 26,
+            "id": "26",
+            "controlId": "0",
+            "percentReduction": "1.3"
+        },
+        {
+            "pollutantCode": "NOX",
+            "_row": 27,
+            "id": "27",
+            "controlId": "0",
+            "percentReduction": "1.3"
+        }
+    ],
+    "facilityContacts": [
+        {
+            "lastName": "Smith",
+            "phoneExt": "1",
+            "city": "Fitzgerald",
+            "mailingCity": "Fitzgerald",
+            "postalCode": "31750",
+            "county": "Whitfield",
+            "type": "RO",
+            "facilitySiteId": "24",
+            "firstName": "John",
+            "mailingStateCode": "GA",
+            "mailingPostalCode": "31750",
+            "mailingStreetAddress": "173 Peachtree Rd",
+            "phone": "3193193119",
+            "streetAddress": "173 Peachtree Rd",
+            "_row": 24,
+            "stateCode": "GA",
+            "id": "24",
+            "email": "johnsmith@gilmanbuilding.com"
+        }
+    ],
+    "facilityNAICS": [
+        {
+            "code": null,
+            "_row": 24,
+            "id": "24",
+            "primaryFlag": "true",
+            "facilitySiteId": "24"
+        },
+        {
+            "code": null,
+            "_row": 25,
+            "id": "25",
+            "primaryFlag": "false",
+            "facilitySiteId": "24"
+        },
+        {
+            "code": null,
+            "_row": 26,
+            "id": "26",
+            "primaryFlag": "false",
+            "facilitySiteId": "24"
+        }
+    ],
+    "emissionFormulaVariables": [
+        {
+            "_row": 24,
+            "id": "24",
+            "emissionFormulaVariableCode": "SU",
+            "value": "25",
+            "emissionId": "25"
+        }
+    ]
+}

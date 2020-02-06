@@ -3,7 +3,7 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class EmissionsUnitBulkUploadDto implements Serializable {
+public class EmissionsUnitBulkUploadDto implements IWorksheetAware, Serializable {
 
     private static final long serialVersionUID = 1L;
 
