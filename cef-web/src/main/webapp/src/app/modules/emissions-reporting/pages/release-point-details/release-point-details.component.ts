@@ -129,6 +129,7 @@ export class ReleasePointDetailsComponent implements OnInit {
     || (rpLat.value < this.facilitySite.latitude - this.factolerance))) {
       this.toastr.error('', 'Release Point latitude must within the ' + this.factolerance +
       ' tolerance range of Facility latitude coordinate ' + this.facilitySite.latitude + '.', {positionClass: 'toast-top-right'});
+      this.releasePointComponent.releasePointForm.controls['latitude'].setErrors({'invalid': true});
       inToleranceRange = false;
     }
 
@@ -137,6 +138,7 @@ export class ReleasePointDetailsComponent implements OnInit {
     || (rpLong.value < this.facilitySite.longitude - this.factolerance))) {
       this.toastr.error('', 'Release Point longitude must within the ' + this.factolerance +
       ' tolerance range of Facility longitude coordinate ' + this.facilitySite.longitude + '.', {positionClass: 'toast-top-right'});
+      this.releasePointComponent.releasePointForm.controls['longitude'].setErrors({'invalid': true});
       inToleranceRange = false;
     }
 
