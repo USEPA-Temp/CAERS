@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
-import { FormBuilder, Validators, ValidatorFn, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';

@@ -52,6 +52,9 @@ public class LookupRepositories {
 	private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
 	
 	@Autowired
+	private PointSourceSccCodeRepository pointSourceSccCodeRepo;
+
+	@Autowired
 	private EisLatLongToleranceLookupRepository latLongToleranceRepo;
 
 	public CalculationMaterialCodeRepository materialCodeRepo() {
@@ -114,6 +117,10 @@ public class LookupRepositories {
 		return aircraftEngCodeRepo;
 	}
 	
+	public PointSourceSccCodeRepository pointSourceSccCodeRepo() {
+		return pointSourceSccCodeRepo;
+	}
+
 	public EisLatLongToleranceLookupRepository latLongToleranceRepo() {
 		return latLongToleranceRepo;
 	}

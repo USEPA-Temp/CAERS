@@ -16,6 +16,8 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
+import { LookupService } from 'src/app/core/services/lookup.service';
+import { PointSourceSccCode } from 'src/app/shared/models/point-source-scc-code';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -26,7 +28,9 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
   controlPaths: ControlPath[];
   facilitySite: FacilitySite;
+  lookupSccCode: PointSourceSccCode;
   unitIdentifier: string;
+  emissionsReportYear: number;
 
   hasAircraftCode = false;
   readOnlyMode = true;
@@ -50,6 +54,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     private reportingPeriodService: ReportingPeriodService,
     private operatingDetailService: OperatingDetailService,
     private controlPathService: ControlPathService,
+    private lookupService: LookupService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private sharedService: SharedService) { }
@@ -88,6 +93,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
       this.facilitySite = data.facilitySite;
+      this.emissionsReportYear = data.facilitySite.emissionsReport.year;
       this.sharedService.emitChange(data.facilitySite);
     });
   }
@@ -105,27 +111,33 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   }
 
   updateProcess() {
-    if (!this.infoComponent.processForm.valid) {
-      this.infoComponent.processForm.markAllAsTouched();
-    } else {
-      const updatedProcess = new Process();
-
-      Object.assign(updatedProcess, this.infoComponent.processForm.value);
-      updatedProcess.emissionsUnitId = this.process.emissionsUnitId;
-      updatedProcess.id = this.process.id;
-
-      this.processService.update(updatedProcess)
+    if (this.infoComponent.processForm.get('sccCode') !== null && !(this.infoComponent.processForm.get('sccCode').value.match(/^ *$/) !== null)) {
+      this.lookupService.retrievePointSourceSccCode(this.infoComponent.processForm.get('sccCode').value)
       .subscribe(result => {
+        this.lookupSccCode = result;
 
-        if (updatedProcess.aircraftEngineTypeCode) {
-          this.hasAircraftCode = true;
+        if (!this.infoComponent.processForm.valid || !this.checkPointSourceSccCode()) {
+          this.infoComponent.processForm.markAllAsTouched();
         } else {
-          this.hasAircraftCode = false;
-        }
+          const updatedProcess = new Process();
+          Object.assign(updatedProcess, this.infoComponent.processForm.value);
+          updatedProcess.emissionsUnitId = this.process.emissionsUnitId;
+          updatedProcess.id = this.process.id;
 
-        Object.assign(this.process, result);
-        this.sharedService.updateReportStatusAndEmit(this.route);
-        this.setEditInfo(false);
+          this.processService.update(updatedProcess)
+          .subscribe(result => {
+
+            if (updatedProcess.aircraftEngineTypeCode) {
+              this.hasAircraftCode = true;
+            } else {
+              this.hasAircraftCode = false;
+            }
+
+            Object.assign(this.process, result);
+            this.sharedService.updateReportStatusAndEmit(this.route);
+            this.setEditInfo(false);
+          });
+        }
       });
     }
   }
@@ -171,6 +183,23 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditPeriod(false);
       });
+    }
+  }
+
+  checkPointSourceSccCode() {
+    if (this.lookupSccCode === null) {
+      this.toastr.error('', this.infoComponent.processForm.get('sccCode').value + ' is not a valid point source SCC. Please choose a valid code.', {positionClass: 'toast-top-right'});
+      return false;
+    } else if (this.lookupSccCode !== null) {
+      if (this.lookupSccCode.lastInventoryYear !== null && (this.lookupSccCode.lastInventoryYear >= this.emissionsReportYear)) {
+        this.toastr.warning('', this.lookupSccCode.code + ' has a retirement date of ' + this.lookupSccCode.lastInventoryYear + '. If applicable, you may want to add a more recent code.', {positionClass: 'toast-top-right'});
+        return true;
+      } else if (this.lookupSccCode.lastInventoryYear !== null && (this.lookupSccCode.lastInventoryYear < this.emissionsReportYear)) {
+        this.toastr.error('', this.lookupSccCode.code + ' was retired in ' + this.lookupSccCode.lastInventoryYear + '. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year', {positionClass: 'toast-top-right'});
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 

@@ -20,6 +20,7 @@ import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -234,6 +235,19 @@ public class LookupApi {
         List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes();
         return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Point Source SCC code
+     * @param code
+     * @return
+     */
+    @GetMapping(value = "/pointSourceSccCode/{code}")
+    @ResponseBody
+    public ResponseEntity<PointSourceSccCodeDto> retrievePointSourceSccCode(@NotNull @PathVariable String code) {
+    	
+    	PointSourceSccCodeDto result = lookupService.retrievePointSourceSccCode(code);
+    	return new ResponseEntity<PointSourceSccCodeDto>(result, HttpStatus.OK);
+    }   
     
     /**
      * Retrieve coordinate tolerance by eisProgramId
