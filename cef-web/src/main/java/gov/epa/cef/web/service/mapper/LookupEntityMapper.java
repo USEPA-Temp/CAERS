@@ -11,6 +11,7 @@ import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
+import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
@@ -29,6 +30,7 @@ import gov.epa.cef.web.repository.LookupRepositories;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
@@ -65,6 +67,8 @@ public abstract class LookupEntityMapper {
     public abstract FipsStateCodeDto fipsStateCodeToDto(FipsStateCode source);
     
     public abstract AircraftEngineTypeCodeDto aircraftEngCodeToDto(AircraftEngineTypeCode source);
+    
+    public abstract EisLatLongToleranceLookupDto EisLatLongToleranceLookupToDto(EisLatLongToleranceLookup source);
 
     @Named("CalculationMethodCode")
     public CalculationMethodCode dtoToCalculationMethodCode(CodeLookupDto source) {

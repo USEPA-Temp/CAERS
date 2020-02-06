@@ -8,6 +8,7 @@ import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
+import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
 
 @Injectable({
   providedIn: 'root'
@@ -101,6 +102,11 @@ export class LookupService {
   retrieveAircraftEngineCodes(): Observable<AircraftEngineTypeCode[]> {
     const url = `${this.baseUrl}/aircraftEngineCode`;
     return this.http.get<AircraftEngineTypeCode[]>(url);
+  }
+
+  retrieveLatLongTolerance(eisProgramId: string): Observable<EisLatLongToleranceLookup> {
+    const url = `${this.baseUrl}/coordinateTolerance/${eisProgramId}`;
+    return this.http.get<EisLatLongToleranceLookup>(url);
   }
 
 }
