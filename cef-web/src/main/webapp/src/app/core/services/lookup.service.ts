@@ -9,6 +9,7 @@ import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
 import { PointSourceSccCode } from 'src/app/shared/models/point-source-scc-code';
+import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
 
 @Injectable({
   providedIn: 'root'
@@ -107,6 +108,11 @@ export class LookupService {
   retrievePointSourceSccCode(code: string): Observable<PointSourceSccCode> {
     const url = `${this.baseUrl}/pointSourceSccCode/${code}`;
     return this.http.get<PointSourceSccCode>(url);
+  }
+
+  retrieveLatLongTolerance(eisProgramId: string): Observable<EisLatLongToleranceLookup> {
+    const url = `${this.baseUrl}/coordinateTolerance/${eisProgramId}`;
+    return this.http.get<EisLatLongToleranceLookup>(url);
   }
 
 }

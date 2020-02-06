@@ -10,6 +10,9 @@ import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { EditReleasePointPanelComponent } from '../../components/edit-release-point-panel/edit-release-point-panel.component';
+import { LookupService } from 'src/app/core/services/lookup.service';
+import { ToastrService } from 'ngx-toastr';
+import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
 
 @Component({
   selector: 'app-release-point-details',
@@ -20,7 +23,11 @@ export class ReleasePointDetailsComponent implements OnInit {
   @Input() releasePoint: ReleasePoint;
   processes: Process[];
   controlPaths: ControlPath[];
+  facilitySite: FacilitySite;
   parentComponentType = 'releasePointAppt';
+  eisProgramId: string;
+  coordinateTolerance: EisLatLongToleranceLookup;
+  factolerance: number;
 
   fugitive = false;
   readOnlyMode = true;
@@ -33,6 +40,8 @@ export class ReleasePointDetailsComponent implements OnInit {
     private releasePointService: ReleasePointService,
     private processService: EmissionsProcessService,
     private controlPathService: ControlPathService,
+    private lookupService: LookupService,
+    private toastr: ToastrService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -63,7 +72,8 @@ export class ReleasePointDetailsComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
-
+      this.facilitySite = data.facilitySite;
+      this.eisProgramId = data.facilitySite.eisProgramId;
       this.sharedService.emitChange(data.facilitySite);
     });
 
@@ -74,28 +84,62 @@ export class ReleasePointDetailsComponent implements OnInit {
   }
 
   updateReleasePoint() {
-    if (!this.releasePointComponent.releasePointForm.valid) {
-      this.releasePointComponent.releasePointForm.markAllAsTouched();
-    } else {
-      const updatedReleasePoint = new ReleasePoint();
+    this.lookupService.retrieveLatLongTolerance(this.eisProgramId)
+    .subscribe(result => {
+      this.coordinateTolerance = result;
 
-      Object.assign(updatedReleasePoint, this.releasePointComponent.releasePointForm.value);
-      updatedReleasePoint.id = this.releasePoint.id;
+      if (!this.releasePointComponent.releasePointForm.valid || !this.checkCoordinateTolerance()) {
+        this.releasePointComponent.releasePointForm.markAllAsTouched();
+      } else {
+        const updatedReleasePoint = new ReleasePoint();
 
-      this.releasePointService.update(updatedReleasePoint)
-      .subscribe(result => {
+        Object.assign(updatedReleasePoint, this.releasePointComponent.releasePointForm.value);
+        updatedReleasePoint.id = this.releasePoint.id;
 
-        if (updatedReleasePoint.typeCode.description === 'Fugitive') {
-          this.fugitive = true;
-        } else {
-          this.fugitive = false;
-        }
+        this.releasePointService.update(updatedReleasePoint)
+        .subscribe(result => {
 
-        Object.assign(this.releasePoint, result);
-        this.sharedService.updateReportStatusAndEmit(this.route);
-        this.setEditInfo(false);
-      });
-    }
+          if (updatedReleasePoint.typeCode.description === 'Fugitive') {
+            this.fugitive = true;
+          } else {
+            this.fugitive = false;
+          }
+
+          Object.assign(this.releasePoint, result);
+          this.sharedService.updateReportStatusAndEmit(this.route);
+          this.setEditInfo(false);
+        });
+      }
+    });
   }
 
+  checkCoordinateTolerance() {
+    const rpLat = this.releasePointComponent.releasePointForm.get('latitude');
+    const rpLong = this.releasePointComponent.releasePointForm.get('longitude');
+    let inToleranceRange = true;
+
+    if (this.coordinateTolerance === null) {
+      this.factolerance = 0.003;
+    } else {
+      this.factolerance = this.coordinateTolerance.coordinateTolerance;
+    }
+
+    if ((rpLat !== null)
+    && ((rpLat.value > this.facilitySite.latitude + this.factolerance)
+    || (rpLat.value < this.facilitySite.latitude - this.factolerance))) {
+      this.toastr.error('', 'Release Point latitude must within the ' + this.factolerance +
+      ' tolerance range of Facility latitude coordinate ' + this.facilitySite.latitude + '.', {positionClass: 'toast-top-right'});
+      inToleranceRange = false;
+    }
+
+    if ((rpLong !== null)
+    && ((rpLong.value > this.facilitySite.longitude + this.factolerance)
+    || (rpLong.value < this.facilitySite.longitude - this.factolerance))) {
+      this.toastr.error('', 'Release Point longitude must within the ' + this.factolerance +
+      ' tolerance range of Facility longitude coordinate ' + this.facilitySite.longitude + '.', {positionClass: 'toast-top-right'});
+      inToleranceRange = false;
+    }
+
+    return inToleranceRange;
+  }
 }

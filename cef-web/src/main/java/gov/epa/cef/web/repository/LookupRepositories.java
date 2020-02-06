@@ -54,6 +54,9 @@ public class LookupRepositories {
 	@Autowired
 	private PointSourceSccCodeRepository pointSourceSccCodeRepo;
 
+	@Autowired
+	private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+
 	public CalculationMaterialCodeRepository materialCodeRepo() {
 		return materialCodeRepo;
 	}
@@ -116,6 +119,10 @@ public class LookupRepositories {
 	
 	public PointSourceSccCodeRepository pointSourceSccCodeRepo() {
 		return pointSourceSccCodeRepo;
+	}
+
+	public EisLatLongToleranceLookupRepository latLongToleranceRepo() {
+		return latLongToleranceRepo;
 	}
 
 }

@@ -17,6 +17,7 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
@@ -248,4 +249,15 @@ public class LookupApi {
     	return new ResponseEntity<PointSourceSccCodeDto>(result, HttpStatus.OK);
     }   
     
+    /**
+     * Retrieve coordinate tolerance by eisProgramId
+     * @param eisProgramId
+     * @return
+     */
+    @GetMapping(value = "/coordinateTolerance/{eisProgramId}")
+    @ResponseBody
+    public ResponseEntity<EisLatLongToleranceLookupDto> retrieveLatLongTolerance(@NotNull @PathVariable String eisProgramId) {
+    	EisLatLongToleranceLookupDto result = lookupService.retrieveLatLongTolerance(eisProgramId);
+    	return new ResponseEntity<EisLatLongToleranceLookupDto>(result, HttpStatus.OK);
+    }   
 }
