@@ -16,6 +16,7 @@ import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
+import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
@@ -33,6 +34,7 @@ import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
+import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
@@ -48,6 +50,7 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
@@ -106,6 +109,9 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+    
+    @Autowired
+    private EisLatLongToleranceLookupRepository latLongToleranceRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -416,6 +422,12 @@ public class LookupServiceImpl implements LookupService {
             result.add(lookupMapper.aircraftEngCodeToDto(entity));
         });
         return result;
+    }
+    
+    public EisLatLongToleranceLookupDto retrieveLatLongTolerance(String eisProgramId) {
+
+    	EisLatLongToleranceLookup entity = latLongToleranceRepo.findById(eisProgramId).orElse(null);
+    	return lookupMapper.EisLatLongToleranceLookupToDto(entity);
     }
     
 }

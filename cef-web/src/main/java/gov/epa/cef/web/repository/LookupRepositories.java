@@ -49,7 +49,10 @@ public class LookupRepositories {
 	private TribalCodeRepository tribalCodeRepo;
 	
 	@Autowired
-  private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+	private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+	
+	@Autowired
+	private EisLatLongToleranceLookupRepository latLongToleranceRepo;
 
 	public CalculationMaterialCodeRepository materialCodeRepo() {
 		return materialCodeRepo;
@@ -109,6 +112,10 @@ public class LookupRepositories {
 	
 	public AircraftEngineTypeCodeRepository aircraftEngCodeRepo() {
 		return aircraftEngCodeRepo;
+	}
+	
+	public EisLatLongToleranceLookupRepository latLongToleranceRepo() {
+		return latLongToleranceRepo;
 	}
 
 }
