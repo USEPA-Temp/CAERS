@@ -8,10 +8,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SccSearchModalComponent } from 'src/app/modules/emissions-reporting/components/scc-search-modal/scc-search-modal.component';
 import { SccCode } from 'src/app/shared/models/scc-code';
 import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
-import { PointSourceSccCode } from 'src/app/shared/models/point-source-scc-code';
-import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute } from '@angular/router';
-import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -22,7 +18,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
   @Input() unitIdentifier: string;
   aircraftSCCcheck = false;
-  emissionsReportYear: number;
 
   processForm = this.fb.group({
     aircraftEngineTypeCode: [null],
@@ -60,16 +55,9 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     private lookupService: LookupService,
     public formUtils: FormUtilsService,
     private modalService: NgbModal,
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private toastr: ToastrService) { }
+    private fb: FormBuilder) { }
 
   ngOnInit() {
-
-    this.lookupService.retrieveOperatingStatus()
-    .subscribe(result => {
-      this.operatingStatusValues = result;
-    });
 
     this.lookupService.retrieveOperatingStatus()
     .subscribe(result => {
@@ -80,10 +68,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     this.aircraftEngineSCC = [
       '2275001000', '2275020000', '2275050011', '2275050012', '2275060011', '2275060012'
     ];
-
-    this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
-      this.emissionsReportYear = data.facilitySite.emissionsReport.year;
-    });
 
     this.checkAircraftSCC();
   }
@@ -113,29 +97,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     }, () => {
       // needed for dismissing without errors
     });
-  }
-
-  checkPointSourceSccCode() {
-    if (this.processForm.get('sccCode').value !== null && this.processForm.get('sccCode').value !== '') {
-
-      this.lookupService.retrievePointSourceSccCode(this.processForm.get('sccCode').value)
-      .subscribe(result => {
-
-        if (result !== null) {
-          if (result.lastInventoryYear !== null && (result.lastInventoryYear >= this.emissionsReportYear)) {
-            this.toastr.warning('', result.code + ' has a retirement date of ' + result.lastInventoryYear + '. If applicable, you may want to add a more recent code.', {positionClass: 'toast-top-right'});
-          } else if (result.lastInventoryYear !== null && (result.lastInventoryYear < this.emissionsReportYear)) {
-            this.toastr.error('', result.code + ' was retired in ' + result.lastInventoryYear + '. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year', {positionClass: 'toast-top-right'});
-            this.processForm.controls['sccCode'].setErrors({'invalid': true});
-          }
-        } else if (result === null) {
-          this.toastr.error('', this.processForm.get('sccCode').value + ' is not a valid point source SCC. Please choose a valid code.', {positionClass: 'toast-top-right'});
-          this.processForm.controls['sccCode'].setErrors({'invalid': true});
-        }
-      });
-    }
-
-    this.checkAircraftSCC();
   }
 
   checkAircraftSCC() {
