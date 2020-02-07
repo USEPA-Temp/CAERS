@@ -126,6 +126,82 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        			"releasePoint.stack.diameterCheck",
 	        			createValidationDetails(releasePoint));
 	        }
+	        
+	        // Check exit gas velocity if exit gas flow rate and stack diameter is submitted.
+	        if ((releasePoint.getExitGasVelocity() == null || releasePoint.getExitGasVelocity() == 0)
+	        	&& (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
+	        	&& (releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)) {
+	        	
+	        	BigDecimal minVelocity = new BigDecimal(0.001);
+	        	BigDecimal maxVelocity = new BigDecimal(1500.0);
+	        	BigDecimal calcVelocity = new BigDecimal(0);
+	        	double inputFlowRate = releasePoint.getExitGasFlowRate();
+	        	double inputDiameter = releasePoint.getStackDiameter();
+	        	String uom= "FPS";
+	        	
+	        	double calcArea = (Math.PI)*(Math.pow((inputDiameter/2), 2));
+	        	calcVelocity = new BigDecimal(inputFlowRate/calcArea).setScale(3, RoundingMode.HALF_UP);
+	        	
+	        	if (releasePoint.getExitGasFlowUomCode() != null && "ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
+	        		minVelocity = new BigDecimal(0.060);
+	        		maxVelocity = new BigDecimal(90000);
+	        		uom = "FPM";
+	        	}
+	        	
+	        	if (calcVelocity.compareTo(maxVelocity.setScale(3, RoundingMode.HALF_UP)) == 1 || calcVelocity.compareTo(minVelocity.setScale(3, RoundingMode.HALF_UP)) == -1) {
+	        		
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.RP_GAS_VELOCITY.value(),
+	        				"releasePoint.exitGasVelocity.range",
+	        				createValidationDetails(releasePoint),
+	        				calcVelocity.toString(),
+	        				uom,
+	        				minVelocity,
+	        				maxVelocity,
+	        				uom);
+	        	}
+	        }
+	        
+	        // Check exit gas flow rate if exit gas flow rate, exit gas velocity, and stack diameter is submitted.
+	        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocity() > 0)
+	        	&& (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
+	        	&& (releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)) {
+	        	
+	        	BigDecimal inputFlowRate = new BigDecimal(releasePoint.getExitGasFlowRate());
+	        	double inputVelocity = releasePoint.getExitGasVelocity();
+	        	double inputDiameter = releasePoint.getStackDiameter();
+	        	
+	        	double calcArea = (Math.PI)*(Math.pow((inputDiameter/2), 2));
+	        	double calcFlowRate = (inputVelocity*calcArea); 
+	        	BigDecimal lowerLimitFlowRate = new BigDecimal(0);
+	        	BigDecimal upperLimitFlowRate = new BigDecimal(0);
+	        	String uom= "ACFS";
+
+	        	if (releasePoint.getExitGasVelocityUomCode() != null && "FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
+	        		uom= "ACFM";
+	        	}
+	        	
+	        	if (releasePoint.getExitGasFlowUomCode() != null && !"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
+	        		inputFlowRate = inputFlowRate.multiply(new BigDecimal(60));
+	        	}
+
+	        	lowerLimitFlowRate = new BigDecimal(0.95*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
+	        	upperLimitFlowRate = new BigDecimal(1.05*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
+	        	
+	        	if (!((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).equals(new BigDecimal(0.00000001).setScale(8, RoundingMode.HALF_UP)))
+		        	&& (((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).compareTo(upperLimitFlowRate) == 1)
+		        	|| ((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).compareTo(lowerLimitFlowRate) == -1))) {
+	        		
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.RP_GAS_FLOW.value(),
+	        				"releasePoint.exitGasFlowRate.range",
+	        				createValidationDetails(releasePoint),
+	        				new BigDecimal(calcFlowRate).setScale(8, RoundingMode.HALF_UP).toString(),
+	        				uom);
+	        	}
+        	}
         }
         
         // FUGITIVE RELEASE POINT CHECKS
