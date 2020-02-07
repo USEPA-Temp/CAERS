@@ -3,20 +3,28 @@ package gov.epa.cef.web.service.validation.validator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -28,6 +36,36 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
     @InjectMocks
     private EmissionValidator validator;
+
+    @Mock
+    private CefConfig cefConfig;
+
+    private UnitMeasureCode curieUom;
+    private UnitMeasureCode lbUom;
+    private UnitMeasureCode tonUom;
+
+    @Before
+    public void init() {
+        curieUom = new UnitMeasureCode();
+        curieUom.setCode("CURIE");
+        curieUom.setDescription("CURIES");
+        curieUom.setUnitType("RADIOACTIVITY");
+        curieUom.setCalculationVariable("1");
+
+        lbUom = new UnitMeasureCode();
+        lbUom.setCode("LB");
+        lbUom.setDescription("POUNDS");
+        lbUom.setUnitType("MASS");
+        lbUom.setCalculationVariable("[lb]");
+
+        tonUom = new UnitMeasureCode();
+        tonUom.setCode("TON");
+        tonUom.setDescription("TONS");
+        tonUom.setUnitType("MASS");
+        tonUom.setCalculationVariable("sTon");
+
+        when(cefConfig.getQaTolerance()).thenReturn(new BigDecimal(".01"));
+    }
 
     @Test
     public void totalDirectEntryFalse_PassTest() {
@@ -161,6 +199,113 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_DENOM_UOM.value()) && errorMap.get(ValidationField.EMISSION_DENOM_UOM.value()).size() == 1);
     }
 
+    /**
+     * There should be one error when Calculation Method Code has false total direct entry and Emission Denominator UoM type doesn't equal Throughput UoM type
+     * and there should be no errors when totalManualEntry is true
+     */
+    @Test
+    public void totalDirectEntryFalse_DenomMismatch_FailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        testData.setEmissionsDenominatorUom(curieUom);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_DENOM_UOM.value()) && errorMap.get(ValidationField.EMISSION_DENOM_UOM.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setTotalManualEntry(true);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    /**
+     * There should be one error when Calculation Method Code has false total direct entry and Emission Numerator UoM type doesn't equal Total Emissions UoM type
+     * and there should be no errors when totalManualEntry is true
+     */
+    @Test
+    public void totalDirectEntryFalse_NumMismatch_FailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        testData.setEmissionsNumeratorUom(curieUom);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_NUM_UOM.value()) && errorMap.get(ValidationField.EMISSION_NUM_UOM.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setTotalManualEntry(true);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    /**
+     * There should be one error when Calculation Method Code has false total direct entry and Emission Total Emissions is not calculated correctly
+     * and there should be no errors when totalManualEntry is true
+     */
+    @Test
+    public void totalDirectEntryFalse_TotalEmissionsTolerance_FailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        testData.setTotalEmissions(new BigDecimal("10.2"));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setTotalManualEntry(true);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        cefContext = createContext();
+        testData.setTotalEmissions(new BigDecimal("9.8"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        cefContext = createContext();
+
+        testData.setTotalManualEntry(false);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+    }
+
+    @Test
+    public void totalDirectEntryFalse_TotalEmissionsTolerance_BoundaryTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        testData.setTotalEmissions(new BigDecimal("10.1"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        cefContext = createContext();
+        testData.setTotalEmissions(new BigDecimal("9.9"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+    }
+
+
     private Emission createBaseEmission(boolean totalDirectEntry) {
 
         Emission result = new Emission();
@@ -174,20 +319,26 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         ReportingPeriod period = new ReportingPeriod();
         period.setCalculationParameterValue(new BigDecimal("10"));
+        period.setCalculationParameterUom(tonUom);
+        period.setEmissionsProcess(new EmissionsProcess());
+        period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
+        period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
         result.setReportingPeriod(period);
 
-        UnitMeasureCode uom = new UnitMeasureCode();
-        uom.setCode("TON");
-        result.setEmissionsUomCode(uom);
+        result.setEmissionsUomCode(tonUom);
 
         result.setTotalEmissions(new BigDecimal("10"));
 
         if (!totalDirectEntry) {
-            result.setEmissionsDenominatorUom(uom);
-            result.setEmissionsNumeratorUom(uom);
+            result.setEmissionsDenominatorUom(tonUom);
+            result.setEmissionsNumeratorUom(tonUom);
             result.setEmissionsFactor(new BigDecimal("1"));
+            result.setTotalManualEntry(false);
         } else {
             result.setComments("Comment");
+            result.setTotalManualEntry(true);
         }
 
         return result;

@@ -1,15 +1,18 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.CalculationUtils;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
@@ -17,6 +20,9 @@ import com.google.common.base.Strings;
 
 @Component
 public class EmissionValidator extends BaseValidator<Emission> {
+
+    @Autowired
+    private CefConfig cefConfig;
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -117,6 +123,85 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         createValidationDetails(emission));
             }
 
+        }
+
+        // Emission Calculation checks
+        if (emission.getEmissionsCalcMethodCode() != null 
+                && emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false
+                && emission.getTotalManualEntry() == false) {
+
+            boolean canCalculate = true;
+
+            if (emission.getReportingPeriod() != null 
+                    && emission.getReportingPeriod().getCalculationParameterUom() != null 
+                    && emission.getEmissionsNumeratorUom() != null
+                    && emission.getEmissionsDenominatorUom() != null
+                    && emission.getEmissionsUomCode() != null) {
+
+                // Total emissions cannot be calculated with the given emissions factor because Throughput UoM {0} cannot be converted to Emission Factor Denominator UoM {1}. 
+                // Please adjust Units of Measure or choose the option "I prefer to calculate the total emissions myself."
+                if (!emission.getReportingPeriod().getCalculationParameterUom().getUnitType().equals(emission.getEmissionsDenominatorUom().getUnitType())) {
+
+                    canCalculate = false;
+                    valid = false;
+                    context.addFederalError(
+                            ValidationField.EMISSION_DENOM_UOM.value(),
+                            "emission.emissionsDenominatorUom.mismatch", 
+                            createValidationDetails(emission),
+                            emission.getReportingPeriod().getCalculationParameterUom().getDescription(),
+                            emission.getEmissionsDenominatorUom().getDescription());
+                }
+
+                //Total emissions cannot be calculated with the given emissions factor because Emission Factor Numerator UoM {0} cannot be converted to Total Emissions UoM {1}. 
+                // Please adjust Units of Measure or choose the option "I prefer to calculate the total emissions myself."
+                if (!emission.getEmissionsNumeratorUom().getUnitType().equals(emission.getEmissionsUomCode().getUnitType())) {
+
+                    canCalculate = false;
+                    valid = false;
+                    context.addFederalError(
+                            ValidationField.EMISSION_NUM_UOM.value(),
+                            "emission.emissionsNumeratorUom.mismatch", 
+                            createValidationDetails(emission),
+                            emission.getEmissionsNumeratorUom().getDescription(),
+                            emission.getEmissionsUomCode().getDescription());
+                }
+
+                if (canCalculate) {
+
+                    BigDecimal tolerance = cefConfig.getQaTolerance();
+
+                    // check if the year is divisible by 4 which would make it a leap year
+                    boolean leapYear = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;
+
+                    BigDecimal totalEmissions = emission.getEmissionsFactor().multiply(emission.getReportingPeriod().getCalculationParameterValue());
+
+                    // convert units for denominator and throughput
+                    if (!emission.getReportingPeriod().getCalculationParameterUom().getCode().equals(emission.getEmissionsDenominatorUom().getCode())) {
+                        totalEmissions = CalculationUtils.convertUnits(emission.getReportingPeriod().getCalculationParameterUom().getCalculationVariable(), 
+                                emission.getEmissionsDenominatorUom().getCalculationVariable(), leapYear).multiply(totalEmissions);
+                    }
+
+                    // convert units for numerator and total emissions
+                    if (!emission.getEmissionsUomCode().getCode().equals(emission.getEmissionsNumeratorUom().getCode())) {
+                        totalEmissions = CalculationUtils.convertUnits(emission.getEmissionsNumeratorUom().getCalculationVariable(), 
+                                emission.getEmissionsUomCode().getCalculationVariable(), leapYear).multiply(totalEmissions);
+                    }
+
+                    // Total emissions listed for this pollutant are outside the acceptable range of +/-{0}% from {1} which is the calculated 
+                    // emissions based on the Emission Factor provided. Please recalculate the total emissions for this pollutant or choose the option 
+                    // "I prefer to calculate the total emissions myself."
+                    if (totalEmissions.subtract(emission.getTotalEmissions()).abs().compareTo(totalEmissions.multiply(tolerance)) > 0) {
+
+                        valid = false;
+                        context.addFederalError(
+                                ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+                                "emission.totalEmissions.tolerance", 
+                                createValidationDetails(emission),
+                                tolerance.multiply(new BigDecimal("100")).toString(),
+                                totalEmissions.toString());
+                    }
+                }
+            }
         }
 
         return valid;
