@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Preconditions;
 import gov.epa.cef.web.client.api.ExcelParserClient;
 import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
@@ -75,6 +76,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -240,39 +243,39 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     @Override
     public EmissionsReportDto saveBulkEmissionsReport(EmissionsReportBulkUploadDto bulkEmissionsReport) {
 
+        Collection<String> warnings = new ArrayList<>();
+
         EmissionsReport emissionsReport = mapEmissionsReport(bulkEmissionsReport);
 
         for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
             FacilitySite facility = mapFacility(bulkFacility);
+
+            Preconditions.checkArgument(bulkFacility.getId() != null,
+                "FacilitySite ID can not be null.");
 
             // Maps for storing the entity referenced by a certain id in the JSON
             Map<Long, ReleasePoint> releasePointMap = new HashMap<>();
             Map<Long, EmissionsProcess> processMap = new HashMap<>();
             Map<Long, ControlPath> controlPathMap = new HashMap<>();
             Map<Long, Control> controlMap = new HashMap<>();
-            Map<Long, FacilityNAICSXref> facilityNaicsMap = new HashMap<>();
-            Map<Long, FacilitySiteContact> facilityContactMap = new HashMap<>();
 
             // Map Facility Contacts
             for (FacilitySiteContactBulkUploadDto bulkFacilityContact : bulkEmissionsReport.getFacilityContacts()) {
                 FacilitySiteContact facilityContact = mapFacilityContact(bulkFacilityContact);
 
-                if (bulkFacilityContact.getFacilitySiteId().equals(bulkFacility.getId())) {
+                if (bulkFacility.getId().equals(bulkFacilityContact.getFacilitySiteId())) {
                     facilityContact.setFacilitySite(facility);
                     facility.getContacts().add(facilityContact);
-                    facilityContactMap.put(bulkFacilityContact.getId(), facilityContact);
                 }
             }
-
 
             // Map Facility NAICS
             for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
                 FacilityNAICSXref facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
 
-                if (bulkFacilityNAICS.getFacilitySiteId().equals(bulkFacility.getId())) {
+                if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {
                     facilityNAICS.setFacilitySite(facility);
                     facility.getFacilityNAICS().add(facilityNAICS);
-                    facilityNaicsMap.put(bulkFacilityNAICS.getId(), facilityNAICS);
                 }
             }
 
@@ -280,7 +283,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
                 ReleasePoint releasePoint = mapReleasePoint(bulkRp);
 
-                if (bulkRp.getFacilitySiteId().equals(bulkFacility.getId())) {
+                if (bulkFacility.getId().equals(bulkRp.getFacilitySiteId())) {
                     releasePoint.setFacilitySite(facility);
                     facility.getReleasePoints().add(releasePoint);
                     releasePointMap.put(bulkRp.getId(), releasePoint);
@@ -290,7 +293,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             // Map Emissions Units
             for (EmissionsUnitBulkUploadDto bulkEmissionsUnit : bulkEmissionsReport.getEmissionsUnits()) {
 
-                if (bulkEmissionsUnit.getFacilitySiteId().equals(bulkFacility.getId())) {
+                if (bulkFacility.getId().equals(bulkEmissionsUnit.getFacilitySiteId())) {
+
                     EmissionsUnit emissionsUnit = mapEmissionsUnit(bulkEmissionsUnit);
                     emissionsUnit.setFacilitySite(facility);
 
@@ -344,6 +348,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     emissionsUnit.setEmissionsProcesses(processes);
 
                     facility.getEmissionsUnits().add(emissionsUnit);
+
                 }
             }
 
@@ -395,18 +400,30 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 if (controlPath != null) {
                     controlAssignment.setControlPath(controlPath);
                     controlPath.getAssignments().add(controlAssignment);
+                } else {
+
+                    warnings.add(String.format("ControlPath %s referenced by assigned %s does not exist.",
+                        bulkControlAssignment.getControlPathId(), bulkControlAssignment.getId()));
                 }
 
                 ControlPath controlPathChild = controlPathMap.get(bulkControlAssignment.getControlPathChildId());
                 if (controlPathChild != null) {
                     controlAssignment.setControlPathChild(controlPathChild);
                     controlPathChild.getChildAssignments().add(controlAssignment);
+                } else {
+
+                    warnings.add(String.format("ControlPath %s referenced by assigned %s does not exist.",
+                        bulkControlAssignment.getControlPathChildId(), bulkControlAssignment.getId()));
                 }
 
                 Control control = controlMap.get(bulkControlAssignment.getControlId());
                 if (control != null) {
                     controlAssignment.setControl(control);
                     control.getAssignments().add(controlAssignment);
+                } else {
+
+                    warnings.add(String.format("Control %s referenced by assigned %s does not exist.",
+                        bulkControlAssignment.getControlId(), bulkControlAssignment.getId()));
                 }
 
             });
@@ -438,6 +455,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             emissionsReport.getFacilitySites().add(facility);
         }
 
+        logger.debug("Warnings {}", warnings);
 
         return this.emissionsReportService.saveEmissionReport(emissionsReport);
     }

@@ -380,7 +380,7 @@
             "latitude": "33.749",
             "county": "Whitfield",
             "description": "Pulp and Paper Processing Plant",
-            "programSystemCode": null,
+            "programSystemCode": "GADNR",
             "facilityCategoryCode": "CAP",
             "mailingStateCode": "GA",
             "mailingPostalCode": "31750",
@@ -453,7 +453,7 @@
             "exitGasFlowUomCode": "ACFM",
             "exitGasVelocityUomCode": "FPM",
             "facilitySiteId": "24",
-            "typeCode": null,
+            "typeCode": "2",
             "stackHeight": "40",
             "fugitiveLine2Latitude": "34.749",
             "_row": 24,
@@ -477,7 +477,7 @@
             "exitGasFlowUomCode": "ACFM",
             "exitGasVelocityUomCode": "FPM",
             "facilitySiteId": "24",
-            "typeCode": null,
+            "typeCode": "2",
             "stackHeight": "7",
             "_row": 25,
             "operatingStatusCode": "OP",
@@ -511,7 +511,7 @@
     ],
     "emissionsProcesses": [
         {
-            "emissionsUnitId": "0",
+            "emissionsUnitId": "24",
             "comments": "Sample Comments for Drying Process",
             "statusYear": "1985",
             "sccDescription": null,
@@ -523,7 +523,7 @@
             "id": "24"
         },
         {
-            "emissionsUnitId": "0",
+            "emissionsUnitId": "25",
             "comments": "Sample Comments for Disposal Process",
             "statusYear": "1985",
             "sccDescription": null,
@@ -535,7 +535,7 @@
             "id": "25"
         },
         {
-            "emissionsUnitId": "0",
+            "emissionsUnitId": "26",
             "comments": "Sample Comments for Storage Process",
             "statusYear": "1985",
             "sccDescription": null,
@@ -556,7 +556,7 @@
             "id": "24",
             "calculationMaterialCode": "698",
             "reportingPeriodTypeCode": "A",
-            "emissionsOperatingTypeCode": null,
+            "emissionsOperatingTypeCode": "R",
             "emissionsProcessId": "24",
             "calculationParameterTypeCode": "I"
         },
@@ -568,7 +568,7 @@
             "id": "25",
             "calculationMaterialCode": "70",
             "reportingPeriodTypeCode": "A",
-            "emissionsOperatingTypeCode": null,
+            "emissionsOperatingTypeCode": "R",
             "emissionsProcessId": "26",
             "calculationParameterTypeCode": "O"
         },
@@ -580,7 +580,7 @@
             "id": "26",
             "calculationMaterialCode": "956",
             "reportingPeriodTypeCode": "A",
-            "emissionsOperatingTypeCode": null,
+            "emissionsOperatingTypeCode": "R",
             "emissionsProcessId": "25",
             "calculationParameterTypeCode": "E"
         }
@@ -796,7 +796,7 @@
             "_row": 24,
             "controlPathChildId": null,
             "id": "24",
-            "controlId": "0",
+            "controlId": "26",
             "percentApportionment": "75"
         },
         {
@@ -814,7 +814,7 @@
             "_row": 26,
             "controlPathChildId": null,
             "id": "26",
-            "controlId": "0",
+            "controlId": "24",
             "percentApportionment": "100"
         },
         {
@@ -823,7 +823,7 @@
             "_row": 27,
             "controlPathChildId": null,
             "id": "27",
-            "controlId": "0",
+            "controlId": "25",
             "percentApportionment": "100"
         }
     ],
@@ -832,28 +832,28 @@
             "pollutantCode": "75070",
             "_row": 24,
             "id": "24",
-            "controlId": "0",
+            "controlId": "24",
             "percentReduction": "100"
         },
         {
             "pollutantCode": "71432",
             "_row": 25,
             "id": "25",
-            "controlId": "0",
+            "controlId": "25",
             "percentReduction": "99.9"
         },
         {
             "pollutantCode": "75070",
             "_row": 26,
             "id": "26",
-            "controlId": "0",
+            "controlId": "24",
             "percentReduction": "1.3"
         },
         {
             "pollutantCode": "NOX",
             "_row": 27,
             "id": "27",
-            "controlId": "0",
+            "controlId": "26",
             "percentReduction": "1.3"
         }
     ],
@@ -881,21 +881,21 @@
     ],
     "facilityNAICS": [
         {
-            "code": null,
+            "code": "4241",
             "_row": 24,
             "id": "24",
             "primaryFlag": "true",
             "facilitySiteId": "24"
         },
         {
-            "code": null,
+            "code": "33142",
             "_row": 25,
             "id": "25",
             "primaryFlag": "false",
             "facilitySiteId": "24"
         },
         {
-            "code": null,
+            "code": "311222",
             "_row": 26,
             "id": "26",
             "primaryFlag": "false",
