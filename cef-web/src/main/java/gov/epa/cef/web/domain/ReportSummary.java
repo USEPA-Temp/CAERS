@@ -14,6 +14,9 @@ public class ReportSummary extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "pollutant_code")
+    private String pollutantCode;
+    
     @Column(name = "pollutant_cas_id")
     private String casId;
     
@@ -29,14 +32,26 @@ public class ReportSummary extends BaseEntity {
     @Column(name = "stack_total")
     private Double stackTotal;
     
+    @Column(name = "fugitive_tons_total")
+    private Double fugitiveTonsTotal;
+    
+    @Column(name = "stack_tons_total")
+    private Double stackTonsTotal;
+    
     @Column(name = "uom")
     private String uom;
     
     @Column(name = "emissions_tons_total")
     private Double emissionsTonsTotal;
+	
+	@Column(name = "emissions_total")
+    private Double emissionsTotal;
     
     @Column(name = "previous_year_total")
     private Double previousYearTotal ;
+    
+    @Column(name = "previous_year_tons_total")
+    private Double previousYearTonsTotal ;
     
     @Column(name = "report_year")
     private Short reportYear;
@@ -47,7 +62,12 @@ public class ReportSummary extends BaseEntity {
     @Column(name = "previous_year")
     private Short previousYear;
 
-
+    public String getPollutantCode() {
+		return pollutantCode;
+	}
+	public void setPollutantCode(String pollutantCode) {
+		this.pollutantCode = pollutantCode;
+	}
 
     public String getCasId() {
         return this.casId;
@@ -83,8 +103,20 @@ public class ReportSummary extends BaseEntity {
     public void setStackTotal(Double stackTotal) {
         this.stackTotal = stackTotal;
     }
-    
-    public String getUom() {
+   
+	public Double getFugitiveTonsTotal() {
+		return fugitiveTonsTotal;
+	}
+	public void setFugitiveTonsTotal(Double fugitiveTonsTotal) {
+		this.fugitiveTonsTotal = fugitiveTonsTotal;
+	}
+	public Double getStackTonsTotal() {
+		return stackTonsTotal;
+	}
+	public void setStackTonsTotal(Double stackTonsTotal) {
+		this.stackTonsTotal = stackTonsTotal;
+	}
+	public String getUom() {
         return this.uom;
     }
     public void setUom(String uom) {
@@ -94,9 +126,18 @@ public class ReportSummary extends BaseEntity {
     public Double getEmissionsTonsTotal() {
         return this.emissionsTonsTotal;
     }
+    
     public void setEmissionsTonsTotal(Double emissionsTonsTotal) {
         this.emissionsTonsTotal = emissionsTonsTotal;
     }
+    
+    public Double getEmissionsTotal() {
+		return emissionsTotal;
+	}
+    
+	public void setEmissionsTotal(Double emissionsTotal) {
+		this.emissionsTotal = emissionsTotal;
+	}
     
     public Double getPreviousYearTotal() {
         return this.previousYearTotal;
@@ -105,7 +146,13 @@ public class ReportSummary extends BaseEntity {
         this.previousYearTotal = previousYearTotal;
     }
     
-    public Short getReportYear() {
+    public Double getPreviousYearTonsTotal() {
+		return previousYearTonsTotal;
+	}
+	public void setPreviousYearTonsTotal(Double previousYearTonsTotal) {
+		this.previousYearTonsTotal = previousYearTonsTotal;
+	}
+	public Short getReportYear() {
         return this.reportYear;
     }
     public void setReportYear(Short reportYear) {
