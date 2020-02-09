@@ -13,6 +13,7 @@ export class ReportSummaryModalComponent implements OnInit {
 
     @Input() submission: SubmissionUnderReview;
     tableData: ReportSummary[];
+    radiationData: ReportSummary[];
     emissionsReportYear: number;
 
     constructor(public activeModal: NgbActiveModal, private reportService: ReportService) { }
@@ -22,9 +23,16 @@ export class ReportSummaryModalComponent implements OnInit {
         if (this.submission.facilitySiteId) {
             this.emissionsReportYear = this.submission.year;
             this.reportService.retrieve(this.submission.year, this.submission.facilitySiteId)
-            .subscribe(report => {
-                console.log(report);
-                this.tableData = report;
+            .subscribe(pollutants => {
+              // filter out radiation pollutants to show separately at the end of the table
+              // (only radionucleides right now which is code 605)
+              this.tableData = pollutants.filter(pollutant => {
+                  return pollutant.pollutantCode !== '605';
+              });
+
+              this.radiationData = pollutants.filter(pollutant => {
+                  return pollutant.pollutantCode === '605';
+              });
             });
         }
     }

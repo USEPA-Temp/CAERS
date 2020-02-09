@@ -189,6 +189,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   checkPointSourceSccCode() {
     if (this.lookupSccCode === null) {
       this.toastr.error('', this.infoComponent.processForm.get('sccCode').value + ' is not a valid point source SCC. Please choose a valid code.', {positionClass: 'toast-top-right'});
+      this.infoComponent.processForm.controls['sccCode'].setErrors({'invalid': true});
       return false;
     } else if (this.lookupSccCode !== null) {
       if (this.lookupSccCode.lastInventoryYear !== null && (this.lookupSccCode.lastInventoryYear >= this.emissionsReportYear)) {
@@ -196,6 +197,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         return true;
       } else if (this.lookupSccCode.lastInventoryYear !== null && (this.lookupSccCode.lastInventoryYear < this.emissionsReportYear)) {
         this.toastr.error('', this.lookupSccCode.code + ' was retired in ' + this.lookupSccCode.lastInventoryYear + '. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year', {positionClass: 'toast-top-right'});
+        this.infoComponent.processForm.controls['sccCode'].setErrors({'invalid': true});
         return false;
       } else {
         return true;
