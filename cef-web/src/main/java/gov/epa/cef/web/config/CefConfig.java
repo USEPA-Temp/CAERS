@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +24,8 @@ public class CefConfig {
     private String defaultEmailAddress;
 
     private final List<String> admins = new ArrayList<>();
+
+    private BigDecimal emissionsTotalQaTolerance;
 
     public List<String> getAdmins() {
 
@@ -56,6 +59,14 @@ public class CefConfig {
 
     public void setDefaultEmailAddress(String defaultEmailAddress) {
         this.defaultEmailAddress = defaultEmailAddress;
+    }
+
+    public BigDecimal getEmissionsTotalQaTolerance() {
+        return emissionsTotalQaTolerance;
+    }
+
+    public void setEmissionsTotalQaTolerance(BigDecimal qaTolerance) {
+        this.emissionsTotalQaTolerance = qaTolerance;
     }
 
 }
