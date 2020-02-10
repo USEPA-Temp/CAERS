@@ -25,7 +25,7 @@ public class CefConfig {
 
     private final List<String> admins = new ArrayList<>();
 
-    private BigDecimal qaTolerance;
+    private BigDecimal emissionsTotalQaTolerance;
 
     public List<String> getAdmins() {
 
@@ -61,12 +61,12 @@ public class CefConfig {
         this.defaultEmailAddress = defaultEmailAddress;
     }
 
-    public BigDecimal getQaTolerance() {
-        return qaTolerance;
+    public BigDecimal getEmissionsTotalQaTolerance() {
+        return emissionsTotalQaTolerance;
     }
 
-    public void setQaTolerance(BigDecimal qaTolerance) {
-        this.qaTolerance = qaTolerance;
+    public void setEmissionsTotalQaTolerance(BigDecimal qaTolerance) {
+        this.emissionsTotalQaTolerance = qaTolerance;
     }
 
 }

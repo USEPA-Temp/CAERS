@@ -168,7 +168,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 if (canCalculate) {
 
-                    BigDecimal tolerance = cefConfig.getQaTolerance();
+                    BigDecimal tolerance = cefConfig.getEmissionsTotalQaTolerance();
 
                     // check if the year is divisible by 4 which would make it a leap year
                     boolean leapYear = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;

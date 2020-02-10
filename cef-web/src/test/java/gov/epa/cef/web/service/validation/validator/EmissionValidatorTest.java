@@ -64,7 +64,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         tonUom.setUnitType("MASS");
         tonUom.setCalculationVariable("sTon");
 
-        when(cefConfig.getQaTolerance()).thenReturn(new BigDecimal(".01"));
+        when(cefConfig.getEmissionsTotalQaTolerance()).thenReturn(new BigDecimal(".01"));
     }
 
     @Test

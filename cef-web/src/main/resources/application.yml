@@ -1,5 +1,5 @@
 cef:
-  qa-tolerance: .01
+  emissions-total-qa-tolerance: .01
 server:
   use-forward-headers: true
   servlet:
