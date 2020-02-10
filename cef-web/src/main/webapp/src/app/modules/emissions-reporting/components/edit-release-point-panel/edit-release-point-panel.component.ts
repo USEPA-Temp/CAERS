@@ -343,11 +343,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const flow = control.get('exitGasFlowRate');
       const velocity = control.get('exitGasVelocity');
 
-      if (((velocityUom.value !== null && flowUom.value !== null) &&
-        (velocityUom.value.code.charAt(velocityUom.value.code.length-1) !== flowUom.value.code.charAt(flowUom.value.code.length-1)))
-        || ((flow.value !== null && velocity.value !== null) && (velocityUom.value === null || flowUom.value === null))) {
-          return { invalidUnits: true };
-        }
+      if ((velocityUom.value !== null && flowUom.value !== null)
+      && (velocityUom.value.code.charAt(velocityUom.value.code.length-1) !== flowUom.value.code.charAt(flowUom.value.code.length-1))) {
+        return { invalidUnits: true };
+      }
+      if ((velocityUom.value === null || flowUom.value === null)
+      && ((flow.value !== null && flow.value !== '') && (velocity.value !== null && velocity.value !== ''))) {
+        return { invalidUnits: true };
+      }
       return null;
     };
   }
@@ -400,7 +403,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const velocity = control.get('exitGasVelocity');
 
       if (this.releaseType !== 'Fugitive') {
-        if ((flowRate === null || flowRate.value === '') && (velocity === null || velocity.value === '')) {
+        if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
           return { invalidVelocity: true };
         }
         return null;
@@ -414,7 +417,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const diameter = control.get('stackDiameter'); // ft
       const height = control.get('stackHeight'); // ft
 
-      if (diameter.value > 0 && height.value > 0) {
+      if ((diameter.value !== null && height.value !== null) && (diameter.value > 0 && height.value > 0)) {
         this.stackDiameterWarning = (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: {diameter} } : null;
       }
       return null;
