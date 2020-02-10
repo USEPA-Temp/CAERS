@@ -1,40 +1,11 @@
 package gov.epa.cef.web.service.impl;
 
-import java.io.ByteArrayInputStream; 
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import javax.activation.DataHandler;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
-import gov.epa.cef.web.domain.OperatingDetail;
-import gov.epa.cef.web.domain.ReleasePoint;
-import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
@@ -57,22 +28,42 @@ import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.activation.DataHandler;
+import javax.validation.constraints.NotBlank;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
-	
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
 
-    // TODO: Remove hard coded value
-    // https://alm.cgifederal.com/projects/browse/CEF-319
-    private static final String __HARD_CODED_AGENCY_CODE__ = "GA";
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
 
     @Autowired
     private EmissionsReportRepository erRepo;
 
     @Autowired
-    EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
+    private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
@@ -94,19 +85,19 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private NotificationService notificationService;
-    
+
     @Autowired
     private ReportService reportService;
 
     @Autowired
     private EmissionsReportStatusService statusService;
-    
+
     @Autowired
     private FacilitySiteContactService contactService;
-    
+
     @Autowired
     private LookupService lookupService;
-    
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
@@ -140,6 +131,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         return erRepo.findById(id)
             .map(report -> emissionsReportMapper.toDto(report))
             .orElse(null);
+    }
+
+    @Override
+    public Optional<EmissionsReport> retrieve(long id) {
+
+        return erRepo.findById(id);
+    }
+
+    @Override
+    public Optional<EmissionsReport> retrieveByEisProgramIdAndYear(@NotBlank String facilityEisProgramId, int year) {
+
+        return erRepo.findByEisProgramIdAndYear(facilityEisProgramId, Integer.valueOf(year).shortValue());
     }
 
     /* (non-Javadoc)
@@ -213,13 +216,13 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.clearId();
-                
+
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.CREATED);
 
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
             .orElse(null);
-        
+
         /*
         // FIXME
         This code is being commented out until after the pilot and FRS integration can be solidified.
@@ -249,30 +252,37 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     }
 
-    public EmissionsReportDto createEmissionReport(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
-    	
+    public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
+
         EmissionsReport newReport = new EmissionsReport();
-        newReport.setEisProgramId(facilityEisProgramId);
+        newReport.setEisProgramId(reportDto.getEisProgramId());
         newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setAgencyCode(reportDto.getStateCode());
-        newReport.setId(this.emissionsReportMapper.toDto(this.erRepo.save(newReport)).getId());
 
-        reportDto.getFacilitySite().setEmissionsReport(newReport);
-        reportDto.getFacilitySite().setEisProgramId(facilityEisProgramId);
-        
-        //TODO: 
-        //For current mvp program system code will be hardcoded to GAGNR for creating new facility sites
+        FacilitySite facilitySite = this.facilitySiteService.transform(reportDto.getFacilitySite());
+        facilitySite.setEmissionsReport(newReport);
+        facilitySite.setEisProgramId(reportDto.getEisProgramId());
+
+        //TODO:
+        //For current mvp program system code will be hardcoded to GADNR for creating new facility sites
         //need to raise issue with Julia and Kevin to determine how we will obtain program system code in future
-        reportDto.getFacilitySite().setProgramSystemCode(this.lookupService.retrieveProgramSystemTypeCodeEntityByCode("GADNR"));
-        this.facilitySiteService.create(reportDto.getFacilitySite());
-        
+        facilitySite.setProgramSystemCode(
+            this.lookupService.retrieveProgramSystemTypeCodeEntityByCode("GADNR"));
+
+        newReport.getFacilitySites().add(facilitySite);
+
+        newReport = this.erRepo.save(newReport);
+
+        LOGGER.debug("New Report {} created.", newReport.getId());
+
     	this.reportService.createReportHistory(newReport.getId(), ReportAction.CREATED);
-        
-        return this.emissionsReportMapper.toDto(this.erRepo.save(newReport));
+
+        return this.emissionsReportMapper.toDto(newReport);
     }
+
     @Override
     public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {
 
@@ -332,7 +342,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         return erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
             .stream().findFirst();
     }
-    
+
     /**
      * Approve the specified reports and move to approved
      * @param reportIds
@@ -343,18 +353,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     public List<EmissionsReportDto>acceptEmissionsReports(List<Long> reportIds, String comments) {
     	List<EmissionsReportDto> updatedReports = statusService.acceptEmissionsReports(reportIds);
         reportService.createReportHistory(reportIds, ReportAction.ACCEPTED, comments);
-             
+
     	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
 	      .forEach(report -> {
-	    	  
-	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at 
+
+	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
 	    	  //some point in the future if different report types are included in the system
 	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
-	    	  
-	    	  //check for "Emission Inventory" contacts in the facility site and send them a notification that their report 
+
+	    	  //check for "Emission Inventory" contacts in the facility site and send them a notification that their report
 	    	  //has been accepted
 	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-	    	  	    	  
+
 	    	  eiContacts.forEach(contact -> {
 	    		  //if the EI contact has a email address - send them the notification
 	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
@@ -368,7 +378,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	      });
     	return updatedReports;
     }
-    
+
     /**
      * Approve the specified reports and move to approved
      * @param reportIds
@@ -379,18 +389,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     public List<EmissionsReportDto>rejectEmissionsReports(List<Long> reportIds, String comments) {
     	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reportIds);
         reportService.createReportHistory(reportIds, ReportAction.REJECTED, comments);
-             
+
     	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
 	      .forEach(report -> {
-	    	  
-	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at 
+
+	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
 	    	  //some point in the future if different report types are included in the system
 	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
-	    	  
-	    	  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report 
+
+	    	  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report
 	    	  //has been accepted
 	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-	    	  
+
 	    	  eiContacts.forEach(contact -> {
 	    		  //if the EI contact has a email address - send them the notification
 	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {

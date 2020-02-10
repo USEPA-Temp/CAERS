@@ -1,12 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import com.fasterxml.jackson.annotation.JsonIgnore; 
-
-import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReportAction;
-import gov.epa.cef.web.domain.ReportStatus;
-import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -16,16 +10,14 @@ import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
-import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.validation.ValidationResult;
+import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
-
-import org.hibernate.annotations.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +32,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -55,9 +50,9 @@ public class EmissionsReportApi {
     Logger LOGGER = LoggerFactory.getLogger(EmissionsReportApi.class);
 
     private final EmissionsReportService emissionsReportService;
-    
+
     private final EmissionsReportStatusService emissionsReportStatusService;
-    
+
     private final ReportService reportService;
 
     private final EmissionsReportValidationService validationService;
@@ -69,7 +64,6 @@ public class EmissionsReportApi {
     @Autowired
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
-                       FacilitySiteService facilitySiteService,
                        EmissionsReportStatusService emissionsReportStatusService,
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
@@ -81,6 +75,49 @@ public class EmissionsReportApi {
         this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
+    }
+
+    /**
+     * Creates an Emissions Report from either previous report or data from FRS
+     *
+     * @param facilityEisProgramId
+     * @param reportDto
+     * @return
+     */
+    @PostMapping(value = "/facility/{facilityEisProgramId}",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmissionsReportDto> create(
+        @NotNull @PathVariable String facilityEisProgramId,
+        @NotBlank @RequestPart("workbook") MultipartFile workbook,
+        @NotNull @RequestPart("metadata") EmissionsReportStarterDto reportDto) {
+
+        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
+
+        reportDto.setEisProgramId(facilityEisProgramId);
+
+        if (reportDto.getYear() == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
+        }
+
+        EmissionsReportDto result = null;
+        HttpStatus status = HttpStatus.NO_CONTENT;
+
+        try (TempFile tempFile = TempFile.from(workbook.getInputStream(), workbook.getOriginalFilename())) {
+
+            LOGGER.debug("Workbook filename {}", tempFile.getFileName());
+            LOGGER.debug("ReportDto {}", reportDto);
+
+            result = this.uploadService.uploadBulkReport(reportDto, tempFile);
+
+            status = HttpStatus.OK;
+
+        } catch (IOException e) {
+
+            throw new IllegalStateException(e);
+        }
+
+        return new ResponseEntity<>(result, status);
     }
 
     /**
@@ -103,8 +140,8 @@ public class EmissionsReportApi {
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
         }
-        
-        EmissionsReportDto result = createEmissionsReportDto(facilityEisProgramId, reportDto);
+
+        EmissionsReportDto result = createEmissionsReportDto(reportDto);
 
         /*
         If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
@@ -122,13 +159,15 @@ public class EmissionsReportApi {
                 status = HttpStatus.OK;
             }
         }
-        
+
         return new ResponseEntity<>(result, status);
     }
-    
-    private EmissionsReportDto createEmissionsReportDto(String facilityEisProgramId, EmissionsReportStarterDto reportDto) {
+
+    private EmissionsReportDto createEmissionsReportDto(EmissionsReportStarterDto reportDto) {
         EmissionsReportDto result;
-        
+
+        String facilityEisProgramId = reportDto.getEisProgramId();
+
         switch (reportDto.getSource()) {
 	        case previous:
 	        	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
@@ -137,18 +176,18 @@ public class EmissionsReportApi {
 	        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
 	        	break;
 	        case fromScratch:
-	        	result = this.emissionsReportService.createEmissionReport(facilityEisProgramId, reportDto);
+	        	result = this.emissionsReportService.createEmissionReport(reportDto);
 	        	break;
 	        default:
 	        	result = null;
         }
-        
+
         return result;
     }
 
     /**
      * Approve the specified reports and move to approved
-     * @param reportIds
+     * @param reviewDTO
      * @return
      */
     @PostMapping(value = "/accept")
@@ -158,13 +197,13 @@ public class EmissionsReportApi {
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
         List<EmissionsReportDto> result = emissionsReportService.acceptEmissionsReports(reviewDTO.reportIds, reviewDTO.comments);
-        
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
      * Reject the specified reports and move back to in progress
-     * @param reportIds
+     * @param reviewDTO
      * @return
      */
     @PostMapping(value = "/reject")
@@ -174,10 +213,10 @@ public class EmissionsReportApi {
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
         List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reviewDTO.reportIds, reviewDTO.comments);
-        
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Reset report status. Sets report status to in progress and validation status to unvalidated.
      * @param reportIds
@@ -192,7 +231,7 @@ public class EmissionsReportApi {
         List<EmissionsReportDto> result = emissionsReportStatusService.resetEmissionsReport(reportIds);
 
         this.reportService.createReportHistory(reportIds, ReportAction.REOPENED);
-        
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -263,7 +302,7 @@ public class EmissionsReportApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Delete a report for given id
      * @param reportId
@@ -294,7 +333,7 @@ public class EmissionsReportApi {
         String documentId = emissionsReportService.submitToCromerr(reportId, activityId);
 
         this.reportService.createReportHistory(reportId, ReportAction.SUBMITTED);
-        
+
         return new ResponseEntity<>(documentId, HttpStatus.OK);
     }
 
@@ -332,9 +371,9 @@ public class EmissionsReportApi {
 
     static class ReviewDTO {
     	private List<Long> reportIds;
-    	
+
     	private String comments;
-    	
+
 		public List<Long> getReportIds() {
 			return reportIds;
 		}
@@ -347,7 +386,5 @@ public class EmissionsReportApi {
 		public void setComments(String comments) {
 			this.comments = comments;
 		}
-    	
     }
-
 }

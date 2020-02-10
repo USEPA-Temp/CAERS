@@ -2,9 +2,7 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import java.io.Serializable;
 
-import gov.epa.cef.web.service.dto.CodeLookupDto;
-
-public class ReleasePointBulkUploadDto implements Serializable {
+public class ReleasePointBulkUploadDto implements IWorksheetAware, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,7 +21,7 @@ public class ReleasePointBulkUploadDto implements Serializable {
     private Short exitGasTemperature;
     private Double exitGasFlowRate;
     private String exitGasFlowUomCode;
-    private String operatingStatusCode;    
+    private String operatingStatusCode;
     private Short statusYear;
     private Double latitude;
     private Double longitude;
@@ -264,5 +262,5 @@ public class ReleasePointBulkUploadDto implements Serializable {
 		public void setFugitiveAngle(Long fugitiveAngle) {
 			this.fugitiveAngle = fugitiveAngle;
 		}
-    
+
 }

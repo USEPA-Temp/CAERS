@@ -22,6 +22,7 @@ import { NumberValidatorDirective } from './directives/number-validator.directiv
 import { BaseConfirmationModalComponent } from './components/base-confirmation-modal/base-confirmation-modal.component';
 import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StripPeriodEndingPipe } from './pipes/strip-period-ending.pipe';
 
 
 @NgModule({
@@ -41,22 +42,24 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     WholeNumberValidatorDirective,
     NumberValidatorDirective,
     BaseConfirmationModalComponent,
-    BulkUploadComponent
+    BulkUploadComponent,
+    StripPeriodEndingPipe
 ],
-  exports: [
-    FacilityInfoComponent,
-    CollapseIconComponent,
-    FontAwesomeModule,
-    SidebarComponent,
-    CollapseNavComponent,
-    SidebarInnerNavComponent,
-    SidebarInnerNavItemComponent,
-    FacilityWidgetComponent,
-    SortableHeaderDirective,
-    PhoneNumberPipe,
-    ReportSummaryTableComponent,
-    ValidationMessageComponent,
-  ],
+    exports: [
+        FacilityInfoComponent,
+        CollapseIconComponent,
+        FontAwesomeModule,
+        SidebarComponent,
+        CollapseNavComponent,
+        SidebarInnerNavComponent,
+        SidebarInnerNavItemComponent,
+        FacilityWidgetComponent,
+        SortableHeaderDirective,
+        PhoneNumberPipe,
+        ReportSummaryTableComponent,
+        ValidationMessageComponent,
+        StripPeriodEndingPipe
+    ],
   imports: [
     CommonModule,
     FontAwesomeModule,

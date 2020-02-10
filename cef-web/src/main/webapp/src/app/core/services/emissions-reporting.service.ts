@@ -1,9 +1,9 @@
-import { EmissionsReport } from 'src/app/shared/models/emissions-report';
+import {EmissionsReport} from 'src/app/shared/models/emissions-report';
 import {HttpClient, HttpResponse} from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
-import { FacilitySite } from 'src/app/shared/models/facility-site';
+import {FacilitySite} from 'src/app/shared/models/facility-site';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +12,8 @@ export class EmissionsReportingService {
 
     private baseUrl = 'api/emissionsReport';  // URL to web api
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
     /** GET reports for specified facility from the server */
     getFacilityReports(facilityId: string): Observable<EmissionsReport[]> {
@@ -28,14 +29,18 @@ export class EmissionsReportingService {
 
     acceptReports(reportIds: number[], comments: String): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/accept`;
-        return this.http.post<EmissionsReport[]>(url, {reportIds: reportIds,
-                                                       comments: comments });
+        return this.http.post<EmissionsReport[]>(url, {
+            reportIds: reportIds,
+            comments: comments
+        });
     }
 
     rejectReports(reportIds: number[], comments: String): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/reject`;
-        return this.http.post<EmissionsReport[]>(url, {reportIds: reportIds,
-                                                       comments: comments });
+        return this.http.post<EmissionsReport[]>(url, {
+            reportIds: reportIds,
+            comments: comments
+        });
     }
 
     resetReports(reportIds: number[]): Observable<EmissionsReport[]> {
@@ -70,8 +75,32 @@ export class EmissionsReportingService {
         });
     }
 
+    /** POST request to the server to create a report for the current year from uploaded workbook */
+    createReportFromUpload(eisFacilityId: string, reportYear: number,
+                           frsFacilityId: string, stateCode: string,
+                           workbook: File): Observable<HttpResponse<EmissionsReport>> {
+
+        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
+
+        let formData = new FormData();
+        formData.append("workbook", workbook);
+        formData.append("metadata", new Blob([JSON.stringify({
+            year: reportYear,
+            eisProgramId: eisFacilityId,
+            frsFacilityId: frsFacilityId,
+            stateCode: stateCode,
+            source: "fromScratch"
+        })], {
+            type: "application/json"
+        }));
+
+        return this.http.post<EmissionsReport>(url, formData, {
+            observe: "response"
+        });
+    }
+
     /** POST request to the server to create a report for the current year from FRS data */
-    createReportFromFrs(eisFacilityId: string, reportYear: number) : Observable<EmissionsReport>{
+    createReportFromFrs(eisFacilityId: string, reportYear: number): Observable<EmissionsReport> {
 
         const url = `${this.baseUrl}/facility/${eisFacilityId}`;
         return this.http.post<EmissionsReport>(url, {
@@ -82,7 +111,7 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a validation result for report */
-    validateReport(reportId: number) : Observable<ValidationResult> {
+    validateReport(reportId: number): Observable<ValidationResult> {
 
         const url = `${this.baseUrl}/validation`;
         return this.http.post<ValidationResult>(url, {

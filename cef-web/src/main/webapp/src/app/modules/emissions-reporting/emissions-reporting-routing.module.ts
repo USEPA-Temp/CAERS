@@ -26,14 +26,17 @@ import { EmissionDetailsComponent } from 'src/app/modules/emissions-reporting/pa
 import {EmissionsReportValidationComponent} from "./pages/emissions-report-validation/emissions-report-validation.component";
 import { ReportHistoryComponent } from './pages/report-history/report-history.component';
 import { EmissionsReportContainerComponent } from 'src/app/modules/emissions-reporting/pages/emissions-report-container/emissions-report-container.component';
+import {ReportBulkUploadComponent} from "./pages/report-bulk-upload/report-bulk-upload.component";
 
 const reportRoutes: Routes = [
   {
     path: '',
     component: EmissionsReportingComponent,
     data: {breadcrumb: 'Emissions Reports'},
-    children: [
-      {
+    children: [{
+        path: 'upload/:year',
+        component: ReportBulkUploadComponent
+    },{
         path: ':reportId',
         component: EmissionsReportContainerComponent,
         resolve: {

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmissionsReportBulkUploadDto implements Serializable {
+public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -79,7 +79,7 @@ public class EmissionsReportBulkUploadDto implements Serializable {
         this.validationStatus = validationStatus;
     }
 
-    
+
     public void setFacilitySites(List<FacilitySiteBulkUploadDto> facilitySites) {
         this.facilitySites = facilitySites;
     }
@@ -93,28 +93,28 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     public List<EmissionsUnitBulkUploadDto> getEmissionsUnits() {
         return emissionsUnits;
     }
-    
+
     public void setEmissionsProcesses(List<EmissionsProcessBulkUploadDto> emissionsProcesses) {
         this.emissionsProcesses = emissionsProcesses;
     }
     public List<EmissionsProcessBulkUploadDto> getEmissionsProcesses() {
         return emissionsProcesses;
     }
-    
+
     public void setReleasePoints(List<ReleasePointBulkUploadDto> releasePoints) {
         this.releasePoints = releasePoints;
     }
     public List<ReleasePointBulkUploadDto> getReleasePoints() {
         return releasePoints;
     }
-    
+
     public void setReleasePointAppts(List<ReleasePointApptBulkUploadDto> releasePointAppts) {
         this.releasePointAppts = releasePointAppts;
     }
     public List<ReleasePointApptBulkUploadDto> getReleasePointAppts() {
         return releasePointAppts;
     }
-    
+
     public void setReportingPeriods(List<ReportingPeriodBulkUploadDto> reportingPeriods) {
         this.reportingPeriods = reportingPeriods;
     }
@@ -169,5 +169,5 @@ public class EmissionsReportBulkUploadDto implements Serializable {
     public void setFacilityContacts(List<FacilitySiteContactBulkUploadDto> facilityContacts) {
     	this.facilityContacts = facilityContacts;
     }
-    
+
 }

@@ -11,6 +11,8 @@ server:
 spring:
   profiles:
     active: #spring.profiles.active#
+  servlet.multipart.max-file-size: 80MB
+  servlet.multipart.max-request-size: 85MB
   jmx.enabled: false
   hazelcast:
     config: classpath:cef-hazelcast-cache.xml

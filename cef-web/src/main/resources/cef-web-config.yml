@@ -54,6 +54,8 @@ cdx:
     - https://test2.e-enterprise.gov
     - https://e-enterprise.gov
     - https://www2.e-enterprise.gov
+excel-parser:
+  base-url: https://devngn.epacdxnode.net/excel-json-parser/api/v1
 frs:
   facility-ipt-endpoint:  https://ofmext.epa.gov/facilityiptqueryprd/v1/FRS
   naas-user: caer-cef-admin@epa.gov
