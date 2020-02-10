@@ -457,47 +457,39 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	
       CefValidatorContext context = getCefValidatorContext(validatorContext);
       boolean result = true;
+      BigDecimal maxRange;
+      BigDecimal minRange;
+      BigDecimal releasePointCoordinate = null;
+      BigDecimal facilityTolerance = DEFAULT_TOLERANCE;
       
       String facilityEisId = releasePoint.getFacilitySite().getEisProgramId();
       
+      if (!rpCoordinate.equals(null)) {
+      	releasePointCoordinate = (new BigDecimal(rpCoordinate)).setScale(6, RoundingMode.HALF_UP);
+    	}
+      
       if (latLongToleranceRepo.findById(facilityEisId).orElse(null) == null) {
-      	BigDecimal maxRange = facilityCoordinate.add(DEFAULT_TOLERANCE).setScale(6, RoundingMode.DOWN);
-      	BigDecimal minRange = facilityCoordinate.subtract(DEFAULT_TOLERANCE).setScale(6, RoundingMode.DOWN);
-      	
-      	if (rpCoordinate == null ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(maxRange) == 1) ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(minRange) == -1)){
-      		
-      		result = false;
-      		context.addFederalError(
-      				ValidationField.RP_COORDINATE.value(),
-      				"releasePoint.coordinate.tolerance.facilityRange",
-      				createValidationDetails(releasePoint),
-      				rpLatLongField,
-      				Double.valueOf(DEFAULT_TOLERANCE.toString()).toString(),
-      				facilityLatLongField,
-      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
-      	}
+      	maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
+      	minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
       } else {
-      	BigDecimal facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.DOWN);
-      	BigDecimal maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.DOWN);
-      	BigDecimal minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.DOWN);
-      	
-      	if (rpCoordinate == null ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(maxRange) == 1) ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(minRange) == -1)){
-      		
-      		result = false;
-      		context.addFederalError(
-      				ValidationField.RP_COORDINATE.value(),
-      				"releasePoint.coordinate.tolerance.facilityRange",
-      				createValidationDetails(releasePoint),
-      				rpLatLongField,
-      				Double.valueOf(facilityTolerance.toString()).toString(),
-      				facilityLatLongField,
-      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
-      	}
+      	facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.HALF_UP);
+      	maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
+      	minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
       }
+      
+      if (releasePointCoordinate == null || (releasePointCoordinate.compareTo(maxRange) == 1) || (releasePointCoordinate.compareTo(minRange) == -1)) {
+      	
+      	result = false;
+      	context.addFederalError(
+      			ValidationField.RP_COORDINATE.value(),
+      			"releasePoint.coordinate.tolerance.facilityRange",
+      			createValidationDetails(releasePoint),
+      			rpLatLongField,
+      			Double.valueOf(facilityTolerance.toString()).toString(),
+      			facilityLatLongField,
+      			facilityCoordinate.setScale(6, RoundingMode.HALF_UP).toString());
+    	}
+      
     	return result;
     }
     

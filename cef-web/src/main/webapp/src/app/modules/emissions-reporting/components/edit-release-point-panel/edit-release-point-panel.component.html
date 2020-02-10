@@ -61,6 +61,16 @@
             <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-10">
+            <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.invalidLatitude">
+                Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude coordinate {{facilitySite.latitude}}.
+            </div>
+            <div class="validation-message" *ngIf="releasePointForm.get('longitude').errors?.invalidLongitude">
+                Release Point longitude must within the {{tolerance}} tolerance range of Facility longitude coordinate {{facilitySite.longitude}}.
+            </div>
+        </div>
+    </div>
 
     <div class="row pb-1">
         <label for="exitGasVelocity" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity Measure:</strong></label>

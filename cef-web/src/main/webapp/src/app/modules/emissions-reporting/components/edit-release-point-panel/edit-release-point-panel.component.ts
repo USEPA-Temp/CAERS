@@ -7,6 +7,9 @@ import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-number-validator.directive';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { ActivatedRoute } from '@angular/router';
+import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
 
 @Component({
   selector: 'app-edit-release-point-panel',
@@ -15,7 +18,9 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
 })
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   @Input() releasePoint: ReleasePoint;
+  facilitySite: FacilitySite;
   releaseType: string;
+  eisProgramId: string;
   stackDiameterWarning: any;
   calculatedVelocity: string;
   calculatedFlowRate: string;
@@ -23,6 +28,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   calculatedVelocityUom: string;
   minVelocity: number;
   maxVelocity: number;
+  coordinateTolerance: EisLatLongToleranceLookup;
+  tolerance: number;
 
   releasePointForm = this.fb.group({
     releasePointIdentifier: ['', [
@@ -139,7 +146,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.stackDiameterCheck(),
     this.exitGasFlowCheck(),
     this.uomCheck(),
-    this.exitVelocityCheck()
+    this.exitVelocityCheck(),
+    this.coordinateToleranceCheck()
     ]
   });
 
@@ -153,6 +161,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   constructor(
     private lookupService: LookupService,
     public formUtils: FormUtilsService,
+    private route: ActivatedRoute,
     private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -177,6 +186,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.uomValues = result.filter(val => String(val.code) === 'FT');
       this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
       this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
+    });
+
+    this.route.data
+    .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.facilitySite = data.facilitySite;
+      // this.eisProgramId = this.facilitySite.eisProgramId;
     });
 
     this.setFormValidation();
@@ -417,10 +432,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const diameter = control.get('stackDiameter'); // ft
       const height = control.get('stackHeight'); // ft
 
-      if ((diameter.value !== null && height.value !== null) && (diameter.value > 0 && height.value > 0)) {
-        this.stackDiameterWarning = (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: {diameter} } : null;
+      if (this.releaseType !== 'Fugitive') {
+        if ((diameter !== null && height !== null) && (diameter.value > 0 && height.value > 0)) {
+          this.stackDiameterWarning = (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: {diameter} } : null;
+        }
+        return null;
       }
-      return null;
     };
   }
 
@@ -472,6 +489,44 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         }
         return null;
       }
+      return null;
+    };
+  }
+
+  coordinateToleranceCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+
+      const rpLong = control.get('longitude');
+      const rpLat = control.get('latitude');
+      let longLowerLimit;
+      let longUpperLimit;
+      let latLowerLimit;
+      let latUpperLimit;
+
+      this.lookupService.retrieveLatLongTolerance(this.eisProgramId)
+      .subscribe(result => {
+        this.coordinateTolerance = result;
+
+        if (this.coordinateTolerance === null) {
+            this.tolerance = 0.003;
+        } else {
+          this.tolerance = this.coordinateTolerance.coordinateTolerance;
+        }
+
+        longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance)*1000000)/1000000);
+        longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance)*1000000)/1000000);
+        latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance)*1000000)/1000000);
+        latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance)*1000000)/1000000);
+
+        if ((rpLong !== null) && ((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
+          control.get('longitude').markAsTouched();
+          control.get('longitude').setErrors({'invalidLongitude': true});
+        }
+        if ((rpLat !== null) && ((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
+          control.get('latitude').markAsTouched();
+          control.get('latitude').setErrors({'invalidLatitude': true});
+        }
+      });
       return null;
     };
   }
