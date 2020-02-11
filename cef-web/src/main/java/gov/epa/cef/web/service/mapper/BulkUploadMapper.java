@@ -202,15 +202,16 @@ public interface BulkUploadMapper {
 
     List<ControlPollutantBulkUploadDto> controlPollutantToDtoList(List<ControlPollutant> source);
 
+    @Mapping(source="facilitySite.id", target="facilitySiteId")
     @Mapping(source="naicsCode.code", target="code")
     FacilityNAICSBulkUploadDto faciliytNAICSToDto(FacilityNAICSXref source);
 
     List<FacilityNAICSBulkUploadDto> faciliytNAICSToDtoList(List<FacilityNAICSXref> source);
-    
+
     @Mapping(source="facilitySite.id", target="facilitySiteId")
     @Mapping(source="type.code", target="type")
-    @Mapping(source="stateCode.code", target="stateCode")
-    @Mapping(source="mailingStateCode.code", target="mailingStateCode")
+    @Mapping(source="stateCode.uspsCode", target="stateCode")
+    @Mapping(source="mailingStateCode.uspsCode", target="mailingStateCode")
     FacilitySiteContactBulkUploadDto facilitySiteContactToDto(FacilitySiteContact source);
 
     List<FacilitySiteContactBulkUploadDto> facilitySiteContactToDtoList(List<FacilitySiteContact> source);

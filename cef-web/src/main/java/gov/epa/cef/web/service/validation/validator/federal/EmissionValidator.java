@@ -170,27 +170,13 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                     BigDecimal tolerance = cefConfig.getEmissionsTotalQaTolerance();
 
-                    // check if the year is divisible by 4 which would make it a leap year
-                    boolean leapYear = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;
 
-                    BigDecimal totalEmissions = emission.getEmissionsFactor().multiply(emission.getReportingPeriod().getCalculationParameterValue());
-
-                    // convert units for denominator and throughput
-                    if (!emission.getReportingPeriod().getCalculationParameterUom().getCode().equals(emission.getEmissionsDenominatorUom().getCode())) {
-                        totalEmissions = CalculationUtils.convertUnits(emission.getReportingPeriod().getCalculationParameterUom().getCalculationVariable(), 
-                                emission.getEmissionsDenominatorUom().getCalculationVariable(), leapYear).multiply(totalEmissions);
-                    }
-
-                    // convert units for numerator and total emissions
-                    if (!emission.getEmissionsUomCode().getCode().equals(emission.getEmissionsNumeratorUom().getCode())) {
-                        totalEmissions = CalculationUtils.convertUnits(emission.getEmissionsNumeratorUom().getCalculationVariable(), 
-                                emission.getEmissionsUomCode().getCalculationVariable(), leapYear).multiply(totalEmissions);
-                    }
+                    BigDecimal totalEmissions = calculateTotalEmissions(emission);
 
                     // Total emissions listed for this pollutant are outside the acceptable range of +/-{0}% from {1} which is the calculated 
                     // emissions based on the Emission Factor provided. Please recalculate the total emissions for this pollutant or choose the option 
                     // "I prefer to calculate the total emissions myself."
-                    if (totalEmissions.subtract(emission.getTotalEmissions()).abs().compareTo(totalEmissions.multiply(tolerance)) > 0) {
+                    if (checkTolerance(totalEmissions, emission.getTotalEmissions(), tolerance)) {
 
                         valid = false;
                         context.addFederalError(
@@ -241,5 +227,36 @@ public class EmissionValidator extends BaseValidator<Emission> {
             dto.getParents().add(new ValidationDetailDto(source.getReportingPeriod().getId(), null, EntityType.REPORTING_PERIOD));
         }
         return dto;
+    }
+
+    private BigDecimal calculateTotalEmissions(Emission emission) {
+
+        boolean leapYear = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;
+
+        BigDecimal totalEmissions = emission.getEmissionsFactor().multiply(emission.getReportingPeriod().getCalculationParameterValue());
+
+        // convert units for denominator and throughput
+        if (!emission.getReportingPeriod().getCalculationParameterUom().getCode().equals(emission.getEmissionsDenominatorUom().getCode())) {
+            totalEmissions = CalculationUtils.convertUnits(emission.getReportingPeriod().getCalculationParameterUom().getCalculationVariable(), 
+                    emission.getEmissionsDenominatorUom().getCalculationVariable(), leapYear).multiply(totalEmissions);
+        }
+
+        // convert units for numerator and total emissions
+        if (!emission.getEmissionsUomCode().getCode().equals(emission.getEmissionsNumeratorUom().getCode())) {
+            totalEmissions = CalculationUtils.convertUnits(emission.getEmissionsNumeratorUom().getCalculationVariable(), 
+                    emission.getEmissionsUomCode().getCalculationVariable(), leapYear).multiply(totalEmissions);
+        }
+
+        if (emission.getOverallControlPercent() != null) {
+            BigDecimal controlRate = new BigDecimal("100").subtract(emission.getOverallControlPercent()).divide(new BigDecimal("100"));
+            totalEmissions = totalEmissions.multiply(controlRate);
+        }
+
+        return totalEmissions;
+    }
+
+    private boolean checkTolerance(BigDecimal calculatedValue, BigDecimal providedValue, BigDecimal tolerance) {
+
+        return calculatedValue.subtract(providedValue).abs().compareTo(calculatedValue.multiply(tolerance)) > 0;
     }
 }

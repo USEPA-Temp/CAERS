@@ -10,6 +10,7 @@ public class EmissionBulkUploadDto implements IWorksheetAware, Serializable {
     private Long id;
     private Long reportingPeriodId;
     private String pollutantCode;
+    private BigDecimal overallControlPercent;
     private BigDecimal totalEmissions;
     private String emissionsUomCode;
     private BigDecimal emissionsFactor;
@@ -40,6 +41,13 @@ public class EmissionBulkUploadDto implements IWorksheetAware, Serializable {
     }
     public void setPollutantCode(String pollutantCode) {
         this.pollutantCode = pollutantCode;
+    }
+
+    public BigDecimal getOverallControlPercent() {
+        return overallControlPercent;
+    }
+    public void setOverallControlPercent(BigDecimal overallControlPercent) {
+        this.overallControlPercent = overallControlPercent;
     }
 
     public BigDecimal getTotalEmissions() {

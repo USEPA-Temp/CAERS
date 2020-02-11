@@ -37,6 +37,9 @@ public class Emission extends BaseAuditEntity {
     @Column(name = "total_manual_entry", nullable = false)
     private Boolean totalManualEntry;
     
+    @Column(name = "overall_control_percent")
+    private BigDecimal overallControlPercent;
+    
     @Column(name = "total_emissions", nullable = false)
     private BigDecimal totalEmissions;
     
@@ -97,6 +100,7 @@ public class Emission extends BaseAuditEntity {
         this.reportingPeriod = reportingPeriod;
         this.pollutant = originalEmission.getPollutant();
         this.totalManualEntry = originalEmission.getTotalManualEntry();
+        this.overallControlPercent = originalEmission.getOverallControlPercent();
         this.totalEmissions = originalEmission.getTotalEmissions();
         this.emissionsUomCode = originalEmission.getEmissionsUomCode();
         this.emissionsFactor = originalEmission.getEmissionsFactor();
@@ -135,11 +139,17 @@ public class Emission extends BaseAuditEntity {
         return totalManualEntry;
     }
 
-
     public void setTotalManualEntry(Boolean totalManualEntry) {
         this.totalManualEntry = totalManualEntry;
     }
 
+    public BigDecimal getOverallControlPercent() {
+        return overallControlPercent;
+    }
+
+    public void setOverallControlPercent(BigDecimal overallControlPercent) {
+        this.overallControlPercent = overallControlPercent;
+    }
 
     public BigDecimal getTotalEmissions() {
         return this.totalEmissions;

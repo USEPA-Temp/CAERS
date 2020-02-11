@@ -12,6 +12,7 @@ public class EmissionDto implements Serializable {
     private Long reportingPeriodId;
     private PollutantDto pollutant;
     private Boolean totalManualEntry;
+    private BigDecimal overallControlPercent;
     private BigDecimal totalEmissions;
     private UnitMeasureCodeDto emissionsUomCode;
     private Boolean formulaIndicator;
@@ -56,6 +57,14 @@ public class EmissionDto implements Serializable {
 
     public void setTotalManualEntry(Boolean totalManualEntry) {
         this.totalManualEntry = totalManualEntry;
+    }
+
+    public BigDecimal getOverallControlPercent() {
+        return overallControlPercent;
+    }
+
+    public void setOverallControlPercent(BigDecimal overallControlPercent) {
+        this.overallControlPercent = overallControlPercent;
     }
 
     public BigDecimal getTotalEmissions() {

@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCaretRight, faEdit, faCaretDown, faAngleLeft, faTrashAlt, faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCaretRight, faEdit, faCaretDown, faAngleLeft, faTrashAlt, faPlus, faCircle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { CollapseIconComponent } from 'src/app/modules/shared/components/collapse-icon/collapse-icon.component';
 import { FacilityWidgetComponent } from 'src/app/modules/shared/components/facility-widget/facility-widget.component';
 import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/sidebar.component';
@@ -81,6 +81,7 @@ export class SharedModule {
     library.add(faTrashAlt);
     library.add(faPlus);
     library.add(faEdit);
-    library.add(faCircle)
+    library.add(faCircle);
+    library.add(faInfoCircle);
   }
 }
