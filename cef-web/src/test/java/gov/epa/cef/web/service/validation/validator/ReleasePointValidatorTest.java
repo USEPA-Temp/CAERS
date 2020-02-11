@@ -287,6 +287,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	uom.setCode("BTU");
     	
     	testData.setExitGasVelocityUomCode(uom);
+    	testData.setExitGasVelocity(0.06);
     	testData.setExitGasFlowRate(null);
     	testData.setExitGasFlowUomCode(null);
     	
@@ -310,6 +311,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	testData.setExitGasFlowUomCode(uom);
     	testData.setExitGasVelocity(null);
     	testData.setExitGasVelocityUomCode(null);
+    	testData.setStackDiameter(0.1);
     	
     	assertFalse(this.validator.validate(cefContext, testData));
     	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);

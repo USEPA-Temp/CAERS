@@ -142,7 +142,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        	double calcArea = (Math.PI)*(Math.pow((inputDiameter/2), 2));
 	        	calcVelocity = new BigDecimal(inputFlowRate/calcArea).setScale(3, RoundingMode.HALF_UP);
 	        	
-	        	if (releasePoint.getExitGasFlowUomCode() != null && "ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
+	        	if (releasePoint.getExitGasFlowUomCode() != null && !"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
 	        		minVelocity = new BigDecimal(0.060);
 	        		maxVelocity = new BigDecimal(90000);
 	        		uom = "FPM";
@@ -178,12 +178,12 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        	BigDecimal upperLimitFlowRate = new BigDecimal(0);
 	        	String uom= "ACFS";
 
-	        	if (releasePoint.getExitGasVelocityUomCode() != null && "FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
+	        	if (releasePoint.getExitGasVelocityUomCode() != null && !"FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
 	        		uom= "ACFM";
 	        	}
 	        	
 	        	if (releasePoint.getExitGasFlowUomCode() != null && !"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
-	        		inputFlowRate = inputFlowRate.multiply(new BigDecimal(60));
+	        		inputFlowRate = new BigDecimal((releasePoint.getExitGasFlowRate()/60));
 	        	}
 
 	        	lowerLimitFlowRate = new BigDecimal(0.95*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
@@ -300,7 +300,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasFlowRate.fugitiveACFS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-  	        	} else if ("ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+  	        	} else if (!"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
   	        			(releasePoint.getExitGasFlowRate() < 0 || releasePoint.getExitGasFlowRate() > 12000000)) {
   		        		result = false;
   			        	context.addFederalError(
@@ -318,7 +318,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasFlowRate.stackACFS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-          		} else if ("ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+          		} else if (!"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
   	        			(releasePoint.getExitGasFlowRate() < 0.00000001 || releasePoint.getExitGasFlowRate() > 12000000)) {
   		        		
           				result = false;
@@ -342,7 +342,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasVelocity.fugitiveFPS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-  	        	} else if ("FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+  	        	} else if (!"FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
   	        			(releasePoint.getExitGasVelocity() < 0 || releasePoint.getExitGasVelocity() > 24000)) {
   	        		
   		        		result = false;
@@ -361,7 +361,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasVelocity.stackFPS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-          		} else if ("FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+          		} else if (!"FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
   	        			(releasePoint.getExitGasVelocity() < 0.060 || releasePoint.getExitGasVelocity() > 90000)) {
   		        		
           				result = false;
@@ -457,47 +457,39 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	
       CefValidatorContext context = getCefValidatorContext(validatorContext);
       boolean result = true;
+      BigDecimal maxRange;
+      BigDecimal minRange;
+      BigDecimal releasePointCoordinate = null;
+      BigDecimal facilityTolerance = DEFAULT_TOLERANCE;
       
       String facilityEisId = releasePoint.getFacilitySite().getEisProgramId();
       
+      if (!rpCoordinate.equals(null)) {
+      	releasePointCoordinate = (new BigDecimal(rpCoordinate)).setScale(6, RoundingMode.HALF_UP);
+    	}
+      
       if (latLongToleranceRepo.findById(facilityEisId).orElse(null) == null) {
-      	BigDecimal maxRange = facilityCoordinate.add(DEFAULT_TOLERANCE).setScale(6, RoundingMode.DOWN);
-      	BigDecimal minRange = facilityCoordinate.subtract(DEFAULT_TOLERANCE).setScale(6, RoundingMode.DOWN);
-      	
-      	if (rpCoordinate == null ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(maxRange) == 1) ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(minRange) == -1)){
-      		
-      		result = false;
-      		context.addFederalError(
-      				ValidationField.RP_COORDINATE.value(),
-      				"releasePoint.coordinate.tolerance.facilityRange",
-      				createValidationDetails(releasePoint),
-      				rpLatLongField,
-      				Double.valueOf(DEFAULT_TOLERANCE.toString()).toString(),
-      				facilityLatLongField,
-      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
-      	}
+      	maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
+      	minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
       } else {
-      	BigDecimal facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.DOWN);
-      	BigDecimal maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.DOWN);
-      	BigDecimal minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.DOWN);
-      	
-      	if (rpCoordinate == null ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(maxRange) == 1) ||
-      		(new BigDecimal(rpCoordinate).setScale(6, RoundingMode.DOWN).compareTo(minRange) == -1)){
-      		
-      		result = false;
-      		context.addFederalError(
-      				ValidationField.RP_COORDINATE.value(),
-      				"releasePoint.coordinate.tolerance.facilityRange",
-      				createValidationDetails(releasePoint),
-      				rpLatLongField,
-      				Double.valueOf(facilityTolerance.toString()).toString(),
-      				facilityLatLongField,
-      				facilityCoordinate.setScale(6, RoundingMode.DOWN).toString());
-      	}
+      	facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.HALF_UP);
+      	maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
+      	minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
       }
+      
+      if (releasePointCoordinate == null || (releasePointCoordinate.compareTo(maxRange) == 1) || (releasePointCoordinate.compareTo(minRange) == -1)) {
+      	
+      	result = false;
+      	context.addFederalError(
+      			ValidationField.RP_COORDINATE.value(),
+      			"releasePoint.coordinate.tolerance.facilityRange",
+      			createValidationDetails(releasePoint),
+      			rpLatLongField,
+      			Double.valueOf(facilityTolerance.toString()).toString(),
+      			facilityLatLongField,
+      			facilityCoordinate.setScale(6, RoundingMode.HALF_UP).toString());
+    	}
+      
     	return result;
     }
     
