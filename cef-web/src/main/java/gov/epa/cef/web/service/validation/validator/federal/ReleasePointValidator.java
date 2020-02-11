@@ -142,7 +142,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        	double calcArea = (Math.PI)*(Math.pow((inputDiameter/2), 2));
 	        	calcVelocity = new BigDecimal(inputFlowRate/calcArea).setScale(3, RoundingMode.HALF_UP);
 	        	
-	        	if (releasePoint.getExitGasFlowUomCode() != null && "ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
+	        	if (releasePoint.getExitGasFlowUomCode() != null && !"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
 	        		minVelocity = new BigDecimal(0.060);
 	        		maxVelocity = new BigDecimal(90000);
 	        		uom = "FPM";
@@ -178,12 +178,12 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        	BigDecimal upperLimitFlowRate = new BigDecimal(0);
 	        	String uom= "ACFS";
 
-	        	if (releasePoint.getExitGasVelocityUomCode() != null && "FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
+	        	if (releasePoint.getExitGasVelocityUomCode() != null && !"FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
 	        		uom= "ACFM";
 	        	}
 	        	
-	        	if (releasePoint.getExitGasFlowUomCode() != null && "ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
-	        		inputFlowRate = inputFlowRate.divide(new BigDecimal(60));
+	        	if (releasePoint.getExitGasFlowUomCode() != null && !"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
+	        		inputFlowRate = new BigDecimal((releasePoint.getExitGasFlowRate()/60));
 	        	}
 
 	        	lowerLimitFlowRate = new BigDecimal(0.95*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
@@ -300,7 +300,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasFlowRate.fugitiveACFS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-  	        	} else if ("ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+  	        	} else if (!"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
   	        			(releasePoint.getExitGasFlowRate() < 0 || releasePoint.getExitGasFlowRate() > 12000000)) {
   		        		result = false;
   			        	context.addFederalError(
@@ -318,7 +318,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasFlowRate.stackACFS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-          		} else if ("ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
+          		} else if (!"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
   	        			(releasePoint.getExitGasFlowRate() < 0.00000001 || releasePoint.getExitGasFlowRate() > 12000000)) {
   		        		
           				result = false;
@@ -342,7 +342,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasVelocity.fugitiveFPS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-  	        	} else if ("FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+  	        	} else if (!"FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
   	        			(releasePoint.getExitGasVelocity() < 0 || releasePoint.getExitGasVelocity() > 24000)) {
   	        		
   		        		result = false;
@@ -361,7 +361,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
   			                  "releasePoint.exitGasVelocity.stackFPS.range",
   			                  createValidationDetails(releasePoint));
   			        	
-          		} else if ("FPM".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
+          		} else if (!"FPS".contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
   	        			(releasePoint.getExitGasVelocity() < 0.060 || releasePoint.getExitGasVelocity() > 90000)) {
   		        		
           				result = false;

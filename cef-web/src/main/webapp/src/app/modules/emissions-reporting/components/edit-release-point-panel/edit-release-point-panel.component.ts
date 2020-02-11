@@ -368,7 +368,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           if (control.get('exitGasFlowUomCode').value !== null) {
             calculatedVelocity = (Math.round((flowRate.value/computedArea)*1000))/1000;
 
-            if ((control.get('exitGasFlowUomCode').value.code === 'ACFM')) {
+            if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
               minVelocity = 0.060; // fpm
               maxVelocity = 90000; // fpm
               this.calculatedVelocityUom = 'FPM';
@@ -438,7 +438,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           actualFlowRate = exitFlowRate.value;
 
           if ((control.get('exitGasVelocityUomCode').value !== null && control.get('exitGasVelocityUomCode').value !== '')
-          && (control.get('exitGasVelocityUomCode').value.code === 'FPM')) {
+          && (control.get('exitGasVelocityUomCode').value.code !== 'FPS')) {
             this.calculatedFlowRateUom = 'ACFM';
           }
 
