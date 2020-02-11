@@ -168,7 +168,8 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
                 if (canCalculate) {
 
-                    BigDecimal tolerance = cefConfig.getEmissionsTotalQaTolerance();
+                    BigDecimal warningTolerance = cefConfig.getEmissionsTotalWarningTolerance();
+                    BigDecimal errorTolerance = cefConfig.getEmissionsTotalErrorTolerance();
 
 
                     BigDecimal totalEmissions = calculateTotalEmissions(emission);
@@ -176,14 +177,23 @@ public class EmissionValidator extends BaseValidator<Emission> {
                     // Total emissions listed for this pollutant are outside the acceptable range of +/-{0}% from {1} which is the calculated 
                     // emissions based on the Emission Factor provided. Please recalculate the total emissions for this pollutant or choose the option 
                     // "I prefer to calculate the total emissions myself."
-                    if (checkTolerance(totalEmissions, emission.getTotalEmissions(), tolerance)) {
+                    if (checkTolerance(totalEmissions, emission.getTotalEmissions(), errorTolerance)) {
 
                         valid = false;
                         context.addFederalError(
                                 ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
                                 "emission.totalEmissions.tolerance", 
                                 createValidationDetails(emission),
-                                tolerance.multiply(new BigDecimal("100")).toString(),
+                                errorTolerance.multiply(new BigDecimal("100")).toString(),
+                                totalEmissions.toString());
+                    } else if (checkTolerance(totalEmissions, emission.getTotalEmissions(), warningTolerance)) {
+
+                        valid = false;
+                        context.addFederalWarning(
+                                ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+                                "emission.totalEmissions.tolerance", 
+                                createValidationDetails(emission),
+                                warningTolerance.multiply(new BigDecimal("100")).toString(),
                                 totalEmissions.toString());
                     }
                 }
