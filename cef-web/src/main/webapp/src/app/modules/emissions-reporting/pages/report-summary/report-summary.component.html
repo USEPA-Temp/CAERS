@@ -14,6 +14,10 @@
                         class="btn btn-success btn-md my-3 ml-3" (click)="reopenReport()">
                         Reopen Report
                     </button>
+                    <button *ngIf="(facilitySite.emissionsReport.status=='SUBMITTED' || facilitySite.emissionsReport.status=='APPROVED')"
+                        class="btn btn-success btn-md my-3 ml-3" (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id)">
+                        Download Report
+                    </button>
                     <button *ngIf="(facilitySite.emissionsReport.status=='IN_PROGRESS')" class="btn btn-primary btn-md my-3 mr-3"
                             (click)="validateReport()">
                         Run Quality Checks

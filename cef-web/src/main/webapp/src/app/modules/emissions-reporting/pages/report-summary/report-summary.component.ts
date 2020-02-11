@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
+import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 
 declare const initCromerrWidget: any;
 
@@ -36,7 +37,8 @@ export class ReportSummaryComponent implements OnInit {
         private userService: UserService,
         private userContextService: UserContextService,
         private modalService: NgbModal,
-        private emissionsReportingService: EmissionsReportingService) { }
+        private emissionsReportingService: EmissionsReportingService,
+        private reportDownloadService: ReportDownloadService) { }
 
     ngOnInit() {
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
@@ -64,7 +66,6 @@ export class ReportSummaryComponent implements OnInit {
                 });
             }
         });
-        console.log("emissions report ",this.facilitySite.emissionsReport)
     }
 
 
@@ -94,7 +95,13 @@ export class ReportSummaryComponent implements OnInit {
         this.emissionsReportingService.resetReports(reportIds).subscribe(result => {
             location.reload();
         });
+    }
 
+    downloadReport(emissionsReportId: number, facilitySiteId: number) {
+        this.reportService.retrieveReportDownloadDto(emissionsReportId, facilitySiteId).subscribe(reportDownloadDto => {
+                this.reportDownloadService.downloadFile(reportDownloadDto, this.facilitySite.emissionsReport.id +'_'+
+                this.facilitySite.emissionsReport.year +'_' + 'Emissions_Report');
+        });
     }
 
 }
