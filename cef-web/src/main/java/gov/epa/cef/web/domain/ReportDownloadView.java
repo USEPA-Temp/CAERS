@@ -49,22 +49,6 @@ public class ReportDownloadView extends BaseEntity{
     @Column(name = "emission_calc_method", length = 200)
     private String emissionsCalcMethod;
     
-	public String getEmissionsCalcMethod() {
-		return emissionsCalcMethod;
-	}
-
-	public void setEmissionsCalcMethod(String emissionsCalcMethod) {
-		this.emissionsCalcMethod = emissionsCalcMethod;
-	}
-
-	public String getEmissionsUomCode() {
-		return emissionsUomCode;
-	}
-
-	public void setEmissionsUomCode(String emissionsUomCode) {
-		this.emissionsUomCode = emissionsUomCode;
-	}
-
 	@Column(name = "emissions_numerator_uom", length = 20)
     private String emissionsNumeratorUom;
     
@@ -204,6 +188,21 @@ public class ReportDownloadView extends BaseEntity{
 
 	public void setTotalEmissions(Double totalEmissions) {
 		this.totalEmissions = totalEmissions;
+	}
+	public String getEmissionsCalcMethod() {
+		return emissionsCalcMethod;
+	}
+
+	public void setEmissionsCalcMethod(String emissionsCalcMethod) {
+		this.emissionsCalcMethod = emissionsCalcMethod;
+	}
+
+	public String getEmissionsUomCode() {
+		return emissionsUomCode;
+	}
+
+	public void setEmissionsUomCode(String emissionsUomCode) {
+		this.emissionsUomCode = emissionsUomCode;
 	}
 	     
 }
