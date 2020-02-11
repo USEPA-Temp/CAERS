@@ -18,6 +18,7 @@ import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tol
 })
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   @Input() releasePoint: ReleasePoint;
+  readonly fugitiveType = 'Fugitive';
   facilitySite: FacilitySite;
   releaseType: string;
   eisProgramId: string;
@@ -72,7 +73,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     exitGasVelocityUomCode: [null],
     exitGasFlowRate: [null, Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')],
     exitGasFlowUomCode: [null],
-
     fugitiveHeight: ['', [
       wholeNumberValidator(),
       Validators.min(0),
@@ -120,7 +120,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.min(-180),
       Validators.max(180)
     ]],
-
     stackHeight: ['', [
       Validators.required,
       Validators.min(1),
@@ -145,7 +144,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.exitFlowConsistencyCheck(),
     this.stackDiameterCheck(),
     this.exitGasFlowCheck(),
-    this.uomCheck(),
     this.exitVelocityCheck(),
     this.coordinateToleranceCheck()
     ]
@@ -211,7 +209,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   isReleasePointFugitiveType() {
     if (this.releasePointForm.controls.typeCode.value !== null) {
       this.releaseType = this.releasePointForm.get('typeCode').value.description;
-      if (this.releaseType === 'Fugitive') {
+      if (this.releaseType === this.fugitiveType) {
         return true;
       }
       return false;
@@ -228,7 +226,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     this.releasePointForm.controls.fenceLineUomCode.setValue({ code: 'FT' });
 
-    if (this.releaseType === 'Fugitive') {
+    if (this.releaseType === this.fugitiveType) {
       this.releasePointForm.controls.fugitiveLine1Latitude.enable();
       this.releasePointForm.controls.fugitiveLine2Latitude.enable();
       this.releasePointForm.controls.fugitiveLine1Longitude.enable();
@@ -299,7 +297,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.isReleasePointFugitiveType();
 
       if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
-        if (this.releaseType === 'Fugitive') {
+        if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
             Validators.min(0), Validators.max(200000),Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
         } else {
@@ -309,7 +307,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
         this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
       } else {
-        if (this.releaseType === 'Fugitive') {
+        if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
             Validators.min(0), Validators.max(12000000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]);
         } else {
@@ -327,7 +325,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.isReleasePointFugitiveType();
 
       if (this.releasePointForm.controls.exitGasVelocityUomCode.value.code === 'FPS') {
-        if (this.releaseType === 'Fugitive') {
+        if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
             Validators.min(0), Validators.max(400), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
         } else {
@@ -337,7 +335,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
         this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
       } else {
-        if (this.releaseType === 'Fugitive') {
+        if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
             Validators.min(0), Validators.max(24000), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
         } else {
@@ -350,37 +348,17 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  // Check flow and velocity uom
-  uomCheck(): ValidatorFn {
-    return (control: FormGroup): ValidationErrors | null => {
-      const velocityUom = control.get('exitGasVelocityUomCode');
-      const flowUom = control.get('exitGasFlowUomCode');
-      const flow = control.get('exitGasFlowRate');
-      const velocity = control.get('exitGasVelocity');
-
-      if ((velocityUom.value !== null && flowUom.value !== null)
-      && (velocityUom.value.code.charAt(velocityUom.value.code.length-1) !== flowUom.value.code.charAt(flowUom.value.code.length-1))) {
-        return { invalidUnits: true };
-      }
-      if ((velocityUom.value === null || flowUom.value === null)
-      && ((flow.value !== null && flow.value !== '') && (velocity.value !== null && velocity.value !== ''))) {
-        return { invalidUnits: true };
-      }
-      return null;
-    };
-  }
-
   // Calculated exit gas velocity range check
   exitVelocityCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if (this.releaseType !== 'Fugitive') {
-        const flowRate = control.get('exitGasFlowRate');
-        const velocity = control.get('exitGasVelocity');
-        const diameter = control.get('stackDiameter');
+      if (this.releaseType !== this.fugitiveType) {
+        const flowRate = control.get('exitGasFlowRate'); // acfs/acfm
+        const velocity = control.get('exitGasVelocity'); // fps/fps
+        const diameter = control.get('stackDiameter'); // ft
         let calculatedVelocity;
         this.calculatedVelocityUom = 'FPS';
-        let minVelocity = 0.001; //FPS
-        let maxVelocity = 1500; //FPS
+        let minVelocity = 0.001; // fps
+        let maxVelocity = 1500; // fps
 
         if ((velocity.value === null || velocity.value === 0 || velocity.value === '')
         && (diameter !== null && diameter.value > 0)
@@ -391,10 +369,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             calculatedVelocity = (Math.round((flowRate.value/computedArea)*1000))/1000;
 
             if ((control.get('exitGasFlowUomCode').value.code === 'ACFM')) {
-              minVelocity = 0.060;
-              maxVelocity = 90000;
+              minVelocity = 0.060; // fpm
+              maxVelocity = 90000; // fpm
               this.calculatedVelocityUom = 'FPM';
-              calculatedVelocity = (Math.round((flowRate.value/computedArea)*1000))/1000;
             }
           }
 
@@ -417,7 +394,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const flowRate = control.get('exitGasFlowRate');
       const velocity = control.get('exitGasVelocity');
 
-      if (this.releaseType !== 'Fugitive') {
+      if (this.releaseType !== this.fugitiveType) {
         if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
           return { invalidVelocity: true };
         }
@@ -432,7 +409,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const diameter = control.get('stackDiameter'); // ft
       const height = control.get('stackHeight'); // ft
 
-      if (this.releaseType !== 'Fugitive') {
+      if (this.releaseType !== this.fugitiveType) {
         if ((diameter !== null && height !== null) && (diameter.value > 0 && height.value > 0)) {
           this.stackDiameterWarning = (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: {diameter} } : null;
         }
@@ -444,7 +421,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   // Exit gas flow input must be within +/-5% of computed flow
   exitFlowConsistencyCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if (this.releaseType !== 'Fugitive') {
+      if (this.releaseType !== this.fugitiveType) {
         const diameter = control.get('stackDiameter'); // ft
         const exitVelocity = control.get('exitGasVelocity'); // fps/fpm
         const exitFlowRate = control.get('exitGasFlowRate'); // acfs/acfm
@@ -457,7 +434,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         && (exitFlowRate !== null && exitFlowRate.value > 0)) {
 
           const computedArea = ((Math.PI)*(Math.pow((diameter.value/2.0), 2))); // sf
-          let calculatedFlowRate = (computedArea*exitVelocity.value); // cfs
+          let calculatedFlowRate = (computedArea*exitVelocity.value); // cfs/cfm
           actualFlowRate = exitFlowRate.value;
 
           if ((control.get('exitGasVelocityUomCode').value !== null && control.get('exitGasVelocityUomCode').value !== '')
@@ -467,7 +444,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
           if ((control.get('exitGasFlowUomCode').value !== null && control.get('exitGasFlowUomCode').value !== '')
           && (control.get('exitGasFlowUomCode').value.code !== 'ACFS' && this.calculatedFlowRateUom === 'ACFS')) {
-              actualFlowRate = exitFlowRate.value*60; // acfm to acfs
+              actualFlowRate = exitFlowRate.value/60; // acfm to acfs
             }
 
           // Compare to value with 0.00000001 precision
@@ -495,7 +472,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   coordinateToleranceCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-
+      const DEFAULT_TOLERANCE = 0.003;
       const rpLong = control.get('longitude');
       const rpLat = control.get('latitude');
       let longLowerLimit;
@@ -508,7 +485,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.coordinateTolerance = result;
 
         if (this.coordinateTolerance === null) {
-            this.tolerance = 0.003;
+          this.tolerance = DEFAULT_TOLERANCE;
         } else {
           this.tolerance = this.coordinateTolerance.coordinateTolerance;
         }
@@ -518,11 +495,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance)*1000000)/1000000);
         latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance)*1000000)/1000000);
 
-        if ((rpLong !== null) && ((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
+        if ((rpLong !== null && rpLong.value !== null) && ((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
           control.get('longitude').markAsTouched();
           control.get('longitude').setErrors({'invalidLongitude': true});
         }
-        if ((rpLat !== null) && ((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
+        if ((rpLat !== null && rpLat.value !== null) && ((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
           control.get('latitude').markAsTouched();
           control.get('latitude').setErrors({'invalidLatitude': true});
         }

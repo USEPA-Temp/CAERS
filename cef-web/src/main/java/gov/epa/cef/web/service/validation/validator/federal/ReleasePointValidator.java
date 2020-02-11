@@ -182,8 +182,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        		uom= "ACFM";
 	        	}
 	        	
-	        	if (releasePoint.getExitGasFlowUomCode() != null && !"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
-	        		inputFlowRate = inputFlowRate.multiply(new BigDecimal(60));
+	        	if (releasePoint.getExitGasFlowUomCode() != null && "ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
+	        		inputFlowRate = inputFlowRate.divide(new BigDecimal(60));
 	        	}
 
 	        	lowerLimitFlowRate = new BigDecimal(0.95*calcFlowRate).setScale(8, RoundingMode.HALF_UP);

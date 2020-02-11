@@ -89,9 +89,6 @@
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidFlowRate">
                 Exit gas flow rate must be within 5% of calculated exit gas flow rate {{calculatedFlowRate}} {{calculatedFlowRateUom}}, calculated using the formula: Exit Gas Flow Rate = (Pi * (Stack Diameter /2) ^ 2) * Velocity (assuming a circular stack).
             </div>
-            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidUnits">
-                Exit Gas Flow Rate and Exit Gas Velocity values must have consistent unit of measures.
-            </div>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidVelocity">
                 Exit Gas Flow Rate or Exit Gas Velocity must be entered.
             </div>
