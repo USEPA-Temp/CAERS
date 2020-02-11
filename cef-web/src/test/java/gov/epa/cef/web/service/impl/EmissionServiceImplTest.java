@@ -275,6 +275,26 @@ public class EmissionServiceImplTest extends BaseServiceTest {
     }
 
     @Test
+    public void calculateTotalEmissions_should_return_dto_with_ef_when_formulaIndicator_false_control_percent() {
+        EmissionDto emission = new EmissionDto();
+        emission.setFormulaIndicator(false);
+        emission.setReportingPeriodId(1L);
+        emission.setEmissionsFactor(new BigDecimal(2.5));
+
+        UnitMeasureCodeDto uomDto = new UnitMeasureCodeDto();
+        uomDto.setCode("LB");
+
+        emission.setEmissionsNumeratorUom(uomDto);
+        emission.setEmissionsDenominatorUom(uomDto);
+        emission.setEmissionsUomCode(uomDto);
+        emission.setOverallControlPercent(new BigDecimal("20"));
+
+        EmissionDto result = emissionServiceImpl.calculateTotalEmissions(emission);
+
+        assertEquals(0, new BigDecimal("20").compareTo(result.getTotalEmissions()));
+    }
+
+    @Test
     public void findEmissionsByFacilityAndCAS_should_return_no_emissions_report_when_none_exists() {
         EmissionsByFacilityAndCASDto emissions = emissionServiceImpl.findEmissionsByFacilityAndCAS("12345", "71-43-2");
         assertEquals("NO_EMISSIONS_REPORT", emissions.getCode());
