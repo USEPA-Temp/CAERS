@@ -43,6 +43,7 @@
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
 
         <skip.node>false</skip.node>
+        <spring.devtools.restart.enabled>true</spring.devtools.restart.enabled>
         <prod.postgres.version>10.8.0</prod.postgres.version>
 
         <!--
@@ -885,6 +886,7 @@
                             <fork>true</fork>
                             <addResources>true</addResources>
                             <systemPropertyVariables>
+                                <spring.devtools.restart.enabled>${spring.devtools.restart.enabled}</spring.devtools.restart.enabled>
                                 <spring.config.dir>${spring.config.dir}</spring.config.dir>
                                 <cdxWebUser.properties>${basedir}/src/test/resources/cdxWebUser/cdxWebUser.properties</cdxWebUser.properties>
                             </systemPropertyVariables>

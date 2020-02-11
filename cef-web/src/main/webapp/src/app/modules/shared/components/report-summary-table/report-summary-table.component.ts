@@ -11,6 +11,7 @@ export class ReportSummaryTableComponent extends BaseSortableTable implements On
 
     @Input() emissionsReportYear: number;
     @Input() tableData: ReportSummary[];
+    @Input() radiationData: ReportSummary[];
 
     constructor() {
         super();
@@ -24,15 +25,15 @@ export class ReportSummaryTableComponent extends BaseSortableTable implements On
      * Calculate the total number of tons for all pollutants
      */
     getPollutantTonsTotal(): number {
-        let pollutantTonsTotal = 0;
+        let currentYearTonsTotal = 0;
 
         if (this.tableData) {
             this.tableData.forEach(reportSummary => {
-                pollutantTonsTotal += reportSummary.emissionsTonsTotal;
+                currentYearTonsTotal += reportSummary.emissionsTonsTotal;
             });
         }
 
-        return pollutantTonsTotal;
+        return currentYearTonsTotal;
     }
 
 
@@ -40,15 +41,15 @@ export class ReportSummaryTableComponent extends BaseSortableTable implements On
      * Calculate the total number of tons for all pollutants from the previous year
      */
     getPreviousPollutantTonsTotal(): number {
-        let previousPollutantTonsTotal = 0;
+        let previousYearTonsTotal = 0;
 
         if (this.tableData) {
             this.tableData.forEach(reportSummary => {
-                previousPollutantTonsTotal += reportSummary.previousYearTotal;
+                previousYearTonsTotal += reportSummary.previousYearTonsTotal;
             });
         }
 
-        return previousPollutantTonsTotal;
+        return previousYearTonsTotal;
     }
 
 }

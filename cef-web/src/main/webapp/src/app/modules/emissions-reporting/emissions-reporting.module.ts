@@ -62,6 +62,7 @@ import { EditControlPathInfoPanelComponent } from './components/edit-control-pat
 import { CreateControlPathComponent } from './pages/create-control-path/create-control-path.component';
 import { ControlPathAssignmentTableComponent } from './components/control-path-assignment-table/control-path-assignment-table.component';
 import { ControlPathAssignmentModalComponent } from './components/control-path-assignment-modal/control-path-assignment-modal.component';
+import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bulk-upload.component';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { ControlPathAssignmentModalComponent } from './components/control-path-a
     EditControlPathInfoPanelComponent,
     CreateControlPathComponent,
     ControlPathAssignmentTableComponent,
-    ControlPathAssignmentModalComponent
+    ControlPathAssignmentModalComponent,
+    ReportBulkUploadComponent
   ],
   imports: [
     CommonModule,

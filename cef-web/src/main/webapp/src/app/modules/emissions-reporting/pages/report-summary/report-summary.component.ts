@@ -23,6 +23,7 @@ declare const initCromerrWidget: any;
 export class ReportSummaryComponent implements OnInit {
     facilitySite: FacilitySite;
     tableData: ReportSummary[];
+    radiationData: ReportSummary[];
     emissionsReportYear: number;
     showCertify: boolean = false;
 
@@ -61,8 +62,16 @@ export class ReportSummaryComponent implements OnInit {
                     }
                 );
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
-                .subscribe(report => {
-                    this.tableData = report;
+                    .subscribe(pollutants => {
+                    // filter out radiation pollutants to show separately at the end of the table 
+                    // (only radionucleides right now which is code 605)
+                    this.tableData = pollutants.filter(pollutant => {
+                        return pollutant.pollutantCode !== '605';
+                    });
+
+                    this.radiationData = pollutants.filter(pollutant => {
+                        return pollutant.pollutantCode === '605';
+                    });
                 });
             }
         });

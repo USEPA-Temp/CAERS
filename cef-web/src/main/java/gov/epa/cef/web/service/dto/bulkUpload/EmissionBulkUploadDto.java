@@ -3,16 +3,18 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class EmissionBulkUploadDto implements Serializable {
+public class EmissionBulkUploadDto implements IWorksheetAware, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private Long reportingPeriodId;
     private String pollutantCode;
+    private BigDecimal overallControlPercent;
     private BigDecimal totalEmissions;
     private String emissionsUomCode;
     private BigDecimal emissionsFactor;
+    private String emissionsFactorFormula;
     private String emissionsFactorText;
     private String emissionsCalcMethodCode;
     private String comments;
@@ -39,6 +41,13 @@ public class EmissionBulkUploadDto implements Serializable {
     }
     public void setPollutantCode(String pollutantCode) {
         this.pollutantCode = pollutantCode;
+    }
+
+    public BigDecimal getOverallControlPercent() {
+        return overallControlPercent;
+    }
+    public void setOverallControlPercent(BigDecimal overallControlPercent) {
+        this.overallControlPercent = overallControlPercent;
     }
 
     public BigDecimal getTotalEmissions() {
@@ -102,5 +111,15 @@ public class EmissionBulkUploadDto implements Serializable {
     }
     public void setEmissionsDenominatorUom(String emissionsDenominatorUom) {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
+    }
+
+    public String getEmissionsFactorFormula() {
+
+        return emissionsFactorFormula;
+    }
+
+    public void setEmissionsFactorFormula(String emissionsFactorFormula) {
+
+        this.emissionsFactorFormula = emissionsFactorFormula;
     }
 }

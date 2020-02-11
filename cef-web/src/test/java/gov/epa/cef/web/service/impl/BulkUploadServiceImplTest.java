@@ -1,14 +1,10 @@
 package gov.epa.cef.web.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.sql.DataSource;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
+import gov.epa.cef.web.config.CommonInitializers;
+import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -20,13 +16,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.common.io.Resources;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import gov.epa.cef.web.config.CommonInitializers;
-import gov.epa.cef.web.service.dto.EmissionsReportDto;
-import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @SqlGroup(value = {@Sql("classpath:db/test/emptyTestData.sql")})
 @ContextConfiguration(initializers = {
@@ -37,7 +33,8 @@ public class BulkUploadServiceImplTest extends BaseServiceDatabaseTest {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ObjectMapper jsonMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    @Autowired
+    private ObjectMapper jsonMapper;
 
     @Autowired
     DataSource dataSource;
@@ -58,7 +55,9 @@ public class BulkUploadServiceImplTest extends BaseServiceDatabaseTest {
     @Test
     public void saveBulkEmissionsReportTest() throws Exception {
 
-        EmissionsReportBulkUploadDto dto = hydrateJsonObject("saveBulkEmissionsReport.json", EmissionsReportBulkUploadDto.class).orElse(null);
+        EmissionsReportBulkUploadDto dto =
+            hydrateJsonObject("saveBulkEmissionsReport.json", EmissionsReportBulkUploadDto.class)
+                .orElse(null);
 
         assertNotNull(dto);
 
@@ -113,15 +112,15 @@ public class BulkUploadServiceImplTest extends BaseServiceDatabaseTest {
                 "select * from control_pollutant", new MapSqlParameterSource());
 
         assertEquals(3, controlPollutants.size());
-        
+
         List<Map<String, Object>> facilityContacts = this.jdbcTemplate.queryForList(
         				"select * from facility_site_contact", new MapSqlParameterSource());
-        
+
         assertEquals(2, facilityContacts.size());
-        
+
         List<Map<String, Object>> facilityNAICS = this.jdbcTemplate.queryForList(
         				"select * from facility_naics_xref", new MapSqlParameterSource());
-        
+
         assertEquals(2, facilityNAICS.size());
     }
 

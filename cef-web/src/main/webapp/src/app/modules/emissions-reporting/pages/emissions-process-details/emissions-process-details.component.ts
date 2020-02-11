@@ -109,7 +109,6 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.infoComponent.processForm.markAllAsTouched();
     } else {
       const updatedProcess = new Process();
-
       Object.assign(updatedProcess, this.infoComponent.processForm.value);
       updatedProcess.emissionsUnitId = this.process.emissionsUnitId;
       updatedProcess.id = this.process.id;

@@ -63,7 +63,6 @@ export class ReleasePointDetailsComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
-
       this.sharedService.emitChange(data.facilitySite);
     });
 
@@ -97,5 +96,4 @@ export class ReleasePointDetailsComponent implements OnInit {
       });
     }
   }
-
 }

@@ -61,6 +61,16 @@
             <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-10">
+            <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.invalidLatitude">
+                Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude coordinate {{facilitySite.latitude}}.
+            </div>
+            <div class="validation-message" *ngIf="releasePointForm.get('longitude').errors?.invalidLongitude">
+                Release Point longitude must within the {{tolerance}} tolerance range of Facility longitude coordinate {{facilitySite.longitude}}.
+            </div>
+        </div>
+    </div>
 
     <div class="row pb-1">
         <label for="exitGasVelocity" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity Measure:</strong></label>
@@ -77,13 +87,13 @@
     <div class="row">
         <div class="col-sm-6 col-md-10">
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidFlowRate">
-                Exit gas flow rate must be within 5% of calculated exit gas flow rate.
-            </div>
-            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidUnits">
-                Exit Gas Flow Rate and Exit Gas Velocity must have consistent unit of measures.
+                Exit gas flow rate must be within 5% of calculated exit gas flow rate {{calculatedFlowRate}} {{calculatedFlowRateUom}}, calculated using the formula: Exit Gas Flow Rate = (Pi * (Stack Diameter /2) ^ 2) * Velocity (assuming a circular stack).
             </div>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidVelocity">
                 Exit Gas Flow Rate or Exit Gas Velocity must be entered.
+            </div>
+            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidComputedVelocity">
+                The calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}}, calculated using the formula: Exit Gas Velocity = Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack). Exit Gas Velocity must be between {{minVelocity}} and {{maxVelocity}} {{calculatedVelocityUom}}.
             </div>
         </div>
     </div>
@@ -117,7 +127,7 @@
                 <input type="text" class="form-control" id="stackDiameter" formControlName="stackDiameter" maxlength="7">
                 <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
                 <div class="validation-warning" *ngIf="stackDiameterWarning?.invalidDiameter">
-                    Stack diameter should be less than stack height.
+                    Warning: Stack diameter should be less than stack height.
                 </div>
             </div>
             <label for="exitGasTemperature" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Temperature Measure (F):</strong></label>

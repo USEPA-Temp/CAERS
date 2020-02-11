@@ -2,13 +2,13 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import java.io.Serializable;
 
-public class ReleasePointApptBulkUploadDto implements Serializable{
+public class ReleasePointApptBulkUploadDto implements IWorksheetAware, Serializable{
 
     /**
      * default version id
      */
     private static final long serialVersionUID = 1L;
-    
+
     private Long id;
     private Long releasePointId;
     private Long emissionProcessId;

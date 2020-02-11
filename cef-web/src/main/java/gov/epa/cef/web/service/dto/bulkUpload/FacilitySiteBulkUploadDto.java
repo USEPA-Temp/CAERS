@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 
-public class FacilitySiteBulkUploadDto implements Serializable {
+public class FacilitySiteBulkUploadDto implements IWorksheetAware, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -209,11 +209,11 @@ public class FacilitySiteBulkUploadDto implements Serializable {
     public void setMailingCountryCode(String mailingCountryCode) {
         this.mailingCountryCode = mailingCountryCode;
     }
-    
+
     public String getComments() {
     	return comments;
     }
-    
+
     public void setComments(String comments) {
     	this.comments = comments;
     }

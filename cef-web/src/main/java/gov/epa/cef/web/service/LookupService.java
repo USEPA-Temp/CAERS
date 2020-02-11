@@ -15,7 +15,9 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -208,5 +210,19 @@ public interface LookupService {
      * @return
      */
     List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes();
+    
+    /**
+    * Retrieve Point Source SCC code database object by code
+    * @param code
+    * @return
+    */
+    PointSourceSccCodeDto retrievePointSourceSccCode(String code);
+    
+    /**
+     * Retrieve EIS latitude/longitude tolerance by EIS program id
+     * @param eisProgramId
+     * @return
+     */
+    EisLatLongToleranceLookupDto retrieveLatLongTolerance(String eisProgramId);
     
 }

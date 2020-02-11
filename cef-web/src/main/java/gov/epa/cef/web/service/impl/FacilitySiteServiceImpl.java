@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.client.api.FrsApiClient; 
+import gov.epa.cef.web.client.api.FrsApiClient;
 import gov.epa.cef.web.client.api.FrsFacilityApiTransforms;
 import gov.epa.cef.web.client.api.FrsSubfacilityTransforms;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     private final FacilitySiteRepository facSiteRepo;
-    
+
     private final FacilityNAICSXrefRepository facilityNaicsXrefRepo;
-    
+
     private final EmissionsReportStatusServiceImpl reportStatusService;
 
     private final FacilitySiteMapper facilitySiteMapper;
-    
+
     private final FacilityNAICSMapper facilityNaicsMapper;
 
     private final FrsApiClient frsClient;
@@ -70,7 +70,7 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             .map(FrsFacilityApiTransforms.toFacilitySite(report))
             .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
                 String.format("EIS Program ID %s does not exist in FRS.", report.getEisProgramId())));
-        
+
         this.frsClient.queryProgramGis(eisProgramId)
             .ifPresent(gis -> {
 
@@ -144,31 +144,37 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             .orElse(null);
     }
 
+    @Override
+    public FacilitySite transform(FacilitySiteDto dto) {
+
+        return this.facilitySiteMapper.fromDto(dto);
+    }
+
     public FacilitySiteDto update(FacilitySiteDto dto) {
-    	
+
     	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
     	facilitySiteMapper.updateFromDto(dto, facilitySite);
-    	
+
     	FacilitySiteDto result = facilitySiteMapper.toDto(facSiteRepo.save(facilitySite));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilitySiteRepository.class);
-    	
+
     	return result;
     }
-    
+
     @Override
     public Optional<ProgramFacility> retrieveFromFrs(String facilityEisProgramId) {
 
         return this.frsClient.queryProgramFacility(facilityEisProgramId);
     }
-    
+
     /**
      * Create Facility Site
-     * @param dto
+     * @param facilitySite
      */
 	public FacilitySiteDto create(FacilitySite facilitySite){
-    	
+
     	FacilitySiteDto result = facilitySiteMapper.toDto(facSiteRepo.save(facilitySite));
-    	
+
     	return result;
 	}
 
@@ -178,27 +184,27 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
      */
     public FacilityNAICSDto createNaics(FacilityNAICSDto dto) {
     	FacilityNAICSXref facilityNaics = facilityNaicsMapper.fromDto(dto);
-    	
+
     	FacilityNAICSDto result = facilityNaicsMapper.facilityNAICSXrefToFacilityNAICSDto(facilityNaicsXrefRepo.save(facilityNaics));
 			reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilityNAICSXrefRepository.class);
-    	
+
     	return result;
     }
-    
+
     /**
      * Update existing Facility NAICS
      */
     public FacilityNAICSDto updateNaics(FacilityNAICSDto dto) {
-    	
+
     	FacilityNAICSXref facilityNaics = facilityNaicsXrefRepo.findById(dto.getId()).orElse(null);
     	facilityNaicsMapper.updateFromDto(dto, facilityNaics);
-    	
+
     	FacilityNAICSDto result = facilityNaicsMapper.facilityNAICSXrefToFacilityNAICSDto(facilityNaicsXrefRepo.save(facilityNaics));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilityNAICSXrefRepository.class);
-    	
+
     	return result;
     }
-    
+
     /**
      * Delete Facility NAICS by id
      * @param facilityNaicsId

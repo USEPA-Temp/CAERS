@@ -1,0 +1,40 @@
+<div class="card">
+    <div class="card-header">
+        <div class="font-weight-bold text-center">Upload Report</div>
+    </div>
+    <div class="card-body">
+
+        <p>
+            Search for a Common Emission Form upload file that you would like to use for the
+            {{reportingYear}} Emissions Report for {{facility.facilityName | stripPeriodEnding}}.
+            Please be aware that uploading a new report will remove any existing inventory data
+            for this reporting year and replace it with the file contents.
+        </p>
+
+        <div class="form-group">
+            <label for="file-excel-workbook" class="font-weight-bold" title="Excel Workbook is required.">
+                <span>Excel Workbook</span>
+                <span style="color: red">*</span>
+            </label>
+            <div class="custom-file">
+                <input id="file-excel-workbook" type="file"
+                       class="custom-file-input" (change)="onFileChanged($event.target.files)">
+                <label for="file-excel-workbook" class="custom-file-label">Click to browse...</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <div class="d-flex flex-row justify-content-end">
+            <a href="javascript:void(0);"
+               class="btn btn-secondary mr-2"
+               [routerLink]="['/facility', facility.programId, 'report']">
+                <span>Cancel</span>
+            </a>
+            <button type="button" class="btn btn-primary"
+                    (click)="onUploadClick()">
+                <span>Upload</span>
+            </button>
+        </div>
+    </div>
+</div>

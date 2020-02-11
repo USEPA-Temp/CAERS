@@ -2,7 +2,7 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import java.io.Serializable;
 
-public class EmissionsProcessBulkUploadDto implements Serializable {
+public class EmissionsProcessBulkUploadDto implements IWorksheetAware, Serializable {
 
     /**
      * default version id

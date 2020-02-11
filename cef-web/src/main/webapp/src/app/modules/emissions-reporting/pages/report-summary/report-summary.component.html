@@ -6,7 +6,7 @@
                     <strong>Report Summary</strong>
                 </div>
                 <div class="card-body">
-                    <app-report-summary-table [tableData]='tableData'
+                    <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
                                               [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
                 </div>
                 <div class="card-footer d-flex flex-row justify-content-end" *ngIf="!readOnlyMode">

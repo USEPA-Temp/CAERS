@@ -57,17 +57,18 @@ export class EmissionDetailsComponent implements OnInit {
   emissionForm = this.fb.group({
     pollutant: [null, Validators.required],
     formulaIndicator: [false, Validators.required],
-    emissionsFactor: ['', [Validators.required, numberValidator()]],
+    emissionsFactor: ['', [Validators.required, Validators.min(0)]],
     emissionsFactorFormula: [''],
     emissionsFactorText: ['', [Validators.required, Validators.maxLength(100)]],
     emissionsNumeratorUom: [null, Validators.required],
     emissionsDenominatorUom: [null, Validators.required],
     emissionsCalcMethodCode: ['', Validators.required],
     totalManualEntry: [false, Validators.required],
-    totalEmissions: ['', [Validators.required, numberValidator()]],
+    overallControlPercent: ['', [Validators.min(0), Validators.max(99.999999)]],
+    totalEmissions: ['', [Validators.required, Validators.min(0)]],
     emissionsUomCode: [null, Validators.required],
     comments: ['', [Validators.maxLength(400)]],
-    calculationComment: ['', [Validators.maxLength(4000)]],
+    calculationComment: ['', [Validators.required, Validators.maxLength(4000)]],
     formulaVariables: this.fb.group({}),
   }, { validators: this.emissionsCalculatedValidator() });
 
@@ -132,16 +133,12 @@ export class EmissionDetailsComponent implements OnInit {
           this.setupVariableFormFromValues(this.emission.variables);
           this.emissionForm.disable();
 
-          // Make user calculate total emissions after changes
-          this.setupCalculationFormListeners();
-
         });
       } else {
 
         this.emissionForm.enable();
 
-        // Make user calculate total emissions after changes
-        this.setupCalculationFormListeners();
+        this.setupForm();
 
       }
 
@@ -163,37 +160,27 @@ export class EmissionDetailsComponent implements OnInit {
       });
     });
 
-    this.emissionForm.get('emissionsCalcMethodCode').valueChanges
-    .subscribe(value => {
-      this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status);
-    });
-
-    this.emissionForm.get('emissionsCalcMethodCode').statusChanges
-    .subscribe(status => {
-      this.onMethodChange(this.emissionForm.get('emissionsCalcMethodCode').value, status);
-    });
-
   }
 
   private onMethodChange(value: CalculationMethodCode, status: string) {
 
     if ('DISABLED' !== status) {
       if (value && value.totalDirectEntry) {
-        this.emissionForm.get('emissionsFactor').disable();
-        this.emissionForm.get('emissionsFactorText').disable();
-        this.emissionForm.get('emissionsNumeratorUom').disable();
-        this.emissionForm.get('emissionsDenominatorUom').disable();
-        this.emissionForm.get('emissionsFactor').reset();
-        this.emissionForm.get('emissionsFactorFormula').reset();
-        this.emissionForm.get('emissionsFactorText').reset();
-        this.emissionForm.get('emissionsNumeratorUom').reset();
-        this.emissionForm.get('emissionsDenominatorUom').reset();
+        this.emissionForm.get('emissionsFactor').reset({value: null, disabled: true});
+        this.emissionForm.get('emissionsFactorFormula').reset({value: null, disabled: true});
+        this.emissionForm.get('emissionsFactorText').reset({value: null, disabled: true});
+        this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
+        this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
+        this.emissionForm.get('comments').setValidators([Validators.required]);
+        this.emissionForm.get('comments').updateValueAndValidity();
         this.getTotalManualEntry().setValue(true);
       } else {
         this.emissionForm.get('emissionsFactor').enable();
         this.emissionForm.get('emissionsFactorText').enable();
         this.emissionForm.get('emissionsNumeratorUom').enable();
         this.emissionForm.get('emissionsDenominatorUom').enable();
+        this.emissionForm.get('comments').clearValidators();
+        this.emissionForm.get('comments').updateValueAndValidity();
         this.getTotalManualEntry().setValue(false);
       }
 
@@ -207,6 +194,62 @@ export class EmissionDetailsComponent implements OnInit {
       }
 
     }
+  }
+
+  private setupForm() {
+
+    const calcMethod = this.getCalcMethodCodeValue();
+    if (calcMethod && calcMethod.totalDirectEntry) {
+      this.emissionForm.get('emissionsFactor').reset({value: null, disabled: true});
+      this.emissionForm.get('emissionsFactorFormula').reset({value: null, disabled: true});
+      this.emissionForm.get('emissionsFactorText').reset({value: null, disabled: true});
+      this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
+      this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
+      this.emissionForm.get('calculationComment').reset({value: null, disabled: true});
+      this.emissionForm.get('comments').setValidators([Validators.required]);
+      this.emissionForm.get('comments').updateValueAndValidity();
+      this.getTotalManualEntry().setValue(true);
+    } else {
+      this.emissionForm.get('emissionsFactor').enable();
+      this.emissionForm.get('emissionsFactorText').enable();
+      this.emissionForm.get('emissionsNumeratorUom').enable();
+      this.emissionForm.get('emissionsDenominatorUom').enable();
+      this.emissionForm.get('comments').clearValidators();
+      this.emissionForm.get('comments').updateValueAndValidity();
+      if (this.getTotalManualEntry().value) {
+        this.emissionForm.get('calculationComment').enable();
+      } else {
+        this.emissionForm.get('calculationComment').reset({value: null, disabled: true});
+      }
+    }
+
+    // set epaEmissionFactor to true for EPA calculation methods
+    if (calcMethod && calcMethod.epaEmissionFactor) {
+      this.epaEmissionFactor = true;
+    } else {
+      this.emissionForm.get('formulaIndicator').reset(false);
+      this.setupVariableForm([]);
+      this.epaEmissionFactor = false;
+    }
+
+
+    // Reconfigure form after calculation method changes
+    this.emissionForm.get('emissionsCalcMethodCode').valueChanges
+    .subscribe(value => {
+      this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status);
+    });
+
+    // Make user calculate total emissions after changes
+    this.setupCalculationFormListeners();
+
+    this.emissionForm.get('formulaIndicator').valueChanges
+    .subscribe(value => {
+      if (value) {
+        this.emissionForm.get('emissionsFactorFormula').enable();
+      } else {
+        this.emissionForm.get('emissionsFactorFormula').disable();
+      }
+    });
   }
 
   onCalculate() {
@@ -267,28 +310,17 @@ export class EmissionDetailsComponent implements OnInit {
   }
 
   onEdit() {
-    this.emissionForm.enable({emitEvent: false});
+    this.emissionForm.enable();
+    this.setupForm();
   }
 
   onSubmit() {
     if (this.emissionForm.value.formulaIndicator && this.getTotalManualEntry().value) {
       this.emissionForm.get('emissionsFactor').disable();
     }
-    if (!this.emissionForm.valid || (this.getTotalManualEntry().value && !this.emissionForm.controls.comments.value)
-        || (this.getTotalManualEntry().value && !this.emissionForm.value.emissionsCalcMethodCode.totalDirectEntry
-        && !this.emissionForm.value.calculationComment)) {
-      this.emissionForm.markAllAsTouched();
-      if (this.getTotalManualEntry().value && !this.emissionForm.controls.comments.value) {
-        this.toastr.error('', 'You must enter an explanation of the total emissions calculation when the ' +
-        this.emissionForm.controls.emissionsCalcMethodCode.value.description +
-        ' calculation method is selected.', {positionClass: 'toast-top-right'});
-      }
 
-      if ((this.getTotalManualEntry().value && !this.emissionForm.value.emissionsCalcMethodCode.totalDirectEntry
-          && !this.emissionForm.value.calculationComment)) {
-        this.toastr.error('Description of Calculation field is required when '
-            + 'using an emission factor and choosing to perform the calculations yourself.');
-      }
+    if (!this.emissionForm.valid) {
+      this.emissionForm.markAllAsTouched();
     } else {
 
       const saveEmission = new Emission();
@@ -341,7 +373,7 @@ export class EmissionDetailsComponent implements OnInit {
       efCriteria.pollutantCode = this.emissionForm.get('pollutant').value.pollutantCode;
 
       // set controlIndicator based on which calculation method is selected
-      if (this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator) {
+      if (this.getCalcMethodCodeValue().controlIndicator) {
         efCriteria.controlIndicator = true;
       } else {
         efCriteria.controlIndicator = false;
@@ -362,6 +394,13 @@ export class EmissionDetailsComponent implements OnInit {
             this.emissionForm.get('emissionsDenominatorUom').setValue(modalEf.emissionsDenominatorUom);
             this.emissionForm.get('emissionsUomCode').setValue(modalEf.emissionsNumeratorUom);
 
+            let descriptionText = modalEf.description;
+            if (descriptionText && descriptionText.length > 100) {
+              descriptionText = descriptionText.substring(0, 97);
+              descriptionText = descriptionText.concat('...');
+            }
+            this.emissionForm.get('emissionsFactorText').setValue(descriptionText);
+
             this.setupVariableForm(modalEf.variables || []);
           }
         }, () => {
@@ -373,11 +412,11 @@ export class EmissionDetailsComponent implements OnInit {
   }
 
   canCalculate() {
-    console.log(this.emissionForm);
     return this.emissionForm.get('formulaIndicator').valid
         &&  (this.emissionForm.get('formulaIndicator').value || this.emissionForm.get('emissionsFactor').valid)
         && this.emissionForm.get('emissionsNumeratorUom').valid
         && this.emissionForm.get('emissionsDenominatorUom').valid
+        && this.emissionForm.get('overallControlPercent').valid
         && this.emissionForm.get('emissionsUomCode').valid
         && this.emissionForm.get('formulaVariables').valid
         && this.emissionForm.get('totalManualEntry').valid;
@@ -405,12 +444,32 @@ export class EmissionDetailsComponent implements OnInit {
       }
     });
 
+    this.emissionForm.get('emissionsNumeratorUom').valueChanges
+    .subscribe(value => {
+      if (this.emissionForm.enabled) {
+        this.needsCalculation = true;
+      }
+    });
+
+    this.emissionForm.get('emissionsDenominatorUom').valueChanges
+    .subscribe(value => {
+      if (this.emissionForm.enabled) {
+        this.needsCalculation = true;
+      }
+    });
+
+    this.emissionForm.get('overallControlPercent').valueChanges
+    .subscribe(value => {
+      if (this.emissionForm.enabled) {
+        this.needsCalculation = true;
+      }
+    });
+
     this.emissionForm.get('totalManualEntry').valueChanges
     .subscribe(value => {
       if (this.emissionForm.enabled) {
         this.needsCalculation = true;
-        if (value && this.emissionForm.value.emissionsCalcMethodCode 
-            && !this.emissionForm.value.emissionsCalcMethodCode.totalDirectEntry) {
+        if (value && this.getCalcMethodCodeValue() && !this.getCalcMethodCodeValue().totalDirectEntry) {
           this.emissionForm.get('calculationComment').enable();
         } else {
           this.emissionForm.get('calculationComment').disable();
@@ -421,6 +480,10 @@ export class EmissionDetailsComponent implements OnInit {
 
   getTotalManualEntry() {
     return this.emissionForm.get('totalManualEntry');
+  }
+
+  getCalcMethodCodeValue(): CalculationMethodCode {
+    return this.emissionForm.value.emissionsCalcMethodCode;
   }
 
   getFormulaVariableForm() {
@@ -493,7 +556,6 @@ export class EmissionDetailsComponent implements OnInit {
       const efControl = control.get('emissionsFactor');
       if (efControl.enabled && !control.get('totalManualEntry').value) {
         return this.needsCalculation ? {emissionsCalculated: true} : null;
-        // return this.calculatedEf === efControl.value ? null : {emissionsCalculated: {value: this.calculatedEf}};
       }
 
       return null;

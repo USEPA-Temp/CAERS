@@ -194,6 +194,14 @@
                     </fieldset>
 
                     <div class="row pb-2">
+                        <label for="overallControlPercentInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Overall Control %:</strong></label>
+                        <div class="col-sm-8 col-lg-4">
+                            <input type="number" class="form-control" id="overallControlPercentInput" formControlName="overallControlPercent">
+                            <app-validation-message [control]="emissionForm.get('overallControlPercent')"></app-validation-message>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2">
                         <label for="totalEmissionsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Total Emissions:</strong></label>
                         <div class="col-sm-8 col-lg-4">
                             <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value">
@@ -220,18 +228,27 @@
 
                     <div class="row">
                         <div class="col">
-                            <div class="float-right form-group form-check" *ngIf="!emissionForm.value?.emissionsCalcMethodCode?.totalDirectEntry">
+                            <div class="float-right form-group form-check" *ngIf="!getCalcMethodCodeValue()?.totalDirectEntry">
                                 <input type="checkbox" class="form-check-input" id="manualEntryCb" formControlName="totalManualEntry" >
                                 <label for="manualEntryCb" class="form-check-label"><strong>I prefer to calculate the total emissions of this pollutant</strong></label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row pb-2" *ngIf="!emissionForm.value?.emissionsCalcMethodCode?.totalDirectEntry && getTotalManualEntry().value">
+                    <div class="row pb-2" *ngIf="!getCalcMethodCodeValue()?.totalDirectEntry && getTotalManualEntry().value">
                         <label for="emissionCalcCommentInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Description of Calculation:</strong></label>
                         <div class="col-sm-8 col-lg-10">
                             <textarea rows="3" class="form-control" maxlength="4000" id="emissionCalcCommentInput" formControlName="calculationComment"></textarea>
-                            <app-validation-message [control]="emissionForm.controls.calculationComment"></app-validation-message>
+                            <div class="validation-message" *ngIf="emissionForm.get('calculationComment').errors 
+                                    && (emissionForm.get('calculationComment').dirty || emissionForm.get('calculationComment').touched)">
+                                <div *ngIf="emissionForm.get('calculationComment').getError('required')">
+                                    Description of Calculation field is required when using an emission factor and choosing to perform the calculations yourself.
+                                </div>
+
+                                <div *ngIf="emissionForm.get('calculationComment').getError('maxlength')">
+                                    Value cannot exceed {{emissionForm.get('calculationComment').getError('maxlength').requiredLength}} characters.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -239,7 +256,16 @@
                         <label for="emissionCommentsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Comments:</strong></label>
                         <div class="col-sm-8 col-lg-10">
                             <textarea rows="3" class="form-control" maxlength="400" id="emissionCommentsInput" formControlName="comments"></textarea>
-                            <app-validation-message [control]="emissionForm.controls.comments"></app-validation-message>
+                            <div class="validation-message" *ngIf="emissionForm.get('comments').errors && (emissionForm.get('comments').dirty || emissionForm.get('comments').touched)">
+                                <div *ngIf="emissionForm.get('comments').getError('required')">
+                                    You must enter an explanation of the total emissions calculation when the 
+                                    {{getCalcMethodCodeValue()?.description}} calculation method is selected.
+                                </div>
+
+                                <div *ngIf="emissionForm.get('comments').getError('maxlength')">
+                                    Value cannot exceed {{emissionForm.get('comments').getError('maxlength').requiredLength}} characters.
+                                </div>
+                            </div>
                         </div>
                     </div>
 

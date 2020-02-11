@@ -1,6 +1,5 @@
 package gov.epa.cef.web.client.api;
 
-import gov.epa.cef.web.config.FrsConfig;
 import gov.epa.client.frs.iptquery.ApiClient;
 import gov.epa.client.frs.iptquery.FrsApi;
 import gov.epa.client.frs.iptquery.model.Association;
@@ -14,9 +13,13 @@ import gov.epa.client.frs.iptquery.model.ProgramGIS;
 import gov.epa.client.frs.iptquery.model.ReleasePoint;
 import gov.epa.client.frs.iptquery.model.Unit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -126,5 +129,62 @@ public class FrsApiClient {
             EISProgramAcronym, eisProgramId, pageSize, offset).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
+    }
+
+    @Component
+    @Validated
+    @ConfigurationProperties(prefix = "frs")
+    public static class FrsConfig {
+
+        private boolean debugging = false;
+
+        @NotNull
+        private URL facilityIptEndpoint;
+
+        @NotBlank
+        private String naasPassword;
+
+        @NotBlank
+        private String naasUser;
+
+        public URL getFacilityIptEndpoint() {
+
+            return facilityIptEndpoint;
+        }
+
+        public void setFacilityIptEndpoint(URL facilityIptEndpoint) {
+
+            this.facilityIptEndpoint = facilityIptEndpoint;
+        }
+
+        public String getNaasPassword() {
+
+            return naasPassword;
+        }
+
+        public void setNaasPassword(String naasPassword) {
+
+            this.naasPassword = naasPassword;
+        }
+
+        public String getNaasUser() {
+
+            return naasUser;
+        }
+
+        public void setNaasUser(String naasUser) {
+
+            this.naasUser = naasUser;
+        }
+
+        public boolean isDebugging() {
+
+            return debugging;
+        }
+
+        public void setDebugging(boolean debugging) {
+
+            this.debugging = debugging;
+        }
     }
 }

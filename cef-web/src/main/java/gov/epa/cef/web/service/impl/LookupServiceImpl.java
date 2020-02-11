@@ -16,10 +16,12 @@ import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
+import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
@@ -33,10 +35,12 @@ import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
+import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
+import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
@@ -48,7 +52,9 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
@@ -106,6 +112,12 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+    
+    @Autowired
+    private PointSourceSccCodeRepository pointSourceSccCodeRepo;
+
+    @Autowired
+    private EisLatLongToleranceLookupRepository latLongToleranceRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -416,6 +428,18 @@ public class LookupServiceImpl implements LookupService {
             result.add(lookupMapper.aircraftEngCodeToDto(entity));
         });
         return result;
+    }
+    
+    public PointSourceSccCodeDto retrievePointSourceSccCode(String code) {
+
+    	PointSourceSccCode entity = pointSourceSccCodeRepo.findById(code).orElse(null);
+    	return lookupMapper.pointSourceSccCodeToDto(entity);
+    }
+    
+    public EisLatLongToleranceLookupDto retrieveLatLongTolerance(String eisProgramId) {
+
+    	EisLatLongToleranceLookup entity = latLongToleranceRepo.findById(eisProgramId).orElse(null);
+    	return lookupMapper.EisLatLongToleranceLookupToDto(entity);
     }
     
 }

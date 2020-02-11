@@ -41,6 +41,17 @@
             <button type="button" class="btn btn-success mr-2" (click)="openSccSearchModal()">Search for SCC Code</button>
         </div>
     </div>
+    <div class="row">
+        <div class="validation-warning" *ngIf="sccWarning?.sccCodeWarning">
+            Warning: {{processForm.controls?.sccCode?.value}} has a retirement date of {{sccRetirementYear}}. If applicable, you may want to add a more recent code.
+        </div>
+        <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeRetired">
+            {{processForm.controls?.sccCode?.value}} was retired in {{sccRetirementYear}}. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year.
+        </div>
+        <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeInvalid">
+            {{processForm.controls?.sccCode?.value}} is not a valid point source SCC. Please choose a valid code.
+        </div>
+    </div>
 
     <div class="row pb-1">
         <label for="sccDescriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC Description:</strong></label>

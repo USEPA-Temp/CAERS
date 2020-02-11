@@ -2,10 +2,13 @@ package gov.epa.cef.web.api.rest;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +17,10 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 
@@ -230,4 +235,29 @@ public class LookupApi {
         List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes();
         return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Point Source SCC code
+     * @param code
+     * @return
+     */
+    @GetMapping(value = "/pointSourceSccCode/{code}")
+    @ResponseBody
+    public ResponseEntity<PointSourceSccCodeDto> retrievePointSourceSccCode(@NotNull @PathVariable String code) {
+    	
+    	PointSourceSccCodeDto result = lookupService.retrievePointSourceSccCode(code);
+    	return new ResponseEntity<PointSourceSccCodeDto>(result, HttpStatus.OK);
+    }   
+    
+    /**
+     * Retrieve coordinate tolerance by eisProgramId
+     * @param eisProgramId
+     * @return
+     */
+    @GetMapping(value = "/coordinateTolerance/{eisProgramId}")
+    @ResponseBody
+    public ResponseEntity<EisLatLongToleranceLookupDto> retrieveLatLongTolerance(@NotNull @PathVariable String eisProgramId) {
+    	EisLatLongToleranceLookupDto result = lookupService.retrieveLatLongTolerance(eisProgramId);
+    	return new ResponseEntity<EisLatLongToleranceLookupDto>(result, HttpStatus.OK);
+    }   
 }

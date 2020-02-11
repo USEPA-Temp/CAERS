@@ -9,4 +9,6 @@ public class TestCategories {
     public static class FastTest extends UnitTest {    };
 
     public static class EmbeddedDatabaseTest extends SlowTest {    };
+
+    public static class IntegrationTest {  };
 }

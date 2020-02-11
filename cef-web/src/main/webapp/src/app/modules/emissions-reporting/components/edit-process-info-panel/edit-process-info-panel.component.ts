@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
-import { FormBuilder, Validators, ValidatorFn, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { Process } from 'src/app/shared/models/process';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
@@ -8,6 +8,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SccSearchModalComponent } from 'src/app/modules/emissions-reporting/components/scc-search-modal/scc-search-modal.component';
 import { SccCode } from 'src/app/shared/models/scc-code';
 import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -17,6 +19,9 @@ import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-ty
 export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
   @Input() unitIdentifier: string;
+  emissionsReportYear: number;
+  sccRetirementYear: number;
+  sccWarning: any;
   aircraftSCCcheck = false;
 
   processForm = this.fb.group({
@@ -45,6 +50,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       Validators.maxLength(200)
     ]],
     comments: ['', Validators.maxLength(400)]
+  }, { validators: [this.checkPointSourceSccCode()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -54,6 +60,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   constructor(
     private lookupService: LookupService,
     public formUtils: FormUtilsService,
+    private route: ActivatedRoute,
     private modalService: NgbModal,
     private fb: FormBuilder) { }
 
@@ -62,6 +69,10 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     this.lookupService.retrieveOperatingStatus()
     .subscribe(result => {
       this.operatingStatusValues = result;
+    });
+
+    this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
+      this.emissionsReportYear = data.facilitySite.emissionsReport.year;
     });
 
     // SCC codes associated with Aircraft Engine Type Codes
@@ -101,26 +112,28 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
   checkAircraftSCC() {
     const formSccCode = this.processForm.get('sccCode');
-    for (let scc of this.aircraftEngineSCC) {
-      if (scc === formSccCode.value) {
+    if (formSccCode.value !== null) {
+      for (let scc of this.aircraftEngineSCC) {
+        if (scc === formSccCode.value) {
 
-        this.aircraftSCCcheck = true;
+          this.aircraftSCCcheck = true;
 
-        // form field is required if selected SCC is aircraft
-        this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
+          // form field is required if selected SCC is aircraft
+          this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
 
-        this.lookupService.retrieveAircraftEngineCodes()
-        .subscribe(result => {
-          this.aircraftEngineTypeValue = result.filter(val => (val.scc === this.processForm.get('sccCode').value));
+          this.lookupService.retrieveAircraftEngineCodes()
+          .subscribe(result => {
+            this.aircraftEngineTypeValue = result.filter(val => (val.scc === this.processForm.get('sccCode').value));
 
-          for (let item of this.aircraftEngineTypeValue) {
-            if (this.process.aircraftEngineTypeCode !== null && (item.code === this.process.aircraftEngineTypeCode.code)) {
-              this.processForm.controls['aircraftEngineTypeCode'].setValue(item);
-              break
+            for (let item of this.aircraftEngineTypeValue) {
+              if (this.process.aircraftEngineTypeCode !== null && (item.code === this.process.aircraftEngineTypeCode.code)) {
+                this.processForm.controls['aircraftEngineTypeCode'].setValue(item);
+                break
+              }
             }
-          }
-        });
-        break;
+          });
+          break;
+        }
       }
       this.aircraftSCCcheck = false;
       }
@@ -141,4 +154,32 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     // console.log(process);
   }
 
+  checkPointSourceSccCode(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      let isValidScc;
+
+      if (control.get('sccCode') !== null && control.get('sccCode').value !== null && control.get('sccCode').value !== '') {
+
+        this.lookupService.retrievePointSourceSccCode(control.get('sccCode').value)
+        .subscribe(result => {
+          isValidScc = result;
+
+          if (isValidScc !== null) {
+            if (isValidScc.lastInventoryYear !== null && (isValidScc.lastInventoryYear >= this.emissionsReportYear)) {
+              this.sccRetirementYear = isValidScc.lastInventoryYear;
+              this.sccWarning = { sccCodeWarning: true };
+            } else if (isValidScc.lastInventoryYear !== null && (isValidScc.lastInventoryYear < this.emissionsReportYear)) {
+              this.sccRetirementYear = isValidScc.lastInventoryYear;
+              control.get('sccCode').markAsTouched();
+              control.get('sccCode').setErrors({'sccCodeRetired': true});
+            }
+          } else if (result === null) {
+            control.get('sccCode').markAsTouched();
+            control.get('sccCode').setErrors({'sccCodeInvalid': true});
+          }
+        });
+      }
+      return null;
+    }
+  }
 }
