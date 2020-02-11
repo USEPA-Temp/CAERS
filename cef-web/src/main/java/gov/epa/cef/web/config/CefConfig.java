@@ -25,7 +25,9 @@ public class CefConfig {
 
     private final List<String> admins = new ArrayList<>();
 
-    private BigDecimal emissionsTotalQaTolerance;
+    private BigDecimal emissionsTotalErrorTolerance;
+
+    private BigDecimal emissionsTotalWarningTolerance;
 
     public List<String> getAdmins() {
 
@@ -61,12 +63,20 @@ public class CefConfig {
         this.defaultEmailAddress = defaultEmailAddress;
     }
 
-    public BigDecimal getEmissionsTotalQaTolerance() {
-        return emissionsTotalQaTolerance;
+    public BigDecimal getEmissionsTotalErrorTolerance() {
+        return emissionsTotalErrorTolerance;
     }
 
-    public void setEmissionsTotalQaTolerance(BigDecimal qaTolerance) {
-        this.emissionsTotalQaTolerance = qaTolerance;
+    public void setEmissionsTotalErrorTolerance(BigDecimal emissionsTotalErrorTolerance) {
+        this.emissionsTotalErrorTolerance = emissionsTotalErrorTolerance;
+    }
+
+    public BigDecimal getEmissionsTotalWarningTolerance() {
+        return emissionsTotalWarningTolerance;
+    }
+
+    public void setEmissionsTotalWarningTolerance(BigDecimal emissionsTotalWarningTolerance) {
+        this.emissionsTotalWarningTolerance = emissionsTotalWarningTolerance;
     }
 
 }

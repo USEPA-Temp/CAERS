@@ -29,6 +29,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
+import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionValidator;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -64,7 +65,8 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         tonUom.setUnitType("MASS");
         tonUom.setCalculationVariable("sTon");
 
-        when(cefConfig.getEmissionsTotalQaTolerance()).thenReturn(new BigDecimal(".01"));
+        when(cefConfig.getEmissionsTotalErrorTolerance()).thenReturn(new BigDecimal(".05"));
+        when(cefConfig.getEmissionsTotalWarningTolerance()).thenReturn(new BigDecimal(".01"));
     }
 
     @Test
@@ -252,7 +254,49 @@ public class EmissionValidatorTest extends BaseValidatorTest {
      * and there should be no errors when totalManualEntry is true
      */
     @Test
-    public void totalDirectEntryFalse_TotalEmissionsTolerance_FailTest() {
+    public void totalDirectEntryFalse_TotalEmissionsToleranceError_FailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        testData.setTotalEmissions(new BigDecimal("10.6"));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
+                && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_ERROR_CODE);
+
+        cefContext = createContext();
+        testData.setTotalManualEntry(true);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        cefContext = createContext();
+        testData.setTotalEmissions(new BigDecimal("9.4"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        cefContext = createContext();
+
+        testData.setTotalManualEntry(false);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
+                && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_ERROR_CODE);
+    }
+
+    /**
+     * There should be one warning when Calculation Method Code has false total direct entry and Emission Total Emissions is not calculated correctly
+     * and there should be no errors when totalManualEntry is true
+     */
+    @Test
+    public void totalDirectEntryFalse_TotalEmissionsToleranceWarning_FailTest() {
 
         CefValidatorContext cefContext = createContext();
         Emission testData = createBaseEmission(false);
@@ -262,7 +306,8 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
+                && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_WARNING_CODE);
 
         cefContext = createContext();
         testData.setTotalManualEntry(true);
@@ -277,18 +322,38 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
-
         testData.setTotalManualEntry(false);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
+                && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_WARNING_CODE);
+
+        cefContext = createContext();
+        testData.setTotalEmissions(new BigDecimal("9.5"));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
+                && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_WARNING_CODE);
+
+        cefContext = createContext();
+        testData.setTotalEmissions(new BigDecimal("10.5"));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
+                && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_WARNING_CODE);
     }
 
     @Test
-    public void totalDirectEntryFalse_TotalEmissionsTolerance_BoundaryTest() {
+    public void totalDirectEntryFalse_TotalEmissionsToleranceWarning_BoundaryTest() {
 
         CefValidatorContext cefContext = createContext();
         Emission testData = createBaseEmission(false);
