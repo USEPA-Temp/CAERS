@@ -19,13 +19,13 @@ public class ValidationResult {
 
     private final List<ValidationError> stateWarnings;
 
-    static final int FEDERAL_ERROR_CODE = 1;
+    public static final int FEDERAL_ERROR_CODE = 1;
 
-    static final int FEDERAL_WARNING_CODE = -1;
+    public static final int FEDERAL_WARNING_CODE = -1;
 
-    static final int STATE_ERROR_CODE = 2;
+    public static final int STATE_ERROR_CODE = 2;
 
-    static final int STATE_WARNING_CODE = -2;
+    public static final int STATE_WARNING_CODE = -2;
 
     public ValidationResult() {
 
