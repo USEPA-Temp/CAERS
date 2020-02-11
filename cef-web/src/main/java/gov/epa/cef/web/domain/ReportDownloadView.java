@@ -1,6 +1,8 @@
 package gov.epa.cef.web.domain;
 
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,7 +58,7 @@ public class ReportDownloadView extends BaseEntity{
     private String emissionsDenominatorUom;
     
     @Column(name = "emissions_factor")
-    private Double emissionsFactor;
+    private BigDecimal emissionsFactor;
     
     @Column(name = "emissions_factor_text", length = 100)
     private String emissionsFactorText;
@@ -66,17 +68,9 @@ public class ReportDownloadView extends BaseEntity{
     
     @Column(name = "reporting_period_type", length = 50)
     private String reportingPeriodType;
-    
-	public String getReportingPeriodType() {
-		return reportingPeriodType;
-	}
-
-	public void setReportingPeriodType(String reportingPeriodType) {
-		this.reportingPeriodType = reportingPeriodType;
-	}
 
 	@Column(name = "total_emissions")
-    private Double totalEmissions;
+    private BigDecimal totalEmissions;
 	
     public String getEmissionsNumeratorUom() {
 		return emissionsNumeratorUom;
@@ -94,11 +88,11 @@ public class ReportDownloadView extends BaseEntity{
 		this.emissionsDenominatorUom = emissionsDenominatorUom;
 	}
 
-	public Double getEmissionsFactor() {
+	public BigDecimal getEmissionsFactor() {
 		return emissionsFactor;
 	}
 
-	public void setEmissionsFactor(Double emissionsFactor) {
+	public void setEmissionsFactor(BigDecimal emissionsFactor) {
 		this.emissionsFactor = emissionsFactor;
 	}
 
@@ -182,11 +176,11 @@ public class ReportDownloadView extends BaseEntity{
 		this.pollutantName = pollutantName;
 	}
 
-	public Double getTotalEmissions() {
+	public BigDecimal getTotalEmissions() {
 		return totalEmissions;
 	}
 
-	public void setTotalEmissions(Double totalEmissions) {
+	public void setTotalEmissions(BigDecimal totalEmissions) {
 		this.totalEmissions = totalEmissions;
 	}
 	public String getEmissionsCalcMethod() {
@@ -205,4 +199,11 @@ public class ReportDownloadView extends BaseEntity{
 		this.emissionsUomCode = emissionsUomCode;
 	}
 	     
+	public String getReportingPeriodType() {
+		return reportingPeriodType;
+	}
+
+	public void setReportingPeriodType(String reportingPeriodType) {
+		this.reportingPeriodType = reportingPeriodType;
+	}
 }

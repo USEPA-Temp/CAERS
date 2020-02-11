@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -26,10 +27,10 @@ public class ReportDownloadDto implements Serializable{
 	private String processDescription;
     private String pollutantName;
     private String emissionsUomCode;
-    private Double totalEmissions;
+    private BigDecimal totalEmissions;
     private String emissionsNumeratorUom;
     private String emissionsDenominatorUom;
-    private Double emissionsFactor;
+    private BigDecimal emissionsFactor;
     private String emissionsFactorText;
     private String emissionsComment;
     private String reportingPeriodType;
@@ -47,10 +48,10 @@ public class ReportDownloadDto implements Serializable{
 	public void setEmissionsDenominatorUom(String emissionsDenominatorUom) {
 		this.emissionsDenominatorUom = emissionsDenominatorUom;
 	}
-	public Double getEmissionsFactor() {
+	public BigDecimal getEmissionsFactor() {
 		return emissionsFactor;
 	}
-	public void setEmissionsFactor(Double emissionsFactor) {
+	public void setEmissionsFactor(BigDecimal emissionsFactor) {
 		this.emissionsFactor = emissionsFactor;
 	}
 	public String getEmissionsFactorText() {
@@ -113,10 +114,10 @@ public class ReportDownloadDto implements Serializable{
 	public void setPollutantName(String pollutantName) {
 		this.pollutantName = pollutantName;
 	}
-	public Double getTotalEmissions() {
+	public BigDecimal getTotalEmissions() {
 		return totalEmissions;
 	}
-	public void setTotalEmissions(Double totalEmissions) {
+	public void setTotalEmissions(BigDecimal totalEmissions) {
 		this.totalEmissions = totalEmissions;
 	}
 	public String getReportingPeriodType() {
