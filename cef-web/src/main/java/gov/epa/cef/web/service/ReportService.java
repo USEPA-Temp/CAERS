@@ -3,6 +3,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.service.dto.ReportDownloadDto;
 import gov.epa.cef.web.service.dto.ReportHistoryDto;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
 
@@ -44,5 +45,12 @@ public interface ReportService {
      * @param reportAction
      */
     void createReportHistory(Long reportId, ReportAction reportAction);
+    
+    /***
+     * Return ReportDownloadDto for the chosen report id
+     * @param reportId
+     * @return
+     */
+    List<ReportDownloadDto> retrieveReportDownloadDtoByReportId(Long reportId);
 
 }
