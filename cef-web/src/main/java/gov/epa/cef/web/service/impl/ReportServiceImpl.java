@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
+import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -11,14 +13,18 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReportDownloadRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportSummaryRepository;
+import gov.epa.cef.web.service.mapper.ReportDownloadMapper;
 import gov.epa.cef.web.service.mapper.ReportHistoryMapper;
 import gov.epa.cef.web.service.mapper.ReportSummaryMapper;
+import gov.epa.cef.web.service.dto.ReportDownloadDto;
 import gov.epa.cef.web.service.dto.ReportHistoryDto;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.domain.ReportDownloadView;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportSummary;
 
@@ -44,6 +50,12 @@ public class ReportServiceImpl implements ReportService {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private ReportDownloadRepository downloadRepo;
+    
+    @Autowired
+    private ReportDownloadMapper downloadMapper;
     
     /***
      * Return list of report summary records with total emissions summed per pollutant for the chosen facility and year
@@ -114,4 +126,14 @@ public class ReportServiceImpl implements ReportService {
 		    	
 		    	reportHistoryRepo.save(rptActionLog);
 	    }
+	    
+	    /***
+	     * Return ReportDownloadDto for the chosen report id
+	     * @param report id
+	     * @return
+	     */
+	    public List<ReportDownloadDto> retrieveReportDownloadDtoByReportId(Long reportId){
+	        List<ReportDownloadView> reportDownloadsList = downloadRepo.findByReportId(reportId);
+	        return downloadMapper.toDtoList(reportDownloadsList);
+	    }	    
 }

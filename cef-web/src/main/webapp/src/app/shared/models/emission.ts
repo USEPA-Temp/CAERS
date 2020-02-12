@@ -9,6 +9,7 @@ export class Emission {
   reportingPeriodId: number;
   pollutant: Pollutant;
   totalManualEntry: boolean;
+  overallControlPercent: number;
   totalEmissions: number;
   emissionsUomCode: UnitMeasureCode;
   formulaIndicator: boolean;

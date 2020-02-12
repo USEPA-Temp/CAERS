@@ -201,6 +201,12 @@ public class EmissionServiceImpl implements EmissionService {
         if (efNumerator != null && totalEmissionUom != null && !totalEmissionUom.getCode().equals(efNumerator.getCode())) {
             totalEmissions = CalculationUtils.convertUnits(efNumerator.getCalculationVariable(), totalEmissionUom.getCalculationVariable(), leapYear).multiply(totalEmissions);
         }
+
+        if (dto.getOverallControlPercent() != null) {
+            BigDecimal controlRate = new BigDecimal("100").subtract(dto.getOverallControlPercent()).divide(new BigDecimal("100"));
+            totalEmissions = totalEmissions.multiply(controlRate);
+        }
+
         dto.setTotalEmissions(totalEmissions);
 
         return dto;

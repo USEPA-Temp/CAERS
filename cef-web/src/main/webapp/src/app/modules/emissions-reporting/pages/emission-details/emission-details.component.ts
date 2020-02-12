@@ -64,6 +64,7 @@ export class EmissionDetailsComponent implements OnInit {
     emissionsDenominatorUom: [null, Validators.required],
     emissionsCalcMethodCode: ['', Validators.required],
     totalManualEntry: [false, Validators.required],
+    overallControlPercent: ['', [Validators.min(0), Validators.max(99.999999)]],
     totalEmissions: ['', [Validators.required, Validators.min(0)]],
     emissionsUomCode: [null, Validators.required],
     comments: ['', [Validators.maxLength(400)]],
@@ -415,6 +416,7 @@ export class EmissionDetailsComponent implements OnInit {
         &&  (this.emissionForm.get('formulaIndicator').value || this.emissionForm.get('emissionsFactor').valid)
         && this.emissionForm.get('emissionsNumeratorUom').valid
         && this.emissionForm.get('emissionsDenominatorUom').valid
+        && this.emissionForm.get('overallControlPercent').valid
         && this.emissionForm.get('emissionsUomCode').valid
         && this.emissionForm.get('formulaVariables').valid
         && this.emissionForm.get('totalManualEntry').valid;
@@ -450,6 +452,13 @@ export class EmissionDetailsComponent implements OnInit {
     });
 
     this.emissionForm.get('emissionsDenominatorUom').valueChanges
+    .subscribe(value => {
+      if (this.emissionForm.enabled) {
+        this.needsCalculation = true;
+      }
+    });
+
+    this.emissionForm.get('overallControlPercent').valueChanges
     .subscribe(value => {
       if (this.emissionForm.enabled) {
         this.needsCalculation = true;
