@@ -24,4 +24,9 @@ export class ReportService {
     const url = `${this.baseUrl}/reportHistory/report/${reportId}/facilitySiteId/${facilitySiteId}`;
     return this.http.get<ReportHistory[]>(url);
   }
+    /** GET ReportDownloadDto for report id */
+  retrieveReportDownloadDto(reportId: number, facilitySiteId: number): Observable<any[]> {
+    const url = `${this.baseUrl}/downloadReport/reportId/${reportId}/facilitySiteId/${facilitySiteId}`;
+    return this.http.get<any[]>(url);
+  }
 }
