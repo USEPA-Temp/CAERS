@@ -22,7 +22,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   facilitySite: FacilitySite;
   releaseType: string;
   eisProgramId: string;
-  stackDiameterWarning: any;
+  facilityOpCode: BaseCodeLookup;
+  diameterCheckHeightWarning: any;
+  diameterCheckFlowAndVelWarning: any;
+  velAndFlowCheckDiameterWarning: any;
   calculatedVelocity: string;
   calculatedFlowRate: string;
   calculatedFlowRateUom: string;
@@ -145,7 +148,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.stackDiameterCheck(),
     this.exitGasFlowCheck(),
     this.exitVelocityCheck(),
-    this.coordinateToleranceCheck()
+    this.coordinateToleranceCheck(),
+    this.stackVelAndFlowCheckForDiameter(),
+    this.stackDiameterCheckForVelAndFlow(),
+    this.facilitySiteStatusCheck(),
+    this.exitGasFlowUomCheck(),
+    this.exitGasVelocityUomCheck()
     ]
   });
 
@@ -180,16 +188,17 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     });
 
     this.lookupService.retrieveUom()
-    .subscribe(result => {
-      this.uomValues = result.filter(val => String(val.code) === 'FT');
-      this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
-      this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
-    });
+      .subscribe(result => {
+        this.uomValues = result.filter(val => String(val.code) === 'FT');
+        this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
+        this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
+      });
 
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
       this.eisProgramId = this.facilitySite.eisProgramId;
+      this.facilityOpCode = this.facilitySite.operatingStatusCode;
     });
 
     this.setFormValidation();
@@ -219,8 +228,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   // reset form fields and set validation based on release point type
   setFormValidation() {
     this.isReleasePointFugitiveType();
-    this.setGasFlowUomValidation();
-    this.setVelocityUomValidation();
     this.setGasFlowRangeValidation();
     this.setGasVelocityRangeValidation();
 
@@ -267,28 +274,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.releasePointForm.controls.fugitiveLengthUomCode.reset();
       this.releasePointForm.controls.fugitiveWidthUomCode.reset();
       this.releasePointForm.controls.fugitiveHeightUomCode.reset();
-    }
-  }
-
-  setGasFlowUomValidation() {
-    if (this.releasePointForm.controls.exitGasFlowRate.value !== null && this.releasePointForm.controls.exitGasFlowRate.value !== '') {
-      this.releasePointForm.controls.exitGasFlowUomCode.setValidators([Validators.required]);
-      this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
-      this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
-    } else {
-      this.releasePointForm.controls.exitGasFlowUomCode.setValidators([]);
-      this.releasePointForm.controls.exitGasFlowUomCode.reset();
-    }
-  }
-
-  setVelocityUomValidation() {
-    if (this.releasePointForm.controls.exitGasVelocity.value !== null && this.releasePointForm.controls.exitGasVelocity.value !== '') {
-      this.releasePointForm.controls.exitGasVelocityUomCode.setValidators([Validators.required]);
-      this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
-      this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
-    } else {
-      this.releasePointForm.controls.exitGasVelocityUomCode.setValidators([]);
-      this.releasePointForm.controls.exitGasVelocityUomCode.reset();
     }
   }
 
@@ -348,6 +333,50 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
   }
 
+  // exit gas flow rate must have uom
+  exitGasFlowUomCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const flowRate = control.get('exitGasFlowRate');
+      const uom = control.get('exitGasFlowUomCode');
+
+      if ((flowRate !== null && flowRate.value !== null && flowRate.value !== '')
+      && (uom === undefined || uom === null || uom.value === null)) {
+        control.get('exitGasFlowUomCode').setErrors({'invalidExitGasFlowUomCode': true});
+      } else if ((uom !== undefined && uom !== null && uom.value !== null && uom.value !== '')
+      && (flowRate === null || flowRate.value === null || flowRate.value === '')) {
+        control.get('exitGasFlowRate').setErrors({'invalidExitGasFlowRate': true});
+      } else if ((flowRate === null || flowRate.value === null || flowRate.value === '')
+      && (uom === undefined || uom === null || uom.value === null || uom.value !== '')) {
+        control.get('exitGasFlowRate').setErrors(null);
+        control.get('exitGasFlowUomCode').setErrors(null);
+        return null;
+      }
+      return null;
+    };
+  }
+
+  // exit gas velocity must have uom
+  exitGasVelocityUomCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const velocity = control.get('exitGasVelocity');
+      const uom = control.get('exitGasVelocityUomCode');
+
+      if ((velocity !== null && velocity.value !== null && velocity.value !== '')
+      && (uom === undefined || uom === null || uom.value === null)) {
+        control.get('exitGasVelocityUomCode').setErrors({'invalidExitGasVelocityUomCode': true});
+      } else if ((uom !== undefined && uom !== null && uom.value !== null && uom.value !== '')
+      && (velocity === null || velocity.value === null || velocity.value === '')) {
+        control.get('exitGasVelocity').setErrors({'invalidExitGasVelocity': true});
+      } else if ((velocity === null || velocity.value === null || velocity.value === '')
+      && (uom === undefined || uom === null || uom.value === null || uom.value !== '')) {
+        control.get('exitGasVelocity').setErrors(null);
+        control.get('exitGasVelocityUomCode').setErrors(null);
+        return null;
+      }
+      return null;
+    };
+  }
+
   // Calculated exit gas velocity range check
   exitVelocityCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
@@ -360,8 +389,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         let minVelocity = 0.001; // fps
         let maxVelocity = 1500; // fps
 
-        if ((velocity.value === null || velocity.value === 0 || velocity.value === '')
-        && (diameter !== null && diameter.value > 0)
+        if ((diameter !== null && diameter.value > 0)
         && (flowRate !== null && flowRate.value > 0)) {
           const computedArea = ((Math.PI)*(Math.pow((diameter.value/2.0), 2)));
 
@@ -394,7 +422,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const flowRate = control.get('exitGasFlowRate');
       const velocity = control.get('exitGasVelocity');
 
-      if (this.releaseType !== this.fugitiveType) {
+      if (control.get('typeCode').value !== null && control.get('typeCode').value.description !== this.fugitiveType) {
         if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
           return { invalidVelocity: true };
         }
@@ -411,10 +439,51 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
       if (this.releaseType !== this.fugitiveType) {
         if ((diameter !== null && height !== null) && (diameter.value > 0 && height.value > 0)) {
-          this.stackDiameterWarning = (Number(height.value) <= Number(diameter.value)) ? { invalidDiameter: {diameter} } : null;
+          this.diameterCheckHeightWarning = (Number(height.value) <= Number(diameter.value)) ? { diameterCheckHeight: true } : null;
         }
         return null;
       }
+    };
+  }
+
+  // Stack Diameter information is reported, Exit Gas Flow Rate and Velocity should be reported
+  stackDiameterCheckForVelAndFlow(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const diameter = control.get('stackDiameter');
+      const exitVelocity = control.get('exitGasVelocity');
+      const exitFlowRate = control.get('exitGasFlowRate');
+
+      if (this.releaseType !== this.fugitiveType) {
+        if ((diameter !== null && diameter.value !== null && diameter.value !== '') &&
+          ((exitVelocity === null || exitVelocity.value === null || exitVelocity.value === '')
+        || (exitFlowRate === null || exitFlowRate.value === null || exitFlowRate.value === ''))
+        ) {
+          this.diameterCheckFlowAndVelWarning = { diameterCheckFlowAndVel: true };
+        } else {
+          this.diameterCheckFlowAndVelWarning = null;
+        }
+      }
+      return null;
+    };
+  }
+
+  // Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
+  stackVelAndFlowCheckForDiameter(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const diameter = control.get('stackDiameter');
+      const exitVelocity = control.get('exitGasVelocity');
+      const exitFlowRate = control.get('exitGasFlowRate');
+
+      if (this.releaseType !== this.fugitiveType) {
+        if ((exitVelocity !== null && exitVelocity.value !== null)
+        && (exitFlowRate !== null && exitFlowRate.value !== null)
+        && (diameter === null || diameter.value === null || diameter.value === '')) {
+          this.velAndFlowCheckDiameterWarning = { velAndFlowCheckDiameter: true };
+        } else {
+          this.velAndFlowCheckDiameterWarning = null;
+        }
+      }
+      return null;
     };
   }
 
@@ -490,21 +559,41 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           this.tolerance = this.coordinateTolerance.coordinateTolerance;
         }
 
-        longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance)*1000000)/1000000);
-        longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance)*1000000)/1000000);
-        latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance)*1000000)/1000000);
-        latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance)*1000000)/1000000);
+        if (rpLong !== null && rpLong.value !== null && rpLong.value !== '') {
+          longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance)*1000000)/1000000);
+          longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance)*1000000)/1000000);
 
-        if ((rpLong !== null && rpLong.value !== null) && ((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
-          control.get('longitude').markAsTouched();
-          control.get('longitude').setErrors({'invalidLongitude': true});
+          if (((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
+            control.get('longitude').markAsTouched();
+            control.get('longitude').setErrors({'invalidLongitude': true});
+          }
         }
-        if ((rpLat !== null && rpLat.value !== null) && ((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
-          control.get('latitude').markAsTouched();
-          control.get('latitude').setErrors({'invalidLatitude': true});
+
+        if (rpLat !== null && rpLat.value !== null && rpLat.value !== '') {
+          latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance)*1000000)/1000000);
+          latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance)*1000000)/1000000);
+
+          if (((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
+            control.get('latitude').markAsTouched();
+            control.get('latitude').setErrors({'invalidLatitude': true});
+          }
         }
       });
       return null;
     };
+  }
+
+  // if facility operation status is TS or PS, release point cannot be OP
+  facilitySiteStatusCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if ((control.get('operatingStatusCode').value !== null)
+      && (control.get('operatingStatusCode').value.code === 'OP')
+      && (this.facilityOpCode !== undefined)) {
+          if (this.facilityOpCode !== null && (this.facilityOpCode.code === 'TS' || this.facilityOpCode.code === 'PS')) {
+            return { invalidStatusCode: true };
+          }
+      }
+      return null;
+    }
   }
 }

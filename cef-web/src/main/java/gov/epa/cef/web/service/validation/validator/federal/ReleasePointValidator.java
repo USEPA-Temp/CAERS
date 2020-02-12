@@ -122,14 +122,13 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        	
 	        	result = false;
 	        	context.addFederalWarning(
-	        			ValidationField.RP_STACK.value(),
-	        			"releasePoint.stack.diameterCheck",
+	        			ValidationField.RP_STACK_WARNING.value(),
+	        			"releasePoint.stackWarning.diameterCheck.height",
 	        			createValidationDetails(releasePoint));
 	        }
 	        
 	        // Check exit gas velocity if exit gas flow rate and stack diameter is submitted.
-	        if ((releasePoint.getExitGasVelocity() == null || releasePoint.getExitGasVelocity() == 0)
-	        	&& (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
+	        if ((releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
 	        	&& (releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)) {
 	        	
 	        	BigDecimal minVelocity = new BigDecimal(0.001);
@@ -202,6 +201,27 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        				uom);
 	        	}
         	}
+	        
+	        // Stack Diameter information is reported, Exit Gas Flow Rate and Velocity should be reported
+	        if ((releasePoint.getStackDiameter() != null && releasePoint.getExitGasVelocity() == null)
+	        	|| (releasePoint.getStackDiameter() != null && releasePoint.getExitGasFlowRate() == null)) {
+	        	
+	        	result = false;
+	        	context.addFederalWarning(
+	        			ValidationField.RP_STACK_WARNING.value(),
+	        			"releasePoint.stackWarning.diameterCheck.forFlowAndVelocity",
+	        			createValidationDetails(releasePoint));
+	        }
+	        
+	        // Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
+	        if (releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasFlowRate() != null && releasePoint.getStackDiameter() == null) {
+	        	
+	        	result = false;
+	        	context.addFederalWarning(
+	        			ValidationField.RP_STACK_WARNING.value(),
+	        			"releasePoint.stackWarning.diameterCheck.forDiameter",
+	        			createValidationDetails(releasePoint));
+	        }
         }
         
         // FUGITIVE RELEASE POINT CHECKS
@@ -266,6 +286,35 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         }
         
         // CHECKS FOR ALL RELEASE POINT TYPES
+        // If facility operation status is Temporarily Shutdown or Permanently Shutdown, release point cannot be operating
+        if (("TS".contentEquals(releasePoint.getFacilitySite().getOperatingStatusCode().getCode())
+    		|| "PS".contentEquals(releasePoint.getFacilitySite().getOperatingStatusCode().getCode()))
+    		&& "OP".contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
+ 	
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.facilitySiteCondition",
+        			createValidationDetails(releasePoint));
+        }
+        
+        // If release point operation status is not operating, status year is required
+        if (!"OP".contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
+ 	
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.required",
+        			createValidationDetails(releasePoint));
+        }
+        
+        // Status year must be between 1900 and 2050
+        if (releasePoint.getStatusYear() != null && (releasePoint.getStatusYear() < 1900 || releasePoint.getStatusYear() > 2050)) {
+        	
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_STATUS_YEAR.value(), "releasePoint.statusYear.range",
+        			createValidationDetails(releasePoint));
+        }
+        
         if ((releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowUomCode() == null) ||
           	(releasePoint.getExitGasFlowRate() == null && releasePoint.getExitGasFlowUomCode() != null)) {
          
