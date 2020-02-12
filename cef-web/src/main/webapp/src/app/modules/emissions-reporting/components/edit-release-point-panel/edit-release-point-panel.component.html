@@ -41,6 +41,16 @@
             <app-validation-message [control]="releasePointForm.get('fenceLineDistance')"></app-validation-message>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-10">
+            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidStatusCode">
+                A facility site with operating status of "Temporarily Shutdown" or "Permanently Shutdown" may not have a status of "Operating".
+            </div>
+            <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.invalidLatitude">
+                Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude coordinate {{facilitySite.latitude}}.
+            </div>
+        </div> 
+    </div>
 
     <div class="row pb-1">
         <label for="statusYear" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Year:</strong></label>
@@ -63,9 +73,6 @@
     </div>
     <div class="row">
         <div class="col-sm-6 col-md-10">
-            <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.invalidLatitude">
-                Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude coordinate {{facilitySite.latitude}}.
-            </div>
             <div class="validation-message" *ngIf="releasePointForm.get('longitude').errors?.invalidLongitude">
                 Release Point longitude must within the {{tolerance}} tolerance range of Facility longitude coordinate {{facilitySite.longitude}}.
             </div>
@@ -73,15 +80,21 @@
     </div>
 
     <div class="row pb-1">
-        <label for="exitGasVelocity" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity Measure:</strong></label>
+        <label for="exitGasVelocity" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Velocity Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="exitGasVelocity" formControlName="exitGasVelocity" (ngModelChange)="setVelocityUomValidation()" maxlength="9">
+            <input type="text" class="form-control" id="exitGasVelocity" formControlName="exitGasVelocity" maxlength="9">
             <app-validation-message [control]="releasePointForm.get('exitGasVelocity')"></app-validation-message>
+            <div class="validation-message" *ngIf="releasePointForm.get('exitGasVelocity').errors?.invalidExitGasVelocity">
+                This field is required.
+            </div>
         </div>
         <label for="exitGasFlowRate" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Flow Rate Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="exitGasFlowRate" formControlName="exitGasFlowRate" (ngModelChange)="setGasFlowUomValidation()" maxlength="17">
+            <input type="text" class="form-control" id="exitGasFlowRate" formControlName="exitGasFlowRate" maxlength="17">
             <app-validation-message [control]="releasePointForm.get('exitGasFlowRate')"></app-validation-message>
+            <div class="validation-message" *ngIf="releasePointForm.get('exitGasFlowRate').errors?.invalidExitGasFlowRate">
+                This field is required.
+            </div>
         </div>
     </div>
     <div class="row">
@@ -99,19 +112,27 @@
     </div>
 
     <div class="row pb-1">
-        <label for="exitGasVelocityUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Gas Velocity UoM:</strong></label>
+        <label for="exitGasVelocityUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Velocity UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" formControlName="exitGasVelocityUomCode" (ngModelChange)="setGasVelocityRangeValidation()" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of velocityUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('exitGasVelocityUomCode')"></app-validation-message>
+            <div class="validation-message" *ngIf="releasePointForm.get('exitGasVelocityUomCode').errors?.invalidExitGasVelocityUomCode">
+                This field is required.
+            </div>
         </div>
         <label for="exitGasFlowUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Flow Rate UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="exitGasFlowUomCodeSelect" formControlName="exitGasFlowUomCode" (ngModelChange)="setGasFlowRangeValidation()" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of flowUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('exitGasFlowUomCode')"></app-validation-message>
+            <div class="validation-message" *ngIf="releasePointForm.get('exitGasFlowUomCode').errors?.invalidExitGasFlowUomCode">
+                This field is required.
+            </div>
         </div>
     </div>
 
@@ -126,9 +147,6 @@
             <div class="col-sm-6 col-md-2">
                 <input type="text" class="form-control" id="stackDiameter" formControlName="stackDiameter" maxlength="7">
                 <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
-                <div class="validation-warning" *ngIf="stackDiameterWarning?.invalidDiameter">
-                    Warning: Stack diameter should be less than stack height.
-                </div>
             </div>
             <label for="exitGasTemperature" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Temperature Measure (F):</strong></label>
             <div class="col-sm-6 col-md-2">
@@ -136,7 +154,19 @@
                 <app-validation-message [control]="releasePointForm.get('exitGasTemperature')"></app-validation-message>
             </div>
         </div>
-
+        <div class="row">
+            <div class="col-sm-6 col-md-10">
+                <div class="validation-warning" *ngIf="diameterCheckHeightWarning?.diameterCheckHeight">
+                    Warning: Stack diameter should be less than stack height.
+                </div>
+                <div class="validation-warning" *ngIf="diameterCheckFlowAndVelWarning?.diameterCheckFlowAndVel">
+                    Warning: If a Stack Diameter information is reported, the Release Point Exit Gas Flow Rate and Velocity should be reported as well.
+                </div>
+                <div class="validation-warning" *ngIf="velAndFlowCheckDiameterWarning?.velAndFlowCheckDiameter">
+                    Warning: If Exit Gas Flow Rate and Velocity information is reported, a Release Point Stack Diameter should be reported as well.
+                </div>
+            </div>
+        </div>
         <div class="row pb-1">
             <label for="stackHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
