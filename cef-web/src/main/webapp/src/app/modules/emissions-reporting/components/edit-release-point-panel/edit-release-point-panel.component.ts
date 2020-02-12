@@ -339,14 +339,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const flowRate = control.get('exitGasFlowRate');
       const uom = control.get('exitGasFlowUomCode');
 
-      if ((flowRate !== null && flowRate.value !== null && flowRate.value !== '')
-      && (uom === undefined || uom === null || uom.value === null)) {
+      if ((flowRate.value !== null && flowRate.value !== '') && (uom === undefined || uom.value === null)) {
         control.get('exitGasFlowUomCode').setErrors({'invalidExitGasFlowUomCode': true});
-      } else if ((uom !== undefined && uom !== null && uom.value !== null && uom.value !== '')
-      && (flowRate === null || flowRate.value === null || flowRate.value === '')) {
+      } else if ((uom !== undefined && uom.value !== null && uom.value !== '') && (flowRate.value === null || flowRate.value === '')) {
         control.get('exitGasFlowRate').setErrors({'invalidExitGasFlowRate': true});
-      } else if ((flowRate === null || flowRate.value === null || flowRate.value === '')
-      && (uom === undefined || uom === null || uom.value === null || uom.value !== '')) {
+      } else if ((flowRate.value === null || flowRate.value === '') && (uom === undefined || uom.value === null || uom.value !== '')) {
         control.get('exitGasFlowRate').setErrors(null);
         control.get('exitGasFlowUomCode').setErrors(null);
         return null;
@@ -361,20 +358,17 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const velocity = control.get('exitGasVelocity');
       const uom = control.get('exitGasVelocityUomCode');
 
-      if ((velocity !== null && velocity.value !== null && velocity.value !== '')
-      && (uom === undefined || uom === null || uom.value === null)) {
-        control.get('exitGasVelocityUomCode').setErrors({'invalidExitGasVelocityUomCode': true});
-      } else if ((uom !== undefined && uom !== null && uom.value !== null && uom.value !== '')
-      && (velocity === null || velocity.value === null || velocity.value === '')) {
-        control.get('exitGasVelocity').setErrors({'invalidExitGasVelocity': true});
-      } else if ((velocity === null || velocity.value === null || velocity.value === '')
-      && (uom === undefined || uom === null || uom.value === null || uom.value !== '')) {
-        control.get('exitGasVelocity').setErrors(null);
-        control.get('exitGasVelocityUomCode').setErrors(null);
+      if ((velocity.value !== null && velocity.value !== '') && (uom === undefined || uom.value === null )) {
+          control.get('exitGasVelocityUomCode').setErrors({'invalidExitGasVelocityUomCode': true});
+        } else if ((uom !== undefined && uom.value !== null && uom.value !== '') && (velocity.value === null || velocity.value === '')) {
+          control.get('exitGasVelocity').setErrors({'invalidExitGasVelocity': true});
+        } else if ((velocity.value === null || velocity.value === '') && (uom === undefined || uom.value === null || uom.value !== '')) {
+          control.get('exitGasVelocity').setErrors(null);
+          control.get('exitGasVelocityUomCode').setErrors(null);
+          return null;
+        }
         return null;
-      }
-      return null;
-    };
+      };
   }
 
   // Calculated exit gas velocity range check
