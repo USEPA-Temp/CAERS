@@ -433,7 +433,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
       if (this.releaseType !== this.fugitiveType) {
         if ((diameter !== null && height !== null) && (diameter.value > 0 && height.value > 0)) {
-          this.diameterCheckHeightWarning = (Number(height.value) <= Number(diameter.value)) ? { diameterCheckHeight: true } : null;
+          if (Number(height.value) <= Number(diameter.value)) {
+            this.diameterCheckHeightWarning = 'Warning: Stack diameter should be less than stack height.';
+          } else {
+            this.diameterCheckHeightWarning = null;
+          }
         }
         return null;
       }
@@ -452,7 +456,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           ((exitVelocity === null || exitVelocity.value === null || exitVelocity.value === '')
         || (exitFlowRate === null || exitFlowRate.value === null || exitFlowRate.value === ''))
         ) {
-          this.diameterCheckFlowAndVelWarning = { diameterCheckFlowAndVel: true };
+          this.diameterCheckFlowAndVelWarning = 'Warning: If a Stack Diameter information is reported, the Release Point Exit Gas Flow Rate and Velocity should be reported as well.';
         } else {
           this.diameterCheckFlowAndVelWarning = null;
         }
@@ -472,7 +476,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         if ((exitVelocity !== null && exitVelocity.value !== null)
         && (exitFlowRate !== null && exitFlowRate.value !== null)
         && (diameter === null || diameter.value === null || diameter.value === '')) {
-          this.velAndFlowCheckDiameterWarning = { velAndFlowCheckDiameter: true };
+          this.velAndFlowCheckDiameterWarning = 'Warning: If Exit Gas Flow Rate and Velocity information is reported, a Release Point Stack Diameter should be reported as well.';
         } else {
           this.velAndFlowCheckDiameterWarning = null;
         }
