@@ -1,39 +1,97 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 
-public class FacilitySiteBulkUploadDto implements IWorksheetAware, Serializable {
+public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Facility Site ID is required.")
     private Long id;
+
+    @Size(max = 22, message = "FRS Facility ID can not exceed {max} chars; found '${validatedValue}'.")
     private String frsFacilityId;
+
+    @Size(max = 30, message = "Alternate Site Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String altSiteIdentifier;
+
+    @Size(max = 20, message = "Category Code can not exceed {max} chars; found '${validatedValue}'.")
     private String facilityCategoryCode;
+
+    @Size(max = 20, message = "Source Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String facilitySourceTypeCode;
+
+    @NotBlank(message = "Facility Name is required.")
+    @Size(max = 80, message = "Facility Name can not exceed {max} chars; found '${validatedValue}'.")
     private String name;
+
+    @Size(max = 100, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
+
+    @NotBlank(message = "Operating Status Code is required.")
+    @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
+
     private Short statusYear;
+
+    @Size(max = 20, message = "Program System Code can not exceed {max} chars; found '${validatedValue}'.")
     private String programSystemCode;
+
+    @NotBlank(message = "Street Address is required.")
+    @Size(max = 100, message = "Street Address can not exceed {max} chars; found '${validatedValue}'.")
     private String streetAddress;
+
+    @Size(max = 60, message = "City can not exceed {max} chars; found '${validatedValue}'.")
     private String city;
+
+    @Size(max = 43, message = "County can not exceed {max} chars; found '${validatedValue}'.")
     private String county;
+
+    @Size(max = 5, message = "State Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stateCode;
+
+    @Size(max = 10, message = "Country Code can not exceed {max} chars; found '${validatedValue}'.")
     private String countryCode;
+
+    @Size(max = 10, message = "Postal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String postalCode;
+
     private BigDecimal latitude;
     private BigDecimal longitude;
+
+    @Size(max = 100, message = "Mailing Street Address can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingStreetAddress;
+
+    @Size(max = 60, message = "Mailing City can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingCity;
+
+    @Size(max = 5, message = "Mailing State Code can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingStateCode;
+
+    @Size(max = 10, message = "Mailing Postal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingPostalCode;
+
+    @Size(max = 10, message = "Mailing Country Code can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingCountryCode;
+
+    @Size(max = 22, message = "EIS Program ID can not exceed {max} chars; found '${validatedValue}'.")
     private String eisProgramId;
+
+    @Size(max = 20, message = "Tribal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String tribalCode;
+
+    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
+    public FacilitySiteBulkUploadDto() {
+
+        super(WorksheetName.FacilitySite);
+    }
 
     public Long getId() {
         return id;

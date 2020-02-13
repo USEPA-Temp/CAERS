@@ -1,15 +1,32 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class ControlPathBulkUploadDto implements IWorksheetAware, Serializable {
+public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Control Path ID is required.")
     private Long id;
+
+    @NotNull(message = "Facility Site ID is required.")
     private Long facilitySiteId;
+
+    @NotBlank(message = "Description is required.")
+    @Size(max = 200, message = "Description can not exceed {max} chars; found ${validatedValue}.")
     private String description;
+
+    @NotBlank(message = "Path ID is required.")
+    @Size(max = 20, message = "Path ID can not exceed {max} chars; found ${validatedValue}.")
     private String pathId;
+
+    public ControlPathBulkUploadDto() {
+
+        super(WorksheetName.ControlPath);
+    }
 
     public Long getId() {
         return id;

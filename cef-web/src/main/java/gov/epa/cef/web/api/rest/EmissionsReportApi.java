@@ -1,8 +1,13 @@
 package gov.epa.cef.web.api.rest;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.exception.BulkReportValidationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
@@ -21,11 +26,11 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +46,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
@@ -61,13 +65,16 @@ public class EmissionsReportApi {
 
     private final SecurityService securityService;
 
+    private final ObjectMapper objectMapper;
+
     @Autowired
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
                        EmissionsReportStatusService emissionsReportStatusService,
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
-                       BulkUploadService uploadService) {
+                       BulkUploadService uploadService,
+                       ObjectMapper objectMapper) {
 
         this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
@@ -75,6 +82,8 @@ public class EmissionsReportApi {
         this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
+
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -108,7 +117,7 @@ public class EmissionsReportApi {
             LOGGER.debug("Workbook filename {}", tempFile.getFileName());
             LOGGER.debug("ReportDto {}", reportDto);
 
-            result = this.uploadService.uploadBulkReport(reportDto, tempFile);
+            result = this.uploadService.saveBulkWorkbook(reportDto, tempFile);
 
             status = HttpStatus.OK;
 
@@ -279,9 +288,7 @@ public class EmissionsReportApi {
         ValidationResult result =
             this.validationService.validateAndUpdateStatus(entityRefDto.getId());
 
-        return ResponseEntity.ok()
-            .cacheControl(CacheControl.noCache().sMaxAge(0, TimeUnit.SECONDS).mustRevalidate())
-            .body(result);
+        return ResponseEntity.ok().body(result);
     }
 
 
@@ -351,7 +358,7 @@ public class EmissionsReportApi {
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
         EmissionsReportDto savedReport = uploadService.saveBulkEmissionsReport(reportUpload);
         this.reportService.createReportHistory(savedReport.getId(), ReportAction.CREATED);
-        return new ResponseEntity<EmissionsReportDto>(savedReport, HttpStatus.OK);
+        return new ResponseEntity<>(savedReport, HttpStatus.OK);
     }
 
     /**
@@ -367,6 +374,17 @@ public class EmissionsReportApi {
             uploadService.generateBulkUploadDto(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = BulkReportValidationException.class)
+    public ResponseEntity<JsonNode> bulkUploadValidationError(BulkReportValidationException exception) {
+
+        ObjectNode objectNode = this.objectMapper.createObjectNode();
+        objectNode.put("failed", true);
+        ArrayNode arrayNode = objectNode.putArray("errors");
+        exception.getErrors().forEach(error -> arrayNode.add(error));
+
+        return ResponseEntity.badRequest().body(objectNode);
     }
 
     static class ReviewDTO {

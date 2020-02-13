@@ -13,7 +13,7 @@ public interface BulkUploadService {
      * @param workbook
      * @return
      */
-    EmissionsReportDto uploadBulkReport(EmissionsReportStarterDto metadata, TempFile workbook);
+    EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook);
 
     /**
      * Save the emissions report to the database.

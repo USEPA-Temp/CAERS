@@ -23,6 +23,9 @@ import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.exception.BulkReportValidationException;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
@@ -160,6 +163,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private BulkUploadMapper uploadMapper;
+
+    @Autowired
+    private BulkReportValidator validator;
 
     /**
      * Testing method for generating upload JSON for a report
@@ -460,7 +466,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         return this.emissionsReportService.saveEmissionReport(emissionsReport);
     }
 
-    public EmissionsReportDto uploadBulkReport(EmissionsReportStarterDto metadata, TempFile workbook) {
+    public EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook) {
 
         EmissionsReportDto result = null;
 
@@ -475,33 +481,23 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         if (response.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-            try {
+            logger.debug("ExcelJsonParser Result {}", response.getJson().toString());
 
-                logger.debug("ExcelJsonParser Result {}", response.getJson().toString());
+            EmissionsReportBulkUploadDto bulkEmissionsReport = parseWorkbookJson(response, metadata);
 
-                EmissionsReportBulkUploadDto bulkEmissionsReport = this.objectMapper.copy()
-                    .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                    .treeToValue(response.getJson(), EmissionsReportBulkUploadDto.class);
+            this.validator.validate(bulkEmissionsReport);
 
-                bulkEmissionsReport.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
-                bulkEmissionsReport.setEisProgramId(metadata.getEisProgramId());
-                bulkEmissionsReport.setFrsFacilityId(metadata.getFrsFacilityId());
-                bulkEmissionsReport.setYear(metadata.getYear());
-                bulkEmissionsReport.setStatus(ReportStatus.IN_PROGRESS.name());
-                bulkEmissionsReport.setValidationStatus(ValidationStatus.UNVALIDATED.name());
-
-                result = saveBulkEmissionsReport(bulkEmissionsReport);
-
-            } catch (JsonProcessingException e) {
-
-                // not happy path
-                throw new IllegalStateException(e);
-            }
+            result = saveBulkEmissionsReport(bulkEmissionsReport);
 
         } else {
 
-            // not happy path
-            throw new IllegalArgumentException("what does the fox say?");
+            List<String> errors = new ArrayList<>();
+            errors.add("Unable to read workbook.");
+            if (response.getJson() != null && response.getJson().hasNonNull("message")) {
+                errors.add(response.getJson().path("message").asText());
+            }
+
+            throw new BulkReportValidationException(errors);
         }
 
         return result;
@@ -521,7 +517,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 MassUomConversion.TON);
             return calculatedEmissionsTons;
         } catch (IllegalArgumentException ex) {
-            logger.debug("Could not perform emission conversion. " + ex.getLocalizedMessage());
+            logger.debug("Could not perform emission conversion. {}", ex.getLocalizedMessage());
             return null;
         }
     }
@@ -884,4 +880,29 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         return result;
     }
 
+    private EmissionsReportBulkUploadDto parseWorkbookJson(ExcelParserResponse response,
+                                                           EmissionsReportStarterDto metadata) {
+
+        EmissionsReportBulkUploadDto result = null;
+
+        try {
+            result = this.objectMapper.copy()
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .treeToValue(response.getJson(), EmissionsReportBulkUploadDto.class);
+
+            result.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
+            result.setEisProgramId(metadata.getEisProgramId());
+            result.setFrsFacilityId(metadata.getFrsFacilityId());
+            result.setYear(metadata.getYear());
+            result.setStatus(ReportStatus.IN_PROGRESS.name());
+            result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
+
+        } catch (JsonProcessingException e) {
+
+            throw new ApplicationException(
+                ApplicationErrorCode.E_INVALID_ARGUMENT, "Unable to process Excel JSON Parser response.", e);
+        }
+
+        return result;
+    }
 }

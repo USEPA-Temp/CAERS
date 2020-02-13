@@ -1,26 +1,61 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class EmissionBulkUploadDto implements IWorksheetAware, Serializable {
+public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Emission ID is required.")
     private Long id;
+
+    @NotNull(message = "Report Period is required.")
     private Long reportingPeriodId;
+
+    @NotBlank(message = "Pollutant Code is required.")
+    @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
+
     private BigDecimal overallControlPercent;
+
+    @NotNull(message = "Total Emissions is required.")
     private BigDecimal totalEmissions;
+
+    @NotBlank(message = "Emissions UoM Code is required.")
+    @Size(max = 20, message = "Emissions UoM Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsUomCode;
+
     private BigDecimal emissionsFactor;
+
+    @Size(max = 100, message = "Emissions Factor Formula can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsFactorFormula;
+
+    @Size(max = 100, message = "Emissions Factor Text can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsFactorText;
+
+    @NotBlank(message = "Emissions UoM Code is required.")
+    @Size(max = 20, message = "Emissions UoM Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsCalcMethodCode;
+
+    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
+    @Size(max = 20, message = "Emissions Numerator UoM Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsNumeratorUom;
+
+    @Size(max = 20, message = "Emissions Denominator UoM Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsDenominatorUom;
+
     private BigDecimal calculatedEmissionsTons;
+
+    public EmissionBulkUploadDto() {
+
+        super(WorksheetName.Emission);
+    }
 
     public Long getId() {
         return id;
