@@ -57,7 +57,7 @@ export class EmissionDetailsComponent implements OnInit {
   emissionForm = this.fb.group({
     pollutant: [null, Validators.required],
     formulaIndicator: [false, Validators.required],
-    emissionsFactor: ['', [Validators.required, Validators.min(0)]],
+    emissionsFactor: ['', [Validators.required]],
     emissionsFactorFormula: [''],
     emissionsFactorText: ['', [Validators.required, Validators.maxLength(100)]],
     emissionsNumeratorUom: [null, Validators.required],
@@ -70,7 +70,12 @@ export class EmissionDetailsComponent implements OnInit {
     comments: ['', [Validators.maxLength(400)]],
     calculationComment: ['', [Validators.required, Validators.maxLength(4000)]],
     formulaVariables: this.fb.group({}),
-  }, { validators: this.emissionsCalculatedValidator() });
+  }, { validators: [
+    this.emissionsCalculatedValidator(), 
+    this.emissionFactorGreaterThanZeroValidator
+    ]
+  });
+
 
   methodValues: CalculationMethodCode[];
   pollutantValues: Pollutant[];
@@ -557,9 +562,18 @@ export class EmissionDetailsComponent implements OnInit {
       if (efControl.enabled && !control.get('totalManualEntry').value) {
         return this.needsCalculation ? {emissionsCalculated: true} : null;
       }
-
       return null;
     };
   }
+
+  emissionFactorGreaterThanZeroValidator(formGroup): any {
+    const emissionFactor = formGroup.controls.emissionsFactor.value;
+    if (emissionFactor <= 0) {
+      return {efFactorLessThanOrEqualToZero: true};
+    } else {
+      return null;
+    }
+  }
+
 
 }

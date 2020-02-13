@@ -181,6 +181,28 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_NUM_UOM.value()) && errorMap.get(ValidationField.EMISSION_NUM_UOM.value()).size() == 1);
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_DENOM_UOM.value()) && errorMap.get(ValidationField.EMISSION_DENOM_UOM.value()).size() == 1);
     }
+    
+    /**
+     * There should be one error when Emissions Factor is less than or equal to zero and the Numerator and Denominator are non-null
+     */
+    @Test
+    public void equalToOrLessThanZeroEmissionsFactor_FailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(true);
+        testData.setEmissionsFactor(BigDecimal.valueOf(0));
+        testData.setEmissionsDenominatorUom(new UnitMeasureCode());
+        testData.setEmissionsNumeratorUom(new UnitMeasureCode());
+        testData.setEmissionsUomCode(new UnitMeasureCode());
+        testData.setEmissionsCalcMethodCode(new CalculationMethodCode());
+        testData.getEmissionsCalcMethodCode().setTotalDirectEntry(false);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF.value()) && errorMap.get(ValidationField.EMISSION_EF.value()).size() == 1);
+    }
 
     /**
      * There should be two errors when Emissions Factor is non-null and Numerator and Denominator UoM are null
