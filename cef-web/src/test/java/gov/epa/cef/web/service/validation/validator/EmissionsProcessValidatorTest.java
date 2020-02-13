@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
@@ -26,6 +25,7 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
+import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -121,6 +121,50 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_INFO_SCC.value()) && errorMap.get(ValidationField.PROCESS_INFO_SCC.value()).size() == 1);
     }
+    
+    @Test
+    public void processHasReleasePointFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        testData.setReleasePointAppts(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP.value()) && errorMap.get(ValidationField.PROCESS_RP.value()).size() == 1);
+    }
+    
+    @Test
+    public void processHasReleasePointPassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void processHasReleasePointDuplicateFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        ReleasePoint rp2 = new ReleasePoint();
+        rp2.setId(2L);
+        ReleasePointAppt rpa3 = new ReleasePointAppt();
+        rpa3.setEmissionsProcess(testData);
+        rpa3.setPercent((double) 0);
+        rpa3.setReleasePoint(rp2);
+        testData.getReleasePointAppts().add(rpa3);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP.value()) && errorMap.get(ValidationField.PROCESS_RP.value()).size() == 1);
+    }
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
@@ -141,10 +185,21 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         OperatingStatusCode os = new OperatingStatusCode();
         os.setCode("OP");
         
+        ReleasePoint rp1 = new ReleasePoint();
+        ReleasePoint rp2 = new ReleasePoint();
+        rp1.setId(1L);
+        rp2.setId(2L);
+        
         ReleasePointAppt rpa1 = new ReleasePointAppt();
         ReleasePointAppt rpa2 = new ReleasePointAppt();
+        rpa1.setReleasePoint(rp1);
+        rpa2.setReleasePoint(rp2);
+        rpa1.setEmissionsProcess(result);
+        rpa2.setEmissionsProcess(result);
         rpa1.setPercent((double) 50);
         rpa2.setPercent((double) 50);
+        rpa1.setId(1L);
+        rpa2.setId(2L);
         result.getReleasePointAppts().add(rpa1);
         result.getReleasePointAppts().add(rpa2);
         result.setId(1L);

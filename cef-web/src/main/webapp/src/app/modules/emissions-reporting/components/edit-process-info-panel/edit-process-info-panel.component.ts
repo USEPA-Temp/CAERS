@@ -173,13 +173,16 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
               control.get('sccCode').markAsTouched();
               control.get('sccCode').setErrors({'sccCodeRetired': true});
               this.sccWarning = null;
+            } else if (isValidScc.lastInventoryYear === null) {
+              this.sccWarning = null;
             }
           } else if (result === null) {
             control.get('sccCode').markAsTouched();
             control.get('sccCode').setErrors({'sccCodeInvalid': true});
             this.sccWarning = null;
+          } else {
+            this.sccWarning = null;
           }
-          this.sccWarning = null;
         });
       }
       return null;

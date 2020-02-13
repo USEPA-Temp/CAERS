@@ -84,6 +84,14 @@ public class EmissionValidator extends BaseValidator<Emission> {
         }
 
         if (emission.getEmissionsFactor() != null) {
+        	
+        	if (emission.getEmissionsFactor().compareTo(BigDecimal.ZERO) <= 0) {
+        		valid = false;
+        		context.addFederalError(
+        				ValidationField.EMISSION_EF.value(), 
+        				"emission.emissionsFactor.range",
+        				createValidationDetails(emission));
+        	}
 
             if (emission.getEmissionsNumeratorUom() == null) {
 
@@ -99,7 +107,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         ValidationField.EMISSION_DENOM_UOM.value(),
-                        "emission.emissionsDenominatorUom.required.emissionsFactor", 
+                        "emission.emissionsDenominatorUom.required.emissionsFactor",
                         createValidationDetails(emission));
             }
 

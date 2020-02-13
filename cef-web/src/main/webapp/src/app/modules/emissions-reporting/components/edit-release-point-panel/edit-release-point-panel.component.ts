@@ -473,8 +473,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const exitFlowRate = control.get('exitGasFlowRate');
 
       if (this.releaseType !== this.fugitiveType) {
-        if ((exitVelocity !== null && exitVelocity.value !== null)
-        && (exitFlowRate !== null && exitFlowRate.value !== null)
+        if (((exitVelocity !== null && exitVelocity.value !== null && exitVelocity.value !== '')
+        && (exitFlowRate !== null && exitFlowRate.value !== null && exitFlowRate.value !== ''))
         && (diameter === null || diameter.value === null || diameter.value === '')) {
           this.velAndFlowCheckDiameterWarning = 'Warning: If Exit Gas Flow Rate and Velocity information is reported, a Release Point Stack Diameter should be reported as well.';
         } else {
