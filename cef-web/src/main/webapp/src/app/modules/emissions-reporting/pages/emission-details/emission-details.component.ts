@@ -72,7 +72,7 @@ export class EmissionDetailsComponent implements OnInit {
     formulaVariables: this.fb.group({}),
   }, { validators: [
     this.emissionsCalculatedValidator(), 
-    this.emissionFactorGreatorThanZeroValidator
+    this.emissionFactorGreaterThanZeroValidator
     ]
   });
 
@@ -566,7 +566,7 @@ export class EmissionDetailsComponent implements OnInit {
     };
   }
 
-  emissionFactorGreatorThanZeroValidator(formGroup): any {
+  emissionFactorGreaterThanZeroValidator(formGroup): any {
     const emissionFactor = formGroup.controls.emissionsFactor.value;
     if (emissionFactor <= 0) {
       return {efFactorLessThanOrEqualToZero: true};
