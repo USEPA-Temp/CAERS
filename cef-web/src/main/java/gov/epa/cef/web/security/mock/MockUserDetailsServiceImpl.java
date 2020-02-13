@@ -69,7 +69,7 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
             try {
 
                 logger.info("Using hard coded user for authentication/authorization");
-                RoleType role = AppRole.RoleType.PREPARER;
+                RoleType role = AppRole.RoleType.REVIEWER;
 
                 String userId = "thomas.fesperman";
                 List<GrantedAuthority> roles = this.securityService.createUserRoles(userId, role, USER_ROLE_ID);
