@@ -42,8 +42,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="validation-warning" *ngIf="sccWarning?.sccCodeWarning">
-            Warning: {{processForm.controls?.sccCode?.value}} has a retirement date of {{sccRetirementYear}}. If applicable, you may want to add a more recent code.
+        <div class="validation-warning" *ngIf="sccWarning !== null">
+            {{sccWarning}}
         </div>
         <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeRetired">
             {{processForm.controls?.sccCode?.value}} was retired in {{sccRetirementYear}}. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year.

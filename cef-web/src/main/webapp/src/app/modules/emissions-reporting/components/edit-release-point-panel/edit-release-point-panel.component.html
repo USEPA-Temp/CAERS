@@ -156,14 +156,14 @@
         </div>
         <div class="row">
             <div class="col-sm-6 col-md-10">
-                <div class="validation-warning" *ngIf="diameterCheckHeightWarning?.diameterCheckHeight">
-                    Warning: Stack diameter should be less than stack height.
+                <div class="validation-warning" *ngIf="diameterCheckHeightWarning !== null">
+                    {{diameterCheckHeightWarning}}
                 </div>
-                <div class="validation-warning" *ngIf="diameterCheckFlowAndVelWarning?.diameterCheckFlowAndVel">
-                    Warning: If a Stack Diameter information is reported, the Release Point Exit Gas Flow Rate and Velocity should be reported as well.
+                <div class="validation-warning" *ngIf="diameterCheckFlowAndVelWarning !== null">
+                    {{diameterCheckFlowAndVelWarning}}
                 </div>
-                <div class="validation-warning" *ngIf="velAndFlowCheckDiameterWarning?.velAndFlowCheckDiameter">
-                    Warning: If Exit Gas Flow Rate and Velocity information is reported, a Release Point Stack Diameter should be reported as well.
+                <div class="validation-warning" *ngIf="velAndFlowCheckDiameterWarning !== null">
+                    {{velAndFlowCheckDiameterWarning}}
                 </div>
             </div>
         </div>
