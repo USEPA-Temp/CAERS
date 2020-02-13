@@ -33,10 +33,10 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
     modalWindow.componentInstance.submission = submission;
   }
 
-  downloadReport(reportId: number, facilitySiteId: number, year: number){
+  downloadReport(reportId: number, facilitySiteId: number, year: number, altFacilityId: number){
     this.reportService.retrieveReportDownloadDto(reportId, facilitySiteId)
     .subscribe(reportDownloadDto => {
-      this.reportDownloadService.downloadFile(reportDownloadDto, reportId +'_'+
+      this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityId +'_'+
                 year +'_' + 'Emissions_Report');
     });
   }

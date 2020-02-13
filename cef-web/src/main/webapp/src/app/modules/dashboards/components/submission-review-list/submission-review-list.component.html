@@ -27,7 +27,7 @@
           <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)">Summary</button>
           <button class="btn btn-primary btn-sm mr-1" 
                 [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'summary']">View Report</button>
-          <button class="btn btn-primary btn-sm" (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year)">Download Report</button>
+          <button class="btn btn-primary btn-sm" (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId)">Download Report</button>
         </td>
       </tr>
       </tbody>

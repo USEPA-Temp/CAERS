@@ -115,9 +115,9 @@ export class ReportSummaryComponent implements OnInit {
         });
     }
 
-    downloadReport(emissionsReportId: number, facilitySiteId: number) {
+    downloadReport(emissionsReportId: number, facilitySiteId: number, altFacilityIdentifier: number) {
         this.reportService.retrieveReportDownloadDto(emissionsReportId, facilitySiteId).subscribe(reportDownloadDto => {
-                this.reportDownloadService.downloadFile(reportDownloadDto, this.facilitySite.emissionsReport.id +'_'+
+                this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityIdentifier +'_'+
                 this.facilitySite.emissionsReport.year +'_' + 'Emissions_Report');
         });
     }
