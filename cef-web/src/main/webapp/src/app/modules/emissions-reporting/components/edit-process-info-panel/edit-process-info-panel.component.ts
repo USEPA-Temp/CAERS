@@ -21,7 +21,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() unitIdentifier: string;
   emissionsReportYear: number;
   sccRetirementYear: number;
-  sccWarning: any;
+  sccWarning: string;
   aircraftSCCcheck = false;
 
   processForm = this.fb.group({
@@ -167,16 +167,19 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
           if (isValidScc !== null) {
             if (isValidScc.lastInventoryYear !== null && (isValidScc.lastInventoryYear >= this.emissionsReportYear)) {
               this.sccRetirementYear = isValidScc.lastInventoryYear;
-              this.sccWarning = { sccCodeWarning: true };
+              this.sccWarning = 'Warning: ' + control.get('sccCode').value + ' has a retirement date of ' + this.sccRetirementYear + '. If applicable, you may want to add a more recent code.';
             } else if (isValidScc.lastInventoryYear !== null && (isValidScc.lastInventoryYear < this.emissionsReportYear)) {
               this.sccRetirementYear = isValidScc.lastInventoryYear;
               control.get('sccCode').markAsTouched();
               control.get('sccCode').setErrors({'sccCodeRetired': true});
+              this.sccWarning = null;
             }
           } else if (result === null) {
             control.get('sccCode').markAsTouched();
             control.get('sccCode').setErrors({'sccCodeInvalid': true});
+            this.sccWarning = null;
           }
+          this.sccWarning = null;
         });
       }
       return null;
