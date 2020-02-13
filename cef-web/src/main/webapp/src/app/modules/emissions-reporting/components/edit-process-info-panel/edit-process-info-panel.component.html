@@ -42,7 +42,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="validation-warning" *ngIf="sccWarning !== null">
+        <div class="validation-warning" *ngIf="sccWarning?.length > 0">
             {{sccWarning}}
         </div>
         <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeRetired">

@@ -156,13 +156,13 @@
         </div>
         <div class="row">
             <div class="col-sm-6 col-md-10">
-                <div class="validation-warning" *ngIf="diameterCheckHeightWarning !== null">
+                <div class="validation-warning" *ngIf="diameterCheckHeightWarning?.length > 0">
                     {{diameterCheckHeightWarning}}
                 </div>
-                <div class="validation-warning" *ngIf="diameterCheckFlowAndVelWarning !== null">
+                <div class="validation-warning" *ngIf="diameterCheckFlowAndVelWarning?.length > 0">
                     {{diameterCheckFlowAndVelWarning}}
                 </div>
-                <div class="validation-warning" *ngIf="velAndFlowCheckDiameterWarning !== null">
+                <div class="validation-warning" *ngIf="velAndFlowCheckDiameterWarning?.length > 0">
                     {{velAndFlowCheckDiameterWarning}}
                 </div>
             </div>
