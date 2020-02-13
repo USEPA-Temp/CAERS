@@ -5,6 +5,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { ValidationResult } from 'src/app/shared/models/validation-result';
+import { ControlPath } from 'src/app/shared/models/control-path';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,14 @@ export class SharedService {
   private emitChangeSource = new Subject<any>();
   private emitSubmissionReviewChangeSource = new Subject<any>();
   private emitValidationResultChangeSource = new Subject<ValidationResult>();
-
+  private emitControlsSource = new Subject<ControlPath[]>();
   constructor(private toastr: ToastrService) { }
 
   // Observable string streams
   changeEmitted$ = this.emitChangeSource.asObservable();
   submissionReviewChangeEmitted$ = this.emitSubmissionReviewChangeSource.asObservable();
   validationResultChangeEmitted$ = this.emitValidationResultChangeSource.asObservable();
+  controlsResultChangeEmitted$ = this.emitControlsSource.asObservable();
 
   // Service message commands
   emitChange(change: any) {
@@ -33,6 +35,10 @@ export class SharedService {
 
   emitValidationResultChange(change: ValidationResult) {
     this.emitValidationResultChangeSource.next(change);
+  }
+
+  emitControlsChange(change: ControlPath[]){
+    this.emitControlsSource.next(change);
   }
 
   updateReportStatusAndEmit(route: ActivatedRoute) {
