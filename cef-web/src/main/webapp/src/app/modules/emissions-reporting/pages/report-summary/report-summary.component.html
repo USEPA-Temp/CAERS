@@ -30,7 +30,7 @@
                         Reopen Report
                     </button>
                     <button *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')"
-                        class="btn btn-success btn-md my-3 ml-3" (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id)">
+                        class="btn btn-success btn-md my-3 ml-3" (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
                         Download Report
                     </button>
                 </div>
