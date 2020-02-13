@@ -12,7 +12,11 @@ import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,7 +98,35 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         			isPointSourceSccCode.getLastInventoryYear().toString());
           }
         }
+        
+        Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
+            .filter(rpa -> rpa.getReleasePoint() != null)
+            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
+     
+        // Process must go to at least one release point
+        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
 
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.PROCESS_RP.value(),
+        			"emissionsProcess.releasePointAppts.required",
+        			createValidationDetails(emissionsProcess));
+        }
+        
+        // release point can be used only once per rp appt collection
+        for (List<ReleasePointAppt> rpa: rpaMap.values()) {
+        	
+        	if (rpa.size() > 1) {
+        		
+        		result = false;
+	        	context.addFederalError(
+	        			ValidationField.PROCESS_RP.value(),
+	        			"emissionsProcess.releasePointAppts.duplicate",
+	        			createValidationDetails(emissionsProcess),
+	        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
+	        }
+	      }
+        
         return result;
     }
 
