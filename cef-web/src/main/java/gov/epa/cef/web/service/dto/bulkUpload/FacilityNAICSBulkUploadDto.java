@@ -1,17 +1,30 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class FacilityNAICSBulkUploadDto implements IWorksheetAware, Serializable {
+public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "NAICS ID is required.")
 	private Long id;
+
+    @NotNull(message = "Facility Site ID is required.")
 	private Long facilitySiteId;
+
+    @NotNull(message = "NAICS code is required.")
 	private Integer code;
+
+    @NotNull(message = "Primary Flag is required.")
 	private boolean primaryFlag;
 
-	public Long getId() {
+    public FacilityNAICSBulkUploadDto() {
+
+        super(WorksheetName.FacilityNaics);
+    }
+
+    public Long getId() {
 		return id;
 	}
 

@@ -15,12 +15,12 @@ export class FacilityDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getFacilities();
-    console.log(this);
+    //console.log(this);
   }
 
   getFacilities(): void {
     this.cdxFacilityService.getMyFacilities()
-    .subscribe(facilities => 
+    .subscribe(facilities =>
       this.facilities = facilities.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1)
       );
   }

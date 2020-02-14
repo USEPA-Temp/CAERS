@@ -1,21 +1,50 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ReportingPeriodBulkUploadDto implements IWorksheetAware, Serializable {
+public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Reporting Period ID is required.")
     private Long id;
+
+    @NotNull(message = "Emissions Process ID is required.")
     private Long emissionsProcessId;
+
+    @NotNull(message = "Reporting Period Type Code is required.")
+    @Size(max = 20, message = "Reporting Period Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String reportingPeriodTypeCode;
+
+    @NotNull(message = "Emissions Operating Type Code is required.")
+    @Size(max = 20, message = "Emissions Operating Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsOperatingTypeCode;
+
+    @NotNull(message = "Calculation Parameter Type Code is required.")
+    @Size(max = 20, message = "Calculation Parameter Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationParameterTypeCode;
+
+    @NotNull(message = "Calculation Parameter Value is required.")
     private BigDecimal calculationParameterValue;
+
+    @NotNull(message = "Calculation Parameter Unit of Measure Code is required.")
+    @Size(max = 20, message = "Calculation Parameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationParameterUom;
+
+    @NotNull(message = "Calculation Material Code is required.")
+    @Size(max = 20, message = "Calculation Material Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationMaterialCode;
+
+    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
+    public ReportingPeriodBulkUploadDto() {
+
+        super(WorksheetName.ReportingPeriod);
+    }
 
     public Long getId() {
         return id;

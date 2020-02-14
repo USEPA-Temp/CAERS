@@ -4,6 +4,8 @@ import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
+import { ReportService } from 'src/app/core/services/report.service';
+import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 
 
 @Component({
@@ -16,7 +18,10 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
   @Input() tableData: SubmissionUnderReview[];
   @Input() hideSelectColumn: boolean;
 
-  constructor(public userContext: UserContextService, private modalService: NgbModal) {
+  constructor(public userContext: UserContextService, 
+              private modalService: NgbModal,
+              private reportService: ReportService,
+              private reportDownloadService: ReportDownloadService) {
     super();
   }
 
@@ -28,4 +33,11 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
     modalWindow.componentInstance.submission = submission;
   }
 
+  downloadReport(reportId: number, facilitySiteId: number, year: number, altFacilityId: number){
+    this.reportService.retrieveReportDownloadDto(reportId, facilitySiteId)
+    .subscribe(reportDownloadDto => {
+      this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityId +'_'+
+                year +'_' + 'Emissions_Report');
+    });
+  }
 }

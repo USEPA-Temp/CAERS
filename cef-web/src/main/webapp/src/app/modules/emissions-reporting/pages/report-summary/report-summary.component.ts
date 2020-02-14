@@ -12,6 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
+import { Subject } from 'rxjs';
 
 declare const initCromerrWidget: any;
 
@@ -25,7 +26,9 @@ export class ReportSummaryComponent implements OnInit {
     tableData: ReportSummary[];
     radiationData: ReportSummary[];
     emissionsReportYear: number;
-    showCertify: boolean = false;
+    showCertify = false;
+    cromerrLoaded = false;
+    cromerrLoadedEmitter = new Subject<boolean>();
 
     readOnlyMode = true;
 
@@ -42,6 +45,11 @@ export class ReportSummaryComponent implements OnInit {
         private reportDownloadService: ReportDownloadService) { }
 
     ngOnInit() {
+        this.cromerrLoadedEmitter
+        .subscribe(result => {
+            this.cromerrLoaded = result;
+        });
+
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
             this.readOnlyMode = ReportStatus.APPROVED === data.facilitySite.emissionsReport.status;
 
@@ -56,7 +64,8 @@ export class ReportSummaryComponent implements OnInit {
                             if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
                                 this.showCertify = true;
                                 initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr);
+                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr, 
+                                    this.cromerrLoadedEmitter);
                             }
                         });
                     }
@@ -106,9 +115,9 @@ export class ReportSummaryComponent implements OnInit {
         });
     }
 
-    downloadReport(emissionsReportId: number, facilitySiteId: number) {
+    downloadReport(emissionsReportId: number, facilitySiteId: number, altFacilityIdentifier: number) {
         this.reportService.retrieveReportDownloadDto(emissionsReportId, facilitySiteId).subscribe(reportDownloadDto => {
-                this.reportDownloadService.downloadFile(reportDownloadDto, this.facilitySite.emissionsReport.id +'_'+
+                this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityIdentifier +'_'+
                 this.facilitySite.emissionsReport.year +'_' + 'Emissions_Report');
         });
     }

@@ -74,6 +74,11 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
           this.tableData = processResponse.releasePointAppts;
           this.calcTotalPercent();
         });
+      this.controlPathService.retrieveForEmissionsProcess(this.process.id)
+      .subscribe(controlPaths => {
+          controlPaths = controlPaths.sort((a, b) => (a.pathId > b.pathId) ? 1 : -1);
+          this.sharedService.emitControlsChange(controlPaths);
+      });
     });
   }
 
@@ -100,6 +105,11 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
         .subscribe(processResponse => {
           if (result !== 'dontUpdate') {
             this.sharedService.updateReportStatusAndEmit(this.route);
+            this.controlPathService.retrieveForEmissionsProcess(this.process.id)
+            .subscribe(controlPaths => {
+              controlPaths = controlPaths.sort((a, b) => (a.pathId > b.pathId) ? 1 : -1);
+              this.sharedService.emitControlsChange(controlPaths);
+            });
           }
           this.tableData = processResponse.releasePointAppts;
           this.calcTotalPercent();
@@ -123,6 +133,11 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
             this.sharedService.updateReportStatusAndEmit(this.route);
             this.tableData = processResponse.releasePointAppts;
             this.calcTotalPercent();
+            this.controlPathService.retrieveForEmissionsProcess(this.process.id)
+            .subscribe(controlPaths => {
+              controlPaths = controlPaths.sort((a, b) => (a.pathId > b.pathId) ? 1 : -1);
+              this.sharedService.emitControlsChange(controlPaths);
+            });
           }
         });
     });

@@ -23,6 +23,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 
+import static java.net.HttpURLConnection.HTTP_OK;
+
 @Component
 public class ExcelParserClient {
 
@@ -53,20 +55,20 @@ public class ExcelParserClient {
         profiler.setLogger(logger);
 
         URL url = makeUrl("/parse");
-        HttpURLConnection connection = null;
+        HttpURLConnection http = null;
 
         try {
 
-            connection = (HttpURLConnection) url.openConnection();
+            http = (HttpURLConnection) url.openConnection();
 
             String boundary = UUID.randomUUID().toString();
 
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
+            http.setRequestMethod("POST");
+            http.setDoOutput(true);
 
-            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=".concat(boundary));
+            http.setRequestProperty("Content-Type", "multipart/form-data;boundary=".concat(boundary));
 
-            try (DataOutputStream request = new DataOutputStream(connection.getOutputStream())) {
+            try (DataOutputStream request = new DataOutputStream(http.getOutputStream())) {
 
                 String boundaryBegLine = String.format("--%s\r\n", boundary);
                 String boundaryEndLine = String.format("\r\n--%s--\r\n", boundary);
@@ -86,11 +88,12 @@ public class ExcelParserClient {
                 request.flush();
             }
 
-            responseCode = connection.getResponseCode();
+            responseCode = http.getResponseCode();
 
             logger.debug("Parser returned response code {}", responseCode);
 
-            try (InputStream inputStream = connection.getInputStream()) {
+            try (InputStream inputStream =
+                     responseCode == HTTP_OK ? http.getInputStream() : http.getErrorStream()) {
 
                 result = this.objectMapper.readTree(inputStream);
             }
@@ -103,8 +106,8 @@ public class ExcelParserClient {
 
             profiler.stop().log();
 
-            if (connection != null) {
-                connection.disconnect();
+            if (http != null) {
+                http.disconnect();
             }
         }
 

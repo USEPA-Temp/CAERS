@@ -1,17 +1,16 @@
 /*
  * Custom JS function to load the Cromerr Widget
  */
-function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr){
+function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter){
 
-    var fancyboxJS="/ContentFramework/Cromerr/js/fancybox/jquery.fancybox-1.3.4.js";
-    var fancyboxCSS="/ContentFramework/Cromerr/js/fancybox/jquery.fancybox-1.3.4.css";
+    var fancyboxJS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.js";
+    var fancyboxCSS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.css";
     var jqueryValidate="/ContentFramework/Cromerr/js/jquery.validate.min.js";
-    var jqueryBlockUI="/ContentFramework/Cromerr/js/jquery.blockUI.js";
     var cromerrJS="/ContentFramework/Cromerr/js/serverWidget.js";
     var jqueryJS="assets/js/jquery-1.6.4.min.js";
 
     if(checkIfScriptExists(baseServiceUrl+cromerrJS)){
-        initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr);
+        initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter);
     }else{
         var jqueryScript=loadScript(jqueryJS);
         jqueryScript.onload=function(){
@@ -23,10 +22,9 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
                 document.head.insertBefore(cssLink, this.firstChild);
                 cssLink.href=baseServiceUrl+fancyboxCSS;
                 loadScript(baseServiceUrl+jqueryValidate);
-                loadScript(baseServiceUrl+jqueryBlockUI);
                 var cromerrScript=loadScript(baseServiceUrl+cromerrJS);
                 cromerrScript.onload=function(){
-                    initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr);
+                    initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter);
                 }
                 cromerrScript.setAttribute('id', "cromerrServerSign");
             }
@@ -42,7 +40,7 @@ function loadScript(srciptUrl){
     return script;
 }
 
-function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr){
+function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter){
     $( document ).ready(function() {
         $.cromerrWidget({
             esignButtonId : "certifyAndSubmit",
@@ -77,8 +75,11 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
             error : function(error) {
                 toastr.error('', "There was an error electronically signing your emission report. Please try again.");
                 console.log(error);
+            },
+            cancel: function() {
             }
         });
+        emitter.next(true);
     });
 
 }

@@ -18,6 +18,10 @@ export class ReportBulkUploadComponent implements OnInit {
     facility: CdxFacility;
     selectedFile: File;
 
+    uploadErrors: string[];
+    uploadFailed: boolean;
+
+
     constructor(private emissionsReportingService: EmissionsReportingService,
                 private modalService: NgbModal,
                 public router: Router,
@@ -42,6 +46,8 @@ export class ReportBulkUploadComponent implements OnInit {
 
     onUploadClick() {
 
+        this.uploadFailed = false;
+
         const modalWindow = this.modalService.open(BusyModalComponent, {
             backdrop: 'static',
             size: 'lg'
@@ -53,17 +59,23 @@ export class ReportBulkUploadComponent implements OnInit {
             this.facility.epaRegistryId, this.facility.state, this.selectedFile)
             .subscribe(reportResp => {
 
-                if (reportResp.status === 200) {
+                // 200 - Success
+                modalWindow.dismiss();
 
-                    // 200 OK
+                let newReport = reportResp.body;
 
-                    modalWindow.dismiss();
+                return this.router.navigateByUrl(
+                    `/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
 
-                    let newReport = reportResp.body;
+            }, errorResp => {
 
-                    return this.router.navigateByUrl(
-                        `/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
-                }
+                // we got an error response
+
+                modalWindow.dismiss();
+
+                this.uploadErrors = errorResp.error.errors;
+
+                this.uploadFailed = true;
             });
 
     }

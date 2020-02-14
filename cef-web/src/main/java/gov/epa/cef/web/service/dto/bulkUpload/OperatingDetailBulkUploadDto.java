@@ -1,16 +1,21 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class OperatingDetailBulkUploadDto implements IWorksheetAware, Serializable{
+public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Serializable{
 
     /**
      * default version id
      */
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Operating Detail ID is required.")
     private Long id;
+
+    @NotNull(message = "Reporting Period ID is required.")
     private Long reportingPeriodId;
+
     private Short actualHoursPerPeriod;
     private Double averageHoursPerDay;
     private Double averageDaysPerWeek;
@@ -19,6 +24,11 @@ public class OperatingDetailBulkUploadDto implements IWorksheetAware, Serializab
     private Double percentSpring;
     private Double percentSummer;
     private Double percentFall;
+
+    public OperatingDetailBulkUploadDto() {
+
+        super(WorksheetName.OperatingDetail);
+    }
 
     public Long getId() {
         return id;
