@@ -33,5 +33,5 @@ export class ReleasePoint {
   fugitiveLengthUomCode: BaseCodeLookup;
   fugitiveHeightUomCode: BaseCodeLookup;
   fugitiveWidthUomCode: BaseCodeLookup;
-  fenceLineDistanceUomCode: BaseCodeLookup;
+  fenceLineUomCode: BaseCodeLookup;
 }

@@ -356,12 +356,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
       if ((flowRate.value !== null && flowRate.value !== '') && (uom === undefined || uom.value === null)) {
         control.get('exitGasFlowUomCode').setErrors({'invalidExitGasFlowUomCode': true});
-      } else if ((uom !== undefined && uom.value !== null && uom.value !== '') && (flowRate.value === null || flowRate.value === '')) {
-        control.get('exitGasFlowRate').setErrors({'invalidExitGasFlowRate': true});
-      } else if ((flowRate.value === null || flowRate.value === '') && (uom === undefined || uom.value === null || uom.value !== '')) {
-        control.get('exitGasFlowRate').setErrors(null);
+      } else {
         control.get('exitGasFlowUomCode').setErrors(null);
-        return null;
       }
       return null;
     };
@@ -375,12 +371,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
       if ((velocity.value !== null && velocity.value !== '') && (uom === undefined || uom.value === null )) {
           control.get('exitGasVelocityUomCode').setErrors({'invalidExitGasVelocityUomCode': true});
-        } else if ((uom !== undefined && uom.value !== null && uom.value !== '') && (velocity.value === null || velocity.value === '')) {
-          control.get('exitGasVelocity').setErrors({'invalidExitGasVelocity': true});
-        } else if ((velocity.value === null || velocity.value === '') && (uom === undefined || uom.value === null || uom.value !== '')) {
-          control.get('exitGasVelocity').setErrors(null);
+        } else {
           control.get('exitGasVelocityUomCode').setErrors(null);
-          return null;
         }
         return null;
       };
@@ -449,7 +441,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       if (this.releaseType !== this.fugitiveType) {
         if ((diameter !== null && height !== null) && (diameter.value > 0 && height.value > 0)) {
           if (Number(height.value) <= Number(diameter.value)) {
-            this.diameterCheckHeightWarning = 'Warning: Stack diameter should be less than stack height.';
+            this.diameterCheckHeightWarning = 'Warning: Release point Stack Diameter Measure should be less than the release point Stack Height Measure.';
           } else {
             this.diameterCheckHeightWarning = null;
           }
@@ -471,7 +463,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           ((exitVelocity === null || exitVelocity.value === null || exitVelocity.value === '')
         || (exitFlowRate === null || exitFlowRate.value === null || exitFlowRate.value === ''))
         ) {
-          this.diameterCheckFlowAndVelWarning = 'Warning: If a Stack Diameter information is reported, the Release Point Exit Gas Flow Rate and Velocity should be reported as well.';
+          this.diameterCheckFlowAndVelWarning = 'Warning: If a Stack Diameter information is reported, Exit Gas Flow Rate and Exit Gas Velocity should be reported as well.';
         } else {
           this.diameterCheckFlowAndVelWarning = null;
         }
@@ -491,7 +483,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         if (((exitVelocity !== null && exitVelocity.value !== null && exitVelocity.value !== '')
         && (exitFlowRate !== null && exitFlowRate.value !== null && exitFlowRate.value !== ''))
         && (diameter === null || diameter.value === null || diameter.value === '')) {
-          this.velAndFlowCheckDiameterWarning = 'Warning: If Exit Gas Flow Rate and Velocity information is reported, a Release Point Stack Diameter should be reported as well.';
+          this.velAndFlowCheckDiameterWarning = 'Warning: If Exit Gas Flow Rate and Exit Gas Velocity information is reported, Stack Diameter should be reported as well.';
         } else {
           this.velAndFlowCheckDiameterWarning = null;
         }

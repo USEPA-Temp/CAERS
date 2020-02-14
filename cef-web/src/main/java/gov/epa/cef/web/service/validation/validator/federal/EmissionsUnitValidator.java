@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
@@ -12,6 +13,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -96,6 +99,24 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         			"emissionsUnit.capacity.required",
         			createValidationDetails(emissionsUnit));
         }
+        
+        // Process identifier must be unique within unit
+        Map<Object, List<EmissionsProcess>> epMap = emissionsUnit.getEmissionsProcesses().stream()
+            .filter(ep -> ep.getEmissionsProcessIdentifier() != null)
+            .collect(Collectors.groupingBy(eu -> eu.getEmissionsProcessIdentifier()));
+        
+        for (List<EmissionsProcess> epList : epMap.values()) {
+        	
+        	if (epList.size() > 1) {
+        		
+        		result = false;
+        		context.addFederalError(
+	        			ValidationField.EMISSIONS_UNIT_PROCESS.value(),
+	        			"emissionsUnit.emissionsProcess.duplicate",
+	        			createValidationDetails(emissionsUnit),
+	        			epList.get(0).getEmissionsProcessIdentifier());
+        	}
+      	}
         
         return result;
     }

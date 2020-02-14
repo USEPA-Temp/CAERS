@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
@@ -163,6 +164,26 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_CAPACITY.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_CAPACITY.value()).size() == 1);
     }
     
+    @Test
+    public void duplicateProcessIdentifierFailTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsUnit testData = createBaseEmissionsUnit();
+    	EmissionsProcess ep1 = new EmissionsProcess();
+    	EmissionsProcess ep2 = new EmissionsProcess();
+    	ep1.setEmissionsProcessIdentifier("ABC");
+    	ep2.setEmissionsProcessIdentifier("ABC");
+    	ep1.setEmissionsUnit(testData);
+    	ep2.setEmissionsUnit(testData);
+    	testData.getEmissionsProcesses().add(ep1);
+    	testData.getEmissionsProcesses().add(ep2);
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null || cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_PROCESS.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_PROCESS.value()).size() == 1);
+    }
     
 
     private EmissionsUnit createBaseEmissionsUnit() {
