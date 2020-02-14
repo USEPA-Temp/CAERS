@@ -10,6 +10,7 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
 import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
+import { ReleasePointService } from 'src/app/core/services/release-point.service';
 
 @Component({
   selector: 'app-edit-release-point-panel',
@@ -18,6 +19,7 @@ import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tol
 })
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   @Input() releasePoint: ReleasePoint;
+  releasePointIdentifiers: String[] = [];
   readonly fugitiveType = 'Fugitive';
   facilitySite: FacilitySite;
   releaseType: string;
@@ -153,7 +155,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.stackDiameterCheckForVelAndFlow(),
     this.facilitySiteStatusCheck(),
     this.exitGasFlowUomCheck(),
-    this.exitGasVelocityUomCheck()
+    this.exitGasVelocityUomCheck(),
+    this.releasePointIdentifierCheck()
     ]
   });
 
@@ -168,10 +171,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     private lookupService: LookupService,
     public formUtils: FormUtilsService,
     private route: ActivatedRoute,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private releasePointService: ReleasePointService) { }
 
   ngOnInit() {
-
     this.lookupService.retrieveReleaseTypeCode()
     .subscribe(result => {
       this.releasePointTypeCode = result;
@@ -199,6 +202,18 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.facilitySite = data.facilitySite;
       this.eisProgramId = this.facilitySite.eisProgramId;
       this.facilityOpCode = this.facilitySite.operatingStatusCode;
+      this.releasePointService.retrieveForFacility(data.facilitySite.id)
+      .subscribe(releasePoints => {
+        releasePoints.forEach(rp => {
+          this.releasePointIdentifiers.push(rp.releasePointIdentifier);
+        });
+        
+        //if a release point is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
+        if (this.releasePoint) {
+          this.releasePointIdentifiers = this.releasePointIdentifiers.filter(identifer => identifer.toString() !== this.releasePoint.releasePointIdentifier);
+        }
+
+      });
     });
 
     this.setFormValidation();
@@ -594,4 +609,16 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       return null;
     }
   }
+
+  releasePointIdentifierCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if(this.releasePointIdentifiers){
+        if (this.releasePointIdentifiers.includes(control.get('releasePointIdentifier').value)) {
+          return { duplicateReleasePointIdentifier: true };
+        }
+      }
+      return null;
+    }
+  }
+
 }
