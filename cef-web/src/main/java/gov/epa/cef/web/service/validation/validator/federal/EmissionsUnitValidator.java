@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.collections.CollectionUtils;
 
 import org.springframework.stereotype.Component;
 
@@ -76,6 +77,23 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
           				emissionsUnit.getUnitTypeCode().getDescription());
           	}
           };
+        }
+        
+        if (emissionsUnit.getUnitIdentifier() != null) {
+        	
+            // Emissions Unit identifier must be unique within the facility.
+            Map<Object, List<EmissionsUnit>> euMap = emissionsUnit.getFacilitySite().getEmissionsUnits().stream()
+                    .filter(eu -> ((eu.getUnitIdentifier().equals(emissionsUnit.getUnitIdentifier())) && (eu.getId() !=
+                    emissionsUnit.getId())))
+                    .collect(Collectors.groupingBy(eu -> eu.getUnitIdentifier()));
+            
+            if (!CollectionUtils.sizeIsEmpty(euMap)) {
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.EMISSIONS_UNIT_IDENTIFIER.value(),
+            			"emissionsUnit.unitIdentifier.duplicate",
+            			createValidationDetails(emissionsUnit));
+            }
         }
         
         // Design capacity range
