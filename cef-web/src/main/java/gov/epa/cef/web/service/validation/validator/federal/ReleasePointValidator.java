@@ -437,7 +437,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             	result = false;
             	context.addFederalError(
             			ValidationField.RP_IDENTIFIER.value(),
-            			"releasePoint.releasePointIdentifier.unique",
+            			"releasePoint.releasePointIdentifier.duplicate",
             			createValidationDetails(releasePoint));
             }
         }
