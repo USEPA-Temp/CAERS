@@ -594,6 +594,26 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void uniqueIdentifierCheckFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        testData.setReleasePointIdentifier("test");
+
+        ReleasePoint rp1 = new ReleasePoint();
+        rp1.setReleasePointIdentifier("test");
+        rp1.setId(2L);
+
+        testData.getFacilitySite().getReleasePoints().add(rp1);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_IDENTIFIER.value()) && errorMap.get(ValidationField.RP_IDENTIFIER.value()).size() == 1);
+    }
+    
+    @Test
     public void exitVelocityCalcCheckFailTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -832,7 +852,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         result.setFugitiveLine2Longitude(-84.388000);
         result.setStatusYear((short) 2000);
         result.setOperatingStatusCode(opStatCode);
-
+        result.setId(1L);
+        
         return result;
     }
     
