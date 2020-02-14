@@ -44,7 +44,7 @@
     <div class="row">
         <div class="col-sm-6 col-md-10">
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidStatusCode">
-                A facility site with operating status of "Temporarily Shutdown" or "Permanently Shutdown" may not have a status of "Operating".
+                A facility site with operating status of "Temporarily Shutdown" or "Permanently Shutdown" may not have a Release Point with status of "Operating".
             </div>
             <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.invalidLatitude">
                 Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude coordinate {{facilitySite.latitude}}.
@@ -84,17 +84,11 @@
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="exitGasVelocity" formControlName="exitGasVelocity" maxlength="9">
             <app-validation-message [control]="releasePointForm.get('exitGasVelocity')"></app-validation-message>
-            <div class="validation-message" *ngIf="releasePointForm.get('exitGasVelocity').errors?.invalidExitGasVelocity">
-                This field is required.
-            </div>
         </div>
         <label for="exitGasFlowRate" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Flow Rate Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="exitGasFlowRate" formControlName="exitGasFlowRate" maxlength="17">
             <app-validation-message [control]="releasePointForm.get('exitGasFlowRate')"></app-validation-message>
-            <div class="validation-message" *ngIf="releasePointForm.get('exitGasFlowRate').errors?.invalidExitGasFlowRate">
-                This field is required.
-            </div>
         </div>
     </div>
     <div class="row">

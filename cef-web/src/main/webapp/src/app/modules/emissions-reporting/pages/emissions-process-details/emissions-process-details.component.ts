@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { Process } from 'src/app/shared/models/process';
@@ -16,6 +16,7 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
+import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -27,6 +28,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   controlPaths: ControlPath[];
   facilitySite: FacilitySite;
   unitIdentifier: string;
+  @Input() emissionsUnit: EmissionUnit;
 
   hasAircraftCode = false;
   readOnlyMode = true;
@@ -68,6 +70,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         this.emissionUnitService.retrieve(process.emissionsUnitId)
         .subscribe(unit => {
           this.unitIdentifier = unit.unitIdentifier;
+          this.emissionsUnit = unit;
         });
 
         this.reportingPeriodService.retrieveForEmissionsProcess(this.process.id)

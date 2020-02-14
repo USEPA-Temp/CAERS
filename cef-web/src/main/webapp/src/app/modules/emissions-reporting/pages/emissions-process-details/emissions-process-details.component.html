@@ -46,7 +46,7 @@
                     </div>
                     
                     <div *ngIf="editInfo">
-                        <app-edit-process-info-panel [process]="process" [unitIdentifier]="unitIdentifier"></app-edit-process-info-panel>
+                        <app-edit-process-info-panel [process]="process" [emissionsUnit]="emissionsUnit"></app-edit-process-info-panel>
                         <div class="float-right pb-3 pr-3" *ngIf="infoComponent">
                             <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
                             <button type="submit" class="btn btn-success" (click)="updateProcess()">Save</button>

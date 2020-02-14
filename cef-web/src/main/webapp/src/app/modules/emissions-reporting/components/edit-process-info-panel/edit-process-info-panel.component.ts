@@ -10,6 +10,8 @@ import { SccCode } from 'src/app/shared/models/scc-code';
 import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
+import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
+import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -19,6 +21,8 @@ import { ActivatedRoute } from '@angular/router';
 export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
   @Input() unitIdentifier: string;
+  @Input() emissionsUnit: EmissionUnit;
+  emissionUnit: EmissionUnit;
   emissionsReportYear: number;
   sccRetirementYear: number;
   sccWarning: string;
@@ -50,7 +54,9 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       Validators.maxLength(200)
     ]],
     comments: ['', Validators.maxLength(400)]
-  }, { validators: [this.checkPointSourceSccCode()]
+  }, { validators: [
+    this.checkPointSourceSccCode(),
+    this.checkProcessIdentifier()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -60,6 +66,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   constructor(
     private lookupService: LookupService,
     public formUtils: FormUtilsService,
+    private emissionUnitService: EmissionUnitService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private fb: FormBuilder) { }
@@ -86,6 +93,14 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   ngOnChanges() {
 
     this.processForm.reset(this.process);
+
+    if (this.emissionsUnit != null) {
+      this.emissionUnitService.retrieve(this.emissionsUnit.id)
+      .subscribe(unit => {
+        this.emissionUnit = unit;
+        this.unitIdentifier = unit.unitIdentifier;
+      });
+    }
   }
 
   onChange(newValue) {
@@ -187,5 +202,28 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       }
       return null;
     }
+  }
+
+  // check for duplicate process identifier
+  checkProcessIdentifier(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+
+      if (control.get('emissionsProcessIdentifier') !== null && this.emissionUnit != null) {
+        this.emissionUnit['emissionsProcesses'].forEach(pIdentifier => {
+          if (this.process !== undefined) {
+            if ((pIdentifier['emissionsProcessIdentifier'] !== this.process.emissionsProcessIdentifier)
+            && (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value)) {
+              control.get('emissionsProcessIdentifier').setErrors({invalidDuplicateProcessIdetifier: true});
+            }
+          } else if (this.process === undefined)  {
+            if (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value) {
+              control.get('emissionsProcessIdentifier').setErrors({invalidDuplicateProcessIdetifier: true});
+            }
+          }
+          return null;
+        });
+      }
+      return null;
+    };
   }
 }

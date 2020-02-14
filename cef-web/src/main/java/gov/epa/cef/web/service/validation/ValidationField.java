@@ -46,7 +46,8 @@ public enum ValidationField {
     EMISSION_DENOM_UOM("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsDenominatorUom"),
     EMISSIONS_UNIT_STATUS_CODE("report.facilitySite.emissionsUnit.statusTypeCode"),
     EMISSIONS_UNIT_STATUS_YEAR("report.facilitySite.emissionsUnit.statusYear"),
-    EMISSIONS_UNIT_CAPACITY("report.emissionsUnit.capacity")
+    EMISSIONS_UNIT_CAPACITY("report.facilitySite.emissionsUnit.capacity"),
+    EMISSIONS_UNIT_PROCESS("report.facilitySite.emissionsUnit.emissionsProcess"),
 //    EMISSION_(""),
     ;
 
