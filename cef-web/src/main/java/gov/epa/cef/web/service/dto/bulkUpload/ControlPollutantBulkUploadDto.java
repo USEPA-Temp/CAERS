@@ -1,15 +1,30 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class ControlPollutantBulkUploadDto implements IWorksheetAware, Serializable {
+public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Control Pollutant ID is required.")
     private Long id;
+
+    @NotNull(message = "Control ID is required.")
     private Long controlId;
+
+    @NotBlank(message = "Pollutant Code is required.")
+    @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
+
     private Double percentReduction;
+
+    public ControlPollutantBulkUploadDto() {
+
+        super(WorksheetName.ControlPollutant);
+    }
 
     public Long getId() {
         return id;

@@ -1,20 +1,44 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class ControlBulkUploadDto implements IWorksheetAware, Serializable {
+public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Control ID is required")
     private Long id;
+
+    @NotNull(message = "Facility Site ID is required.")
     private Long facilitySiteId;
+
+    @Size(max = 20, message = "Operating Status Code can not exceed {max} chars.")
     private String operatingStatusCode;
+
+    @NotBlank(message = "Control Identifier is required.")
+    @Size(max = 20, message = "Control Identifier can not exceed {max} chars.")
     private String identifier;
+
+    @Size(max = 200, message = "Description can not exceed {max} chars.")
     private String description;
+
     private Double percentCapture;
     private Double percentControl;
+
+    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
+    @NotBlank(message = "Control Measure Code is required.")
+    @Size(max = 20, message = "Control Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String controlMeasureCode;
+
+    public ControlBulkUploadDto() {
+
+        super(WorksheetName.Control);
+    }
 
     public Long getId() {
         return id;

@@ -1,25 +1,53 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class EmissionsProcessBulkUploadDto implements IWorksheetAware, Serializable {
+public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
-    /**
-     * default version id
-     */
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Emissions Process ID is required.")
     private Long id;
+
+    @NotNull(message = "Emissions Unit ID is required.")
     private Long emissionsUnitId;
+
+    @NotBlank(message = "Emissions Process Identifier is required.")
+    @Size(max = 20, message = "Emissions Process Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsProcessIdentifier;
+
+    @NotBlank(message = "Operating Status Code is required.")
+    @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
+
     private Short statusYear;
+
+    @NotBlank(message = "SCC Code is required.")
+    @Size(max = 20, message = "SCC Code can not exceed {max} chars; found '${validatedValue}'.")
     private String sccCode;
+
+    @Size(max = 100, message = "SCC Short Name can not exceed {max} chars; found '${validatedValue}'.")
     private String sccShortName;
+
+    @Size(max = 200, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
+
+    @Size(max = 10, message = "Aircraft Engine Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String aircraftEngineTypeCode;
+
+    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
+    @Size(max = 500, message = "SCC Description can not exceed {max} chars; found '${validatedValue}'.")
     private String sccDescription;
+
+    public EmissionsProcessBulkUploadDto() {
+
+        super(WorksheetName.EmissionsProcess);
+    }
 
     public Long getId() {
         return id;

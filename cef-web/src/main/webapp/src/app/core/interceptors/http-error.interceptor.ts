@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Router} from "@angular/router";
-import { HttpRequest, HttpHandler, HttpInterceptor } from '@angular/common/http';
-import {Observable, throwError, EMPTY, of} from 'rxjs';
+import {HttpRequest, HttpHandler, HttpInterceptor, HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {Observable, throwError, EMPTY, of, from} from 'rxjs';
 import {retryWhen, delay, concatMap} from 'rxjs/operators';
 import {UserContextService} from "../services/user-context.service";
 
@@ -49,6 +49,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         }
 
                         return EMPTY;
+                    }
+
+                    if (error instanceof HttpErrorResponse
+                        && [502, 503, 504].indexOf(error.status) === -1) {
+
+                        // doesn't make sense to repeat the same bad request
+                        // unless (debatable) it's a bad gateway, service unavailable or gateway timeout
+                        // let the caller handle the HTTP error
+                        return new Observable<HttpResponse<any>>(subscriber => {
+                            subscriber.error(error);
+                        });
                     }
 
                     if (count < MAX_RETRIES) {

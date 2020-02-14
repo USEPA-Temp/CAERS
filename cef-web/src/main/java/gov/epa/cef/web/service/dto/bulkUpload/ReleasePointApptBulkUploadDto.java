@@ -1,19 +1,30 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class ReleasePointApptBulkUploadDto implements IWorksheetAware, Serializable{
+public class ReleasePointApptBulkUploadDto extends BaseWorksheetDto implements Serializable{
 
-    /**
-     * default version id
-     */
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Release Point Apportionment ID is required.")
     private Long id;
+
+    @NotNull(message = "Release Point ID is required.")
     private Long releasePointId;
+
+    @NotNull(message = "Emission Process ID is required.")
     private Long emissionProcessId;
+
+    @NotNull(message = "Percent is required.")
     private Double percent;
+
     private Long controlPathId;
+
+    public ReleasePointApptBulkUploadDto() {
+
+        super(WorksheetName.ReleasePointAppt);
+    }
 
     public Long getId() {
         return id;

@@ -1,45 +1,102 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class ReleasePointBulkUploadDto implements IWorksheetAware, Serializable {
+public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "Release Point ID is required.")
     private Long id;
+
+    @NotNull(message = "Release Point ID is required.")
     private Long facilitySiteId;
+
+    @NotBlank(message = "Release Point Identifier is required.")
+    @Size(max = 20, message = "Release Point Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String releasePointIdentifier;
+
+    @Size(max = 20, message = "Program System Code can not exceed {max} chars; found '${validatedValue}'.")
     private String programSystemCode;
+
+    @NotBlank(message = "Type Code is required.")
+    @Size(max = 20, message = "Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String typeCode;
+
+    @NotBlank(message = "Description is required.")
+    @Size(max = 200, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
+
     private Double stackHeight;
+
+    @Size(max = 20, message = "Stack Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackHeightUomCode;
+
     private Double stackDiameter;
+
+    @Size(max = 20, message = "Stack Diameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackDiameterUomCode;
+
     private Double exitGasVelocity;
+
+    @Size(max = 20, message = "Exit Gas Velocity Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String exitGasVelocityUomCode;
+
     private Short exitGasTemperature;
     private Double exitGasFlowRate;
+
+    @Size(max = 20, message = "Exit Gas Flow Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String exitGasFlowUomCode;
+
+    @NotBlank(message = "Operating Status Code is required.")
+    @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
+
     private Short statusYear;
+
+    @NotNull(message = "Latitude is required.")
     private Double latitude;
+
+    @NotNull(message = "Longitude is required.")
     private Double longitude;
+
     private Double fugitiveLine1Latitude;
     private Double fugitiveLine1Longitude;
     private Double fugitiveLine2Latitude;
     private Double fugitiveLine2Longitude;
+
+    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
     private Long fenceLineDistance;
+
+    @Size(max = 20, message = "Fence Line Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fenceLineUomCode;
+
     private Long fugitiveHeight;
+
+    @Size(max = 20, message = "Fugitive Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fugitiveHeightUomCode;
+
     private Long fugitiveWidth;
+
+    @Size(max = 20, message = "Fugitive Width Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fugitiveWidthUomCode;
+
     private Long fugitiveLength;
+
+    @Size(max = 20, message = "Fugitive Length Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fugitiveLengthUomCode;
+
     private Long fugitiveAngle;
 
+    public ReleasePointBulkUploadDto() {
+
+        super(WorksheetName.ReleasePoint);
+    }
 
     public Long getId() {
         return id;
