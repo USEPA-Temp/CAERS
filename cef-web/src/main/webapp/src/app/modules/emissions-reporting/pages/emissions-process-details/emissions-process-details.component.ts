@@ -28,7 +28,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   controlPaths: ControlPath[];
   facilitySite: FacilitySite;
   unitIdentifier: string;
-  @Input() emissionsUnit: EmissionUnit;
+  emissionsUnit: EmissionUnit;
 
   hasAircraftCode = false;
   readOnlyMode = true;
