@@ -10,16 +10,16 @@ AS
     ep.description AS process_description,
     p.pollutant_name,
     repcode.short_name AS reporting_period_type,
-	cmc.description AS emission_calc_method,
+    cmc.description AS emission_calc_method,
     e.emissions_uom_code,
     e.emissions_numerator_uom,
     e.emissions_denominator_uom,
     e.emissions_factor,
-    e.emissions_factor_text,
-    e.comments AS emissions_comment,
+    replace(e.emissions_factor_text::text, ','::text, ''::text) AS emissions_factor_text,
+    replace(e.comments::text, ','::text, ''::text) AS emissions_comment,
     e.total_emissions
    FROM emission e
-   	 JOIN calculation_method_code cmc ON cmc.code = e.emissions_calc_method_code
+     JOIN calculation_method_code cmc ON cmc.code::text = e.emissions_calc_method_code::text
      JOIN reporting_period repper ON repper.id = e.reporting_period_id
      JOIN reporting_period_code repcode ON repper.reporting_period_type_code::text = repcode.code::text
      JOIN emissions_process ep ON ep.id = repper.emissions_process_id
