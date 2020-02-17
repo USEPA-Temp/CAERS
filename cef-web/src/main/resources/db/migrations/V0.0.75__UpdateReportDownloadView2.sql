@@ -1,6 +1,8 @@
+DROP VIEW vw_report_download;
+
 CREATE OR REPLACE VIEW vw_report_download
 AS
- SELECT row_number() OVER (ORDER BY p.pollutant_cas_id) AS id,
+SELECT row_number() OVER (ORDER BY p.pollutant_cas_id) AS id,
     er.id AS report_id,
     fs.alt_site_identifier AS facility_site_id,
     er.year AS inventory_year,
@@ -15,11 +17,11 @@ AS
     e.emissions_numerator_uom,
     e.emissions_denominator_uom,
     e.emissions_factor,
-    e.emissions_factor_text,
-    e.comments AS emissions_comment,
+    replace(e.emissions_factor_text::text, ','::text, ''::text) AS emissions_factor_text,
+    replace(e.comments::text, ','::text, ''::text) AS emissions_comment,
     e.total_emissions
    FROM emission e
-   	 JOIN calculation_method_code cmc ON cmc.code = e.emissions_calc_method_code
+     JOIN calculation_method_code cmc ON cmc.code::text = e.emissions_calc_method_code::text
      JOIN reporting_period repper ON repper.id = e.reporting_period_id
      JOIN reporting_period_code repcode ON repper.reporting_period_type_code::text = repcode.code::text
      JOIN emissions_process ep ON ep.id = repper.emissions_process_id
