@@ -5,6 +5,9 @@
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" maxlength="20" id="unitIdentifierInput" formControlName="unitIdentifier">
             <app-validation-message [control]="emissionUnitForm.get('unitIdentifier')"></app-validation-message>
+            <div class="validation-message" *ngIf="emissionUnitForm.errors?.duplicateEmissionUnitIdentifier">
+                Emission Unit Identifier must be unique within the facility. 
+            </div>
         </div>
         <label for="unitTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Type Code:</strong></label>
         <div class="col-sm-6 col-md-2">

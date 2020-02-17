@@ -17,6 +17,7 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
@@ -138,6 +139,27 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void uniqueIdentifierCheckFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsUnit testData = createBaseEmissionsUnit();
+        testData.setUnitIdentifier("test");
+
+        EmissionsUnit em1 = new EmissionsUnit();
+        em1.setUnitIdentifier("test");
+        em1.setId(2L);
+
+        testData.getFacilitySite().getEmissionsUnits().add(em1);
+        testData.getFacilitySite().getEmissionsUnits().add(testData);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_IDENTIFIER.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_IDENTIFIER.value()).size() == 1);
+    }
+    
+    @Test
     public void designCapacityAndUomRequiredFailTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -199,11 +221,16 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         UnitMeasureCode capUom = new UnitMeasureCode();
         capUom.setCode("CURIE");
         
+        FacilitySite facility = new FacilitySite();
+        facility.setId(1L);
+        
         result.setStatusYear((short) 2000);
         result.setOperatingStatusCode(opStatCode);
         result.setUnitTypeCode(utc);
         result.setUnitOfMeasureCode(capUom);
+        result.setFacilitySite(facility);
         result.setDesignCapacity(BigDecimal.valueOf(100));
+        result.setId(1L);
         
         return result;
     }

@@ -6,6 +6,9 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
 import { ToastrService } from 'ngx-toastr';
+import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
+import { ActivatedRoute } from '@angular/router';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Component({
   selector: 'app-edit-emission-unit-info-panel',
@@ -15,6 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   @Input() emissionUnit: EmissionUnit;
   designCapacityWarning: any;
+  facilitySite: FacilitySite;
+  emissionUnitIdentifiers: String[] = [];
 
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
@@ -42,7 +47,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     ]],
     comments: ['', Validators.maxLength(400)]
   }, { validators: [
-    this.unitTypeCheck()]
+    this.unitTypeCheck(),
+    this.emissionUnitIdentifierCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -55,10 +61,28 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   constructor(private fb: FormBuilder,
               private lookupService: LookupService,
               public formUtils: FormUtilsService,
-              private toastr: ToastrService
+              private toastr: ToastrService,
+              private emissionUnitService: EmissionUnitService,
+              private route: ActivatedRoute
               ) { }
 
   ngOnInit() {
+    
+    this.route.data
+    .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.emissionUnitService.retrieveForFacility(data.facilitySite.id)
+      .subscribe(emissionUnits => {
+        emissionUnits.forEach(eu => {
+          this.emissionUnitIdentifiers.push(eu.unitIdentifier);
+        });
+
+        // if an emission unit is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
+        if (this.emissionUnit) {
+          this.emissionUnitIdentifiers = this.emissionUnitIdentifiers.filter(identifer => identifer.toString() !== this.emissionUnit.unitIdentifier);
+        }
+
+      });
+    });
 
     this.lookupService.retrieveUom()
     .subscribe(result => {
@@ -83,7 +107,6 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         });
         this.unitTypeValues = result;
     });
-
     this.uomCapacityCheck();
   }
 
@@ -129,5 +152,16 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       }
       return null;
     };
+  }
+
+  emissionUnitIdentifierCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if(this.emissionUnitIdentifiers){
+        if (this.emissionUnitIdentifiers.includes(control.get('unitIdentifier').value)) {
+          return { duplicateEmissionUnitIdentifier: true };
+        }
+      }
+      return null;
+    }
   }
 }
