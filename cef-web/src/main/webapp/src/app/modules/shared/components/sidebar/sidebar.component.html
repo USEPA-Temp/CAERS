@@ -3,10 +3,13 @@
         <div class="container">
             <app-facility-info [facility]="facility"></app-facility-info>
         </div>
-        <div class="pt-1" *ngIf="facilitySite && facilitySite.emissionsReport">
-            <strong>{{facilitySite.emissionsReport.year}} Emissions Report</strong>
-            <br/>
-            <strong>Agency: {{facilitySite.emissionsReport.agencyCode}}</strong>
+        <div class="container" *ngIf="facilitySite && facilitySite.emissionsReport">
+            <div class="row small">
+                <strong>{{facilitySite.emissionsReport.year}} Emissions Report</strong>
+            </div>
+            <div class="row small">
+                <strong>Agency: {{facilitySite.emissionsReport.agencyCode}}</strong>
+            </div>
         </div>
     </div>
     <div class="mt-2" *ngIf="emissionsNavItems && facilityNavItems">

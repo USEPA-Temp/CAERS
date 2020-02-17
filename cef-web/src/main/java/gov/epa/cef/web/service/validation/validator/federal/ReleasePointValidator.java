@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -426,23 +425,24 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
           	}
           }
           
-        if (releasePoint.getReleasePointIdentifier() != null) {
-
-        	// Release Point Identifier must be unique within the facility. 
-            Map<Object, List<ReleasePoint>> rpMap = releasePoint.getFacilitySite().getReleasePoints().stream()
-                    .filter(rp -> (rp.getReleasePointIdentifier().toString() == releasePoint.getReleasePointIdentifier()))
-                    .collect(Collectors.groupingBy(e -> e.getReleasePointIdentifier()));
-            
-            if (!CollectionUtils.sizeIsEmpty(rpMap)) {
+      		// Release Point Identifier must be unique within the facility. 
+          Map<Object, List<ReleasePoint>> rpMap = releasePoint.getFacilitySite().getReleasePoints().stream()
+                  .filter(rp -> (rp.getReleasePointIdentifier() != null))
+                  .collect(Collectors.groupingBy(frp -> frp.getReleasePointIdentifier()));
+  
+        	for (List<ReleasePoint> rpList : rpMap.values()) {
+            	
+          	if (rpList.size() > 1 && rpList.get(0).getReleasePointIdentifier().contentEquals(releasePoint.getReleasePointIdentifier())) {
+          		
             	result = false;
             	context.addFederalError(
             			ValidationField.RP_IDENTIFIER.value(),
             			"releasePoint.releasePointIdentifier.duplicate",
             			createValidationDetails(releasePoint));
             }
-        }
+        	}
           
-        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocityUomCode() == null) ||
+        	if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocityUomCode() == null) ||
           	(releasePoint.getExitGasVelocity() == null && releasePoint.getExitGasVelocityUomCode() != null)) {
          
           	// Exit Gas Velocity and Exit Gas Velocity UoM must be reported together.
