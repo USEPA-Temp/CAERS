@@ -463,7 +463,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           ((exitVelocity === null || exitVelocity.value === null || exitVelocity.value === '')
         || (exitFlowRate === null || exitFlowRate.value === null || exitFlowRate.value === ''))
         ) {
-          this.diameterCheckFlowAndVelWarning = 'Warning: If a Stack Diameter information is reported, Exit Gas Flow Rate and Exit Gas Velocity should be reported as well.';
+          this.diameterCheckFlowAndVelWarning = 'Warning: If Release Point Stack Diameter is reported, Exit Gas Flow Rate and Exit Gas Velocity should also be reported.';
         } else {
           this.diameterCheckFlowAndVelWarning = null;
         }
@@ -483,7 +483,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         if (((exitVelocity !== null && exitVelocity.value !== null && exitVelocity.value !== '')
         && (exitFlowRate !== null && exitFlowRate.value !== null && exitFlowRate.value !== ''))
         && (diameter === null || diameter.value === null || diameter.value === '')) {
-          this.velAndFlowCheckDiameterWarning = 'Warning: If Exit Gas Flow Rate and Exit Gas Velocity information is reported, Stack Diameter should be reported as well.';
+          this.velAndFlowCheckDiameterWarning = 'Warning: If Release Point Exit Gas Flow Rate and Exit Gas Velocity are reported, Stack Diameter should also be reported.';
         } else {
           this.velAndFlowCheckDiameterWarning = null;
         }

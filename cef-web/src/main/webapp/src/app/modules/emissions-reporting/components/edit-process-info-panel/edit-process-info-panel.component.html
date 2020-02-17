@@ -66,16 +66,20 @@
         </div>
     </div>
 
-    <div class="row pb-1">
-        <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label" *ngIf="aircraftSCCcheck"><strong>Aircraft Engine Code:</strong></label>
-        <div class="col-sm-6 col-md-10" *ngIf="aircraftSCCcheck">
+    <div class="row pb-1" *ngIf="aircraftSCCcheck">
+        <label for="processAircraftCodeInput" class="col-sm-6 col-md-2 col-form-label"><strong>Aircraft Engine Code:</strong></label>
+        <div class="col-sm-6 col-md-10">
             <select type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCode">
-                <option disabled [ngValue]="null"></option>
-                <option [selected]="opt.code === process.aircraftEngineTypeCode?.code" *ngFor="let opt of aircraftEngineTypeValue" [ngValue]="opt">
+                <option [ngValue]="null"></option>
+                <option *ngIf="invalidAircraftSCC" disabled [selected]="process?.aircraftEngineTypeCode?.code">{{process?.aircraftEngineTypeCode?.faaAircraftType}}&nbsp;-&nbsp;{{process?.aircraftEngineTypeCode?.engine}}</option>
+                <option [selected]="opt.code === process?.aircraftEngineTypeCode?.code" *ngFor="let opt of aircraftEngineTypeValue" [ngValue]="opt">
                     {{opt?.faaAircraftType}}&nbsp;-&nbsp;{{opt?.engine}}
                 </option>
             </select>
             <app-validation-message [control]="processForm.controls.aircraftEngineTypeCode"></app-validation-message>
+            <div class="validation-message" *ngIf="processForm.get('aircraftEngineTypeCode').errors?.invalidAircraftSCC">
+                The Aircraft Engine Code must match the SCC Code of the process to which it is assigned.
+            </div>
         </div>
     </div>
 
