@@ -19,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
+import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -27,6 +28,7 @@ import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -41,6 +43,9 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     @Mock
 		private PointSourceSccCodeRepository sccRepo;
     
+    @Mock
+    private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+    
     @Before
     public void init(){
     	
@@ -54,15 +59,38 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	PointSourceSccCode ps3 = new PointSourceSccCode();
     	ps3.setCode("30700599"); // point source scc code
     	ps3.setLastInventoryYear((short)2019);
+    	PointSourceSccCode ps4 = new PointSourceSccCode();
+    	ps4.setCode("2275001000"); // point source scc code
+    	PointSourceSccCode ps5 = new PointSourceSccCode();
+    	ps5.setCode("2275050012"); // point source scc code
     	
     	sccList.add(ps1);
     	sccList.add(ps2);
     	sccList.add(ps3);
+    	sccList.add(ps4);
+    	sccList.add(ps5);
     	
       when(sccRepo.findById("30503506")).thenReturn(Optional.of(ps1));
       when(sccRepo.findById("40500701")).thenReturn(Optional.of(ps2));
       when(sccRepo.findById("2862000000")).thenReturn(Optional.empty());
       when(sccRepo.findById("30700599")).thenReturn(Optional.of(ps3));
+      when(sccRepo.findById("2275001000")).thenReturn(Optional.of(ps4));
+      when(sccRepo.findById("2275050012")).thenReturn(Optional.of(ps5));
+      
+      List<AircraftEngineTypeCode> aircraftList = new ArrayList<AircraftEngineTypeCode>();
+      
+      AircraftEngineTypeCode aircraft1 = new AircraftEngineTypeCode();
+      aircraft1.setCode("1322");
+      aircraft1.setScc("2275001000");
+      AircraftEngineTypeCode aircraft2 = new AircraftEngineTypeCode();
+      aircraft2.setCode("1850");
+      aircraft2.setScc("2275050012");
+      
+      aircraftList.add(aircraft1);
+      aircraftList.add(aircraft2);
+      
+      when(aircraftEngCodeRepo.findById("1322")).thenReturn(Optional.of(aircraft1));
+      when(aircraftEngCodeRepo.findById("1850")).thenReturn(Optional.of(aircraft2));
     	
     }
 
@@ -165,6 +193,58 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP.value()) && errorMap.get(ValidationField.PROCESS_RP.value()).size() == 1);
     }
+    
+    @Test
+    public void aircraftCodeRequiredFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        
+        testData.setSccCode("2275050012");
+        testData.setAircraftEngineTypeCode(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE.value()).size() == 1);
+    }
+    
+    @Test
+    public void aircraftCodeValidForSccFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        
+        AircraftEngineTypeCode aircraft = new AircraftEngineTypeCode();
+        aircraft.setCode("1850");
+        aircraft.setScc("2275050012");
+        testData.setAircraftEngineTypeCode(aircraft);
+        testData.setSccCode("2275001000");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE.value()).size() == 1);
+    }
+    
+    @Test
+    public void aircraftCodePassTest() {
+    		
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	
+    	AircraftEngineTypeCode aircraft = new AircraftEngineTypeCode();
+    	aircraft.setCode("1322");
+    	aircraft.setScc("2275001000");
+    	testData.setAircraftEngineTypeCode(aircraft);
+    	testData.setSccCode("2275001000");
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 

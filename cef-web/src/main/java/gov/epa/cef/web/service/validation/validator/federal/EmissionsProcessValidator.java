@@ -1,8 +1,10 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
+import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
@@ -12,6 +14,8 @@ import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,6 +33,9 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	
 	@Autowired
 	private PointSourceSccCodeRepository sccRepo;
+	
+	@Autowired
+	private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
     
     @Override
     public void compose(FluentValidator validator,
@@ -97,6 +104,36 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         			emissionsProcess.getSccCode(),
         			isPointSourceSccCode.getLastInventoryYear().toString());
           }
+        	
+          List<String> aircraftEngineScc = new ArrayList<String>();
+          Collections.addAll(aircraftEngineScc, "2275001000", "2275020000", "2275050011", "2275050012", "2275060011", "2275060012");
+        	
+          // if SCC is an aircraft engine type, then aircraft engine code is required 
+          for (String code: aircraftEngineScc) {
+          	if (code.contentEquals(emissionsProcess.getSccCode()) && emissionsProcess.getAircraftEngineTypeCode() == null) {
+          		
+          		result = false;
+          		context.addFederalError(
+          				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
+          				"emissionsProcess.aircraftCode.required",
+          				createValidationDetails(emissionsProcess));
+          		
+          	} 
+          }
+          
+          // aircraft engine code must match assigned SCC
+          if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
+          	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
+          	
+          	if (sccHasEngineType != null && !emissionsProcess.getSccCode().contentEquals(sccHasEngineType.getScc())) {
+          		
+          		result = false;
+          		context.addFederalError(
+          				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
+          				"emissionsProcess.aircraftCode.valid",
+          				createValidationDetails(emissionsProcess));
+        		}
+        	}
         }
         
         Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
