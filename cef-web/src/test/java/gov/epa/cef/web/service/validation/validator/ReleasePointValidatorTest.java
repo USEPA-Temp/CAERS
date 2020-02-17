@@ -598,13 +598,12 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
-        testData.setReleasePointIdentifier("test");
-
         ReleasePoint rp1 = new ReleasePoint();
         rp1.setReleasePointIdentifier("test");
         rp1.setId(2L);
-
+        testData.setReleasePointIdentifier("test");
         testData.getFacilitySite().getReleasePoints().add(rp1);
+        testData.getFacilitySite().getReleasePoints().add(testData);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);

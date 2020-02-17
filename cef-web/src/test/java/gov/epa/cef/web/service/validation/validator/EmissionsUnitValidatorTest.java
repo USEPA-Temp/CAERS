@@ -142,7 +142,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     public void uniqueIdentifierCheckFailTest() {
 
         CefValidatorContext cefContext = createContext();
-    	EmissionsUnit testData = createBaseEmissionsUnit();
+        EmissionsUnit testData = createBaseEmissionsUnit();
         testData.setUnitIdentifier("test");
 
         EmissionsUnit em1 = new EmissionsUnit();
@@ -150,6 +150,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         em1.setId(2L);
 
         testData.getFacilitySite().getEmissionsUnits().add(em1);
+        testData.getFacilitySite().getEmissionsUnits().add(testData);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
