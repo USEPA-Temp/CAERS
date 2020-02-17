@@ -79,20 +79,23 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         }
         
         // Emissions Unit identifier must be unique within the facility.
-        Map<Object, List<EmissionsUnit>> euMap = emissionsUnit.getFacilitySite().getEmissionsUnits().stream()
-                .filter(eu -> (eu.getUnitIdentifier() != null))
-                .collect(Collectors.groupingBy(feu -> feu.getUnitIdentifier()));
-        
-        for (List<EmissionsUnit> euList : euMap.values()) {
-        	
-        	if (euList.size() > 1 && euList.get(0).getUnitIdentifier().contentEquals(emissionsUnit.getUnitIdentifier())) {
-          	
-        		result = false;
-          	context.addFederalError(
-          			ValidationField.EMISSIONS_UNIT_IDENTIFIER.value(),
-          			"emissionsUnit.unitIdentifier.duplicate",
-          			createValidationDetails(emissionsUnit));
-        	}
+        if (emissionsUnit != null && emissionsUnit.getFacilitySite() != null && emissionsUnit.getFacilitySite().getEmissionsUnits() != null) {
+	        Map<Object, List<EmissionsUnit>> euMap = emissionsUnit.getFacilitySite().getEmissionsUnits().stream()
+	                .filter(eu -> (eu.getUnitIdentifier() != null))
+	                .collect(Collectors.groupingBy(feu -> feu.getUnitIdentifier()));
+	        
+	        
+	        for (List<EmissionsUnit> euList : euMap.values()) {
+	        	
+	        	if (euList.size() > 1 && euList.get(0).getUnitIdentifier().contentEquals(emissionsUnit.getUnitIdentifier())) {
+	          	
+	        		result = false;
+	          	context.addFederalError(
+	          			ValidationField.EMISSIONS_UNIT_IDENTIFIER.value(),
+	          			"emissionsUnit.unitIdentifier.duplicate",
+	          			createValidationDetails(emissionsUnit));
+	        	}
+	        }
         }
         
         // Design capacity range
