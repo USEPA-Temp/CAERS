@@ -20,6 +20,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   designCapacityWarning: any;
   facilitySite: FacilitySite;
   emissionUnitIdentifiers: String[] = [];
+  facilityOpCode: BaseCodeLookup;
 
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
@@ -48,7 +49,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     comments: ['', Validators.maxLength(400)]
   }, { validators: [
     this.unitTypeCheck(),
-    this.emissionUnitIdentifierCheck()]
+    this.emissionUnitIdentifierCheck(),
+    this.facilitySiteStatusCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -70,6 +72,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.facilityOpCode = data.facilitySite.operatingStatusCode;
       this.emissionUnitService.retrieveForFacility(data.facilitySite.id)
       .subscribe(emissionUnits => {
         emissionUnits.forEach(eu => {
@@ -160,6 +163,19 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         if (this.emissionUnitIdentifiers.includes(control.get('unitIdentifier').value)) {
           return { duplicateEmissionUnitIdentifier: true };
         }
+      }
+      return null;
+    }
+  }
+
+  facilitySiteStatusCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if ((control.get('operatingStatusCode').value !== null)
+      && (control.get('operatingStatusCode').value.code === 'OP')
+      && (this.facilityOpCode !== undefined)) {
+          if (this.facilityOpCode !== null && (this.facilityOpCode.code === 'TS' || this.facilityOpCode.code === 'PS')) {
+            return { invalidStatusCode: true };
+          }
       }
       return null;
     }

@@ -21,6 +21,9 @@
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="unitStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
+            <div class="validation-message" *ngIf="emissionUnitForm.errors?.invalidStatusCode">
+                A facility site with operating status of "Temporarily Shutdown" or "Permanently Shutdown" may not have a status of "Operating".
+            </div>
             <app-validation-message [control]="emissionUnitForm.get('operatingStatusCode')"></app-validation-message>
         </div>
     </div>

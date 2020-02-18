@@ -98,6 +98,20 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        }
         }
         
+        // If facility operation status is Temporarily Shutdown or Permanently Shutdown, emissions unit cannot be operating
+        if (emissionsUnit != null && emissionsUnit.getFacilitySite() != null && emissionsUnit.getFacilitySite().getOperatingStatusCode() != null &&
+            emissionsUnit.getOperatingStatusCode() != null) {
+	        if (("TS".contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode())
+	    		|| "PS".contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode()))
+	    		&& "OP".contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+	 	
+	        	result = false;
+	        	context.addFederalError(
+	        			ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(), "emissionsUnit.statusTypeCode.facilitySiteCondition",
+	        			createValidationDetails(emissionsUnit));
+	        }
+        }
+	        
         // Design capacity range
         if ((emissionsUnit.getDesignCapacity() != null)
         	&& (emissionsUnit.getDesignCapacity().doubleValue() < 0.01 || emissionsUnit.getDesignCapacity().doubleValue() > 100000000)) {
