@@ -16,8 +16,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="validation-message" *ngIf="processForm.get('emissionsProcessIdentifier').errors?.invalidDuplicateProcessIdetifier">
-            This Emissions Process Identifier already exists for this Emissions Unit, duplicates are not allowed.
+        <div class="col-sm-6 col-md-10">
+            <div class="validation-message" *ngIf="processForm.get('emissionsProcessIdentifier').errors?.invalidDuplicateProcessIdetifier">
+                This Emissions Process Identifier already exists for this Emissions Unit, duplicates are not allowed.
+            </div>
         </div>
     </div>
 
@@ -47,14 +49,16 @@
         </div>
     </div>
     <div class="row">
-        <div class="validation-warning" *ngIf="sccWarning?.length > 0">
-            {{sccWarning}}
-        </div>
-        <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeRetired">
-            {{processForm.controls?.sccCode?.value}} was retired in {{sccRetirementYear}}. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year.
-        </div>
-        <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeInvalid">
-            {{processForm.controls?.sccCode?.value}} is not a valid point source SCC. Please choose a valid code.
+        <div class="col-sm-6 col-md-10">
+            <div class="validation-warning" *ngIf="sccWarning?.length > 0">
+                {{sccWarning}}
+            </div>
+            <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeRetired">
+                {{processForm.controls?.sccCode?.value}} was retired in {{sccRetirementYear}}. Select an active SCC or an SCC with last inventory year greater than or equal to the current submission inventory year.
+            </div>
+            <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.sccCodeInvalid">
+                {{processForm.controls?.sccCode?.value}} is not a valid point source SCC. Please choose a valid code.
+            </div>
         </div>
     </div>
 

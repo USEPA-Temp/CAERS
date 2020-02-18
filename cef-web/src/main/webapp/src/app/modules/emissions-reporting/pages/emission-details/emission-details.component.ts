@@ -27,6 +27,7 @@ import { EmissionFormulaVariable } from 'src/app/shared/models/emission-formula-
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
+import { ControlPollutantTableComponent } from '../../components/control-pollutant-table/control-pollutant-table.component';
 
 @Component({
   selector: 'app-emission-details',
@@ -71,8 +72,9 @@ export class EmissionDetailsComponent implements OnInit {
     calculationComment: ['', [Validators.required, Validators.maxLength(4000)]],
     formulaVariables: this.fb.group({}),
   }, { validators: [
-    this.emissionsCalculatedValidator(), 
-    this.emissionFactorGreaterThanZeroValidator
+    this.emissionsCalculatedValidator(),
+    this.emissionFactorGreaterThanZeroValidator,
+    this.pollutantEmissionsUoMValidator()
     ]
   });
 
@@ -575,5 +577,18 @@ export class EmissionDetailsComponent implements OnInit {
     }
   }
 
+  pollutantEmissionsUoMValidator(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const pollutant = control.get('pollutant');
+      if (pollutant !== null && pollutant.value !== null && control.get('emissionsUomCode') !== null) {
+        if ((pollutant.value.pollutantCode === '605'
+        || pollutant.value.pollutantCode === '605A')
+        && control.get('emissionsUomCode').value.code !== 'CURIE') {
+          return {emissionsUomCodeCurie: true};
+        }
+        return null;
+      }
+    };
+  }
 
 }
