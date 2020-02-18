@@ -26,7 +26,6 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +46,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
@@ -290,9 +288,7 @@ public class EmissionsReportApi {
         ValidationResult result =
             this.validationService.validateAndUpdateStatus(entityRefDto.getId());
 
-        return ResponseEntity.ok()
-            .cacheControl(CacheControl.noCache().sMaxAge(0, TimeUnit.SECONDS).mustRevalidate())
-            .body(result);
+        return ResponseEntity.ok().body(result);
     }
 
 
