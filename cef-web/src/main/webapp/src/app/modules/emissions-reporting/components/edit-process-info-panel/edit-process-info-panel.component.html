@@ -42,6 +42,9 @@
         <label for="processSccInput" class="col-sm-6 col-md-2 col-form-label"><strong>SCC:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()">
+            <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.invalidAircraftSCCCombination">
+                Combination of SCC and Aircraft Engine Type Code must be unique within a facility.
+            </div>
             <app-validation-message [control]="processForm.get('sccCode')"></app-validation-message>
         </div>
         <div class="col-sm-6 col-md-3">
@@ -81,6 +84,9 @@
                 </option>
             </select>
             <app-validation-message [control]="processForm.controls.aircraftEngineTypeCode"></app-validation-message>
+            <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.invalidAircraftSCCCombination">
+                Combination of SCC and Aircraft Engine Type Code must be unique within a facility.
+            </div>
             <div class="validation-message" *ngIf="processForm.get('aircraftEngineTypeCode').errors?.invalidAircraftSCC">
                 The Aircraft Engine Code must match the SCC Code of the process to which it is assigned.
             </div>

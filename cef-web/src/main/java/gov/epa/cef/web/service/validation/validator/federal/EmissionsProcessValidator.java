@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
@@ -124,6 +125,31 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         
         if (emissionsProcess != null) {
         	
+            // Check for unique SCC and AircraftEngineType code combination within a facility site
+            if ((emissionsProcess.getSccCode() != null) && (emissionsProcess.getAircraftEngineTypeCode() != null)) {
+            	String testingCombination = emissionsProcess.getAircraftEngineTypeCode().getCode().toString() + emissionsProcess.getSccCode().toString();
+                List<String> combinationList = new ArrayList<String>();
+                for(EmissionsUnit eu: emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsUnits()){
+                	if(eu.getEmissionsProcesses() != null){
+                		for(EmissionsProcess ep: eu.getEmissionsProcesses()){
+                			if ((ep.getSccCode() != null) && (ep.getAircraftEngineTypeCode() != null) && (!ep.getId().equals(emissionsProcess.getId()))){
+                    			String combination = ep.getAircraftEngineTypeCode().getCode().toString() + ep.getSccCode().toString();
+                    			combinationList.add(combination);
+                			}
+                		}
+                	}
+                }
+                for(String combination: combinationList){
+            		if(combination.equals(testingCombination)){
+                    	context.addFederalError(
+                    			ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value(),
+                    			"emissionsProcess.aircraftCodeAndSccCombination.duplicate",
+                    			createValidationDetails(emissionsProcess));
+                    	result = false;
+            		}
+                }
+            }        	
+      
           // aircraft engine code must match assigned SCC
           if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
           	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
