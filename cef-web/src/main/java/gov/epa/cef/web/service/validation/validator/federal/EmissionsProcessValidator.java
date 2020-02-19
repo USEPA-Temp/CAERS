@@ -120,25 +120,24 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
           		
           	} 
           }
-          
-          if (emissionsProcess != null) {
-	          // aircraft engine code must match assigned SCC
-	          if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
-	          	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
-	          	
-	          	if (sccHasEngineType != null && !emissionsProcess.getSccCode().contentEquals(sccHasEngineType.getScc())) {
-	          		
-	          		result = false;
-	          		context.addFederalError(
-	          				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
-	          				"emissionsProcess.aircraftCode.valid",
-	          				createValidationDetails(emissionsProcess));
-	        		}
-	        	}
-          }
         }
         
         if (emissionsProcess != null) {
+        	
+          // aircraft engine code must match assigned SCC
+          if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
+          	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
+          	
+          	if (sccHasEngineType != null && !emissionsProcess.getSccCode().contentEquals(sccHasEngineType.getScc())) {
+          		
+          		result = false;
+          		context.addFederalError(
+          				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
+          				"emissionsProcess.aircraftCode.valid",
+          				createValidationDetails(emissionsProcess));
+        		}
+        	}
+          
 	        Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
 	            .filter(rpa -> rpa.getReleasePoint() != null)
 	            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
