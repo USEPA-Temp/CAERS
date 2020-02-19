@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Emission } from 'src/app/shared/models/emission';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
-import { Validators, FormBuilder, ValidatorFn, FormGroup, FormControl } from '@angular/forms';
+import { Validators, FormBuilder, ValidatorFn, FormGroup, FormControl, ValidationErrors } from '@angular/forms';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
 import { Pollutant } from 'src/app/shared/models/pollutant';
@@ -74,7 +74,9 @@ export class EmissionDetailsComponent implements OnInit {
   }, { validators: [
     this.emissionsCalculatedValidator(),
     this.emissionFactorGreaterThanZeroValidator,
-    this.pollutantEmissionsUoMValidator()
+    this.pollutantEmissionsUoMValidator(),
+    this.checkPercentSulfurRange(),
+    this.checkPercentAshRange()
     ]
   });
 
@@ -166,7 +168,6 @@ export class EmissionDetailsComponent implements OnInit {
         });
       });
     });
-
   }
 
   private onMethodChange(value: CalculationMethodCode, status: string) {
@@ -590,4 +591,27 @@ export class EmissionDetailsComponent implements OnInit {
     };
   }
 
+  checkPercentSulfurRange(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const emissionFormulaVar = control.get('formulaVariables');
+      if (emissionFormulaVar !== undefined && emissionFormulaVar !== null && Object.keys(emissionFormulaVar.value)[0] === "SU") {
+        if (emissionFormulaVar.value.SU !== null && (emissionFormulaVar.value.SU < 0.01 || emissionFormulaVar.value.SU > 10)) {
+          return {invalidSulfurRange: true};
+        }
+        return null;
+      }
+    };
+  }
+
+  checkPercentAshRange(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const emissionFormulaVar = control.get('formulaVariables');
+      if (emissionFormulaVar !== undefined && emissionFormulaVar !== null && Object.keys(emissionFormulaVar.value)[0] === "A") {
+        if (emissionFormulaVar.value.A !== null && (emissionFormulaVar.value.A < 0.01 || emissionFormulaVar.value.A > 30)) {
+          return {invalidAshRange: true};
+        }
+        return null;
+      }
+    };
+  }
 }

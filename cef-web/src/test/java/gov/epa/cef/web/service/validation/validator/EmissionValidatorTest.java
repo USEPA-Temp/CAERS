@@ -21,6 +21,8 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
+import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -404,7 +406,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         Pollutant pollutant = new Pollutant();
         pollutant.setPollutantCode("605");
         testData.setPollutant(pollutant);
-
+        
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
@@ -422,6 +424,76 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_CURIE_UOM.value()) && errorMap.get(ValidationField.EMISSION_CURIE_UOM.value()).size() == 1);
+    }
+
+     /**
+     * There should be two errors when emission formula variable value for % ash is less than 0.01 and greater than 30,
+     * and there should be no errors when value is within range.
+     */
+    @Test
+    public void percentAsh_Range_FailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        EmissionFormulaVariableCode ashCode = new EmissionFormulaVariableCode();
+        ashCode.setCode("A");
+        EmissionFormulaVariable var1 = new EmissionFormulaVariable();
+        var1.setValue(BigDecimal.ZERO);
+        var1.setVariableCode(ashCode);
+        testData.getVariables().add(var1);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_FORMULA_VARIABLE.value()) && errorMap.get(ValidationField.EMISSION_FORMULA_VARIABLE.value()).size() == 1);
+
+        cefContext = createContext();
+        var1.setValue(new BigDecimal(31));
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        var1.setValue(new BigDecimal(0.01));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
+     * There should be two errors when emission formula variable value for % sulfur is less than 0.01 and greater than 10,
+     * and there should be no errors when value is within range.
+     */
+    @Test
+    public void percentSulfur_Range_FailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        EmissionFormulaVariableCode sulfurCode = new EmissionFormulaVariableCode();
+        sulfurCode.setCode("SU");
+        EmissionFormulaVariable var1 = new EmissionFormulaVariable();
+        var1.setValue(BigDecimal.ZERO);
+        var1.setVariableCode(sulfurCode);
+        testData.getVariables().add(var1);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_FORMULA_VARIABLE.value()) && errorMap.get(ValidationField.EMISSION_FORMULA_VARIABLE.value()).size() == 1);
+
+        cefContext = createContext();
+        var1.setValue(new BigDecimal(11));
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        cefContext = createContext();
+        var1.setValue(new BigDecimal(10));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
 
 
