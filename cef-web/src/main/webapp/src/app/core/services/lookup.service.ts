@@ -100,8 +100,8 @@ export class LookupService {
     return this.http.get<FacilityNaicsCode[]>(url);
   }
 
-  retrieveAircraftEngineCodes(): Observable<AircraftEngineTypeCode[]> {
-    const url = `${this.baseUrl}/aircraftEngineCode`;
+  retrieveAircraftEngineCodes(scc: string): Observable<AircraftEngineTypeCode[]> {
+    const url = `${this.baseUrl}/aircraftEngineCode/${scc}`;
     return this.http.get<AircraftEngineTypeCode[]>(url);
   }
 
