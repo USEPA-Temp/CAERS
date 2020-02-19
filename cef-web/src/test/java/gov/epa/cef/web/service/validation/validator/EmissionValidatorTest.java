@@ -402,7 +402,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         Emission testData = createBaseEmission(false);
         Pollutant pollutant = new Pollutant();
-        pollutant.setPollutantCode("605A");
+        pollutant.setPollutantCode("605");
         testData.setPollutant(pollutant);
 
         assertFalse(this.validator.validate(cefContext, testData));
