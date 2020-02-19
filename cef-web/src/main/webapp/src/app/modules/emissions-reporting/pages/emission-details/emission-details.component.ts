@@ -73,7 +73,7 @@ export class EmissionDetailsComponent implements OnInit {
   }, { validators: [
     this.emissionsCalculatedValidator(),
     this.emissionFactorGreaterThanZeroValidator,
-    this.checkPercentSulferRange(),
+    this.checkPercentSulfurRange(),
     this.checkPercentAshRange()
     ]
   });
@@ -576,12 +576,12 @@ export class EmissionDetailsComponent implements OnInit {
     }
   }
 
-  checkPercentSulferRange(): ValidatorFn {
+  checkPercentSulfurRange(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const emissionFormulaVar = control.get('formulaVariables');
       if (emissionFormulaVar !== undefined && emissionFormulaVar !== null && Object.keys(emissionFormulaVar.value)[0] === "SU") {
         if (emissionFormulaVar.value.SU !== null && (emissionFormulaVar.value.SU < 0.01 || emissionFormulaVar.value.SU > 10)) {
-          return {invalidSulferRange: true};
+          return {invalidSulfurRange: true};
         }
         return null;
       }

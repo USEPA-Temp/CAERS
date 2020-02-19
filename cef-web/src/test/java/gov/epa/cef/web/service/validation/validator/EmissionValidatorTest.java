@@ -430,19 +430,19 @@ public class EmissionValidatorTest extends BaseValidatorTest {
     }
     
     /**
-     * There should be two errors when emission formula variable value for % sulfer is less than 0.01 and greater than 10,
+     * There should be two errors when emission formula variable value for % sulfur is less than 0.01 and greater than 10,
      * and there should be no errors when value is within range.
      */
     @Test
-    public void percentSulfer_Range_FailTest() {
+    public void percentSulfur_Range_FailTest() {
 
         CefValidatorContext cefContext = createContext();
         Emission testData = createBaseEmission(false);
-        EmissionFormulaVariableCode sulferCode = new EmissionFormulaVariableCode();
-        sulferCode.setCode("SU");
+        EmissionFormulaVariableCode sulfurCode = new EmissionFormulaVariableCode();
+        sulfurCode.setCode("SU");
         EmissionFormulaVariable var1 = new EmissionFormulaVariable();
         var1.setValue(BigDecimal.ZERO);
-        var1.setVariableCode(sulferCode);
+        var1.setVariableCode(sulfurCode);
         testData.getVariables().add(var1);
 
         assertFalse(this.validator.validate(cefContext, testData));

@@ -26,6 +26,9 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
     @Autowired
     private CefConfig cefConfig;
+    
+    private static final String ASH_EMISSION_FORMULA_CODE = "A";
+    private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -143,7 +146,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        
 	        // check for emission formula variable code % ash value to be between 0.01 and 30
         	for (EmissionFormulaVariable formulaVar: efvList) {
-        		if ("A".contentEquals(formulaVar.getVariableCode().getCode()) &&
+        		if (ASH_EMISSION_FORMULA_CODE.contentEquals(formulaVar.getVariableCode().getCode()) &&
         				(formulaVar.getValue().compareTo(new BigDecimal(0.01)) == -1 || formulaVar.getValue().compareTo(new BigDecimal(30)) == 1)) {
      
         			valid = false;
@@ -155,15 +158,15 @@ public class EmissionValidator extends BaseValidator<Emission> {
         		}
         	}
         	
-        	// check for emission formula variable code % sulfer value to be between 0.01 and 10
+        	// check for emission formula variable code % sulfur value to be between 0.01 and 10
         	for (EmissionFormulaVariable formulaVar: efvList) {
-        		if ("SU".contentEquals(formulaVar.getVariableCode().getCode()) &&
+        		if (SULFUR_EMISSION_FORMULA_CODE.contentEquals(formulaVar.getVariableCode().getCode()) &&
         				((formulaVar.getValue().compareTo(new BigDecimal(0.01)) == -1) || (formulaVar.getValue().compareTo(new BigDecimal(10)) == 1))) {
         			
         			valid = false;
         			context.addFederalError(
         					ValidationField.EMISSION_FORMULA_VARIABLE.value(),
-        					"emission.formula.variable.sulferRange", 
+        					"emission.formula.variable.sulfurRange", 
         					createValidationDetails(emission));
         		}
         	}
