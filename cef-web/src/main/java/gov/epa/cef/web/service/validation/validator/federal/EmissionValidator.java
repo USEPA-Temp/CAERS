@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -11,6 +12,8 @@ import gov.epa.cef.web.util.CalculationUtils;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +26,9 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
     @Autowired
     private CefConfig cefConfig;
+    
+    private static final String ASH_EMISSION_FORMULA_CODE = "A";
+    private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -131,6 +137,39 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         createValidationDetails(emission));
             }
 
+        }
+        
+        if (emission.getVariables() != null) {
+	        List<EmissionFormulaVariable> efvList = emission.getVariables().stream()
+	            .filter(var -> var.getVariableCode() != null)
+	            .collect(Collectors.toList());
+	        
+	        // check for emission formula variable code % ash value to be between 0.01 and 30
+        	for (EmissionFormulaVariable formulaVar: efvList) {
+        		if (ASH_EMISSION_FORMULA_CODE.contentEquals(formulaVar.getVariableCode().getCode()) &&
+        				(formulaVar.getValue().compareTo(new BigDecimal(0.01)) == -1 || formulaVar.getValue().compareTo(new BigDecimal(30)) == 1)) {
+     
+        			valid = false;
+        			context.addFederalError(
+        					ValidationField.EMISSION_FORMULA_VARIABLE.value(),
+        					"emission.formula.variable.ashRange", 
+        					createValidationDetails(emission));
+              
+        		}
+        	}
+        	
+        	// check for emission formula variable code % sulfur value to be between 0.01 and 10
+        	for (EmissionFormulaVariable formulaVar: efvList) {
+        		if (SULFUR_EMISSION_FORMULA_CODE.contentEquals(formulaVar.getVariableCode().getCode()) &&
+        				((formulaVar.getValue().compareTo(new BigDecimal(0.01)) == -1) || (formulaVar.getValue().compareTo(new BigDecimal(10)) == 1))) {
+        			
+        			valid = false;
+        			context.addFederalError(
+        					ValidationField.EMISSION_FORMULA_VARIABLE.value(),
+        					"emission.formula.variable.sulfurRange", 
+        					createValidationDetails(emission));
+        		}
+        	}
         }
 
         // Emission Calculation checks
