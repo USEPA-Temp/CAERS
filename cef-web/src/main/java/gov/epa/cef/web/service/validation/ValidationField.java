@@ -44,6 +44,7 @@ public enum ValidationField {
     EMISSION_COMMENTS("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.comments"),
     EMISSION_EF("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsFactor"),
     EMISSION_TOTAL_EMISSIONS("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.totalEmissions"),
+    EMISSION_CURIE_UOM("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsCurieUom"),
     EMISSION_NUM_UOM("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsNumeratorUom"),
     EMISSION_DENOM_UOM("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsDenominatorUom"),
     EMISSION_FORMULA_VARIABLE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.formula.variable"),

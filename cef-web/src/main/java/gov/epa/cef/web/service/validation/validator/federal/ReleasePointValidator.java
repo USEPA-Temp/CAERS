@@ -425,22 +425,24 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
           	}
           }
           
-      		// Release Point Identifier must be unique within the facility. 
-          Map<Object, List<ReleasePoint>> rpMap = releasePoint.getFacilitySite().getReleasePoints().stream()
-                  .filter(rp -> (rp.getReleasePointIdentifier() != null))
-                  .collect(Collectors.groupingBy(frp -> frp.getReleasePointIdentifier()));
-  
-        	for (List<ReleasePoint> rpList : rpMap.values()) {
-            	
-          	if (rpList.size() > 1 && rpList.get(0).getReleasePointIdentifier().contentEquals(releasePoint.getReleasePointIdentifier())) {
-          		
-            	result = false;
-            	context.addFederalError(
-            			ValidationField.RP_IDENTIFIER.value(),
-            			"releasePoint.releasePointIdentifier.duplicate",
-            			createValidationDetails(releasePoint));
-            }
-        	}
+          if (releasePoint != null && releasePoint.getFacilitySite() != null && releasePoint.getFacilitySite().getReleasePoints() != null) {
+          	// Release Point Identifier must be unique within the facility. 
+	          Map<Object, List<ReleasePoint>> rpMap = releasePoint.getFacilitySite().getReleasePoints().stream()
+	                  .filter(rp -> (rp.getReleasePointIdentifier() != null))
+	                  .collect(Collectors.groupingBy(frp -> frp.getReleasePointIdentifier()));
+	  
+	        	for (List<ReleasePoint> rpList : rpMap.values()) {
+	            	
+	          	if (rpList.size() > 1 && rpList.get(0).getReleasePointIdentifier().contentEquals(releasePoint.getReleasePointIdentifier())) {
+	          		
+	            	result = false;
+	            	context.addFederalError(
+	            			ValidationField.RP_IDENTIFIER.value(),
+	            			"releasePoint.releasePointIdentifier.duplicate",
+	            			createValidationDetails(releasePoint));
+	            }
+	          }
+	        }
           
         	if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocityUomCode() == null) ||
           	(releasePoint.getExitGasVelocity() == null && releasePoint.getExitGasVelocityUomCode() != null)) {

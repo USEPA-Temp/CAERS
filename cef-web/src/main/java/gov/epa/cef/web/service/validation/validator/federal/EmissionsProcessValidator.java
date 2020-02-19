@@ -120,7 +120,10 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
           		
           	} 
           }
-          
+        }
+        
+        if (emissionsProcess != null) {
+        	
           // aircraft engine code must match assigned SCC
           if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
           	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
@@ -134,35 +137,35 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
           				createValidationDetails(emissionsProcess));
         		}
         	}
-        }
-        
-        Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
-            .filter(rpa -> rpa.getReleasePoint() != null)
-            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
-     
-        // Process must go to at least one release point
-        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
-
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.PROCESS_RP.value(),
-        			"emissionsProcess.releasePointAppts.required",
-        			createValidationDetails(emissionsProcess));
-        }
-        
-        // release point can be used only once per rp appt collection
-        for (List<ReleasePointAppt> rpa: rpaMap.values()) {
-        	
-        	if (rpa.size() > 1) {
-        		
-        		result = false;
+          
+	        Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
+	            .filter(rpa -> rpa.getReleasePoint() != null)
+	            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
+	     
+	        // Process must go to at least one release point
+	        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
+	
+	        	result = false;
 	        	context.addFederalError(
 	        			ValidationField.PROCESS_RP.value(),
-	        			"emissionsProcess.releasePointAppts.duplicate",
-	        			createValidationDetails(emissionsProcess),
-	        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
+	        			"emissionsProcess.releasePointAppts.required",
+	        			createValidationDetails(emissionsProcess));
 	        }
-	      }
+	        
+	        // release point can be used only once per rp appt collection
+	        for (List<ReleasePointAppt> rpa: rpaMap.values()) {
+	        	
+	        	if (rpa.size() > 1) {
+	        		
+	        		result = false;
+		        	context.addFederalError(
+		        			ValidationField.PROCESS_RP.value(),
+		        			"emissionsProcess.releasePointAppts.duplicate",
+		        			createValidationDetails(emissionsProcess),
+		        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
+		        }
+		      }
+        }
         
         return result;
     }

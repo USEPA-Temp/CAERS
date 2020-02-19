@@ -246,6 +246,18 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 }
             }
         }
+        
+        if (emission.getPollutant() != null && ("605".contentEquals(emission.getPollutant().getPollutantCode()))) {
+
+          if (emission.getEmissionsUomCode() == null || !"CURIE".contentEquals(emission.getEmissionsUomCode().getCode())) {
+	          
+          	valid = false;
+	          context.addFederalError(
+	              ValidationField.EMISSION_CURIE_UOM.value(),
+	              "emission.emissionsCurieUom.required", 
+	              createValidationDetails(emission));
+          }
+        }
 
         return valid;
     }

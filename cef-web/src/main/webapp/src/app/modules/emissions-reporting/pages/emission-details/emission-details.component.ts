@@ -27,6 +27,7 @@ import { EmissionFormulaVariable } from 'src/app/shared/models/emission-formula-
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
+import { ControlPollutantTableComponent } from '../../components/control-pollutant-table/control-pollutant-table.component';
 
 @Component({
   selector: 'app-emission-details',
@@ -73,6 +74,7 @@ export class EmissionDetailsComponent implements OnInit {
   }, { validators: [
     this.emissionsCalculatedValidator(),
     this.emissionFactorGreaterThanZeroValidator,
+    this.pollutantEmissionsUoMValidator(),
     this.checkPercentSulfurRange(),
     this.checkPercentAshRange()
     ]
@@ -574,6 +576,19 @@ export class EmissionDetailsComponent implements OnInit {
     } else {
       return null;
     }
+  }
+
+  pollutantEmissionsUoMValidator(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const pollutant = control.get('pollutant');
+      if (pollutant !== null && pollutant.value !== null && control.get('emissionsUomCode') !== null) {
+        if ((pollutant.value.pollutantCode === '605')
+        && control.get('emissionsUomCode').value.code !== 'CURIE') {
+          return {emissionsUomCodeCurie: true};
+        }
+        return null;
+      }
+    };
   }
 
   checkPercentSulfurRange(): ValidatorFn {

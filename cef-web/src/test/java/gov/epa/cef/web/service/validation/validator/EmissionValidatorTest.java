@@ -27,6 +27,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -395,6 +396,37 @@ public class EmissionValidatorTest extends BaseValidatorTest {
     }
     
     /**
+     * There should be two errors when pollutant is 605 and UoM is not CURIE and when UoM is null
+     */
+    @Test
+    public void pollutantCode605_UomFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        Pollutant pollutant = new Pollutant();
+        pollutant.setPollutantCode("605");
+        testData.setPollutant(pollutant);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CURIE_UOM.value()) && errorMap.get(ValidationField.EMISSION_CURIE_UOM.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData = createBaseEmission(false);
+        testData.setEmissionsUomCode(null);
+        pollutant.setPollutantCode("605");
+        testData.setPollutant(pollutant);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CURIE_UOM.value()) && errorMap.get(ValidationField.EMISSION_CURIE_UOM.value()).size() == 1);
+    }
+
+     /**
      * There should be two errors when emission formula variable value for % ash is less than 0.01 and greater than 30,
      * and there should be no errors when value is within range.
      */
