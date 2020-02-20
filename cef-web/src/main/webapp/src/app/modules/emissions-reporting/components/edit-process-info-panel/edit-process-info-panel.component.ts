@@ -63,7 +63,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   });
 
   operatingStatusValues: BaseCodeLookup[];
-  aircraftEngineType: AircraftEngineTypeCode[];
   aircraftEngineTypeValue: AircraftEngineTypeCode[];
   aircraftEngineSCC: string[];
 
