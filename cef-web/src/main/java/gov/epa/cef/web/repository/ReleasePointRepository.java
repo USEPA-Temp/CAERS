@@ -21,6 +21,17 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
     List<ReleasePoint> findByFacilitySiteIdOrderByReleasePointIdentifier(Long facilitySiteId);
 
     /**
+     * Find Release Points with the specified identifier, EIS program id, and year
+     * @param identifier
+     * @param eisProgramId
+     * @param year
+     * @return
+     */
+    @Query("select rp from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r "
+            + "where rp.releasePointIdentifier = :identifier and fs.eisProgramId = :eisProgramId and r.year = :year")
+    Optional<ReleasePoint> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
+
+    /**
      *
      * @param id
      * @return EIS Program ID

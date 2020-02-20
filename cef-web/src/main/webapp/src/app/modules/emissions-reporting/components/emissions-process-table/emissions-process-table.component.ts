@@ -37,15 +37,20 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
     deleteProcess(processId: number, emissionsUnitId: number) {
         this.processService.delete(processId).subscribe(() => {
 
-        // update the table with the list of processes
-        this.processService.retrieveForEmissionsUnit(emissionsUnitId)
-            .subscribe(processes1 => {
-                this.tableData = processes1.sort((a, b) => (a.id > b.id ? 1 : -1));
-            });
+            // update the table with the list of processes
+            this.processService.retrieveForEmissionsUnit(emissionsUnitId)
+                .subscribe(processes1 => {
+                    this.tableData = processes1.sort((a, b) => (a.id > b.id ? 1 : -1));
+                });
 
-        // emit the facility data back to the sidebar to reflect the updated
-        // list of emission processes
-        this.sharedService.updateReportStatusAndEmit(this.route);
+            // emit the facility data back to the sidebar to reflect the updated
+            // list of emission processes
+            this.sharedService.updateReportStatusAndEmit(this.route);
+        }, error => {
+            if (error.error && error.status === 422) {
+                const modalRef = this.modalService.open(ConfirmationDialogComponent);
+                modalRef.componentInstance.message = error.error.message;
+            }
         });
     }
 
