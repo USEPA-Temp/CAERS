@@ -22,6 +22,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
   @Input() unitIdentifier: string;
   @Input() emissionsUnit: EmissionUnit;
+  sccAndAircraftCombinations: String[] = [];
   emissionUnit: EmissionUnit;
   emissionsReportYear: number;
   sccRetirementYear: number;
@@ -59,7 +60,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   }, { validators: [
     this.checkPointSourceSccCode(),
     this.checkProcessIdentifier(),
-    this.checkMatchSccAircraft()]
+    this.checkMatchSccAircraft(),
+    this.checkSccAndAircraftDuplicate()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -83,6 +85,20 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
       this.emissionsReportYear = data.facilitySite.emissionsReport.year;
+      this.emissionUnitService.retrieveForFacility(data.facilitySite.id).subscribe(emissionUnits =>{
+        emissionUnits.forEach(eu => {
+          eu['emissionsProcesses'].forEach(process =>{
+            if(process['aircraftEngineTypeCode'] && process['sccCode']){
+              //if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
+              //to avoid comparing its own combination to itself, if its a new process then skip this check
+              if ((!this.process) || (this.process && process['id']!== this.process.id)){
+                let combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
+                this.sccAndAircraftCombinations.push(combination);
+              }
+            }
+        });
+        });
+      });
     });
 
     // SCC codes associated with Aircraft Engine Type Codes
@@ -278,6 +294,26 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
         } else {
           control.get('aircraftEngineTypeCode').setErrors(null);
         }
+        return null;
+      }
+    };
+  }
+
+  checkSccAndAircraftDuplicate(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if ((control.get('aircraftEngineTypeCode').value) && (control.get('sccCode').value)) {
+        let codeCombo = control.get('aircraftEngineTypeCode').value.code + control.get('sccCode').value;
+        this.sccAndAircraftCombinations.forEach(combination =>{
+          if (codeCombo === combination) {
+            control.get('aircraftEngineTypeCode').setErrors({'invalidAircraftSCCCombination': true});
+            control.get('sccCode').setErrors({'invalidAircraftSCCCombination': true});
+          }
+          else{
+            control.get('sccCode').setErrors(null);
+            control.get('aircraftEngineTypeCode').setErrors(null);
+          }
+        });
+      } else {
         return null;
       }
     };
