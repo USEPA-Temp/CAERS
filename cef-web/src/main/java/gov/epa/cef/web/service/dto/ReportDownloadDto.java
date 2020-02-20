@@ -36,7 +36,8 @@ public class ReportDownloadDto implements Serializable{
     private String reportingPeriodType;
     private String emissionsCalcMethod;
     private String lastModifiedBy;
-    
+	private String lastModifiedDate;
+	
     public String getLastModifiedBy() {
 		return lastModifiedBy;
 	}
@@ -49,8 +50,6 @@ public class ReportDownloadDto implements Serializable{
 	public void setLastModifiedDate(String lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
-	private String lastModifiedDate;
-    
 	public String getEmissionsNumeratorUom() {
 		return emissionsNumeratorUom;
 	}
