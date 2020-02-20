@@ -2,7 +2,6 @@ package gov.epa.cef.web.domain;
 
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -73,29 +72,7 @@ public class ReportDownloadView extends BaseEntity{
 	@Column(name = "total_emissions")
     private BigDecimal totalEmissions;
 	
-    @Column(name = "last_modified_by", length = 255)
-    private String lastModifiedBy;
-    
-	@Column(name = "last_modified_date")
-	private Date lastModifiedDate;
-	
-    public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getEmissionsNumeratorUom() {
+    public String getEmissionsNumeratorUom() {
 		return emissionsNumeratorUom;
 	}
 
