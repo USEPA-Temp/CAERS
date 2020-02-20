@@ -9,16 +9,21 @@ import { EventEmitter } from '@angular/core';
 })
 export class ConfirmationDialogComponent implements OnInit {
 
-  constructor(public activeModal: NgbActiveModal) { }
+  @Input() title = 'Confirm';
   @Input() message: string;
+  @Input() cancelButtonText = 'Cancel';
+  @Input() confirmButtonText = 'Confirm';
+  @Input() singleButton = false;
   @Output() continue: EventEmitter<any> = new EventEmitter();
+
+  constructor(public activeModal: NgbActiveModal) { }
+
+  ngOnInit() {
+  }
 
   onContinue() {
     this.continue.emit(null);
     this.activeModal.close();
-  }
-
-  ngOnInit() {
   }
 
   onClose() {

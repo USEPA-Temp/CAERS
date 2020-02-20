@@ -63,6 +63,12 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
         .subscribe(releasePointResponse => {
           this.tableData = releasePointResponse;
       });
+    }, error => {
+      if (error.error && error.status === 422) {
+        const modalRef = this.modalService.open(ConfirmationDialogComponent);
+        modalRef.componentInstance.message = error.error.message;
+        modalRef.componentInstance.singleButton = true;
+      }
     });
   }
 

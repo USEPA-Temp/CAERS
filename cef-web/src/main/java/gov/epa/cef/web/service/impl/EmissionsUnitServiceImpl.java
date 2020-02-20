@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.exception.AppValidationException;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.service.EmissionsUnitService;
-import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EmissionsUnitDto;
 import gov.epa.cef.web.service.mapper.EmissionsUnitMapper;
 
@@ -54,6 +54,19 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
      * @param unitId
      */
     public void delete(Long unitId) {
+        EmissionsUnit emissionsUnit= unitRepo
+                .findById(unitId)
+                .orElse(null);
+
+        // check if the emissions unit was reported last year
+        unitRepo.retrieveByIdentifierFacilityYear(emissionsUnit.getUnitIdentifier(), 
+                emissionsUnit.getFacilitySite().getEisProgramId(), 
+                Integer.valueOf(emissionsUnit.getFacilitySite().getEmissionsReport().getYear() - 1).shortValue())
+                .ifPresent(oldUnit -> {
+                    throw new AppValidationException("This Unit has been submitted on previous years' facility reports, so it cannot be deleted. "
+                            + "If this Unit is no longer operational, please use the \"Operating Status\" field to mark this Unit as \"Permanently Shutdown\".");
+                });
+
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(unitId), EmissionsUnitRepository.class);
         unitRepo.deleteById(unitId);
     }

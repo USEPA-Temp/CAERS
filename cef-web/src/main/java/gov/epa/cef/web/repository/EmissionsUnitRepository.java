@@ -21,6 +21,16 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
     List<EmissionsUnit> findByFacilitySiteIdOrderByUnitIdentifier(Long facilitySiteId);
 
     /**
+     * Find Emissions Units with the specified identifier, EIS program id, and year
+     * @param identifier
+     * @param eisProgramId
+     * @param year
+     * @return
+     */
+    @Query("select eu from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where eu.unitIdentifier = :identifier and fs.eisProgramId = :eisProgramId and r.year = :year")
+    Optional<EmissionsUnit> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
+
+    /**
      *
      * @param id
      * @return EIS Program ID
