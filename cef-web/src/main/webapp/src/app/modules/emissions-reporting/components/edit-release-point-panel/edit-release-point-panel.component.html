@@ -2,7 +2,7 @@
     <div class="row pb-1">
         <label for="releasePointIdentifier" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point ID:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="releasePointIdentifier" formControlName="releasePointIdentifier" maxlength="20">
+            <input [readonly]="releasePoint" type="text" class="form-control" id="releasePointIdentifier" formControlName="releasePointIdentifier" maxlength="20">
             <app-validation-message [control]="releasePointForm.get('releasePointIdentifier')"></app-validation-message>
             <div class="validation-message" *ngIf="releasePointForm.errors?.duplicateReleasePointIdentifier">
                 Release Point Identifier must be unique within the facility. 

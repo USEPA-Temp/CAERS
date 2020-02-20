@@ -6,7 +6,7 @@
     <div class="row pb-1">
         <label for="processIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process ID:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier">
+            <input [readonly]="process" type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier">
             <app-validation-message [control]="processForm.get('emissionsProcessIdentifier')"></app-validation-message>
         </div>
         <label for="processDescriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Process Description:</strong></label>
