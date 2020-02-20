@@ -91,14 +91,9 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
             if(process['aircraftEngineTypeCode'] && process['sccCode']){
               //if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
               //to avoid comparing its own combination to itself, if its a new process then skip this check
-              if (this.process) {
-                if (process['id'] !== this.process.id){
-                  let combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
-                  this.sccAndAircraftCombinations.push(combination);
-                } 
-              } else {
-                  let combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
-                  this.sccAndAircraftCombinations.push(combination);
+              if ((!this.process) || (this.process && process['id']!== this.process.id)){
+                let combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
+                this.sccAndAircraftCombinations.push(combination);
               }
             }
         });
@@ -306,12 +301,16 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
   checkSccAndAircraftDuplicate(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if (control.get('aircraftEngineTypeCode').value) {
+      if ((control.get('aircraftEngineTypeCode').value) && (control.get('sccCode').value)) {
         let codeCombo = control.get('aircraftEngineTypeCode').value.code + control.get('sccCode').value;
         this.sccAndAircraftCombinations.forEach(combination =>{
           if (codeCombo === combination) {
             control.get('aircraftEngineTypeCode').setErrors({'invalidAircraftSCCCombination': true});
             control.get('sccCode').setErrors({'invalidAircraftSCCCombination': true});
+          }
+          else{
+            control.get('sccCode').setErrors(null);
+            control.get('aircraftEngineTypeCode').setErrors(null);
           }
         });
       } else {
