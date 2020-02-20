@@ -228,11 +228,11 @@ public class LookupApi {
      * Retrieve Aircraft Engine Type codes
      * @return
      */
-    @GetMapping(value = "/aircraftEngineCode")
+    @GetMapping(value = "/aircraftEngineCode/{scc}")
     @ResponseBody
-    public ResponseEntity<List<AircraftEngineTypeCodeDto>> retrieveAircraftEngineCodes() {
+    public ResponseEntity<List<AircraftEngineTypeCodeDto>> retrieveAircraftEngineCodes(@NotNull @PathVariable String scc) {
 
-        List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes();
+        List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes(scc);
         return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
     }
     

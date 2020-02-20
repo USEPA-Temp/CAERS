@@ -29,6 +29,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   sccWarning: string;
   aircraftSCCcheck = false;
   invalidAircraftSCC = false;
+  processHasAETC = false;
 
   processForm = this.fb.group({
     aircraftEngineTypeCode: [null],
@@ -148,46 +149,79 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     });
   }
 
+  // check for aircraft type SCC and associated Aircraft Engine Type Codes
   checkAircraftSCC() {
+    this.aircraftSCCcheck = false;
+    this.invalidAircraftSCC = false;
+    this.checkForAircraftSCC();
+    if (this.aircraftSCCcheck) {
+      // get AETC list and set form value
+      this.getAircraftEngineCodes();
+    } else if (!this.aircraftSCCcheck && this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
+      this.aircraftEngineTypeValue = null;
+      this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
+      this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
+      this.processHasAETC = true;
+      this.invalidAircraftSCC = true;
+    }
+  }
+
+  // check if aircraft type SCC
+  checkForAircraftSCC() {
     const formSccCode = this.processForm.get('sccCode');
+    this.aircraftSCCcheck = false;
     for (let scc of this.aircraftEngineSCC) {
       if (scc === formSccCode.value) {
-
         this.aircraftSCCcheck = true;
-
-        // form field is required if selected SCC is aircraft
-        this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
-        this.lookupService.retrieveAircraftEngineCodes()
-        .subscribe(result => {
-          this.aircraftEngineTypeValue = result.filter(val => (val.scc === this.processForm.get('sccCode').value));
-          for (let item of this.aircraftEngineTypeValue) {
-            this.invalidAircraftSCC = false;
-            if (this.process !== undefined && this.process.aircraftEngineTypeCode !== null
-              && (item.code === this.process.aircraftEngineTypeCode.code)) {
-              this.processForm.controls['aircraftEngineTypeCode'].setValue(item);
-              break;
-            } else {
-              this.processForm.controls['aircraftEngineTypeCode'].reset();
-            }
-          }
-        });
+        this.processHasAETC = true;
         break;
-      } else if (formSccCode.value !== null && this.process.aircraftEngineTypeCode !== null) {
-        this.aircraftEngineTypeValue = null;
-        this.aircraftSCCcheck = true;
-        this.invalidAircraftSCC = true;
-      } else {
-        this.processForm.controls['aircraftEngineTypeCode'].reset();
-        this.aircraftSCCcheck = false;
-        this.invalidAircraftSCC = false;
       }
     }
 
-    if (!this.aircraftSCCcheck) {
-      // reset form field if selected SCC is not aircraft
+    if (this.aircraftSCCcheck) {
+      this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
+      this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
+    } else if (!this.aircraftSCCcheck) {
       this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
-      this.processForm.controls.aircraftEngineTypeCode.reset();
+      this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
+      if (this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
+        this.processForm.controls.aircraftEngineTypeCode.reset(this.process.aircraftEngineTypeCode);
+        this.invalidAircraftSCC = true;
+        this.processHasAETC = true;
+      } else {
+        this.aircraftEngineTypeValue = null;
+        this.processHasAETC = false;
+      }
     }
+  }
+
+  // get AETC list
+  getAircraftEngineCodes() {
+    let codeInList = false;
+    this.lookupService.retrieveAircraftEngineCodes(this.processForm.get('sccCode').value)
+    .subscribe(result => {
+      this.aircraftEngineTypeValue = result;
+
+      // check if process AETC is valid
+      if (this.aircraftSCCcheck && this.aircraftEngineTypeValue !== null && this.aircraftEngineTypeValue !== undefined) {
+        if (this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
+          for (let item of this.aircraftEngineTypeValue) {
+
+            if (item.code === this.process.aircraftEngineTypeCode.code) {
+              this.invalidAircraftSCC = false;
+              codeInList = true;
+              this.processForm.controls.aircraftEngineTypeCode.setValue(item);
+              break;
+            }
+          }
+        }
+        if (!codeInList) {
+          this.processForm.controls.aircraftEngineTypeCode.setValue(null);
+          this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
+          this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
+        }
+      }
+    });
   }
 
   onSubmit() {
@@ -260,12 +294,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   checkMatchSccAircraft(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       if (this.invalidAircraftSCC) {
-        if (control.get('aircraftEngineTypeCode').value !== null) {
+        if (control.get('aircraftEngineTypeCode') !== null && control.get('aircraftEngineTypeCode').value !== null) {
           control.get('aircraftEngineTypeCode').setErrors({'invalidAircraftSCC': true});
         } else {
           control.get('aircraftEngineTypeCode').setErrors(null);
-          return null;
         }
+        return null;
       }
     };
   }
@@ -285,4 +319,5 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       }
     };
   }
+
 }

@@ -209,7 +209,7 @@ public interface LookupService {
      * Retrieve Aircraft Engine Type Codes
      * @return
      */
-    List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes();
+    List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes(String scc);
     
     /**
     * Retrieve Point Source SCC code database object by code
