@@ -276,6 +276,34 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP_PCT.value()) && errorMap.get(ValidationField.PROCESS_RP_PCT.value()).size() == 3);
     }
     
+    @Test
+    public void aircraftCodeAndSccDuplicateCombinationFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        EmissionsProcess ep1 = createBaseEmissionsProcess();
+
+        
+        AircraftEngineTypeCode aircraft = new AircraftEngineTypeCode();
+        aircraft.setCode("1322");
+        aircraft.setScc("2275001000");
+        
+        testData.setAircraftEngineTypeCode(aircraft);
+        testData.setSccCode("2275001000");
+        testData.setId(1L);
+        ep1.setAircraftEngineTypeCode(aircraft);
+        ep1.setSccCode("2275001000");
+        ep1.setId(2L);
+        
+        testData.getEmissionsUnit().getEmissionsProcesses().add(ep1);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()).size() == 1);
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
@@ -290,7 +318,8 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         EmissionsUnit unit = new EmissionsUnit();
         unit.setId(1L);
         unit.setFacilitySite(facility);
-        
+        facility.getEmissionsUnits().add(unit);
+
         EmissionsProcess result = new EmissionsProcess();
         
         OperatingStatusCode os = new OperatingStatusCode();

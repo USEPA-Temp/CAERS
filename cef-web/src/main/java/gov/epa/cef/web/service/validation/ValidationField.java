@@ -26,6 +26,7 @@ public enum ValidationField {
     PROCESS_INFO_SCC("report.facilitySite.emissionsUnit.emissionsProcess.information.scc"),
     PROCESS_RP("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.required"),
     PROCESS_AIRCRAFT_CODE("report.facilitySite.emissionsUnit.emissionsProcess.aircraftCode"),
+    PROCESS_AIRCRAFT_CODE_AND_SCC_CODE("report.facilitySite.emissionsUnit.emissionsProcess.aircraftCodeAndSccCombination"),
     PERIOD_CALC_VALUE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue"),
     PERIOD_CALC_MAT_CODE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationMaterialCode"),
     PERIOD_CALC_TYPE_CODE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterTypeCode"),

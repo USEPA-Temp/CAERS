@@ -42,14 +42,14 @@ export class EmissionsUnitTableComponent extends BaseSortableTable implements On
   }
 
   openDeleteModal(emissionUnitName: string, emissionUnitId: number, facilitySiteId: number) {
-        const modalMessage = `Are you sure you want to delete ${emissionUnitName} from this facility? This will also remove 
-          any Emission Process, Emissions, Control Assignments, and Release Point Assignments associated with this Emissions Unit.`;
-        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
-        modalRef.componentInstance.message = modalMessage;
-        modalRef.componentInstance.continue.subscribe(() => {
-            this.deleteEmissionUnit(emissionUnitId, facilitySiteId);
-        });
-    }
+    const modalMessage = `Are you sure you want to delete ${emissionUnitName} from this facility? This will also remove 
+      any Emission Process, Emissions, Control Assignments, and Release Point Assignments associated with this Emissions Unit.`;
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.continue.subscribe(() => {
+        this.deleteEmissionUnit(emissionUnitId, facilitySiteId);
+    });
+  }
 
   // delete an emission unit from the database
   deleteEmissionUnit(emissionUnitId: number, facilitySiteId: number) {
@@ -64,6 +64,12 @@ export class EmissionsUnitTableComponent extends BaseSortableTable implements On
       // emit the facility data back to the sidebar to reflect the updated
       // list of emission units
       this.sharedService.updateReportStatusAndEmit(this.route);
+    }, error => {
+      if (error.error && error.status === 422) {
+        const modalRef = this.modalService.open(ConfirmationDialogComponent);
+        modalRef.componentInstance.message = error.error.message;
+        modalRef.componentInstance.singleButton = true;
+      }
     });
   }
 }
