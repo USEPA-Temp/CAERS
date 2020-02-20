@@ -419,10 +419,10 @@ public class LookupServiceImpl implements LookupService {
     }
     
     @Override
-    public List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes() {
+    public List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes(String scc) {
 
         List<AircraftEngineTypeCodeDto> result = new ArrayList<AircraftEngineTypeCodeDto>();
-        Iterable<AircraftEngineTypeCode> entities = aircraftEngCodeRepo.findAll(Sort.by(Direction.ASC, "faaAircraftType"));
+        Iterable<AircraftEngineTypeCode> entities = aircraftEngCodeRepo.findByScc(scc, Sort.by(Direction.ASC, "faaAircraftType"));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.aircraftEngCodeToDto(entity));
