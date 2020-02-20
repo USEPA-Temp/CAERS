@@ -127,7 +127,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         	
             // Check for unique SCC and AircraftEngineType code combination within a facility site
             if ((emissionsProcess.getSccCode() != null) && (emissionsProcess.getAircraftEngineTypeCode() != null)) {
-            	String testingCombination = emissionsProcess.getAircraftEngineTypeCode().getCode().toString() + emissionsProcess.getSccCode().toString();
+            	String testingCombination = emissionsProcess.getAircraftEngineTypeCode().getCode() + emissionsProcess.getSccCode();
                 List<String> combinationList = new ArrayList<String>();
                 for(EmissionsUnit eu: emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsUnits()){
                 	if(eu.getEmissionsProcesses() != null){

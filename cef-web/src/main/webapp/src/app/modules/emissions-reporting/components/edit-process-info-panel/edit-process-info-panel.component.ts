@@ -22,7 +22,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
   @Input() unitIdentifier: string;
   @Input() emissionsUnit: EmissionUnit;
-  emissionUnits: EmissionUnit[];
   sccAndAircraftCombinations: String[] = [];
   emissionUnit: EmissionUnit;
   emissionsReportYear: number;
@@ -86,10 +85,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
       this.emissionsReportYear = data.facilitySite.emissionsReport.year;
       this.emissionUnitService.retrieveForFacility(data.facilitySite.id).subscribe(emissionUnits =>{
-        this.emissionUnits = emissionUnits;
-        this.emissionUnits.forEach(eu => {
+        emissionUnits.forEach(eu => {
           eu['emissionsProcesses'].forEach(process =>{
             if(process['aircraftEngineTypeCode'] && process['sccCode']){
+              //if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
+              //to avoid comparing its own combination to itself, if its a new process then skip this check
               if (this.process) {
                 if (process['id'] !== this.process.id){
                   let combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
