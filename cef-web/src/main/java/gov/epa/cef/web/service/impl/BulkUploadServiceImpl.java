@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import gov.epa.cef.web.client.api.ExcelParserClient;
 import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
@@ -580,8 +581,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         Emission result = uploadMapper.emissionsFromDto(dto);
 
-        result.setFormulaIndicator(false);
-        result.setTotalManualEntry(true);
+        result.setTotalManualEntry(false);
+        result.setFormulaIndicator(Strings.emptyToNull(dto.getEmissionsFactorFormula()) != null);
 
         if (dto.getEmissionsCalcMethodCode() != null) {
             result.setEmissionsCalcMethodCode(calcMethodCodeRepo.findById(dto.getEmissionsCalcMethodCode()).orElse(null));
