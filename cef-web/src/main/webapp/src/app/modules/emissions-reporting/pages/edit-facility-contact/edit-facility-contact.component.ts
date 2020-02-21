@@ -57,13 +57,15 @@ export class EditFacilityContactComponent implements OnInit {
     stateCode: [null, Validators.required],
     postalCode: ['', [
       Validators.required,
-      Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')]],
+      Validators.pattern('^\\d{5}(-\\d{4})?$')]],
     mailingStreetAddress: [''],
     mailingCity: [''],
     mailingStateCode: [null],
-    mailingPostalCode: ['', Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')],
+    mailingPostalCode: ['', Validators.pattern('^\\d{5}(-\\d{4})?$')],
     county: ['']
-  }, {validators: this.mailingAddressValidator()});
+  }, {validators: [
+    this.mailingAddressValidator()
+   ]});
 
   facilityContactType: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
