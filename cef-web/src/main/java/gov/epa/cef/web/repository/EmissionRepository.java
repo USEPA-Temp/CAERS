@@ -6,12 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.Pollutant;
+
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EmissionRepository extends CrudRepository<Emission, Long>, ProgramIdRetriever, ReportIdRetriever {
 
+    List<Emission> findAllByPollutant(Pollutant pollutant);
+    
     /**
      *
      * @param id
