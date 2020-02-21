@@ -27,6 +27,8 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
@@ -495,18 +497,94 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
+    
+    /**
+    * There should be one error when total emissions values is less than 0,
+    * one error for total emissions are outside of tolerance,
+    * and there should be no errors when value is greater than or equal to 0
+    */
+   @Test
+   public void totalEmissionsValue_FailTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.setTotalEmissions(BigDecimal.ZERO);
+
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+       
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+       
+       cefContext = createContext();
+       testData.setTotalEmissions(new BigDecimal(-10));
+
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+       cefContext = createContext();
+       testData.setTotalEmissions(new BigDecimal(10));
+       
+       assertTrue(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+   }
+   
+   /**
+    * There should be no errors when facility with status of not OP is a landfill or if the status year is > current cycle year
+    */
+   @Test
+   public void facilityNotOperatingReportEmissionsPassTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getOperatingStatusCode().setCode("TS");
+       
+       assertTrue(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+       
+       cefContext = createContext();
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getFacilitySourceTypeCode().setCode("104");
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2000);
+       
+       
+       assertTrue(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+   }
+   
+   /**
+    * There should be errors when facility with status of not OP is not a landfill and the status year is <= current cycle year
+    */
+   @Test
+   public void facilityNotOperatingReportEmissionsFailTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getOperatingStatusCode().setCode("TS");
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2000);
+       
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_REPORTED.value()) && errorMap.get(ValidationField.EMISSION_REPORTED.value()).size() == 1);
+   }
 
 
     private Emission createBaseEmission(boolean totalDirectEntry) {
 
         Emission result = new Emission();
-
+        
         CalculationMethodCode calcMethod = new CalculationMethodCode();
         calcMethod.setCode("1");
         calcMethod.setControlIndicator(false);
         calcMethod.setEpaEmissionFactor(false);
         calcMethod.setTotalDirectEntry(totalDirectEntry);
         result.setEmissionsCalcMethodCode(calcMethod);
+        
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("100");
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
 
         ReportingPeriod period = new ReportingPeriod();
         period.setCalculationParameterValue(new BigDecimal("10"));
@@ -514,6 +592,9 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.setEmissionsProcess(new EmissionsProcess());
         period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2020);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setOperatingStatusCode(opStatCode);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setFacilitySourceTypeCode(sourceType);
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
         result.setReportingPeriod(period);

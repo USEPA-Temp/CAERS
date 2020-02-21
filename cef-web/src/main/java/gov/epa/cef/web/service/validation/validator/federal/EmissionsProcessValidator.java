@@ -191,6 +191,20 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 		        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
 		        }
 		      }
+	        
+	        // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
+	        if (emissionsProcess.getReleasePointAppts() != null) {
+	        	for(ReleasePointAppt rpa: emissionsProcess.getReleasePointAppts()){
+	        		  if((rpa.getPercent() < 1) || (rpa.getPercent() > 100)){
+	  	        		result = false;
+			        	context.addFederalError(
+			        			ValidationField.PROCESS_RP_PCT.value(),
+			        			"emissionsProcess.releasePointAppts.percent.range",
+			        			createValidationDetails(emissionsProcess),
+			        			rpa.getReleasePoint().getReleasePointIdentifier());  
+	        		  }
+	        	}
+	        }
         }
         
         return result;

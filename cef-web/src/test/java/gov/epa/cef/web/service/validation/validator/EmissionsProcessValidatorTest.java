@@ -183,13 +183,13 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rp2.setId(2L);
         ReleasePointAppt rpa3 = new ReleasePointAppt();
         rpa3.setEmissionsProcess(testData);
-        rpa3.setPercent((double) 0);
+        rpa3.setPercent(0D);
         rpa3.setReleasePoint(rp2);
         testData.getReleasePointAppts().add(rpa3);
 
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP.value()) && errorMap.get(ValidationField.PROCESS_RP.value()).size() == 1);
     }
@@ -243,6 +243,37 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	
     	assertTrue(this.validator.validate(cefContext, testData));
     	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void simpleValidateReleasePointApportionmentRangeFailTest() {
+	      
+        CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+        ReleasePointAppt rpa1 = new ReleasePointAppt();
+        ReleasePoint rp1 = new ReleasePoint();
+        rp1.setReleasePointIdentifier("test");
+        rp1.setId(5L);
+        rpa1.setPercent(101D);
+        rpa1.setReleasePoint(rp1);
+        
+        testData.getReleasePointAppts().add(rpa1);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP_PCT.value()) && errorMap.get(ValidationField.PROCESS_RP_PCT.value()).size() == 2);
+        
+        cefContext = createContext();
+        rpa1.setPercent(-1D);
+        testData.getReleasePointAppts().add(rpa1);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 4);
+        
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP_PCT.value()) && errorMap.get(ValidationField.PROCESS_RP_PCT.value()).size() == 3);
     }
     
     @Test
