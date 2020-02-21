@@ -581,8 +581,8 @@ export class EmissionDetailsComponent implements OnInit {
   pollutantEmissionsUoMValidator(): ValidatorFn {
     return (control: FormGroup): {[key: string]: any} | null => {
       const pollutant = control.get('pollutant');
-      if (pollutant !== null && pollutant.value !== null && control.get('emissionsUomCode') !== null) {
-        if ((pollutant.value.pollutantCode === '605')
+      if (pollutant !== null && pollutant.value !== undefined && pollutant.value !== null && control.get('emissionsUomCode') !== null) {
+        if ((pollutant.value.pollutantCode !== undefined && pollutant.value.pollutantCode === '605')
         && control.get('emissionsUomCode').value.code !== 'CURIE') {
           return {emissionsUomCodeCurie: true};
         }
