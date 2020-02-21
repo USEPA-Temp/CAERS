@@ -6,6 +6,7 @@ import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -39,6 +40,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
     
     private static final String ASH_EMISSION_FORMULA_CODE = "A";
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
+    private static final String LANDFILL_SOURCE_CODE = "104";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -79,7 +81,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
             if (emission.getReportingPeriod() != null 
                     && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
                     && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
-
+            	
                 valid = false;
                 context.addFederalError(
                         ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
@@ -244,6 +246,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                                 createValidationDetails(emission),
                                 errorTolerance.multiply(new BigDecimal("100")).toString(),
                                 totalEmissions.toString());
+                        
                     } else if (checkTolerance(totalEmissions, emission.getTotalEmissions(), warningTolerance)) {
 
                         valid = false;
@@ -273,41 +276,73 @@ public class EmissionValidator extends BaseValidator<Emission> {
         if (emission != null) {
           // check current year's total emissions against previous year's total emissions warning
           EmissionsReport currentReport = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport();
-     
-          List<EmissionsReport> erList = reportRepo.findByEisProgramId(currentReport.getEisProgramId()).stream()
-              .filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
-              .sorted(Comparator.comparing(EmissionsReport::getYear))
-              .collect(Collectors.toList());
           
-          if (!erList.isEmpty()) {
-          	
-          	Short previousReportYr = erList.get(erList.size()-1).getYear();
-          	Long previousReportId = erList.get(erList.size()-1).getId();
-          	
-          	if (emission.getPollutant() != null) {
-          		List<Emission> eList = emissionRepo.findAllByPollutant(emission.getPollutant());
-          		
-          		if (!eList.isEmpty()) {
-          			for (Emission e: eList) {
-          				if (e.getReportingPeriod() != null
-          					&& (e.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getId() == previousReportId
-          					&& e.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier().contentEquals(emission.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier()))) {
-          					
-          					// check if total emissions are equal in value and scale 
-          					if (e.getTotalEmissions().equals(emission.getTotalEmissions())) {
-			          			
-			          			valid = false;
-			          			context.addFederalWarning(
-			          					ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
-			          					"emission.totalEmissions.copied", 
-			          					createValidationDetails(emission),
-			          					previousReportYr.toString());
-			          		}
+          if (currentReport != null) {
+	          List<EmissionsReport> erList = reportRepo.findByEisProgramId(currentReport.getEisProgramId()).stream()
+	              .filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
+	              .sorted(Comparator.comparing(EmissionsReport::getYear))
+	              .collect(Collectors.toList());
+	          
+	          if (!erList.isEmpty()) {
+	          	
+	          	Short previousReportYr = erList.get(erList.size()-1).getYear();
+	          	Long previousReportId = erList.get(erList.size()-1).getId();
+	          	
+	          	if (emission.getPollutant() != null) {
+	          		List<Emission> eList = emissionRepo.findAllByPollutant(emission.getPollutant());
+	          		
+	          		if (!eList.isEmpty()) {
+	          			for (Emission e: eList) {
+	          				if (e.getReportingPeriod() != null
+	          					&& (e.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getId() == previousReportId
+	          					&& e.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier().contentEquals(emission.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier()))) {
+	          					
+	          					// check if total emissions are equal in value and scale 
+	          					if (e.getTotalEmissions().equals(emission.getTotalEmissions())) {
+				          			
+				          			valid = false;
+				          			context.addFederalWarning(
+				          					ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+				          					"emission.totalEmissions.copied", 
+				          					createValidationDetails(emission),
+				          					previousReportYr.toString());
+				          		}
+				          	}
 			          	}
-		          	}
+			          }
 		          }
-	          }
+		        }
+          }
+        }
+        
+        FacilitySite fs = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite();
+        if (fs.getStatusYear() != null && fs.getFacilitySourceTypeCode() != null) {
+        	
+        	// total emissions must be >= 0
+	        if (emission.getTotalEmissions() == null || emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == -1) {
+		     
+		        	valid = false;
+		        	context.addFederalError(
+		        			ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+		        			"emission.totalEmissions.range", 
+		        			createValidationDetails(emission));
 	        }
+		        
+	        // total emissions > 0 will not be accepted if facility site operation status is not OP,
+	        // except when source type is landfill or status year is greater than inventory cycle year.
+	        if ((!LANDFILL_SOURCE_CODE.contentEquals(fs.getFacilitySourceTypeCode().getCode()))
+	        	&& fs.getStatusYear() <= fs.getEmissionsReport().getYear()
+	        	&& (!"OP".contentEquals(fs.getOperatingStatusCode().getCode()))) {
+	        	
+	        	if (emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == 1) {
+	  
+		        	valid = false;
+		        	context.addFederalError(
+		        			ValidationField.EMISSION_REPORTED.value(),
+		        			"emission.reportedEmissions.invalid", 
+		        			createValidationDetails(emission));
+	        	}
+	      	}
         }
 
         return valid;

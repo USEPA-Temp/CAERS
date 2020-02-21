@@ -27,7 +27,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
   controlPathId: number;
 
   releasePointApptForm = this.fb.group({
-    percent: ['', [Validators.required, Validators.max(100), Validators.pattern('[0-9]*')]],
+    percent: ['', [Validators.required, Validators.min(1), Validators.max(100), Validators.pattern('[0-9]*')]],
     selectedReleasePointAppt: ['', Validators.required],
     controlPath: ['']
   });

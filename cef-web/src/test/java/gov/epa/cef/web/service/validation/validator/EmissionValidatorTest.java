@@ -28,6 +28,8 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
@@ -56,7 +58,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
     private UnitMeasureCode curieUom;
     private UnitMeasureCode lbUom;
     private UnitMeasureCode tonUom;
-    private Pollutant nox;
+    private Pollutant pollutant;
 
     @Before
     public void init() {
@@ -81,11 +83,11 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         when(cefConfig.getEmissionsTotalErrorTolerance()).thenReturn(new BigDecimal(".05"));
         when(cefConfig.getEmissionsTotalWarningTolerance()).thenReturn(new BigDecimal(".01"));
         
-        nox = new Pollutant();
-        nox.setPollutantCode("NO3");
-        nox.setPollutantCasId("Nitrate portion of PM2.5-PRI");
-        nox.setPollutantType("HAP");
-        nox.setPollutantStandardUomCode("LB");
+        pollutant = new Pollutant();
+        pollutant.setPollutantCode("NO3");
+        pollutant.setPollutantCasId("Nitrate portion of PM2.5-PRI");
+        pollutant.setPollutantType("HAP");
+        pollutant.setPollutantStandardUomCode("LB");
         
         List<EmissionsReport> erList = new ArrayList<EmissionsReport>();
         EmissionsReport er1 = new EmissionsReport();
@@ -124,16 +126,16 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         List<Emission> eList = new ArrayList<Emission>();
         Emission e1 = new Emission();
         e1.setId(2L);
-        e1.setPollutant(nox);
+        e1.setPollutant(pollutant);
         e1.setTotalEmissions(new BigDecimal(123.1000));
         e1.setReportingPeriod(rp);
         Emission e2 = new Emission();
-        e2.setPollutant(nox);
+        e2.setPollutant(pollutant);
         e2.setId(3L);
         eList.add(e1);
         eList.add(e2);
         
-        when(emissionRepo.findAllByPollutant(nox)).thenReturn(eList);
+        when(emissionRepo.findAllByPollutant(pollutant)).thenReturn(eList);
     }
 
     @Test
@@ -585,18 +587,94 @@ public class EmissionValidatorTest extends BaseValidatorTest {
       assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 2);
 
     }
+    
+    /**
+    * There should be one error when total emissions values is less than 0,
+    * one error for total emissions are outside of tolerance,
+    * and there should be no errors when value is greater than or equal to 0
+    */
+   @Test
+   public void totalEmissionsValue_FailTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.setTotalEmissions(BigDecimal.ZERO);
+
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+       
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+       
+       cefContext = createContext();
+       testData.setTotalEmissions(new BigDecimal(-10));
+
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+       cefContext = createContext();
+       testData.setTotalEmissions(new BigDecimal(10));
+       
+       assertTrue(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+   }
+   
+   /**
+    * There should be no errors when facility with status of not OP is a landfill or if the status year is > current cycle year
+    */
+   @Test
+   public void facilityNotOperatingReportEmissionsPassTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getOperatingStatusCode().setCode("TS");
+       
+       assertTrue(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+       
+       cefContext = createContext();
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getFacilitySourceTypeCode().setCode("104");
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2000);
+       
+       
+       assertTrue(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+   }
+   
+   /**
+    * There should be errors when facility with status of not OP is not a landfill and the status year is <= current cycle year
+    */
+   @Test
+   public void facilityNotOperatingReportEmissionsFailTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getOperatingStatusCode().setCode("TS");
+       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2000);
+       
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_REPORTED.value()) && errorMap.get(ValidationField.EMISSION_REPORTED.value()).size() == 1);
+   }
 
 
     private Emission createBaseEmission(boolean totalDirectEntry) {
 
         Emission result = new Emission();
-
+        
         CalculationMethodCode calcMethod = new CalculationMethodCode();
         calcMethod.setCode("1");
         calcMethod.setControlIndicator(false);
         calcMethod.setEpaEmissionFactor(false);
         calcMethod.setTotalDirectEntry(totalDirectEntry);
         result.setEmissionsCalcMethodCode(calcMethod);
+        
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("100");
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
 
         ReportingPeriod period = new ReportingPeriod();
         period.setCalculationParameterValue(new BigDecimal("10"));
@@ -605,13 +683,16 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.getEmissionsProcess().setEmissionsProcessIdentifier("test-1");
         period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2020);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setOperatingStatusCode(opStatCode);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setFacilitySourceTypeCode(sourceType);
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setEisProgramId("11111");
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setId(2L);
         result.setReportingPeriod(period);
 
-        result.setPollutant(nox);
+        result.setPollutant(pollutant);
         
         result.setEmissionsUomCode(tonUom);
 
