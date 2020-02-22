@@ -16,7 +16,7 @@
                     </button>
                     <button *ngIf="(facilitySite.emissionsReport.validationStatus=='PASSED'|| facilitySite.emissionsReport.validationStatus=='PASSED_WARNINGS') && showCertify"
                             [disabled]="!cromerrLoaded"
-                            id="certifyAndSubmit" 
+                            id="certifyAndSubmit"
                             class="btn btn-success btn-md my-3 ml-3">
                         Certify and Submit to SLT
                         <div *ngIf="showCertify && !cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
@@ -24,7 +24,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="card-footer d-flex flex-row justify-content-end">
+                <div class="card-footer d-flex flex-row justify-content-end" *ngIf="readOnlyMode">
                     <button *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')"
                         class="btn btn-success btn-md my-3 ml-3" (click)="reopenReport()">
                         Reopen Report
