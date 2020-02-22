@@ -9,7 +9,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap/modal/modal-ref";
 import {HttpEvent, HttpEventType} from "@angular/common/http";
 import {EMPTY} from "rxjs";
-import {UserService} from "../../../../core/services/user.service";
+import {UserService} from "src/app/core/services/user.service";
 
 interface PleaseWaitConfig {
     modal: NgbModalRef,
