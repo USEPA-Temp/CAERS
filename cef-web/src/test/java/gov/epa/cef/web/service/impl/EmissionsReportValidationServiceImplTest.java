@@ -125,6 +125,7 @@ public class EmissionsReportValidationServiceImplTest {
         emission.setReportingPeriod(reportingPeriod);
         emissionsProcess.getReportingPeriods().add(reportingPeriod);
         emissionsProcess.setEmissionsUnit(emissionsUnit);
+        emissionsProcess.setOperatingStatusCode(opStatCode);
         emissionsUnit.getEmissionsProcesses().add(emissionsProcess);
         emissionsUnit.setOperatingStatusCode(opStatCode);
         emissionsUnit.setFacilitySite(facilitySite);

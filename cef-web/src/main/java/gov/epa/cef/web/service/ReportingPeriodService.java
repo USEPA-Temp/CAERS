@@ -7,6 +7,13 @@ import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 public interface ReportingPeriodService {
 
     /**
+     * Create a new Reporting Period
+     * @param dto
+     * @return
+     */
+    public ReportingPeriodDto create(ReportingPeriodDto dto);
+
+    /**
      * Update a Reporting Period
      * @param dto
      * @return

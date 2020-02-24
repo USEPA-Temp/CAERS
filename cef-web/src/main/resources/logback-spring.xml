@@ -24,9 +24,9 @@
             <appender-ref ref="TIME_BASED_FILE"/>
         </root>
     </springProfile>
-    <logger name="gov.epa.cdx" level="debug"/>
+    <logger name="gov.epa.cef" level="debug"/>
     <logger name="org.springframework" level="info"/>
-    <logger name="org.springframework.security" level="debug"/>
+    <logger name="org.springframework.security" level="info"/>
     <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="info"/>
     <logger name="org.hibernate.SQL" level="info"/>
     <logger name="org.flywaydb" level="info"/>

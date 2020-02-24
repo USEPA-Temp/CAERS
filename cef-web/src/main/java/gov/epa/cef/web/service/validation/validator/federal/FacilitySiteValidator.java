@@ -16,6 +16,8 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -24,6 +26,8 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
+    private static final String STATUS_OPERATING = "OP";
+    
     @Override
     public void compose(FluentValidator validator,
                         ValidatorContext validatorContext,
@@ -54,7 +58,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         }
         
         // If facility operation status is not operating, status year is required
-        if (!"OP".contentEquals(facilitySite.getOperatingStatusCode().getCode()) && facilitySite.getStatusYear() == null) {
+        if (!STATUS_OPERATING.contentEquals(facilitySite.getOperatingStatusCode().getCode()) && facilitySite.getStatusYear() == null) {
         	
         	result = false;
         	context.addFederalError(
@@ -70,6 +74,59 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         			ValidationField.FACILITY_STATUS.value(), "facilitysite.status.range",
         			createValidationDetails(facilitySite));
         }
+        
+        // Postal codes must be entered as 5 digits (XXXXX) or 9 digits (XXXXX-XXXX).
+        if(facilitySite.getContacts() != null){
+        	for(FacilitySiteContact fc: facilitySite.getContacts()){
+            	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
+            	Pattern pattern = Pattern.compile(regex);
+            	if(fc.getPostalCode() != null){
+                	Matcher matcher = pattern.matcher(fc.getPostalCode());
+                	if(!matcher.matches()){
+                    	result = false; 
+                    	context.addFederalError(
+                    			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+                    			"facilitySite.contacts.postalCode.requiredFormat",
+                    			createContactValidationDetails(facilitySite));
+                	}	
+            	}
+            	if(fc.getMailingPostalCode() != null){
+                	Matcher matcher = pattern.matcher(fc.getMailingPostalCode());
+                	if(!matcher.matches()){
+                    	result = false; 
+                    	context.addFederalError(
+                    			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+                    			"facilitySite.contacts.postalCode.requiredFormat",
+                    			createContactValidationDetails(facilitySite));
+                	}	
+            	}
+        	}
+        }
+        if(facilitySite != null){
+        	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
+        	Pattern pattern = Pattern.compile(regex);
+        	if(facilitySite.getPostalCode() != null) {
+	        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
+	        	if(!matcher.matches()){
+	            	result = false; 
+	            	context.addFederalError(
+	            			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+	            			"facilitysite.postalCode.requiredFormat",
+	            			createValidationDetails(facilitySite));
+	        	}
+        	}
+        	if(facilitySite.getMailingPostalCode() != null){
+            	Matcher matcher = pattern.matcher(facilitySite.getMailingPostalCode());
+            	if(!matcher.matches()){
+                	result = false; 
+                	context.addFederalError(
+                			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+                			"facilitysite.postalCode.requiredFormat",
+                			createValidationDetails(facilitySite));
+            	}	
+        	}
+        }
+
         
         // Facility must have a facility NAICS code reported
         List<FacilityNAICSXref> fsNAICSList = facilitySite.getFacilityNAICS();

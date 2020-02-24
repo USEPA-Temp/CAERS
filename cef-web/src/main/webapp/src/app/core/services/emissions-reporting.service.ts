@@ -1,9 +1,10 @@
 import {EmissionsReport} from 'src/app/shared/models/emissions-report';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
 import {FacilitySite} from 'src/app/shared/models/facility-site';
+import {last, tap} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -78,7 +79,7 @@ export class EmissionsReportingService {
     /** POST request to the server to create a report for the current year from uploaded workbook */
     createReportFromUpload(eisFacilityId: string, reportYear: number,
                            frsFacilityId: string, stateCode: string,
-                           workbook: File): Observable<HttpResponse<EmissionsReport>> {
+                           workbook: File): Observable<HttpEvent<EmissionsReport>> {
 
         const url = `${this.baseUrl}/facility/${eisFacilityId}`;
 
@@ -95,7 +96,8 @@ export class EmissionsReportingService {
         }));
 
         return this.http.post<EmissionsReport>(url, formData, {
-            observe: "response"
+            observe: "events",
+            reportProgress: true
         });
     }
 

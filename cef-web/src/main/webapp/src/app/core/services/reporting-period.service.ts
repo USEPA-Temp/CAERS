@@ -12,6 +12,11 @@ export class ReportingPeriodService {
 
   constructor(private http: HttpClient) { }
 
+  create(period: ReportingPeriod): Observable<ReportingPeriod> {
+    const url = `${this.baseUrl}`;
+    return this.http.post<ReportingPeriod>(url, period);
+  }
+
   update(period: ReportingPeriod): Observable<ReportingPeriod> {
     const url = `${this.baseUrl}/${period.id}`;
     return this.http.put<ReportingPeriod>(url, period);

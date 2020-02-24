@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import gov.epa.cef.web.client.api.ExcelParserClient;
 import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
@@ -65,6 +66,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.CalculationUtils;
@@ -476,7 +478,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 this.emissionsReportService.delete(report.getId());
             });
 
-
         ExcelParserResponse response = this.excelParserClient.parseWorkbook(workbook);
 
         if (response.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -491,10 +492,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         } else {
 
-            List<String> errors = new ArrayList<>();
-            errors.add("Unable to read workbook.");
+            List<WorksheetError> errors = new ArrayList<>();
+            errors.add(new WorksheetError(null, -1, "Unable to read workbook."));
             if (response.getJson() != null && response.getJson().hasNonNull("message")) {
-                errors.add(response.getJson().path("message").asText());
+                errors.add(new WorksheetError(null, -1, response.getJson().path("message").asText()));
             }
 
             throw new BulkReportValidationException(errors);
@@ -580,8 +581,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         Emission result = uploadMapper.emissionsFromDto(dto);
 
-        result.setFormulaIndicator(false);
-        result.setTotalManualEntry(true);
+        result.setTotalManualEntry(false);
+        result.setFormulaIndicator(Strings.emptyToNull(dto.getEmissionsFactorFormula()) != null);
 
         if (dto.getEmissionsCalcMethodCode() != null) {
             result.setEmissionsCalcMethodCode(calcMethodCodeRepo.findById(dto.getEmissionsCalcMethodCode()).orElse(null));

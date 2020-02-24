@@ -382,7 +382,7 @@ public class EmissionsReportApi {
         ObjectNode objectNode = this.objectMapper.createObjectNode();
         objectNode.put("failed", true);
         ArrayNode arrayNode = objectNode.putArray("errors");
-        exception.getErrors().forEach(error -> arrayNode.add(error));
+        exception.getErrors().forEach(error -> arrayNode.add(this.objectMapper.convertValue(error, JsonNode.class)));
 
         return ResponseEntity.badRequest().body(objectNode);
     }
