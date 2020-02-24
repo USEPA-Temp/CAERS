@@ -80,42 +80,50 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         	for(FacilitySiteContact fc: facilitySite.getContacts()){
             	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
             	Pattern pattern = Pattern.compile(regex);
-            	Matcher matcher = pattern.matcher(fc.getPostalCode());
-            	if(!matcher.matches()){
-                	result = false; 
-                	context.addFederalError(
-                			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-                			"facilitySite.contacts.postalCode.requiredFormat",
-                			createContactValidationDetails(facilitySite));
+            	if(fc.getPostalCode() != null){
+                	Matcher matcher = pattern.matcher(fc.getPostalCode());
+                	if(!matcher.matches()){
+                    	result = false; 
+                    	context.addFederalError(
+                    			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+                    			"facilitySite.contacts.postalCode.requiredFormat",
+                    			createContactValidationDetails(facilitySite));
+                	}	
             	}
-            	matcher = pattern.matcher(fc.getMailingPostalCode());
-            	if(!matcher.matches()){
-                	result = false; 
-                	context.addFederalError(
-                			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-                			"facilitySite.contacts.postalCode.requiredFormat",
-                			createContactValidationDetails(facilitySite));
+            	if(fc.getMailingPostalCode() != null){
+                	Matcher matcher = pattern.matcher(fc.getMailingPostalCode());
+                	if(!matcher.matches()){
+                    	result = false; 
+                    	context.addFederalError(
+                    			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+                    			"facilitySite.contacts.postalCode.requiredFormat",
+                    			createContactValidationDetails(facilitySite));
+                	}	
             	}
         	}
         }
         if(facilitySite != null){
         	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
         	Pattern pattern = Pattern.compile(regex);
-        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
-        	if(!matcher.matches()){
-            	result = false; 
-            	context.addFederalError(
-            			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-            			"facilitysite.postalCode.requiredFormat",
-            			createValidationDetails(facilitySite));
+        	if(facilitySite.getPostalCode() != null) {
+	        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
+	        	if(!matcher.matches()){
+	            	result = false; 
+	            	context.addFederalError(
+	            			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+	            			"facilitysite.postalCode.requiredFormat",
+	            			createValidationDetails(facilitySite));
+	        	}
         	}
-        	matcher = pattern.matcher(facilitySite.getMailingPostalCode());
-        	if(!matcher.matches()){
-            	result = false; 
-            	context.addFederalError(
-            			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-            			"facilitysite.postalCode.requiredFormat",
-            			createValidationDetails(facilitySite));
+        	if(facilitySite.getMailingPostalCode() != null){
+            	Matcher matcher = pattern.matcher(facilitySite.getMailingPostalCode());
+            	if(!matcher.matches()){
+                	result = false; 
+                	context.addFederalError(
+                			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+                			"facilitysite.postalCode.requiredFormat",
+                			createValidationDetails(facilitySite));
+            	}	
         	}
         }
 
