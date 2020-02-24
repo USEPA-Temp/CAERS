@@ -584,7 +584,7 @@ export class EmissionDetailsComponent implements OnInit {
       const pollutant = control.get('pollutant');
       if (pollutant !== null && pollutant.value !== undefined && pollutant.value !== null && control.get('emissionsUomCode') !== null) {
         if ((pollutant.value.pollutantCode !== undefined && pollutant.value.pollutantCode === '605')
-        && control.get('emissionsUomCode').value.code !== 'CURIE') {
+        && control.get('emissionsUomCode').value !== null && control.get('emissionsUomCode').value.code !== 'CURIE') {
           return {emissionsUomCodeCurie: true};
         }
         return null;
