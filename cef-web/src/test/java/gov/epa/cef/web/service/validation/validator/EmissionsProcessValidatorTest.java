@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -28,6 +29,7 @@ import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -304,6 +306,39 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()).size() == 1);
     }
     
+    @Test
+    public void reportingPeriodNoEmissionsFailTest() {
+    		
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	testData.getReportingPeriods().get(0).setEmissions(null);
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.PROCESS_PERIOD_EMISSION.value()) && errorMap.get(ValidationField.PROCESS_PERIOD_EMISSION.value()).size() == 1);
+    }
+    
+    @Test
+    public void reportingPeriodNoEmissionsPassTest() {
+    		
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    	
+    	cefContext = createContext();
+    	testData = createBaseEmissionsProcess();
+    	testData.getReportingPeriods().get(0).setEmissions(null);
+    	testData.getOperatingStatusCode().setCode("TS");
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    	
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
@@ -324,6 +359,18 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         
         OperatingStatusCode os = new OperatingStatusCode();
         os.setCode("OP");
+        
+        ReportingPeriod rperiod1 = new ReportingPeriod();
+        rperiod1.setId(1L);
+        
+        Emission e1 = new Emission();
+        e1.setId(1L);
+        e1.setReportingPeriod(rperiod1);
+        Emission e2 = new Emission();
+        e2.setId(2L);
+        e2.setReportingPeriod(rperiod1);
+        rperiod1.getEmissions().add(e1);
+        rperiod1.getEmissions().add(e2);
         
         ReleasePoint rp1 = new ReleasePoint();
         ReleasePoint rp2 = new ReleasePoint();
@@ -346,6 +393,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         result.setEmissionsUnit(unit);
         result.setAircraftEngineTypeCode(null);
         result.setOperatingStatusCode(os);
+        result.getReportingPeriods().add(rperiod1);
         result.setEmissionsProcessIdentifier("Boiler 001");
         result.setSccCode("30503506");
 

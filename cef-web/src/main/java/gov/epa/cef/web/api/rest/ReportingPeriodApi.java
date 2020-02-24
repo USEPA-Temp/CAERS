@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,23 @@ public class ReportingPeriodApi {
 
         this.reportingPeriodService = reportingPeriodService;
         this.securityService = securityService;
+    }
+
+    /**
+     * Create a new Reporting Period
+     * @param dto
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<ReportingPeriodDto> createReportingPeriod(
+        @NotNull @RequestBody ReportingPeriodDto dto) {
+
+        this.securityService.facilityEnforcer()
+            .enforceEntity(dto.getEmissionsProcessId(), EmissionsProcessRepository.class);
+
+        ReportingPeriodDto result = reportingPeriodService.create(dto);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**

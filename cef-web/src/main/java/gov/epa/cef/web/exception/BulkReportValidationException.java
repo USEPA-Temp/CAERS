@@ -1,5 +1,6 @@
 package gov.epa.cef.web.exception;
 
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -11,9 +12,9 @@ import java.util.List;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class BulkReportValidationException extends ApplicationException {
 
-    private final List<String> errors;
+    private final List<WorksheetError> errors;
 
-    public BulkReportValidationException(List<String> errors) {
+    public BulkReportValidationException(List<WorksheetError> errors) {
 
         super(ApplicationErrorCode.E_INVALID_ARGUMENT, "Bulk Report failed validation.");
 
@@ -23,7 +24,7 @@ public class BulkReportValidationException extends ApplicationException {
         }
     }
 
-    public Collection<String> getErrors() {
+    public Collection<WorksheetError> getErrors() {
 
         return Collections.unmodifiableCollection(this.errors);
     }

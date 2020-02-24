@@ -457,6 +457,7 @@
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.14.0</version>
                 <executions>
                     <execution>
                         <id>cers_1_2</id>
@@ -535,6 +536,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.6</version>
                 <configuration>
                     <vmArgs>
                         <vmArg>-Djavax.xml.accessExternalDTD=all</vmArg>
@@ -616,7 +618,7 @@
                             <target>
 
                                 <replace
-                                    dir="${build.directory}/generated-sources/swagger/src/main/java/gov/epa/client/frs/iptquery/model"
+                                    dir="${project.build.directory}/generated-sources/swagger/src/main/java/gov/epa/client/frs/iptquery/model"
                                     token="implements Serializable"
                                     value="implements Serializable, gov.epa.cef.web.client.api.FrsProgramIdentifiable">
                                     <include name="AlternativeId.java"/>
