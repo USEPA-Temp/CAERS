@@ -24,6 +24,10 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 @Component
 public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
+    private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String STATUS_OPERATING = "OP";
+    
     @Override
     public void compose(FluentValidator validator,
                         ValidatorContext validatorContext,
@@ -44,7 +48,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
         // If unit operation status is not operating, status year is required
-        if (!"OP".contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getStatusYear() == null) {
+        if (!STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getStatusYear() == null) {
  	
         	result = false;
         	context.addFederalError(
@@ -101,10 +105,10 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         // If facility operation status is Temporarily Shutdown or Permanently Shutdown, emissions unit cannot be operating
         if (emissionsUnit != null && emissionsUnit.getFacilitySite() != null && emissionsUnit.getFacilitySite().getOperatingStatusCode() != null &&
             emissionsUnit.getOperatingStatusCode() != null) {
-	        if (("TS".contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode())
-	    		|| "PS".contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode()))
-	    		&& "OP".contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
-	 	
+	        if ((STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode())
+	    		|| STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode()))
+	    		&& STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+
 	        	result = false;
 	        	context.addFederalError(
 	        			ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(), "emissionsUnit.statusTypeCode.facilitySiteCondition",

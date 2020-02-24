@@ -24,6 +24,8 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
+    private static final String STATUS_OPERATING = "OP";
+    
     @Override
     public void compose(FluentValidator validator,
                         ValidatorContext validatorContext,
@@ -54,7 +56,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         }
         
         // If facility operation status is not operating, status year is required
-        if (!"OP".contentEquals(facilitySite.getOperatingStatusCode().getCode()) && facilitySite.getStatusYear() == null) {
+        if (!STATUS_OPERATING.contentEquals(facilitySite.getOperatingStatusCode().getCode()) && facilitySite.getStatusYear() == null) {
         	
         	result = false;
         	context.addFederalError(
