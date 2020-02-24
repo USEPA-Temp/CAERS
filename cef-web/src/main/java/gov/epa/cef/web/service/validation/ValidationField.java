@@ -7,6 +7,7 @@ public enum ValidationField {
     REPORT_EIS_ID("report.eisProgramId"),
     FACILITY_EIS_ID("report.facilitySite.eisProgramId"),
     FACILITY_CONTACT("report.facilitySite.contacts"),
+    FACILITY_CONTACT_POSTAL("report.facilitySite.contacts.postalCode"),
     FACILITY_STATUS("report.facilitySite.status"),
     FACILITY_NAICS("report.facilitySite.naics"),
     RP_IDENTIFIER("report.facilitySite.releasePoint.releasePointIdentifier"),

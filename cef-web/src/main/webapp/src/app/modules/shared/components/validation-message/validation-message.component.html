@@ -46,7 +46,7 @@
       Enter area code and phone number without spaces or dashes.
     </div>
 
-    <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{5}([\-]?[0-9]{4})?$'">
+    <div *ngIf="control.errors?.pattern.requiredPattern === '^\\d{5}(-\\d{4})?$'">
       Enter 5 digit (XXXXX) or 9 digit (XXXXX-XXXX) Zip Code.
     </div>
   </div>
