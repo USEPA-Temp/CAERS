@@ -24,7 +24,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="card-footer d-flex flex-row justify-content-end" *ngIf="readOnlyMode">
+                <div class="card-footer d-flex flex-row justify-content-end">
                     <button *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')"
                         class="btn btn-success btn-md my-3 ml-3" (click)="reopenReport()">
                         Reopen Report
