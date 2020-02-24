@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.exception.AppValidationException;
 import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.ReleasePointService;
@@ -94,6 +95,19 @@ public class ReleasePointServiceImpl implements ReleasePointService {
      * @param releasePointId
      */
     public void delete(Long releasePointId) {
+        ReleasePoint rp = releasePointRepo
+                .findById(releasePointId)
+                .orElse(null);
+
+        // check if the release point was reported last year
+        releasePointRepo.retrieveByIdentifierFacilityYear(rp.getReleasePointIdentifier(), 
+                rp.getFacilitySite().getEisProgramId(), 
+                Integer.valueOf(rp.getFacilitySite().getEmissionsReport().getYear() - 1).shortValue())
+                .ifPresent(oldRp -> {
+                    throw new AppValidationException("This Release Point has been submitted on previous years' facility reports, so it cannot be deleted. "
+                            + "If this Release Point is no longer operational, please use the \"Operating Status\" field to mark this Release Point as \"Permanently Shutdown\".");
+                });
+
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(releasePointId), ReleasePointRepository.class);
     	releasePointRepo.deleteById(releasePointId);
     }

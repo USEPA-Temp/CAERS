@@ -34,6 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,13 +91,16 @@ public class EmissionsReportValidationServiceImplTest {
     public void simpleValidateFailureTest() {
 
         EmissionsReport report = new EmissionsReport();
+        report.setYear((short) 2020);
 
         FacilitySite facilitySite = new FacilitySite();
+        facilitySite.setStatusYear((short) 2019);
         EmissionsUnit emissionsUnit = new EmissionsUnit();
         EmissionsProcess emissionsProcess = new EmissionsProcess();
         ReportingPeriod reportingPeriod = new ReportingPeriod();
         OperatingDetail detail = new OperatingDetail();
         Emission emission = new Emission();
+        emission.setTotalEmissions(new BigDecimal(10));
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");
@@ -116,8 +120,12 @@ public class EmissionsReportValidationServiceImplTest {
         facilitySite.setOperatingStatusCode(opStatCode);
 
         reportingPeriod.getEmissions().add(emission);
+        reportingPeriod.setEmissionsProcess(emissionsProcess);
         reportingPeriod.getOperatingDetails().add(detail);
+        emission.setReportingPeriod(reportingPeriod);
         emissionsProcess.getReportingPeriods().add(reportingPeriod);
+        emissionsProcess.setEmissionsUnit(emissionsUnit);
+        emissionsProcess.setOperatingStatusCode(opStatCode);
         emissionsUnit.getEmissionsProcesses().add(emissionsProcess);
         emissionsUnit.setOperatingStatusCode(opStatCode);
         emissionsUnit.setFacilitySite(facilitySite);

@@ -162,6 +162,30 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void simpleValidateContactPostalCodeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).setPostalCode("1234567890");
+        testData.getContacts().get(0).setMailingPostalCode("1234567890");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+    }
+    
+    @Test
+    public void simpleValidateFacilityPostalCodeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setPostalCode("1234567890");
+        testData.setMailingPostalCode("1234567890");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+    }
+    
+    @Test
     public void nullFacilityContactEmissionsInventoryTypeTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -198,6 +222,8 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         FacilitySite result = new FacilitySite();
         result.setEisProgramId("1");
         result.setStatusYear(null);
+        result.setPostalCode("31750");
+        result.setMailingPostalCode("31750");
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");
@@ -227,6 +253,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         contact.setCity("Fitzgerald");
         contact.setStateCode(stateCode);
         contact.setPostalCode("31750");
+        contact.setMailingPostalCode("31750");
         contact.setCounty("Whitfield");
         contactList.add(contact);
         

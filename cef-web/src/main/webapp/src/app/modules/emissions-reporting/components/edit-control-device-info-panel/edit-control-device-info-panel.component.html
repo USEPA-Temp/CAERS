@@ -2,7 +2,7 @@
     <div class="row pb-1">
         <label for="controlIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Control ID:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <input type="text" class="form-control" maxlength="20" id="controlIdentifierInput" formControlName="identifier">
+            <input [readonly]="control" type="text" class="form-control" maxlength="20" id="controlIdentifierInput" formControlName="identifier">
             <app-validation-message [control]="controlDeviceForm.get('identifier')"></app-validation-message>
         </div>
         <label for="controlStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Status:</strong></label>

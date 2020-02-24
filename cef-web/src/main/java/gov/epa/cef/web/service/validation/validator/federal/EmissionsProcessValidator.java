@@ -2,8 +2,10 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
@@ -36,6 +38,9 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	
 	@Autowired
 	private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+	
+	private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+	private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
     
     @Override
     public void compose(FluentValidator validator,
@@ -124,6 +129,31 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         
         if (emissionsProcess != null) {
         	
+            // Check for unique SCC and AircraftEngineType code combination within a facility site
+            if ((emissionsProcess.getSccCode() != null) && (emissionsProcess.getAircraftEngineTypeCode() != null)) {
+            	String testingCombination = emissionsProcess.getAircraftEngineTypeCode().getCode() + emissionsProcess.getSccCode();
+                List<String> combinationList = new ArrayList<String>();
+                for(EmissionsUnit eu: emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsUnits()){
+                	if(eu.getEmissionsProcesses() != null){
+                		for(EmissionsProcess ep: eu.getEmissionsProcesses()){
+                			if ((ep.getSccCode() != null) && (ep.getAircraftEngineTypeCode() != null) && (!ep.getId().equals(emissionsProcess.getId()))){
+                    			String combination = ep.getAircraftEngineTypeCode().getCode().toString() + ep.getSccCode().toString();
+                    			combinationList.add(combination);
+                			}
+                		}
+                	}
+                }
+                for(String combination: combinationList){
+            		if(combination.equals(testingCombination)){
+                    	context.addFederalError(
+                    			ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value(),
+                    			"emissionsProcess.aircraftCodeAndSccCombination.duplicate",
+                    			createValidationDetails(emissionsProcess));
+                    	result = false;
+            		}
+                }
+            }        	
+      
           // aircraft engine code must match assigned SCC
           if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
           	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
@@ -165,7 +195,38 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 		        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
 		        }
 		      }
+	        
+	        // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
+	        if (emissionsProcess.getReleasePointAppts() != null) {
+	        	for(ReleasePointAppt rpa: emissionsProcess.getReleasePointAppts()){
+	        		  if((rpa.getPercent() < 1) || (rpa.getPercent() > 100)){
+	  	        		result = false;
+			        	context.addFederalError(
+			        			ValidationField.PROCESS_RP_PCT.value(),
+			        			"emissionsProcess.releasePointAppts.percent.range",
+			        			createValidationDetails(emissionsProcess),
+			        			rpa.getReleasePoint().getReleasePointIdentifier());  
+	        		  }
+	        	}
+	        }
         }
+        
+        // At least one emission is recorded for the Reporting Period when Process Status is "Operating.
+        // and when Process Status is not "Permanently Shutdown" or "Temporarily Shutdown".
+        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()) && !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+        	if (emissionsProcess.getReportingPeriods() != null) {
+        		for (ReportingPeriod rp : emissionsProcess.getReportingPeriods()) {
+        			if (rp.getEmissions() == null || rp.getEmissions().size() == 0) {
+        				
+        				result = false;
+        				context.addFederalError(
+        						ValidationField.PROCESS_PERIOD_EMISSION.value(),
+        						"emissionProcess.emission.required",
+        						createValidationDetails(emissionsProcess));
+      				}
+      			}
+      		}
+      	}
         
         return result;
     }

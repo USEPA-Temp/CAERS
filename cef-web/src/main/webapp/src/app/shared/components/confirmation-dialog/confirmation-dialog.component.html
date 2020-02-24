@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title">Confirm</h4>
+  <h4 class="modal-title">{{title}}</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -7,8 +7,10 @@
 <div class="modal-body buttonCenter">
     {{message}}
     <br/>
-    <button (click)="onContinue()" class="btn btn-primary btn-md m-3">Confirm</button>
-    <button (click)="activeModal.dismiss()" class="btn btn-success btn-md m-3">Cancel</button>
+    <button (click)="onContinue()" class="btn btn-primary btn-md m-3">{{confirmButtonText}}</button>
+    <button *ngIf="!singleButton" (click)="activeModal.dismiss()" class="btn btn-success btn-md m-3">{{cancelButtonText}}</button>
 </div>
 <div class="modal-footer">
+  <!-- <button *ngIf="!singleButton" (click)="activeModal.dismiss()" class="btn btn-success btn-md">{{cancelButtonText}}</button>
+  <button (click)="onContinue()" class="btn btn-primary btn-md">{{confirmButtonText}}</button> -->
 </div>

@@ -37,6 +37,8 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   editDetails = false;
   editPeriod = false;
 
+  createPeriod = false;
+
   @ViewChild(EditProcessInfoPanelComponent, { static: false })
   infoComponent: EditProcessInfoPanelComponent;
 
@@ -107,6 +109,10 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     this.editPeriod = value;
   }
 
+  setCreatePeriod(value: boolean) {
+    this.createPeriod = value;
+  }
+
   updateProcess() {
     if (!this.infoComponent.processForm.valid) {
       this.infoComponent.processForm.markAllAsTouched();
@@ -172,6 +178,39 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         Object.assign(period, result);
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditPeriod(false);
+      });
+    }
+  }
+
+  createReportingPeriod() {
+    if (!this.operatingDetailsComponent.operatingDetailsForm.valid
+        || !this.reportingPeriodComponent.reportingPeriodForm.valid
+        || !this.operatingDetailsComponent.validateOperatingPercent()) {
+
+      this.operatingDetailsComponent.operatingDetailsForm.markAllAsTouched();
+      this.reportingPeriodComponent.reportingPeriodForm.markAllAsTouched();
+      if (!this.operatingDetailsComponent.validateOperatingPercent()) {
+        this.toastr.error('', 'Total Operating Percent must be between 99.5 and 100.5', {positionClass: 'toast-top-right'});
+      }
+    } else {
+
+      const operatingDetails = new OperatingDetail();
+      const reportingPeriod = new ReportingPeriod();
+
+      Object.assign(operatingDetails, this.operatingDetailsComponent.operatingDetailsForm.value);
+      Object.assign(reportingPeriod, this.reportingPeriodComponent.reportingPeriodForm.value);
+
+      reportingPeriod.operatingDetails = [operatingDetails];
+      reportingPeriod.emissionsProcessId = this.process.id;
+
+      console.log(reportingPeriod);
+
+      this.reportingPeriodService.create(reportingPeriod)
+      .subscribe(result => {
+
+        this.process.reportingPeriods.push(result);
+        this.sharedService.updateReportStatusAndEmit(this.route);
+        this.setCreatePeriod(false);
       });
     }
   }

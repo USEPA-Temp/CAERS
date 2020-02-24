@@ -48,11 +48,11 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     stateCode: [null, Validators.required],
     postalCode: ['', [
       Validators.required,
-      Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')]],
+      Validators.pattern('^\\d{5}(-\\d{4})?$')]],
     mailingStreetAddress: [''],
     mailingCity: [''],
     mailingStateCode: [null],
-    mailingPostalCode: ['', Validators.pattern('^[0-9]{5}([\-]?[0-9]{4})?$')],
+    mailingPostalCode: ['', Validators.pattern('^\\d{5}(-\\d{4})?$')],
     county: ['', Validators.maxLength(43)],
     comments: ['', Validators.maxLength(400)]
   }, {validators: this.mailingAddressValidator()});

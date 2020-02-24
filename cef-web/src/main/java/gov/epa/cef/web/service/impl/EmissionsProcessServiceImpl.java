@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.domain.EmissionsProcess; 
+import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.exception.AppValidationException;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.service.EmissionsProcessService;
 import gov.epa.cef.web.service.LookupService;
@@ -8,7 +9,6 @@ import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
 import gov.epa.cef.web.service.mapper.EmissionsProcessMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -113,6 +113,20 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
      * @param id
      */
     public void delete(Long id) {
+        EmissionsProcess process = processRepo
+                .findById(id)
+                .orElse(null);
+
+        // check if the emissions process was reported last year
+        processRepo.retrieveByIdentifierParentFacilityYear(process.getEmissionsProcessIdentifier(),
+                process.getEmissionsUnit().getUnitIdentifier(), 
+                process.getEmissionsUnit().getFacilitySite().getEisProgramId(), 
+                Integer.valueOf(process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() - 1).shortValue())
+                .ifPresent(oldUnit -> {
+                    throw new AppValidationException("This Process has been submitted on previous years' facility reports, so it cannot be deleted. "
+                            + "If this Process is no longer operational, please use the \"Operating Status\" field to mark this Process as \"Permanently Shutdown\".");
+                });
+
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), EmissionsProcessRepository.class);
         processRepo.deleteById(id);
     }

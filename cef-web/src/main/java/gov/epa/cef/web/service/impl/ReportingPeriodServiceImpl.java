@@ -28,6 +28,39 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
 
+    public ReportingPeriodDto create(ReportingPeriodDto dto) {
+
+        ReportingPeriod period = mapper.fromDto(dto);
+
+        if (dto.getCalculationMaterialCode() != null) {
+            period.setCalculationMaterialCode(lookupService.retrieveCalcMaterialCodeEntityByCode(dto.getCalculationMaterialCode().getCode()));
+        }
+
+        if (dto.getCalculationParameterTypeCode() != null) {
+            period.setCalculationParameterTypeCode(lookupService.retrieveCalcParamTypeCodeEntityByCode(dto.getCalculationParameterTypeCode().getCode()));
+        }
+
+        if (dto.getCalculationParameterUom() != null) {
+            period.setCalculationParameterUom(lookupService.retrieveUnitMeasureCodeEntityByCode(dto.getCalculationParameterUom().getCode()));
+        }
+
+        if (dto.getEmissionsOperatingTypeCode() != null) {
+            period.setEmissionsOperatingTypeCode(lookupService.retrieveEmissionsOperatingTypeCodeEntityByCode(dto.getEmissionsOperatingTypeCode().getCode()));
+        }
+
+        if (dto.getReportingPeriodTypeCode() != null) {
+            period.setReportingPeriodTypeCode(lookupService.retrieveReportingPeriodCodeEntityByCode(dto.getReportingPeriodTypeCode().getCode()));
+        }
+
+        period.getOperatingDetails().forEach(od -> {
+            od.setReportingPeriod(period);
+        });
+
+        ReportingPeriodDto result = mapper.toDto(repo.save(period));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReportingPeriodRepository.class);
+        return result;
+    }
+
     public ReportingPeriodDto update(ReportingPeriodDto dto) {
 
         ReportingPeriod period = repo.findById(dto.getId())
