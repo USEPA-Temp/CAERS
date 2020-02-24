@@ -569,9 +569,10 @@ export class EmissionDetailsComponent implements OnInit {
     };
   }
 
+  // TODO: this should be updated to a single field validation
   emissionFactorGreaterThanZeroValidator(formGroup): any {
     const emissionFactor = formGroup.controls.emissionsFactor.value;
-    if (emissionFactor <= 0) {
+    if (formGroup.controls.emissionsFactor.enabled && emissionFactor <= 0) {
       return {efFactorLessThanOrEqualToZero: true};
     } else {
       return null;
