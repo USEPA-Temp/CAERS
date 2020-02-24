@@ -31,6 +31,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
     private static final String ASH_EMISSION_FORMULA_CODE = "A";
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
     private static final String LANDFILL_SOURCE_CODE = "104";
+    private static final String STATUS_OPERATING = "OP";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -279,7 +280,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        // except when source type is landfill or status year is greater than inventory cycle year.
 	        if ((!LANDFILL_SOURCE_CODE.contentEquals(fs.getFacilitySourceTypeCode().getCode()))
 	        	&& fs.getStatusYear() <= fs.getEmissionsReport().getYear()
-	        	&& (!"OP".contentEquals(fs.getOperatingStatusCode().getCode()))) {
+	        	&& (!STATUS_OPERATING.contentEquals(fs.getOperatingStatusCode().getCode()))) {
 	        	
 	        	if (emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == 1) {
 	  

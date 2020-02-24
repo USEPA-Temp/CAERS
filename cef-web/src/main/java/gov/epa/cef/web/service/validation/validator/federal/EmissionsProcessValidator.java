@@ -5,6 +5,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
@@ -37,6 +38,9 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	
 	@Autowired
 	private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+	
+	private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+	private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
     
     @Override
     public void compose(FluentValidator validator,
@@ -206,6 +210,23 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	        	}
 	        }
         }
+        
+        // At least one emission is recorded for the Reporting Period when Process Status is "Operating.
+        // and when Process Status is not "Permanently Shutdown" or "Temporarily Shutdown".
+        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()) && !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+        	if (emissionsProcess.getReportingPeriods() != null) {
+        		for (ReportingPeriod rp : emissionsProcess.getReportingPeriods()) {
+        			if (rp.getEmissions() == null || rp.getEmissions().size() == 0) {
+        				
+        				result = false;
+        				context.addFederalError(
+        						ValidationField.PROCESS_PERIOD_EMISSION.value(),
+        						"emissionProcess.emission.required",
+        						createValidationDetails(emissionsProcess));
+      				}
+      			}
+      		}
+      	}
         
         return result;
     }
