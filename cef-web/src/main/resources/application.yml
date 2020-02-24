@@ -20,6 +20,10 @@ spring:
   thymeleaf:
     mode: HTML
   jpa:
+      # 14:48:39.624-05 WARN  [...JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration]
+      # spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering.
+      # Explicitly configure spring.jpa.open-in-view to disable this warning
+      # TODO: Remove anti-pattern by switching to DTO and adding to *all* ServiceImpl using a Repository a @Transactional
     #open-in-view: false
     show-sql: false
     generate-ddl: false
