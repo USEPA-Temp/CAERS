@@ -569,9 +569,10 @@ export class EmissionDetailsComponent implements OnInit {
     };
   }
 
+  // TODO: this should be updated to a single field validation
   emissionFactorGreaterThanZeroValidator(formGroup): any {
     const emissionFactor = formGroup.controls.emissionsFactor.value;
-    if (emissionFactor <= 0) {
+    if (formGroup.controls.emissionsFactor.enabled && emissionFactor <= 0) {
       return {efFactorLessThanOrEqualToZero: true};
     } else {
       return null;
@@ -583,7 +584,7 @@ export class EmissionDetailsComponent implements OnInit {
       const pollutant = control.get('pollutant');
       if (pollutant !== null && pollutant.value !== undefined && pollutant.value !== null && control.get('emissionsUomCode') !== null) {
         if ((pollutant.value.pollutantCode !== undefined && pollutant.value.pollutantCode === '605')
-        && control.get('emissionsUomCode').value.code !== 'CURIE') {
+        && control.get('emissionsUomCode').value !== null && control.get('emissionsUomCode').value.code !== 'CURIE') {
           return {emissionsUomCodeCurie: true};
         }
         return null;
