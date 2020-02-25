@@ -77,10 +77,9 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         }
         
         // Postal codes must be entered as 5 digits (XXXXX) or 9 digits (XXXXX-XXXX).
-        if(facilitySite.getContacts() != null){
+        	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
+        	Pattern pattern = Pattern.compile(regex);
         	for(FacilitySiteContact fc: facilitySite.getContacts()){
-            	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
-            	Pattern pattern = Pattern.compile(regex);
             	if(!StringUtils.isEmpty(fc.getPostalCode())){
                 	Matcher matcher = pattern.matcher(fc.getPostalCode());
                 	if(!matcher.matches()){
@@ -102,10 +101,8 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                 	}	
             	}
         	}
-        }
+        	
         if(facilitySite != null){
-        	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
-        	Pattern pattern = Pattern.compile(regex);
         	if(!StringUtils.isEmpty(facilitySite.getPostalCode())) {
 	        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
 	        	if(!matcher.matches()){
