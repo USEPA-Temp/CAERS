@@ -263,19 +263,19 @@ public class EmissionValidator extends BaseValidator<Emission> {
           }
         }
         
+        // total emissions must be >= 0
+        if (emission.getTotalEmissions() == null || emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == -1) {
+	     
+	        	valid = false;
+	        	context.addFederalError(
+	        			ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+	        			"emission.totalEmissions.range", 
+	        			createValidationDetails(emission));
+        }
+        
         FacilitySite fs = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite();
         if (fs.getStatusYear() != null && fs.getFacilitySourceTypeCode() != null) {
         	
-        	// total emissions must be >= 0
-	        if (emission.getTotalEmissions() == null || emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == -1) {
-		     
-		        	valid = false;
-		        	context.addFederalError(
-		        			ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
-		        			"emission.totalEmissions.range", 
-		        			createValidationDetails(emission));
-	        }
-		        
 	        // total emissions > 0 will not be accepted if facility site operation status is not OP,
 	        // except when source type is landfill or status year is greater than inventory cycle year.
 	        if ((!LANDFILL_SOURCE_CODE.contentEquals(fs.getFacilitySourceTypeCode().getCode()))
