@@ -4,9 +4,13 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 
+import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.repository.EmissionRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -15,17 +19,25 @@ import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.text.MessageFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 @Component
 public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
+    @Autowired
+    private EmissionRepository emissionRepo;
+    
+    @Autowired
+    private EmissionsReportRepository reportRepo;
+    
     private static final String STATUS_OPERATING = "OP";
     
     @Override
@@ -170,6 +182,49 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         				createContactValidationDetails(facilitySite));
         	}
         }
+        
+        try {
+	        List<Emission> currentEmissionsList = emissionRepo.findAllByReportId(facilitySite.getEmissionsReport().getId());
+	        
+	        if (currentEmissionsList != null) {
+	          // check current year's total emissions against previous year's total emissions warning
+	          EmissionsReport currentReport = facilitySite.getEmissionsReport();
+	          // find previous report
+	          if (currentReport != null) {
+		          List<EmissionsReport> erList = reportRepo.findByEisProgramId(currentReport.getEisProgramId()).stream()
+		              .filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
+		              .sorted(Comparator.comparing(EmissionsReport::getYear))
+		              .collect(Collectors.toList());
+	
+		          if (!erList.isEmpty()) {
+		          	Short previousReportYr = erList.get(erList.size()-1).getYear();
+		          	Long previousReportId = erList.get(erList.size()-1).getId();
+		          	
+	          		List<Emission> previousEmissionsList = emissionRepo.findAllByReportId(previousReportId);
+	          		
+	          		for (Emission ce: currentEmissionsList) {
+	          			for (Emission pe: previousEmissionsList) {
+	          				if (pe.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier()
+	          						.contentEquals(ce.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier())) {
+	          					
+	          					// check if total emissions are equal in value and scale 
+	          					if (pe.getTotalEmissions().equals(ce.getTotalEmissions())) {
+	          						result = false;
+	          						context.addFederalWarning(
+	          								ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+	          								"emission.totalEmissions.copied",
+	          								createValidationDetails(ce),
+	          								previousReportYr.toString());
+				          		}
+	          				}
+	          			}
+	          		}
+	          	}
+	          }
+	        }
+        } catch (NullPointerException e) {
+        	System.out.println("No Emissions found for Emissions Report");
+        }
 
         return result;
     }
@@ -189,5 +244,41 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
     	ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEisProgramId(), EntityType.FACILITY_SITE, description);
     	return dto;
     }
+    
+    private String getEmissionsUnitIdentifier(Emission emission) {
+      if (emission.getReportingPeriod() != null && emission.getReportingPeriod().getEmissionsProcess() != null 
+              && emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit() != null) {
+          return emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier();
+      }
+      return null;
+	}
+    
+    private String getEmissionsProcessIdentifier(Emission emission) {
+  	if (emission.getReportingPeriod() != null && emission.getReportingPeriod().getEmissionsProcess() != null) {
+  		return emission.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier();
+  	}
+  	return null;
+    }
+    
+    private String getPollutantName(Emission emission) {
+  	if (emission.getPollutant() != null) {
+  		return emission.getPollutant().getPollutantName();
+  	}
+  	return null;
+	}
+
+    private ValidationDetailDto createValidationDetails(Emission source) {
+
+      String description = MessageFormat.format("Emission Unit: {0}, Emission Process: {1}, Pollutant: {2}", 
+              getEmissionsUnitIdentifier(source),
+              getEmissionsProcessIdentifier(source),
+              getPollutantName(source));
+
+      ValidationDetailDto dto = new ValidationDetailDto(source.getId(), getPollutantName(source), EntityType.EMISSION, description);
+      if (source.getReportingPeriod() != null) {
+          dto.getParents().add(new ValidationDetailDto(source.getReportingPeriod().getId(), null, EntityType.REPORTING_PERIOD));
+      }
+      return dto;
+  }
     
 }
