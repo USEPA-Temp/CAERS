@@ -107,6 +107,8 @@ public class EmissionsReportValidationServiceImplTest {
         Emission emission = new Emission();
         emission.setTotalEmissions(new BigDecimal(10));
         Control control = new Control(); 
+        control.setIdentifier("control_Identifier");
+        control.setFacilitySite(facilitySite);
         facilitySite.getControls().add(control);
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();

@@ -1,6 +1,9 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -10,6 +13,7 @@ import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
+import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 @Component
@@ -22,7 +26,21 @@ public class ControlValidator extends BaseValidator<Control> {
 		
 		CefValidatorContext context = getCefValidatorContext(validatorContext);
 		
-		//Add QA checks here
+
+		Map<Object, List<Control>> cMap = control.getFacilitySite().getControls().stream()
+        .filter(controls -> (controls.getIdentifier() != null))
+        .collect(Collectors.groupingBy(c -> c.getIdentifier()));
+		
+		for (List<Control> cList: cMap.values()) {
+			if (cList.size() > 1 && cList.get(0).getIdentifier().contentEquals(control.getIdentifier())) {
+			
+				result = false;
+				context.addFederalError(
+	  			ValidationField.CONTROL_IDENTIFIER.value(),
+	  			"control.controlIdentifier.duplicate",
+	  			createValidationDetails(control));
+			}
+		}
 		
 		return result;
 	}
