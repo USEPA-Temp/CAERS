@@ -14,13 +14,14 @@ import java.util.Optional;
 
 public interface EmissionRepository extends CrudRepository<Emission, Long>, ProgramIdRetriever, ReportIdRetriever {
 	
-    /**
-     * Find all Emissions with the specified report id
-     * @param reportId
-     * @return
-     */
-	@Query("select e from Emission e join e.reportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport er where er.id = :reportId")	
-	List<Emission> findAllByReportId(@Param("reportId") Long reportId);
+	/**
+   * Find all Emissions with the specified process id
+   * @param processId
+   * @param reportId
+   * @return
+   */
+	@Query("select e from Emission e join e.reportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where ep.id = :processId and r.id = :reportId")	
+	List<Emission> findAllByProcessIdReportId(@Param("processId") Long processId, @Param("reportId") Long reportId);
 		
     /**
      *

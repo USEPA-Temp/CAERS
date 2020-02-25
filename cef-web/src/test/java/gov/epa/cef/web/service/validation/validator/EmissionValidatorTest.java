@@ -590,7 +590,6 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.setCalculationParameterValue(new BigDecimal("10"));
         period.setCalculationParameterUom(tonUom);
         period.setEmissionsProcess(new EmissionsProcess());
-        period.getEmissionsProcess().setEmissionsProcessIdentifier("test-1");
         period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2020);
@@ -598,8 +597,6 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setFacilitySourceTypeCode(sourceType);
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
-        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setEisProgramId("11111");
-        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setId(2L);
         result.setReportingPeriod(period);
 
         result.setEmissionsUomCode(tonUom);
