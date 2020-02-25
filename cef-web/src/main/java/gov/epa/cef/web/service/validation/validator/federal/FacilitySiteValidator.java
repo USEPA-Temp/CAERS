@@ -102,7 +102,6 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             	}
         	}
         	
-        if(facilitySite != null){
         	if(!StringUtils.isEmpty(facilitySite.getPostalCode())) {
 	        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
 	        	if(!matcher.matches()){
@@ -123,7 +122,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                 			createValidationDetails(facilitySite));
             	}	
         	}
-        }
+        
 
         
         // Facility must have a facility NAICS code reported
