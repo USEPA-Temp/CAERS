@@ -80,7 +80,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         	for(FacilitySiteContact fc: facilitySite.getContacts()){
             	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
             	Pattern pattern = Pattern.compile(regex);
-            	if(fc.getPostalCode() != null){
+            	if((fc.getPostalCode() != null) && (!fc.getPostalCode().equals(""))){
                 	Matcher matcher = pattern.matcher(fc.getPostalCode());
                 	if(!matcher.matches()){
                     	result = false; 
@@ -90,7 +90,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                     			createContactValidationDetails(facilitySite));
                 	}	
             	}
-            	if(fc.getMailingPostalCode() != null){
+            	if((fc.getMailingPostalCode() != null) && (!fc.getMailingPostalCode().equals(""))){
                 	Matcher matcher = pattern.matcher(fc.getMailingPostalCode());
                 	if(!matcher.matches()){
                     	result = false; 
@@ -105,7 +105,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         if(facilitySite != null){
         	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
         	Pattern pattern = Pattern.compile(regex);
-        	if(facilitySite.getPostalCode() != null) {
+        	if((facilitySite.getPostalCode() != null) && (!facilitySite.getPostalCode().equals(""))) {
 	        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
 	        	if(!matcher.matches()){
 	            	result = false; 
@@ -115,7 +115,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 	            			createValidationDetails(facilitySite));
 	        	}
         	}
-        	if(facilitySite.getMailingPostalCode() != null){
+        	if((facilitySite.getMailingPostalCode() != null) && (!facilitySite.getMailingPostalCode().equals(""))){
             	Matcher matcher = pattern.matcher(facilitySite.getMailingPostalCode());
             	if(!matcher.matches()){
                 	result = false; 

@@ -137,13 +137,6 @@ export class EditFacilityContactComponent implements OnInit {
       const saveContact = new FacilitySiteContact();
       Object.assign(saveContact, this.contactForm.value);
 
-      // if values are empty set to null to avoid QA check throwing false errors
-      if (saveContact.mailingPostalCode === '') {
-        saveContact.mailingPostalCode = null;
-      }
-      if (saveContact.postalCode === '') {
-        saveContact.postalCode = null;
-      }
       if (this.createMode) {
 
         saveContact.facilitySiteId = this.facilitySite.id;

@@ -72,14 +72,6 @@ export class FacilityInformationComponent implements OnInit {
     } else {
       const updatedFacilitySite = new FacilitySite();
       Object.assign(updatedFacilitySite, this.facilitySiteComponent.facilitySiteForm.value);
-
-      // if values are empty set to null to avoid QA check throwing false errors
-      if (this.facilitySiteComponent.facilitySiteForm.get('mailingPostalCode').value === '') {
-        updatedFacilitySite.mailingPostalCode = null;
-      }
-      if (this.facilitySiteComponent.facilitySiteForm.get('postalCode').value === '') {
-        updatedFacilitySite.postalCode = null;
-      }
       updatedFacilitySite.id = this.facilitySite.id;
       updatedFacilitySite.emissionsReport = this.facilitySite.emissionsReport;
       updatedFacilitySite.frsFacilityId = this.facilitySite.frsFacilityId;
