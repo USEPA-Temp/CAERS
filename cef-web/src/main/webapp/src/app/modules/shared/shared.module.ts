@@ -23,6 +23,7 @@ import { BaseConfirmationModalComponent } from './components/base-confirmation-m
 import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StripPeriodEndingPipe } from './pipes/strip-period-ending.pipe';
+import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.directive';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { StripPeriodEndingPipe } from './pipes/strip-period-ending.pipe';
     NumberValidatorDirective,
     BaseConfirmationModalComponent,
     BulkUploadComponent,
-    StripPeriodEndingPipe
+    StripPeriodEndingPipe,
+    LegacyUomValidatorDirective
 ],
     exports: [
         FacilityInfoComponent,

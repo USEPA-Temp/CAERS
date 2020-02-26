@@ -28,6 +28,7 @@ import { VariableValidationType } from 'src/app/shared/enums/variable-validation
 import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { ControlPollutantTableComponent } from '../../components/control-pollutant-table/control-pollutant-table.component';
+import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 
 @Component({
   selector: 'app-emission-details',
@@ -61,13 +62,13 @@ export class EmissionDetailsComponent implements OnInit {
     emissionsFactor: ['', [Validators.required]],
     emissionsFactorFormula: [''],
     emissionsFactorText: ['', [Validators.required, Validators.maxLength(100)]],
-    emissionsNumeratorUom: [null, Validators.required],
-    emissionsDenominatorUom: [null, Validators.required],
+    emissionsNumeratorUom: [null, [Validators.required, legacyUomValidator()]],
+    emissionsDenominatorUom: [null, [Validators.required, legacyUomValidator()]],
     emissionsCalcMethodCode: ['', Validators.required],
     totalManualEntry: [false, Validators.required],
     overallControlPercent: ['', [Validators.min(0), Validators.max(99.999999)]],
     totalEmissions: ['', [Validators.required, Validators.min(0)]],
-    emissionsUomCode: [null, Validators.required],
+    emissionsUomCode: [null, [Validators.required, legacyUomValidator()]],
     comments: ['', [Validators.maxLength(400)]],
     calculationComment: ['', [Validators.required, Validators.maxLength(4000)]],
     formulaVariables: this.fb.group({}),

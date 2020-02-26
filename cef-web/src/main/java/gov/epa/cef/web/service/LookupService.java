@@ -96,6 +96,12 @@ public interface LookupService {
     List<UnitMeasureCodeDto> retrieveUnitMeasureCodes();
 
     /**
+     * Retrieve non-legacy UoM codes
+     * @return
+     */
+    List<UnitMeasureCodeDto> retrieveCurrentUnitMeasureCodes();
+
+    /**
      * Retrieve UoM code database object by code
      * @param code
      * @return

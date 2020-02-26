@@ -19,7 +19,7 @@ public class EmissionsUnitDto implements Serializable {
     private String programSystemCode;
     private String description;
     private Short statusYear;
-    private CodeLookupDto unitOfMeasureCode;
+    private UnitMeasureCodeDto unitOfMeasureCode;
     private Double designCapacity;
     private String unitOfMeasureDescription;
     private String comments;
@@ -76,10 +76,10 @@ public class EmissionsUnitDto implements Serializable {
         this.statusYear = statusYear;
     }
 
-    public CodeLookupDto getUnitOfMeasureCode() {
+    public UnitMeasureCodeDto getUnitOfMeasureCode() {
         return this.unitOfMeasureCode;
     }
-    public void setUnitOfMeasureCode(CodeLookupDto unitOfMeasureCode) {
+    public void setUnitOfMeasureCode(UnitMeasureCodeDto unitOfMeasureCode) {
         this.unitOfMeasureCode = unitOfMeasureCode;
     }
 

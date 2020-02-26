@@ -63,3 +63,9 @@
       Email must be a valid email address.
   </div>
 </div>
+
+<div class="validation-message" *ngIf="control.errors">
+  <div *ngIf="control.errors?.legacyUom">
+      The Unit of Measure {{control.errors.legacyUom.value}} is no longer a valid UoM. Please select a different UoM.
+  </div>
+</div>
