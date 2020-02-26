@@ -10,6 +10,8 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
 
     private Boolean efDenominator;
 
+    private Boolean legacy;
+
     public String getUnitType() {
         return unitType;
     }
@@ -32,6 +34,14 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
 
     public void setEfDenominator(Boolean efDenominator) {
         this.efDenominator = efDenominator;
+    }
+
+    public Boolean getLegacy() {
+        return legacy;
+    }
+
+    public void setLegacy(Boolean legacy) {
+        this.legacy = legacy;
     }
 
 

@@ -253,7 +253,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         				createControlValidationDetails(c));
         	}
         }
-
+        
         return result;
     }
     

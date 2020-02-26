@@ -19,6 +19,7 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
@@ -455,6 +456,12 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         result.setStatusYear(null);
         result.setPostalCode("31750");
         result.setMailingPostalCode("31750");
+        
+        EmissionsReport er = new EmissionsReport();
+        er.setId(2L);
+        er.setYear(new Short("2019"));
+        er.setEisProgramId("1");
+        result.setEmissionsReport(er);
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");

@@ -95,6 +95,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
         if (emission.getEmissionsFactor() != null) {
         	
         	if (emission.getEmissionsFactor().compareTo(BigDecimal.ZERO) <= 0) {
+
         		valid = false;
         		context.addFederalError(
         				ValidationField.EMISSION_EF.value(), 
@@ -292,7 +293,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        	}
 	      	}
         }
-        
+
         return valid;
     }
 

@@ -5,6 +5,7 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
+import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 
 @Component({
   selector: 'app-edit-process-reporting-period-panel',
@@ -22,7 +23,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       Validators.min(0),
       Validators.pattern('^[0-9]*\\.?[0-9]+$')
     ]],
-    calculationParameterUom: [null, Validators.required],
+    calculationParameterUom: [null, [Validators.required, legacyUomValidator()]],
     calculationMaterialCode: [null, Validators.required],
     comments: ['', Validators.maxLength(400)]
   });
