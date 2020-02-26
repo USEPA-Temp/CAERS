@@ -72,7 +72,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
             if (emission.getReportingPeriod() != null 
                     && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
                     && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
-            	
+
                 valid = false;
                 context.addFederalError(
                         ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
@@ -90,6 +90,16 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         "emission.emissionsFactor.required.method",
                         createValidationDetails(emission));
             }
+        }
+
+        if (emission.getEmissionsUomCode() != null && Boolean.TRUE.equals(emission.getEmissionsUomCode().getLegacy())) {
+
+            valid = false;
+            context.addFederalError(
+                    ValidationField.EMISSION_UOM.value(),
+                    "emission.emissionsUom.legacy", 
+                    createValidationDetails(emission),
+                    emission.getEmissionsUomCode().getDescription());
         }
 
         if (emission.getEmissionsFactor() != null) {
@@ -110,6 +120,15 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         ValidationField.EMISSION_NUM_UOM.value(),
                         "emission.emissionsNumeratorUom.required.emissionsFactor", 
                         createValidationDetails(emission));
+
+            } else if (Boolean.TRUE.equals(emission.getEmissionsNumeratorUom().getLegacy())) {
+
+                valid = false;
+                context.addFederalError(
+                        ValidationField.EMISSION_NUM_UOM.value(),
+                        "emission.emissionsNumeratorUom.legacy", 
+                        createValidationDetails(emission),
+                        emission.getEmissionsNumeratorUom().getDescription());
             }
 
             if (emission.getEmissionsDenominatorUom() == null) {
@@ -119,6 +138,15 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         ValidationField.EMISSION_DENOM_UOM.value(),
                         "emission.emissionsDenominatorUom.required.emissionsFactor",
                         createValidationDetails(emission));
+
+            } else if (Boolean.TRUE.equals(emission.getEmissionsDenominatorUom().getLegacy())) {
+
+                valid = false;
+                context.addFederalError(
+                        ValidationField.EMISSION_DENOM_UOM.value(),
+                        "emission.emissionsDenominatorUom.legacy", 
+                        createValidationDetails(emission),
+                        emission.getEmissionsDenominatorUom().getDescription());
             }
 
         } else if (emission.getEmissionsFactor() == null) {
