@@ -246,9 +246,8 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         try {
         	// check current year's total emissions against previous year's total emissions warning
         	EmissionsReport currentReport = emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport();
-        	
-        	// find previous report
-        	if (currentReport != null) {
+        		
+        		// find previous report
         		List<EmissionsReport> erList = reportRepo.findByEisProgramId(currentReport.getEisProgramId()).stream()
         				.filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
         				.sorted(Comparator.comparing(EmissionsReport::getYear))
@@ -261,33 +260,26 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         			EmissionsProcess previousProcess = processRepo.retrieveByIdentifierParentFacilityYear(emissionsProcess.getEmissionsProcessIdentifier(), emissionsProcess.getEmissionsUnit().getUnitIdentifier(), currentReport.getEisProgramId(), previousReportYr).orElse(null);
         			if (previousProcess != null) {
         				List<Emission> currentEmissionsList = emissionRepo.findAllByProcessIdReportId(emissionsProcess.getId(), currentReport.getId());
-        				
-        				if (previousProcess.getEmissionsUnit().getUnitIdentifier().contentEquals(emissionsProcess.getEmissionsUnit().getUnitIdentifier())
-        						&& previousProcess.getEmissionsProcessIdentifier().contentEquals(emissionsProcess.getEmissionsProcessIdentifier())) {
-        					
-        					List<Emission> previousEmissionsList = emissionRepo.findAllByProcessIdReportId(previousProcess.getId(), previousReportId);
-        					
-        					for (Emission ce: currentEmissionsList) {
-        						for (Emission pe: previousEmissionsList) {
-        							
-        							// check if pollutant code the same and total emissions are equal in value and scale 
-        							if ((ce.getPollutant().getPollutantCode().contentEquals(pe.getPollutant().getPollutantCode()))
-        									&& ce.getTotalEmissions().equals(pe.getTotalEmissions())) {
-        								
-        								result = false;
-        								context.addFederalWarning(
-        										ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
-        										"emission.totalEmissions.copied",
-        										createEmissionValidationDetails(ce),
-        										previousReportYr.toString());
-        								
-        							}
-        						}
-        					}
-        				}
-        			}
+      					List<Emission> previousEmissionsList = emissionRepo.findAllByProcessIdReportId(previousProcess.getId(), previousReportId);
+      					
+      					for (Emission ce: currentEmissionsList) {
+      						for (Emission pe: previousEmissionsList) {
+      							// check if pollutant code the same and total emissions are equal in value and scale 
+      							if ((ce.getPollutant().getPollutantCode().contentEquals(pe.getPollutant().getPollutantCode()))
+      									&& ce.getTotalEmissions().equals(pe.getTotalEmissions())) {
+  
+      								result = false;
+      								context.addFederalWarning(
+      										ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+      										"emission.totalEmissions.copied",
+      										createEmissionValidationDetails(ce),
+      										previousReportYr.toString());
+      							}
+      						}
+      					}
+      				}
         		}
-        	}
+        		
         } catch (NullPointerException e) {
         	System.out.println("No Emissions found for Emissions Report");
         }
