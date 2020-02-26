@@ -19,7 +19,6 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -34,6 +33,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
     private static final String STATUS_OPERATING = "OP";
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String LANDFILL_SOURCE_CODE = "104";
     
     @Override
     public void compose(FluentValidator validator,
@@ -252,6 +252,22 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         				"control.statusTypeCode.permanentShutdown",
         				createControlValidationDetails(c));
         	}
+        }
+        
+        if (facilitySite.getStatusYear() != null && facilitySite.getFacilitySourceTypeCode() != null) {
+        	
+	        // warning total emissions will not be accepted if facility site operation status is not OP,
+	        // except when source type is landfill or status year is greater than inventory cycle year.
+	        if ((!LANDFILL_SOURCE_CODE.contentEquals(facilitySite.getFacilitySourceTypeCode().getCode()))
+	        	&& facilitySite.getStatusYear() <= facilitySite.getEmissionsReport().getYear()
+	        	&& (!STATUS_OPERATING.contentEquals(facilitySite.getOperatingStatusCode().getCode()))) {
+	        	
+		        	result = false;
+		        	context.addFederalWarning(
+		        			ValidationField.FACILITY_EMISSION_REPORTED.value(),
+		        			"facilitysite.reportedEmissions.invalidWarning", 
+		        			createValidationDetails(facilitySite));
+	      	}
         }
         
         return result;

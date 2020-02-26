@@ -185,7 +185,21 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_CAPACITY.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_CAPACITY.value()).size() == 1);
     }
-    
+
+    @Test
+    public void legacyUomFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsUnit testData = createBaseEmissionsUnit();
+        testData.getUnitOfMeasureCode().setLegacy(true);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_UOM.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_UOM.value()).size() == 1);
+    }
+
     @Test
     public void duplicateProcessIdentifierFailTest() {
     	
@@ -208,12 +222,12 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     }
     
     /**
-     * There should be no errors when facility site operating status is not PS.
-     * There should be one error when facility site operating status is PS and emission process operating status is not PS.
-     * There should be no errors when facility site operating status is PS and emission process operating status is PS.
+     * There should be no errors when emissions unit operating status is not PS.
+     * There should be one error when emissions unit operating status is PS and emission process operating status is not PS.
+     * There should be no errors when emissions unit operating status is PS and emission process operating status is PS.
      */
     @Test
-    public void facilityOperatingStatusPSEmissionProcessStatusTest() {
+    public void emissionUnitOperatingStatusPSEmissionProcessStatusTest() {
 
         CefValidatorContext cefContext = createContext();
         EmissionsUnit testData = createBaseEmissionsUnit();
@@ -244,12 +258,12 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     }
     
     /**
-     * There should be no errors when facility site operating status is not TS or PS.
-     * There should be one error when facility site operating status is TS and emission process operating status is not PS and not TS.
-     * There should be no errors when facility site operating status is TS and emission process operating status is PS or TS.
+     * There should be no errors when emissions unit operating status is not TS or PS.
+     * There should be one error when emissions unit operating status is TS and emission process operating status is not PS and not TS.
+     * There should be no errors when emissions unit operating status is TS and emission process operating status is PS or TS.
      */
     @Test
-    public void facilityOperatingStatusTSEmissionUnitStatusTest() {
+    public void emissionUnitOperatingStatusTSEmissionUnitStatusTest() {
 
         CefValidatorContext cefContext = createContext();
         EmissionsUnit testData = createBaseEmissionsUnit();

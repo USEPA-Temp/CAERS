@@ -19,10 +19,12 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -412,6 +414,26 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     /**
+     * There should be no errors when facility with status of not OP is a landfill or if the status year is > current cycle year
+     */
+    @Test
+    public void facilityNotOperatingReportEmissionsPassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2020);
+        testData.getOperatingStatusCode().setCode("TS");
+        
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("104");
+        testData.setFacilitySourceTypeCode(sourceType);
+        testData.setStatusYear((short) 2000);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
      * There should be no errors when facility site operating status is not TS or PS.
      * There should be one error when facility site operating status is PS and release point operating status is not PS and not TS.
      * There should be no errors when facility site operating status is PS and release point operating status is PS or TS.
@@ -448,7 +470,27 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
 
+    /**
+     * There should be errors when facility with status of not OP is not a landfill and the status year is <= current cycle year
+     */
+    @Test
+    public void facilityNotOperatingReportEmissionsFailTest() {
 
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("100");
+        testData.setFacilitySourceTypeCode(sourceType);
+        testData.getOperatingStatusCode().setCode("TS");
+        testData.setStatusYear((short) 2000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_EMISSION_REPORTED.value()) && errorMap.get(ValidationField.FACILITY_EMISSION_REPORTED.value()).size() == 1);
+    }
+    
     private FacilitySite createBaseFacilitySite() {
 
         FacilitySite result = new FacilitySite();

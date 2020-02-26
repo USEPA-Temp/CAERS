@@ -3,7 +3,6 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
-import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -30,8 +29,6 @@ public class EmissionValidator extends BaseValidator<Emission> {
     
     private static final String ASH_EMISSION_FORMULA_CODE = "A";
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
-    private static final String LANDFILL_SOURCE_CODE = "104";
-    private static final String STATUS_OPERATING = "OP";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -72,7 +69,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
             if (emission.getReportingPeriod() != null 
                     && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
                     && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
-            	
+
                 valid = false;
                 context.addFederalError(
                         ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
@@ -90,6 +87,16 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         "emission.emissionsFactor.required.method",
                         createValidationDetails(emission));
             }
+        }
+
+        if (emission.getEmissionsUomCode() != null && Boolean.TRUE.equals(emission.getEmissionsUomCode().getLegacy())) {
+
+            valid = false;
+            context.addFederalError(
+                    ValidationField.EMISSION_UOM.value(),
+                    "emission.emissionsUom.legacy", 
+                    createValidationDetails(emission),
+                    emission.getEmissionsUomCode().getDescription());
         }
 
         if (emission.getEmissionsFactor() != null) {
@@ -110,6 +117,15 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         ValidationField.EMISSION_NUM_UOM.value(),
                         "emission.emissionsNumeratorUom.required.emissionsFactor", 
                         createValidationDetails(emission));
+
+            } else if (Boolean.TRUE.equals(emission.getEmissionsNumeratorUom().getLegacy())) {
+
+                valid = false;
+                context.addFederalError(
+                        ValidationField.EMISSION_NUM_UOM.value(),
+                        "emission.emissionsNumeratorUom.legacy", 
+                        createValidationDetails(emission),
+                        emission.getEmissionsNumeratorUom().getDescription());
             }
 
             if (emission.getEmissionsDenominatorUom() == null) {
@@ -119,6 +135,15 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         ValidationField.EMISSION_DENOM_UOM.value(),
                         "emission.emissionsDenominatorUom.required.emissionsFactor",
                         createValidationDetails(emission));
+
+            } else if (Boolean.TRUE.equals(emission.getEmissionsDenominatorUom().getLegacy())) {
+
+                valid = false;
+                context.addFederalError(
+                        ValidationField.EMISSION_DENOM_UOM.value(),
+                        "emission.emissionsDenominatorUom.legacy", 
+                        createValidationDetails(emission),
+                        emission.getEmissionsDenominatorUom().getDescription());
             }
 
         } else if (emission.getEmissionsFactor() == null) {
@@ -264,36 +289,17 @@ public class EmissionValidator extends BaseValidator<Emission> {
           }
         }
         
-        FacilitySite fs = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite();
-        if (fs.getStatusYear() != null && fs.getFacilitySourceTypeCode() != null) {
-        	
-        	// total emissions must be >= 0
-	        if (emission.getTotalEmissions() == null || emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == -1) {
-		     
-		        	valid = false;
-		        	context.addFederalError(
-		        			ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
-		        			"emission.totalEmissions.range", 
-		        			createValidationDetails(emission));
-	        }
-		        
-	        // total emissions > 0 will not be accepted if facility site operation status is not OP,
-	        // except when source type is landfill or status year is greater than inventory cycle year.
-	        if ((!LANDFILL_SOURCE_CODE.contentEquals(fs.getFacilitySourceTypeCode().getCode()))
-	        	&& fs.getStatusYear() <= fs.getEmissionsReport().getYear()
-	        	&& (!STATUS_OPERATING.contentEquals(fs.getOperatingStatusCode().getCode()))) {
-	        	
-	        	if (emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == 1) {
-	  
-		        	valid = false;
-		        	context.addFederalError(
-		        			ValidationField.EMISSION_REPORTED.value(),
-		        			"emission.reportedEmissions.invalid", 
-		        			createValidationDetails(emission));
-	        	}
-	      	}
+        // total emissions must be >= 0
+        if (emission.getTotalEmissions() == null || emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == -1) {
+	     
+	        	valid = false;
+	        	context.addFederalError(
+	        			ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+	        			"emission.totalEmissions.range", 
+	        			createValidationDetails(emission));
         }
-
+        
+        
         return valid;
     }
 
