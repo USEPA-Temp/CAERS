@@ -150,7 +150,6 @@ export class EditFacilityContactComponent implements OnInit {
       } else {
 
         saveContact.id = this.facilityContact.id;
-
         this.contactService.update(saveContact)
         .subscribe(() => {
 

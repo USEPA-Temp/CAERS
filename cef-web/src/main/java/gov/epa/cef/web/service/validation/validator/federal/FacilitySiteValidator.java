@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -76,11 +77,10 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         }
         
         // Postal codes must be entered as 5 digits (XXXXX) or 9 digits (XXXXX-XXXX).
-        if(facilitySite.getContacts() != null){
+        	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
+        	Pattern pattern = Pattern.compile(regex);
         	for(FacilitySiteContact fc: facilitySite.getContacts()){
-            	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
-            	Pattern pattern = Pattern.compile(regex);
-            	if(fc.getPostalCode() != null){
+            	if(!StringUtils.isEmpty(fc.getPostalCode())){
                 	Matcher matcher = pattern.matcher(fc.getPostalCode());
                 	if(!matcher.matches()){
                     	result = false; 
@@ -90,7 +90,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                     			createContactValidationDetails(facilitySite));
                 	}	
             	}
-            	if(fc.getMailingPostalCode() != null){
+            	if(!StringUtils.isEmpty(fc.getMailingPostalCode())){
                 	Matcher matcher = pattern.matcher(fc.getMailingPostalCode());
                 	if(!matcher.matches()){
                     	result = false; 
@@ -101,11 +101,8 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                 	}	
             	}
         	}
-        }
-        if(facilitySite != null){
-        	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
-        	Pattern pattern = Pattern.compile(regex);
-        	if(facilitySite.getPostalCode() != null) {
+        	
+        	if(!StringUtils.isEmpty(facilitySite.getPostalCode())) {
 	        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
 	        	if(!matcher.matches()){
 	            	result = false; 
@@ -115,7 +112,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 	            			createValidationDetails(facilitySite));
 	        	}
         	}
-        	if(facilitySite.getMailingPostalCode() != null){
+        	if(!StringUtils.isEmpty(facilitySite.getMailingPostalCode())){
             	Matcher matcher = pattern.matcher(facilitySite.getMailingPostalCode());
             	if(!matcher.matches()){
                 	result = false; 
@@ -125,7 +122,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                 			createValidationDetails(facilitySite));
             	}	
         	}
-        }
+        
 
         
         // Facility must have a facility NAICS code reported
