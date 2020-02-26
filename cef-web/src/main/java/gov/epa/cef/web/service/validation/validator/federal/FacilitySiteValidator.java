@@ -28,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
     private static final String STATUS_OPERATING = "OP";
+    private static final String LANDFILL_SOURCE_CODE = "104";
     
     @Override
     public void compose(FluentValidator validator,
@@ -169,6 +170,22 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         		context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.email.required",
         				createContactValidationDetails(facilitySite));
         	}
+        }
+        
+        if (facilitySite.getStatusYear() != null && facilitySite.getFacilitySourceTypeCode() != null) {
+        	
+	        // warning total emissions will not be accepted if facility site operation status is not OP,
+	        // except when source type is landfill or status year is greater than inventory cycle year.
+	        if ((!LANDFILL_SOURCE_CODE.contentEquals(facilitySite.getFacilitySourceTypeCode().getCode()))
+	        	&& facilitySite.getStatusYear() <= facilitySite.getEmissionsReport().getYear()
+	        	&& (!STATUS_OPERATING.contentEquals(facilitySite.getOperatingStatusCode().getCode()))) {
+	        	
+		        	result = false;
+		        	context.addFederalWarning(
+		        			ValidationField.FACILITY_EMISSION_REPORTED.value(),
+		        			"facilitysite.reportedEmissions.invalidWarning", 
+		        			createValidationDetails(facilitySite));
+	      	}
         }
         
         return result;

@@ -30,7 +30,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
     
     private static final String ASH_EMISSION_FORMULA_CODE = "A";
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
-    private static final String LANDFILL_SOURCE_CODE = "104";
+//    private static final String LANDFILL_SOURCE_CODE = "104";
     private static final String STATUS_OPERATING = "OP";
 
     @Override
@@ -274,6 +274,9 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        			createValidationDetails(emission));
         }
         
+        
+        /**
+         * CEF-621 QA check moved to FacilitySiteValidator to show error as warning once at the facility level.
         FacilitySite fs = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite();
         if (fs.getStatusYear() != null && fs.getFacilitySourceTypeCode() != null) {
         	
@@ -293,6 +296,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        	}
 	      	}
         }
+        */
 
         return valid;
     }
