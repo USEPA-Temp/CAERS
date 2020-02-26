@@ -170,7 +170,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         				createContactValidationDetails(facilitySite));
         	}
         }
-
+        
         return result;
     }
     

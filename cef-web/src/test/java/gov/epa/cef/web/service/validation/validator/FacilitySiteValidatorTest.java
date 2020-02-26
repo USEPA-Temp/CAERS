@@ -16,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
@@ -31,7 +32,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
 
     @InjectMocks
     private FacilitySiteValidator validator;
-
+    
     @Test
     public void simpleValidatePassTest() {
 
@@ -215,7 +216,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT.value()) && errorMap.get(ValidationField.FACILITY_CONTACT.value()).size() == 1);
     }
-
+    
 
     private FacilitySite createBaseFacilitySite() {
 
@@ -224,6 +225,12 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         result.setStatusYear(null);
         result.setPostalCode("31750");
         result.setMailingPostalCode("31750");
+        
+        EmissionsReport er = new EmissionsReport();
+        er.setId(2L);
+        er.setYear(new Short("2019"));
+        er.setEisProgramId("1");
+        result.setEmissionsReport(er);
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");
