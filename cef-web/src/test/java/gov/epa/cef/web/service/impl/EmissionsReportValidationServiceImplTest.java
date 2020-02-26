@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 import com.baidu.unbiz.fluentvalidator.ValidatorChain;
 
+import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -16,6 +17,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ControlValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsProcessValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsReportValidator;
@@ -67,6 +69,9 @@ public class EmissionsReportValidationServiceImplTest {
 
         when(validationRegistry.findOneByType(EmissionsUnitValidator.class))
             .thenReturn(new EmissionsUnitValidator());
+        
+        when(validationRegistry.findOneByType(ControlValidator.class))
+        .thenReturn(new ControlValidator());
 
         when(validationRegistry.findOneByType(EmissionsProcessValidator.class))
             .thenReturn(new EmissionsProcessValidator());
@@ -101,6 +106,10 @@ public class EmissionsReportValidationServiceImplTest {
         OperatingDetail detail = new OperatingDetail();
         Emission emission = new Emission();
         emission.setTotalEmissions(new BigDecimal(10));
+        Control control = new Control(); 
+        control.setIdentifier("control_Identifier");
+        control.setFacilitySite(facilitySite);
+        facilitySite.getControls().add(control);
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");

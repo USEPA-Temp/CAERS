@@ -6,12 +6,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import gov.epa.cef.web.domain.Emission;
+
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EmissionRepository extends CrudRepository<Emission, Long>, ProgramIdRetriever, ReportIdRetriever {
-
+	
+	/**
+   * Find all Emissions with the specified process id
+   * @param processId
+   * @param reportId
+   * @return
+   */
+	@Query("select e from Emission e join e.reportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where ep.id = :processId and r.id = :reportId")	
+	List<Emission> findAllByProcessIdReportId(@Param("processId") Long processId, @Param("reportId") Long reportId);
+		
     /**
      *
      * @param id
