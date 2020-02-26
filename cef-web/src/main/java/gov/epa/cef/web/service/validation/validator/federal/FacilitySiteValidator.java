@@ -4,9 +4,12 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 
+import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -16,6 +19,7 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,6 +32,8 @@ import org.springframework.util.CollectionUtils;
 public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
     private static final String STATUS_OPERATING = "OP";
+    private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
     
     @Override
     public void compose(FluentValidator validator,
@@ -126,8 +132,6 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             	}	
         	}
         
-
-        
         // Facility must have a facility NAICS code reported
         List<FacilityNAICSXref> fsNAICSList = facilitySite.getFacilityNAICS();
         
@@ -170,6 +174,85 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         				createContactValidationDetails(facilitySite));
         	}
         }
+        
+        if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
+        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
+        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode())
+        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (EmissionsUnit eu: euList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+        				"emissionsUnit.statusTypeCode.temporarilyShutdown",
+        				createEmissionsUnitValidationDetails(eu));
+        	}
+        	
+        	List<ReleasePoint> rpList = facilitySite.getReleasePoints().stream()
+        			.filter(releasePoint -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode())
+        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (ReleasePoint rp: rpList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.RP_STATUS_CODE.value(),
+        				"releasePoint.statusTypeCode.temporarilyShutdown",
+        				createReleasePointValidationDetails(rp));
+        	}
+        	
+        	List<Control> cList = facilitySite.getControls().stream()
+        			.filter(control -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode())
+        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (Control c: cList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.CONTROL_STATUS_CODE.value(),
+        				"control.statusTypeCode.temporarilyShutdown",
+        				createControlValidationDetails(c));
+        	}
+        }
+        
+        if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
+        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
+        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (EmissionsUnit eu: euList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+        				"emissionsUnit.statusTypeCode.permanentShutdown",
+        				createEmissionsUnitValidationDetails(eu));
+        	}
+        	
+        	List<ReleasePoint> rpList = facilitySite.getReleasePoints().stream()
+        			.filter(releasePoint -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (ReleasePoint rp: rpList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.RP_STATUS_CODE.value(),
+        				"releasePoint.statusTypeCode.permanentShutdown",
+        				createReleasePointValidationDetails(rp));
+        	}
+        	
+        	List<Control> cList = facilitySite.getControls().stream()
+        			.filter(control -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (Control c: cList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.CONTROL_STATUS_CODE.value(),
+        				"control.statusTypeCode.permanentShutdown",
+        				createControlValidationDetails(c));
+        	}
+        }
 
         return result;
     }
@@ -188,6 +271,30 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
     	
     	ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEisProgramId(), EntityType.FACILITY_SITE, description);
     	return dto;
+    }
+    
+    private ValidationDetailDto createEmissionsUnitValidationDetails(EmissionsUnit source) {
+
+      String description = MessageFormat.format("Emissions Unit: {0}", source.getUnitIdentifier());
+
+      ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getUnitIdentifier(), EntityType.EMISSIONS_UNIT, description);
+      return dto;
+    }
+    
+    private ValidationDetailDto createReleasePointValidationDetails(ReleasePoint source) {
+
+      String description = MessageFormat.format("Release Point: {0}", source.getReleasePointIdentifier());
+
+      ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getReleasePointIdentifier(), EntityType.RELEASE_POINT, description);
+      return dto;
+    }
+    
+    private ValidationDetailDto createControlValidationDetails(Control source) {
+
+      String description = MessageFormat.format("Control: {0}", source.getIdentifier());
+
+      ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getIdentifier(), EntityType.CONTROL, description);
+      return dto;
     }
     
 }

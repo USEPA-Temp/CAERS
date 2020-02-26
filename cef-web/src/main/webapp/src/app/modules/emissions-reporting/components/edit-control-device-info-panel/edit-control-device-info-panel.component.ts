@@ -17,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
   @Input() control: Control;
   controlIdentifiers: String[]=[];
+  facilityOpCode: BaseCodeLookup;
 
   controlDeviceForm = this.fb.group({
     identifier: ['', Validators.required],
@@ -38,7 +39,8 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     ]],
     comments: ['', Validators.maxLength(400)]
   }, { validators: [
-    this.controlIdentifierCheck()
+    this.controlIdentifierCheck(),
+    this.facilitySiteStatusCheck()
   ]});
 
   operatingStatusValues: BaseCodeLookup[];
@@ -65,6 +67,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
 
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.facilityOpCode = data.facilitySite.operatingStatusCode;
       this.controlService.retrieveForFacilitySite(data.facilitySite.id)
       .subscribe(controls => {
         controls.forEach(c => {
@@ -91,6 +94,26 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         if (this.controlIdentifiers.includes(control.get('identifier').value)) {
           return { duplicateControlIdentifier: true };
         }
+      }
+      return null;
+    }
+  }
+
+  facilitySiteStatusCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const status_perm_shutdown = "PS";
+      const status_temp_shutdown = "TS";
+      const control_status = control.get('operatingStatusCode').value;
+
+      if (this.facilityOpCode && control_status) {
+        if (this.facilityOpCode.code === status_temp_shutdown
+          && control_status.code !== status_perm_shutdown
+          && control_status.code !== status_temp_shutdown) {
+            return {invalidStatusCodeTS: true};
+          } else if (this.facilityOpCode.code === status_perm_shutdown
+          && control_status.code !== status_perm_shutdown) {
+            return {invalidStatusCodePS: true};
+          }
       }
       return null;
     }

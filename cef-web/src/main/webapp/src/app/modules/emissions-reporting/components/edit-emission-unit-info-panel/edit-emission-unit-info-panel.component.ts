@@ -170,11 +170,18 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if ((control.get('operatingStatusCode').value !== null)
-      && (control.get('operatingStatusCode').value.code === 'OP')
-      && (this.facilityOpCode !== undefined)) {
-          if (this.facilityOpCode !== null && (this.facilityOpCode.code === 'TS' || this.facilityOpCode.code === 'PS')) {
-            return { invalidStatusCode: true };
+      const status_perm_shutdown = "PS";
+      const status_temp_shutdown = "TS";
+      const control_status = control.get('operatingStatusCode').value;
+
+      if (this.facilityOpCode && control_status) {
+        if (this.facilityOpCode.code === status_temp_shutdown
+          && control_status.code !== status_perm_shutdown
+          && control_status.code !== status_temp_shutdown) {
+            return {invalidStatusCodeTS: true};
+          } else if (this.facilityOpCode.code === status_perm_shutdown
+          && control_status.code !== status_perm_shutdown) {
+            return {invalidStatusCodePS: true};
           }
       }
       return null;

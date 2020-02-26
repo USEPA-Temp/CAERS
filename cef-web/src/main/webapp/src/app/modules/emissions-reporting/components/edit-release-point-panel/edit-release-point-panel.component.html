@@ -32,27 +32,26 @@
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('operatingStatusCode')"></app-validation-message>
+            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidStatusCodeTS">
+                If the facility site  status is Temporarily Shutdown then each sub-facility component must also be either Permanently Shutdown or Temporarily Shutdown.            
+            </div>
+            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidStatusCodePS">
+                If the facility site  status is Permanently Shutdown then each sub-facility component must also be Permanently Shutdown.            
+            </div>
         </div>
         <label for="latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Latitude Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="latitude" formControlName="latitude" maxlength="10">
             <app-validation-message [control]="releasePointForm.get('latitude')"></app-validation-message>
+            <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.invalidLatitude">
+                Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude coordinate {{facilitySite.latitude}}.
+            </div>
         </div>
         <label for="fenceLineDistance" class="col-sm-6 col-md-2 col-form-label"><strong>Fence Line Distance Measure:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="fenceLineDistance" formControlName="fenceLineDistance" maxlength="6">
             <app-validation-message [control]="releasePointForm.get('fenceLineDistance')"></app-validation-message>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 col-md-10">
-            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidStatusCode">
-                A facility site with operating status of "Temporarily Shutdown" or "Permanently Shutdown" may not have a Release Point with status of "Operating".
-            </div>
-            <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.invalidLatitude">
-                Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude coordinate {{facilitySite.latitude}}.
-            </div>
-        </div> 
     </div>
 
     <div class="row pb-1">
@@ -65,6 +64,9 @@
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="longitude" formControlName="longitude" maxlength="11">
             <app-validation-message [control]="releasePointForm.get('longitude')"></app-validation-message>
+            <div class="validation-message" *ngIf="releasePointForm.get('longitude').errors?.invalidLongitude">
+                Release Point longitude must within the {{tolerance}} tolerance range of Facility longitude coordinate {{facilitySite.longitude}}.
+            </div>
         </div>
         <label for="fenceLineUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fence Line Distance UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
@@ -72,13 +74,6 @@
                 <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 col-md-10">
-            <div class="validation-message" *ngIf="releasePointForm.get('longitude').errors?.invalidLongitude">
-                Release Point longitude must within the {{tolerance}} tolerance range of Facility longitude coordinate {{facilitySite.longitude}}.
-            </div>
         </div>
     </div>
 
