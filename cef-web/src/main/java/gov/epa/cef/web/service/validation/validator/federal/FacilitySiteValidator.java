@@ -42,6 +42,9 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
         validator.onEach(facilitySite.getReleasePoints(),
                 registry.findOneByType(ReleasePointValidator.class));
+        
+        validator.onEach(facilitySite.getControls(),
+        		registry.findOneByType(ControlValidator.class));
     }
 
     @Override

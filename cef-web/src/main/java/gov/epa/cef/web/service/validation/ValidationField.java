@@ -23,6 +23,7 @@ public enum ValidationField {
     RP_STACK("report.facilitySite.releasePoint.stack"),
     RP_STACK_WARNING("report.facilitySite.releasePoint.stackWarning"),
     RP_COORDINATE("report.facilitySite.releasePoint.coordinate"),
+    CONTROL_IDENTIFIER("report.facilitySite.control.controlIdentifier"),
     PROCESS_RP_PCT("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.percent"),
     PROCESS_INFO_SCC("report.facilitySite.emissionsUnit.emissionsProcess.information.scc"),
     PROCESS_RP("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.required"),

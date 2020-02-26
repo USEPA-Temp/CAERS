@@ -4,6 +4,9 @@
         <div class="col-sm-6 col-md-2">
             <input [readonly]="control" type="text" class="form-control" maxlength="20" id="controlIdentifierInput" formControlName="identifier">
             <app-validation-message [control]="controlDeviceForm.get('identifier')"></app-validation-message>
+            <div class="validation-message" *ngIf="controlDeviceForm.errors?.duplicateControlIdentifier">
+                Control Identifier must be unique within the facility. 
+            </div>
         </div>
         <label for="controlStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Status:</strong></label>
         <div class="col-sm-6 col-md-2">
