@@ -529,48 +529,6 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
    }
    
-   
-   /**
-    * CEF-621 QA check moved to FacilitySiteValidator to show error as warning once at the facility level.
-   // There should be no errors when facility with status of not OP is a landfill or if the status year is > current cycle year
-   @Test
-   public void facilityNotOperatingReportEmissionsPassTest() {
-
-       CefValidatorContext cefContext = createContext();
-       Emission testData = createBaseEmission(false);
-       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getOperatingStatusCode().setCode("TS");
-       
-       assertTrue(this.validator.validate(cefContext, testData));
-       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-       
-       cefContext = createContext();
-       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getFacilitySourceTypeCode().setCode("104");
-       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2000);
-       
-       
-       assertTrue(this.validator.validate(cefContext, testData));
-       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-   }
-   
-   
-   // There should be errors when facility with status of not OP is not a landfill and the status year is <= current cycle year
-   @Test
-   public void facilityNotOperatingReportEmissionsFailTest() {
-
-       CefValidatorContext cefContext = createContext();
-       Emission testData = createBaseEmission(false);
-       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getOperatingStatusCode().setCode("TS");
-       testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2000);
-       
-       assertFalse(this.validator.validate(cefContext, testData));
-       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-       assertTrue(errorMap.containsKey(ValidationField.EMISSION_REPORTED.value()) && errorMap.get(ValidationField.EMISSION_REPORTED.value()).size() == 1);
-   }
-   */
-
-
     private Emission createBaseEmission(boolean totalDirectEntry) {
 
         Emission result = new Emission();

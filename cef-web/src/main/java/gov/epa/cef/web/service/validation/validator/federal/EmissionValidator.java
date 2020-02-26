@@ -3,7 +3,6 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
-import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -30,8 +29,6 @@ public class EmissionValidator extends BaseValidator<Emission> {
     
     private static final String ASH_EMISSION_FORMULA_CODE = "A";
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
-//    private static final String LANDFILL_SOURCE_CODE = "104";
-    private static final String STATUS_OPERATING = "OP";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -275,29 +272,6 @@ public class EmissionValidator extends BaseValidator<Emission> {
         }
         
         
-        /**
-         * CEF-621 QA check moved to FacilitySiteValidator to show error as warning once at the facility level.
-        FacilitySite fs = emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite();
-        if (fs.getStatusYear() != null && fs.getFacilitySourceTypeCode() != null) {
-        	
-	        // total emissions > 0 will not be accepted if facility site operation status is not OP,
-	        // except when source type is landfill or status year is greater than inventory cycle year.
-	        if ((!LANDFILL_SOURCE_CODE.contentEquals(fs.getFacilitySourceTypeCode().getCode()))
-	        	&& fs.getStatusYear() <= fs.getEmissionsReport().getYear()
-	        	&& (!STATUS_OPERATING.contentEquals(fs.getOperatingStatusCode().getCode()))) {
-	        	
-	        	if (emission.getTotalEmissions().compareTo(BigDecimal.ZERO) == 1) {
-	  
-		        	valid = false;
-		        	context.addFederalError(
-		        			ValidationField.EMISSION_REPORTED.value(),
-		        			"emission.reportedEmissions.invalid", 
-		        			createValidationDetails(emission));
-	        	}
-	      	}
-        }
-        */
-
         return valid;
     }
 
