@@ -16,6 +16,7 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -235,7 +236,7 @@ public interface LookupService {
      * Retrieve Facility Category codes
      * @return
      */
-    List<CodeLookupDto> retrieveFacilityCategoryCodes();
+    List<FacilityCategoryCodeDto> retrieveFacilityCategoryCodes();
     
     /**
      * Retrieve Facility Source Type codes

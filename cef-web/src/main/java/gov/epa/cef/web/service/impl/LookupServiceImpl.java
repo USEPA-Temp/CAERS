@@ -57,6 +57,7 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -467,13 +468,13 @@ public class LookupServiceImpl implements LookupService {
     }
     
     @Override
-    public List<CodeLookupDto> retrieveFacilityCategoryCodes() {
+    public List<FacilityCategoryCodeDto> retrieveFacilityCategoryCodes() {
 
-        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        List<FacilityCategoryCodeDto> result = new ArrayList<FacilityCategoryCodeDto>();
         Iterable<FacilityCategoryCode> entities = facilityCategoryCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
 
         entities.forEach(entity -> {
-            result.add(lookupMapper.toDto(entity));
+            result.add(lookupMapper.facilityCategoryCodeToDto(entity));
         });
         return result;
     }

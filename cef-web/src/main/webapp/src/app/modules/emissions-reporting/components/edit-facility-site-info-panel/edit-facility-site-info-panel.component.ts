@@ -6,6 +6,7 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
+import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 
 @Component({
   selector: 'app-edit-facility-site-info-panel',
@@ -63,7 +64,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   operatingStatusValues: BaseCodeLookup[];
   tribalCodeValues: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
-  facilityCategoryCodeValues: BaseCodeLookup[];
+  facilityCategoryCodeValues: FacilityCategoryCode[];
   facilitySourceTypeValues: BaseCodeLookup[];
 
   constructor(

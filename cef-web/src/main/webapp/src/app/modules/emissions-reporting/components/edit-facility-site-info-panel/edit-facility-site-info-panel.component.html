@@ -47,7 +47,7 @@
         <label for="facilityCategoryCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Facility Category Code:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="facilityCategoryCodeSelect" formControlName="facilityCategoryCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of facilityCategoryCodeValues" [ngValue]="opt">{{opt?.code}}</option>
+                <option *ngFor="let opt of facilityCategoryCodeValues" [ngValue]="opt">{{opt?.name}}</option>
             </select>
             <app-validation-message [control]="facilitySiteForm.get('facilityCategoryCode')"></app-validation-message>
         </div>
@@ -136,7 +136,7 @@
     <div class="row pb-1">
         <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Description:</strong></label>
         <div class="col-sm-6 col-md-10">
-            <input type="text" class="form-control" maxlength="100" style="height:100%;" id="descriptionInput" formControlName="description">
+            <input type="text" class="form-control" maxlength="100" id="descriptionInput" formControlName="description">
             <app-validation-message [control]="facilitySiteForm.get('description')"></app-validation-message>
         </div>
     </div>

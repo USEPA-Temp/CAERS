@@ -18,6 +18,7 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
@@ -267,10 +268,10 @@ public class LookupApi {
      */
     @GetMapping(value = "/facility/category")
     @ResponseBody
-    public ResponseEntity<List<CodeLookupDto>> retrieveFacilityCategoryCodes() {
+    public ResponseEntity<List<FacilityCategoryCodeDto>> retrieveFacilityCategoryCodes() {
 
-        List<CodeLookupDto> result = lookupService.retrieveFacilityCategoryCodes();
-        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+        List<FacilityCategoryCodeDto> result = lookupService.retrieveFacilityCategoryCodes();
+        return new ResponseEntity<List<FacilityCategoryCodeDto>>(result, HttpStatus.OK);
     }
     
     /**
