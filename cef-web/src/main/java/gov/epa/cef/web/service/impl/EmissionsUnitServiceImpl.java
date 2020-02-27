@@ -64,7 +64,7 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
                 .orElse(null);
 
         // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findRecentByEisProgramIdAndYear(emissionsUnit.getFacilitySite().getEisProgramId(),
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(emissionsUnit.getFacilitySite().getEisProgramId(),
                 emissionsUnit.getFacilitySite().getEmissionsReport().getYear());
 
         // check if the emissions unit was reported last year
