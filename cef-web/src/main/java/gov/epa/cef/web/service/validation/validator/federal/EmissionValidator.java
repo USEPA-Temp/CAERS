@@ -294,6 +294,19 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	      	}
         }
 
+        // percent overall control cannot be < 0 and cannot be >= 100 percent.
+        if (emission.getOverallControlPercent() != null
+        		&& (emission.getOverallControlPercent().compareTo(new BigDecimal(0)) == -1 
+        		|| emission.getOverallControlPercent().compareTo(new BigDecimal(100)) >= 0)) {
+        	
+        	valid = false;
+        	context.addFederalError(
+        			ValidationField.EMISSION_CONTROL_PERCENT.value(),
+        			"emission.controlPercent.range", 
+        			createValidationDetails(emission));
+        	
+        }
+        
         return valid;
     }
 

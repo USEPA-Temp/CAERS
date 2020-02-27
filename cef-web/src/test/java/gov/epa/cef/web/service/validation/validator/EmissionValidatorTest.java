@@ -568,6 +568,39 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_REPORTED.value()) && errorMap.get(ValidationField.EMISSION_REPORTED.value()).size() == 1);
    }
+   
+   /**
+    * There should be errors for overall control percentage when the overall control percent is < 0 or >= 100.
+    * There are errors for emissions outside of tolerance range due to control percentage. 
+    */
+   @Test
+   public void overallControlPercentRangeTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.setOverallControlPercent(new BigDecimal(30));
+       
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+       
+       cefContext = createContext();
+       testData.setOverallControlPercent(new BigDecimal(-10));
+       
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
+       
+       cefContext = createContext();
+       testData.setOverallControlPercent(new BigDecimal(100));
+       
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+       errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
+   }
 
 
     private Emission createBaseEmission(boolean totalDirectEntry) {
