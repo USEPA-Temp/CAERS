@@ -54,6 +54,23 @@ public class ControlValidator extends BaseValidator<Control> {
 	  			cp.getPollutant().getPollutantName());
 			}
 		}
+			
+		Map<Object, List<ControlPollutant>> cpMap = control.getPollutants().stream()
+				.filter(cp -> cp.getPollutant() != null)
+				.collect(Collectors.groupingBy(p -> p.getPollutant().getPollutantName()));
+		
+		for (List<ControlPollutant> pList: cpMap.values()) {
+			if (pList.size() > 1) {
+				
+				result = false;
+				context.addFederalError(
+						ValidationField.CONTROL_POLLUTANT.value(),
+		  			"control.controlPollutant.duplicate",
+		  			createValidationDetails(control),
+		  			pList.get(0).getPollutant().getPollutantName());
+					
+			}
+		}
 		
 		return result;
 	}
