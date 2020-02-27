@@ -107,7 +107,7 @@ public class ReleasePointServiceImpl implements ReleasePointService {
 
         // find the last year reported
         Optional<EmissionsReport> lastReport = reportRepo.findRecentByEisProgramIdAndYear(rp.getFacilitySite().getEisProgramId(),
-                Integer.valueOf(rp.getFacilitySite().getEmissionsReport().getYear() - 1).shortValue());
+                rp.getFacilitySite().getEmissionsReport().getYear());
 
         // check if the release point was reported last year
         if (lastReport.isPresent()) {

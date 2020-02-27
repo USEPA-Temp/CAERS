@@ -125,7 +125,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
      // find the last year reported
         Optional<EmissionsReport> lastReport = reportRepo.findRecentByEisProgramIdAndYear(process.getEmissionsUnit().getFacilitySite().getEisProgramId(),
-                Integer.valueOf(process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() - 1).shortValue());
+                process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
 
         // check if the emissions process was reported last year
         if (lastReport.isPresent()) {

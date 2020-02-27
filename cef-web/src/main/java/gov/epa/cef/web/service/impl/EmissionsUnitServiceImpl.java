@@ -65,7 +65,7 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
 
         // find the last year reported
         Optional<EmissionsReport> lastReport = reportRepo.findRecentByEisProgramIdAndYear(emissionsUnit.getFacilitySite().getEisProgramId(),
-                Integer.valueOf(emissionsUnit.getFacilitySite().getEmissionsReport().getYear() - 1).shortValue());
+                emissionsUnit.getFacilitySite().getEmissionsReport().getYear());
 
         // check if the emissions unit was reported last year
         if (lastReport.isPresent()) {
