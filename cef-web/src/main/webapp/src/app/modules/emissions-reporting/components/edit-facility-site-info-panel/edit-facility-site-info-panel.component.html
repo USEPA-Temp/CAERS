@@ -134,6 +134,14 @@
     </div>
 
     <div class="row pb-1">
+        <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Description:</strong></label>
+        <div class="col-sm-6 col-md-10">
+            <input type="text" class="form-control" maxlength="100" style="height:100%;" id="descriptionInput" formControlName="description">
+            <app-validation-message [control]="facilitySiteForm.get('description')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
         <label for="facilityCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
         <div class="col-sm-6 col-md-10">
             <textarea rows="3" class="form-control" maxlength="400" style="height:100%;" id="facilityCommentsInput" formControlName="comments"></textarea>
