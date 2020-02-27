@@ -60,9 +60,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         				"emissionsProcess.statusTypeCode.temporarilyShutdown",
         				createEmissionsProcessValidationDetails(ep));
         	}
-        }
-        
-        if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        } else if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
         	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
         			.filter(emissionsProcess -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
         			.collect(Collectors.toList());

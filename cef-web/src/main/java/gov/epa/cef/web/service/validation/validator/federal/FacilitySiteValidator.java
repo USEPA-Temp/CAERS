@@ -214,9 +214,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         				"control.statusTypeCode.temporarilyShutdown",
         				createControlValidationDetails(c));
         	}
-        }
-        
-        if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
+        } else if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
         	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
         			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))
         			.collect(Collectors.toList());
