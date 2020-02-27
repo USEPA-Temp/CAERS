@@ -14,7 +14,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ControlValidator;
@@ -67,7 +69,76 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		
 	}
 	
+	/**
+	 * There should be errors for control pollutant percent reduction when the percent is < 5 or >= 100.
+	 */
+	@Test
+	public void controlPollutantPercentReductionTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		ControlPollutant cp = new ControlPollutant();
+		Pollutant p = new Pollutant();
+		p.setPollutantName("Nitrogen Oxides");
+		p.setPollutantCode("NOX");
+		cp.setPollutant(p);
+		cp.setPercentReduction(99.999);
+		testData.getPollutants().add(cp);
+		
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+		
+		cefContext = createContext();
+		cp.setPercentReduction(0.0);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);
+		
+		cefContext = createContext();
+		cp.setPercentReduction(100.0);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);
+		
+	}
 	
+	@Test
+	public void duplicateControlPollutantFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		ControlPollutant cp1 = new ControlPollutant();
+		Pollutant p1 = new Pollutant();
+		p1.setPollutantName("NOX");
+		Pollutant p2 = new Pollutant();
+		p2.setPollutantName("CO2");
+		cp1.setPollutant(p1);
+		cp1.setPercentReduction(50.0);
+		testData.getPollutants().add(cp1);
+		ControlPollutant cp2 = new ControlPollutant();
+		cp2.setPollutant(p2);
+		cp2.setPercentReduction(50.0);
+		testData.getPollutants().add(cp2);
+		
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+		
+		cefContext = createContext();
+		cp2.setPollutant(p1);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);		
+		
+	}
 	
 	
 	private Control createBaseControl() {

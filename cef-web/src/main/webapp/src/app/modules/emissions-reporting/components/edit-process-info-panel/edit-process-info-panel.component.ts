@@ -30,6 +30,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   aircraftSCCcheck = false;
   invalidAircraftSCC = false;
   processHasAETC = false;
+  facilityOpCode: BaseCodeLookup;
 
   processForm = this.fb.group({
     aircraftEngineTypeCode: [null],
@@ -61,7 +62,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     this.checkPointSourceSccCode(),
     this.checkProcessIdentifier(),
     this.checkMatchSccAircraft(),
-    this.checkSccAndAircraftDuplicate()]
+    this.checkSccAndAircraftDuplicate(),
+    this.facilitySiteStatusCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -84,6 +86,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     });
 
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
+      this.facilityOpCode = data.facilitySite.operatingStatusCode;
       this.emissionsReportYear = data.facilitySite.emissionsReport.year;
       this.emissionUnitService.retrieveForFacility(data.facilitySite.id).subscribe(emissionUnits =>{
         emissionUnits.forEach(eu => {
@@ -317,6 +320,26 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
         return null;
       }
     };
+  }
+
+  facilitySiteStatusCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const status_perm_shutdown = "PS";
+      const status_temp_shutdown = "TS";
+      const control_status = control.get('operatingStatusCode').value;
+
+      if (this.facilityOpCode && control_status) {
+        if (this.facilityOpCode.code === status_temp_shutdown
+          && control_status.code !== status_perm_shutdown
+          && control_status.code !== status_temp_shutdown) {
+            return {invalidStatusCodeTS: true};
+          } else if (this.facilityOpCode.code === status_perm_shutdown
+          && control_status.code !== status_perm_shutdown) {
+            return {invalidStatusCodePS: true};
+          }
+      }
+      return null;
+    }
   }
 
 }

@@ -727,7 +727,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void simpleValidateOperationStatusTypeFailTest() {
+    public void simpleValidateOperationStatusYearTypeFailTest() {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
@@ -784,24 +784,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_YEAR.value()) && errorMap.get(ValidationField.RP_STATUS_YEAR.value()).size() == 1);
-    }
-    
-    @Test
-    public void facilityOpStatusVsReleasePointOpStatusFailTest() {
-	      
-        CefValidatorContext cefContext = createContext();
-        ReleasePoint testData = createBaseReleasePoint();
-        
-        OperatingStatusCode opStatCode = new OperatingStatusCode();
-	      opStatCode.setCode("OP");
-        
-        testData.setOperatingStatusCode(opStatCode);
-        
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-        
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
     }
     
     

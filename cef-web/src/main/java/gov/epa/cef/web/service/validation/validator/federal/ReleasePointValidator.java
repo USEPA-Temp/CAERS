@@ -292,17 +292,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         }
         
         // CHECKS FOR ALL RELEASE POINT TYPES
-        // If facility operation status is Temporarily Shutdown or Permanently Shutdown, release point cannot be operating
-        if ((STATUS_TEMPORARILY_SHUTDOWN.contentEquals(releasePoint.getFacilitySite().getOperatingStatusCode().getCode())
-    		|| STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getFacilitySite().getOperatingStatusCode().getCode()))
-    		&& STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
- 	
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.facilitySiteCondition",
-        			createValidationDetails(releasePoint));
-        }
-        
         // If release point operation status is not operating, status year is required
         if (!STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
  	

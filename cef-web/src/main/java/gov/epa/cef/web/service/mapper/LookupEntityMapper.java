@@ -64,6 +64,8 @@ public abstract class LookupEntityMapper {
 
     public abstract UnitMeasureCodeDto unitMeasureCodeToDto(UnitMeasureCode source);
 
+    public abstract List<UnitMeasureCodeDto> unitMeasureCodeToDtoList(List<UnitMeasureCode> source);
+
     public abstract PollutantDto pollutantToDto(Pollutant source);
 
     public abstract FipsStateCodeDto fipsStateCodeToDto(FipsStateCode source);

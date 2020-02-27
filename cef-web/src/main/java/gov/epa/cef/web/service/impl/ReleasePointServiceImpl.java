@@ -2,15 +2,18 @@ package gov.epa.cef.web.service.impl;
 
 import java.util.Collections;  
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.exception.AppValidationException;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.ReleasePointApptRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.ReleasePointService;
@@ -23,6 +26,9 @@ import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 
 @Service
 public class ReleasePointServiceImpl implements ReleasePointService {
+
+    @Autowired
+    private EmissionsReportRepository reportRepo;
 
     @Autowired
     private ReleasePointRepository releasePointRepo;
@@ -99,14 +105,20 @@ public class ReleasePointServiceImpl implements ReleasePointService {
                 .findById(releasePointId)
                 .orElse(null);
 
+        // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(rp.getFacilitySite().getEisProgramId(),
+                rp.getFacilitySite().getEmissionsReport().getYear());
+
         // check if the release point was reported last year
-        releasePointRepo.retrieveByIdentifierFacilityYear(rp.getReleasePointIdentifier(), 
-                rp.getFacilitySite().getEisProgramId(), 
-                Integer.valueOf(rp.getFacilitySite().getEmissionsReport().getYear() - 1).shortValue())
-                .ifPresent(oldRp -> {
-                    throw new AppValidationException("This Release Point has been submitted on previous years' facility reports, so it cannot be deleted. "
-                            + "If this Release Point is no longer operational, please use the \"Operating Status\" field to mark this Release Point as \"Permanently Shutdown\".");
-                });
+        if (lastReport.isPresent()) {
+            releasePointRepo.retrieveByIdentifierFacilityYear(rp.getReleasePointIdentifier(), 
+                    rp.getFacilitySite().getEisProgramId(), 
+                    lastReport.get().getYear())
+                    .ifPresent(oldRp -> {
+                        throw new AppValidationException("This Release Point has been submitted on previous years' facility reports, so it cannot be deleted. "
+                                + "If this Release Point is no longer operational, please use the \"Operating Status\" field to mark this Release Point as \"Permanently Shutdown\".");
+                    });
+        }
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(releasePointId), ReleasePointRepository.class);
     	releasePointRepo.deleteById(releasePointId);

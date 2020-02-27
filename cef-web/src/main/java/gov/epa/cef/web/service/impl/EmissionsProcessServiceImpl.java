@@ -1,8 +1,10 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.AppValidationException;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.EmissionsProcessService;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
@@ -13,9 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmissionsProcessServiceImpl implements EmissionsProcessService {
+
+    @Autowired
+    private EmissionsReportRepository reportRepo;
 
     @Autowired
     private EmissionsProcessRepository processRepo;
@@ -117,15 +123,21 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
                 .findById(id)
                 .orElse(null);
 
+     // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(process.getEmissionsUnit().getFacilitySite().getEisProgramId(),
+                process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
+
         // check if the emissions process was reported last year
-        processRepo.retrieveByIdentifierParentFacilityYear(process.getEmissionsProcessIdentifier(),
-                process.getEmissionsUnit().getUnitIdentifier(), 
-                process.getEmissionsUnit().getFacilitySite().getEisProgramId(), 
-                Integer.valueOf(process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() - 1).shortValue())
-                .ifPresent(oldUnit -> {
-                    throw new AppValidationException("This Process has been submitted on previous years' facility reports, so it cannot be deleted. "
-                            + "If this Process is no longer operational, please use the \"Operating Status\" field to mark this Process as \"Permanently Shutdown\".");
-                });
+        if (lastReport.isPresent()) {
+            processRepo.retrieveByIdentifierParentFacilityYear(process.getEmissionsProcessIdentifier(),
+                    process.getEmissionsUnit().getUnitIdentifier(), 
+                    process.getEmissionsUnit().getFacilitySite().getEisProgramId(), 
+                    lastReport.get().getYear())
+                    .ifPresent(oldUnit -> {
+                        throw new AppValidationException("This Process has been submitted on previous years' facility reports, so it cannot be deleted. "
+                                + "If this Process is no longer operational, please use the \"Operating Status\" field to mark this Process as \"Permanently Shutdown\".");
+                    });
+        }
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), EmissionsProcessRepository.class);
         processRepo.deleteById(id);

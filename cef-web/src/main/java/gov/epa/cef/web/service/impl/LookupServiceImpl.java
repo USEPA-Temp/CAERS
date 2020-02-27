@@ -273,6 +273,20 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    /**
+     * Retrieve non-legacy UoM codes
+     * @return
+     */
+    @Override
+    public List<UnitMeasureCodeDto> retrieveCurrentUnitMeasureCodes() {
+
+        
+        List<UnitMeasureCode> entities = uomRepo.findAllCurrent(Sort.by(Direction.ASC, "code"));
+
+        List<UnitMeasureCodeDto> result = lookupMapper.unitMeasureCodeToDtoList(entities);
+        return result;
+    }
+
     public UnitMeasureCode retrieveUnitMeasureCodeEntityByCode(String code) {
         UnitMeasureCode result= uomRepo
             .findById(code)

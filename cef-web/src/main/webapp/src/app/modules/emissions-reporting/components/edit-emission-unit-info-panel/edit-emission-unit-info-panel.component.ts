@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { ActivatedRoute } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 
 @Component({
   selector: 'app-edit-emission-unit-info-panel',
@@ -25,7 +26,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
     operatingStatusCode: [null, Validators.required],
-    unitOfMeasureCode: [null],
+    unitOfMeasureCode: [null, legacyUomValidator()],
     unitIdentifier: ['', [
       Validators.required,
       Validators.maxLength(20)
@@ -126,11 +127,11 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
   uomCapacityCheck() {
     if (this.emissionUnitForm.controls.designCapacity.value !== null && this.emissionUnitForm.controls.designCapacity.value !== '') {
-      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([Validators.required]);
+      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([Validators.required, legacyUomValidator()]);
       this.emissionUnitForm.controls.designCapacity.updateValueAndValidity();
       this.emissionUnitForm.controls.unitOfMeasureCode.updateValueAndValidity();
     } else {
-      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([]);
+      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([legacyUomValidator()]);
       this.emissionUnitForm.controls.unitOfMeasureCode.reset();
     }
   }
@@ -170,11 +171,18 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if ((control.get('operatingStatusCode').value !== null)
-      && (control.get('operatingStatusCode').value.code === 'OP')
-      && (this.facilityOpCode !== undefined)) {
-          if (this.facilityOpCode !== null && (this.facilityOpCode.code === 'TS' || this.facilityOpCode.code === 'PS')) {
-            return { invalidStatusCode: true };
+      const status_perm_shutdown = "PS";
+      const status_temp_shutdown = "TS";
+      const control_status = control.get('operatingStatusCode').value;
+
+      if (this.facilityOpCode && control_status) {
+        if (this.facilityOpCode.code === status_temp_shutdown
+          && control_status.code !== status_perm_shutdown
+          && control_status.code !== status_temp_shutdown) {
+            return {invalidStatusCodeTS: true};
+          } else if (this.facilityOpCode.code === status_perm_shutdown
+          && control_status.code !== status_perm_shutdown) {
+            return {invalidStatusCodePS: true};
           }
       }
       return null;

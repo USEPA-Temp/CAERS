@@ -12,6 +12,7 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
+import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -41,6 +42,35 @@ public class ControlValidator extends BaseValidator<Control> {
 	  			ValidationField.CONTROL_IDENTIFIER.value(),
 	  			"control.controlIdentifier.duplicate",
 	  			createValidationDetails(control));
+			}
+		}
+		
+		for  (ControlPollutant cp: control.getPollutants()) {
+			if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.999) {
+				
+				result = false;
+				context.addFederalError(
+	  			ValidationField.CONTROL_POLLUTANT.value(),
+	  			"control.controlPollutant.range",
+	  			createValidationDetails(control),
+	  			cp.getPollutant().getPollutantName());
+			}
+		}
+			
+		Map<Object, List<ControlPollutant>> cpMap = control.getPollutants().stream()
+				.filter(cp -> cp.getPollutant() != null)
+				.collect(Collectors.groupingBy(p -> p.getPollutant().getPollutantName()));
+		
+		for (List<ControlPollutant> pList: cpMap.values()) {
+			if (pList.size() > 1) {
+				
+				result = false;
+				context.addFederalError(
+						ValidationField.CONTROL_POLLUTANT.value(),
+		  			"control.controlPollutant.duplicate",
+		  			createValidationDetails(control),
+		  			pList.get(0).getPollutant().getPollutantName());
+					
 			}
 		}
 		

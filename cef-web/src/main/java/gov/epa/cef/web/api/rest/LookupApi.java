@@ -136,7 +136,7 @@ public class LookupApi {
     @ResponseBody
     public ResponseEntity<List<UnitMeasureCodeDto>> retrieveUnitMeasureCodes() {
 
-        List<UnitMeasureCodeDto> result = lookupService.retrieveUnitMeasureCodes();
+        List<UnitMeasureCodeDto> result = lookupService.retrieveCurrentUnitMeasureCodes();
         return new ResponseEntity<List<UnitMeasureCodeDto>>(result, HttpStatus.OK);
     }
     
