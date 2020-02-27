@@ -43,17 +43,15 @@ public class ControlValidator extends BaseValidator<Control> {
 			}
 		}
 		
-		if (control.getPollutants() != null) {
-			for  (ControlPollutant cp: control.getPollutants()) {
-				if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.999) {
-					
-					result = false;
-					context.addFederalError(
-		  			ValidationField.CONTROL_POLLUTANT.value(),
-		  			"control.controlPollutant.range",
-		  			createValidationDetails(control),
-		  			cp.getPollutant().getPollutantName());
-				}
+		for  (ControlPollutant cp: control.getPollutants()) {
+			if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.999) {
+				
+				result = false;
+				context.addFederalError(
+	  			ValidationField.CONTROL_POLLUTANT.value(),
+	  			"control.controlPollutant.range",
+	  			createValidationDetails(control),
+	  			cp.getPollutant().getPollutantName());
 			}
 		}
 		
