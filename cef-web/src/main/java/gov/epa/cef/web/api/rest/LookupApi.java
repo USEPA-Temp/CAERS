@@ -260,4 +260,28 @@ public class LookupApi {
     	EisLatLongToleranceLookupDto result = lookupService.retrieveLatLongTolerance(eisProgramId);
     	return new ResponseEntity<EisLatLongToleranceLookupDto>(result, HttpStatus.OK);
     }   
+    
+    /**
+     * Retrieve Facility Category codes
+     * @return
+     */
+    @GetMapping(value = "/facility/category")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveFacilityCategoryCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveFacilityCategoryCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Facility Category codes
+     * @return
+     */
+    @GetMapping(value = "/facility/sourceType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveFacilitySourceTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveFacilitySourceTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 }

@@ -115,4 +115,14 @@ export class LookupService {
     return this.http.get<EisLatLongToleranceLookup>(url);
   }
 
+  retrieveFacilityCategory(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/facility/category`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveFacilitySourceType(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/facility/sourceType`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
 }

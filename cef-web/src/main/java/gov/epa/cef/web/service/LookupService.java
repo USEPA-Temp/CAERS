@@ -231,4 +231,16 @@ public interface LookupService {
      */
     EisLatLongToleranceLookupDto retrieveLatLongTolerance(String eisProgramId);
     
+    /**
+     * Retrieve Facility Category codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveFacilityCategoryCodes();
+    
+    /**
+     * Retrieve Facility Source Type codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveFacilitySourceTypeCodes();
+    
 }

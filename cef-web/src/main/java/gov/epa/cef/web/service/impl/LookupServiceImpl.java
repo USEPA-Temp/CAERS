@@ -18,6 +18,8 @@ import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
+import gov.epa.cef.web.domain.FacilityCategoryCode;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -37,6 +39,8 @@ import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
+import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
+import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
@@ -118,6 +122,12 @@ public class LookupServiceImpl implements LookupService {
 
     @Autowired
     private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+    
+    @Autowired
+    private FacilityCategoryCodeRepository facilityCategoryCodeRepo;
+    
+    @Autowired
+    private FacilitySourceTypeCodeRepository facilitySourceTypeCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -454,6 +464,30 @@ public class LookupServiceImpl implements LookupService {
 
     	EisLatLongToleranceLookup entity = latLongToleranceRepo.findById(eisProgramId).orElse(null);
     	return lookupMapper.EisLatLongToleranceLookupToDto(entity);
+    }
+    
+    @Override
+    public List<CodeLookupDto> retrieveFacilityCategoryCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<FacilityCategoryCode> entities = facilityCategoryCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
+    
+    @Override
+    public List<CodeLookupDto> retrieveFacilitySourceTypeCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<FacilitySourceTypeCode> entities = facilitySourceTypeCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
     }
     
 }

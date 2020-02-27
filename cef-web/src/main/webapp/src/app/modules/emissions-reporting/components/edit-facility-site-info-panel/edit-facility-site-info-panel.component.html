@@ -37,6 +37,23 @@
     </div>
 
     <div class="row pb-1">
+        <label for="facilitySourceTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Facility Source Type:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="facilitySourceTypeCodeSelect" formControlName="facilitySourceTypeCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of facilitySourceTypeValues" [ngValue]="opt">{{opt?.description}}</option>
+            </select>
+            <app-validation-message [control]="facilitySiteForm.get('facilitySourceTypeCode')"></app-validation-message>
+        </div>
+        <label for="facilityCategoryCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Facility Category Code:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="facilityCategoryCodeSelect" formControlName="facilityCategoryCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of facilityCategoryCodeValues" [ngValue]="opt">{{opt?.code}}</option>
+            </select>
+            <app-validation-message [control]="facilitySiteForm.get('facilityCategoryCode')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
         <label for="streetAddressInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Facility Address:</strong></label>
         <div class="col-sm-8 col-lg-10">
             <input type="text" class="form-control"  maxlength="100" id="streetAddressInput" formControlName="streetAddress" readonly>

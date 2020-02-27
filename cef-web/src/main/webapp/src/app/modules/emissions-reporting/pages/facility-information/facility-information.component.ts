@@ -76,8 +76,6 @@ export class FacilityInformationComponent implements OnInit {
       updatedFacilitySite.emissionsReport = this.facilitySite.emissionsReport;
       updatedFacilitySite.frsFacilityId = this.facilitySite.frsFacilityId;
       updatedFacilitySite.eisProgramId = this.facilitySite.eisProgramId;
-      updatedFacilitySite.facilityCategoryCode = this.facilitySite.facilityCategoryCode;
-      updatedFacilitySite.facilitySourceTypeCode = this.facilitySite.facilitySourceTypeCode;
       updatedFacilitySite.description = this.facilitySite.description;
       updatedFacilitySite.programSystemCode = this.facilitySite.programSystemCode;
       updatedFacilitySite.mailingStateCode = this.facilitySiteComponent.facilitySiteForm.value.mailingStateCode.uspsCode;
