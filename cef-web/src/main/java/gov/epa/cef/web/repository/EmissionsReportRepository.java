@@ -60,8 +60,7 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @param year
      * @return
      */
-    @Query("select r from EmissionsReport r where r.eisProgramId = :eisProgramId and r.year < :year order by r.year desc")
-    Optional<EmissionsReport> findRecentByEisProgramIdAndYear(@NotBlank String eisProgramId, @NotNull Short year);
+    Optional<EmissionsReport> findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(@NotBlank String eisProgramId, @NotNull Short year);
 
     /**
      *
