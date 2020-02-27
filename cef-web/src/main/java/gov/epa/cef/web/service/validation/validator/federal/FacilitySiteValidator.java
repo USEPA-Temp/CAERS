@@ -51,6 +51,9 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         
         validator.onEach(facilitySite.getControls(),
         		registry.findOneByType(ControlValidator.class));
+        
+        validator.onEach(facilitySite.getControlPaths(),
+        		registry.findOneByType(ControlPathValidator.class));
     }
 
     @Override
