@@ -236,7 +236,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         				result = false;
         				context.addFederalError(
         						ValidationField.PROCESS_PERIOD_EMISSION.value(),
-        						"emissionProcess.emission.required",
+        						"emissionsProcess.emission.required",
         						createValidationDetails(emissionsProcess));
       				}
       			}
