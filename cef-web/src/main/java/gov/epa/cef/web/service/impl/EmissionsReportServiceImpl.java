@@ -309,13 +309,13 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Override
     public EmissionsReportDto saveAndAuditEmissionsReport(EmissionsReport emissionsReport, ReportAction reportAction) {
 
-        this.erRepo.save(emissionsReport);
+        EmissionsReport result = this.erRepo.save(emissionsReport);
 
-        LOGGER.debug("Report {} {}.", emissionsReport.getId(), reportAction.label());
+        LOGGER.debug("Report {} {}.", result.getId(), reportAction.label());
 
-        this.reportService.createReportHistory(emissionsReport.getId(), reportAction);
+        this.reportService.createReportHistory(result.getId(), reportAction);
 
-        return this.emissionsReportMapper.toDto(emissionsReport);
+        return this.emissionsReportMapper.toDto(result);
     }
 
     /**
