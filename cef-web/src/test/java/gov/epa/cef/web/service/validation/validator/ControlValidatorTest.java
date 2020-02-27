@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.Pollutant;
@@ -140,14 +141,46 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		
 	}
 	
+	@Test
+	public void controlPathAssignedFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		testData.setAssignments(null);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_WARNING.value()) && errorMap.get(ValidationField.CONTROL_PATH_WARNING.value()).size() == 1);		
+		
+	}
+	
+	@Test
+	public void controlPathAssignedPassTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());		
+		
+	}
+	
 	
 	private Control createBaseControl() {
 		
 		Control result = new Control();
+		result.setId(1L);
 		result.setIdentifier("test");
 		FacilitySite fs = new FacilitySite();
 		fs.getControls().add(result);
 		result.setFacilitySite(fs);
+		
+		ControlAssignment ca = new ControlAssignment();
+		ca.setControl(result);
+		result.getAssignments().add(ca);
 		
 		return result;
 	}
