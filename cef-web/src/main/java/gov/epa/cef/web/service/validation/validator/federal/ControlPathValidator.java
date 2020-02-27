@@ -45,6 +45,14 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 					
 			}
 		}
+		
+		if(controlPath.getReleasePointAppts().isEmpty()){
+        	result = false;
+        	context.addFederalWarning(
+        			ValidationField.CONTROL_PATH_RPA_WARNING.value(),
+        			"controlPath.releasePointApportionment.required",
+        			createValidationDetails(controlPath));
+		}
 	
 	return result;
   }
