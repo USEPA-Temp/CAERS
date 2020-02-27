@@ -40,7 +40,7 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
  				context.addFederalError(
  	  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
  	  			"controlPath.assignment.duplicate",
- 	  			createValidationDetails(controlPath, cmList.get(0))
+ 	  			createValidationDetails(controlPath)
  	  			,cmList.get(0));
 					
 			}
@@ -49,9 +49,9 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	return result;
   }
 	
-	private ValidationDetailDto createValidationDetails(ControlPath source, String controlMeasureDescription) {
+	private ValidationDetailDto createValidationDetails(ControlPath source) {
 
-	    String description = MessageFormat.format("ControlPath: {0}, Control Measure: {1}", source.getPathId(),controlMeasureDescription);
+	    String description = MessageFormat.format("ControlPath: {0}", source.getPathId());
 	
 	    ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getPathId(), EntityType.CONTROL_PATH, description);
 	    return dto;

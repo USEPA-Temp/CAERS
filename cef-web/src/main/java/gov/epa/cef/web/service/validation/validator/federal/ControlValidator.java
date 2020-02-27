@@ -1,7 +1,6 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 
 import gov.epa.cef.web.domain.Control;
-import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
