@@ -14,6 +14,12 @@
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="controlDeviceForm.get('operatingStatusCode')"></app-validation-message>
+            <div class="validation-message" *ngIf="controlDeviceForm.errors?.invalidStatusCodeTS">
+                If the facility site  status is Temporarily Shutdown then each sub-facility component must also be either Permanently Shutdown or Temporarily Shutdown.            
+            </div>
+            <div class="validation-message" *ngIf="controlDeviceForm.errors?.invalidStatusCodePS">
+                If the facility site  status is Permanently Shutdown then each sub-facility component must also be Permanently Shutdown.            
+            </div>
         </div>
         <label for="percentCaptureInput" class="col-sm-6 col-md-2 col-form-label"><strong>Percent Capture:</strong></label>
         <div class="col-sm-6 col-md-2">
