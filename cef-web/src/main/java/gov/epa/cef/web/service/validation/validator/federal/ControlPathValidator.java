@@ -1,0 +1,73 @@
+package gov.epa.cef.web.service.validation.validator.federal;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import com.baidu.unbiz.fluentvalidator.ValidatorContext;
+
+import gov.epa.cef.web.domain.ControlAssignment;
+import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.service.dto.EntityType;
+import gov.epa.cef.web.service.dto.ValidationDetailDto;
+import gov.epa.cef.web.service.validation.CefValidatorContext;
+import gov.epa.cef.web.service.validation.ValidationField;
+import gov.epa.cef.web.service.validation.validator.BaseValidator;
+
+@Component
+public class ControlPathValidator extends BaseValidator<ControlPath> {
+	
+	@Override
+  public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
+		
+	boolean result = true;
+	CefValidatorContext context = getCefValidatorContext(validatorContext);
+	
+	
+    	List<String> controlMeasureCodeList = new ArrayList<String>(); 
+    	controlMeasureCodeList = controlMeasureCodeListBuilder(controlPath.getAssignments());
+    	
+		Map<Object, List<String>> cmMap = controlMeasureCodeList.stream()
+				.collect(Collectors.groupingBy(cm -> cm));
+		
+		for (List<String> cmList: cmMap.values()) {
+			if (cmList.size() > 1) {
+ 				result = false;
+ 				context.addFederalError(
+ 	  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+ 	  			"controlPath.assignment.duplicate",
+ 	  			createValidationDetails(controlPath, cmList.get(0))
+ 	  			,cmList.get(0));
+					
+			}
+		}
+	
+	return result;
+  }
+	
+	private ValidationDetailDto createValidationDetails(ControlPath source, String controlMeasureDescription) {
+
+	    String description = MessageFormat.format("ControlPath: {0}, Control Measure: {1}", source.getPathId(),controlMeasureDescription);
+	
+	    ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getPathId(), EntityType.CONTROL_PATH, description);
+	    return dto;
+	}
+	
+	private List<String> controlMeasureCodeListBuilder(List<ControlAssignment> controlAssignments){
+    	List<String> controlMeasureCodeList = new ArrayList<String>(); 
+    	for(ControlAssignment ca: controlAssignments){
+    		if(ca.getControl() != null){
+    			controlMeasureCodeList.add(ca.getControl().getControlMeasureCode().getDescription());
+    		}
+    		if(ca.getControlPathChild() != null){
+    			controlMeasureCodeList.addAll(controlMeasureCodeListBuilder(ca.getControlPathChild().getAssignments()));
+    		}
+    	}
+    	return controlMeasureCodeList;
+	}
+
+}

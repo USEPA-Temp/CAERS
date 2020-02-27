@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 
 import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -44,7 +46,7 @@ public class ControlValidator extends BaseValidator<Control> {
 		
 		return result;
 	}
-	
+		
 	private ValidationDetailDto createValidationDetails(Control source) {
 
     String description = MessageFormat.format("Control: {0}", source.getIdentifier());

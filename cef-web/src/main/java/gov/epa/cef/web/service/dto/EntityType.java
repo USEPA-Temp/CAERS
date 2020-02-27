@@ -9,5 +9,6 @@ public enum EntityType {
     OPERATING_DETAIL,
     RELEASE_POINT,
     REPORTING_PERIOD, 
-    CONTROL;
+    CONTROL,
+    CONTROL_PATH;
 }
