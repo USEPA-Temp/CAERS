@@ -18,6 +18,8 @@ import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
+import gov.epa.cef.web.domain.FacilityCategoryCode;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -37,6 +39,8 @@ import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
+import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
+import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
@@ -53,6 +57,7 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -118,6 +123,12 @@ public class LookupServiceImpl implements LookupService {
 
     @Autowired
     private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+    
+    @Autowired
+    private FacilityCategoryCodeRepository facilityCategoryCodeRepo;
+    
+    @Autowired
+    private FacilitySourceTypeCodeRepository facilitySourceTypeCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -454,6 +465,30 @@ public class LookupServiceImpl implements LookupService {
 
     	EisLatLongToleranceLookup entity = latLongToleranceRepo.findById(eisProgramId).orElse(null);
     	return lookupMapper.EisLatLongToleranceLookupToDto(entity);
+    }
+    
+    @Override
+    public List<FacilityCategoryCodeDto> retrieveFacilityCategoryCodes() {
+
+        List<FacilityCategoryCodeDto> result = new ArrayList<FacilityCategoryCodeDto>();
+        Iterable<FacilityCategoryCode> entities = facilityCategoryCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.facilityCategoryCodeToDto(entity));
+        });
+        return result;
+    }
+    
+    @Override
+    public List<CodeLookupDto> retrieveFacilitySourceTypeCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<FacilitySourceTypeCode> entities = facilitySourceTypeCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
     }
     
 }

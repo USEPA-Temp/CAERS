@@ -56,6 +56,12 @@ public class LookupRepositories {
 
 	@Autowired
 	private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+	
+	@Autowired
+	private FacilitySourceTypeCodeRepository facilitySourceTypeCodeRepo;
+	
+	@Autowired
+	private FacilityCategoryCodeRepository facilityCategoryCodeRepo;
 
 	public CalculationMaterialCodeRepository materialCodeRepo() {
 		return materialCodeRepo;
@@ -123,6 +129,14 @@ public class LookupRepositories {
 
 	public EisLatLongToleranceLookupRepository latLongToleranceRepo() {
 		return latLongToleranceRepo;
+	}
+	
+	public FacilitySourceTypeCodeRepository facilitySourceTypeCodeRepo() {
+		return facilitySourceTypeCodeRepo;
+	}
+	
+	public FacilityCategoryCodeRepository facilityCategoryCodeRepo() {
+		return facilityCategoryCodeRepo;
 	}
 
 }

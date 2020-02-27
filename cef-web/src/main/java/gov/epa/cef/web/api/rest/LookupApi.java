@@ -18,6 +18,7 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
@@ -260,4 +261,28 @@ public class LookupApi {
     	EisLatLongToleranceLookupDto result = lookupService.retrieveLatLongTolerance(eisProgramId);
     	return new ResponseEntity<EisLatLongToleranceLookupDto>(result, HttpStatus.OK);
     }   
+    
+    /**
+     * Retrieve Facility Category codes
+     * @return
+     */
+    @GetMapping(value = "/facility/category")
+    @ResponseBody
+    public ResponseEntity<List<FacilityCategoryCodeDto>> retrieveFacilityCategoryCodes() {
+
+        List<FacilityCategoryCodeDto> result = lookupService.retrieveFacilityCategoryCodes();
+        return new ResponseEntity<List<FacilityCategoryCodeDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Facility Category codes
+     * @return
+     */
+    @GetMapping(value = "/facility/sourceType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveFacilitySourceTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveFacilitySourceTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 }

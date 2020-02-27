@@ -10,6 +10,7 @@ import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { AircraftEngineTypeCode } from 'src/app/shared/models/aircraft-engine-type-code';
 import { PointSourceSccCode } from 'src/app/shared/models/point-source-scc-code';
 import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
+import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 
 @Injectable({
   providedIn: 'root'
@@ -113,6 +114,16 @@ export class LookupService {
   retrieveLatLongTolerance(eisProgramId: string): Observable<EisLatLongToleranceLookup> {
     const url = `${this.baseUrl}/coordinateTolerance/${eisProgramId}`;
     return this.http.get<EisLatLongToleranceLookup>(url);
+  }
+
+  retrieveFacilityCategory(): Observable<FacilityCategoryCode[]> {
+    const url = `${this.baseUrl}/facility/category`;
+    return this.http.get<FacilityCategoryCode[]>(url);
+  }
+
+  retrieveFacilitySourceType(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/facility/sourceType`;
+    return this.http.get<BaseCodeLookup[]>(url);
   }
 
 }

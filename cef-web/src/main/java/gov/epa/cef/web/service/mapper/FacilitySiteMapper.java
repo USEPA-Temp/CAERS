@@ -19,6 +19,8 @@ public interface FacilitySiteMapper {
     @Mapping(target="tribalCode", qualifiedByName = "TribalCode")
     @Mapping(target ="operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
     @Mapping(target = "facilityNAICS", ignore = true)
+    @Mapping(target = "facilityCategoryCode", qualifiedByName = "FacilityCategoryCode")
+    @Mapping(target = "facilitySourceTypeCode", qualifiedByName = "FacilitySourceTypeCode")
     void updateFromDto(FacilitySiteDto source, @MappingTarget FacilitySite target);
     
     FacilitySite fromDto(FacilitySiteDto facilitySite);
