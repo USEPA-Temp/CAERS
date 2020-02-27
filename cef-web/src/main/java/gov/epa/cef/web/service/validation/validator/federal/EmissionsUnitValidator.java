@@ -137,7 +137,18 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         			"emissionsUnit.capacity.required",
         			createValidationDetails(emissionsUnit));
         }
-        
+
+        // Cannot report legacy UoM
+        if (emissionsUnit.getUnitOfMeasureCode() != null && Boolean.TRUE.equals(emissionsUnit.getUnitOfMeasureCode().getLegacy())) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.EMISSIONS_UNIT_UOM.value(),
+                    "emissionsUnit.capacity.legacy",
+                    createValidationDetails(emissionsUnit),
+                    emissionsUnit.getUnitOfMeasureCode().getDescription());
+        }
+
         // Process identifier must be unique within unit
         Map<Object, List<EmissionsProcess>> epMap = emissionsUnit.getEmissionsProcesses().stream()
             .filter(ep -> ep.getEmissionsProcessIdentifier() != null)

@@ -91,6 +91,15 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
                     ValidationField.PERIOD_CALC_UOM.value(),
                     "reportingPeriod.calculationParameterUom.required", 
                     createValidationDetails(period));
+
+        } else if (Boolean.TRUE.equals(period.getCalculationParameterUom().getLegacy())) {
+
+            valid = false;
+            context.addFederalError(
+                    ValidationField.PERIOD_CALC_UOM.value(),
+                    "reportingPeriod.calculationParameterUom.legacy", 
+                    createValidationDetails(period),
+                    period.getCalculationParameterUom().getDescription());
         }
 
         Map<String, List<Emission>> emissionMap = period.getEmissions().stream()
