@@ -274,13 +274,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         newReport.getFacilitySites().add(facilitySite);
 
-        newReport = this.erRepo.save(newReport);
-
-        LOGGER.debug("New Report {} created.", newReport.getId());
-
-    	this.reportService.createReportHistory(newReport.getId(), ReportAction.CREATED);
-
-        return this.emissionsReportMapper.toDto(newReport);
+        return saveAndAuditEmissionsReport(newReport, ReportAction.CREATED);
     }
 
     @Override
@@ -312,15 +306,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 String.format("EIS Program ID [%s] is not found in FRS.", facilityEisProgramId)));
     }
 
-    /**
-     * Save the emissions report to the database.
-     * @param emissionsReport
-     * @return
-     */
     @Override
-    public EmissionsReportDto saveEmissionReport(EmissionsReport emissionsReport) {
-        EmissionsReport savedReport = erRepo.save(emissionsReport);
-        return emissionsReportMapper.toDto(savedReport);
+    public EmissionsReportDto saveAndAuditEmissionsReport(EmissionsReport emissionsReport, ReportAction reportAction) {
+
+        EmissionsReport result = this.erRepo.save(emissionsReport);
+
+        LOGGER.debug("Report {} {}.", result.getId(), reportAction.label());
+
+        this.reportService.createReportHistory(result.getId(), reportAction);
+
+        return this.emissionsReportMapper.toDto(result);
     }
 
     /**

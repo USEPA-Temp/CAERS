@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
 import {FacilitySite} from 'src/app/shared/models/facility-site';
 import {last, tap} from "rxjs/operators";
+import {CdxFacility} from "../../shared/models/cdx-facility";
 
 @Injectable({
     providedIn: 'root'
@@ -62,13 +63,17 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a report for the current year from scratch */
-    createReportFromScratch(eisFacilityId: string, reportYear: number, frsFacilityId: string, stateCode: string, facilitySite: FacilitySite): Observable<HttpResponse<EmissionsReport>> {
-        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
+    createReportFromScratch(facility: CdxFacility,
+                            reportYear: number,
+                            facilitySite: FacilitySite): Observable<HttpResponse<EmissionsReport>> {
+
+        const url = `${this.baseUrl}/facility/${facility.programId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
-            eisProgramId: eisFacilityId,
-            frsFacilityId: frsFacilityId,
-            stateCode: stateCode,
+            eisProgramId: facility.programId,
+            frsFacilityId: facility.epaRegistryId,
+            stateFacilityId: facility.stateFacilityId,
+            stateCode: facility.state,
             source: "fromScratch",
             facilitySite: facilitySite
         }, {
@@ -77,19 +82,20 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a report for the current year from uploaded workbook */
-    createReportFromUpload(eisFacilityId: string, reportYear: number,
-                           frsFacilityId: string, stateCode: string,
+    createReportFromUpload(facility: CdxFacility,
+                           reportYear: number,
                            workbook: File): Observable<HttpEvent<EmissionsReport>> {
 
-        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
+        const url = `${this.baseUrl}/facility/${facility.programId}`;
 
         let formData = new FormData();
         formData.append("workbook", workbook);
         formData.append("metadata", new Blob([JSON.stringify({
             year: reportYear,
-            eisProgramId: eisFacilityId,
-            frsFacilityId: frsFacilityId,
-            stateCode: stateCode,
+            eisProgramId: facility.programId,
+            frsFacilityId: facility.epaRegistryId,
+            stateFacilityId: facility.stateFacilityId,
+            stateCode: facility.state,
             source: "fromScratch"
         })], {
             type: "application/json"
