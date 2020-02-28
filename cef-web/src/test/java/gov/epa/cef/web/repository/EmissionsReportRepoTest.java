@@ -1,20 +1,5 @@
 package gov.epa.cef.web.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
-
 import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
@@ -50,9 +35,22 @@ import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.impl.EmissionsReportServiceImpl;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 @SqlGroup(value = { @Sql("classpath:db/test/baseTestData.sql") })
-@ContextConfiguration(initializers = { 
+@ContextConfiguration(initializers = {
 		CommonInitializers.NoCacheInitializer.class
 })
 public class EmissionsReportRepoTest extends BaseRepositoryTest {
@@ -72,16 +70,10 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 	@Autowired
 	private EmissionsReportServiceImpl emissionsReportServiceImpl;
 
-	@Before
-	public void _onJunitBeginTest() {
-
-		runWithMockUser();
-	}
-
 	/**
 	 * Verify that deleting an emissions report works and that any children are
 	 * also deleted
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -119,9 +111,9 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		assertEquals(false, unit.isPresent());
 	}
 
-	// Test to confirm copy emissions report functionality works and does not result in an error due to 
-	// missing required fields. Purpose of test is not confirm copy of every field. 
-	// 
+	// Test to confirm copy emissions report functionality works and does not result in an error due to
+	// missing required fields. Purpose of test is not confirm copy of every field.
+	//
 	// If new required fields are created, the fields should be added to createHydratedEmissionsReport.
 	@Test
 	public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() throws Exception {

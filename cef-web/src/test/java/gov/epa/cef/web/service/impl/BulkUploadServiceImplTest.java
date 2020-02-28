@@ -47,8 +47,6 @@ public class BulkUploadServiceImplTest extends BaseServiceDatabaseTest {
     @Before
     public void _onJunitBeginTest() {
 
-        runWithMockUser();
-
         this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
     }
 

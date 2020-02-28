@@ -43,14 +43,12 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
     ControlRepository repository;
-    
+
     @Autowired
     ControlAssignmentRepository controlAssignmentRepo;
-    
+
     @Before
     public void _onJunitBeginTest() {
-
-        runWithMockUser();
 
         this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
     }
@@ -76,10 +74,10 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
 
         Control control = this.repository.findById(9999992L)
             .orElseThrow(() -> new IllegalStateException("Control 9999992L does not exist."));
-        
+
         Optional<ControlAssignment> controlAssignment = this.controlAssignmentRepo.findById(9999994L);
             assertEquals(true, controlAssignment.isPresent());
-        
+
         this.repository.delete(control);
 
         SqlParameterSource params = new MapSqlParameterSource()
@@ -89,10 +87,10 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
             "select * from control where id = :id", params);
 
         assertTrue(controls.isEmpty());
-        
+
         controlAssignment = this.controlAssignmentRepo.findById(9999994L);
         assertEquals(false, controlAssignment.isPresent());
-        
+
     }
 
     @Test

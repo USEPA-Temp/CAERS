@@ -1,6 +1,6 @@
 package gov.epa.cef.web.repository;
 
-import gov.epa.cef.web.config.CommonInitializers;   
+import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.FacilitySite;
 import org.junit.Before;
@@ -19,7 +19,6 @@ import javax.sql.DataSource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static junit.framework.TestCase.assertTrue;
@@ -40,11 +39,9 @@ public class ControlPathRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
     ControlPathRepository repository;
-    
+
     @Before
     public void _onJunitBeginTest() {
-
-        runWithMockUser();
 
         this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
     }
@@ -70,7 +67,7 @@ public class ControlPathRepositoryTest extends BaseRepositoryTest {
 
         ControlPath controlPath = this.repository.findById(9999992L)
             .orElseThrow(() -> new IllegalStateException("Control 9999992L does not exist."));
-        
+
         this.repository.delete(controlPath);
 
         SqlParameterSource params = new MapSqlParameterSource()
@@ -80,7 +77,7 @@ public class ControlPathRepositoryTest extends BaseRepositoryTest {
             "select * from control_path where id = :id", params);
 
         assertTrue(controlPaths.isEmpty());
-                
+
     }
 
     @Test
@@ -120,7 +117,7 @@ public class ControlPathRepositoryTest extends BaseRepositoryTest {
         controlPath.setLastModifiedBy(controlPath.getCreatedBy());
         controlPath.setLastModifiedDate(controlPath.getCreatedDate());
         controlPath.setPathId("TEST PATH");
-        
+
         return controlPath;
     }
 }
