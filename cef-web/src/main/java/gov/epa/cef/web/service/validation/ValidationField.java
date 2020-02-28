@@ -26,6 +26,7 @@ public enum ValidationField {
     RP_COORDINATE("report.facilitySite.releasePoint.coordinate"),
     CONTROL_IDENTIFIER("report.facilitySite.control.controlIdentifier"),
     CONTROL_PATH_ASSIGNMENT("report.facilitySite.controlPath.assignment"),
+    CONTROL_PATH_WARNING("report.facilitySite.control.pathWarning"),
     CONTROL_STATUS_CODE("report.facilitySite.control.statusTypeCode"),
     CONTROL_POLLUTANT("report.facilitySite.control.controlPollutant"),
     PROCESS_RP_PCT("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.percent"),

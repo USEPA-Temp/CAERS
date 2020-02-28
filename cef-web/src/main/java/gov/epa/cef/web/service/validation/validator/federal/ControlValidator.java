@@ -72,6 +72,15 @@ public class ControlValidator extends BaseValidator<Control> {
 			}
 		}
 		
+		if (control.getAssignments().isEmpty()) {
+			
+			result = false;
+			context.addFederalWarning(
+					ValidationField.CONTROL_PATH_WARNING.value(),
+	  			"control.pathWarning.notAssigned",
+	  			createValidationDetails(control));
+		}
+		
 		return result;
 	}
 		
