@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.validation.validator;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse; 
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ControlPathValidator;
@@ -83,14 +84,39 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		
 	}
 	
+    @Test
+    public void releasePointApportionmentAssignmentFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = new ControlPath();
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_RPA_WARNING.value()) && errorMap.get(ValidationField.CONTROL_PATH_RPA_WARNING.value()).size() == 1);
+    }
+    
+    @Test
+    public void releasePointApportionmentAssignmentPassTest() {
+
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+	
 	
 	
 	
 	private ControlPath createBaseControlPath() {
 		
 		ControlPath result = new ControlPath();
+		ReleasePointAppt rpa = new ReleasePointAppt();
 		result.setPathId("test control path");
 		result.setDescription("test description");
+		result.getReleasePointAppts().add(rpa);
 		FacilitySite fs = new FacilitySite();
 		fs.getControlPaths().add(result);
 		result.setFacilitySite(fs);
