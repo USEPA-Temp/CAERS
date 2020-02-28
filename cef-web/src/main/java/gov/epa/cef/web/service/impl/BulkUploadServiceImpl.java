@@ -21,6 +21,7 @@ import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
@@ -465,7 +466,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         logger.debug("Warnings {}", warnings);
 
-        return this.emissionsReportService.saveEmissionReport(emissionsReport);
+        return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.CREATED);
     }
 
     public EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook) {
@@ -894,6 +895,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             result.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
             result.setEisProgramId(metadata.getEisProgramId());
             result.setFrsFacilityId(metadata.getFrsFacilityId());
+            result.setAltSiteIdentifier(metadata.getStateFacilityId());
             result.setYear(metadata.getYear());
             result.setStatus(ReportStatus.IN_PROGRESS.name());
             result.setValidationStatus(ValidationStatus.UNVALIDATED.name());

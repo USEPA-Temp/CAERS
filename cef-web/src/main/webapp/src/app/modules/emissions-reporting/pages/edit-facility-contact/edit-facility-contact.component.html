@@ -18,8 +18,15 @@
         <div class="col-sm-6 col-md-2">{{facilitySite.name}}</div>
         <div class="col-sm-6 col-md-2"><strong>Longitude:</strong></div>
         <div class="col-sm-6 col-md-2">{{facilitySite.longitude}}</div>
-        <div class="col-sm-6 col-md-2"><strong>BIA Code:</strong></div>
-        <div class="col-sm-6 col-md-2"></div>
+        <div class="col-sm-6 col-md-2"><strong>Status Year:</strong></div>
+        <div class="col-sm-6 col-md-2">{{facilitySite.statusYear}}</div>
+      </div>
+
+      <div class="row pb-2">
+          <div class="col-sm-6 col-md-2"><strong>Facility Source Type:</strong></div>
+          <div class="col-sm-6 col-md-2">{{facilitySite.facilitySourceTypeCode?.description}}</div>
+          <div class="col-sm-6 col-md-2"><strong>Facility Category Code:</strong></div>
+          <div class="col-sm-6 col-md-2">{{facilitySite.facilityCategoryCode?.name}}</div>
       </div>
       
       <div class="row  pb-2">
@@ -36,12 +43,13 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-6 col-md-2"><strong>NAICS Code:</strong></div>
-        <div class="col-sm-6 col-md-10">
-          <span *ngFor="let naics of naicsCodes">
-            {{naics.code}}&nbsp;-&nbsp;{{naics.description}}<span *ngIf="naics.primaryFlag">&nbsp;(<strong>Primary</strong>)</span><br/>
-          </span>
-        </div>
+        <div class="col-sm-6 col-md-2"><strong>BIA Code:</strong></div>
+        <div class="col-sm-6 col-md-6">{{facilitySite.tribalCode?.description}}</div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 col-md-2"><strong>Description:</strong></div>
+        <div class="col-sm-6 col-md-10">{{facilitySite.description}}</div>
       </div>
 
       <div class="row">

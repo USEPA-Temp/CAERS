@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
@@ -90,7 +91,7 @@ public interface EmissionsReportService {
      * @param emissionsReport
      * @return
      */
-    EmissionsReportDto saveEmissionReport(EmissionsReport emissionsReport);
+    EmissionsReportDto saveAndAuditEmissionsReport(EmissionsReport emissionsReport, ReportAction reportAction);
 
     /**
      * Delete specified emissions report from database

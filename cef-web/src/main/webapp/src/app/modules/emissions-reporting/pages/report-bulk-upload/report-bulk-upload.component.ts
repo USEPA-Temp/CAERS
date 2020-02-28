@@ -76,8 +76,7 @@ export class ReportBulkUploadComponent implements OnInit {
             progress: 0
         };
 
-        this.emissionsReportingService.createReportFromUpload(this.facility.programId, this.reportingYear,
-            this.facility.epaRegistryId, this.facility.state, this.selectedFile)
+        this.emissionsReportingService.createReportFromUpload(this.facility, this.reportingYear, this.selectedFile)
             .subscribe(respEvent => this.onUploadEvent(respEvent),
                 errorResp => this.onUploadError(errorResp));
     }

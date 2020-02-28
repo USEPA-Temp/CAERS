@@ -6,6 +6,7 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
+import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 
 @Component({
   selector: 'app-edit-facility-site-info-panel',
@@ -33,6 +34,8 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
       Validators.max(180),
     ]],
     operatingStatusCode: [null, Validators.required],
+    facilityCategoryCode: [null],
+    facilitySourceTypeCode: [null],
     statusYear: ['', [
       Validators.required,
       Validators.min(1900),
@@ -54,12 +57,15 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     mailingStateCode: [null],
     mailingPostalCode: ['', Validators.pattern('^\\d{5}(-\\d{4})?$')],
     county: ['', Validators.maxLength(43)],
+    description: ['', Validators.maxLength(100)],
     comments: ['', Validators.maxLength(400)]
   }, {validators: this.mailingAddressValidator()});
 
   operatingStatusValues: BaseCodeLookup[];
   tribalCodeValues: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
+  facilityCategoryCodeValues: FacilityCategoryCode[];
+  facilitySourceTypeValues: BaseCodeLookup[];
 
   constructor(
     private lookupService: LookupService,
@@ -76,6 +82,16 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     this.lookupService.retrieveTribalCode()
     .subscribe(result => {
       this.tribalCodeValues = result;
+    });
+
+    this.lookupService.retrieveFacilityCategory()
+    .subscribe(result => {
+      this.facilityCategoryCodeValues = result;
+    });
+
+    this.lookupService.retrieveFacilitySourceType()
+    .subscribe(result => {
+      this.facilitySourceTypeValues = result;
     });
 
     this.lookupService.retrieveFipsStateCode()
