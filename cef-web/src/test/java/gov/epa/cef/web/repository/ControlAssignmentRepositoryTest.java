@@ -15,9 +15,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-import java.math.*;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +40,9 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
     ControlAssignmentRepository repository;
-    
+
     @Before
     public void _onJunitBeginTest() {
-
-        runWithMockUser();
 
         this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
     }
@@ -70,7 +68,7 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
 
         ControlAssignment controlPathAssigment = this.repository.findById(9999991L)
             .orElseThrow(() -> new IllegalStateException("Control 9999991L does not exist."));
-        
+
         this.repository.delete(controlPathAssigment);
 
         SqlParameterSource params = new MapSqlParameterSource()
@@ -80,7 +78,7 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
             "select * from control_assignment where id = :id", params);
 
         assertTrue(controlPathAssignments.isEmpty());
-                
+
     }
 
     @Test
@@ -109,14 +107,14 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
 
         ControlPath controlPath = new ControlPath();
         controlPath.setId(9999991L);
-        
+
         Control control = new Control();
         control.setId(9999991L);
-        
+
         ControlPath controlPathChild = new ControlPath();
         controlPathChild.setId(9999991L);
-        
-        
+
+
 
         ControlAssignment controlPathAssignment = new ControlAssignment();
         controlPathAssignment.setControl(control);
@@ -129,7 +127,7 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
         controlPathAssignment.setLastModifiedBy(controlPathAssignment.getCreatedBy());
         controlPathAssignment.setLastModifiedDate(controlPathAssignment.getCreatedDate());
 
-        
+
         return controlPathAssignment;
     }
 }

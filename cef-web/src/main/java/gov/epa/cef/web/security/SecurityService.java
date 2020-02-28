@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -57,31 +56,6 @@ public class SecurityService {
         this.programIdRepoLocator = programIdRepoLocator;
 
         this.cefConfig = cefConfig;
-    }
-
-    /**
-     * Add the provided user to the security context
-     *
-     * @param appUser
-     */
-    public void addUserToSecurityContext(ApplicationUser appUser) {
-
-        SecurityContextHolder.getContext().setAuthentication(
-            new UsernamePasswordAuthenticationToken(appUser, null, appUser.getAuthorities()));
-        logger.debug("User {} explicitly added to security context.", appUser.getUsername());
-        for (GrantedAuthority a : appUser.getAuthorities()) {
-            logger.debug("Role {} explicitly added to security context.", a.getAuthority());
-        }
-    }
-
-    /**
-     * Add the provided user to the security context
-     *
-     * @param user
-     */
-    public void asUser(ApplicationUser user) {
-
-        addUserToSecurityContext(user);
     }
 
     public List<GrantedAuthority> createUserRoles(String userId, AppRole.RoleType role, Long userRoleId) {
