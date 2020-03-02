@@ -55,6 +55,8 @@
                 <span>Cancel</span>
             </a>
             <button type="button" class="btn btn-primary"
+                    [ngClass]="{'disable-click' : selectedFile === null}"
+                    [disabled]="selectedFile === null"
                     (click)="onUploadClick()">
                 <span>Upload</span>
             </button>

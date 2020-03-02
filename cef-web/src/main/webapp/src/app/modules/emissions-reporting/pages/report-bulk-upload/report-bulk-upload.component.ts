@@ -28,7 +28,7 @@ export class ReportBulkUploadComponent implements OnInit {
 
     reportingYear: number;
     facility: CdxFacility;
-    selectedFile: File;
+    selectedFile: File = null;
 
     uploadErrors: string[];
     uploadFailed: boolean;
@@ -63,22 +63,25 @@ export class ReportBulkUploadComponent implements OnInit {
 
     onUploadClick() {
 
-        this.uploadFailed = false;
+        if (this.selectedFile) {
 
-        this.pleaseWait = {
-            keepAliveTicker: null,
-            serverTicker: null,
-            modal: this.modalService.open(this.pleaseWaitTemplate, {
-                backdrop: 'static',
-                size: 'lg'
-            }),
-            message: "",
-            progress: 0
-        };
+            this.uploadFailed = false;
 
-        this.emissionsReportingService.createReportFromUpload(this.facility, this.reportingYear, this.selectedFile)
-            .subscribe(respEvent => this.onUploadEvent(respEvent),
-                errorResp => this.onUploadError(errorResp));
+            this.pleaseWait = {
+                keepAliveTicker: null,
+                serverTicker: null,
+                modal: this.modalService.open(this.pleaseWaitTemplate, {
+                    backdrop: 'static',
+                    size: 'lg'
+                }),
+                message: "",
+                progress: 0
+            };
+
+            this.emissionsReportingService.createReportFromUpload(this.facility, this.reportingYear, this.selectedFile)
+                .subscribe(respEvent => this.onUploadEvent(respEvent),
+                    errorResp => this.onUploadError(errorResp));
+        }
     }
 
     onUploadEvent(event: HttpEvent<any>) {
@@ -173,6 +176,6 @@ export class ReportBulkUploadComponent implements OnInit {
 
     onFileChanged(files: FileList) {
 
-        this.selectedFile = files.item(0);
+        this.selectedFile = files.length ? files.item(0) : null;
     }
 }
