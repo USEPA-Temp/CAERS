@@ -128,7 +128,6 @@ public interface BulkUploadMapper {
     List<EmissionBulkUploadDto> emissionToDtoList(List<Emission> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
-    @Mapping(source="programSystemCode.code", target="programSystemCode")
     @Mapping(source="typeCode.code", target="typeCode")
     @Mapping(source="stackHeightUomCode.code", target="stackHeightUomCode")
     @Mapping(source="stackDiameterUomCode.code", target="stackDiameterUomCode")

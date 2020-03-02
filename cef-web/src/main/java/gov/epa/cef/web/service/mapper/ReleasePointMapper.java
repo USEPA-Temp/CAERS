@@ -25,7 +25,6 @@ public interface ReleasePointMapper {
     ReleasePoint fromDto(ReleasePointDto source);
     
     @Mapping(target="typeCode", qualifiedByName="ReleasePointTypeCode")
-    @Mapping(target="programSystemCode", qualifiedByName="ProgramSystemCode")
     @Mapping(target="operatingStatusCode", qualifiedByName="OperatingStatusCode")
     @Mapping(target="stackHeightUomCode", qualifiedByName="UnitMeasureCode")
     @Mapping(target="stackDiameterUomCode", qualifiedByName="UnitMeasureCode")

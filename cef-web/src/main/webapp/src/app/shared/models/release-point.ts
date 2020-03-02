@@ -4,7 +4,6 @@ export class ReleasePoint {
   id: number;
   description: string;
   operatingStatusCode: BaseCodeLookup;
-  programSystemCode: BaseCodeLookup;
   facilitySiteId: number;
   releasePointIdentifier: string;
   typeCode: BaseCodeLookup;

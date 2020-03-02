@@ -4,7 +4,6 @@ import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
-import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
@@ -235,10 +234,6 @@ private ReleasePoint newReleasePt() {
         operatingStatusCode.setCode("I");
         operatingStatusCode.setDescription("Fugitive");
 
-        ProgramSystemCode programSystemCode = new ProgramSystemCode();
-        programSystemCode.setCode("63IIII");
-        programSystemCode.setDescription("SPPD Rule Category: Auto and Light Duty Trucks: Surface Coating");
-
         UnitMeasureCode distanceUom = new UnitMeasureCode();
         distanceUom.setCode("FT");
 
@@ -255,7 +250,6 @@ private ReleasePoint newReleasePt() {
 
         releasePt.setFacilitySite(facilitySite);
         releasePt.setOperatingStatusCode(operatingStatusCode);
-        releasePt.setProgramSystemCode(programSystemCode);
         releasePt.setTypeCode(releasePointTypeCode);
         releasePt.setReleasePointIdentifier("TestRP");
         releasePt.setDescription("Test Description");

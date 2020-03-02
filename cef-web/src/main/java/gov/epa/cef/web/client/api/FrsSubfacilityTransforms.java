@@ -5,7 +5,6 @@ import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
-import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
@@ -51,9 +50,6 @@ public class FrsSubfacilityTransforms {
             result.setDescription(unit.getUnitDescription());
             result.setDesignCapacity(unit.getUnitDesignCapacity());
             result.setFacilitySite(facilitySite);
-
-            // TODO verify this mapping is correct
-            result.setProgramSystemCode(unit.getUnitSourceSystemProgramCode());
 
             // TODO do we want to default to OP - Operating
             result.setOperatingStatusCode(createOperatingStatus(unit.getUnitOperatingStatus()));
@@ -130,14 +126,6 @@ public class FrsSubfacilityTransforms {
 
             result.setLatitude(bigToDbl(release.getReleasePointLatitude()));
             result.setLongitude(bigToDbl(release.getReleasePointLongitude()));
-
-            String syscode = release.getReleasePointSourceSystemProgramCode();
-            if (syscode != null) {
-
-                ProgramSystemCode programSystemCode = new ProgramSystemCode();
-                programSystemCode.setCode(syscode);
-                result.setProgramSystemCode(programSystemCode);
-            }
 
             result.setStackDiameter(bigToDbl(release.getReleasePointStackDiameterMeasure()));
             result.setStackHeight(bigToDbl(release.getReleasePointStackHeightMeasure()));

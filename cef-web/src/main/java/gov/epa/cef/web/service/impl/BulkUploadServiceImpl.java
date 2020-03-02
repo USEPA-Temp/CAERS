@@ -654,7 +654,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         EmissionsUnit emissionsUnit = new EmissionsUnit();
 
         emissionsUnit.setUnitIdentifier(bulkEmissionsUnit.getUnitIdentifier());
-        emissionsUnit.setProgramSystemCode(bulkEmissionsUnit.getProgramSystemCode());
         emissionsUnit.setDescription(bulkEmissionsUnit.getDescription());
         emissionsUnit.setStatusYear(bulkEmissionsUnit.getStatusYear());
         emissionsUnit.setDesignCapacity(bulkEmissionsUnit.getDesignCapacity());
@@ -809,9 +808,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         releasePoint.setFugitiveAngle(bulkReleasePoint.getFugitiveAngle());
         releasePoint.setFenceLineDistance(bulkReleasePoint.getFenceLineDistance());
 
-        if (bulkReleasePoint.getProgramSystemCode() != null) {
-            releasePoint.setProgramSystemCode(programSystemCodeRepo.findById(bulkReleasePoint.getProgramSystemCode()).orElse(null));
-        }
         if (bulkReleasePoint.getOperatingStatusCode() != null) {
             releasePoint.setOperatingStatusCode(operatingStatusRepo.findById(bulkReleasePoint.getOperatingStatusCode()).orElse(null));
         }

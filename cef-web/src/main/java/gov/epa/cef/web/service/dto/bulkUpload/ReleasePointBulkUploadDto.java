@@ -19,9 +19,6 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Release Point Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String releasePointIdentifier;
 
-    @Size(max = 20, message = "Program System Code can not exceed {max} chars; found '${validatedValue}'.")
-    private String programSystemCode;
-
     @NotBlank(message = "Type Code is required.")
     @Size(max = 20, message = "Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String typeCode;
@@ -110,13 +107,6 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     }
     public void setFacilitySiteId(Long facilitySiteId) {
         this.facilitySiteId = facilitySiteId;
-    }
-
-    public String getProgramSystemCode() {
-        return programSystemCode;
-    }
-    public void setProgramSystemCode(String programSystemCode) {
-        this.programSystemCode = programSystemCode;
     }
 
     public String getOperatingStatusCode() {
