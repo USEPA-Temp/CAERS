@@ -52,7 +52,6 @@ export class EmissionUnitInfoComponent implements OnInit {
       Object.assign(updatedUnit, this.infoComponent.emissionUnitForm.value);
       updatedUnit.facilitySiteId = this.facilitySiteId;
       updatedUnit.id = this.unitId;
-      updatedUnit.programSystemCode = this.emissionsUnit.programSystemCode;
 
       this.unitService.update(updatedUnit)
       .subscribe(result => {

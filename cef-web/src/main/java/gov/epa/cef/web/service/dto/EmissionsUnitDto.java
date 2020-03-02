@@ -16,7 +16,6 @@ public class EmissionsUnitDto implements Serializable {
     private OperatingStatusCode operatingStatusCode;
     private String operatingStatusCodeDescription;
     private String unitIdentifier;
-    private String programSystemCode;
     private String description;
     private Short statusYear;
     private UnitMeasureCodeDto unitOfMeasureCode;
@@ -53,13 +52,6 @@ public class EmissionsUnitDto implements Serializable {
     }
     public void setUnitIdentifier(String unitIdentifier) {
         this.unitIdentifier = unitIdentifier;
-    }
-
-    public String getProgramSystemCode() {
-        return this.programSystemCode;
-    }
-    public void setProgramSystemCode(String programSystemCode) {
-        this.programSystemCode = programSystemCode;
     }
 
     public String getDescription() {

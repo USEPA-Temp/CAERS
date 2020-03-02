@@ -252,16 +252,6 @@
         </div>
     </div>
 
-    <div class="row pb-3">
-        <label for="programSystemCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Program System:</strong></label>
-        <div class="col-sm-6 col-md-10">
-            <select type="text" class="form-control" id="programSystemCodeSelect" formControlName="programSystemCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of programSystemCode" [ngValue]="opt">{{opt.description}}</option>
-            </select>
-            <app-validation-message [control]="releasePointForm.get('programSystemCode')"></app-validation-message>
-        </div>
-    </div>
-
     <div class="row pb-1">
         <label for="releaseCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
         <div class="col-sm-6 col-md-10">

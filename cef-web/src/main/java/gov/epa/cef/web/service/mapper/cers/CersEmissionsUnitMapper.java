@@ -85,12 +85,10 @@ public interface CersEmissionsUnitMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="unitIdentifier", target="identifier")
-    @Mapping(source="programSystemCode", target="programSystemCode")
     IdentificationDataType identificationFromEmissionsUnit(EmissionsUnit source);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="emissionsProcessIdentifier", target="identifier")
-    @Mapping(source="emissionsUnit.programSystemCode", target="programSystemCode")
     IdentificationDataType identificationFromEmissionsProcess(EmissionsProcess source);
 
     // TODO: the XML appears to only support 1 operating detail per reporting period, might want to change our db schema

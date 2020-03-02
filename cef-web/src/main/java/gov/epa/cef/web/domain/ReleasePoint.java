@@ -27,10 +27,6 @@ public class ReleasePoint extends BaseAuditEntity {
     // Fields
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "program_system_code")
-    private ProgramSystemCode programSystemCode;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_code", nullable = false)
     private OperatingStatusCode operatingStatusCode;
 
@@ -151,7 +147,6 @@ public class ReleasePoint extends BaseAuditEntity {
      */
     public ReleasePoint(FacilitySite facilitySite, ReleasePoint originalReleasePoint) {
 		this.id = originalReleasePoint.getId();
-        this.programSystemCode = originalReleasePoint.getProgramSystemCode();
         this.operatingStatusCode = originalReleasePoint.getOperatingStatusCode();
         this.facilitySite = facilitySite;
         this.releasePointIdentifier = originalReleasePoint.getReleasePointIdentifier();
@@ -186,14 +181,6 @@ public class ReleasePoint extends BaseAuditEntity {
     }
     
     // Property accessors
-    public ProgramSystemCode getProgramSystemCode() {
-        return this.programSystemCode;
-    }
-
-    public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
-        this.programSystemCode = programSystemCode;
-    }
-
     public OperatingStatusCode getOperatingStatusCode() {
         return this.operatingStatusCode;
     }
