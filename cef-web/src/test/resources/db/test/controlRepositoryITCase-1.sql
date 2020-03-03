@@ -10,10 +10,10 @@ INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, y
 
 --FACILITY
 INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
- program_system_code, street_address, city, county, state_code, country_code, postal_code, latitude, longitude,
+ program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude,
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date)
     VALUES ('9999991', '9999997', '110015680798', '9758611', '1301700008', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant',
-     'OP', '1985', '63JJJJ', '173 Peachtree Rd', 'Fitzgerald', 'Whitfield', 'GA' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750',
+     'OP', '1985', '63JJJJ', '173 Peachtree Rd', 'Fitzgerald', '13313', 'GA' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750',
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 INSERT INTO control_measure_code (code, description) VALUES ('1','Wet Scrubber - High Efficiency');

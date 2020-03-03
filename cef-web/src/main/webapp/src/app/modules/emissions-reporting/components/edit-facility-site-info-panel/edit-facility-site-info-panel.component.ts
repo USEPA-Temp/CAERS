@@ -7,6 +7,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
+import { FipsCounty } from 'src/app/shared/models/fips-county';
 
 @Component({
   selector: 'app-edit-facility-site-info-panel',
@@ -56,7 +57,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     mailingCity: [''],
     mailingStateCode: [null],
     mailingPostalCode: ['', Validators.pattern('^\\d{5}(-\\d{4})?$')],
-    county: ['', Validators.maxLength(43)],
+    countyCode: [null, Validators.required],
     description: ['', Validators.maxLength(100)],
     comments: ['', Validators.maxLength(400)]
   }, {validators: this.mailingAddressValidator()});
@@ -66,6 +67,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   fipsStateCode: FipsStateCode[];
   facilityCategoryCodeValues: FacilityCategoryCode[];
   facilitySourceTypeValues: BaseCodeLookup[];
+  counties: FipsCounty[];
 
   constructor(
     private lookupService: LookupService,
@@ -73,6 +75,23 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     private fb: FormBuilder) { }
 
   ngOnInit() {
+
+    this.facilitySiteForm.get('stateCode').valueChanges
+    .subscribe(value => {
+      if (value) {
+        if (this.facilitySiteForm.value.countyCode && value.code
+            && this.facilitySiteForm.value.countyCode.fipsStateCode.code !== value.code) {
+          this.facilitySiteForm.get('countyCode').setValue(null);
+        }
+        this.lookupService.retrieveFipsCountiesForState(value.code)
+        .subscribe(result => {
+          this.counties = result;
+        });
+      } else {
+        this.counties = [];
+        this.facilitySiteForm.get('countyCode').setValue(null);
+      }
+    });
 
     this.lookupService.retrieveOperatingStatus()
     .subscribe(result => {
