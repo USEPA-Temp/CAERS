@@ -26,9 +26,9 @@ export class ReportSummaryComponent implements OnInit {
     tableData: ReportSummary[];
     radiationData: ReportSummary[];
     emissionsReportYear: number;
-    showCertify = false;
     cromerrLoaded = false;
     cromerrLoadedEmitter = new Subject<boolean>();
+    userRole: string;
 
     constructor(
         private router: Router,
@@ -58,8 +58,8 @@ export class ReportSummaryComponent implements OnInit {
                 this.userService.getCurrentUserNaasToken()
                 .subscribe(userToken => {
                     this.userContextService.getUser().subscribe( user => {
+                        this.userRole = user.role;
                         if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                            this.showCertify = true;
                             initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                 this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr, 
                                 this.cromerrLoadedEmitter);
