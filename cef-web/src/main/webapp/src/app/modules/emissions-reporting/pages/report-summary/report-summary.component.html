@@ -12,7 +12,7 @@
 
                 <div class="card-footer d-flex flex-row justify-content-end">
                     <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
-                        <button *ngIf="(facilitySite.emissionsReport.validationStatus!=='PASSED')"
+                        <button *ngIf="userRole!=='Reviewer'"
                                 class="btn btn-primary btn-md my-3 mr-3"
                                 (click)="validateReport()">
                             Run Quality Checks
