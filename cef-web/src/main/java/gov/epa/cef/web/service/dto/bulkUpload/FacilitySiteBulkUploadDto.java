@@ -52,8 +52,14 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 43, message = "County can not exceed {max} chars; found '${validatedValue}'.")
     private String county;
 
+    @Size(max = 3, message = "County Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String countyCode;
+
     @Size(max = 5, message = "State Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stateCode;
+
+    @Size(max = 2, message = "State FIPS Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String stateFipsCode;
 
     @Size(max = 10, message = "Country Code can not exceed {max} chars; found '${validatedValue}'.")
     private String countryCode;
@@ -198,11 +204,25 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.county = county;
     }
 
+    public String getCountyCode() {
+        return countyCode;
+    }
+    public void setCountyCode(String countyCode) {
+        this.countyCode = countyCode;
+    }
+
     public String getStateCode() {
         return stateCode;
     }
     public void setStateCode(String stateCode) {
         this.stateCode = stateCode;
+    }
+
+    public String getStateFipsCode() {
+        return stateFipsCode;
+    }
+    public void setStateFipsCode(String stateFipsCode) {
+        this.stateFipsCode = stateFipsCode;
     }
 
     public String getCountryCode() {

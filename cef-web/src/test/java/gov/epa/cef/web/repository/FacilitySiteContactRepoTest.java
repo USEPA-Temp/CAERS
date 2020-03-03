@@ -4,6 +4,7 @@ import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
 import org.junit.Before;
 import org.junit.Test;
@@ -129,6 +130,12 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
         mailingStateCode.setCode("13");
         mailingStateCode.setUspsCode("GA");
 
+        FipsCounty countyCode = new FipsCounty();
+        countyCode.setCode("13313");
+        countyCode.setCountyCode("13");
+        countyCode.setName("Whitfield");
+        countyCode.setFipsStateCode(stateCode);
+
     	FacilitySiteContact contact = new FacilitySiteContact();
 
     	contact.setFacilitySite(facilitySite);
@@ -142,7 +149,7 @@ public class FacilitySiteContactRepoTest extends BaseRepositoryTest {
         contact.setCity("Fitzgerald");
         contact.setStateCode(stateCode);
         contact.setPostalCode("31750");
-        contact.setCounty("Whitfield");
+        contact.setCountyCode(countyCode);
         contact.setMailingStreetAddress("123 Test Street");
         contact.setMailingCity("Fitzgerald");
         contact.setMailingStateCode(mailingStateCode);

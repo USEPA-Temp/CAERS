@@ -25,6 +25,7 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -195,6 +196,49 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+    }
+    
+    @Test
+    public void nullFacilityCountyTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setCountyCode(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_COUNTY.value()).size() == 1);
+    }
+    
+    @Test
+    public void facilityCountyInvalidStateTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStateCode("NC");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_COUNTY.value()).size() == 1);
+    }
+    
+    @Test
+    public void facilityContactCountyInvalidStateTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).getStateCode().setCode("37");
+        testData.getContacts().get(0).getStateCode().setUspsCode("NC");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_CONTACT_COUNTY.value()).size() == 1);
     }
     
     @Test
@@ -493,11 +537,23 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     
     private FacilitySite createBaseFacilitySite() {
 
+        FipsStateCode countyStateCode = new FipsStateCode();
+        countyStateCode.setCode("13");
+        countyStateCode.setUspsCode("GA");
+        
+        FipsCounty countyCode = new FipsCounty();
+        countyCode.setCode("13313");
+        countyCode.setCountyCode("13");
+        countyCode.setName("Whitfield");
+        countyCode.setFipsStateCode(countyStateCode);
+        
         FacilitySite result = new FacilitySite();
         result.setEisProgramId("1");
         result.setStatusYear(null);
         result.setPostalCode("31750");
         result.setMailingPostalCode("31750");
+        result.setCountyCode(countyCode);
+        result.setStateCode("GA");
         
         EmissionsReport er = new EmissionsReport();
         er.setId(2L);
@@ -534,7 +590,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         contact.setStateCode(stateCode);
         contact.setPostalCode("31750");
         contact.setMailingPostalCode("31750");
-        contact.setCounty("Whitfield");
+        contact.setCountyCode(countyCode);
         contactList.add(contact);
         
         result.setContacts(contactList);

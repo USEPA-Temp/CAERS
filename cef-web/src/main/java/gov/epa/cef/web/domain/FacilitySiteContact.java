@@ -57,8 +57,9 @@ public class FacilitySiteContact extends BaseAuditEntity {
     @Column(name = "postal_code", length = 10)
     private String postalCode;
     
-    @Column(name = "county", length = 43)
-    private String county;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "county_code")
+    private FipsCounty countyCode;
 
     @Column(name = "mailing_street_address", length = 100)
     private String mailingStreetAddress;
@@ -100,7 +101,7 @@ public class FacilitySiteContact extends BaseAuditEntity {
     	this.stateCode = originalFacilitySiteContact.getStateCode();
     	this.countryCode = originalFacilitySiteContact.getCountryCode();
     	this.postalCode = originalFacilitySiteContact.getPostalCode();
-    	this.county = originalFacilitySiteContact.getCounty();
+    	this.countyCode = originalFacilitySiteContact.getCountyCode();
     	this.mailingStreetAddress = originalFacilitySiteContact.getMailingStreetAddress();
     	this.mailingCity = originalFacilitySiteContact.getMailingCity();
     	this.mailingStateCode = originalFacilitySiteContact.getMailingStateCode();
@@ -214,12 +215,12 @@ public class FacilitySiteContact extends BaseAuditEntity {
         this.postalCode = postalCode;
     }
 
-    public String getCounty() {
-        return county;
+    public FipsCounty getCountyCode() {
+        return countyCode;
     }
 
-    public void setCounty(String county) {
-        this.county = county;
+    public void setCountyCode(FipsCounty countyCode) {
+        this.countyCode = countyCode;
     }
 
     public String getMailingStreetAddress() {

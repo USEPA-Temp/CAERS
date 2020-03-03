@@ -5,6 +5,7 @@ import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
+import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ProgramSystemCode;
@@ -17,6 +18,7 @@ import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
+import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -140,6 +142,26 @@ public interface LookupService {
      * @return
      */
     List<CodeLookupDto> retrieveUnitTypeCodes();
+
+    /**
+     * Retrieve County codes
+     * @return
+     */
+    List<FipsCountyDto> retrieveCountyCodes();
+
+    /**
+     * Retrieve County codes for a state
+     * @param stateCode
+     * @return
+     */
+    List<FipsCountyDto> retrieveCountyCodesByState(String stateCode);
+
+    /**
+     * Retrieve County code database object by code
+     * @param code
+     * @return
+     */
+    FipsCounty retrieveCountyEntityByCode(String code);
 
     /**
      * Retrieve Fips State codes

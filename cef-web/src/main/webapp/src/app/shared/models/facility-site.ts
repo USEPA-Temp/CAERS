@@ -5,6 +5,7 @@ import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { Control } from 'src/app/shared/models/control';
+import { FipsCounty } from 'src/app/shared/models/fips-county';
 
 export class FacilitySite {
   id: number;
@@ -17,7 +18,7 @@ export class FacilitySite {
   city: string;
   stateCode: string;
   postalCode: string;
-  county: string;
+  countyCode: FipsCounty;
   mailingStreetAddress: string;
   mailingCity: string;
   mailingStateCode: string;

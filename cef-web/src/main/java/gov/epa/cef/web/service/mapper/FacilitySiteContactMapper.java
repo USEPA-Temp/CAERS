@@ -21,6 +21,7 @@ public interface FacilitySiteContactMapper {
     FacilitySiteContact fromDto(FacilitySiteContactDto source);
     
     @Mapping(target="type", qualifiedByName = "ContactTypeCode")
+    @Mapping(target="countyCode", qualifiedByName = "FipsCounty")
     @Mapping(target="stateCode", qualifiedByName = "FipsStateCode")
     @Mapping(target="mailingStateCode", qualifiedByName = "FipsStateCode")
     void updateFromDto(FacilitySiteContactDto source, @MappingTarget FacilitySiteContact target);

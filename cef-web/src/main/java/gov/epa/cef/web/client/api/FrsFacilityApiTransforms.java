@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 
+import static gov.epa.cef.web.client.api.FrsUtil.createCounty;
 import static gov.epa.cef.web.client.api.FrsUtil.createOperatingStatus;
 
 public class FrsFacilityApiTransforms {
@@ -34,10 +35,11 @@ public class FrsFacilityApiTransforms {
             result.setCity(pf.getCityName());
             result.setStateCode(pf.getStateCode());
             result.setPostalCode(pf.getPostalCode());
-            result.setCounty(pf.getCountyName());
             result.setCountryCode(pf.getCountryISO31661Alpha2());
 
             result.setStatusYear(pf.getOperatingStatusYear() == null ? null : pf.getOperatingStatusYear().shortValue());
+
+            result.setCountyCode(createCounty(pf.getCountyFIPSCode()));
 
             result.setOperatingStatusCode(createOperatingStatus(pf.getOperatingStatus()));
 
@@ -65,8 +67,9 @@ public class FrsFacilityApiTransforms {
 
             result.setStreetAddress(c.getMailingAddress());
             result.setCity(c.getCityName());
-            result.setCounty(c.getCountyName());
             result.setCountryCode(c.getCountryName());
+
+            result.setCountyCode(createCounty(c.getCountyFips()));
 
             return result;
         };
