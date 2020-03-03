@@ -106,11 +106,10 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
          ||(dto.getOperatingStatusCode().getCode().equals("ONRE") && !unit.getOperatingStatusCode().getCode().equals("ONRE"))
 
          ){
-            // TODO use this after switching to CodeLookupDto
-            // OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
-            // tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());
-            //
-        	OperatingStatusCode tempOperatingStatusCode = dto.getOperatingStatusCode();
+        	
+        	OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
+        	tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());
+            
         	Short tempStatusYear = dto.getStatusYear();
 
         	unit.getEmissionsProcesses().forEach(process -> {
