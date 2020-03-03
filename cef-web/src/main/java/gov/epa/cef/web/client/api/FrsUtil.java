@@ -1,5 +1,6 @@
 package gov.epa.cef.web.client.api;
 
+import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 
@@ -14,6 +15,21 @@ class FrsUtil {
         }
 
         return big.doubleValue();
+    }
+
+    static FipsCounty createCounty(String code) {
+
+        FipsCounty result = new FipsCounty();
+
+        if (code == null) {
+
+            return null;
+
+        }
+
+        result.setCode(code);
+
+        return result;
     }
 
     static OperatingStatusCode createOperatingStatus(String code) {

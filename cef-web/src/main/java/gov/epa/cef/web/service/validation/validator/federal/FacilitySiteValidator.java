@@ -87,53 +87,70 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         			ValidationField.FACILITY_STATUS.value(), "facilitysite.status.range",
         			createValidationDetails(facilitySite));
         }
-        
+
+        if (facilitySite.getCountyCode() == null) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.FACILITY_COUNTY.value(), "facilitySite.county.required",
+                    createValidationDetails(facilitySite));
+
+        } else if (!facilitySite.getCountyCode().getFipsStateCode().getUspsCode().equals(facilitySite.getStateCode())) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.FACILITY_COUNTY.value(), "facilitySite.county.invalidState",
+                    createValidationDetails(facilitySite),
+                    facilitySite.getCountyCode().getName(),
+                    facilitySite.getStateCode());
+        }
+
         // Postal codes must be entered as 5 digits (XXXXX) or 9 digits (XXXXX-XXXX).
-        	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
-        	Pattern pattern = Pattern.compile(regex);
-        	for(FacilitySiteContact fc: facilitySite.getContacts()){
-            	if(!StringUtils.isEmpty(fc.getPostalCode())){
-                	Matcher matcher = pattern.matcher(fc.getPostalCode());
-                	if(!matcher.matches()){
-                    	result = false; 
-                    	context.addFederalError(
-                    			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-                    			"facilitySite.contacts.postalCode.requiredFormat",
-                    			createContactValidationDetails(facilitySite));
-                	}	
-            	}
-            	if(!StringUtils.isEmpty(fc.getMailingPostalCode())){
-                	Matcher matcher = pattern.matcher(fc.getMailingPostalCode());
-                	if(!matcher.matches()){
-                    	result = false; 
-                    	context.addFederalError(
-                    			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-                    			"facilitySite.contacts.postalCode.requiredFormat",
-                    			createContactValidationDetails(facilitySite));
-                	}	
-            	}
-        	}
-        	
-        	if(!StringUtils.isEmpty(facilitySite.getPostalCode())) {
-	        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
-	        	if(!matcher.matches()){
-	            	result = false; 
-	            	context.addFederalError(
-	            			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-	            			"facilitysite.postalCode.requiredFormat",
-	            			createValidationDetails(facilitySite));
-	        	}
-        	}
-        	if(!StringUtils.isEmpty(facilitySite.getMailingPostalCode())){
-            	Matcher matcher = pattern.matcher(facilitySite.getMailingPostalCode());
+    	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
+    	Pattern pattern = Pattern.compile(regex);
+    	for(FacilitySiteContact fc: facilitySite.getContacts()){
+        	if(!StringUtils.isEmpty(fc.getPostalCode())){
+            	Matcher matcher = pattern.matcher(fc.getPostalCode());
             	if(!matcher.matches()){
                 	result = false; 
                 	context.addFederalError(
                 			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
-                			"facilitysite.postalCode.requiredFormat",
-                			createValidationDetails(facilitySite));
+                			"facilitySite.contacts.postalCode.requiredFormat",
+                			createContactValidationDetails(facilitySite));
             	}	
         	}
+        	if(!StringUtils.isEmpty(fc.getMailingPostalCode())){
+            	Matcher matcher = pattern.matcher(fc.getMailingPostalCode());
+            	if(!matcher.matches()){
+                	result = false; 
+                	context.addFederalError(
+                			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+                			"facilitySite.contacts.postalCode.requiredFormat",
+                			createContactValidationDetails(facilitySite));
+            	}	
+        	}
+    	}
+    	
+    	if(!StringUtils.isEmpty(facilitySite.getPostalCode())) {
+        	Matcher matcher = pattern.matcher(facilitySite.getPostalCode());
+        	if(!matcher.matches()){
+            	result = false; 
+            	context.addFederalError(
+            			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+            			"facilitysite.postalCode.requiredFormat",
+            			createValidationDetails(facilitySite));
+        	}
+    	}
+    	if(!StringUtils.isEmpty(facilitySite.getMailingPostalCode())){
+        	Matcher matcher = pattern.matcher(facilitySite.getMailingPostalCode());
+        	if(!matcher.matches()){
+            	result = false; 
+            	context.addFederalError(
+            			ValidationField.FACILITY_CONTACT_POSTAL.value(), 
+            			"facilitysite.postalCode.requiredFormat",
+            			createValidationDetails(facilitySite));
+        	}	
+    	}
         
         // Facility must have a facility NAICS code reported
         List<FacilityNAICSXref> fsNAICSList = facilitySite.getFacilityNAICS();
@@ -168,14 +185,26 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         			createContactValidationDetails(facilitySite));
         }
         
-        // Facility contact must have an email
+        
         for (FacilitySiteContact contact: facilitySite.getContacts()) {
+            // Facility contact must have an email
         	if (Strings.emptyToNull(contact.getEmail()) == null) {
         		
         		result = false;
         		context.addFederalError(ValidationField.FACILITY_CONTACT.value(), "facilitysite.contacts.email.required",
         				createContactValidationDetails(facilitySite));
         	}
+        	
+        	// Facility contact county must be for selected state
+        	if (contact.getCountyCode() != null && !contact.getCountyCode().getFipsStateCode().getUspsCode().equals(contact.getStateCode().getUspsCode())) {
+
+                result = false;
+                context.addFederalError(
+                        ValidationField.FACILITY_CONTACT_COUNTY.value(), "facilitySite.contacts.county.invalidState",
+                        createValidationDetails(facilitySite),
+                        contact.getCountyCode().getName(),
+                        contact.getStateCode().getUspsCode());
+            }
         }
         
         if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {

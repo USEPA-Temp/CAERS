@@ -18,6 +18,7 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -36,6 +37,7 @@ import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
+import gov.epa.cef.web.repository.FipsCountyRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
@@ -111,6 +113,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private ControlMeasureCodeRepository controlMeasureCodeRepo;
+
+    @Autowired
+    private FipsCountyRepository countyRepo;
 
     @Autowired
     private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
@@ -685,7 +690,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setStatusYear(bulkFacility.getStatusYear());
         facility.setStreetAddress(bulkFacility.getStreetAddress());
         facility.setCity(bulkFacility.getCity());
-        facility.setCounty(bulkFacility.getCounty());
         facility.setStateCode(bulkFacility.getStateCode());
         facility.setCountryCode(bulkFacility.getCountryCode());
         facility.setPostalCode(bulkFacility.getPostalCode());
@@ -714,6 +718,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             facility.setTribalCode(tribalCodeRepo.findById(bulkFacility.getTribalCode()).orElse(null));
         }
 
+        if (Strings.emptyToNull(bulkFacility.getStateCode()) != null && Strings.emptyToNull(bulkFacility.getCountyCode()) != null) {
+            FipsStateCode stateCode = stateCodeRepo.findByUspsCode(bulkFacility.getStateCode()).orElse(null);
+            if (stateCode != null) {
+                facility.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(stateCode.getCode(), bulkFacility.getCountyCode()).orElse(null));
+            }
+        }
+
         return facility;
     }
 
@@ -732,7 +743,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facilityContact.setPhoneExt(bulkFacilityContact.getPhoneExt());
         facilityContact.setStreetAddress(bulkFacilityContact.getStreetAddress());
         facilityContact.setCity(bulkFacilityContact.getCity());
-        facilityContact.setCounty(bulkFacilityContact.getCounty());
         facilityContact.setCountryCode(bulkFacilityContact.getCountryCode());
         facilityContact.setPostalCode(bulkFacilityContact.getPostalCode());
         facilityContact.setMailingStreetAddress(bulkFacilityContact.getMailingStreetAddress());
@@ -745,6 +755,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
         if (bulkFacilityContact.getStateCode() != null) {
             facilityContact.setStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getStateCode())).orElse(null));
+            if (facilityContact.getStateCode() != null && Strings.emptyToNull(bulkFacilityContact.getCountyCode()) != null) {
+                facilityContact.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(facilityContact.getStateCode().getCode(), bulkFacilityContact.getCountyCode()).orElse(null));
+            }
         }
         if (bulkFacilityContact.getMailingStateCode() != null) {
             facilityContact.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getMailingStateCode())).orElse(null));

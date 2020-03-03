@@ -67,8 +67,9 @@ public class FacilitySite extends BaseAuditEntity {
     @Column(name = "city", nullable = false, length = 60)
     private String city;
 
-    @Column(name = "county", length = 43)
-    private String county;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "county_code")
+    private FipsCounty countyCode;
 
     @Column(name = "state_code", nullable = false, length = 5)
     private String stateCode;
@@ -149,7 +150,7 @@ public class FacilitySite extends BaseAuditEntity {
         this.statusYear = originalFacilitySite.getStatusYear();
         this.streetAddress = originalFacilitySite.getStreetAddress();
         this.city = originalFacilitySite.getCity();
-        this.county = originalFacilitySite.getCounty();
+        this.countyCode = originalFacilitySite.getCountyCode();
         this.stateCode = originalFacilitySite.getStateCode();
         this.countryCode = originalFacilitySite.getCountryCode();
         this.postalCode = originalFacilitySite.getPostalCode();
@@ -291,12 +292,12 @@ public class FacilitySite extends BaseAuditEntity {
         this.city = city;
     }
 
-    public String getCounty() {
-        return this.county;
+    public FipsCounty getCountyCode() {
+        return countyCode;
     }
 
-    public void setCounty(String county) {
-        this.county = county;
+    public void setCountyCode(FipsCounty countyCode) {
+        this.countyCode = countyCode;
     }
 
     public String getStateCode() {

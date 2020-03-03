@@ -12,6 +12,7 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
+import { FipsCounty } from 'src/app/shared/models/fips-county';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -62,13 +63,14 @@ export class EditFacilityContactComponent implements OnInit {
     mailingCity: [''],
     mailingStateCode: [null],
     mailingPostalCode: ['', Validators.pattern('^\\d{5}(-\\d{4})?$')],
-    county: ['']
+    countyCode: [null]
   }, {validators: [
     this.mailingAddressValidator()
    ]});
 
   facilityContactType: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
+  counties: FipsCounty[];
 
   constructor(
     private contactService: FacilitySiteContactService,
@@ -80,6 +82,22 @@ export class EditFacilityContactComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit() {
+
+    this.contactForm.get('stateCode').valueChanges
+    .subscribe(value => {
+      if (value) {
+        if (this.contactForm.value.countyCode && value.code && this.contactForm.value.countyCode.fipsStateCode.code !== value.code) {
+          this.contactForm.get('countyCode').setValue(null);
+        }
+        this.lookupService.retrieveFipsCountiesForState(value.code)
+        .subscribe(result => {
+          this.counties = result;
+        });
+      } else {
+        this.counties = [];
+        this.contactForm.get('countyCode').setValue(null);
+      }
+    });
 
     this.lookupService.retrieveFacilityContactType()
     .subscribe(result => {

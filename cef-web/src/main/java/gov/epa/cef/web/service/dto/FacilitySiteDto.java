@@ -22,7 +22,7 @@ public class FacilitySiteDto implements Serializable {
     private Short statusYear;
     private String streetAddress;
     private String city;
-    private String county;
+    private FipsCountyDto countyCode;
     private String stateCode;
     private String countryCode;
     private String postalCode;
@@ -156,12 +156,12 @@ public class FacilitySiteDto implements Serializable {
         this.city = city;
     }
 
-    public String getCounty() {
-        return county;
+    public FipsCountyDto getCountyCode() {
+        return countyCode;
     }
 
-    public void setCounty(String county) {
-        this.county = county;
+    public void setCountyCode(FipsCountyDto countyCode) {
+        this.countyCode = countyCode;
     }
 
     public String getStateCode() {

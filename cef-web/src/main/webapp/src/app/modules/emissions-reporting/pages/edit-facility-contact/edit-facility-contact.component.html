@@ -39,7 +39,7 @@
           </span>
         </div>
         <div class="col-sm-6 col-md-2"><strong>County:</strong></div>
-        <div class="col-sm-6 col-md-2">{{facilitySite.county}}</div>
+        <div class="col-sm-6 col-md-2">{{facilitySite.countyCode?.name}}</div>
       </div>
 
       <div class="row">
@@ -140,10 +140,13 @@
           </div>
 
           <div class="row pb-5">
-            <label for="county" class="col-sm-4 col-lg-2 col-form-label"><strong>County:</strong></label>
+            <label for="countySelect" class="col-sm-4 col-lg-2 col-form-label"><strong>County:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="county" formControlName="county" [value]="contactForm.value.contact?.county" maxlength="43">
-              <app-validation-message [control]="contactForm.controls.county"></app-validation-message>
+              <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of counties" [ngValue]="opt">{{opt?.name}}</option>
+              </select>
+              <app-validation-message [control]="contactForm.get('countyCode')"></app-validation-message>
             </div>
             <label for="postalCode" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
             <div class="col-sm-8 col-lg-2">

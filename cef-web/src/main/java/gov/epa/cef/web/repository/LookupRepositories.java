@@ -34,6 +34,9 @@ public class LookupRepositories {
 	private ContactTypeCodeRepository contactTypeRepo;
 
 	@Autowired
+    private FipsCountyRepository countyRepo;
+
+	@Autowired
 	private FipsStateCodeRepository stateCodeRepo;
 
 	@Autowired
@@ -94,6 +97,10 @@ public class LookupRepositories {
 	public ContactTypeCodeRepository contactTypeRepo() {
 		return contactTypeRepo;
 	}
+
+	public FipsCountyRepository countyRepo() {
+        return countyRepo;
+    }
 
 	public FipsStateCodeRepository stateCodeRepo() {
 		return stateCodeRepo;
