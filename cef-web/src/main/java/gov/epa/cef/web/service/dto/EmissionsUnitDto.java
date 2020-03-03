@@ -1,7 +1,5 @@
 package gov.epa.cef.web.service.dto;
 
-import gov.epa.cef.web.domain.OperatingStatusCode;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,8 +10,7 @@ public class EmissionsUnitDto implements Serializable {
     private Long id;
     private Long facilitySiteId;
     private CodeLookupDto unitTypeCode;
-    // TODO needs to be switched to CodeLookupDto
-    private OperatingStatusCode operatingStatusCode;
+    private CodeLookupDto operatingStatusCode;
     private String operatingStatusCodeDescription;
     private String unitIdentifier;
     private String description;
@@ -105,10 +102,10 @@ public class EmissionsUnitDto implements Serializable {
         return this;
     }
 
-	public OperatingStatusCode getOperatingStatusCode() {
+	public CodeLookupDto getOperatingStatusCode() {
 		return operatingStatusCode;
 	}
-	public void setOperatingStatusCode(OperatingStatusCode operatingStatusCode) {
+	public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
 		this.operatingStatusCode = operatingStatusCode;
 	}
 	public CodeLookupDto getUnitTypeCode() {

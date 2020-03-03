@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -139,7 +140,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 	    
       when(reportRepo.findByEisProgramId("1")).thenReturn(erList);
       when(processRepo.retrieveByIdentifierParentFacilityYear(
-      		"Boiler 001","test_unit","1",(short) 2018)).thenReturn(Optional.of(p1));
+      		"Boiler 001","test_unit","1",(short) 2018)).thenReturn(Collections.singletonList(p1));
       when(emissionRepo.findAllByProcessIdReportId(2L,1L)).thenReturn(eList);
       
     }

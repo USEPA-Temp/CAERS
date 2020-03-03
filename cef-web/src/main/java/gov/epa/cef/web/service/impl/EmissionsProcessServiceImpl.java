@@ -133,7 +133,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
                     process.getEmissionsUnit().getUnitIdentifier(), 
                     process.getEmissionsUnit().getFacilitySite().getEisProgramId(), 
                     lastReport.get().getYear())
-                    .ifPresent(oldUnit -> {
+                    .stream().findFirst().ifPresent(oldUnit -> {
                         throw new AppValidationException("This Process has been submitted on previous years' facility reports, so it cannot be deleted. "
                                 + "If this Process is no longer operational, please use the \"Operating Status\" field to mark this Process as \"Permanently Shutdown\".");
                     });
