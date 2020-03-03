@@ -72,7 +72,7 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
             unitRepo.retrieveByIdentifierFacilityYear(emissionsUnit.getUnitIdentifier(),
                     emissionsUnit.getFacilitySite().getEisProgramId(),
                     lastReport.get().getYear())
-                    .ifPresent(oldUnit -> {
+                    .stream().findFirst().ifPresent(oldUnit -> {
                         throw new AppValidationException("This Unit has been submitted on previous years' facility reports, so it cannot be deleted. "
                                 + "If this Unit is no longer operational, please use the \"Operating Status\" field to mark this Unit as \"Permanently Shutdown\".");
                     });

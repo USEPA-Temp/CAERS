@@ -26,7 +26,7 @@ public interface EmissionsProcessRepository extends CrudRepository<EmissionsProc
      */
     @Query("select ep from EmissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r "
             + "where ep.emissionsProcessIdentifier = :identifier and eu.unitIdentifier = :parentIdentifier and fs.eisProgramId = :eisProgramId and r.year = :year")
-    Optional<EmissionsProcess> retrieveByIdentifierParentFacilityYear(@Param("identifier") String identifier, @Param("parentIdentifier") String parentIdentifier, 
+    List<EmissionsProcess> retrieveByIdentifierParentFacilityYear(@Param("identifier") String identifier, @Param("parentIdentifier") String parentIdentifier, 
                                                                       @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
 
     /**

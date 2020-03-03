@@ -29,7 +29,7 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
      */
     @Query("select rp from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r "
             + "where rp.releasePointIdentifier = :identifier and fs.eisProgramId = :eisProgramId and r.year = :year")
-    Optional<ReleasePoint> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
+    List<ReleasePoint> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
 
     /**
      *
