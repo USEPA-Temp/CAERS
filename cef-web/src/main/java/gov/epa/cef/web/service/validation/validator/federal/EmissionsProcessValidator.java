@@ -257,26 +257,35 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         			Short previousReportYr = erList.get(erList.size()-1).getYear();
         			Long previousReportId = erList.get(erList.size()-1).getId();
         			
-        			EmissionsProcess previousProcess = processRepo.retrieveByIdentifierParentFacilityYear(emissionsProcess.getEmissionsProcessIdentifier(), emissionsProcess.getEmissionsUnit().getUnitIdentifier(), currentReport.getEisProgramId(), previousReportYr).orElse(null);
-        			if (previousProcess != null) {
-        				List<Emission> currentEmissionsList = emissionRepo.findAllByProcessIdReportId(emissionsProcess.getId(), currentReport.getId());
-      					List<Emission> previousEmissionsList = emissionRepo.findAllByProcessIdReportId(previousProcess.getId(), previousReportId);
-      					
-      					for (Emission ce: currentEmissionsList) {
-      						for (Emission pe: previousEmissionsList) {
-      							// check if pollutant code the same and total emissions are equal in value and scale 
-      							if ((ce.getPollutant().getPollutantCode().contentEquals(pe.getPollutant().getPollutantCode()))
-      									&& ce.getTotalEmissions().equals(pe.getTotalEmissions())) {
-  
-      								result = false;
-      								context.addFederalWarning(
-      										ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
-      										"emission.totalEmissions.copied",
-      										createEmissionValidationDetails(ce),
-      										previousReportYr.toString());
-      							}
-      						}
-      					}
+        			List<EmissionsProcess> previousProcesses = processRepo.retrieveByIdentifierParentFacilityYear(emissionsProcess.getEmissionsProcessIdentifier(), 
+        			        emissionsProcess.getEmissionsUnit().getUnitIdentifier(), 
+        			        currentReport.getEisProgramId(), 
+        			        previousReportYr);
+
+        			if (!previousProcesses.isEmpty()) {
+        			    // loop through all processes, if the same report was uploaded twice for a previous year this should only work once
+        			    // if the previous report had the same process multiple times this may return duplicate messages
+        			    for (EmissionsProcess previousProcess : previousProcesses) {
+
+            				List<Emission> currentEmissionsList = emissionRepo.findAllByProcessIdReportId(emissionsProcess.getId(), currentReport.getId());
+          					List<Emission> previousEmissionsList = emissionRepo.findAllByProcessIdReportId(previousProcess.getId(), previousReportId);
+          					
+          					for (Emission ce: currentEmissionsList) {
+          						for (Emission pe: previousEmissionsList) {
+          							// check if pollutant code the same and total emissions are equal in value and scale 
+          							if ((ce.getPollutant().getPollutantCode().contentEquals(pe.getPollutant().getPollutantCode()))
+          									&& ce.getTotalEmissions().equals(pe.getTotalEmissions())) {
+      
+          								result = false;
+          								context.addFederalWarning(
+          										ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+          										"emission.totalEmissions.copied",
+          										createEmissionValidationDetails(ce),
+          										previousReportYr.toString());
+          							}
+          						}
+          					}
+        			    }
       				}
         		}
         		

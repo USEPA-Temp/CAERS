@@ -114,7 +114,7 @@ public class ReleasePointServiceImpl implements ReleasePointService {
             releasePointRepo.retrieveByIdentifierFacilityYear(rp.getReleasePointIdentifier(), 
                     rp.getFacilitySite().getEisProgramId(), 
                     lastReport.get().getYear())
-                    .ifPresent(oldRp -> {
+                    .stream().findFirst().ifPresent(oldRp -> {
                         throw new AppValidationException("This Release Point has been submitted on previous years' facility reports, so it cannot be deleted. "
                                 + "If this Release Point is no longer operational, please use the \"Operating Status\" field to mark this Release Point as \"Permanently Shutdown\".");
                     });
