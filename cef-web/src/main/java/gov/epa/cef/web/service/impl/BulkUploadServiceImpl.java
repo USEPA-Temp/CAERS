@@ -25,8 +25,6 @@ import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.BulkReportValidationException;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
@@ -84,6 +82,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -881,7 +880,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private EmissionsReportBulkUploadDto parseWorkbookJson(ExcelParserResponse response,
                                                            EmissionsReportStarterDto metadata) {
 
-        EmissionsReportBulkUploadDto result = null;
+        EmissionsReportBulkUploadDto result;
 
         try {
             result = this.objectMapper.copy()
@@ -898,8 +897,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         } catch (JsonProcessingException e) {
 
-            throw new ApplicationException(
-                ApplicationErrorCode.E_INVALID_ARGUMENT, "Unable to process Excel JSON Parser response.", e);
+            String msg = e.getMessage().replaceAll(
+                EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
+
+            WorksheetError violation = new WorksheetError("*", -1, msg);
+
+            throw new BulkReportValidationException(Collections.singletonList(violation));
         }
 
         return result;
