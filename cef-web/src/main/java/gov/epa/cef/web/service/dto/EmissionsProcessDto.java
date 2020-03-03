@@ -14,8 +14,7 @@ public class EmissionsProcessDto implements Serializable {
 
     private Long id;
     private Long emissionsUnitId;
-    // TODO needs to be switch to AircraftEngineTypeCodeDto
-    private AircraftEngineTypeCode aircraftEngineTypeCode;
+    private AircraftEngineTypeCodeDto aircraftEngineTypeCode;
     private CodeLookupDto operatingStatusCode;
     private String emissionsProcessIdentifier;
     private Short statusYear;
@@ -42,11 +41,11 @@ public class EmissionsProcessDto implements Serializable {
         this.emissionsUnitId = emissionsUnitId;
     }
 
-    public AircraftEngineTypeCode getaircraftEngineTypeCode() {
+    public AircraftEngineTypeCodeDto getaircraftEngineTypeCode() {
         return aircraftEngineTypeCode;
     }
 
-    public void setAircraftEngineTypeCode(AircraftEngineTypeCode aircraftEngineTypeCode) {
+    public void setAircraftEngineTypeCode(AircraftEngineTypeCodeDto aircraftEngineTypeCode) {
         this.aircraftEngineTypeCode = aircraftEngineTypeCode;
     }
 
