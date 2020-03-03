@@ -30,8 +30,6 @@ export class ReportSummaryComponent implements OnInit {
     cromerrLoaded = false;
     cromerrLoadedEmitter = new Subject<boolean>();
 
-    readOnlyMode = true;
-
     constructor(
         private router: Router,
         private reportService: ReportService,
@@ -51,7 +49,6 @@ export class ReportSummaryComponent implements OnInit {
         });
 
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
-            this.readOnlyMode = ReportStatus.APPROVED === data.facilitySite.emissionsReport.status;
 
             this.facilitySite = data.facilitySite;
             this.sharedService.emitChange(data.facilitySite);
@@ -61,15 +58,14 @@ export class ReportSummaryComponent implements OnInit {
                 this.userService.getCurrentUserNaasToken()
                 .subscribe(userToken => {
                     this.userContextService.getUser().subscribe( user => {
-                            if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                                this.showCertify = true;
-                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr, 
-                                    this.cromerrLoadedEmitter);
-                            }
-                        });
-                    }
-                );
+                        if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                            this.showCertify = true;
+                            initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
+                                this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr, 
+                                this.cromerrLoadedEmitter);
+                        }
+                    });
+                });
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                     .subscribe(pollutants => {
                     // filter out radiation pollutants to show separately at the end of the table 
