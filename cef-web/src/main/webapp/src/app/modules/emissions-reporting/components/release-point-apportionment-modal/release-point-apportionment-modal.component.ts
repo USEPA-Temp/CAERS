@@ -70,6 +70,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
     .subscribe(points => {
       this.releasePoints = points;
     });
+
   }
 
   isValid() {
@@ -80,7 +81,8 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
     this.activeModal.close('dontUpdate');
   }
 
-  onSubmit() {
+  onSubmit(event) {
+    event.target.disabled = true;
     if (!this.isValid()) {
         this.releasePointApptForm.markAllAsTouched();
       } else {
@@ -90,6 +92,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
             if ((this.selectedReleasePoint.releasePointIdentifier !== this.releasePointApptForm.get('selectedReleasePointAppt').value.toString())
             && (apportionment.releasePointIdentifier === this.releasePointApptForm.get('selectedReleasePointAppt').value.toString())) {
               this.duplicateCheck = false;
+              event.target.disabled = false;
               // tslint:disable-next-line: max-line-length
               this.toastr.error('', 'This Emissions Process already contains this Release Point Apportionment, duplicates are not allowed.', {positionClass: 'toast-top-right'});
             }
