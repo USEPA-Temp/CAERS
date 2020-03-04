@@ -32,6 +32,7 @@ import { TimeoutModalComponent } from './shared/components/timeout-modal/timeout
 import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
 import { ConfirmationDialogComponent } from './shared/components/confirmation-dialog/confirmation-dialog.component';
 import { SubmissionReviewModalComponent } from './modules/dashboards/components/submission-review-modal/submission-review-modal.component';
+import { HelpPageComponent } from './modules/dashboards/pages/help-page/help-page.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { SubmissionReviewModalComponent } from './modules/dashboards/components/
     RejectSubmissionModalComponent,
     TimeoutModalComponent,
     ConfirmationDialogComponent,
-    SubmissionReviewModalComponent
+    SubmissionReviewModalComponent,
+    HelpPageComponent
   ],
   imports: [
     BrowserModule,
