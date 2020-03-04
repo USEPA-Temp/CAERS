@@ -474,16 +474,38 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
       		result = false;
       	}
         
-        // Latitude/Longitude Tolerance Check
-        BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
-        BigDecimal facilitySiteLong = releasePoint.getFacilitySite().getLongitude();
-       
-        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLatitude(), facilitySiteLat, "latitude", "latitude")) {
+        // Latitude required
+        if (releasePoint.getLatitude() == null) {
+        	
         	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_LATITUDE.value(),
+        			"releasePoint.latitude.required",
+        			createValidationDetails(releasePoint));
         }
         
-        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLongitude(), facilitySiteLong, "longitude", "longitude")) {
+        // Longitude required
+        if (releasePoint.getLongitude() == null) {
+        	
         	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_LONGITUDE.value(),
+        			"releasePoint.longitude.required",
+        			createValidationDetails(releasePoint));
+        }
+        
+        // Latitude/Longitude Tolerance Check
+        if (releasePoint.getLatitude() != null && releasePoint.getLongitude() != null) {
+	        BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
+	        BigDecimal facilitySiteLong = releasePoint.getFacilitySite().getLongitude();
+	       
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLatitude(), facilitySiteLat, "latitude", "latitude")) {
+	        	result = false;
+	        }
+	        
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLongitude(), facilitySiteLong, "longitude", "longitude")) {
+	        	result = false;
+	        }
         }
         
         return result;
