@@ -786,6 +786,36 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_YEAR.value()) && errorMap.get(ValidationField.RP_STATUS_YEAR.value()).size() == 1);
     }
     
+    @Test
+    public void latitudeRequiredFailTest() {
+	      
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        
+        testData.setLatitude(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_LATITUDE.value()) && errorMap.get(ValidationField.RP_LATITUDE.value()).size() == 1);
+    }
+    
+    @Test
+    public void longitudeRequiredFailTest() {
+	      
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        
+        testData.setLongitude(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_LONGITUDE.value()) && errorMap.get(ValidationField.RP_LONGITUDE.value()).size() == 1);
+    }
+    
     
     private ReleasePoint createBaseReleasePoint() {
     	
