@@ -20,6 +20,7 @@
 
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
+import 'core-js/es7/array'; // added to fix .includes error when creating a new control in Internet Explorer
 
 /**
  * Web Animations `@angular/platform-browser/animations`
@@ -56,7 +57,6 @@
  * Zone JS is required by default for Angular itself.
  */
 import 'zone.js/dist/zone';  // Included with Angular CLI.
-import 'core-js/es7/array'; // added to fix .includes error when creating a new control in Internet Explorer
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
