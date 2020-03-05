@@ -24,6 +24,10 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 @Component
 public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
+    private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String STATUS_OPERATING = "OP";
+    
     @Override
     public void compose(FluentValidator validator,
                         ValidatorContext validatorContext,
@@ -43,8 +47,35 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
+        if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
+        			.filter(emissionsProcess -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())
+        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (EmissionsProcess ep: epList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.PROCESS_STATUS_CODE.value(),
+        				"emissionsProcess.statusTypeCode.temporarilyShutdown",
+        				createEmissionsProcessValidationDetails(ep));
+        	}
+        } else if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
+        			.filter(emissionsProcess -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
+        			.collect(Collectors.toList());
+        	
+        	for (EmissionsProcess ep: epList) {
+        		result = false;
+        		context.addFederalError(
+        				ValidationField.PROCESS_STATUS_CODE.value(),
+        				"emissionsProcess.statusTypeCode.permanentShutdown",
+        				createEmissionsProcessValidationDetails(ep));
+        	}
+        }
+        
         // If unit operation status is not operating, status year is required
-        if (!"OP".contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getStatusYear() == null) {
+        if (!STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getStatusYear() == null) {
  	
         	result = false;
         	context.addFederalError(
@@ -98,20 +129,6 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        }
         }
         
-        // If facility operation status is Temporarily Shutdown or Permanently Shutdown, emissions unit cannot be operating
-        if (emissionsUnit != null && emissionsUnit.getFacilitySite() != null && emissionsUnit.getFacilitySite().getOperatingStatusCode() != null &&
-            emissionsUnit.getOperatingStatusCode() != null) {
-	        if (("TS".contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode())
-	    		|| "PS".contentEquals(emissionsUnit.getFacilitySite().getOperatingStatusCode().getCode()))
-	    		&& "OP".contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
-	 	
-	        	result = false;
-	        	context.addFederalError(
-	        			ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(), "emissionsUnit.statusTypeCode.facilitySiteCondition",
-	        			createValidationDetails(emissionsUnit));
-	        }
-        }
-	        
         // Design capacity range
         if ((emissionsUnit.getDesignCapacity() != null)
         	&& (emissionsUnit.getDesignCapacity().doubleValue() < 0.01 || emissionsUnit.getDesignCapacity().doubleValue() > 100000000)) {
@@ -133,7 +150,18 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         			"emissionsUnit.capacity.required",
         			createValidationDetails(emissionsUnit));
         }
-        
+
+        // Cannot report legacy UoM
+        if (emissionsUnit.getUnitOfMeasureCode() != null && Boolean.TRUE.equals(emissionsUnit.getUnitOfMeasureCode().getLegacy())) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.EMISSIONS_UNIT_UOM.value(),
+                    "emissionsUnit.capacity.legacy",
+                    createValidationDetails(emissionsUnit),
+                    emissionsUnit.getUnitOfMeasureCode().getDescription());
+        }
+
         // Process identifier must be unique within unit
         Map<Object, List<EmissionsProcess>> epMap = emissionsUnit.getEmissionsProcesses().stream()
             .filter(ep -> ep.getEmissionsProcessIdentifier() != null)
@@ -160,6 +188,23 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
       String description = MessageFormat.format("Emissions Unit: {0}", source.getUnitIdentifier());
 
       ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getUnitIdentifier(), EntityType.EMISSIONS_UNIT, description);
+      return dto;
+  }
+    
+    private String getEmissionsUnitIdentifier(EmissionsProcess process) {
+      if (process.getEmissionsUnit() != null) {
+          return process.getEmissionsUnit().getUnitIdentifier();
+      }
+      return null;
+  }
+    
+    private ValidationDetailDto createEmissionsProcessValidationDetails(EmissionsProcess source) {
+
+      String description = MessageFormat.format("Emission Unit: {0}, Emission Process: {1}", 
+              getEmissionsUnitIdentifier(source),
+              source.getEmissionsProcessIdentifier());
+
+      ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEmissionsProcessIdentifier(), EntityType.EMISSIONS_PROCESS, description);
       return dto;
   }
 }

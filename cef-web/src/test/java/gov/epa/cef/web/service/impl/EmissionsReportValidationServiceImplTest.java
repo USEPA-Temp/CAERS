@@ -3,6 +3,9 @@ package gov.epa.cef.web.service.impl;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 import com.baidu.unbiz.fluentvalidator.ValidatorChain;
 
+import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlAssignment;
+import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -16,6 +19,8 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ControlPathValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ControlValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsProcessValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsReportValidator;
@@ -67,6 +72,9 @@ public class EmissionsReportValidationServiceImplTest {
 
         when(validationRegistry.findOneByType(EmissionsUnitValidator.class))
             .thenReturn(new EmissionsUnitValidator());
+        
+        when(validationRegistry.findOneByType(ControlValidator.class))
+        .thenReturn(new ControlValidator());
 
         when(validationRegistry.findOneByType(EmissionsProcessValidator.class))
             .thenReturn(new EmissionsProcessValidator());
@@ -79,6 +87,9 @@ public class EmissionsReportValidationServiceImplTest {
 
         when(validationRegistry.findOneByType(EmissionValidator.class))
             .thenReturn(new EmissionValidator());
+        
+        when(validationRegistry.findOneByType(ControlPathValidator.class))
+        .thenReturn(new ControlPathValidator());
 
         ValidatorChain reportChain = new ValidatorChain();
         reportChain.setValidators(Arrays.asList(new EmissionsReportValidator(), new GeorgiaValidator()));
@@ -101,6 +112,13 @@ public class EmissionsReportValidationServiceImplTest {
         OperatingDetail detail = new OperatingDetail();
         Emission emission = new Emission();
         emission.setTotalEmissions(new BigDecimal(10));
+        ControlPath controlPath = new ControlPath();
+        Control control = new Control(); 
+        control.setIdentifier("control_Identifier");
+        control.setFacilitySite(facilitySite);
+        controlPath.setFacilitySite(facilitySite);
+        facilitySite.getControls().add(control);
+        facilitySite.getControlPaths().add(controlPath);
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");
@@ -125,6 +143,7 @@ public class EmissionsReportValidationServiceImplTest {
         emission.setReportingPeriod(reportingPeriod);
         emissionsProcess.getReportingPeriods().add(reportingPeriod);
         emissionsProcess.setEmissionsUnit(emissionsUnit);
+        emissionsProcess.setOperatingStatusCode(opStatCode);
         emissionsUnit.getEmissionsProcesses().add(emissionsProcess);
         emissionsUnit.setOperatingStatusCode(opStatCode);
         emissionsUnit.setFacilitySite(facilitySite);

@@ -18,6 +18,9 @@ public interface ReportingPeriodMapper {
 
     List<ReportingPeriodDto> toDtoList(List<ReportingPeriod> source);
 
+    @Mapping(source="emissionsProcessId", target="emissionsProcess.id")
+    ReportingPeriod fromDto(ReportingPeriodDto source);
+
     @Mapping(target = "reportingPeriodTypeCode", ignore = true)
     @Mapping(target = "emissionsOperatingTypeCode", ignore = true)
     @Mapping(target = "calculationParameterTypeCode", ignore = true)

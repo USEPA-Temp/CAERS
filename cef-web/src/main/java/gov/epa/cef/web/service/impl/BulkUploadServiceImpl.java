@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import gov.epa.cef.web.client.api.ExcelParserClient;
 import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
@@ -17,14 +18,14 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.BulkReportValidationException;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
@@ -36,6 +37,7 @@ import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
+import gov.epa.cef.web.repository.FipsCountyRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
@@ -65,6 +67,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.CalculationUtils;
@@ -81,6 +84,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +113,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private ControlMeasureCodeRepository controlMeasureCodeRepo;
+
+    @Autowired
+    private FipsCountyRepository countyRepo;
 
     @Autowired
     private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
@@ -463,7 +470,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         logger.debug("Warnings {}", warnings);
 
-        return this.emissionsReportService.saveEmissionReport(emissionsReport);
+        return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.CREATED);
     }
 
     public EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook) {
@@ -475,7 +482,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
                 this.emissionsReportService.delete(report.getId());
             });
-
 
         ExcelParserResponse response = this.excelParserClient.parseWorkbook(workbook);
 
@@ -491,10 +497,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         } else {
 
-            List<String> errors = new ArrayList<>();
-            errors.add("Unable to read workbook.");
+            List<WorksheetError> errors = new ArrayList<>();
+            errors.add(new WorksheetError(null, -1, "Unable to read workbook."));
             if (response.getJson() != null && response.getJson().hasNonNull("message")) {
-                errors.add(response.getJson().path("message").asText());
+                errors.add(new WorksheetError(null, -1, response.getJson().path("message").asText()));
             }
 
             throw new BulkReportValidationException(errors);
@@ -580,8 +586,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         Emission result = uploadMapper.emissionsFromDto(dto);
 
-        result.setFormulaIndicator(false);
-        result.setTotalManualEntry(true);
+        result.setTotalManualEntry(false);
+        result.setFormulaIndicator(Strings.emptyToNull(dto.getEmissionsFactorFormula()) != null);
 
         if (dto.getEmissionsCalcMethodCode() != null) {
             result.setEmissionsCalcMethodCode(calcMethodCodeRepo.findById(dto.getEmissionsCalcMethodCode()).orElse(null));
@@ -652,7 +658,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         EmissionsUnit emissionsUnit = new EmissionsUnit();
 
         emissionsUnit.setUnitIdentifier(bulkEmissionsUnit.getUnitIdentifier());
-        emissionsUnit.setProgramSystemCode(bulkEmissionsUnit.getProgramSystemCode());
         emissionsUnit.setDescription(bulkEmissionsUnit.getDescription());
         emissionsUnit.setStatusYear(bulkEmissionsUnit.getStatusYear());
         emissionsUnit.setDesignCapacity(bulkEmissionsUnit.getDesignCapacity());
@@ -685,7 +690,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setStatusYear(bulkFacility.getStatusYear());
         facility.setStreetAddress(bulkFacility.getStreetAddress());
         facility.setCity(bulkFacility.getCity());
-        facility.setCounty(bulkFacility.getCounty());
         facility.setStateCode(bulkFacility.getStateCode());
         facility.setCountryCode(bulkFacility.getCountryCode());
         facility.setPostalCode(bulkFacility.getPostalCode());
@@ -714,6 +718,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             facility.setTribalCode(tribalCodeRepo.findById(bulkFacility.getTribalCode()).orElse(null));
         }
 
+        if (Strings.emptyToNull(bulkFacility.getStateCode()) != null && Strings.emptyToNull(bulkFacility.getCountyCode()) != null) {
+            FipsStateCode stateCode = stateCodeRepo.findByUspsCode(bulkFacility.getStateCode()).orElse(null);
+            if (stateCode != null) {
+                facility.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(stateCode.getCode(), bulkFacility.getCountyCode()).orElse(null));
+            }
+        }
+
         return facility;
     }
 
@@ -732,7 +743,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facilityContact.setPhoneExt(bulkFacilityContact.getPhoneExt());
         facilityContact.setStreetAddress(bulkFacilityContact.getStreetAddress());
         facilityContact.setCity(bulkFacilityContact.getCity());
-        facilityContact.setCounty(bulkFacilityContact.getCounty());
         facilityContact.setCountryCode(bulkFacilityContact.getCountryCode());
         facilityContact.setPostalCode(bulkFacilityContact.getPostalCode());
         facilityContact.setMailingStreetAddress(bulkFacilityContact.getMailingStreetAddress());
@@ -745,6 +755,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
         if (bulkFacilityContact.getStateCode() != null) {
             facilityContact.setStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getStateCode())).orElse(null));
+            if (facilityContact.getStateCode() != null && Strings.emptyToNull(bulkFacilityContact.getCountyCode()) != null) {
+                facilityContact.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(facilityContact.getStateCode().getCode(), bulkFacilityContact.getCountyCode()).orElse(null));
+            }
         }
         if (bulkFacilityContact.getMailingStateCode() != null) {
             facilityContact.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getMailingStateCode())).orElse(null));
@@ -807,9 +820,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         releasePoint.setFugitiveAngle(bulkReleasePoint.getFugitiveAngle());
         releasePoint.setFenceLineDistance(bulkReleasePoint.getFenceLineDistance());
 
-        if (bulkReleasePoint.getProgramSystemCode() != null) {
-            releasePoint.setProgramSystemCode(programSystemCodeRepo.findById(bulkReleasePoint.getProgramSystemCode()).orElse(null));
-        }
         if (bulkReleasePoint.getOperatingStatusCode() != null) {
             releasePoint.setOperatingStatusCode(operatingStatusRepo.findById(bulkReleasePoint.getOperatingStatusCode()).orElse(null));
         }
@@ -883,7 +893,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private EmissionsReportBulkUploadDto parseWorkbookJson(ExcelParserResponse response,
                                                            EmissionsReportStarterDto metadata) {
 
-        EmissionsReportBulkUploadDto result = null;
+        EmissionsReportBulkUploadDto result;
 
         try {
             result = this.objectMapper.copy()
@@ -893,14 +903,19 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             result.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
             result.setEisProgramId(metadata.getEisProgramId());
             result.setFrsFacilityId(metadata.getFrsFacilityId());
+            result.setAltSiteIdentifier(metadata.getStateFacilityId());
             result.setYear(metadata.getYear());
             result.setStatus(ReportStatus.IN_PROGRESS.name());
             result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
 
         } catch (JsonProcessingException e) {
 
-            throw new ApplicationException(
-                ApplicationErrorCode.E_INVALID_ARGUMENT, "Unable to process Excel JSON Parser response.", e);
+            String msg = e.getMessage().replaceAll(
+                EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
+
+            WorksheetError violation = new WorksheetError("*", -1, msg);
+
+            throw new BulkReportValidationException(Collections.singletonList(violation));
         }
 
         return result;

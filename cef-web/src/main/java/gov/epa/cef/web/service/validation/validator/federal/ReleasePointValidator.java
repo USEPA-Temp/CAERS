@@ -29,6 +29,9 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     
     private static final String FUGITIVE_RELEASE_POINT_CODE = "1"; 
     private static final BigDecimal DEFAULT_TOLERANCE = new BigDecimal(0.003).setScale(6, RoundingMode.DOWN);
+    private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String STATUS_OPERATING = "OP";
     
     @Override
     public boolean validate(ValidatorContext validatorContext, ReleasePoint releasePoint) {
@@ -289,19 +292,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         }
         
         // CHECKS FOR ALL RELEASE POINT TYPES
-        // If facility operation status is Temporarily Shutdown or Permanently Shutdown, release point cannot be operating
-        if (("TS".contentEquals(releasePoint.getFacilitySite().getOperatingStatusCode().getCode())
-    		|| "PS".contentEquals(releasePoint.getFacilitySite().getOperatingStatusCode().getCode()))
-    		&& "OP".contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
- 	
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.facilitySiteCondition",
-        			createValidationDetails(releasePoint));
-        }
-        
         // If release point operation status is not operating, status year is required
-        if (!"OP".contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
+        if (!STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
  	
         	result = false;
         	context.addFederalError(
@@ -482,16 +474,38 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
       		result = false;
       	}
         
-        // Latitude/Longitude Tolerance Check
-        BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
-        BigDecimal facilitySiteLong = releasePoint.getFacilitySite().getLongitude();
-       
-        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLatitude(), facilitySiteLat, "latitude", "latitude")) {
+        // Latitude required
+        if (releasePoint.getLatitude() == null) {
+        	
         	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_LATITUDE.value(),
+        			"releasePoint.latitude.required",
+        			createValidationDetails(releasePoint));
         }
         
-        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLongitude(), facilitySiteLong, "longitude", "longitude")) {
+        // Longitude required
+        if (releasePoint.getLongitude() == null) {
+        	
         	result = false;
+        	context.addFederalError(
+        			ValidationField.RP_LONGITUDE.value(),
+        			"releasePoint.longitude.required",
+        			createValidationDetails(releasePoint));
+        }
+        
+        // Latitude/Longitude Tolerance Check
+        if (releasePoint.getLatitude() != null && releasePoint.getLongitude() != null) {
+	        BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
+	        BigDecimal facilitySiteLong = releasePoint.getFacilitySite().getLongitude();
+	       
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLatitude(), facilitySiteLat, "latitude", "latitude")) {
+	        	result = false;
+	        }
+	        
+	        if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLongitude(), facilitySiteLong, "longitude", "longitude")) {
+	        	result = false;
+	        }
         }
         
         return result;

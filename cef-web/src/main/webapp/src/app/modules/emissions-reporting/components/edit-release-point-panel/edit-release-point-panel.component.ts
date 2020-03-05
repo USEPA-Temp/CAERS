@@ -73,7 +73,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     ]],
     fenceLineUomCode: [null],
     comments: ['', Validators.maxLength(400)],
-    programSystemCode: [null, Validators.required],
     exitGasVelocity: [null, Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')],
     exitGasVelocityUomCode: [null],
     exitGasFlowRate: [null, Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')],
@@ -161,7 +160,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   });
 
   releasePointTypeCode: BaseCodeLookup[];
-  programSystemCode: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
   flowUomValues: UnitMeasureCode[];
@@ -178,11 +176,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.lookupService.retrieveReleaseTypeCode()
     .subscribe(result => {
       this.releasePointTypeCode = result;
-    });
-
-    this.lookupService.retrieveProgramSystemTypeCode()
-    .subscribe(result => {
-      this.programSystemCode = result;
     });
 
     this.lookupService.retrieveOperatingStatus()
@@ -588,14 +581,20 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // if facility operation status is TS or PS, release point cannot be OP
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if ((control.get('operatingStatusCode').value !== null)
-      && (control.get('operatingStatusCode').value.code === 'OP')
-      && (this.facilityOpCode !== undefined)) {
-          if (this.facilityOpCode !== null && (this.facilityOpCode.code === 'TS' || this.facilityOpCode.code === 'PS')) {
-            return { invalidStatusCode: true };
+      const status_perm_shutdown = "PS";
+      const status_temp_shutdown = "TS";
+      const control_status = control.get('operatingStatusCode').value;
+
+      if (this.facilityOpCode && control_status) {
+        if (this.facilityOpCode.code === status_temp_shutdown
+          && control_status.code !== status_perm_shutdown
+          && control_status.code !== status_temp_shutdown) {
+            return {invalidStatusCodeTS: true};
+          } else if (this.facilityOpCode.code === status_perm_shutdown
+          && control_status.code !== status_perm_shutdown) {
+            return {invalidStatusCodePS: true};
           }
       }
       return null;

@@ -126,5 +126,9 @@ export class BreadcrumbNavComponent implements OnInit {
         return true;
     }
 
+    goToHelpPage(){
+        this.router.navigateByUrl('/helpPage');
+    }
+
 
 }

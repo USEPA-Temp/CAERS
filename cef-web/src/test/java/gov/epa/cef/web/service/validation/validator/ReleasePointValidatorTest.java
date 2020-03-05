@@ -727,7 +727,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void simpleValidateOperationStatusTypeFailTest() {
+    public void simpleValidateOperationStatusYearTypeFailTest() {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
@@ -787,21 +787,33 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void facilityOpStatusVsReleasePointOpStatusFailTest() {
+    public void latitudeRequiredFailTest() {
 	      
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
         
-        OperatingStatusCode opStatCode = new OperatingStatusCode();
-	      opStatCode.setCode("OP");
-        
-        testData.setOperatingStatusCode(opStatCode);
+        testData.setLatitude(null);
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.RP_LATITUDE.value()) && errorMap.get(ValidationField.RP_LATITUDE.value()).size() == 1);
+    }
+    
+    @Test
+    public void longitudeRequiredFailTest() {
+	      
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        
+        testData.setLongitude(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_LONGITUDE.value()) && errorMap.get(ValidationField.RP_LONGITUDE.value()).size() == 1);
     }
     
     

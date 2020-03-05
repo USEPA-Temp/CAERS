@@ -5,7 +5,8 @@
     <div class="card-body">
 
         <p>
-            Search for a Common Emission Form upload file that you would like to use for the
+            Search for a Combined Air Emissions Reporting System upload file that
+            you would like to use for the
             {{reportingYear}} Emissions Report for {{facility.facilityName | stripPeriodEnding}}.
             Please be aware that uploading a new report will remove any existing inventory data
             for this reporting year and replace it with the file contents.
@@ -33,7 +34,12 @@
                 <div class="h5 font-weight-bolder">Data Error(s)</div>
                 <ol>
                     <li *ngFor="let error of uploadErrors">
-                        <span [textContent]="error"></span>
+                        <span class="font-weight-bold mr-1">Sheet:</span>
+                        <span [textContent]="error.worksheet"></span>
+                        <span class="font-weight-bold ml-2 mr-1">Row:</span>
+                        <span [textContent]="error.row"></span>
+                        <span class="font-weight-bold ml-2 mr-1">Message:</span>
+                        <span [textContent]="error.message"></span>
                     </li>
                 </ol>
             </div>
@@ -49,9 +55,30 @@
                 <span>Cancel</span>
             </a>
             <button type="button" class="btn btn-primary"
+                    [ngClass]="{'disable-click' : selectedFile === null}"
+                    [disabled]="selectedFile === null"
                     (click)="onUploadClick()">
                 <span>Upload</span>
             </button>
         </div>
     </div>
 </div>
+
+<ng-template #PleaseWaitModal>
+    <div class="modal-header bg-info text-white">
+        <div class="modal-title h4">Bulk Upload</div>
+    </div>
+    <div class="modal-body">
+        <div class="mb-2">Please wait this could take a minute or two.</div>
+        <div class="mb-2 font-weight-bold">
+            <span [textContent]="pleaseWait.message"></span>
+            <span class="ml-2" [textContent]="pleaseWait.progress + '%'"></span>
+        </div>
+        <div class="progress" style="height: 40px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                 role="progressbar" [style.width]="pleaseWait.progress + '%'"
+                 [attr.aria-valuenow]="pleaseWait.progress" aria-valuemin="0" aria-valuemax="100">
+            </div>
+        </div>
+    </div>
+</ng-template>

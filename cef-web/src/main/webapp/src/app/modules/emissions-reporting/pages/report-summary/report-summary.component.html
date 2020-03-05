@@ -9,30 +9,36 @@
                     <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
                                               [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
                 </div>
-                <div class="card-footer d-flex flex-row justify-content-end" *ngIf="!readOnlyMode">
-                    <button *ngIf="(facilitySite.emissionsReport.status=='IN_PROGRESS')" class="btn btn-primary btn-md my-3 mr-3"
-                            (click)="validateReport()">
-                        Run Quality Checks
-                    </button>
-                    <button *ngIf="(facilitySite.emissionsReport.validationStatus=='PASSED'|| facilitySite.emissionsReport.validationStatus=='PASSED_WARNINGS') && showCertify"
-                            [disabled]="!cromerrLoaded"
-                            id="certifyAndSubmit" 
-                            class="btn btn-success btn-md my-3 ml-3">
-                        Certify and Submit to SLT
-                        <div *ngIf="showCertify && !cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </button>
-                </div>
+
                 <div class="card-footer d-flex flex-row justify-content-end">
-                    <button *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')"
-                        class="btn btn-success btn-md my-3 ml-3" (click)="reopenReport()">
-                        Reopen Report
-                    </button>
-                    <button *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')"
-                        class="btn btn-success btn-md my-3 ml-3" (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
-                        Download Report
-                    </button>
+                    <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
+                        <button *ngIf="userRole!=='Reviewer'"
+                                class="btn btn-primary btn-md my-3 mr-3"
+                                (click)="validateReport()">
+                            Run Quality Checks
+                        </button>
+                        <button *ngIf="(facilitySite.emissionsReport.validationStatus==='PASSED'|| facilitySite.emissionsReport.validationStatus==='PASSED_WARNINGS')
+                                && userRole==='NEI Certifier'"
+                                [disabled]="!cromerrLoaded"
+                                id="certifyAndSubmit"
+                                class="btn btn-success btn-md my-3 ml-3">
+                            Certify and Submit to SLT
+                            <div *ngIf="!cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
+                        <button *ngIf="userRole==='NEI Certifier' || userRole==='Preparer'"
+                                class="btn btn-success btn-md my-3 ml-3" 
+                                (click)="reopenReport()">
+                            Reopen Report
+                        </button>
+                        <button class="btn btn-success btn-md my-3 ml-3" 
+                                (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
+                            Download Report
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -39,9 +39,6 @@ public class EmissionsUnit extends BaseAuditEntity {
     @Column(name = "unit_identifier", nullable = false, length = 20)
     private String unitIdentifier;
 
-    @Column(name = "program_system_code", length = 20)
-    private String programSystemCode;
-
     @Column(name = "description", length = 100)
     private String description;
 
@@ -78,7 +75,6 @@ public class EmissionsUnit extends BaseAuditEntity {
         this.unitTypeCode = originalUnit.getUnitTypeCode();
         this.operatingStatusCode = originalUnit.getOperatingStatusCode();
         this.unitIdentifier = originalUnit.getUnitIdentifier();
-        this.programSystemCode = originalUnit.getProgramSystemCode();
         this.description = originalUnit.getDescription();
         this.statusYear = originalUnit.getStatusYear();
         this.designCapacity = originalUnit.getDesignCapacity();
@@ -116,13 +112,6 @@ public class EmissionsUnit extends BaseAuditEntity {
     }
     public void setUnitIdentifier(String unitIdentifier) {
         this.unitIdentifier = unitIdentifier;
-    }
-
-    public String getProgramSystemCode() {
-        return this.programSystemCode;
-    }
-    public void setProgramSystemCode(String programSystemCode) {
-        this.programSystemCode = programSystemCode;
     }
 
     public String getDescription() {

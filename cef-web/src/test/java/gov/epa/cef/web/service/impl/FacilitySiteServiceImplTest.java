@@ -112,7 +112,8 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
 
         assertEquals(report.getEisProgramId(), facilitySite.getEisProgramId());
         assertEquals("ROME", facilitySite.getCity());
-        assertEquals("FLOYD", facilitySite.getCounty());
+//        assertEquals("FLOYD", facilitySite.getCounty());
+        assertEquals("13115", facilitySite.getCountyCode().getCode());
         assertEquals("GA", facilitySite.getStateCode());
 
         assertNotNull(facilitySite.getOperatingStatusCode());

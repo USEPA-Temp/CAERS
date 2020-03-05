@@ -39,7 +39,6 @@ public interface CersReleasePointMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="releasePointIdentifier", target="identifier")
-    @Mapping(source="programSystemCode.code", target="programSystemCode")
     IdentificationDataType identificationFromReleasePoint(ReleasePoint source);
 
     default List<IdentificationDataType> identificationListFromReleasePoint(ReleasePoint source) {

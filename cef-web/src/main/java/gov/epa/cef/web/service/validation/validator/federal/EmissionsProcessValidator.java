@@ -1,11 +1,17 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
+import gov.epa.cef.web.repository.EmissionRepository;
+import gov.epa.cef.web.repository.EmissionsProcessRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
@@ -17,6 +23,7 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +44,18 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	
 	@Autowired
 	private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
+	
+	@Autowired
+	private EmissionsReportRepository reportRepo;
+	
+	@Autowired
+	private EmissionsProcessRepository processRepo;
+	
+	@Autowired
+	private EmissionRepository emissionRepo;
+	
+	private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+	private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
     
     @Override
     public void compose(FluentValidator validator,
@@ -207,6 +226,74 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	        }
         }
         
+        // At least one emission is recorded for the Reporting Period when Process Status is "Operating.
+        // and when Process Status is not "Permanently Shutdown" or "Temporarily Shutdown".
+        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()) && !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+        	if (emissionsProcess.getReportingPeriods() != null) {
+        		for (ReportingPeriod rp : emissionsProcess.getReportingPeriods()) {
+        			if (rp.getEmissions() == null || rp.getEmissions().size() == 0) {
+        				
+        				result = false;
+        				context.addFederalError(
+        						ValidationField.PROCESS_PERIOD_EMISSION.value(),
+        						"emissionsProcess.emission.required",
+        						createValidationDetails(emissionsProcess));
+      				}
+      			}
+      		}
+      	}
+        
+        try {
+        	// check current year's total emissions against previous year's total emissions warning
+        	EmissionsReport currentReport = emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport();
+        		
+        		// find previous report
+        		List<EmissionsReport> erList = reportRepo.findByEisProgramId(currentReport.getEisProgramId()).stream()
+        				.filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
+        				.sorted(Comparator.comparing(EmissionsReport::getYear))
+        				.collect(Collectors.toList());
+        		
+        		if (!erList.isEmpty()) {
+        			Short previousReportYr = erList.get(erList.size()-1).getYear();
+        			Long previousReportId = erList.get(erList.size()-1).getId();
+        			
+        			List<EmissionsProcess> previousProcesses = processRepo.retrieveByIdentifierParentFacilityYear(emissionsProcess.getEmissionsProcessIdentifier(), 
+        			        emissionsProcess.getEmissionsUnit().getUnitIdentifier(), 
+        			        currentReport.getEisProgramId(), 
+        			        previousReportYr);
+
+        			if (!previousProcesses.isEmpty()) {
+        			    // loop through all processes, if the same report was uploaded twice for a previous year this should only work once
+        			    // if the previous report had the same process multiple times this may return duplicate messages
+        			    for (EmissionsProcess previousProcess : previousProcesses) {
+
+            				List<Emission> currentEmissionsList = emissionRepo.findAllByProcessIdReportId(emissionsProcess.getId(), currentReport.getId());
+          					List<Emission> previousEmissionsList = emissionRepo.findAllByProcessIdReportId(previousProcess.getId(), previousReportId);
+          					
+          					for (Emission ce: currentEmissionsList) {
+          						for (Emission pe: previousEmissionsList) {
+          							// check if pollutant code the same and total emissions are equal in value and scale 
+          							if ((ce.getPollutant().getPollutantCode().contentEquals(pe.getPollutant().getPollutantCode()))
+          									&& ce.getTotalEmissions().equals(pe.getTotalEmissions())) {
+      
+          								result = false;
+          								context.addFederalWarning(
+          										ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+          										"emission.totalEmissions.copied",
+          										createEmissionValidationDetails(ce),
+          										previousReportYr.toString());
+          							}
+          						}
+          					}
+        			    }
+      				}
+        		}
+        		
+        } catch (NullPointerException e) {
+        	System.out.println("No Emissions found for Emissions Report");
+        }
+        
+        
         return result;
     }
 
@@ -226,5 +313,41 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEmissionsProcessIdentifier(), EntityType.EMISSIONS_PROCESS, description);
         return dto;
     }
+    
+    private String getEmissionsUnitIdentifier(Emission emission) {
+      if (emission.getReportingPeriod() != null && emission.getReportingPeriod().getEmissionsProcess() != null 
+              && emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit() != null) {
+          return emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier();
+      }
+      return null;
+	}
+    
+    private String getEmissionsProcessIdentifier(Emission emission) {
+  	if (emission.getReportingPeriod() != null && emission.getReportingPeriod().getEmissionsProcess() != null) {
+  		return emission.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier();
+  	}
+  	return null;
+    }
+    
+    private String getPollutantName(Emission emission) {
+  	if (emission.getPollutant() != null) {
+  		return emission.getPollutant().getPollutantName();
+  	}
+  	return null;
+	}
+
+    private ValidationDetailDto createEmissionValidationDetails(Emission source) {
+
+      String description = MessageFormat.format("Emission Unit: {0}, Emission Process: {1}, Pollutant: {2}", 
+              getEmissionsUnitIdentifier(source),
+              getEmissionsProcessIdentifier(source),
+              getPollutantName(source));
+
+      ValidationDetailDto dto = new ValidationDetailDto(source.getId(), getPollutantName(source), EntityType.EMISSION, description);
+      if (source.getReportingPeriod() != null) {
+          dto.getParents().add(new ValidationDetailDto(source.getReportingPeriod().getId(), null, EntityType.REPORTING_PERIOD));
+      }
+      return dto;
+  }
 
 }

@@ -18,7 +18,19 @@ public class EmissionsReportStarterDto {
 
     private String stateCode;
 
+    private String stateFacilityId;
+
     private Short year;
+
+    public String getStateFacilityId() {
+
+        return stateFacilityId;
+    }
+
+    public void setStateFacilityId(String stateFacilityId) {
+
+        this.stateFacilityId = stateFacilityId;
+    }
 
     public String getEisProgramId() {
 
@@ -85,11 +97,12 @@ public class EmissionsReportStarterDto {
 
         return MoreObjects.toStringHelper(this)
             .add("eisProgramId", eisProgramId)
-            .add("frsFacilityId", frsFacilityId)
-            .add("stateCode", stateCode)
-            .add("source", source)
-            .add("year", year)
             .add("facilitySite", facilitySite)
+            .add("frsFacilityId", frsFacilityId)
+            .add("source", source)
+            .add("stateCode", stateCode)
+            .add("stateFacilityId", stateFacilityId)
+            .add("year", year)
             .toString();
     }
 }

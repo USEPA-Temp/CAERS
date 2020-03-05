@@ -3,9 +3,6 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import gov.epa.cef.web.domain.OperatingStatusCode;
-import gov.epa.cef.web.domain.UnitTypeCode;
-
 public class EmissionsUnitDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -13,13 +10,12 @@ public class EmissionsUnitDto implements Serializable {
     private Long id;
     private Long facilitySiteId;
     private CodeLookupDto unitTypeCode;
-    private OperatingStatusCode operatingStatusCode;
+    private CodeLookupDto operatingStatusCode;
     private String operatingStatusCodeDescription;
     private String unitIdentifier;
-    private String programSystemCode;
     private String description;
     private Short statusYear;
-    private CodeLookupDto unitOfMeasureCode;
+    private UnitMeasureCodeDto unitOfMeasureCode;
     private Double designCapacity;
     private String unitOfMeasureDescription;
     private String comments;
@@ -55,13 +51,6 @@ public class EmissionsUnitDto implements Serializable {
         this.unitIdentifier = unitIdentifier;
     }
 
-    public String getProgramSystemCode() {
-        return this.programSystemCode;
-    }
-    public void setProgramSystemCode(String programSystemCode) {
-        this.programSystemCode = programSystemCode;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -76,10 +65,10 @@ public class EmissionsUnitDto implements Serializable {
         this.statusYear = statusYear;
     }
 
-    public CodeLookupDto getUnitOfMeasureCode() {
+    public UnitMeasureCodeDto getUnitOfMeasureCode() {
         return this.unitOfMeasureCode;
     }
-    public void setUnitOfMeasureCode(CodeLookupDto unitOfMeasureCode) {
+    public void setUnitOfMeasureCode(UnitMeasureCodeDto unitOfMeasureCode) {
         this.unitOfMeasureCode = unitOfMeasureCode;
     }
 
@@ -107,16 +96,16 @@ public class EmissionsUnitDto implements Serializable {
     public void setEmissionsProcesses(List<EmissionsProcessDto> emissionsProcesses) {
         this.emissionsProcesses = emissionsProcesses;
     }
-    
+
     public EmissionsUnitDto withId(Long id) {
         setId(id);
         return this;
     }
-    
-	public OperatingStatusCode getOperatingStatusCode() {
+
+	public CodeLookupDto getOperatingStatusCode() {
 		return operatingStatusCode;
 	}
-	public void setOperatingStatusCode(OperatingStatusCode operatingStatusCode) {
+	public void setOperatingStatusCode(CodeLookupDto operatingStatusCode) {
 		this.operatingStatusCode = operatingStatusCode;
 	}
 	public CodeLookupDto getUnitTypeCode() {

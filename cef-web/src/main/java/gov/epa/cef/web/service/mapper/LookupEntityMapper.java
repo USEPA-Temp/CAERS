@@ -15,6 +15,8 @@ import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -34,6 +36,7 @@ import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
+import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -64,7 +67,13 @@ public abstract class LookupEntityMapper {
 
     public abstract UnitMeasureCodeDto unitMeasureCodeToDto(UnitMeasureCode source);
 
+    public abstract List<UnitMeasureCodeDto> unitMeasureCodeToDtoList(List<UnitMeasureCode> source);
+
     public abstract PollutantDto pollutantToDto(Pollutant source);
+
+    public abstract FipsCountyDto fipsCountyToDto(FipsCounty source);
+
+    public abstract List<FipsCountyDto> fipsCountyToDtoList(List<FipsCounty> source);
 
     public abstract FipsStateCodeDto fipsStateCodeToDto(FipsStateCode source);
     
@@ -73,7 +82,9 @@ public abstract class LookupEntityMapper {
     public abstract PointSourceSccCodeDto pointSourceSccCodeToDto(PointSourceSccCode source);
 
     public abstract EisLatLongToleranceLookupDto EisLatLongToleranceLookupToDto(EisLatLongToleranceLookup source);
-
+    
+    public abstract CodeLookupDto facilitySourceTypeCodeToDto(FacilitySourceTypeCode source);
+    
     @Named("CalculationMethodCode")
     public CalculationMethodCode dtoToCalculationMethodCode(CodeLookupDto source) {
         if (source != null) {
@@ -117,6 +128,14 @@ public abstract class LookupEntityMapper {
     public ContactTypeCode dtoToContactTypeCode(CodeLookupDto source) {
         if (source != null) {
             return repos.contactTypeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("FipsCounty")
+    public FipsCounty dtoToFipsStateCode(FipsCountyDto source) {
+        if (source != null) {
+            return repos.countyRepo().findById(source.getCode()).orElse(null);
         }
         return null;
     }
@@ -165,6 +184,22 @@ public abstract class LookupEntityMapper {
     public AircraftEngineTypeCode dtoToAircraftEngCode(AircraftEngineTypeCodeDto source) {
         if (source != null) {
             return repos.aircraftEngCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("FacilitySourceTypeCode")
+    public FacilitySourceTypeCode dtoToFacilitySourceTypeCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.facilitySourceTypeCodeRepo().findById(source.getCode()).orElse(null);
+        }
+        return null;
+    }
+    
+    @Named("FacilityCategoryCode")
+    public FacilityCategoryCode dtoToFacilityCategoryCode(CodeLookupDto source) {
+        if (source != null) {
+            return repos.facilityCategoryCodeRepo().findById(source.getCode()).orElse(null);
         }
         return null;
     }

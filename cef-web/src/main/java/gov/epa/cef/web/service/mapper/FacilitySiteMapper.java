@@ -16,9 +16,12 @@ public interface FacilitySiteMapper {
 
     List<FacilitySiteDto> toDtoList(List<FacilitySite> facilitySites);
     
+    @Mapping(target="countyCode", qualifiedByName = "CountyCode")
     @Mapping(target="tribalCode", qualifiedByName = "TribalCode")
     @Mapping(target ="operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
     @Mapping(target = "facilityNAICS", ignore = true)
+    @Mapping(target = "facilityCategoryCode", qualifiedByName = "FacilityCategoryCode")
+    @Mapping(target = "facilitySourceTypeCode", qualifiedByName = "FacilitySourceTypeCode")
     void updateFromDto(FacilitySiteDto source, @MappingTarget FacilitySite target);
     
     FacilitySite fromDto(FacilitySiteDto facilitySite);

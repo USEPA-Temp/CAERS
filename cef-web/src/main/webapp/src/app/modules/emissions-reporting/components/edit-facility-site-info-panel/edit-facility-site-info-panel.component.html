@@ -37,6 +37,23 @@
     </div>
 
     <div class="row pb-1">
+        <label for="facilitySourceTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Facility Source Type:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="facilitySourceTypeCodeSelect" formControlName="facilitySourceTypeCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of facilitySourceTypeValues" [ngValue]="opt">{{opt?.description}}</option>
+            </select>
+            <app-validation-message [control]="facilitySiteForm.get('facilitySourceTypeCode')"></app-validation-message>
+        </div>
+        <label for="facilityCategoryCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Facility Category Code:</strong></label>
+        <div class="col-sm-6 col-md-2">
+            <select type="text" class="form-control" id="facilityCategoryCodeSelect" formControlName="facilityCategoryCode" [compareWith]="formUtils.compareCode">
+                <option *ngFor="let opt of facilityCategoryCodeValues" [ngValue]="opt">{{opt?.name}}</option>
+            </select>
+            <app-validation-message [control]="facilitySiteForm.get('facilityCategoryCode')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
         <label for="streetAddressInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Facility Address:</strong></label>
         <div class="col-sm-8 col-lg-10">
             <input type="text" class="form-control"  maxlength="100" id="streetAddressInput" formControlName="streetAddress" readonly>
@@ -102,17 +119,29 @@
     </div>
 
     <div class="row pb-2">
-        <label for="countyInput" class="col-sm-4 col-lg-2 col-form-label"><strong>County:</strong></label>
+        <label for="countySelect" class="col-sm-4 col-lg-2 col-form-label"><strong>County:</strong></label>
         <div class="col-sm-8 col-lg-2">
-            <input type="text" maxlength="43" class="form-control" id="countyInput" formControlName="county">
-            <app-validation-message [control]="facilitySiteForm.get('county')"></app-validation-message>
+            <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of counties" [ngValue]="opt">{{opt?.name}}</option>
+            </select>
+            <app-validation-message [control]="facilitySiteForm.get('countyCode')"></app-validation-message>
         </div>
+
         <label for="facilityBIACodeSelect" class="col-sm-4 col-md-2 col-form-label"><strong>BIA Code:</strong></label>
         <div class="col-sm-6 col-md-6">
             <select type="text" class="form-control" id="facilityStatusBIASelect" formControlName="tribalCode" [compareWith]="formUtils.compareCode">
                 <option *ngFor="let opt of tribalCodeValues" [ngValue]="opt">{{opt?.description}}</option>
             </select>
             <app-validation-message [control]="facilitySiteForm.get('tribalCode')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Description:</strong></label>
+        <div class="col-sm-6 col-md-10">
+            <input type="text" class="form-control" maxlength="100" id="descriptionInput" formControlName="description">
+            <app-validation-message [control]="facilitySiteForm.get('description')"></app-validation-message>
         </div>
     </div>
 

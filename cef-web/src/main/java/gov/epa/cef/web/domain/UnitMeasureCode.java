@@ -34,6 +34,9 @@ public class UnitMeasureCode extends BaseLookupEntity {
     @Column(name = "ef_denominator", nullable = false)
     private Boolean efDenominator;
 
+    @Column(name = "legacy", nullable = false)
+    private Boolean legacy;
+
     public String getUnitType() {
         return unitType;
     }
@@ -64,6 +67,14 @@ public class UnitMeasureCode extends BaseLookupEntity {
 
     public void setEfDenominator(Boolean efDenominator) {
         this.efDenominator = efDenominator;
+    }
+
+    public Boolean getLegacy() {
+        return legacy;
+    }
+
+    public void setLegacy(Boolean legacy) {
+        this.legacy = legacy;
     }
 
 }

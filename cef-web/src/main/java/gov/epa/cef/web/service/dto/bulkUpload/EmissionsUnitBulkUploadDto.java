@@ -20,9 +20,6 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
     @Size(max = 20, message = "Unit Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String unitIdentifier;
 
-    @Size(max = 20, message = "Program System Code can not exceed {max} chars; found '${validatedValue}'.")
-    private String programSystemCode;
-
     @Size(max = 100, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
 
@@ -81,13 +78,6 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
     }
     public void setUnitIdentifier(String unitIdentifier) {
         this.unitIdentifier = unitIdentifier;
-    }
-
-    public String getProgramSystemCode() {
-        return this.programSystemCode;
-    }
-    public void setProgramSystemCode(String programSystemCode) {
-        this.programSystemCode = programSystemCode;
     }
 
     public String getDescription() {

@@ -7,6 +7,7 @@ import { FacilityResolverService } from 'src/app/core/services/facility-resolver
 import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/redirect.component';
 import { ErrorComponent } from 'src/app/modules/shared/pages/error/error.component';
 import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
+import { HelpPageComponent } from 'src/app/modules/dashboards/pages/help-page/help-page.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -37,6 +38,7 @@ const routes: Routes = [
     ]
   },
   { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } },
+  { path: 'helpPage', component: HelpPageComponent, data: { title: 'Help Page' } },
   { path: 'upload', component: BulkUploadComponent, data: { title: 'Bulk Upload' } },
   { path: 'error', component: ErrorComponent, data: { title: 'Error Page' } },
   { path: '*', component: RedirectComponent, data: { title: 'Redirect Page' } }

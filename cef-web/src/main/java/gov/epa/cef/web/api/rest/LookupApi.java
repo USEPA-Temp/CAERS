@@ -18,7 +18,9 @@ import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
+import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
@@ -136,7 +138,7 @@ public class LookupApi {
     @ResponseBody
     public ResponseEntity<List<UnitMeasureCodeDto>> retrieveUnitMeasureCodes() {
 
-        List<UnitMeasureCodeDto> result = lookupService.retrieveUnitMeasureCodes();
+        List<UnitMeasureCodeDto> result = lookupService.retrieveCurrentUnitMeasureCodes();
         return new ResponseEntity<List<UnitMeasureCodeDto>>(result, HttpStatus.OK);
     }
     
@@ -151,7 +153,32 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveContactTypeCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
-    
+
+    /**
+     * Retrieve Fips Counties
+     * @return
+     */
+    @GetMapping(value = "/county")
+    @ResponseBody
+    public ResponseEntity<List<FipsCountyDto>> retrieveCounties() {
+
+        List<FipsCountyDto> result = lookupService.retrieveCountyCodes();
+        return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve Fips Counties by state
+     * @param stateCode
+     * @return
+     */
+    @GetMapping(value = "/county/state/{stateCode}")
+    @ResponseBody
+    public ResponseEntity<List<FipsCountyDto>> retrieveCountiesForState(@PathVariable String stateCode) {
+
+        List<FipsCountyDto> result = lookupService.retrieveCountyCodesByState(stateCode);
+        return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
+    }
+
     /**
      * Retrieve Fips State codes
      * @return
@@ -260,4 +287,28 @@ public class LookupApi {
     	EisLatLongToleranceLookupDto result = lookupService.retrieveLatLongTolerance(eisProgramId);
     	return new ResponseEntity<EisLatLongToleranceLookupDto>(result, HttpStatus.OK);
     }   
+    
+    /**
+     * Retrieve Facility Category codes
+     * @return
+     */
+    @GetMapping(value = "/facility/category")
+    @ResponseBody
+    public ResponseEntity<List<FacilityCategoryCodeDto>> retrieveFacilityCategoryCodes() {
+
+        List<FacilityCategoryCodeDto> result = lookupService.retrieveFacilityCategoryCodes();
+        return new ResponseEntity<List<FacilityCategoryCodeDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Facility Category codes
+     * @return
+     */
+    @GetMapping(value = "/facility/sourceType")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveFacilitySourceTypeCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveFacilitySourceTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 }

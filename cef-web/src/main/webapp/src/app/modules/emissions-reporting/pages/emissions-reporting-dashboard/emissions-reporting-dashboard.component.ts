@@ -92,8 +92,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                         // no previous report, no FRS data
 
                         this.copyFacilitySiteFromCdxModel();
-                        this.reportService.createReportFromScratch(this.facility.programId, reportingYear, this.facility.epaRegistryId,
-                        this.facility.state, this.facilitySite)
+                        this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
                         .subscribe(reportResp => {
                             modalWindow.dismiss();
                             this.reportCompleted(reportResp.body);

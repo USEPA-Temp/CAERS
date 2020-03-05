@@ -124,6 +124,17 @@ export class EmissionsReportValidationComponent implements OnInit {
           [BaseReportUrl.FACILITY_INFO],
           {relativeTo: this.route.parent});
 
+      } else if (EntityType.CONTROL_PATH === detail.type) {
+
+        tree = this.router.createUrlTree(
+          [BaseReportUrl.CONTROL_PATH, detail.id],
+          {relativeTo: this.route.parent});
+
+      } else if (EntityType.CONTROL === detail.type) {
+
+        tree = this.router.createUrlTree(
+          [BaseReportUrl.CONTROL_DEVICE, detail.id],
+          {relativeTo: this.route.parent});
 
       } else if (EntityType.RELEASE_POINT === detail.type) {
 

@@ -5,7 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,15 +22,21 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
+import gov.epa.cef.web.repository.EmissionRepository;
+import gov.epa.cef.web.repository.EmissionsProcessRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -46,8 +54,22 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     @Mock
     private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
     
+    @Mock
+    private EmissionsReportRepository reportRepo;
+    
+    @Mock
+    private EmissionsProcessRepository processRepo;
+    
+    @Mock
+    private EmissionRepository emissionRepo;
+    
+    private Pollutant pollutant;
+    
     @Before
     public void init(){
+    	
+    	pollutant = new Pollutant();
+    	pollutant.setPollutantCode("NO3");
     	
     	List<PointSourceSccCode> sccList = new ArrayList<PointSourceSccCode>();
     	
@@ -91,7 +113,36 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       
       when(aircraftEngCodeRepo.findById("1322")).thenReturn(Optional.of(aircraft1));
       when(aircraftEngCodeRepo.findById("1850")).thenReturn(Optional.of(aircraft2));
-    	
+      
+      List<EmissionsReport> erList = new ArrayList<EmissionsReport>();
+      EmissionsReport er1 = new EmissionsReport();
+      EmissionsReport er2 = new EmissionsReport();
+      er1.setId(1L);
+      er2.setId(2L);
+      er1.setYear((short) 2018);
+      er2.setYear((short) 2020);
+      er1.setEisProgramId("1");
+      er2.setEisProgramId("1");
+      erList.add(er1);
+      erList.add(er2);
+      
+      EmissionsProcess p1 = new EmissionsProcess();
+      p1.setEmissionsProcessIdentifier("Boiler 001");
+      p1.setId(2L);
+      
+      List<Emission> eList = new ArrayList<Emission>();
+      Emission previousE1 = new Emission();
+      Emission previousE2 = new Emission();
+      previousE1.setPollutant(pollutant);
+      previousE1.setTotalEmissions(new BigDecimal(130.00));
+      eList.add(previousE1);
+      eList.add(previousE2);
+	    
+      when(reportRepo.findByEisProgramId("1")).thenReturn(erList);
+      when(processRepo.retrieveByIdentifierParentFacilityYear(
+      		"Boiler 001","test_unit","1",(short) 2018)).thenReturn(Collections.singletonList(p1));
+      when(emissionRepo.findAllByProcessIdReportId(2L,1L)).thenReturn(eList);
+      
     }
 
     @Test
@@ -304,12 +355,77 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()).size() == 1);
     }
     
+    @Test
+    public void reportingPeriodNoEmissionsFailTest() {
+    		
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	testData.getReportingPeriods().get(0).setEmissions(null);
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.PROCESS_PERIOD_EMISSION.value()) && errorMap.get(ValidationField.PROCESS_PERIOD_EMISSION.value()).size() == 1);
+    }
+    
+    @Test
+    public void reportingPeriodNoEmissionsPassTest() {
+    		
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    	
+    	cefContext = createContext();
+    	testData = createBaseEmissionsProcess();
+    	testData.getReportingPeriods().get(0).setEmissions(null);
+    	testData.getOperatingStatusCode().setCode("TS");
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    	
+    }
+    
+    /**
+     * There should be no errors when total emission value for pollutant code is not the same as value from previous report year.
+     * There should be one error when total emission value for pollutant code for current report year is
+     * the same as the emission value for previous report year
+     */
+    @Test
+    public void copiedEmissions_Warning_Test() {
+    		
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	List<Emission> eList2 = new ArrayList<Emission>();
+    	Emission test1 = new Emission();
+    	test1.setPollutant(pollutant);
+    	test1.setTotalEmissions(new BigDecimal(150.00));
+    	eList2.add(test1);
+    	
+    	when(emissionRepo.findAllByProcessIdReportId(testData.getId(),testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getId())).thenReturn(eList2);
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    	
+    	cefContext = createContext();
+    	test1.setTotalEmissions(new BigDecimal(130.00));
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
         EmissionsReport report = new EmissionsReport();
         report.setYear(new Short("2019"));
-        report.setId(1L);
+        report.setId(3L);
+        report.setEisProgramId("1");
         
         FacilitySite facility = new FacilitySite();
         facility.setId(1L);
@@ -318,12 +434,25 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         EmissionsUnit unit = new EmissionsUnit();
         unit.setId(1L);
         unit.setFacilitySite(facility);
+        unit.setUnitIdentifier("test_unit");
         facility.getEmissionsUnits().add(unit);
 
         EmissionsProcess result = new EmissionsProcess();
         
         OperatingStatusCode os = new OperatingStatusCode();
         os.setCode("OP");
+        
+        ReportingPeriod rperiod1 = new ReportingPeriod();
+        rperiod1.setId(1L);
+        
+        Emission e1 = new Emission();
+        e1.setId(1L);
+        e1.setReportingPeriod(rperiod1);
+        Emission e2 = new Emission();
+        e2.setId(2L);
+        e2.setReportingPeriod(rperiod1);
+        rperiod1.getEmissions().add(e1);
+        rperiod1.getEmissions().add(e2);
         
         ReleasePoint rp1 = new ReleasePoint();
         ReleasePoint rp2 = new ReleasePoint();
@@ -346,6 +475,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         result.setEmissionsUnit(unit);
         result.setAircraftEngineTypeCode(null);
         result.setOperatingStatusCode(os);
+        result.getReportingPeriods().add(rperiod1);
         result.setEmissionsProcessIdentifier("Boiler 001");
         result.setSccCode("30503506");
 

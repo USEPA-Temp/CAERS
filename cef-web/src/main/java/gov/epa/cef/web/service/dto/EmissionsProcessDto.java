@@ -1,9 +1,9 @@
 package gov.epa.cef.web.service.dto;
 
+import gov.epa.cef.web.domain.AircraftEngineTypeCode;
+
 import java.io.Serializable;
 import java.util.List;
-
-import gov.epa.cef.web.domain.AircraftEngineTypeCode;
 
 public class EmissionsProcessDto implements Serializable {
 
@@ -14,7 +14,7 @@ public class EmissionsProcessDto implements Serializable {
 
     private Long id;
     private Long emissionsUnitId;
-    private AircraftEngineTypeCode aircraftEngineTypeCode;
+    private AircraftEngineTypeCodeDto aircraftEngineTypeCode;
     private CodeLookupDto operatingStatusCode;
     private String emissionsProcessIdentifier;
     private Short statusYear;
@@ -41,11 +41,11 @@ public class EmissionsProcessDto implements Serializable {
         this.emissionsUnitId = emissionsUnitId;
     }
 
-    public AircraftEngineTypeCode getaircraftEngineTypeCode() {
+    public AircraftEngineTypeCodeDto getaircraftEngineTypeCode() {
         return aircraftEngineTypeCode;
     }
 
-    public void setAircraftEngineTypeCode(AircraftEngineTypeCode aircraftEngineTypeCode) {
+    public void setAircraftEngineTypeCode(AircraftEngineTypeCodeDto aircraftEngineTypeCode) {
         this.aircraftEngineTypeCode = aircraftEngineTypeCode;
     }
 

@@ -48,6 +48,7 @@ public interface BulkUploadMapper {
     @Mapping(target = "emissions", ignore = true)
     EmissionsReportBulkUploadDto emissionsReportToDto(EmissionsReport source);
 
+    @Mapping(source="countyCode.countyCode", target="countyCode")
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
     @Mapping(source="facilitySourceTypeCode.code", target="facilitySourceTypeCode")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
@@ -128,7 +129,6 @@ public interface BulkUploadMapper {
     List<EmissionBulkUploadDto> emissionToDtoList(List<Emission> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
-    @Mapping(source="programSystemCode.code", target="programSystemCode")
     @Mapping(source="typeCode.code", target="typeCode")
     @Mapping(source="stackHeightUomCode.code", target="stackHeightUomCode")
     @Mapping(source="stackDiameterUomCode.code", target="stackDiameterUomCode")
@@ -209,6 +209,7 @@ public interface BulkUploadMapper {
     List<FacilityNAICSBulkUploadDto> faciliytNAICSToDtoList(List<FacilityNAICSXref> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
+    @Mapping(source="countyCode.countyCode", target="countyCode")
     @Mapping(source="type.code", target="type")
     @Mapping(source="stateCode.uspsCode", target="stateCode")
     @Mapping(source="mailingStateCode.uspsCode", target="mailingStateCode")

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,12 +17,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.FacilitySiteValidator;
@@ -31,7 +39,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
 
     @InjectMocks
     private FacilitySiteValidator validator;
-
+    
     @Test
     public void simpleValidatePassTest() {
 
@@ -64,6 +72,11 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         
         OperatingStatusCode opStatusCode = new OperatingStatusCode();
         opStatusCode.setCode("TS");
+        
+        EmissionsUnit eu = new EmissionsUnit();
+        eu.setOperatingStatusCode(opStatusCode);
+        eu.setFacilitySite(testData);
+        testData.getEmissionsUnits().add(eu);
         testData.setOperatingStatusCode(opStatusCode);
         
         assertFalse(this.validator.validate(cefContext, testData));
@@ -162,6 +175,73 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void simpleValidateContactPostalCodeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).setPostalCode("1234567890");
+        testData.getContacts().get(0).setMailingPostalCode("1234567890");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+    }
+    
+    @Test
+    public void simpleValidateFacilityPostalCodeFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setPostalCode("1234567890");
+        testData.setMailingPostalCode("1234567890");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+    }
+    
+    @Test
+    public void nullFacilityCountyTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setCountyCode(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_COUNTY.value()).size() == 1);
+    }
+    
+    @Test
+    public void facilityCountyInvalidStateTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStateCode("NC");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_COUNTY.value()).size() == 1);
+    }
+    
+    @Test
+    public void facilityContactCountyInvalidStateTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).getStateCode().setCode("37");
+        testData.getContacts().get(0).getStateCode().setUspsCode("NC");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_CONTACT_COUNTY.value()).size() == 1);
+    }
+    
+    @Test
     public void nullFacilityContactEmissionsInventoryTypeTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -191,13 +271,295 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT.value()) && errorMap.get(ValidationField.FACILITY_CONTACT.value()).size() == 1);
     }
+    
+    /**
+     * There should be no errors when facility site operating status is not PS.
+     * There should be one error when facility site operating status is PS and emission unit operating status is not PS.
+     * There should be no errors when facility site operating status is PS and emission unit operating status is PS.
+     */
+    @Test
+    public void facilityOperatingStatusPSEmissionUnitStatusTest() {
 
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2019);
+        EmissionsUnit eu = new EmissionsUnit();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        eu.setOperatingStatusCode(opStatCode);
+        eu.setFacilitySite(testData);
+        testData.getEmissionsUnits().add(eu);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("PS");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
+        
+        cefContext = createContext();
+        eu.getOperatingStatusCode().setCode("PS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
+     * There should be no errors when facility site operating status is not PS.
+     * There should be one error when facility site operating status is PS and control operating status is not PS.
+     * There should be no errors when facility site operating status is PS and control operating status is PS.
+     */
+    @Test
+    public void facilityOperatingStatusPSControlStatusTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2019);
+        Control c = new Control();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        c.setOperatingStatusCode(opStatCode);
+        c.setFacilitySite(testData);
+        testData.getControls().add(c);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("PS");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_STATUS_CODE.value()) && errorMap.get(ValidationField.CONTROL_STATUS_CODE.value()).size() == 1);
+        
+        cefContext = createContext();
+        c.getOperatingStatusCode().setCode("PS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
+     * There should be no errors when facility site operating status is not PS.
+     * There should be one error when facility site operating status is PS and release point operating status is not PS.
+     * There should be no errors when facility site operating status is PS and release point operating status is PS.
+     */
+    @Test
+    public void facilityOperatingStatusPSReleasePointStatusTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2019);
+        ReleasePoint rp = new ReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        rp.setOperatingStatusCode(opStatCode);
+        rp.setFacilitySite(testData);
+        testData.getReleasePoints().add(rp);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("PS");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
+        
+        cefContext = createContext();
+        rp.getOperatingStatusCode().setCode("PS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
+     * There should be no errors when facility site operating status is not TS or PS.
+     * There should be one error when facility site operating status is TS and emission unit operating status is not PS and not TS.
+     * There should be no errors when facility site operating status is TS and emission unit operating status is PS or TS.
+     */
+    @Test
+    public void facilityOperatingStatusTSEmissionUnitStatusTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2019);
+        EmissionsUnit eu = new EmissionsUnit();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        eu.setOperatingStatusCode(opStatCode);
+        eu.setFacilitySite(testData);
+        testData.getEmissionsUnits().add(eu);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
+        
+        cefContext = createContext();
+        eu.getOperatingStatusCode().setCode("PS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
+     * There should be no errors when facility site operating status is not TS or PS.
+     * There should be one error when facility site operating status is PS and control operating status is not PS and not TS.
+     * There should be no errors when facility site operating status is PS and control operating status is PS or TS.
+     */
+    @Test
+    public void facilityOperatingStatusTSControlStatusTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2019);
+        Control c = new Control();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        c.setOperatingStatusCode(opStatCode);
+        c.setFacilitySite(testData);
+        testData.getControls().add(c);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_STATUS_CODE.value()) && errorMap.get(ValidationField.CONTROL_STATUS_CODE.value()).size() == 1);
+        
+        cefContext = createContext();
+        c.getOperatingStatusCode().setCode("TS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
+     * There should be no errors when facility with status of not OP is a landfill or if the status year is > current cycle year
+     */
+    @Test
+    public void facilityNotOperatingReportEmissionsPassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2020);
+        testData.getOperatingStatusCode().setCode("TS");
+        
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("104");
+        testData.setFacilitySourceTypeCode(sourceType);
+        testData.setStatusYear((short) 2000);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    /**
+     * There should be no errors when facility site operating status is not TS or PS.
+     * There should be one error when facility site operating status is PS and release point operating status is not PS and not TS.
+     * There should be no errors when facility site operating status is PS and release point operating status is PS or TS.
+     */
+    @Test
+    public void facilityOperatingStatusTSReleasePointStatusTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.setStatusYear((short) 2019);
+        ReleasePoint rp = new ReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        rp.setOperatingStatusCode(opStatCode);
+        rp.setFacilitySite(testData);
+        testData.getReleasePoints().add(rp);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
+        
+        cefContext = createContext();
+        rp.getOperatingStatusCode().setCode("PS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    /**
+     * There should be errors when facility with status of not OP is not a landfill and the status year is <= current cycle year
+     */
+    @Test
+    public void facilityNotOperatingReportEmissionsFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("100");
+        testData.setFacilitySourceTypeCode(sourceType);
+        testData.getOperatingStatusCode().setCode("TS");
+        testData.setStatusYear((short) 2000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_EMISSION_REPORTED.value()) && errorMap.get(ValidationField.FACILITY_EMISSION_REPORTED.value()).size() == 1);
+    }
+    
     private FacilitySite createBaseFacilitySite() {
 
+        FipsStateCode countyStateCode = new FipsStateCode();
+        countyStateCode.setCode("13");
+        countyStateCode.setUspsCode("GA");
+        
+        FipsCounty countyCode = new FipsCounty();
+        countyCode.setCode("13313");
+        countyCode.setCountyCode("13");
+        countyCode.setName("Whitfield");
+        countyCode.setFipsStateCode(countyStateCode);
+        
         FacilitySite result = new FacilitySite();
         result.setEisProgramId("1");
         result.setStatusYear(null);
+        result.setPostalCode("31750");
+        result.setMailingPostalCode("31750");
+        result.setCountyCode(countyCode);
+        result.setStateCode("GA");
+        
+        EmissionsReport er = new EmissionsReport();
+        er.setId(2L);
+        er.setYear(new Short("2019"));
+        er.setEisProgramId("1");
+        result.setEmissionsReport(er);
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");
@@ -227,7 +589,8 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         contact.setCity("Fitzgerald");
         contact.setStateCode(stateCode);
         contact.setPostalCode("31750");
-        contact.setCounty("Whitfield");
+        contact.setMailingPostalCode("31750");
+        contact.setCountyCode(countyCode);
         contactList.add(contact);
         
         result.setContacts(contactList);

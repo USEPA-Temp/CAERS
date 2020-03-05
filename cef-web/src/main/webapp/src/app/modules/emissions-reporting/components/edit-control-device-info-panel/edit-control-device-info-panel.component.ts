@@ -1,9 +1,12 @@
 import { Component, Input, OnInit, OnChanges } from "@angular/core";
 import { Control } from 'src/app/shared/models/control';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
+import { ControlService } from 'src/app/core/services/control.service';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-edit-control-device-info-panel',
@@ -13,6 +16,8 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 
 export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
   @Input() control: Control;
+  controlIdentifiers: String[]=[];
+  facilityOpCode: BaseCodeLookup;
 
   controlDeviceForm = this.fb.group({
     identifier: ['', Validators.required],
@@ -33,14 +38,19 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
       Validators.maxLength(200)
     ]],
     comments: ['', Validators.maxLength(400)]
-  });
+  }, { validators: [
+    this.controlIdentifierCheck(),
+    this.facilitySiteStatusCheck()
+  ]});
 
   operatingStatusValues: BaseCodeLookup[];
   controlMeasureCode: BaseCodeLookup[];
 
   constructor(private fb: FormBuilder,
               private lookupService: LookupService,
-              public formUtils: FormUtilsService
+              public formUtils: FormUtilsService,
+              private controlService: ControlService,
+              private route: ActivatedRoute
               ) { }
 
   ngOnInit() {
@@ -54,11 +64,59 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
       .subscribe(result => {
         this.controlMeasureCode = result;
       });
+
+    this.route.data
+    .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.facilityOpCode = data.facilitySite.operatingStatusCode;
+      this.controlService.retrieveForFacilitySite(data.facilitySite.id)
+      .subscribe(controls => {
+        controls.forEach(c => {
+          this.controlIdentifiers.push(c.identifier);
+        });
+
+        // if a control is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
+        if (this.control) {
+          this.controlIdentifiers = this.controlIdentifiers.filter(identifer => identifer.toString() !== this.control.identifier);
+        }
+
+      });
+    });
   }
 
   ngOnChanges() {
 
     this.controlDeviceForm.reset(this.control);
+  }
+
+  controlIdentifierCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if (this.controlIdentifiers) {
+        if (this.controlIdentifiers.includes(control.get('identifier').value)) {
+          return { duplicateControlIdentifier: true };
+        }
+      }
+      return null;
+    }
+  }
+
+  facilitySiteStatusCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const status_perm_shutdown = "PS";
+      const status_temp_shutdown = "TS";
+      const control_status = control.get('operatingStatusCode').value;
+
+      if (this.facilityOpCode && control_status) {
+        if (this.facilityOpCode.code === status_temp_shutdown
+          && control_status.code !== status_perm_shutdown
+          && control_status.code !== status_temp_shutdown) {
+            return {invalidStatusCodeTS: true};
+          } else if (this.facilityOpCode.code === status_perm_shutdown
+          && control_status.code !== status_perm_shutdown) {
+            return {invalidStatusCodePS: true};
+          }
+      }
+      return null;
+    }
   }
 
 }

@@ -34,6 +34,9 @@ public class LookupRepositories {
 	private ContactTypeCodeRepository contactTypeRepo;
 
 	@Autowired
+    private FipsCountyRepository countyRepo;
+
+	@Autowired
 	private FipsStateCodeRepository stateCodeRepo;
 
 	@Autowired
@@ -56,6 +59,12 @@ public class LookupRepositories {
 
 	@Autowired
 	private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+	
+	@Autowired
+	private FacilitySourceTypeCodeRepository facilitySourceTypeCodeRepo;
+	
+	@Autowired
+	private FacilityCategoryCodeRepository facilityCategoryCodeRepo;
 
 	public CalculationMaterialCodeRepository materialCodeRepo() {
 		return materialCodeRepo;
@@ -88,6 +97,10 @@ public class LookupRepositories {
 	public ContactTypeCodeRepository contactTypeRepo() {
 		return contactTypeRepo;
 	}
+
+	public FipsCountyRepository countyRepo() {
+        return countyRepo;
+    }
 
 	public FipsStateCodeRepository stateCodeRepo() {
 		return stateCodeRepo;
@@ -123,6 +136,14 @@ public class LookupRepositories {
 
 	public EisLatLongToleranceLookupRepository latLongToleranceRepo() {
 		return latLongToleranceRepo;
+	}
+	
+	public FacilitySourceTypeCodeRepository facilitySourceTypeCodeRepo() {
+		return facilitySourceTypeCodeRepo;
+	}
+	
+	public FacilityCategoryCodeRepository facilityCategoryCodeRepo() {
+		return facilityCategoryCodeRepo;
 	}
 
 }

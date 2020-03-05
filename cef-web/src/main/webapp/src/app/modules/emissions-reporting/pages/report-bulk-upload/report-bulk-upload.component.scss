@@ -2,3 +2,9 @@
 .validation-item-error {
     color: #C40233;
 }
+
+.disable-click {
+
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
