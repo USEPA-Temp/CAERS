@@ -14,7 +14,6 @@ public class ReportSummaryDto implements Serializable {
     private Double stackTotal;
     private Double fugitiveTonsTotal;
     private Double stackTonsTotal;
-    private String uom;
     private Double emissionsTonsTotal;
     private Double emissionsTotal;
     private Double previousYearTotal;
@@ -84,12 +83,6 @@ public class ReportSummaryDto implements Serializable {
 	public void setStackTonsTotal(Double stackTonsTotal) {
 		this.stackTonsTotal = stackTonsTotal;
 	}
-	public String getUom() {
-        return this.uom;
-    }
-    public void setUom(String uom) {
-        this.uom = uom;
-    }
     
     public Double getEmissionsTonsTotal() {
         return this.emissionsTonsTotal;

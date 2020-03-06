@@ -12,6 +12,7 @@
         <label for="unitTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Type Code:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="unitTypeCodeSelect" formControlName="unitTypeCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let unit of unitTypeValues" [ngValue]="unit">{{unit.description}}</option>
             </select>
             <app-validation-message [control]="emissionUnitForm.get('unitTypeCode')"></app-validation-message>
@@ -19,6 +20,7 @@
         <label for="unitStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Status:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="unitStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <div class="validation-message" *ngIf="emissionUnitForm.errors?.invalidStatusCodeTS">
@@ -53,6 +55,7 @@
         <label for="unitOfMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Unit Design Capacity UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="unitOfMeasureCodeSelect" formControlName="unitOfMeasureCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let uom of uomValues" [ngValue]="uom">{{uom.code}}</option>
             </select>            
             <app-validation-message [control]="emissionUnitForm.get('unitOfMeasureCode')"></app-validation-message>

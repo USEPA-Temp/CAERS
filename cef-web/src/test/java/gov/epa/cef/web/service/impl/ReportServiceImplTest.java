@@ -64,7 +64,6 @@ public class ReportServiceImplTest extends BaseServiceTest {
             rs.setReportYear(new Short("2019"));
             rs.setStackTotal(new Double(x*20));
             rs.setEmissionsTonsTotal(rs.getFugitiveTotal() + rs.getStackTotal());
-            rs.setUom("tons");
             fullReportSummaryList.add(rs);
 
             ReportSummaryDto dto = new ReportSummaryDto();
@@ -78,7 +77,6 @@ public class ReportServiceImplTest extends BaseServiceTest {
             dto.setReportYear(rs.getReportYear());
             dto.setStackTotal(rs.getStackTotal());
             dto.setEmissionsTonsTotal(rs.getEmissionsTonsTotal());
-            dto.setUom(rs.getUom());
             fullReportSummaryDtoList.add(dto);
         }
         when(reportSummaryRepo.findByReportYearAndFacilitySiteId(new Short("2019"), 1L,Sort.by(Sort.DEFAULT_DIRECTION.ASC, "pollutantName"))).thenReturn(fullReportSummaryList);
