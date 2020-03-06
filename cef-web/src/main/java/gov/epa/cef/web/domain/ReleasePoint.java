@@ -97,10 +97,10 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "fugitive_line_2_longitude", precision = 10, scale = 6)
     private Double fugitiveLine2Longitude;
     
-    @Column(name = "latitude", nullable = false, precision = 10, scale = 6)
+    @Column(name = "latitude", precision = 10, scale = 6)
     private Double latitude;
     
-    @Column(name = "longitude", nullable = false, precision = 10, scale = 6)
+    @Column(name = "longitude", precision = 10, scale = 6)
     private Double longitude;
     
     @Column(name = "fugitive_height", precision = 3, scale = 0)
