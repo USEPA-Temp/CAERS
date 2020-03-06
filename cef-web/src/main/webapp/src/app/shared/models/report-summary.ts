@@ -8,7 +8,6 @@ export class ReportSummary {
   stackTotal: number;
   fugitiveTonsTotal: number;
   stackTonsTotal: number;
-  uom: string;
   emissionsTonsTotal: number;
   emissionsTotal: number;
   previousYearTotal: number;

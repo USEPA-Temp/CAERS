@@ -38,9 +38,6 @@ public class ReportSummary extends BaseEntity {
     @Column(name = "stack_tons_total")
     private Double stackTonsTotal;
     
-    @Column(name = "uom")
-    private String uom;
-    
     @Column(name = "emissions_tons_total")
     private Double emissionsTonsTotal;
 	
@@ -116,12 +113,6 @@ public class ReportSummary extends BaseEntity {
 	public void setStackTonsTotal(Double stackTonsTotal) {
 		this.stackTonsTotal = stackTonsTotal;
 	}
-	public String getUom() {
-        return this.uom;
-    }
-    public void setUom(String uom) {
-        this.uom = uom;
-    }
     
     public Double getEmissionsTonsTotal() {
         return this.emissionsTonsTotal;
