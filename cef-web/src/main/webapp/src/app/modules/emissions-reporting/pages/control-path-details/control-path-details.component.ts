@@ -44,6 +44,7 @@ export class ControlPathDetailsComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
       this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.sharedService.emitChange(data.facilitySite);
     });
 
 

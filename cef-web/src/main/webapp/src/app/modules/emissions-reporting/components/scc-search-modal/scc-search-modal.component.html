@@ -14,7 +14,7 @@
 
   <div class="row pb-3">
     <div class="col-sm-8">
-      <input type="text" class="form-control" id="pollutantNameInput" [formControl]="searchControl">
+      <input type="text" class="form-control" id="pollutantNameInput" [formControl]="searchControl" aria-label="search SCC Codes">
       <app-validation-message [control]="searchControl"></app-validation-message>
     </div>
     <div class="col-sm-4">

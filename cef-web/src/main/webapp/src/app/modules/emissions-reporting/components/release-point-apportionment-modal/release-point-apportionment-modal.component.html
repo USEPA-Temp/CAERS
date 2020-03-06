@@ -6,7 +6,7 @@
     <div class="modal-body">
         <strong>Select a Release Point</strong>
         <br>
-        <select [(ngModel)]="rpApptSelected" type="text" id="releasePointSelect" class="form-control" formControlName="selectedReleasePointAppt">
+        <select [(ngModel)]="rpApptSelected" type="text" id="releasePointSelect" class="form-control" formControlName="selectedReleasePointAppt" aria-label="select release point">
             <option disabled selected value></option>
             <option *ngFor="let rp of releasePoints" [ngValue]="rp.releasePointIdentifier">
                 {{rp.releasePointIdentifier}}&nbsp;-&nbsp;{{rp.description}}
@@ -16,7 +16,7 @@
         <br>
         <strong>Select a Control Path (optional)</strong>
         <br>
-        <select [(ngModel)]="controlPathSelected" type="text" id="controlPathSelect" class="form-control" formControlName="controlPath">
+        <select [(ngModel)]="controlPathSelected" type="text" id="controlPathSelect" class="form-control" formControlName="controlPath" aria-label="select control path">
             <option [ngValue]="null"></option>
             <option *ngFor="let cp of controlPaths" [ngValue]="cp">
                 {{cp.pathId}}
@@ -26,7 +26,7 @@
         <br>
         <strong>Enter the Emission Percentage</strong>
         <br>
-        <input type="text" maxlength="3" formControlName="percent" id="percentInput">
+        <input type="text" maxlength="3" formControlName="percent" id="percentInput" aria-label="emission percentage">
         <app-validation-message [control]="releasePointApptForm.get('percent')"></app-validation-message>
     </div>
 

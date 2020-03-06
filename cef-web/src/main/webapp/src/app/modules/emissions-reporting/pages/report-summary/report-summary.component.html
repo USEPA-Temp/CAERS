@@ -14,6 +14,7 @@
                     <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
                         <button *ngIf="userRole!=='Reviewer'"
                                 class="btn btn-primary btn-md my-3 mr-3"
+                                aria-label="run quality checks"
                                 (click)="validateReport()">
                             Run Quality Checks
                         </button>
@@ -21,6 +22,7 @@
                                 && userRole==='NEI Certifier'"
                                 [disabled]="!cromerrLoaded"
                                 id="certifyAndSubmit"
+                                aria-label="certify and submit"
                                 class="btn btn-success btn-md my-3 ml-3">
                             Certify and Submit to SLT
                             <div *ngIf="!cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
@@ -31,10 +33,12 @@
                     <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
                         <button *ngIf="userRole==='NEI Certifier' || userRole==='Preparer'"
                                 class="btn btn-success btn-md my-3 ml-3" 
+                                aria-label="reopen report"
                                 (click)="reopenReport()">
                             Reopen Report
                         </button>
                         <button class="btn btn-success btn-md my-3 ml-3" 
+                                aria-label="download report"
                                 (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
                             Download Report
                         </button>

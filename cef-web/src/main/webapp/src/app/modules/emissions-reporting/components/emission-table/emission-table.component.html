@@ -17,13 +17,13 @@
       <td>{{item.pollutant.pollutantCode}}</td>
       <td>{{item.pollutant.pollutantCasId}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)" aria-label="delete emission pollutant"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container>
     </tr>
     <ng-container *ngIf="!readOnlyMode">
       <tr>
         <td colspan="3"></td>
-        <td><a [routerLink]="[baseUrl]"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+        <td><a [routerLink]="[baseUrl]" aria-label="add emission pollutant"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
       </tr>
     </ng-container>
     </tbody>
