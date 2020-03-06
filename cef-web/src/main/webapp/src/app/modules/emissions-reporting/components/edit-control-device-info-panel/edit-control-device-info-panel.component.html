@@ -11,6 +11,7 @@
         <label for="controlStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Status:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="controlStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="controlDeviceForm.get('operatingStatusCode')"></app-validation-message>
@@ -31,6 +32,7 @@
         <label for="controlMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Control Measure:</strong></label>
         <div class="col-sm-6 col-md-6">
             <select type="text" class="form-control" id="controlMeasureCodeSelect" formControlName="controlMeasureCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of controlMeasureCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="controlDeviceForm.get('controlMeasureCode')"></app-validation-message>
