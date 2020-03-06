@@ -76,6 +76,7 @@
             <label for="type" class="col-sm-4 col-lg-2 col-form-label"><strong>Contact Type:</strong></label>
             <div class="col-sm-8 col-lg-4">
               <select type="text" class="form-control" id="type" formControlName="type" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of facilityContactType" [ngValue]="opt">{{opt.description}}</option>
               </select>
               <app-validation-message [control]="contactForm.controls.type"></app-validation-message>
@@ -133,6 +134,7 @@
             <label for="stateCode" class="col-sm-4 col-lg-2 col-form-label"><strong>State:</strong></label>
             <div class="col-sm-8 col-lg-2">
               <select type="text" class="form-control" id="stateCode" formControlName="stateCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of fipsStateCode" [ngValue]="opt">{{opt.uspsCode}}</option>
               </select>
               <app-validation-message [control]="contactForm.controls.stateCode"></app-validation-message>
@@ -175,6 +177,7 @@
             <label for="mailingStateCode" class="col-sm-4 col-lg-2 col-form-label"><strong>State:</strong></label>
             <div class="col-sm-8 col-lg-2">
               <select type="text" class="form-control" id="mailingStateCode" formControlName="mailingStateCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of fipsStateCode" [ngValue]="opt">{{opt.uspsCode}}</option>
               </select>
               <app-validation-message [control]="contactForm.controls.mailingStateCode"></app-validation-message>

@@ -122,6 +122,7 @@
                         <label for="emissionsCalcMethodCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Calculation Method:</strong></label>
                         <div class="col-sm-8 col-lg-10">
                             <select type="text" class="form-control" id="emissionsCalcMethodCodeSelect" formControlName="emissionsCalcMethodCode" [compareWith]="formUtils.compareCode">
+                                <option [ngValue]="null"></option>
                                 <option *ngFor="let opt of methodValues" [ngValue]="opt">{{opt.description}}</option>
                             </select>
                             <app-validation-message [control]="emissionForm.controls.emissionsCalcMethodCode"></app-validation-message>
@@ -224,6 +225,7 @@
                         <label for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions UoM:</strong></label>
                         <div class="col-sm-8 col-lg-4">
                             <select type="text" class="form-control" id="emissionsUomCodeSelect" formControlName="emissionsUomCode" [compareWith]="formUtils.compareCode">
+                                <option [ngValue]="null"></option>
                                 <option *ngFor="let opt of numeratorUomValues" [ngValue]="opt">{{opt.code}}</option>
                             </select>
                             <app-validation-message [control]="emissionForm.controls.emissionsUomCode"></app-validation-message>
