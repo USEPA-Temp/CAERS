@@ -241,6 +241,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.releasePointForm.controls.stackDiameterUomCode.enable();
       this.releasePointForm.controls.stackHeightUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.stackDiameterUomCode.setValue({ code: 'FT' });
+      this.releasePointForm.controls.fugitiveLine1Latitude.reset();
+      this.releasePointForm.controls.fugitiveLine2Latitude.reset();
+      this.releasePointForm.controls.fugitiveLine1Longitude.reset();
+      this.releasePointForm.controls.fugitiveLine2Longitude.reset();
       this.releasePointForm.controls.fugitiveLength.reset();
       this.releasePointForm.controls.fugitiveWidth.reset();
       this.releasePointForm.controls.fugitiveHeight.reset();
