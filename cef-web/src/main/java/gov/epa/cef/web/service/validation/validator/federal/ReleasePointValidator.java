@@ -474,26 +474,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
       		result = false;
       	}
         
-        // Latitude required
-        if (releasePoint.getLatitude() == null) {
-        	
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.RP_LATITUDE.value(),
-        			"releasePoint.latitude.required",
-        			createValidationDetails(releasePoint));
-        }
-        
-        // Longitude required
-        if (releasePoint.getLongitude() == null) {
-        	
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.RP_LONGITUDE.value(),
-        			"releasePoint.longitude.required",
-        			createValidationDetails(releasePoint));
-        }
-        
         // Latitude/Longitude Tolerance Check
         if (releasePoint.getLatitude() != null && releasePoint.getLongitude() != null) {
 	        BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
