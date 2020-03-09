@@ -14,7 +14,8 @@ public enum WorksheetName {
     ControlAssignment("Control Assignments"),
     ControlPollutant("Control Pollutant"),
     FacilitySiteContact("Facility Contacts"),
-    FacilityNaics("NAICS");
+    FacilityNaics("NAICS"),
+    EmissionFormulaVariable("Emission Formula Variables");
 
     private final String sheetName;
 
