@@ -17,13 +17,13 @@
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCode.description}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.identifier, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.identifier, item.id, item.facilitySiteId)" aria-label="delete control device"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container>
     </tr>
     <ng-container *ngIf="!readOnlyMode">
       <tr>
         <td colspan="3"></td>
-        <td><a routerLink="{{baseUrl}}/create"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+        <td><a routerLink="{{baseUrl}}/create" aria-label="add control device"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
       </tr>
     </ng-container>
     </tbody>

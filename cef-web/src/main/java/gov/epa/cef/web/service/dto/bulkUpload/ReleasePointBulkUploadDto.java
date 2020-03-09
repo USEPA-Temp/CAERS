@@ -54,10 +54,8 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
 
     private Short statusYear;
 
-    @NotNull(message = "Latitude is required.")
     private Double latitude;
 
-    @NotNull(message = "Longitude is required.")
     private Double longitude;
 
     private Double fugitiveLine1Latitude;

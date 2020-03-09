@@ -15,14 +15,14 @@
         <td><a routerLink="{{baseUrl}}/process/{{item.id}}">{{item.emissionsProcessIdentifier}}</a></td>
         <td>{{item.sccCode}}</td>
         <ng-container *ngIf="!readOnlyMode && parentComponentType!=='releasePointAppt'">
-          <td><a routerLink="." (click)="openDeleteModal(item.emissionsProcessIdentifier, item.id, item.emissionsUnitId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+          <td><a routerLink="." (click)="openDeleteModal(item.emissionsProcessIdentifier, item.id, item.emissionsUnitId)" aria-label="delete process"><fa-icon icon="trash-alt"></fa-icon></a></td>
         </ng-container>
       </tr>
       <ng-container *ngIf="!readOnlyMode && parentComponentType!=='releasePointAppt'">
         <tr>
           <td colspan="2"></td>
           <td>   
-            <a routerLink="{{createUrl}}"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a>
+            <a routerLink="{{createUrl}}" aria-label="add process"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a>
           </td> 
         </tr>
       </ng-container>
