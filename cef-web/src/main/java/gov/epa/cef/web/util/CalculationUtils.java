@@ -1,6 +1,7 @@
 package gov.epa.cef.web.util;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
+import gov.epa.cef.web.exception.CalculationException;
 
 public class CalculationUtils {
 
@@ -22,7 +24,7 @@ public class CalculationUtils {
     private static final Argument W = new Argument("w = [J] / [s]");
     private static final Argument HP = new Argument("hp = 745.69987158 * [J] / [s]");
     private static final Argument YEAR = new Argument("year = 365 * [day]");
-    private static final Argument LEAP_YEAR = new Argument("year = 365 * [day]");
+    private static final Argument LEAP_YEAR = new Argument("year = 366 * [day]");
 
     public static BigDecimal convertMassUnits(BigDecimal sourceValue, MassUomConversion sourceUnit, MassUomConversion targetUnit) {
         BigDecimal result = sourceValue.multiply(sourceUnit.conversionFactor()).divide(targetUnit.conversionFactor());
@@ -37,6 +39,10 @@ public class CalculationUtils {
 
         Expression e = new Expression(formula);
         e.addConstants(variables);
+
+        if (!e.checkSyntax()) {
+            throw new CalculationException(Arrays.asList(e.getMissingUserDefinedArguments()));
+        }
 
         return BigDecimal.valueOf(e.calculate());
     }

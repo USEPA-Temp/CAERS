@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
+import gov.epa.cef.web.exception.CalculationException;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -77,7 +78,8 @@ public class EmissionValidator extends BaseValidator<Emission> {
                         createValidationDetails(emission));
             }
 
-        } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false) {
+        } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false 
+                && !(Boolean.TRUE.equals(emission.getFormulaIndicator()) && Boolean.TRUE.equals(emission.getTotalManualEntry()))) {
 
             if(emission.getEmissionsFactor() == null) {
 
@@ -99,9 +101,9 @@ public class EmissionValidator extends BaseValidator<Emission> {
                     emission.getEmissionsUomCode().getDescription());
         }
 
-        if (emission.getEmissionsFactor() != null) {
+        if (emission.getEmissionsFactor() != null || (Boolean.TRUE.equals(emission.getFormulaIndicator()) && Boolean.TRUE.equals(emission.getTotalManualEntry()))) {
         	
-        	if (emission.getEmissionsFactor().compareTo(BigDecimal.ZERO) <= 0) {
+        	if (emission.getEmissionsFactor() != null && emission.getEmissionsFactor().compareTo(BigDecimal.ZERO) <= 0) {
 
         		valid = false;
         		context.addFederalError(
@@ -205,11 +207,27 @@ public class EmissionValidator extends BaseValidator<Emission> {
         if (emission.getEmissionsCalcMethodCode() != null 
                 && emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false
                 && emission.getTotalManualEntry() == false) {
+            
+            if (Boolean.TRUE.equals(emission.getFormulaIndicator())) {
+
+                try {
+                    CalculationUtils.calculateEmissionFormula(emission.getEmissionsFactorFormula(), emission.getVariables());
+                } catch (CalculationException e) {
+
+                    valid = false;
+                    context.addFederalError(
+                            ValidationField.EMISSION_FORMULA_VARIABLE.value(),
+                            "emission.formula.variable.missing", 
+                            createValidationDetails(emission),
+                            String.join(", ", e.getMissingVariables()));
+                }
+            }
 
             boolean canCalculate = true;
 
             if (emission.getReportingPeriod() != null 
                     && emission.getReportingPeriod().getCalculationParameterUom() != null 
+                    && emission.getEmissionsFactor() != null
                     && emission.getEmissionsNumeratorUom() != null
                     && emission.getEmissionsDenominatorUom() != null
                     && emission.getEmissionsUomCode() != null) {
