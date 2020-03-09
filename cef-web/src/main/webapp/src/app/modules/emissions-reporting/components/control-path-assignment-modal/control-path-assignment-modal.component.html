@@ -5,10 +5,10 @@
 
     <div class="modal-body">
             <div class="row ml-1">
-                <label><b>Enter the Sequence Number</b></label>
+                <label for="sequenceNumberInput"><strong>Enter the Sequence Number</strong></label>
             </div>
             <div class="row ml-1">
-                    <input class="mb-1" formControlName="sequenceNumber" id="sequenceNumberInput">
+                <input class="mb-1" formControlName="sequenceNumber" id="sequenceNumberInput">
             </div>
             <div class="row ml-1 mb-2">
                 <app-validation-message [control]="controlPathAssignmentForm.get('sequenceNumber')"></app-validation-message>
@@ -17,8 +17,8 @@
                 <strong>You must select either a Control or a Control Path:</strong>
             </div>
             <div class ="row ml-1">
-                <label><b>Control</b></label>
-                <label style="margin-left:256px;"><b>Control Path</b></label>
+                <label for="controlSelect"><strong>Control</strong></label>
+                <label style="margin-left:256px;" for="controlPathSelect"><strong>Control Path</strong></label>
             </div>
             <div class="row ml-1">
                 <select style="width: 300px;" type="text" id="controlSelect" class="form-control mr-2" formControlName="control">
@@ -39,7 +39,7 @@
                 <app-validation-message [control]="controlPathAssignmentForm.get('controlPathChild')"></app-validation-message>
             </div>
             <div class="row ml-1 mt-2">
-                <label><b>Enter the Apportionment Percentage</b></label>
+                <label for="percentInput"><strong>Enter the Apportionment Percentage</strong></label>
             </div>
             <div class="ml-1">
                 <input type="text" maxlength="3" formControlName="percentApportionment" id="percentInput">

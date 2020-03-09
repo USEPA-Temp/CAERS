@@ -1,4 +1,4 @@
-<div *ngIf="facilitySite" class="row bs-wizard" style="border-bottom:0;">
+<div *ngIf="facilitySite" class="row bs-wizard" aria-label="progress bar" style="border-bottom:0;">
 	<div class="col-md bs-wizard-step" [ngClass]="isOneOf(facilitySite.emissionsReport.status, ['IN_PROGRESS', 'VALIDATED', 'SUBMITTED', 'APPROVED']) ? 'complete' : 'disabled'">
 		<div class="text-center bs-wizard-stepnum">Report Facility & Emissions Information</div>
 		<div class="progress"><div class="progress-bar"></div></div>

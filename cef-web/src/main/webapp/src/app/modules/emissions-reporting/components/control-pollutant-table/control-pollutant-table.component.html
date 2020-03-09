@@ -21,15 +21,15 @@
       <td>{{item.pollutant.pollutantCasId}}</td>
       <td>{{item.percentReduction}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openEditModal(item)"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
-        <td><a routerLink="." (click)="openDeleteModal(item)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openEditModal(item)" aria-label="edit control pollutant"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item)" aria-label="delete control pollutant"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container>
      
     </tr>
       <ng-container *ngIf="!readOnlyMode">
         <tr>
           <td colspan="5"></td>
-          <td><button style="color:#209c98;border:none;background-color: Transparent;float: right;" (click)="openCreateModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td> 
+          <td><button style="color:#209c98;border:none;background-color: Transparent;float: right;" (click)="openCreateModal()" aria-label="add control pollutant"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td> 
         </tr>
       </ng-container> 
     </tbody>
