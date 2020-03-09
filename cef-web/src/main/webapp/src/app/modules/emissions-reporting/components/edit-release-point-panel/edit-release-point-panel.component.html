@@ -163,6 +163,7 @@
             <label for="stackHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Height UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
                 <select type="text" class="form-control" id="stackHeightUomCodeSelect" formControlName="stackHeightUomCode" [compareWith]="formUtils.compareCode">
+                    <option [ngValue]="null"></option>
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('stackHeightUomCode')"></app-validation-message>
@@ -170,6 +171,7 @@
             <label for="stackDiameterUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Stack Diameter UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
                 <select type="text" class="form-control" id="stackDiameterUomCodeSelect" formControlName="stackDiameterUomCode" [compareWith]="formUtils.compareCode">
+                    <option [ngValue]="null"></option>
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('stackDiameterUomCode')"></app-validation-message>
@@ -179,11 +181,6 @@
 
     <div *ngIf="isReleasePointFugitiveType()">
         <div class="row pb-1">
-            <label for="fugitiveLine1Latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 1 Lat:</strong></label>
-            <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="fugitiveLine1Latitude" formControlName="fugitiveLine1Latitude" maxlength="10">
-                <app-validation-message [control]="releasePointForm.get('fugitiveLine1Latitude')"></app-validation-message>
-            </div>
             <label for="fugitiveHeight" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Height Measure:</strong></label>
             <div class="col-sm-6 col-md-2">
                 <input type="text" class="form-control" id="fugitiveHeight" formControlName="fugitiveHeight" maxlength="3">
@@ -197,14 +194,10 @@
         </div>
 
         <div class="row pb-1">
-            <label for="fugitiveLine1Longitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 1 Long:</strong></label>
-            <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="fugitiveLine1Longitude" formControlName="fugitiveLine1Longitude" maxlength="11">
-                <app-validation-message [control]="releasePointForm.get('fugitiveLine1Longitude')"></app-validation-message>
-            </div>
             <label for="fugitiveHeightUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Height UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
                 <select type="text" class="form-control" id="fugitiveHeightUomCodeSelect" formControlName="fugitiveHeightUomCode" [compareWith]="formUtils.compareCode">
+                    <option [ngValue]="null"></option>
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('fugitiveHeightUomCode')"></app-validation-message>
@@ -212,6 +205,7 @@
             <label for="fugitiveLengthUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Length UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
                 <select type="text" class="form-control" id="fugitiveLengthUomCodeSelect" formControlName="fugitiveLengthUomCode" [compareWith]="formUtils.compareCode">
+                    <option [ngValue]="null"></option>
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('fugitiveLengthUomCode')"></app-validation-message>
@@ -219,11 +213,6 @@
         </div>
 
         <div class="row pb-1">
-            <label for="fugitiveLine2Latitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 2 Lat:</strong></label>
-            <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="fugitiveLine2Latitude" formControlName="fugitiveLine2Latitude" maxlength="10">
-                <app-validation-message [control]="releasePointForm.get('fugitiveLine2Latitude')"></app-validation-message>
-            </div>
             <label for="fugitiveWidth" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width Measure:</strong></label>
             <div class="col-sm-6 col-md-2">
                 <input type="text" class="form-control" id="fugitiveWidth" formControlName="fugitiveWidth" maxlength="6">
@@ -237,14 +226,10 @@
         </div>
 
         <div class="row pb-1">
-            <label for="fugitiveLine2Longitude" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Line Point 2 Long:</strong></label>
-            <div class="col-sm-6 col-md-2">
-                <input type="text" class="form-control" id="fugitiveLine2Longitude" formControlName="fugitiveLine2Longitude" maxlength="11">
-                <app-validation-message [control]="releasePointForm.get('fugitiveLine2Longitude')"></app-validation-message>
-            </div>
             <label for="fugitiveWidthUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Fugitive Width UoM:</strong></label>
             <div class="col-sm-6 col-md-2">
                 <select type="text" class="form-control" id="fugitiveWidthUomCodeSelect" formControlName="fugitiveWidthUomCode" [compareWith]="formUtils.compareCode">
+                    <option [ngValue]="null"></option>
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('fugitiveWidthUomCode')"></app-validation-message>

@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { User } from "src/app/shared/models/user";
 import { UserContextService } from "src/app/core/services/user-context.service";
+import { Location } from '@angular/common';
 
 @Component( {
     selector: 'app-breadcrumb-nav',
@@ -21,11 +22,16 @@ export class BreadcrumbNavComponent implements OnInit {
     year: number;
     baseLabel: string;
     user:User;
+    url: string;
 
     constructor( private router: Router, private activeRoute: ActivatedRoute,
-                 private sharedService: SharedService, private userContext: UserContextService ) { }
+                 private sharedService: SharedService, private userContext: UserContextService,
+                 private location: Location ) { }
 
     ngOnInit() {
+        this.router.events.subscribe((val) => {
+            this.url = this.location.path();
+        });
         this.userContext.getUser()
         .subscribe(currentUser => {
             this.user=currentUser;
@@ -126,8 +132,12 @@ export class BreadcrumbNavComponent implements OnInit {
         return true;
     }
 
-    goToHelpPage(){
+    goToHelpPage() {
         this.router.navigateByUrl('/helpPage');
+    }
+
+    goToMyFacilities() {
+        this.router.navigateByUrl('/facility');
     }
 
 

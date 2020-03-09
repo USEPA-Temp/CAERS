@@ -84,6 +84,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
   onSubmit(event) {
     event.target.disabled = true;
     if (!this.isValid()) {
+        event.target.disabled = false;
         this.releasePointApptForm.markAllAsTouched();
       } else {
         // check for duplicate selection

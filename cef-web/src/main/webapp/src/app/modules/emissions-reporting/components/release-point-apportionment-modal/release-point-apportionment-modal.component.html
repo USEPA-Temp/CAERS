@@ -7,7 +7,7 @@
         <strong>Select a Release Point</strong>
         <br>
         <select [(ngModel)]="rpApptSelected" type="text" id="releasePointSelect" class="form-control" formControlName="selectedReleasePointAppt" aria-label="select release point">
-            <option disabled selected value></option>
+            <option [ngValue]="null"></option>
             <option *ngFor="let rp of releasePoints" [ngValue]="rp.releasePointIdentifier">
                 {{rp.releasePointIdentifier}}&nbsp;-&nbsp;{{rp.description}}
             </option>
