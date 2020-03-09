@@ -94,6 +94,22 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
 
+    @Test
+    public void formula_PassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseFormulaEmission();
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        testData.setEmissionsFactor(null);
+        testData.setTotalManualEntry(true);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
     /**
      * There should be one error when Calculation Method Code has true total direct entry and a null comment
      */
@@ -665,6 +681,23 @@ public class EmissionValidatorTest extends BaseValidatorTest {
             result.setComments("Comment");
             result.setTotalManualEntry(true);
         }
+
+        return result;
+    }
+
+    private Emission createBaseFormulaEmission() {
+        Emission result = createBaseEmission(false);
+
+        EmissionFormulaVariableCode variableCode = new EmissionFormulaVariableCode();
+        variableCode.setCode("A");
+
+        EmissionFormulaVariable variable = new EmissionFormulaVariable();
+        variable.setVariableCode(variableCode);
+        variable.setValue(BigDecimal.TEN);
+
+        result.setEmissionsFactorFormula("5.9*A");
+        result.setFormulaIndicator(true);
+        result.getVariables().add(variable);
 
         return result;
     }

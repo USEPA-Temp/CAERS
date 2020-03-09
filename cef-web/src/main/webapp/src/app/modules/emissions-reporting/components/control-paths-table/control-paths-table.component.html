@@ -14,13 +14,13 @@
       <td><a routerLink="{{baseUrl}}/{{item.id}}">{{item.pathId}}</a></td>
       <td>{{item.description}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.pathId, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.pathId, item.id, item.facilitySiteId)" aria-label="delete control path"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container>
 	</tr>
 	<ng-container *ngIf="!readOnlyMode">
       <tr>
         <td colspan="2"></td>
-        <td><a routerLink="{{baseUrl}}/create"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
+        <td><a routerLink="{{baseUrl}}/create" aria-label="add control path"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td>
       </tr>
     </ng-container>
 	</tbody>

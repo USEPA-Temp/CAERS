@@ -12,6 +12,7 @@ import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -27,6 +28,7 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.BulkReportValidationException;
+import gov.epa.cef.web.exception.CalculationException;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
@@ -34,6 +36,7 @@ import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
+import gov.epa.cef.web.repository.EmissionFormulaVariableCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
@@ -57,6 +60,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
@@ -116,6 +120,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private FipsCountyRepository countyRepo;
+
+    @Autowired
+    private EmissionFormulaVariableCodeRepository emissionFormulaVariableCodeRepo;
 
     @Autowired
     private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
@@ -338,7 +345,26 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                                         .filter(e -> bulkPeriod.getId().equals(e.getReportingPeriodId()))
                                         .map(bulkEmission -> {
                                             Emission emission = mapEmission(bulkEmission);
+
+                                            List<EmissionFormulaVariable> variables = bulkEmissionsReport.getEmissionFormulaVariables().stream()
+                                                    .filter(efv -> bulkEmission.getId().equals(efv.getEmissionId()))
+                                                    .map(bulkVariable -> {
+                                                        EmissionFormulaVariable variable = mapEmissionFormulaVariable(bulkVariable);
+                                                        variable.setEmission(emission);
+
+                                                        return variable;
+                                                    }).collect(Collectors.toList());
+
                                             emission.setReportingPeriod(period);
+                                            emission.setVariables(variables);
+
+                                            if (Boolean.TRUE.equals(emission.getFormulaIndicator()) && !emission.getVariables().isEmpty()) {
+                                                try {
+                                                    emission.setEmissionsFactor(CalculationUtils.calculateEmissionFormula(emission.getEmissionsFactorFormula(), emission.getVariables()));
+                                                }catch (CalculationException e) {
+                                                    // TODO: handle exception
+                                                }
+                                            }
 
                                             return emission;
                                         }).collect(Collectors.toList());
@@ -487,7 +513,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         if (response.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-            logger.debug("ExcelJsonParser Result {}", response.getJson().toString());
+            logger.info("ExcelJsonParser Result {}", response.getJson().toString());
 
             EmissionsReportBulkUploadDto bulkEmissionsReport = parseWorkbookJson(response, metadata);
 
@@ -890,6 +916,18 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         return result;
     }
 
+    private EmissionFormulaVariable mapEmissionFormulaVariable(EmissionFormulaVariableBulkUploadDto dto) {
+
+        EmissionFormulaVariable result = new EmissionFormulaVariable();
+        result.setValue(dto.getValue());
+
+        if (dto.getEmissionFormulaVariableCode() != null) {
+            result.setVariableCode(emissionFormulaVariableCodeRepo.findById(dto.getEmissionFormulaVariableCode()).orElse(null));
+        }
+
+        return result;
+    }
+
     private EmissionsReportBulkUploadDto parseWorkbookJson(ExcelParserResponse response,
                                                            EmissionsReportStarterDto metadata) {
 
@@ -907,6 +945,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             result.setYear(metadata.getYear());
             result.setStatus(ReportStatus.IN_PROGRESS.name());
             result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
+            
+            logger.info(result.getEmissionFormulaVariables().toString());
 
         } catch (JsonProcessingException e) {
 

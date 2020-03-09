@@ -55,13 +55,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       numberValidator()
     ]],
     latitude: ['', [
-      Validators.required,
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-90),
       Validators.max(90),
     ]],
     longitude: ['', [
-      Validators.required,
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-180),
       Validators.max(180),
@@ -100,30 +98,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.min(0),
       wholeNumberValidator()
     ]],
-    fugitiveLine1Latitude: ['', [
-      Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-90),
-      Validators.max(90)
-    ]],
-    fugitiveLine1Longitude: ['', [
-      Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-180),
-      Validators.max(180)
-    ]],
-    fugitiveLine2Latitude: ['', [
-      Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-90),
-      Validators.max(90)
-      ]],
-    fugitiveLine2Longitude: ['', [
-      Validators.required,
-      Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
-      Validators.min(-180),
-      Validators.max(180)
-    ]],
+    fugitiveLine1Latitude: [],
+    fugitiveLine1Longitude: [],
+    fugitiveLine2Latitude: [],
+    fugitiveLine2Longitude: [],
     stackHeight: ['', [
       Validators.required,
       Validators.min(1),
@@ -242,10 +220,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.releasePointForm.controls.fenceLineUomCode.setValue({ code: 'FT' });
 
     if (this.releaseType === this.fugitiveType) {
-      this.releasePointForm.controls.fugitiveLine1Latitude.enable();
-      this.releasePointForm.controls.fugitiveLine2Latitude.enable();
-      this.releasePointForm.controls.fugitiveLine1Longitude.enable();
-      this.releasePointForm.controls.fugitiveLine2Longitude.enable();
       this.releasePointForm.controls.fugitiveLengthUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.fugitiveWidthUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.fugitiveHeightUomCode.setValue({ code: 'FT' });
@@ -267,10 +241,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.releasePointForm.controls.stackDiameterUomCode.enable();
       this.releasePointForm.controls.stackHeightUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.stackDiameterUomCode.setValue({ code: 'FT' });
-      this.releasePointForm.controls.fugitiveLine1Latitude.disable();
-      this.releasePointForm.controls.fugitiveLine2Latitude.disable();
-      this.releasePointForm.controls.fugitiveLine1Longitude.disable();
-      this.releasePointForm.controls.fugitiveLine2Longitude.disable();
       this.releasePointForm.controls.fugitiveLine1Latitude.reset();
       this.releasePointForm.controls.fugitiveLine2Latitude.reset();
       this.releasePointForm.controls.fugitiveLine1Longitude.reset();
@@ -551,31 +521,33 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       .subscribe(result => {
         this.coordinateTolerance = result;
 
-        if (this.coordinateTolerance === null) {
-          this.tolerance = DEFAULT_TOLERANCE;
-        } else {
-          this.tolerance = this.coordinateTolerance.coordinateTolerance;
-        }
-
-        if (rpLong !== null && rpLong.value !== null && rpLong.value !== '') {
-          longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance)*1000000)/1000000);
-          longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance)*1000000)/1000000);
-
-          if (((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
-            control.get('longitude').markAsTouched();
-            control.get('longitude').setErrors({'invalidLongitude': true});
+        setTimeout(() => {
+          if (this.coordinateTolerance) {
+            this.tolerance = this.coordinateTolerance.coordinateTolerance;
+          } else {
+            this.tolerance = DEFAULT_TOLERANCE;
           }
-        }
 
-        if (rpLat !== null && rpLat.value !== null && rpLat.value !== '') {
-          latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance)*1000000)/1000000);
-          latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance)*1000000)/1000000);
+          if (rpLong !== null && rpLong.value !== null && rpLong.value !== '') {
+            longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance)*1000000)/1000000);
+            longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance)*1000000)/1000000);
 
-          if (((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
-            control.get('latitude').markAsTouched();
-            control.get('latitude').setErrors({'invalidLatitude': true});
+            if (((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
+              control.get('longitude').markAsTouched();
+              control.get('longitude').setErrors({'invalidLongitude': true});
+            }
           }
-        }
+
+          if (rpLat !== null && rpLat.value !== null && rpLat.value !== '') {
+            latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance)*1000000)/1000000);
+            latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance)*1000000)/1000000);
+
+            if (((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
+              control.get('latitude').markAsTouched();
+              control.get('latitude').setErrors({'invalidLatitude': true});
+            }
+          }
+        }, 1000);
       });
       return null;
     };

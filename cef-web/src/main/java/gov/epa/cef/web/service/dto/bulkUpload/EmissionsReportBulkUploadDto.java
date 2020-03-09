@@ -24,6 +24,7 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     private List<ReportingPeriodBulkUploadDto> reportingPeriods = new ArrayList<>();
     private List<OperatingDetailBulkUploadDto> operatingDetails = new ArrayList<>();
     private List<EmissionBulkUploadDto> emissions = new ArrayList<>();
+    private List<EmissionFormulaVariableBulkUploadDto> emissionFormulaVariables = new ArrayList<>();
     private List<ControlPathBulkUploadDto> controlPaths = new ArrayList<>();
     private List<ControlBulkUploadDto> controls = new ArrayList<>();
     private List<ControlAssignmentBulkUploadDto> controlAssignments = new ArrayList<>();
@@ -140,6 +141,12 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     }
     public List<EmissionBulkUploadDto> getEmissions() {
         return emissions;
+    }
+    public List<EmissionFormulaVariableBulkUploadDto> getEmissionFormulaVariables() {
+        return emissionFormulaVariables;
+    }
+    public void setEmissionFormulaVariables(List<EmissionFormulaVariableBulkUploadDto> emissionFormulaVariables) {
+        this.emissionFormulaVariables = emissionFormulaVariables;
     }
     public List<ControlPathBulkUploadDto> getControlPaths() {
         return controlPaths;
