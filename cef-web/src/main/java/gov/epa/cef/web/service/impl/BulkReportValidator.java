@@ -41,6 +41,7 @@ public class BulkReportValidator {
         report.getReportingPeriods().forEach(worksheetValidator);
         report.getOperatingDetails().forEach(worksheetValidator);
         report.getEmissions().forEach(worksheetValidator);
+        report.getEmissionFormulaVariables().forEach(worksheetValidator);
         report.getControlPaths().forEach(worksheetValidator);
         report.getControls().forEach(worksheetValidator);
         report.getControlAssignments().forEach(worksheetValidator);

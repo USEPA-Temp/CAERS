@@ -81,6 +81,26 @@
         </div>
     </div>
 
+    <div class="row pb-2">
+        <label for="countySelect" class="col-sm-4 col-lg-2 col-form-label"><strong>County:</strong></label>
+        <div class="col-sm-8 col-lg-2">
+            <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of counties" [ngValue]="opt">{{opt?.name}}</option>
+            </select>
+            <app-validation-message [control]="facilitySiteForm.get('countyCode')"></app-validation-message>
+        </div>
+
+        <label for="facilityBIACodeSelect" class="col-sm-4 col-md-2 col-form-label"><strong>BIA Code:</strong></label>
+        <div class="col-sm-6 col-md-6">
+            <select type="text" class="form-control" id="facilityBIACodeSelect" formControlName="tribalCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of tribalCodeValues" [ngValue]="opt">{{opt?.description}}</option>
+            </select>
+            <app-validation-message [control]="facilitySiteForm.get('tribalCode')"></app-validation-message>
+        </div>
+    </div>
+
     <div class="row pb-1">
         <label for="mailingStreetAddressInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Mailing Street Address:</strong></label>
         <div class="col-sm-8 col-lg-10">
@@ -116,26 +136,6 @@
             <div class="validation-message"  *ngIf="facilitySiteForm.getError('mailingStreetAddress')">
                 This field is required for mailing address.
             </div>
-        </div>
-    </div>
-
-    <div class="row pb-2">
-        <label for="countySelect" class="col-sm-4 col-lg-2 col-form-label"><strong>County:</strong></label>
-        <div class="col-sm-8 col-lg-2">
-            <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode">
-                <option [ngValue]="null"></option>
-                <option *ngFor="let opt of counties" [ngValue]="opt">{{opt?.name}}</option>
-            </select>
-            <app-validation-message [control]="facilitySiteForm.get('countyCode')"></app-validation-message>
-        </div>
-
-        <label for="facilityBIACodeSelect" class="col-sm-4 col-md-2 col-form-label"><strong>BIA Code:</strong></label>
-        <div class="col-sm-6 col-md-6">
-            <select type="text" class="form-control" id="facilityBIACodeSelect" formControlName="tribalCode" [compareWith]="formUtils.compareCode">
-                <option [ngValue]="null"></option>
-                <option *ngFor="let opt of tribalCodeValues" [ngValue]="opt">{{opt?.description}}</option>
-            </select>
-            <app-validation-message [control]="facilitySiteForm.get('tribalCode')"></app-validation-message>
         </div>
     </div>
 
