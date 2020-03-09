@@ -91,7 +91,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
   controlIdentifierCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       if (this.controlIdentifiers) {
-        if (this.controlIdentifiers.includes(control.get('identifier').value)) {
+        if (this.controlIdentifiers.includes(control.get('identifier').value.trim())) {
           return { duplicateControlIdentifier: true };
         }
       }
