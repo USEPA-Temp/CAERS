@@ -106,7 +106,7 @@
     <div class="row pb-1">
         <label for="exitGasVelocityUomCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Exit Gas Velocity UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
-            <select type="text" class="form-control" formControlName="exitGasVelocityUomCode" (ngModelChange)="setGasVelocityRangeValidation()" [compareWith]="formUtils.compareCode">
+            <select type="text" class="form-control" id="exitGasVelocityUomCodeSelect" formControlName="exitGasVelocityUomCode" (ngModelChange)="setGasVelocityRangeValidation()" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of velocityUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>

@@ -21,13 +21,13 @@
         </ng-container>
       </td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.code, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.code, item.id, item.facilitySiteId)" aria-label="delete NAICS"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container> 
     </tr>
       <ng-container *ngIf="!readOnlyMode">
         <tr>
           <td colspan="3"></td>
-          <td><a routerLink="." (click)="openFacilityNaicsModal()"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td> 
+          <td><a routerLink="." (click)="openFacilityNaicsModal()" aria-label="add NAICS"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td> 
         </tr>
       </ng-container> 
    

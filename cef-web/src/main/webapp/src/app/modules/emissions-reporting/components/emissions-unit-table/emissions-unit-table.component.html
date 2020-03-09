@@ -19,14 +19,14 @@
       <td>{{item.description}}</td>
       <td>{{item.operatingStatusCode.description}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.unitIdentifier, item.id, item.facilitySiteId)"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.unitIdentifier, item.id, item.facilitySiteId)" aria-label="delete unit"><fa-icon icon="trash-alt"></fa-icon></a></td>
       </ng-container>
     </tr>
     <ng-container *ngIf="!readOnlyMode">
       <tr>
         <td colspan="4"></td>
         <td>   
-          <a routerLink="{{createUrl}}"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a>
+          <a routerLink="{{createUrl}}" aria-label="add unit"><fa-icon [icon]="['fa', 'plus']"></fa-icon></a>
         </td> 
       </tr>
     </ng-container>
