@@ -11,6 +11,7 @@
         <label for="releaseTypeCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Type:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="releaseTypeCodeSelect" formControlName="typeCode" (change)="setFormValidation()" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of releasePointTypeCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('typeCode')"></app-validation-message>
@@ -29,6 +30,7 @@
         <label for="releaseStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Release Point Status:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="releaseStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('operatingStatusCode')"></app-validation-message>
