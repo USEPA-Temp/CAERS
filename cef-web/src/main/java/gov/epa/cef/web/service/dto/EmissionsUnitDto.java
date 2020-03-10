@@ -48,7 +48,7 @@ public class EmissionsUnitDto implements Serializable {
         return this.unitIdentifier;
     }
     public void setUnitIdentifier(String unitIdentifier) {
-        this.unitIdentifier = unitIdentifier;
+        this.unitIdentifier = unitIdentifier.trim();
     }
 
     public String getDescription() {
