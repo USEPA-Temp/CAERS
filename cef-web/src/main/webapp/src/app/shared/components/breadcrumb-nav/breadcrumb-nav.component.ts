@@ -21,7 +21,7 @@ export class BreadcrumbNavComponent implements OnInit {
     public breadcrumbs: BreadCrumb[];
     year: number;
     baseLabel: string;
-    user:User;
+    user:User = new User();
     url: string;
 
     constructor( private router: Router, private activeRoute: ActivatedRoute,
