@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
-      <li *ngIf="(url === '/helpPage') && (user.role !== 'Reviewer')"><u><a class="nav-link menu_links" (click)="goToMyFacilities()">My Facilities</a></u></li>
+      <li *ngIf="(url === '/helpPage') && (user?.role !== 'Reviewer')"><u><a class="nav-link menu_links" (click)="goToMyFacilities()">My Facilities</a></u></li>
         <li *ngFor="let breadcrumb of breadcrumbs; index as i" class="nav-item">
           <a *ngIf="i<breadcrumbs.length-1 && (url !== '/helpPage') && (url !== '/submissionReviewDashboard')" class="nav-link"  [href]="[breadcrumb.url]"><span *ngIf="i!=0">&gt;&nbsp;&nbsp;&nbsp;&nbsp;</span><u>{{ breadcrumb.label }}</u></a>
           <span *ngIf="i==breadcrumbs.length-1 && (url !== '/helpPage') && (url !== '/submissionReviewDashboard')" class="nav-link"><span *ngIf="i!=0">&gt;&nbsp;&nbsp;&nbsp;&nbsp;</span>{{ breadcrumb.label }}</span>
