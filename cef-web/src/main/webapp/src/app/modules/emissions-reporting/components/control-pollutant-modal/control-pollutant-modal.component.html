@@ -6,7 +6,7 @@
     <div class="modal-body" style="height: 350px;">
         <label for="pollutantSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant:</strong></label>
             <div class="col-sm-8 col-lg-10">
-                <input id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
+                <input [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
                 <app-validation-message [control]="pollutantForm.get('pollutant')"></app-validation-message>
             </div>
         <br>

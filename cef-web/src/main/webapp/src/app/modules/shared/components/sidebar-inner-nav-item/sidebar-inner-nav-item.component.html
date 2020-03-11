@@ -3,11 +3,11 @@
 
     <div class="nav-link p-0">
         <button class="btn btn-link text-primary font-weight-bold text-left small p-0" type="button"
-                (click)="collapsed = !collapsed" [attr.aria-expanded]="!collapsed"
-                [attr.aria-controls]="targetId" *ngIf="navItem.children?.length" aria-label="navigation icon">
+                (click)="collapsed = !collapsed" [attr.aria-expanded]="collapsed"
+                [attr.aria-controls]="targetId" *ngIf="navItem.children?.length" [attr.aria-label]="'list unit '+ navItem?.description + ' processes'">
             <app-collapse-icon [collapsed]='!collapsed'></app-collapse-icon>
         </button>
-        <a class=" text-primary font-weight-bold small" [routerLinkActive]="'active text-success'"
+        <a [attr.aria-label]="'select ' + navItem?.baseUrl + navItem?.description" class="text-primary font-weight-bold small" [routerLinkActive]="'active text-success'"
                 [routerLinkActiveOptions]="{exact: true}" routerLink="{{itemUrl}}" 
                 title="{{navItem.description}}">
             <span>
