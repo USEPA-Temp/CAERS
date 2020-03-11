@@ -98,7 +98,7 @@
                     <div class="row pb-2">
                         <label for="pollutantSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant:</strong></label>
                         <div class="col-sm-8 col-lg-5">
-                            <input id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
+                            <input [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
                             <app-validation-message [control]="emissionForm.controls.pollutant"></app-validation-message>
                         </div>
                         <label for="pollutantCodeInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant Code:</strong></label>

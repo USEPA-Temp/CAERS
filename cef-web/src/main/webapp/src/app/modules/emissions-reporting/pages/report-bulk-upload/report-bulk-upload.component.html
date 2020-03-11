@@ -50,11 +50,11 @@
     <div class="card-footer">
         <div class="d-flex flex-row justify-content-end">
             <a href="javascript:void(0);"
-               class="btn btn-secondary mr-2"
+               class="btn btn-primary mr-2"
                [routerLink]="['/facility', facility.programId, 'report']">
                 <span>Cancel</span>
             </a>
-            <button type="button" class="btn btn-primary"
+            <button type="button" class="btn btn-success"
                     [ngClass]="{'disable-click' : selectedFile === null}"
                     [disabled]="selectedFile === null"
                     (click)="onUploadClick()">
@@ -66,7 +66,7 @@
 
 <ng-template #PleaseWaitModal>
     <div class="modal-header bg-info text-white">
-        <div class="modal-title h4">Bulk Upload</div>
+        <div class="modal-title h4"><strong>Bulk Upload</strong></div>
     </div>
     <div class="modal-body">
         <div class="mb-2">Please wait this could take a minute or two.</div>

@@ -5,142 +5,153 @@
 		</div>
 	</div>
 	<div *ngIf="paginate">
-		<button type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed25 = !isCollapsed25"
-				[attr.aria-expanded]="!isCollapsed25" aria-controls="target25">
-				<app-collapse-icon [collapsed]='isCollapsed25'></app-collapse-icon>
-		Units 1-25
-		</button>
+		<div role="list">
+			<button type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed25 = !isCollapsed25"
+					[attr.aria-expanded]="!isCollapsed25" aria-label="units 1-25" >
+					<app-collapse-icon [collapsed]='isCollapsed25'></app-collapse-icon>
+			Units 1-25
+			</button>
 
-		<div *ngFor="let navItem of navItems| slice:0:25">
-			<div id="target25" [ngbCollapse]="isCollapsed25">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:0:25" role="listitem">
+				<div [ngbCollapse]="isCollapsed25">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
-		
-		<button *ngIf="navItems?.length > 25" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed50 = !isCollapsed50"
-				[attr.aria-expanded]="!isCollapsed50" aria-controls="target50">
-				<app-collapse-icon [collapsed]='!isCollapsed50'></app-collapse-icon>
-		Units 26-50
-		</button>
+		<div role="list">
+			<button *ngIf="navItems?.length > 25" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed50 = !isCollapsed50"
+					[attr.aria-expanded]="isCollapsed50" aria-label="units 26-50">
+					<app-collapse-icon [collapsed]='!isCollapsed50'></app-collapse-icon>
+			Units 26-50
+			</button>
 
-		<div *ngFor="let navItem of navItems| slice:25:50">
-			<div id="target50" [ngbCollapse]="!isCollapsed50">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:25:50" role="listitem">
+				<div [ngbCollapse]="!isCollapsed50">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div role="list">
+			<button *ngIf="navItems?.length > 50" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed75 = !isCollapsed75"
+					[attr.aria-expanded]="isCollapsed75" aria-label="units 51-75">
+					<app-collapse-icon [collapsed]='!isCollapsed75'></app-collapse-icon>
+			Units 51-75
+			</button>
 
-		<button *ngIf="navItems?.length > 50" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed75 = !isCollapsed75"
-				[attr.aria-expanded]="!isCollapsed75" aria-controls="target75">
-				<app-collapse-icon [collapsed]='!isCollapsed75'></app-collapse-icon>
-		Units 51-75
-		</button>
-
-		<div *ngFor="let navItem of navItems| slice:50:75">
-			<div id="target75" [ngbCollapse]="!isCollapsed75">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:50:75" role="listitem">
+				<div [ngbCollapse]="!isCollapsed75">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div role="list">
+			<button *ngIf="navItems?.length > 75" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed100 = !isCollapsed100"
+					[attr.aria-expanded]="isCollapsed100" aria-label="units 76-100">
+					<app-collapse-icon [collapsed]='!isCollapsed100'></app-collapse-icon>
+			Units 76-100
+			</button>
 
-		<button *ngIf="navItems?.length > 75" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed100 = !isCollapsed100"
-				[attr.aria-expanded]="!isCollapsed100" aria-controls="target100">
-				<app-collapse-icon [collapsed]='!isCollapsed100'></app-collapse-icon>
-		Units 76-100
-		</button>
-
-		<div *ngFor="let navItem of navItems| slice:75:100">
-			<div id="target100" [ngbCollapse]="!isCollapsed100">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:75:100" role="listitem">
+				<div [ngbCollapse]="!isCollapsed100">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div role="list">
+			<button *ngIf="navItems?.length > 100" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed125 = !isCollapsed125"
+					[attr.aria-expanded]="isCollapsed125" aria-label="units 101-125">
+					<app-collapse-icon [collapsed]='!isCollapsed125'></app-collapse-icon>
+			Units 101-125
+			</button>
 
-		<button *ngIf="navItems?.length > 100" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed125 = !isCollapsed125"
-				[attr.aria-expanded]="!isCollapsed125" aria-controls="target125">
-				<app-collapse-icon [collapsed]='!isCollapsed125'></app-collapse-icon>
-		Units 101-125
-		</button>
-
-		<div *ngFor="let navItem of navItems| slice:100:125">
-			<div id="target125" [ngbCollapse]="!isCollapsed125">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:100:125" role="listitem">
+				<div [ngbCollapse]="!isCollapsed125">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
-		
-		<button *ngIf="navItems?.length > 125" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed150 = !isCollapsed150"
-				[attr.aria-expanded]="!isCollapsed150" aria-controls="target150">
-				<app-collapse-icon [collapsed]='!isCollapsed150'></app-collapse-icon>
-		Units 126-150
-		</button>
+		<div role="list">
+			<button *ngIf="navItems?.length > 125" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed150 = !isCollapsed150"
+					[attr.aria-expanded]="isCollapsed150" aria-label="units 126-150">
+					<app-collapse-icon [collapsed]='!isCollapsed150'></app-collapse-icon>
+			Units 126-150
+			</button>
 
-		<div *ngFor="let navItem of navItems| slice:125:150">
-			<div id="target150" [ngbCollapse]="!isCollapsed150">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:125:150" role="listitem">
+				<div [ngbCollapse]="!isCollapsed150">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div role="list">
+			<button *ngIf="navItems?.length > 150" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed175 = !isCollapsed175"
+					[attr.aria-expanded]="isCollapsed175" aria-label="units 151-175">
+					<app-collapse-icon [collapsed]='!isCollapsed175'></app-collapse-icon>
+			Units 151-175
+			</button>
 
-		<button *ngIf="navItems?.length > 150" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed175 = !isCollapsed175"
-				[attr.aria-expanded]="!isCollapsed175" aria-controls="target175">
-				<app-collapse-icon [collapsed]='!isCollapsed175'></app-collapse-icon>
-		Units 151-175
-		</button>
-
-		<div *ngFor="let navItem of navItems| slice:150:175">
-			<div id="target175" [ngbCollapse]="!isCollapsed175">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:150:175" role="listitem">
+				<div [ngbCollapse]="!isCollapsed175">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div role="list">
+			<button *ngIf="navItems?.length > 175" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed200 = !isCollapsed200"
+					[attr.aria-expanded]="isCollapsed200" aria-label="units 176-200">
+					<app-collapse-icon [collapsed]='!isCollapsed200'></app-collapse-icon>
+			Units 176-200
+			</button>
 
-		<button *ngIf="navItems?.length > 175" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed200 = !isCollapsed200"
-				[attr.aria-expanded]="!isCollapsed200" aria-controls="target200">
-				<app-collapse-icon [collapsed]='!isCollapsed200'></app-collapse-icon>
-		Units 176-200
-		</button>
-
-		<div *ngFor="let navItem of navItems| slice:175:200">
-			<div id="target200" [ngbCollapse]="!isCollapsed200">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:175:200" role="listitem">
+				<div [ngbCollapse]="!isCollapsed200">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div role="list">
+			<button *ngIf="navItems?.length > 200" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed225 = !isCollapsed225"
+					[attr.aria-expanded]="isCollapsed225" aria-label="units 201-225">
+					<app-collapse-icon [collapsed]='!isCollapsed225'></app-collapse-icon>
+			Units 201-225
+			</button>
 
-		<button *ngIf="navItems?.length > 200" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed225 = !isCollapsed225"
-				[attr.aria-expanded]="!isCollapsed225" aria-controls="target225">
-				<app-collapse-icon [collapsed]='!isCollapsed225'></app-collapse-icon>
-		Units 201-225
-		</button>
-
-		<div *ngFor="let navItem of navItems| slice:200:225">
-			<div id="target225" [ngbCollapse]="!isCollapsed225">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:200:225" role="listitem">
+				<div [ngbCollapse]="!isCollapsed225">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div role="list">
+			<button *ngIf="navItems?.length > 225" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed250 = !isCollapsed250"
+					[attr.aria-expanded]="isCollapsed250" aria-label="units 226-250">
+					<app-collapse-icon [collapsed]='!isCollapsed250'></app-collapse-icon>
+			Units 226-250
+			</button>
 
-		<button *ngIf="navItems?.length > 225" type="button" class="btn btn-link text-primary font-weight-bold text-left p-0" (click)="isCollapsed250 = !isCollapsed250"
-				[attr.aria-expanded]="!isCollapsed250" aria-controls="target250">
-				<app-collapse-icon [collapsed]='!isCollapsed250'></app-collapse-icon>
-		Units 226-250
-		</button>
-
-		<div *ngFor="let navItem of navItems| slice:225:250">
-			<div id="target250" [ngbCollapse]="!isCollapsed250">
-				<div class="row ml-2">
-					<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+			<div *ngFor="let navItem of navItems| slice:225:250" role="listitem">
+				<div [ngbCollapse]="!isCollapsed250">
+					<div class="row ml-2">
+						<app-sidebar-inner-nav-item [navItem]="navItem" [baseUrl]="baseUrl"></app-sidebar-inner-nav-item>
+					</div>
 				</div>
 			</div>
 		</div>
