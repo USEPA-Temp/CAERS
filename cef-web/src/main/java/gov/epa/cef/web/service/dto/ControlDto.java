@@ -47,7 +47,7 @@ public class ControlDto implements Serializable {
     }
 
     public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+        this.identifier = identifier.trim();
     }
 
     public String getDescription() {

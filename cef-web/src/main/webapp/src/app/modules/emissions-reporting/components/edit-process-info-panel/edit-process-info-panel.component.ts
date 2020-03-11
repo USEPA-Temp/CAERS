@@ -274,11 +274,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
         this.emissionUnit['emissionsProcesses'].forEach(pIdentifier => {
           if (this.process !== undefined) {
             if ((pIdentifier['emissionsProcessIdentifier'] !== this.process.emissionsProcessIdentifier)
-            && (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value)) {
+            && (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value.trim())) {
               control.get('emissionsProcessIdentifier').setErrors({invalidDuplicateProcessIdetifier: true});
             }
           } else if (this.process === undefined)  {
-            if (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value) {
+            if (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value.trim()) {
               control.get('emissionsProcessIdentifier').setErrors({invalidDuplicateProcessIdetifier: true});
             }
           }
