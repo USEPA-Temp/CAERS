@@ -1,7 +1,7 @@
 <div *ngIf="validationResult">
 
   <div *ngIf="pageErrors?.length">
-    <ngb-alert  type="danger" (close)="onCloseErrors()" ngbTooltip="This list of errors will not be updated until the Quality Checks are run again.">
+    <ngb-alert  type="danger" (close)="onCloseErrors()" style="color:black;" ngbTooltip="This list of errors will not be updated until the Quality Checks are run again.">
       <ol>
         <li *ngFor="let item of pageErrors">
           {{item.errorMsg}}
@@ -12,7 +12,7 @@
   </div>
 
   <div *ngIf="pageWarnings?.length">
-    <ngb-alert  type="warning" (close)="onCloseWarnings()" ngbTooltip="This list of warnings will not be updated until the Quality Checks are run again.">
+    <ngb-alert  type="warning" (close)="onCloseWarnings()" style="color:black;" ngbTooltip="This list of warnings will not be updated until the Quality Checks are run again.">
       <ol>
         <li *ngFor="let item of pageWarnings">
           {{item.errorMsg}}
