@@ -1,7 +1,7 @@
 <div class="d-flex flex-row flex-wrap justify-content-between">
   <app-facility-info [facility]="facility" class="ml-2"></app-facility-info>
   <div>
-    <button class="btn btn-success m-1" [routerLink]="['/facility', facility.programId, 'review']">Review Facility Data</button>
+    <button class="btn btn-success m-1" [routerLink]="['/facility', facility.programId, 'review']" [attr.aria-label]="'review facility data for'+ facility?.facilityName">Review Facility Data</button>
     <button class="btn btn-success m-1" [routerLink]="['/facility', facility.programId, 'report']">Begin / Continue Reporting</button>
   </div>
 </div>

@@ -9,28 +9,33 @@
 
 				<div class="pipe-list">
                     <a [routerLink]="['/facility', report.eisProgramId, 'report', 'upload', report.year]"
-                       class="text-dark font-weight-bold pipe-item"
+					   class="text-dark font-weight-bold pipe-item"
+					   [attr.aria-label]="'upload'+ report.year +'report'"
                        *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'VALIDATED'])">
                         <span>Upload Report</span>
                     </a>
 
                     <a href="javascript:void(0);"
-                       class="text-dark font-weight-bold pipe-item"
+					   class="text-dark font-weight-bold pipe-item"
+					   [attr.aria-label]="'create new'+ report.year +'report'"
 						(click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
 
 					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
 						class="text-dark font-weight-bold pipe-item"
+						[attr.aria-label]="'continue'+ report.year +'report'"
 						*ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
 
 					<a href="#" class="text-dark font-weight-bold pipe-item"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>
 
                     <a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
-                       class="text-dark font-weight-bold pipe-item"
+					   class="text-dark font-weight-bold pipe-item"
+					   [attr.aria-label]="'view'+ report.year +'report'"
                        *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 
 					<a [routerLink]="['.']"
 						class="text-dark font-weight-bold pipe-item"
+						[attr.aria-label]="'reopen'+ report.year +'report'"
 						(click)="reopenReport(report)"
 						*ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">Reopen Report</a>
 
@@ -44,6 +49,7 @@
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
 
 					<a href="#" class="text-dark font-weight-bold pipe-item"
+						[attr.aria-label]="'delete'+ report.year +'report'"
 						*ngIf="report.status !== 'NEW'"
 						[routerLink]="['.']" (click)="openDeleteModal(report.eisProgramId, report.id, report.year)">Delete</a>
 				</div>

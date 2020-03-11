@@ -39,7 +39,7 @@
                 <ol class="pl-3">
                     <li *ngFor="let item of validationResult.federalWarnings">
                         <span *ngIf="item.invalidValue">
-                            <a [routerLink]="[item.url]" class="text-info"><u>{{item.invalidValue?.description}}</u></a> - 
+                            <a [routerLink]="[item.url]" class="text-info"><u style="color:#333399;" >{{item.invalidValue?.description}}</u></a> - 
                         </span>
                         {{ item.errorMsg }}
                     </li>

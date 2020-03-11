@@ -7,7 +7,7 @@
       <strong>Combined Air Emissions Reporting System</strong>
     </div>
     <div id="userInfo" *ngIf="userContext.user">
-      {{userContext.user.role}}- {{userContext.user.cdxUserId}} <fa-icon icon="user-circle" size="lg"></fa-icon>
+      {{userContext.user.role}}- {{userContext.user.cdxUserId}} <fa-icon icon="user-circle" size="lg" aria-label="user-icon"></fa-icon>
         <a class="btn btn-link p-1 mb-1" href="javascript:void(0);" (click)="logout()"><u>Logout</u></a>
     </div>
   </div>
