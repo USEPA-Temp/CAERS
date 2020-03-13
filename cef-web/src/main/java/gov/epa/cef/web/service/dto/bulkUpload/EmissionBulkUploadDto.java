@@ -21,6 +21,9 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
 
+    @NotNull(message = "I prefer to calculate this emission myself is required.")
+    private boolean totalManualEntry;
+
     @Digits(integer = 2, fraction = 6,
         message = "Overall Control Percent is not in expected numeric format: '{integer}.{fraction}' digits.")
     private BigDecimal overallControlPercent;
@@ -46,6 +49,9 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
+    @Size(max = 4000, message = "Description of Calculation can not exceed {max} chars; found '${validatedValue}'.")
+    private String calculationComment;
 
     @Size(max = 20, message = "Emissions Numerator UoM Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsNumeratorUom;
@@ -79,6 +85,13 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     }
     public void setPollutantCode(String pollutantCode) {
         this.pollutantCode = pollutantCode;
+    }
+
+    public boolean isTotalManualEntry() {
+        return totalManualEntry;
+    }
+    public void setTotalManualEntry(boolean totalManualEntry) {
+        this.totalManualEntry = totalManualEntry;
     }
 
     public BigDecimal getOverallControlPercent() {
@@ -128,6 +141,13 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     }
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getCalculationComment() {
+        return calculationComment;
+    }
+    public void setCalculationComment(String calculationComment) {
+        this.calculationComment = calculationComment;
     }
 
     public BigDecimal getCalculatedEmissionsTons() {
