@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -17,6 +18,8 @@ public class ReleasePointApptBulkUploadDto extends BaseWorksheetDto implements S
     private Long emissionProcessId;
 
     @NotNull(message = "Percent is required.")
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percent;
 
     private Long controlPathId;

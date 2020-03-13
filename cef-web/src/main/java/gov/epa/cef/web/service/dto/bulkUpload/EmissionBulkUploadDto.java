@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,6 +24,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @NotNull(message = "I prefer to calculate this emission myself is required.")
     private boolean totalManualEntry;
 
+    @Digits(integer = 2, fraction = 6,
+        message = "Overall Control Percent is not in expected numeric format: '{integer}.{fraction}' digits.")
     private BigDecimal overallControlPercent;
 
     @NotNull(message = "Total Emissions is required.")

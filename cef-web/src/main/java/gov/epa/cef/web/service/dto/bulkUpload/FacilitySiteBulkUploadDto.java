@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -67,7 +68,12 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 10, message = "Postal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String postalCode;
 
+    @Digits(integer = 4, fraction = 6,
+        message = "Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private BigDecimal latitude;
+
+    @Digits(integer = 4, fraction = 6,
+        message = "Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private BigDecimal longitude;
 
     @Size(max = 100, message = "Mailing Street Address can not exceed {max} chars; found '${validatedValue}'.")

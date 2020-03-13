@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,6 +20,8 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
 
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent Reduction is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentReduction;
 
     public ControlPollutantBulkUploadDto() {
