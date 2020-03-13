@@ -519,7 +519,20 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             this.validator.validate(bulkEmissionsReport);
 
-            result = saveBulkEmissionsReport(bulkEmissionsReport);
+            try {
+
+                result = saveBulkEmissionsReport(bulkEmissionsReport);
+
+            } catch (Exception e) {
+
+                String msg = e.getMessage()
+                    .replaceAll(EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "")
+                    .replaceAll(EmissionsReport.class.getPackage().getName().concat("."), "");
+
+                WorksheetError violation = new WorksheetError("*", -1, msg);
+
+                throw new BulkReportValidationException(Collections.singletonList(violation));
+            }
 
         } else {
 
@@ -945,7 +958,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             result.setYear(metadata.getYear());
             result.setStatus(ReportStatus.IN_PROGRESS.name());
             result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
-            
+
             logger.info(result.getEmissionFormulaVariables().toString());
 
         } catch (JsonProcessingException e) {

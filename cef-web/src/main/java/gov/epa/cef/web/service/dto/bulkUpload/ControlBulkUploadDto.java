@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,7 +26,12 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     @Size(max = 200, message = "Description can not exceed {max} chars.")
     private String description;
 
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent Capture is not in expected numeric format:'{integer}.{fraction}' digits.")
     private Double percentCapture;
+
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent Control is is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentControl;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")

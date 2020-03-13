@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,22 +28,31 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 200, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
 
+    @Digits(integer = 5, fraction = 3,
+        message = "Stack Height is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double stackHeight;
 
     @Size(max = 20, message = "Stack Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackHeightUomCode;
 
+    @Digits(integer = 5, fraction = 3,
+        message = "Stack Diameter is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double stackDiameter;
 
     @Size(max = 20, message = "Stack Diameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackDiameterUomCode;
 
+    @Digits(integer = 5, fraction = 3,
+        message = "Exit Gas Velocity is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double exitGasVelocity;
 
     @Size(max = 20, message = "Exit Gas Velocity Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String exitGasVelocityUomCode;
 
     private Short exitGasTemperature;
+
+    @Digits(integer = 8, fraction = 8,
+        message = "Exit Gas Flow Rate is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double exitGasFlowRate;
 
     @Size(max = 20, message = "Exit Gas Flow Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
@@ -54,13 +64,28 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
 
     private Short statusYear;
 
+    @Digits(integer = 4, fraction = 6,
+        message = "Latitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double latitude;
 
+    @Digits(integer = 4, fraction = 6,
+        message = "Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double longitude;
 
+    @Digits(integer = 4, fraction = 6,
+        message = "Fugitive Line1 Latitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double fugitiveLine1Latitude;
+
+    @Digits(integer = 4, fraction = 6,
+        message = "Fugitive Line1 Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double fugitiveLine1Longitude;
+
+    @Digits(integer = 4, fraction = 6,
+        message = "Fugitive Line2 Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double fugitiveLine2Latitude;
+
+    @Digits(integer = 4, fraction = 6,
+        message = "Fugitive Line2 Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double fugitiveLine2Longitude;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
