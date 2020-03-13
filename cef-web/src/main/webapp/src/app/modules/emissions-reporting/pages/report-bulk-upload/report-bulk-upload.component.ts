@@ -30,6 +30,7 @@ export class ReportBulkUploadComponent implements OnInit {
     facility: CdxFacility;
     selectedFile: File = null;
 
+    uploadFile: string;
     uploadErrors: string[];
     uploadFailed: boolean;
 
@@ -66,6 +67,7 @@ export class ReportBulkUploadComponent implements OnInit {
         if (this.selectedFile) {
 
             this.uploadFailed = false;
+            this.uploadFile = this.selectedFile.name;
 
             this.pleaseWait = {
                 keepAliveTicker: null,
