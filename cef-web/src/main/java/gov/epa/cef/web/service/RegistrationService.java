@@ -16,7 +16,6 @@ public interface RegistrationService {
      * @return
      * @throws ApplicationException
      */
-    @Cacheable(value = CacheName.UserProgramFacilities)
     List<ProgramFacility> retrieveFacilities(Long userRoleId);
 
     /**
