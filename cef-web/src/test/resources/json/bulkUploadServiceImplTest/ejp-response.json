@@ -411,39 +411,63 @@
             "unitOfMeasureCode": "E6FT3",
             "unitIdentifier": "UnitTest1",
             "typeCode": "100"
+        },
+        {
+            "comments": "Unit ID unique",
+            "statusYear": "1980",
+            "operatingStatusCodeDescription": "OP",
+            "_row": 25,
+            "description": "Natural Gas Boiler",
+            "designCapacity": "100",
+            "id": "25",
+            "facilitySiteId": "24",
+            "unitOfMeasureCode": "E6FT3",
+            "unitIdentifier": "UnitTest1",
+            "typeCode": "100"
+        },
+        {
+            "comments": "test",
+            "statusYear": "2008",
+            "operatingStatusCodeDescription": "OP",
+            "_row": 26,
+            "description": "Mainline Unit",
+            "designCapacity": "16900",
+            "id": "26",
+            "facilitySiteId": "24",
+            "unitOfMeasureCode": "HP",
+            "unitIdentifier": "ML04",
+            "typeCode": "120"
         }
     ],
     "releasePoints": [
         {
-            "releasePointIdentifier": "JoshStack1",
-            "stackDiameter": "15",
+            "releasePointIdentifier": "TestStack1",
             "exitGasTemperature": "100",
-            "comments": "Comments for JoshStack1",
+            "comments": "Comments for TestStack1",
             "statusYear": "1980",
-            "latitude": "33.82962",
+            "latitude": "33.8296",
             "fenceLineDistance": "100",
             "fenceLineUomCode": "FT",
             "description": "Primary Smokestack",
-            "stackDiameterUomCode": "FT",
-            "exitGasVelocity": "100",
+            "exitGasVelocity": "5",
             "exitGasFlowUomCode": "ACFS",
             "exitGasVelocityUomCode": "FPS",
             "facilitySiteId": "24",
             "typeCode": "2",
-            "stackHeight": "20",
+            "stackHeight": "16",
             "_row": 24,
             "operatingStatusCode": "OP",
             "id": "24",
-            "exitGasFlowRate": "70",
+            "exitGasFlowRate": "352",
             "longitude": "-83.69087",
             "stackHeightUomCode": "FT"
         },
         {
             "fugitiveHeight": "100",
-            "releasePointIdentifier": "EdStack2",
+            "releasePointIdentifier": "TestStack2",
             "fugitiveLengthUomCode": "FT",
             "statusYear": "1979",
-            "latitude": "33.82961",
+            "latitude": "33.8296",
             "fenceLineDistance": "200",
             "description": "Secondary Fugitive",
             "exitGasVelocity": "100",
@@ -454,9 +478,9 @@
             "operatingStatusCode": "OP",
             "fugitiveAngle": "45",
             "id": "25",
-            "longitude": "-83.69086",
+            "longitude": "-83.69087",
             "exitGasTemperature": "200",
-            "comments": "Comments for EdStack2",
+            "comments": "Comments for TestStack2",
             "fugitiveLine2Longitude": "-83.69081",
             "fenceLineUomCode": "FT",
             "fugitiveLine1Latitude": "33.82951",
@@ -468,6 +492,56 @@
             "exitGasFlowRate": "300",
             "fugitiveLine1Longitude": "-83.6908",
             "fugitiveWidthUomCode": "FT"
+        },
+        {
+            "fugitiveHeight": "100",
+            "releasePointIdentifier": "TestStack2",
+            "fugitiveLengthUomCode": "FT",
+            "statusYear": "2018",
+            "latitude": "33.8296",
+            "fenceLineDistance": "200",
+            "description": "Primary Fugitive",
+            "exitGasVelocity": "100",
+            "exitGasFlowUomCode": "ACFM",
+            "exitGasVelocityUomCode": "FPM",
+            "facilitySiteId": "24",
+            "fugitiveLine2Latitude": "33.82941",
+            "operatingStatusCode": "OP",
+            "fugitiveAngle": "45",
+            "id": "26",
+            "longitude": "-83.69087",
+            "exitGasTemperature": "200",
+            "comments": "Comments for TestStack2",
+            "fugitiveLine2Longitude": "-83.69081",
+            "fenceLineUomCode": "FT",
+            "fugitiveLine1Latitude": "33.8297",
+            "fugitiveLength": "30",
+            "fugitiveWidth": "20",
+            "typeCode": "1",
+            "_row": 26,
+            "exitGasFlowRate": "300",
+            "fugitiveLine1Longitude": "-83.6908",
+            "fugitiveWidthUomCode": "FT"
+        },
+        {
+            "releasePointIdentifier": "TestStack3",
+            "stackDiameter": "10",
+            "exitGasTemperature": "100",
+            "comments": "Comments for TestStack3",
+            "statusYear": "2018",
+            "latitude": "33.8296",
+            "fenceLineDistance": "200",
+            "fenceLineUomCode": "FT",
+            "description": "Secondary Stack",
+            "stackDiameterUomCode": "FT",
+            "facilitySiteId": "24",
+            "typeCode": "2",
+            "stackHeight": "16",
+            "_row": 27,
+            "operatingStatusCode": "OP",
+            "id": "27",
+            "longitude": "-84",
+            "stackHeightUomCode": "FT"
         }
     ],
     "emissionsProcesses": [
@@ -475,14 +549,66 @@
             "emissionsUnitId": "24",
             "comments": "Comments for Natural Gas Process",
             "statusYear": "1988",
-            "sccDescription": "External Combustion Boilers > Industrial > Natural Gas > > 100 Million BTU/hr",
-            "emissionsProcessIdentifier": "Natural Gas Boiling Process",
-            "aircraftEngineTypeCode": null,
+            "sccDescription": "Mobile Sources > Aircraft > Air Taxi > Turbine",
+            "emissionsProcessIdentifier": "NG Boiling",
+            "aircraftEngineTypeCode": "203269",
             "_row": 24,
             "operatingStatusCode": "OP",
             "description": "A process where we boil water using natural gas",
             "id": "24",
-            "sccCode": "10200601"
+            "sccCode": "2275060012"
+        },
+        {
+            "emissionsUnitId": "24",
+            "comments": "SCC/Aircraft unique",
+            "statusYear": "2018",
+            "sccDescription": "Mobile Sources > Aircraft > Air Taxi > Turbine",
+            "emissionsProcessIdentifier": "NG Storage",
+            "aircraftEngineTypeCode": "203269",
+            "_row": 25,
+            "operatingStatusCode": "OP",
+            "description": "A storage process",
+            "id": "25",
+            "sccCode": "2275060012"
+        },
+        {
+            "emissionsUnitId": "24",
+            "comments": "Process ID unique",
+            "statusYear": "1988",
+            "sccDescription": "Chemical Evaporation > Aerosol Cans > Filling Facilities > Other Not Elsewhere Classified",
+            "emissionsProcessIdentifier": "NG Boiling",
+            "aircraftEngineTypeCode": "204007",
+            "_row": 26,
+            "operatingStatusCode": "OP",
+            "description": "A process where we boil water using natural gas",
+            "id": "26",
+            "sccCode": "41100101"
+        },
+        {
+            "emissionsUnitId": "26",
+            "comments": "TEST",
+            "statusYear": "2008",
+            "sccDescription": "Internal Combustion Engines > Industrial > Natural Gas > Turbine",
+            "emissionsProcessIdentifier": "ML04",
+            "aircraftEngineTypeCode": null,
+            "_row": 27,
+            "operatingStatusCode": "OP",
+            "description": "Mainline Unit",
+            "id": "27",
+            "sccCode": "20200201"
+        },
+        {
+            "emissionsUnitId": "26",
+            "comments": "TEST",
+            "statusYear": "2008",
+            "sccDescription": "Internal Combustion Engines > Industrial > Natural Gas > Turbine",
+            "emissionsProcessIdentifier": "ML04",
+            "aircraftEngineTypeCode": null,
+            "_row": 28,
+            "operatingStatusCode": "OP",
+            "description": "Mainline Unit",
+            "id": "28",
+            "sccCode": "20200201"
         }
     ],
     "reportingPeriods": [
@@ -497,56 +623,118 @@
             "emissionsOperatingTypeCode": "R",
             "emissionsProcessId": "24",
             "calculationParameterTypeCode": "I"
+        },
+        {
+            "calculationParameterValue": "207",
+            "calculationParameterUom": "E6FT3",
+            "_row": 25,
+            "id": "25",
+            "calculationMaterialCode": "209",
+            "reportingPeriodTypeCode": "A",
+            "emissionsOperatingTypeCode": "R",
+            "emissionsProcessId": "27",
+            "calculationParameterTypeCode": "I"
+        },
+        {
+            "calculationParameterValue": "207",
+            "calculationParameterUom": "E3FT3",
+            "_row": 26,
+            "id": "26",
+            "calculationMaterialCode": "209",
+            "reportingPeriodTypeCode": "A",
+            "emissionsOperatingTypeCode": "R",
+            "emissionsProcessId": "27",
+            "calculationParameterTypeCode": "I"
         }
     ],
     "emissions": [
         {
-            "emissionsDenominatorUom": "E6FT3",
             "pollutantCode": "CO2",
             "emissionsFactor": "0.6",
-            "emissionsCalcMethodCode": "12",
             "comments": "Emission 1 Comments",
             "reportingPeriodId": "24",
+            "overallControlPercent": "100",
+            "emissionsDenominatorUom": "E6FT3",
+            "emissionsCalcMethodCode": "12",
             "_row": 24,
             "id": "24",
             "emissionsFactorText": "Emission Factor from my industry",
-            "totalEmissions": "100",
+            "totalEmissions": "-0.05",
             "emissionsUomCode": "TON",
             "emissionsNumeratorUom": "LB"
         },
         {
-            "emissionsDenominatorUom": "E6FT3",
             "pollutantCode": "VOC",
             "emissionsFactor": "0.1",
-            "emissionsCalcMethodCode": "8",
             "comments": "No Comments",
             "reportingPeriodId": "24",
+            "overallControlPercent": "-0.01",
+            "emissionsDenominatorUom": "E6FT3",
+            "emissionsCalcMethodCode": "8",
             "_row": 25,
             "id": "25",
             "emissionsFactorText": "Text from a sample emission factor",
-            "totalEmissions": "200",
+            "totalEmissions": "19000",
             "emissionsUomCode": "LB",
             "emissionsNumeratorUom": "TON"
         },
         {
+            "emissionsDenominatorUom": "HR",
             "pollutantCode": "N2O",
+            "emissionsFactor": "0.6",
             "emissionsCalcMethodCode": "1",
             "comments": "Figured it out myself",
             "reportingPeriodId": "24",
             "_row": 26,
             "id": "26",
+            "emissionsFactorText": "Test for Curies UoM",
             "totalEmissions": "300",
+            "emissionsUomCode": "TON",
+            "emissionsNumeratorUom": "LB"
+        },
+        {
+            "pollutantCode": "605",
+            "emissionsCalcMethodCode": "2",
+            "reportingPeriodId": "24",
+            "_row": 27,
+            "id": "27",
+            "totalEmissions": "25",
+            "emissionsUomCode": "G"
+        },
+        {
+            "pollutantCode": "CO",
+            "emissionsFactor": "15.8",
+            "emissionsCalcMethodCode": "11",
+            "reportingPeriodId": "25",
+            "_row": 28,
+            "id": "28",
+            "emissionsFactorText": "Test for Curies UoM",
+            "totalEmissions": "13.94",
             "emissionsUomCode": "TON"
+        },
+        {
+            "emissionsDenominatorUom": "HR",
+            "pollutantCode": "NOX",
+            "emissionsFactor": "15.2",
+            "emissionsCalcMethodCode": "11",
+            "comments": "test",
+            "reportingPeriodId": "26",
+            "_row": 29,
+            "id": "29",
+            "emissionsFactorText": "Test",
+            "totalEmissions": "13.41",
+            "emissionsUomCode": "TON",
+            "emissionsNumeratorUom": "LB"
         }
     ],
     "releasePointAppts": [
         {
             "emissionProcessId": "24",
-            "controlPathId": "24",
+            "controlPathId": null,
             "releasePointId": "24",
             "_row": 24,
             "id": "24",
-            "percent": "50"
+            "percent": "102"
         },
         {
             "emissionProcessId": "24",
@@ -570,6 +758,32 @@
             "actualHoursPerPeriod": "8000",
             "id": "24",
             "percentSpring": "30"
+        },
+        {
+            "averageWeeksPerPeriod": "11",
+            "reportingPeriodId": "25",
+            "percentFall": "15.8",
+            "percentSummer": "1.3",
+            "averageHoursPerDay": "4.8",
+            "percentWinter": "82.9",
+            "averageDaysPerWeek": "1.4",
+            "_row": 25,
+            "actualHoursPerPeriod": "1764",
+            "id": "25",
+            "percentSpring": "0"
+        },
+        {
+            "averageWeeksPerPeriod": "11",
+            "reportingPeriodId": "26",
+            "percentFall": "15.8",
+            "percentSummer": "1.3",
+            "averageHoursPerDay": "4.8",
+            "percentWinter": "82.9",
+            "averageDaysPerWeek": "1.4",
+            "_row": 26,
+            "actualHoursPerPeriod": "1764",
+            "id": "26",
+            "percentSpring": "0"
         }
     ],
     "controlPaths": [
@@ -593,6 +807,18 @@
             "percentCapture": "20",
             "id": "24",
             "facilitySiteId": "24"
+        },
+        {
+            "identifier": "Control 2",
+            "comments": "Unassigned Control",
+            "controlMeasureCode": "112",
+            "_row": 25,
+            "percentControl": "20",
+            "operatingStatusCode": "OP",
+            "description": "An unassigned Control",
+            "percentCapture": "15",
+            "id": "25",
+            "facilitySiteId": "24"
         }
     ],
     "controlAssignments": [
@@ -604,6 +830,15 @@
             "id": "24",
             "controlId": "24",
             "percentApportionment": "100"
+        },
+        {
+            "controlPathId": "24",
+            "sequenceNumber": "1",
+            "_row": 25,
+            "controlPathChildId": null,
+            "id": "25",
+            "controlId": "24",
+            "percentApportionment": "50"
         }
     ],
     "controlPollutants": [
@@ -612,7 +847,21 @@
             "_row": 24,
             "id": "24",
             "controlId": "24",
-            "percentReduction": "98"
+            "percentReduction": "102"
+        },
+        {
+            "pollutantCode": "1313991",
+            "_row": 25,
+            "id": "25",
+            "controlId": "24",
+            "percentReduction": "99.9"
+        },
+        {
+            "pollutantCode": "18540299",
+            "_row": 26,
+            "id": "26",
+            "controlId": "24",
+            "percentReduction": "2"
         }
     ],
     "facilityContacts": [
@@ -622,7 +871,7 @@
             "city": "Monroe",
             "mailingCity": "Monroe",
             "prefix": "Mr",
-            "postalCode": "33090",
+            "postalCode": "3309015888",
             "county": "Walton",
             "type": "EI",
             "facilitySiteId": "24",

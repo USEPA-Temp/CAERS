@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -17,12 +18,31 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
     private Long reportingPeriodId;
 
     private Short actualHoursPerPeriod;
+
+    @Digits(integer = 2, fraction = 1,
+        message = "Percent Apportionment is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double averageHoursPerDay;
+
+    @Digits(integer = 1, fraction = 1,
+        message = "Percent Apportionment is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double averageDaysPerWeek;
+
     private Short averageWeeksPerPeriod;
+
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent Winter is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentWinter;
+
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent Spring is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentSpring;
+
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent Summer is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentSummer;
+
+    @Digits(integer = 3, fraction = 1,
+        message = "Percent Fall is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentFall;
 
     public OperatingDetailBulkUploadDto() {
