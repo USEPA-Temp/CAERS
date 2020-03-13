@@ -20,6 +20,9 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
 
+    @NotNull(message = "Total Manual Entry is required.")
+    private boolean totalManualEntry;
+
     private BigDecimal overallControlPercent;
 
     @NotNull(message = "Total Emissions is required.")
@@ -43,6 +46,9 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
+
+    @Size(max = 4000, message = "Calculation Comment can not exceed {max} chars; found '${validatedValue}'.")
+    private String calculationComment;
 
     @Size(max = 20, message = "Emissions Numerator UoM Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsNumeratorUom;
@@ -76,6 +82,13 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     }
     public void setPollutantCode(String pollutantCode) {
         this.pollutantCode = pollutantCode;
+    }
+
+    public boolean isTotalManualEntry() {
+        return totalManualEntry;
+    }
+    public void setTotalManualEntry(boolean totalManualEntry) {
+        this.totalManualEntry = totalManualEntry;
     }
 
     public BigDecimal getOverallControlPercent() {
@@ -125,6 +138,13 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     }
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getCalculationComment() {
+        return calculationComment;
+    }
+    public void setCalculationComment(String calculationComment) {
+        this.calculationComment = calculationComment;
     }
 
     public BigDecimal getCalculatedEmissionsTons() {
