@@ -61,6 +61,14 @@ thead.thead-cef-medium {
     font-size: 80%;
 }
 
+.modal-backdrop.show {
+    opacity: 0.45;
+}
+
+.modal-dialog {
+    top: 10%; 
+} 
+
 .cursor-pointer{
   cursor: pointer;
 }
