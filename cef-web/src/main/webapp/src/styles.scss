@@ -11,6 +11,15 @@
     content: "";
 }
 
+#navbarToggleFooter .nav-item .nav-link:hover::after {
+    color: $yellow;
+}
+
+#navbarToggleFooter .nav-item .nav-link:hover {
+    color: $yellow !important;
+    text-decoration: underline;
+}
+
 .pipe-list .pipe-item::after {
     content: " | ";
 }

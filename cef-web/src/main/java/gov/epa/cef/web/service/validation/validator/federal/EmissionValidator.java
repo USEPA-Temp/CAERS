@@ -30,6 +30,8 @@ public class EmissionValidator extends BaseValidator<Emission> {
     
     private static final String ASH_EMISSION_FORMULA_CODE = "A";
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
+    private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -230,7 +232,9 @@ public class EmissionValidator extends BaseValidator<Emission> {
                     && emission.getEmissionsFactor() != null
                     && emission.getEmissionsNumeratorUom() != null
                     && emission.getEmissionsDenominatorUom() != null
-                    && emission.getEmissionsUomCode() != null) {
+                    && emission.getEmissionsUomCode() != null
+                    && !emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_TEMPORARILY_SHUTDOWN)
+                    && !emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_PERMANENTLY_SHUTDOWN)){
 
                 // Total emissions cannot be calculated with the given emissions factor because Throughput UoM {0} cannot be converted to Emission Factor Denominator UoM {1}. 
                 // Please adjust Units of Measure or choose the option "I prefer to calculate the total emissions myself."
