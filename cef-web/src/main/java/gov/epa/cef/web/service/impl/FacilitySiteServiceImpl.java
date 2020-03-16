@@ -7,6 +7,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
@@ -153,8 +154,40 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     public FacilitySiteDto update(FacilitySiteDto dto) {
 
     	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
-    	facilitySiteMapper.updateFromDto(dto, facilitySite);
+    	
+        if((dto.getOperatingStatusCode().getCode().equals("PS") && !facilitySite.getOperatingStatusCode().getCode().equals("PS"))
+                ||(dto.getOperatingStatusCode().getCode().equals("TS") && !facilitySite.getOperatingStatusCode().getCode().equals("TS"))
+                ||(dto.getOperatingStatusCode().getCode().equals("OP") && !facilitySite.getOperatingStatusCode().getCode().equals("OP"))
+                ||(dto.getOperatingStatusCode().getCode().equals("ONP") && !facilitySite.getOperatingStatusCode().getCode().equals("ONP"))
+                ||(dto.getOperatingStatusCode().getCode().equals("ONRE") && !facilitySite.getOperatingStatusCode().getCode().equals("ONRE"))
 
+                ){
+        			OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
+        			tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());
+        			
+                	Short tempStatusYear = dto.getStatusYear();
+                	
+                	facilitySite.getEmissionsUnits().forEach(unit -> {
+        	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
+        	        	unit.setStatusYear(tempStatusYear);
+        	        	unit.getEmissionsProcesses().forEach(process -> {
+            	        	process.setOperatingStatusCode(tempOperatingStatusCode);
+            	        	process.setStatusYear(tempStatusYear);
+        	        	});
+                	});
+                	
+                	facilitySite.getControls().forEach(control -> {
+        	        	control.setOperatingStatusCode(tempOperatingStatusCode);
+                	});
+                	
+                	facilitySite.getReleasePoints().forEach(releasePoint -> {
+        	        	releasePoint.setOperatingStatusCode(tempOperatingStatusCode);
+        	        	releasePoint.setStatusYear(tempStatusYear);
+                	});
+        }
+   
+    	facilitySiteMapper.updateFromDto(dto, facilitySite);
+    	
     	FacilitySiteDto result = facilitySiteMapper.toDto(facSiteRepo.save(facilitySite));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilitySiteRepository.class);
 
