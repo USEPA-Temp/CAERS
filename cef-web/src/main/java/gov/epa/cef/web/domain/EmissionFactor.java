@@ -46,8 +46,8 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
     @JoinColumn(name = "control_measure_code")
     private ControlMeasureCode controlMeasureCode;
     
-    @Column(name = "scc_code", nullable = false, precision = 8, scale = 0)
-    private Integer sccCode;
+    @Column(name = "scc_code", nullable = false, length = 20)
+    private String sccCode;
     
     @Column(name = "pollutant_code", length = 12)
     private String pollutantCode;
@@ -108,11 +108,11 @@ public class EmissionFactor extends BaseEntity implements java.io.Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public Integer getSccCode() {
+    public String getSccCode() {
         return sccCode;
     }
 
-    public void setSccCode(Integer sccCode) {
+    public void setSccCode(String sccCode) {
         this.sccCode = sccCode;
     }
 
