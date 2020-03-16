@@ -1,2 +1,2 @@
 ALTER TABLE emission_factor 
-	ALTER COLUMN scc_code TYPE character varying(10);
+	ALTER COLUMN scc_code TYPE character varying(20);
