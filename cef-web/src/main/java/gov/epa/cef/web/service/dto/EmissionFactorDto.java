@@ -11,7 +11,7 @@ public class EmissionFactorDto {
     private CodeLookupDto calculationParameterTypeCode;
     private CodeLookupDto calculationMaterialCode;
     private CodeLookupDto controlMeasureCode;
-    private Integer sccCode;
+    private String sccCode;
     private String pollutantCode;
     private Boolean formulaIndicator;
     private Boolean controlIndicator;
@@ -70,11 +70,11 @@ public class EmissionFactorDto {
         this.controlMeasureCode = controlMeasureCode;
     }
 
-    public Integer getSccCode() {
+    public String getSccCode() {
         return sccCode;
     }
 
-    public void setSccCode(Integer sccCode) {
+    public void setSccCode(String sccCode) {
         this.sccCode = sccCode;
     }
 
