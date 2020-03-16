@@ -284,7 +284,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
     /**
      * There should be one error when Calculation Method Code has false total direct entry and Emission Denominator UoM type doesn't equal Throughput UoM type
-     * and there should be no errors when totalManualEntry is true
+     * and there should be no errors when totalManualEntry is true and when Emissions Process Operating Status is TEMPORARILY shutdown or PERMANENTLY shutdown.
      */
     @Test
     public void totalDirectEntryFalse_DenomMismatch_FailTest() {
@@ -300,6 +300,12 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_DENOM_UOM.value()) && errorMap.get(ValidationField.EMISSION_DENOM_UOM.value()).size() == 1);
 
         cefContext = createContext();
+        testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("TS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
         testData.setTotalManualEntry(true);
 
         assertTrue(this.validator.validate(cefContext, testData));
@@ -308,7 +314,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
     /**
      * There should be one error when Calculation Method Code has false total direct entry and Emission Numerator UoM type doesn't equal Total Emissions UoM type
-     * and there should be no errors when totalManualEntry is true
+     * and there should be no errors when totalManualEntry is true and when Emissions Process Operating Status is TEMPORARILY shutdown or PERMANENTLY shutdown.
      */
     @Test
     public void totalDirectEntryFalse_NumMismatch_FailTest() {
@@ -324,6 +330,12 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_NUM_UOM.value()) && errorMap.get(ValidationField.EMISSION_NUM_UOM.value()).size() == 1);
 
         cefContext = createContext();
+        testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("PS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
         testData.setTotalManualEntry(true);
 
         assertTrue(this.validator.validate(cefContext, testData));
@@ -332,7 +344,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
     /**
      * There should be one error when Calculation Method Code has false total direct entry and Emission Total Emissions is not calculated correctly
-     * and there should be no errors when totalManualEntry is true
+     * and there should be no errors when totalManualEntry is true and when Emissions Process Operating Status is TEMPORARILY shutdown or PERMANENTLY shutdown.
      */
     @Test
     public void totalDirectEntryFalse_TotalEmissionsToleranceError_FailTest() {
@@ -370,11 +382,17 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
                 && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_ERROR_CODE);
+        
+        cefContext = createContext();
+        testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("TS");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
 
     /**
      * There should be one warning when Calculation Method Code has false total direct entry and Emission Total Emissions is not calculated correctly
-     * and there should be no errors when totalManualEntry is true
+     * and there should be no errors when totalManualEntry is true and when Emissions Process Operating Status is TEMPORARILY shutdown or PERMANENTLY shutdown.
      */
     @Test
     public void totalDirectEntryFalse_TotalEmissionsToleranceWarning_FailTest() {
@@ -446,6 +464,12 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         testData.setTotalEmissions(new BigDecimal("9.9"));
 
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("PS");
+        
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
@@ -659,6 +683,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.setCalculationParameterValue(new BigDecimal("10"));
         period.setCalculationParameterUom(tonUom);
         period.setEmissionsProcess(new EmissionsProcess());
+        period.getEmissionsProcess().setOperatingStatusCode(opStatCode);
         period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2020);
