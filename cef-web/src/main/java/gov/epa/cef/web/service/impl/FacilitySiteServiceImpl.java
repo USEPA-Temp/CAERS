@@ -168,21 +168,27 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
                 	Short tempStatusYear = dto.getStatusYear();
                 	
                 	facilitySite.getEmissionsUnits().forEach(unit -> {
-        	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
-        	        	unit.setStatusYear(tempStatusYear);
-        	        	unit.getEmissionsProcesses().forEach(process -> {
-            	        	process.setOperatingStatusCode(tempOperatingStatusCode);
-            	        	process.setStatusYear(tempStatusYear);
-        	        	});
+                		if(!unit.getOperatingStatusCode().getCode().contentEquals("PS")){
+            	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
+            	        	unit.setStatusYear(tempStatusYear);
+            	        	unit.getEmissionsProcesses().forEach(process -> {
+                	        	process.setOperatingStatusCode(tempOperatingStatusCode);
+                	        	process.setStatusYear(tempStatusYear);
+            	        	});
+                		}
                 	});
                 	
                 	facilitySite.getControls().forEach(control -> {
-        	        	control.setOperatingStatusCode(tempOperatingStatusCode);
+                		if(!control.getOperatingStatusCode().getCode().contentEquals("PS")){
+                			control.setOperatingStatusCode(tempOperatingStatusCode);
+                		}
                 	});
                 	
                 	facilitySite.getReleasePoints().forEach(releasePoint -> {
-        	        	releasePoint.setOperatingStatusCode(tempOperatingStatusCode);
-        	        	releasePoint.setStatusYear(tempStatusYear);
+                		if(!releasePoint.getOperatingStatusCode().getCode().contentEquals("PS")){
+	        	        	releasePoint.setOperatingStatusCode(tempOperatingStatusCode);
+	        	        	releasePoint.setStatusYear(tempStatusYear);
+                		}
                 	});
         }
    
