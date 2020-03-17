@@ -23,6 +23,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() unitIdentifier: string;
   @Input() emissionsUnit: EmissionUnit;
   sccAndAircraftCombinations: String[] = [];
+  emissionsProcessIdentifiers: String[] = [];
   emissionUnit: EmissionUnit;
   emissionsReportYear: number;
   sccRetirementYear: number;
@@ -91,6 +92,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       this.emissionUnitService.retrieveForFacility(data.facilitySite.id).subscribe(emissionUnits =>{
         emissionUnits.forEach(eu => {
           eu['emissionsProcesses'].forEach(process =>{
+            this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
+
             if(process['aircraftEngineTypeCode'] && process['sccCode']){
               //if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
               //to avoid comparing its own combination to itself, if its a new process then skip this check
@@ -99,7 +102,13 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
                 this.sccAndAircraftCombinations.push(combination);
               }
             }
-        });
+          });
+
+          //if a process is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
+          if (this.process) {
+            this.emissionsProcessIdentifiers = this.emissionsProcessIdentifiers.filter(identifer => identifer.toString() !== this.process.emissionsProcessIdentifier);
+          }
+
         });
       });
     });
@@ -269,21 +278,10 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   // check for duplicate process identifier
   checkProcessIdentifier(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-
-      if (control.get('emissionsProcessIdentifier') !== null && this.emissionUnit != null) {
-        this.emissionUnit['emissionsProcesses'].forEach(pIdentifier => {
-          if (this.process !== undefined) {
-            if ((pIdentifier['emissionsProcessIdentifier'] !== this.process.emissionsProcessIdentifier)
-            && (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value.trim())) {
-              control.get('emissionsProcessIdentifier').setErrors({invalidDuplicateProcessIdetifier: true});
-            }
-          } else if (this.process === undefined)  {
-            if (pIdentifier['emissionsProcessIdentifier'] === control.get('emissionsProcessIdentifier').value.trim()) {
-              control.get('emissionsProcessIdentifier').setErrors({invalidDuplicateProcessIdetifier: true});
-            }
-          }
-          return null;
-        });
+      if (this.emissionsProcessIdentifiers && control.get('emissionsProcessIdentifier').value) {
+        if (this.emissionsProcessIdentifiers.includes(control.get('emissionsProcessIdentifier').value.trim())) {
+          return { invalidDuplicateProcessIdetifier: true };
+        }
       }
       return null;
     };

@@ -43,6 +43,7 @@ export class EmissionDetailsComponent implements OnInit {
   @Input() createMode = false;
   epaEmissionFactor = false;
   efNumeratorMismatch = false;
+  calcParamValue = true;
   failedNumDesc: string;
   failedTotalDesc: string;
   efDenominatorMismatch = false;
@@ -287,8 +288,13 @@ export class EmissionDetailsComponent implements OnInit {
         this.failedTotalDesc = null;
       }
 
-      if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.reportingPeriod.calculationParameterValue) {
+      if (this.reportingPeriod.calculationParameterValue < 0) {
+        this.calcParamValue = false;
+      } else {
+        this.calcParamValue = true;
+      }
 
+      if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.reportingPeriod.calculationParameterValue >= 0) {
         const calcEmission = new Emission();
         Object.assign(calcEmission, this.emissionForm.value);
 

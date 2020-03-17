@@ -14,7 +14,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.OperatingDetail;
+import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.OperatingDetailValidator;
@@ -444,6 +447,13 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
     private OperatingDetail createBaseOperatingDetail() {
 
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        
+        ReportingPeriod period = new ReportingPeriod();
+        period.setEmissionsProcess(new EmissionsProcess());
+        period.getEmissionsProcess().setOperatingStatusCode(opStatCode);
+        
         OperatingDetail result = new OperatingDetail();
         result.setAvgHoursPerDay(Double.valueOf(5));
         result.setAvgDaysPerWeek(Double.valueOf(5));
@@ -453,6 +463,8 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         result.setPercentFall(Double.valueOf(25));
         result.setPercentWinter(Double.valueOf(25));
         result.setAvgWeeksPerPeriod(Short.valueOf("5"));
+        result.setReportingPeriod(period);
+        period.getOperatingDetails().add(result);
 
         return result;
     }

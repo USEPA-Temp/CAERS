@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <div class="col-sm-6 col-md-10">
-            <div class="validation-message" *ngIf="processForm.get('emissionsProcessIdentifier').errors?.invalidDuplicateProcessIdetifier">
+            <div class="validation-message" *ngIf="processForm.errors?.invalidDuplicateProcessIdetifier">
                 This Emissions Process Identifier already exists for this Emissions Unit, duplicates are not allowed.
             </div>
         </div>

@@ -140,6 +140,7 @@ public class EmissionsReportValidationServiceImplTest {
         reportingPeriod.getEmissions().add(emission);
         reportingPeriod.setEmissionsProcess(emissionsProcess);
         reportingPeriod.getOperatingDetails().add(detail);
+        detail.setReportingPeriod(reportingPeriod);
         emission.setReportingPeriod(reportingPeriod);
         emissionsProcess.getReportingPeriods().add(reportingPeriod);
         emissionsProcess.setEmissionsUnit(emissionsUnit);
