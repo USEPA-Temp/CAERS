@@ -11,10 +11,13 @@
         </div>
 
         <div *ngIf="validationComplete">
-
-            <div class="text-success" *ngIf="!(hasErrors() || hasWarnings())">
-                Quality checks were completed successfully with no warnings or errors.
+            <div class="text-success" *ngIf="(!hasErrors() && hasWarnings()) "> 
+                Quality checks were completed with warnings.  Please review the following warnings and make any necessary updates before submitting your report from the Report Summary screen.
             </div>
+            <div class="text-success" *ngIf="!(hasErrors() || hasWarnings())">
+                Quality checks were completed successfully with no warnings or errors. You can now certify and submit your report from the Report Summary screen.
+            </div>
+            <div *ngIf="!hasErrors()"><button routerLink="{{baseUrl}}/summary"  class="btn btn-success btn-md my-3">Proceed to Report Summary</button></div>
 
             <div class="validation-item-error" *ngIf="validationResult.federalErrors.length > 0 || validationResult.stateErrors.length > 0">
                 <div class="h3 font-weight-bolder">Errors</div>
