@@ -172,8 +172,10 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
             	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
             	        	unit.setStatusYear(tempStatusYear);
             	        	unit.getEmissionsProcesses().forEach(process -> {
-                	        	process.setOperatingStatusCode(tempOperatingStatusCode);
-                	        	process.setStatusYear(tempStatusYear);
+            	        		if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
+	                	        	process.setOperatingStatusCode(tempOperatingStatusCode);
+	                	        	process.setStatusYear(tempStatusYear);
+            	        		}
             	        	});
                 		}
                 	});
