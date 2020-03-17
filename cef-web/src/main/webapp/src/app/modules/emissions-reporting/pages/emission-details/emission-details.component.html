@@ -243,7 +243,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="float-right form-group form-check" *ngIf="!getCalcMethodCodeValue()?.totalDirectEntry">
-                                <input type="checkbox" class="form-check-input" id="manualEntryCb" formControlName="totalManualEntry" >
+                                <input  (ngModelChange)="onChange($event)" type="checkbox" class="form-check-input" id="manualEntryCb" formControlName="totalManualEntry" >
                                 <label for="manualEntryCb" class="form-check-label"><strong>I prefer to calculate the total emissions of this pollutant</strong></label>
                             </div>
                         </div>
@@ -258,7 +258,6 @@
                                 <div *ngIf="emissionForm.get('calculationComment').getError('required')">
                                     Description of Calculation field is required when using an emission factor and choosing to perform the calculations yourself.
                                 </div>
-
                                 <div *ngIf="emissionForm.get('calculationComment').getError('maxlength')">
                                     Value cannot exceed {{emissionForm.get('calculationComment').getError('maxlength').requiredLength}} characters.
                                 </div>

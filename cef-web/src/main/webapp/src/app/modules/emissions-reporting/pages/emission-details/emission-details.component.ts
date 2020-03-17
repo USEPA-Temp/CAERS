@@ -227,8 +227,10 @@ export class EmissionDetailsComponent implements OnInit {
       this.emissionForm.get('comments').updateValueAndValidity();
       if (this.getTotalManualEntry().value) {
         this.emissionForm.get('calculationComment').enable();
+        this.emissionForm.get('emissionsFactorText').setValidators(null);
       } else {
         this.emissionForm.get('calculationComment').reset({value: null, disabled: true});
+        this.emissionForm.get('emissionsFactorText').setValidators([Validators.required]);
       }
     }
 
@@ -315,6 +317,16 @@ export class EmissionDetailsComponent implements OnInit {
     this.emissionForm.enable();
     if (!this.createMode) {
       this.emissionForm.reset(this.emission);
+    }
+  }
+
+  onChange(checkBoxChecked) {
+    if (checkBoxChecked) {
+      this.emissionForm.get('emissionsFactorText').setValidators(null);
+      this.emissionForm.controls.emissionsFactorText.updateValueAndValidity();
+    } else {
+      this.emissionForm.get('emissionsFactorText').setValidators([Validators.required]);
+      this.emissionForm.controls.emissionsFactorText.updateValueAndValidity();
     }
   }
 
@@ -480,6 +492,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.needsCalculation = true;
         if (value && this.getCalcMethodCodeValue() && !this.getCalcMethodCodeValue().totalDirectEntry) {
           this.emissionForm.get('calculationComment').enable();
+          this.emissionForm.get('emissionsFactorText').setValidators(null);
         } else {
           this.emissionForm.get('calculationComment').disable();
         }
