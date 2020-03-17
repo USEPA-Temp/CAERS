@@ -8,6 +8,7 @@ import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-facility-site-info-panel',
@@ -72,7 +73,8 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   constructor(
     private lookupService: LookupService,
     public formUtils: FormUtilsService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private toastr: ToastrService) { }
 
   ngOnInit() {
 
@@ -137,6 +139,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   onChange(newValue) {
     if(newValue) {
       this.facilitySiteForm.controls.statusYear.reset();
+      this.toastr.warning('', 'If the operating status of the Facility Site is changed, then the operating status of all the child Emission Units, Processes, Controls, and Release Points that are underneath this Facility Site will also be updated, unless they are already Permanently Shutdown.', {positionClass: 'toast-top-right'});
     }
   }
 
