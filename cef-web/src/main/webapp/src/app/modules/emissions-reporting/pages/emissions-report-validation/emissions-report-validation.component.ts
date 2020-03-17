@@ -19,6 +19,7 @@ export class EmissionsReportValidationComponent implements OnInit {
 
     validationResult: ValidationResult;
     validationComplete: boolean;
+    baseUrl: string;
 
   constructor(
       private route: ActivatedRoute,
@@ -29,6 +30,11 @@ export class EmissionsReportValidationComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.route.paramMap
+      .subscribe(map => {
+        this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
+    });
 
       this.validationComplete = false;
 
@@ -69,6 +75,10 @@ export class EmissionsReportValidationComponent implements OnInit {
                   this.sharedService.emitValidationResultChange(this.validationResult);
               });
       });
+  }
+  
+  goToReportSummary(){
+
   }
 
   hasErrors() {
