@@ -220,6 +220,9 @@
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
                                     The Total Emissions must be recalculated.
                                 </div>
+                                <div *ngIf="!calcParamValue">
+                                    Cannot calculate Total Emissions. Annual Throughput for Reporting Period must be greater than or equal to zero.
+                                </div>
                             </div>
                         </div>
                         <label for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions UoM:</strong></label>
