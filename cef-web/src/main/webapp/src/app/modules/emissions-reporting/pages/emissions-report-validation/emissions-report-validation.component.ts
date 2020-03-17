@@ -76,10 +76,6 @@ export class EmissionsReportValidationComponent implements OnInit {
               });
       });
   }
-  
-  goToReportSummary(){
-
-  }
 
   hasErrors() {
       if (this.validationComplete === true && this.validationResult) {
