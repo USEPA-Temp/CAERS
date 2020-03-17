@@ -99,14 +99,8 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
 
         EmissionsUnit unit = unitRepo.findById(dto.getId()).orElse(null);
 
-        if((dto.getOperatingStatusCode().getCode().equals("PS") && !unit.getOperatingStatusCode().getCode().equals("PS"))
-         ||(dto.getOperatingStatusCode().getCode().equals("TS") && !unit.getOperatingStatusCode().getCode().equals("TS"))
-         ||(dto.getOperatingStatusCode().getCode().equals("OP") && !unit.getOperatingStatusCode().getCode().equals("OP"))
-         ||(dto.getOperatingStatusCode().getCode().equals("ONP") && !unit.getOperatingStatusCode().getCode().equals("ONP"))
-         ||(dto.getOperatingStatusCode().getCode().equals("ONRE") && !unit.getOperatingStatusCode().getCode().equals("ONRE"))
+    	if(!(dto.getOperatingStatusCode().getCode().equals(unit.getOperatingStatusCode().getCode()))){
 
-         ){
-        	
         	OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
         	tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());
             
