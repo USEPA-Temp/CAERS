@@ -155,43 +155,38 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
     	
-        if((dto.getOperatingStatusCode().getCode().equals("PS") && !facilitySite.getOperatingStatusCode().getCode().equals("PS"))
-                ||(dto.getOperatingStatusCode().getCode().equals("TS") && !facilitySite.getOperatingStatusCode().getCode().equals("TS"))
-                ||(dto.getOperatingStatusCode().getCode().equals("OP") && !facilitySite.getOperatingStatusCode().getCode().equals("OP"))
-                ||(dto.getOperatingStatusCode().getCode().equals("ONP") && !facilitySite.getOperatingStatusCode().getCode().equals("ONP"))
-                ||(dto.getOperatingStatusCode().getCode().equals("ONRE") && !facilitySite.getOperatingStatusCode().getCode().equals("ONRE"))
-
-                ){
-        			OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
-        			tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());
-        			
-                	Short tempStatusYear = dto.getStatusYear();
-                	
-                	facilitySite.getEmissionsUnits().forEach(unit -> {
-                		if(!unit.getOperatingStatusCode().getCode().contentEquals("PS")){
-            	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
-            	        	unit.setStatusYear(tempStatusYear);
-            	        	unit.getEmissionsProcesses().forEach(process -> {
-            	        		if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
-	                	        	process.setOperatingStatusCode(tempOperatingStatusCode);
-	                	        	process.setStatusYear(tempStatusYear);
-            	        		}
-            	        	});
-                		}
-                	});
-                	
-                	facilitySite.getControls().forEach(control -> {
-                		if(!control.getOperatingStatusCode().getCode().contentEquals("PS")){
-                			control.setOperatingStatusCode(tempOperatingStatusCode);
-                		}
-                	});
-                	
-                	facilitySite.getReleasePoints().forEach(releasePoint -> {
-                		if(!releasePoint.getOperatingStatusCode().getCode().contentEquals("PS")){
-	        	        	releasePoint.setOperatingStatusCode(tempOperatingStatusCode);
-	        	        	releasePoint.setStatusYear(tempStatusYear);
-                		}
-                	});
+    	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode()))){
+    		
+			OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
+			tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());
+			
+        	Short tempStatusYear = dto.getStatusYear();
+        	
+        	facilitySite.getEmissionsUnits().forEach(unit -> {
+        		if(!unit.getOperatingStatusCode().getCode().contentEquals("PS")){
+    	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
+    	        	unit.setStatusYear(tempStatusYear);
+    	        	unit.getEmissionsProcesses().forEach(process -> {
+    	        		if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
+            	        	process.setOperatingStatusCode(tempOperatingStatusCode);
+            	        	process.setStatusYear(tempStatusYear);
+    	        		}
+    	        	});
+        		}
+        	});
+        	
+        	facilitySite.getControls().forEach(control -> {
+        		if(!control.getOperatingStatusCode().getCode().contentEquals("PS")){
+        			control.setOperatingStatusCode(tempOperatingStatusCode);
+        		}
+        	});
+        	
+        	facilitySite.getReleasePoints().forEach(releasePoint -> {
+        		if(!releasePoint.getOperatingStatusCode().getCode().contentEquals("PS")){
+    	        	releasePoint.setOperatingStatusCode(tempOperatingStatusCode);
+    	        	releasePoint.setStatusYear(tempStatusYear);
+        		}
+        	});
         }
    
     	facilitySiteMapper.updateFromDto(dto, facilitySite);
