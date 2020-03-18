@@ -16,7 +16,7 @@
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.emissionsOperatingTypeCode"></app-validation-message>
         </div>
-        <label for="rpParamSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Calculation Parameter:</strong></label>
+        <label for="rpParamSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Throughput Parameter:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="rpParamSelect" formControlName="calculationParameterTypeCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
@@ -27,7 +27,7 @@
     </div>
 
     <div class="row pb-1">
-        <label for="rpMaterialSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Calculation Material:</strong></label>
+        <label for="rpMaterialSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Throughput Material:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="rpMaterialSelect" formControlName="calculationMaterialCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
@@ -35,12 +35,12 @@
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.calculationMaterialCode"></app-validation-message>
         </div>
-        <label for="rpValueInput" class="col-sm-6 col-md-2 col-form-label"><strong>Calculation Value:</strong></label>
+        <label for="rpValueInput" class="col-sm-6 col-md-2 col-form-label"><strong>Throughput Value:</strong></label>
         <div class="col-sm-6 col-md-2">
             <input type="text" class="form-control" id="rpValueInput" formControlName="calculationParameterValue" >
             <app-validation-message [control]="reportingPeriodForm.controls.calculationParameterValue"></app-validation-message>
         </div>
-        <label for="rpUomSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Calculation UoM:</strong></label>
+        <label for="rpUomSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Throughput UoM:</strong></label>
         <div class="col-sm-6 col-md-2">
             <select type="text" class="form-control" id="rpUomSelect" formControlName="calculationParameterUom" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
