@@ -143,7 +143,9 @@
                         <div class="col-sm-8 col-lg-4" *ngIf="!emissionForm.get('formulaIndicator').value">
                             <input type="number" class="form-control" id="emissionFactorInput" formControlName="emissionsFactor" [readonly]="epaEmissionFactor">
                             <app-validation-message [control]="emissionForm.controls.emissionsFactor"></app-validation-message>
-                            <span class="validation-message" [hidden]="!emissionForm.hasError('efFactorLessThanOrEqualToZero') || !emissionForm.controls.emissionsFactor.dirty">Emission Factor must be greater than zero.</span>
+                            <span class="validation-message" *ngIf="emissionForm.getError('efFactorLessThanOrEqualToZero') && emissionForm.controls.emissionsFactor.valid">
+                                Emission Factor must be greater than zero.
+                            </span>
                         </div>
                         <div class="col-sm-8 col-lg-4" *ngIf="emissionForm.get('formulaIndicator').value">
                             <input type="text" class="form-control" id="emissionFactorInput" formControlName="emissionsFactorFormula" [readonly]="true">
