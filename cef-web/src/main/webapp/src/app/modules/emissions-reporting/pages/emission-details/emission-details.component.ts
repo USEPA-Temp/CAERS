@@ -75,7 +75,7 @@ export class EmissionDetailsComponent implements OnInit {
     formulaVariables: this.fb.group({}),
   }, { validators: [
     this.emissionsCalculatedValidator(),
-    this.emissionFactorGreaterThanZeroValidator,
+    this.emissionFactorGreaterThanZeroValidator(),
     this.pollutantEmissionsUoMValidator(),
     this.checkPercentSulfurRange(),
     this.checkPercentAshRange()
@@ -576,14 +576,15 @@ export class EmissionDetailsComponent implements OnInit {
     };
   }
 
-  // TODO: this should be updated to a single field validation
-  emissionFactorGreaterThanZeroValidator(formGroup): any {
-    const emissionFactor = formGroup.controls.emissionsFactor.value;
-    if (formGroup.controls.emissionsFactor.enabled && emissionFactor <= 0) {
-      return {efFactorLessThanOrEqualToZero: true};
-    } else {
-      return null;
-    }
+  emissionFactorGreaterThanZeroValidator(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const emissionFactor = control.get('emissionsFactor');
+      if (emissionFactor.enabled && emissionFactor.value <= 0) {
+        return {efFactorLessThanOrEqualToZero: true};
+      } else {
+        return null;
+      }
+    };
   }
 
   pollutantEmissionsUoMValidator(): ValidatorFn {
