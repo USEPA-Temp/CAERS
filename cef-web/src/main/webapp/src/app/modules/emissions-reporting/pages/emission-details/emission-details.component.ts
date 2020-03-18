@@ -181,16 +181,14 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsFactorText').reset({value: null, disabled: true});
         this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
         this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
-        this.emissionForm.get('comments').setValidators([Validators.required]);
-        this.emissionForm.get('comments').updateValueAndValidity();
+        this.isCommentRequired();
         this.getTotalManualEntry().setValue(true);
       } else {
         this.emissionForm.get('emissionsFactor').enable();
         this.emissionForm.get('emissionsFactorText').enable();
         this.emissionForm.get('emissionsNumeratorUom').enable();
         this.emissionForm.get('emissionsDenominatorUom').enable();
-        this.emissionForm.get('comments').clearValidators();
-        this.emissionForm.get('comments').updateValueAndValidity();
+        this.isCommentRequired();
         this.getTotalManualEntry().setValue(false);
       }
 
@@ -216,16 +214,14 @@ export class EmissionDetailsComponent implements OnInit {
       this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
       this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
       this.emissionForm.get('calculationComment').reset({value: null, disabled: true});
-      this.emissionForm.get('comments').setValidators([Validators.required]);
-      this.emissionForm.get('comments').updateValueAndValidity();
+      this.isCommentRequired();
       this.getTotalManualEntry().setValue(true);
     } else {
       this.emissionForm.get('emissionsFactor').enable();
       this.emissionForm.get('emissionsFactorText').enable();
       this.emissionForm.get('emissionsNumeratorUom').enable();
       this.emissionForm.get('emissionsDenominatorUom').enable();
-      this.emissionForm.get('comments').clearValidators();
-      this.emissionForm.get('comments').updateValueAndValidity();
+      this.isCommentRequired();
       if (this.getTotalManualEntry().value) {
         this.emissionForm.get('calculationComment').enable();
       } else {
@@ -260,6 +256,17 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsFactorFormula').disable();
       }
     });
+  }
+
+  isCommentRequired() {
+    const engJudgment = '2';
+    if (this.emissionForm.value.emissionsCalcMethodCode && this.emissionForm.value.emissionsCalcMethodCode.code === engJudgment) {
+        this.emissionForm.get('comments').setValidators([Validators.required]);
+        this.emissionForm.get('comments').updateValueAndValidity();
+      } else {
+        this.emissionForm.get('comments').clearValidators();
+        this.emissionForm.get('comments').updateValueAndValidity();
+      }
   }
 
   onCalculate() {

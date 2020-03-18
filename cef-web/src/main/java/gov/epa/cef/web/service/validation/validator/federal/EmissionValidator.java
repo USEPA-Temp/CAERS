@@ -32,6 +32,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String ENGINEERING_JUDGEMENT = "2";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -54,7 +55,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	
             } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == true) {
 	
-	            if(Strings.emptyToNull(emission.getComments()) == null) {
+	            if(Strings.emptyToNull(emission.getComments()) == null && ENGINEERING_JUDGEMENT.contentEquals(emission.getEmissionsCalcMethodCode().getCode())) {
 	
 	                valid = false;
 	                context.addFederalError(
