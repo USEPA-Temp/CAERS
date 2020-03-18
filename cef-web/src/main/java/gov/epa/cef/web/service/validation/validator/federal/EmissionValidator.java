@@ -72,16 +72,17 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	                        createValidationDetails(emission));
 	            }
 	
-	            if (emission.getReportingPeriod() != null 
-	                    && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
-	                    && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
-	
-	                valid = false;
-	                context.addFederalError(
-	                        ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
-	                        "emission.totalEmissions.nonzero.method", 
-	                        createValidationDetails(emission));
-	            }
+	            // This check is commented out, to be confirmed Post MVP
+//	            if (emission.getReportingPeriod() != null 
+//	                    && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
+//	                    && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
+//	
+//	                valid = false;
+//	                context.addFederalError(
+//	                        ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+//	                        "emission.totalEmissions.nonzero.method", 
+//	                        createValidationDetails(emission));
+//	            }
 	
 	        } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false 
 	                && !(Boolean.TRUE.equals(emission.getFormulaIndicator()) && Boolean.TRUE.equals(emission.getTotalManualEntry()))) {
