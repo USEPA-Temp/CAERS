@@ -11,9 +11,9 @@
         <tr>
           <th scope="col">Select</th>
           <th scope="col" sortable="emissionFactor" (sort)="onSort($event)">Emissions Factor</th>
-          <th scope="col" sortable="description" (sort)="onSort($event)">Description</th>
           <th scope="col" sortable="emissionsNumeratorUom.code" (sort)="onSort($event)">Numerator UoM</th>
           <th scope="col" sortable="emissionsDenominatorUom.code" (sort)="onSort($event)">Denominator UoM</th>
+          <th scope="col" sortable="description" (sort)="onSort($event)">Description</th>
           <th scope="col" sortable="calculationMaterialCode.description" (sort)="onSort($event)">Calculation Material</th>
           <th scope="col" sortable="controlMeasureCode.description" (sort)="onSort($event)">Control Measure</th>
         </tr>
@@ -22,9 +22,9 @@
         <tr *ngFor="let item of tableData">
           <td><input class="" type="radio" name="efRadio" [formControl]="efControl" [value]="item" aria-label="select emission factor"></td>
           <td>{{item.emissionFactor || item.emissionFactorFormula}}</td>
-          <td>{{item.description}}</td>
           <td>{{item.emissionsNumeratorUom.code}}</td>
           <td>{{item.emissionsDenominatorUom.code}}</td>
+          <td>{{item.description}}</td>
           <td>{{item.calculationMaterialCode.description}}</td>
           <td>{{item.controlMeasureCode.description}}</td>
         </tr>
