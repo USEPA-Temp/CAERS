@@ -85,3 +85,11 @@ thead.thead-cef-medium {
 .underline-on-hover:hover {
     text-decoration: $link-hover-decoration;
 }
+
+.announcement-bar {
+    color: $black;
+    text-align: center;
+    vertical-align: middle;
+    background: $yellow;
+    padding: 20px;
+}
