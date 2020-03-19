@@ -668,7 +668,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         Emission result = new Emission();
         
         CalculationMethodCode calcMethod = new CalculationMethodCode();
-        calcMethod.setCode("1");
+        calcMethod.setCode("2");
         calcMethod.setControlIndicator(false);
         calcMethod.setEpaEmissionFactor(false);
         calcMethod.setTotalDirectEntry(totalDirectEntry);
