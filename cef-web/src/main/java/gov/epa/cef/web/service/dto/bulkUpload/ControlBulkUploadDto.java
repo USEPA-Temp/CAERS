@@ -16,6 +16,7 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     @NotNull(message = "Facility Site ID is required.")
     private Long facilitySiteId;
 
+    @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars.")
     private String operatingStatusCode;
 

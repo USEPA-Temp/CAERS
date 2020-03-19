@@ -67,6 +67,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 10, message = "Country Code can not exceed {max} chars; found '${validatedValue}'.")
     private String countryCode;
 
+    @NotBlank(message = "Postal Code is required.")
     @Size(max = 10, message = "Postal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String postalCode;
 

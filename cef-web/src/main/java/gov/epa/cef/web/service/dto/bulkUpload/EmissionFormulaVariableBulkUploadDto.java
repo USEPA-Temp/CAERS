@@ -20,6 +20,7 @@ public class EmissionFormulaVariableBulkUploadDto extends BaseWorksheetDto imple
     @Size(max = 20, message = "Emission Formula Variable Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionFormulaVariableCode;
 
+    @NotNull(message = "Value is required.")
     private BigDecimal value;
 
     public EmissionFormulaVariableBulkUploadDto() {

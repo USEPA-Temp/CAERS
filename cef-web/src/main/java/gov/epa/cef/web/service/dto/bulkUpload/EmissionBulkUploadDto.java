@@ -22,7 +22,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     private String pollutantCode;
 
     @NotNull(message = "I prefer to calculate this emission myself is required.")
-    private boolean totalManualEntry;
+    private Boolean totalManualEntry;
 
     @Digits(integer = 2, fraction = 6,
         message = "Overall Control Percent is not in expected numeric format: '{integer}.{fraction}' digits.")
@@ -43,8 +43,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @Size(max = 100, message = "Emissions Factor Text can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsFactorText;
 
-    @NotBlank(message = "Emissions UoM Code is required.")
-    @Size(max = 20, message = "Emissions UoM Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotBlank(message = "Emissions Calculation Method is required.")
+    @Size(max = 20, message = "Emissions Calculation Method can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsCalcMethodCode;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")

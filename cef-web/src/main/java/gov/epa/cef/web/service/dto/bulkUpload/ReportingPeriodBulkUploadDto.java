@@ -31,7 +31,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     private BigDecimal calculationParameterValue;
 
     @NotNull(message = "Throughput Parameter Unit of Measure Code is required.")
-    @Size(max = 20, message = "Calculation Parameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    @Size(max = 20, message = "Throughput Parameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationParameterUom;
 
     @NotNull(message = "Throughput Parameter Code is required.")

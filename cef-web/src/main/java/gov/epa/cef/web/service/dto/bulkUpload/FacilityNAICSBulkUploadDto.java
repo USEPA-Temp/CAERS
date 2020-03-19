@@ -17,7 +17,7 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 	private Integer code;
 
     @NotNull(message = "Primary Flag is required.")
-	private boolean primaryFlag;
+	private Boolean primaryFlag;
 
     public FacilityNAICSBulkUploadDto() {
 
