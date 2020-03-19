@@ -162,6 +162,7 @@
         </ng-container>
     </div>
 
+<div class="row" *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">   
     <div *ngIf="createPeriod">
         <div class="row">
             <div class="col-sm-12">
@@ -191,7 +192,6 @@
         </div>
     </div>
 
-<div class="row" *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">   
     <div class="row" *ngIf="!(process.reportingPeriods && process.reportingPeriods.length)">
         <div class="col">
             <div class="float-right pb-3 pr-3">
