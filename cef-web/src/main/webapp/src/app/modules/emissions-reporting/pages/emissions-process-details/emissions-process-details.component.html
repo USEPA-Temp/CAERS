@@ -191,6 +191,7 @@
         </div>
     </div>
 
+<div class="row" *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">   
     <div class="row" *ngIf="!(process.reportingPeriods && process.reportingPeriods.length)">
         <div class="col">
             <div class="float-right pb-3 pr-3">
@@ -201,7 +202,6 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">   
         <ng-container *ngFor="let period of process.reportingPeriods">
         <div class="col-sm-12 col-md-6">
             <div class="card mb-3">
@@ -212,9 +212,9 @@
                     <app-emission-table [tableData]="period.emissions" [reportingPeriod]="period" [process]="process" [readOnlyMode]="readOnlyMode"></app-emission-table>
                 </div>
             </div>
-            
         </div>
         </ng-container>
+</div>
         <div class="col-sm-12 col-md-6">
             <div class="card mb-3">
                 <div class="card-header text-center">
@@ -236,7 +236,6 @@
                 </div>
             </div>
         </div>
-    </div>
     
 
 </div>
