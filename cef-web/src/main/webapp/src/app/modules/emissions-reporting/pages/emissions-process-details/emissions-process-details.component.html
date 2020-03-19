@@ -111,40 +111,41 @@
                 
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card mb-3">
-                    <div class="card-header text-center">
-                        <strong>Reporting Period</strong>
-                        <div class="float-right" *ngIf="!editPeriod && !readOnlyMode">
-                            <button type="button" class="btn btn-success" (click)="setEditPeriod(true)">Edit</button>
-                        </div>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Reporting Period</strong>
+                    <div class="float-right" *ngIf="!editPeriod && !readOnlyMode">
+                        <button type="button" class="btn btn-success" (click)="setEditPeriod(true)">Edit</button>
                     </div>
-                    <div class="card-body">
-                        <div *ngIf="!editPeriod">
-                        <div class="row">
-                            <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{period.reportingPeriodTypeCode.shortName}}</div>
-                            <div class="col-sm-6 col-md-2"><strong>Operating Type:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{period.emissionsOperatingTypeCode.shortName}}</div>
-                            <div class="col-sm-6 col-md-2"><strong>Calculation Parameter:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{period.calculationParameterTypeCode.description}}</div>
-                        </div>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="!editPeriod">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.reportingPeriodTypeCode.shortName}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Operating Type:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.emissionsOperatingTypeCode.shortName}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Throughput Parameter:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationParameterTypeCode.description}}</div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-sm-6 col-md-2"><strong>Calculation Material:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{period.calculationMaterialCode.description}}</div>
-                            <div class="col-sm-6 col-md-2"><strong>Calculation Value:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{period.calculationParameterValue}}</div>
-                            <div class="col-sm-6 col-md-2"><strong>Calculation UoM:</strong></div>
-                            <div class="col-sm-6 col-md-2">{{period.calculationParameterUom.description}}</div>
-                        </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Throughput Material:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationMaterialCode.description}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Throughput Value:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationParameterValue}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Throughput UoM:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.calculationParameterUom.description}}</div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
-                            <div class="col-sm-6 col-md-10">{{period.comments}}</div>
-                        </div>
-                        </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
+                        <div class="col-sm-6 col-md-10">{{period.comments}}</div>
+                    </div>
+                    </div>
 
                         <div *ngIf="editPeriod">
                             <app-edit-process-reporting-period-panel [reportingPeriod]="period"></app-edit-process-reporting-period-panel>
