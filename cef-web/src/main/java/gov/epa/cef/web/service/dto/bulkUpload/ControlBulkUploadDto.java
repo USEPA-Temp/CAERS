@@ -31,7 +31,7 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     private Double percentCapture;
 
     @Digits(integer = 3, fraction = 1,
-        message = "Percent Control is is not in expected numeric format: '{integer}.{fraction}' digits.")
+        message = "Percent Control Effectiveness is is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentControl;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
