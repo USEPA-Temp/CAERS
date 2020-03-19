@@ -75,17 +75,6 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         boolean result = true;
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
-
-        Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
-        // Might need to add a rounding tolerance.
-        if (100 != totalReleasePointPercent) {
-
-            result = false;
-            context.addFederalError(
-                    ValidationField.PROCESS_RP_PCT.value(),
-                    "emissionsProcess.releasePointAppts.percent.total",
-                    createValidationDetails(emissionsProcess));
-        }
         
         // Check for valid SCC Code
         if (Strings.emptyToNull(emissionsProcess.getSccCode()) != null) {
@@ -167,7 +156,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
                     	result = false;
             		}
                 }
-            }        	
+            }
       
           // aircraft engine code must match assigned SCC
           if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
@@ -183,46 +172,60 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         		}
         	}
           
-	        Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
-	            .filter(rpa -> rpa.getReleasePoint() != null)
-	            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
-	     
-	        // Process must go to at least one release point
-	        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
-	
-	        	result = false;
-	        	context.addFederalError(
-	        			ValidationField.PROCESS_RP.value(),
-	        			"emissionsProcess.releasePointAppts.required",
-	        			createValidationDetails(emissionsProcess));
-	        }
-	        
-	        // release point can be used only once per rp appt collection
-	        for (List<ReleasePointAppt> rpa: rpaMap.values()) {
-	        	
-	        	if (rpa.size() > 1) {
-	        		
-	        		result = false;
+          if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()) && !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+             
+        	  Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
+              // Might need to add a rounding tolerance.
+              if (100 != totalReleasePointPercent) {
+
+                  result = false;
+                  context.addFederalError(
+                          ValidationField.PROCESS_RP_PCT.value(),
+                          "emissionsProcess.releasePointAppts.percent.total",
+                          createValidationDetails(emissionsProcess));
+              }
+        	  
+        	  Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
+		            .filter(rpa -> rpa.getReleasePoint() != null)
+		            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
+		     
+		        // Process must go to at least one release point
+		        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
+		
+		        	result = false;
 		        	context.addFederalError(
 		        			ValidationField.PROCESS_RP.value(),
-		        			"emissionsProcess.releasePointAppts.duplicate",
-		        			createValidationDetails(emissionsProcess),
-		        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
+		        			"emissionsProcess.releasePointAppts.required",
+		        			createValidationDetails(emissionsProcess));
 		        }
-		      }
-	        
-	        // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
-	        if (emissionsProcess.getReleasePointAppts() != null) {
-	        	for(ReleasePointAppt rpa: emissionsProcess.getReleasePointAppts()){
-	        		  if((rpa.getPercent() < 1) || (rpa.getPercent() > 100)){
-	  	        		result = false;
+		        
+		        // release point can be used only once per rp appt collection
+		        for (List<ReleasePointAppt> rpa: rpaMap.values()) {
+		        	
+		        	if (rpa.size() > 1) {
+		        		
+		        		result = false;
 			        	context.addFederalError(
-			        			ValidationField.PROCESS_RP_PCT.value(),
-			        			"emissionsProcess.releasePointAppts.percent.range",
+			        			ValidationField.PROCESS_RP.value(),
+			        			"emissionsProcess.releasePointAppts.duplicate",
 			        			createValidationDetails(emissionsProcess),
-			        			rpa.getReleasePoint().getReleasePointIdentifier());  
-	        		  }
-	        	}
+			        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
+			        }
+			      }
+		        
+		        // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
+		        if (emissionsProcess.getReleasePointAppts() != null) {
+		        	for(ReleasePointAppt rpa: emissionsProcess.getReleasePointAppts()){
+		        		  if((rpa.getPercent() < 1) || (rpa.getPercent() > 100)){
+		  	        		result = false;
+				        	context.addFederalError(
+				        			ValidationField.PROCESS_RP_PCT.value(),
+				        			"emissionsProcess.releasePointAppts.percent.range",
+				        			createValidationDetails(emissionsProcess),
+				        			rpa.getReleasePoint().getReleasePointIdentifier());  
+		        		  }
+		        	}
+		        }
 	        }
         }
         
