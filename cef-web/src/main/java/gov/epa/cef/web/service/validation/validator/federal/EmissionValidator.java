@@ -32,6 +32,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String ENGINEERING_JUDGEMENT = "2";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Emission emission) {
@@ -54,7 +55,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	
             } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == true) {
 	
-	            if(Strings.emptyToNull(emission.getComments()) == null) {
+	            if(Strings.emptyToNull(emission.getComments()) == null && ENGINEERING_JUDGEMENT.contentEquals(emission.getEmissionsCalcMethodCode().getCode())) {
 	
 	                valid = false;
 	                context.addFederalError(
@@ -72,16 +73,17 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	                        createValidationDetails(emission));
 	            }
 	
-	            if (emission.getReportingPeriod() != null 
-	                    && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
-	                    && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
-	
-	                valid = false;
-	                context.addFederalError(
-	                        ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
-	                        "emission.totalEmissions.nonzero.method", 
-	                        createValidationDetails(emission));
-	            }
+	            // This check is commented out, to be confirmed Post MVP
+//	            if (emission.getReportingPeriod() != null 
+//	                    && emission.getReportingPeriod().getCalculationParameterValue().compareTo(BigDecimal.ZERO) == 0
+//	                    && emission.getTotalEmissions().compareTo(BigDecimal.ZERO) != 0) {
+//	
+//	                valid = false;
+//	                context.addFederalError(
+//	                        ValidationField.EMISSION_TOTAL_EMISSIONS.value(),
+//	                        "emission.totalEmissions.nonzero.method", 
+//	                        createValidationDetails(emission));
+//	            }
 	
 	        } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false 
 	                && !(Boolean.TRUE.equals(emission.getFormulaIndicator()) && Boolean.TRUE.equals(emission.getTotalManualEntry()))) {

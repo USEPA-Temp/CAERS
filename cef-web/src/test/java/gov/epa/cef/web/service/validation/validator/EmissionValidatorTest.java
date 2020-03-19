@@ -150,20 +150,20 @@ public class EmissionValidatorTest extends BaseValidatorTest {
      * There should be one error when Calculation Method Code has true total direct entry and 
      * the reporting period's calculation parameter value is zero but the total emissions is not zero
      */
-    @Test
-    public void totalDirectEntryTrue_NonZeroTotalEmissions_FailTest() {
-
-        CefValidatorContext cefContext = createContext();
-        Emission testData = createBaseEmission(true);
-        testData.getReportingPeriod().setCalculationParameterValue(BigDecimal.ZERO);
-        testData.setTotalEmissions(BigDecimal.ONE);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
-    }
+//    @Test
+//    public void totalDirectEntryTrue_NonZeroTotalEmissions_FailTest() {
+//
+//        CefValidatorContext cefContext = createContext();
+//        Emission testData = createBaseEmission(true);
+//        testData.getReportingPeriod().setCalculationParameterValue(BigDecimal.ZERO);
+//        testData.setTotalEmissions(BigDecimal.ONE);
+//
+//        assertFalse(this.validator.validate(cefContext, testData));
+//        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+//
+//        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+//        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
+//    }
 
     /**
      * There should be one error when Calculation Method Code has false total direct entry and a null Emissions Factor
@@ -668,7 +668,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         Emission result = new Emission();
         
         CalculationMethodCode calcMethod = new CalculationMethodCode();
-        calcMethod.setCode("1");
+        calcMethod.setCode("2");
         calcMethod.setControlIndicator(false);
         calcMethod.setEpaEmissionFactor(false);
         calcMethod.setTotalDirectEntry(totalDirectEntry);

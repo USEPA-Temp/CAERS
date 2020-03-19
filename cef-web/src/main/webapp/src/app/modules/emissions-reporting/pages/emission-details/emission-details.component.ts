@@ -75,7 +75,7 @@ export class EmissionDetailsComponent implements OnInit {
     formulaVariables: this.fb.group({}),
   }, { validators: [
     this.emissionsCalculatedValidator(),
-    this.emissionFactorGreaterThanZeroValidator,
+    this.emissionFactorGreaterThanZeroValidator(),
     this.pollutantEmissionsUoMValidator(),
     this.checkPercentSulfurRange(),
     this.checkPercentAshRange()
@@ -181,16 +181,14 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsFactorText').reset({value: null, disabled: true});
         this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
         this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
-        this.emissionForm.get('comments').setValidators([Validators.required]);
-        this.emissionForm.get('comments').updateValueAndValidity();
+        this.isCommentRequired();
         this.getTotalManualEntry().setValue(true);
       } else {
         this.emissionForm.get('emissionsFactor').enable();
         this.emissionForm.get('emissionsFactorText').enable();
         this.emissionForm.get('emissionsNumeratorUom').enable();
         this.emissionForm.get('emissionsDenominatorUom').enable();
-        this.emissionForm.get('comments').clearValidators();
-        this.emissionForm.get('comments').updateValueAndValidity();
+        this.isCommentRequired();
         this.getTotalManualEntry().setValue(false);
       }
 
@@ -216,16 +214,14 @@ export class EmissionDetailsComponent implements OnInit {
       this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
       this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
       this.emissionForm.get('calculationComment').reset({value: null, disabled: true});
-      this.emissionForm.get('comments').setValidators([Validators.required]);
-      this.emissionForm.get('comments').updateValueAndValidity();
+      this.isCommentRequired();
       this.getTotalManualEntry().setValue(true);
     } else {
       this.emissionForm.get('emissionsFactor').enable();
       this.emissionForm.get('emissionsFactorText').enable();
       this.emissionForm.get('emissionsNumeratorUom').enable();
       this.emissionForm.get('emissionsDenominatorUom').enable();
-      this.emissionForm.get('comments').clearValidators();
-      this.emissionForm.get('comments').updateValueAndValidity();
+      this.isCommentRequired();
       if (this.getTotalManualEntry().value) {
         this.emissionForm.get('calculationComment').enable();
         this.emissionForm.get('emissionsFactorText').setValidators(null);
@@ -262,6 +258,17 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsFactorFormula').disable();
       }
     });
+  }
+
+  isCommentRequired() {
+    const engJudgment = '2';
+    if (this.emissionForm.value.emissionsCalcMethodCode && this.emissionForm.value.emissionsCalcMethodCode.code === engJudgment) {
+        this.emissionForm.get('comments').setValidators([Validators.required]);
+        this.emissionForm.get('comments').updateValueAndValidity();
+      } else {
+        this.emissionForm.get('comments').clearValidators();
+        this.emissionForm.get('comments').updateValueAndValidity();
+      }
   }
 
   onCalculate() {
@@ -583,14 +590,15 @@ export class EmissionDetailsComponent implements OnInit {
     };
   }
 
-  // TODO: this should be updated to a single field validation
-  emissionFactorGreaterThanZeroValidator(formGroup): any {
-    const emissionFactor = formGroup.controls.emissionsFactor.value;
-    if (formGroup.controls.emissionsFactor.enabled && emissionFactor <= 0) {
-      return {efFactorLessThanOrEqualToZero: true};
-    } else {
-      return null;
-    }
+  emissionFactorGreaterThanZeroValidator(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const emissionFactor = control.get('emissionsFactor');
+      if (emissionFactor.enabled && emissionFactor.value <= 0) {
+        return {efFactorLessThanOrEqualToZero: true};
+      } else {
+        return null;
+      }
+    };
   }
 
   pollutantEmissionsUoMValidator(): ValidatorFn {
