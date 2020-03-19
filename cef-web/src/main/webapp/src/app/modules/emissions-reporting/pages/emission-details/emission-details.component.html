@@ -263,7 +263,6 @@
                                 <div *ngIf="emissionForm.get('calculationComment').getError('required')">
                                     Description of Calculation field is required when using an emission factor and choosing to perform the calculations yourself.
                                 </div>
-
                                 <div *ngIf="emissionForm.get('calculationComment').getError('maxlength')">
                                     Value cannot exceed {{emissionForm.get('calculationComment').getError('maxlength').requiredLength}} characters.
                                 </div>
