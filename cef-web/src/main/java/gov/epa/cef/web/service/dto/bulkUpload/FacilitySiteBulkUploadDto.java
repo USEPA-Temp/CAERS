@@ -47,6 +47,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 100, message = "Street Address can not exceed {max} chars; found '${validatedValue}'.")
     private String streetAddress;
 
+    @NotBlank(message = "City is required.")
     @Size(max = 60, message = "City can not exceed {max} chars; found '${validatedValue}'.")
     private String city;
 
@@ -56,6 +57,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 3, message = "County Code can not exceed {max} chars; found '${validatedValue}'.")
     private String countyCode;
 
+    @NotBlank(message = "State Code is required.")
     @Size(max = 5, message = "State Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stateCode;
 
@@ -65,13 +67,16 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 10, message = "Country Code can not exceed {max} chars; found '${validatedValue}'.")
     private String countryCode;
 
+    @NotBlank(message = "Postal Code is required.")
     @Size(max = 10, message = "Postal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String postalCode;
 
+    @NotNull(message = "Latitude is required.")
     @Digits(integer = 4, fraction = 6,
-        message = "Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
+        message = "Latitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private BigDecimal latitude;
 
+    @NotNull(message = "Longitude is required.")
     @Digits(integer = 4, fraction = 6,
         message = "Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
     private BigDecimal longitude;
