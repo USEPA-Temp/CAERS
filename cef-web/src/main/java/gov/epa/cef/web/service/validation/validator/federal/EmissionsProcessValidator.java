@@ -75,17 +75,6 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         boolean result = true;
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
-
-        Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
-        // Might need to add a rounding tolerance.
-        if (100 != totalReleasePointPercent) {
-
-            result = false;
-            context.addFederalError(
-                    ValidationField.PROCESS_RP_PCT.value(),
-                    "emissionsProcess.releasePointAppts.percent.total",
-                    createValidationDetails(emissionsProcess));
-        }
         
         // Check for valid SCC Code
         if (Strings.emptyToNull(emissionsProcess.getSccCode()) != null) {
@@ -167,7 +156,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
                     	result = false;
             		}
                 }
-            }        	
+            }
       
           // aircraft engine code must match assigned SCC
           if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
@@ -182,8 +171,19 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
           				createValidationDetails(emissionsProcess));
         		}
         	}
-          
-	        Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
+                       
+    	  Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
+          // Might need to add a rounding tolerance.
+          if (100 != totalReleasePointPercent) {
+
+              result = false;
+              context.addFederalError(
+                      ValidationField.PROCESS_RP_PCT.value(),
+                      "emissionsProcess.releasePointAppts.percent.total",
+                      createValidationDetails(emissionsProcess));
+          }
+    	  
+    	  Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
 	            .filter(rpa -> rpa.getReleasePoint() != null)
 	            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
 	     
