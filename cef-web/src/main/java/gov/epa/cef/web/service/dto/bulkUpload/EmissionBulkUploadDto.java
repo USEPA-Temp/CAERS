@@ -21,6 +21,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
 
+    // Object type boolean is used here only to trigger @NotNull validation, primitive type boolean should be used to only allow true/false values.
     @NotNull(message = "I prefer to calculate this emission myself is required.")
     private Boolean totalManualEntry;
 

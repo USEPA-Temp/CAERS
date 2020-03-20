@@ -16,6 +16,7 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
     @NotNull(message = "NAICS code is required.")
 	private Integer code;
 
+    // Object type boolean is used here only to trigger @NotNull validation, primitive type boolean should be used to only allow true/false values.
     @NotNull(message = "Primary Flag is required.")
 	private Boolean primaryFlag;
 
