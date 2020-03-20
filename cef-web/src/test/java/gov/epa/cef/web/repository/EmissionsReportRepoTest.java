@@ -340,7 +340,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		e.setEmissionsUomCode(uom);
 
 		Pollutant p = new Pollutant();
-		p.setPollutantCode("OC");
+		p.setPollutantCode("199");
 		e.setPollutant(p);
 
 		CalculationMethodCode cMethodc = new CalculationMethodCode();
