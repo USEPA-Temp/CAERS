@@ -23,19 +23,19 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     @Size(max = 20, message = "Emissions Operating Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsOperatingTypeCode;
 
-    @NotNull(message = "Calculation Parameter Type Code is required.")
-    @Size(max = 20, message = "Calculation Parameter Type Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotNull(message = "Throughput Parameter Type Code is required.")
+    @Size(max = 20, message = "Throughput Parameter Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationParameterTypeCode;
 
-    @NotNull(message = "Calculation Parameter Value is required.")
+    @NotNull(message = "Throughput Parameter Value is required.")
     private BigDecimal calculationParameterValue;
 
-    @NotNull(message = "Calculation Parameter Unit of Measure Code is required.")
-    @Size(max = 20, message = "Calculation Parameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotNull(message = "Throughput Parameter Unit of Measure Code is required.")
+    @Size(max = 20, message = "Throughput Parameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationParameterUom;
 
-    @NotNull(message = "Calculation Material Code is required.")
-    @Size(max = 20, message = "Calculation Material Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotNull(message = "Throughput Parameter Code is required.")
+    @Size(max = 20, message = "Throughput Parameter Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationMaterialCode;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")

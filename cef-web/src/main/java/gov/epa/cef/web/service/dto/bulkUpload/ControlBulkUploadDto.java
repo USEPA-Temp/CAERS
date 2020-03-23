@@ -16,6 +16,7 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     @NotNull(message = "Facility Site ID is required.")
     private Long facilitySiteId;
 
+    @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars.")
     private String operatingStatusCode;
 
@@ -31,7 +32,7 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     private Double percentCapture;
 
     @Digits(integer = 3, fraction = 1,
-        message = "Percent Control is is not in expected numeric format: '{integer}.{fraction}' digits.")
+        message = "Percent Control Effectiveness is is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentControl;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
