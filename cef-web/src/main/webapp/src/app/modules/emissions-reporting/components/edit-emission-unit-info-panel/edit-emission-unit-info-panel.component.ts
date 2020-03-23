@@ -160,8 +160,10 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
   emissionUnitIdentifierCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if(this.emissionUnitIdentifiers){
-        if (this.emissionUnitIdentifiers.includes(control.get('unitIdentifier').value.trim())) {
+      if (this.emissionUnitIdentifiers) {
+        if (control.get('unitIdentifier').value.trim() === '') {
+          control.get('unitIdentifier').setErrors({required: true});
+        } else if (this.emissionUnitIdentifiers.includes(control.get('unitIdentifier').value.trim())) {
           return { duplicateEmissionUnitIdentifier: true };
         }
       }

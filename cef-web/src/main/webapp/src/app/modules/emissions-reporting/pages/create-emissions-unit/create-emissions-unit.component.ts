@@ -61,10 +61,8 @@ export class CreateEmissionsUnitComponent implements OnInit {
           emissionUnit.facilitySiteId = this.facilitySiteId;
           emissionUnit.unitIdentifier = this.infoComponent.emissionUnitForm.controls.unitIdentifier.value.trim();
 
-          console.log(emissionUnit)
           this.emissionUnitService.create(emissionUnit)
           .subscribe(result => {
-            console.log(result)
             this.sharedService.updateReportStatusAndEmit(this.route);
             this.router.navigate(['../..'], { relativeTo: this.route });
           });
