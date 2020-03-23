@@ -212,6 +212,71 @@ public class EmissionServiceImpl implements EmissionService {
         return dto;
     }
 
+    public Emission calculateTotalEmissions(Emission emission, ReportingPeriod rp) {
+
+
+        UnitMeasureCode totalEmissionUom = emission.getEmissionsUomCode();
+        UnitMeasureCode efNumerator = emission.getEmissionsNumeratorUom();
+        UnitMeasureCode efDenom = emission.getEmissionsDenominatorUom();
+
+        if (rp.getCalculationParameterUom() == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Period Calculation Unit of Measure must be set.");
+        }
+        if (totalEmissionUom == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Total Emissions Unit of Measure must be set.");
+        }
+        if (efNumerator == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Numerator Unit of Measure must be set.");
+        }
+        if (efDenom == null) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Denominator Unit of Measure must be set.");
+        }
+
+        if (!rp.getCalculationParameterUom().getUnitType().equals(efDenom.getUnitType())) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
+                    String.format("Reporting Period Calculation Unit of Measure %s cannot be converted into Emission Factor Denominator Unit of Measure %s.",
+                            rp.getCalculationParameterUom().getDescription(), efDenom.getDescription()));
+        }
+
+        if (!totalEmissionUom.getUnitType().equals(efNumerator.getUnitType())) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
+                    String.format("Emission Factor Numerator Unit of Measure %s cannot be converted into Total Emissions Unit of Measure %s.",
+                            efNumerator.getDescription(), totalEmissionUom.getDescription()));
+        }
+
+        if (emission.getFormulaIndicator()) {
+            List<EmissionFormulaVariable> variables = emission.getVariables();
+
+            BigDecimal ef = CalculationUtils.calculateEmissionFormula(emission.getEmissionsFactorFormula(), variables);
+            emission.setEmissionsFactor(ef);
+        }
+
+        // check if the year is divisible by 4 which would make it a leap year
+        boolean leapYear = rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;
+
+        BigDecimal totalEmissions = emission.getEmissionsFactor().multiply(rp.getCalculationParameterValue());
+
+        // convert units for denominator and throughput
+        if (efDenom != null && rp.getCalculationParameterUom() != null 
+                && !rp.getCalculationParameterUom().getCode().equals(efDenom.getCode())) {
+            totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
+        }
+
+        // convert units for numerator and total emissions
+        if (efNumerator != null && totalEmissionUom != null && !totalEmissionUom.getCode().equals(efNumerator.getCode())) {
+            totalEmissions = CalculationUtils.convertUnits(efNumerator.getCalculationVariable(), totalEmissionUom.getCalculationVariable(), leapYear).multiply(totalEmissions);
+        }
+
+        if (emission.getOverallControlPercent() != null) {
+            BigDecimal controlRate = new BigDecimal("100").subtract(emission.getOverallControlPercent()).divide(new BigDecimal("100"));
+            totalEmissions = totalEmissions.multiply(controlRate);
+        }
+
+        emission.setTotalEmissions(totalEmissions);
+
+        return emission;
+    }
+
     /**
      * Find Emissions by Facility and CAS Number.
      * This method is primarily intended to provide the interface to TRIMEweb so that TRI users can
