@@ -40,10 +40,10 @@ export class CreateEmissionsUnitComponent implements OnInit {
         this.reportId = parseInt(map.get('reportId'));
       });
 
-      this.facilitySiteService.retrieveForReport(this.eisProgramId,this.reportId)
+      this.facilitySiteService.retrieveForReport(this.eisProgramId, this.reportId)
       .subscribe(result => {
         this.facilitySiteId = result.id;
-      })
+      });
   }
 
   isValid() {
