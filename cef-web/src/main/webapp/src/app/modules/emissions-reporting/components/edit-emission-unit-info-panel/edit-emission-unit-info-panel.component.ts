@@ -22,6 +22,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   facilitySite: FacilitySite;
   emissionUnitIdentifiers: String[] = [];
   facilityOpCode: BaseCodeLookup;
+  edit: boolean = true;
 
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
@@ -83,6 +84,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         // if an emission unit is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
         if (this.emissionUnit) {
           this.emissionUnitIdentifiers = this.emissionUnitIdentifiers.filter(identifer => identifer.toString() !== this.emissionUnit.unitIdentifier);
+        } else {
+          this.edit = false;
         }
 
       });
@@ -119,7 +122,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   }
 
   onChange(newValue) {
-    if (newValue) {
+    if (newValue && this.edit) {
       this.emissionUnitForm.controls.statusYear.reset();
       this.toastr.warning('', 'If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated, unless they are already Permanently Shutdown.', {positionClass: 'toast-top-right'});
     }
