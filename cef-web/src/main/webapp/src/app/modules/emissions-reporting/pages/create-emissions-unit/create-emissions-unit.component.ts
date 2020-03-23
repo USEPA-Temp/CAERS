@@ -59,6 +59,7 @@ export class CreateEmissionsUnitComponent implements OnInit {
 
           Object.assign(emissionUnit, this.infoComponent.emissionUnitForm.value);
           emissionUnit.facilitySiteId = this.facilitySiteId;
+          emissionUnit.unitIdentifier = this.infoComponent.emissionUnitForm.controls.unitIdentifier.value.trim();
 
           console.log(emissionUnit)
           this.emissionUnitService.create(emissionUnit)
