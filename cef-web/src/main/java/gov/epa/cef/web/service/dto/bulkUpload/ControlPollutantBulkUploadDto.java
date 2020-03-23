@@ -21,7 +21,7 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
     private String pollutantCode;
 
     @Digits(integer = 3, fraction = 1,
-        message = "Percent Reduction is not in expected numeric format: '{integer}.{fraction}' digits.")
+        message = "Percent Reduction Efficiency is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentReduction;
 
     public ControlPollutantBulkUploadDto() {
