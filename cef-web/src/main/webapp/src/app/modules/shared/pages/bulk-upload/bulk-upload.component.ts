@@ -20,7 +20,7 @@ export class BulkUploadComponent implements OnInit {
       private toastr: ToastrService) { }
 
   ngOnInit() {
-    bsCustomFileInput.init("#file-excel-workbook");
+    bsCustomFileInput.init("#file-json-workbook");
   }
 
   onFileChanged(event) {
@@ -37,7 +37,7 @@ export class BulkUploadComponent implements OnInit {
       }
     };
     fileReader.onerror = (error) => {
-        console.log("error123 ",error);
+        console.log(error);
     };
   }
 

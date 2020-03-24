@@ -1,12 +1,12 @@
 <div class="form-group">
-	<label for="file-excel-workbook" class="font-weight-bold" title="Excel Workbook is required.">
+	<label for="file-jsonl-workbook" class="font-weight-bold" title="Json Workbook is required.">
 		<span>Bulk Upload (json) </span>
 		<span style="color: red">*</span>
 	</label>
 	<div class="custom-file">
-		<input id="file-excel-workbook" type="file"
+		<input id="file-json-workbook" type="file"
 				class="custom-file-input" (change)="onFileChanged($event)">
-		<label for="file-excel-workbook" class="custom-file-label">Click to browse...</label>
+		<label for="file-json-workbook" class="custom-file-label">Click to browse...</label>
 	</div>
 </div>
 <button type="button" class="btn btn-success"
@@ -15,21 +15,3 @@
 		(click)="onUpload()">
 	<span>Upload</span>
 </button>
-<ng-template #PleaseWaitModal>
-    <div class="modal-header bg-info text-white">
-        <div class="modal-title h4"><strong>Bulk Upload</strong></div>
-    </div>
-    <div class="modal-body">
-        <div class="mb-2">Please wait this could take a minute or two.</div>
-        <div class="mb-2 font-weight-bold">
-            <span [textContent]="pleaseWait.message"></span>
-            <span class="ml-2" [textContent]="pleaseWait.progress + '%'"></span>
-        </div>
-        <div class="progress" style="height: 40px;">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
-                 role="progressbar" [style.width]="pleaseWait.progress + '%'"
-                 [attr.aria-valuenow]="pleaseWait.progress" aria-valuemin="0" aria-valuemax="100">
-            </div>
-        </div>
-    </div>
-</ng-template>
