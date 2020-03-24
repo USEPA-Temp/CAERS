@@ -30,8 +30,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @NotNull(message = "Total Emissions is required.")
     private BigDecimal totalEmissions;
 
-    @NotBlank(message = "Emissions UoM Code is required.")
-    @Size(max = 20, message = "Emissions UoM Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotBlank(message = "Emissions Unit of Measure is required.")
+    @Size(max = 20, message = "Emissions Unit of Measure can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsUomCode;
 
     private BigDecimal emissionsFactor;

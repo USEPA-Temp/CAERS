@@ -53,6 +53,7 @@ export class CreateReleasePointComponent implements OnInit {
 
       Object.assign(saveReleasePoint, this.releasePointComponent.releasePointForm.value);
       saveReleasePoint.facilitySiteId = this.facilitySite.id;
+      saveReleasePoint.releasePointIdentifier = this.releasePointComponent.releasePointForm.controls.releasePointIdentifier.value.trim();
 
       this.releasePointService.create(saveReleasePoint)
       .subscribe(() => {
