@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
+import { ToastrService } from 'ngx-toastr';
+import bsCustomFileInput from "bs-custom-file-input";
 
 @Component({
   selector: 'app-bulk-upload',
@@ -8,15 +10,17 @@ import { EmissionsReportingService } from 'src/app/core/services/emissions-repor
   styleUrls: ['./bulk-upload.component.scss']
 })
 export class BulkUploadComponent implements OnInit {
-    selectedFile: File;
+    selectedFile:File = null;
     jsonFileContents: string;
     reportUpload: string;
 
   constructor(
       private emissionsReportingService: EmissionsReportingService,
-      private route: ActivatedRoute) { }
+      private route: ActivatedRoute,
+      private toastr: ToastrService) { }
 
   ngOnInit() {
+    bsCustomFileInput.init("#file-json-workbook");
   }
 
   onFileChanged(event) {
@@ -24,7 +28,13 @@ export class BulkUploadComponent implements OnInit {
     const fileReader = new FileReader();
     fileReader.readAsText(this.selectedFile, 'UTF-8');
     fileReader.onload = () => {
-    this.jsonFileContents = JSON.parse(fileReader.result.toString());
+      try {
+        this.jsonFileContents = JSON.parse(fileReader.result.toString());
+      }
+      catch {
+        this.toastr.error('', 'Invalid File Format', {positionClass: 'toast-top-right'});
+        this.selectedFile = null;
+      }
     };
     fileReader.onerror = (error) => {
         console.log(error);
@@ -40,6 +50,7 @@ export class BulkUploadComponent implements OnInit {
             ${report.status}; ${report.validationStatus}; ${report.year}; `);
         this.reportUpload = `emissionsReport: ${report.agencyCode}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
             ${report.status}; ${report.validationStatus}; ${report.year}; `;
+        this.toastr.success('', 'File Successfully Uploaded', {positionClass: 'toast-top-right'})
       });
     });
   }
