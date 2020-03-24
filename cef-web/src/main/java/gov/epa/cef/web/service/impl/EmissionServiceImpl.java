@@ -212,8 +212,8 @@ public class EmissionServiceImpl implements EmissionService {
         return dto;
     }
 
+    //TODO: consolidate with other calculateTotalEmissions method, CEF-778
     public Emission calculateTotalEmissions(Emission emission, ReportingPeriod rp) {
-
 
         UnitMeasureCode totalEmissionUom = emission.getEmissionsUomCode();
         UnitMeasureCode efNumerator = emission.getEmissionsNumeratorUom();
