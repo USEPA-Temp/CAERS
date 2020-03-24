@@ -62,7 +62,7 @@ public class EmissionsProcessDto implements Serializable {
     }
 
     public void setEmissionsProcessIdentifier(String emissionsProcessIdentifier) {
-        this.emissionsProcessIdentifier = emissionsProcessIdentifier.trim();
+        this.emissionsProcessIdentifier = emissionsProcessIdentifier;
     }
 
     public Short getStatusYear() {

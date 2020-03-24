@@ -214,7 +214,6 @@
             </div>
         </div>
         </ng-container>
-</div>
         <div class="col-sm-12 col-md-6">
             <div class="card mb-3">
                 <div class="card-header text-center">
@@ -223,9 +222,21 @@
                 <div class="card-body">
                     <app-release-point-appt-table [facilitySiteId]="facilitySite.id" [tableData]="process.releasePointAppts" [process]="process" [readOnlyMode]="readOnlyMode"></app-release-point-appt-table>
                 </div>
-            </div>
-            
+            </div> 
         </div>
+</div>
+    <div class="row" *ngIf="(process?.operatingStatusCode?.code === 'PS') || (process?.operatingStatusCode?.code === 'TS')">
+        <div class="col-sm-12 col-md-6">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Release Points Associated with this Process</strong>
+                </div>
+                <div class="card-body">
+                    <app-release-point-appt-table [facilitySiteId]="facilitySite.id" [tableData]="process.releasePointAppts" [process]="process" [readOnlyMode]="readOnlyMode"></app-release-point-appt-table>
+                </div>
+            </div> 
+        </div>
+
         <div class="col-sm-12 col-md-6">
             <div class="card mb-3">
                 <div class="card-header text-center">
@@ -236,6 +247,19 @@
                 </div>
             </div>
         </div>
-    
+    </div>
+    <div class="row" *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">
+        <div class="col-sm-12 col-md-6">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Controls Associated with this Process</strong>
+                </div>
+                <div class="card-body">
+                    <app-control-path-panel [tableData]="controlPaths" [readOnlyMode]="readOnlyMode"></app-control-path-panel>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>

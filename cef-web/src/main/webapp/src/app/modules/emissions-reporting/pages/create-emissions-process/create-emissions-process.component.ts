@@ -81,6 +81,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
       reportingPeriod.operatingDetails = [operatingDetails];
       process.reportingPeriods = [reportingPeriod];
       process.emissionsUnitId = this.emissionsUnit.id;
+      process.emissionsProcessIdentifier = this.infoComponent.processForm.controls.emissionsProcessIdentifier.value.trim();
 
       // console.log(process);
 

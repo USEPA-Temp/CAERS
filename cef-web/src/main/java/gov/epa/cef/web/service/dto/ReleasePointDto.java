@@ -68,7 +68,7 @@ public class ReleasePointDto implements Serializable {
     }
 
     public void setReleasePointIdentifier(String releasePointIdentifier) {
-        this.releasePointIdentifier = releasePointIdentifier.trim();
+        this.releasePointIdentifier = releasePointIdentifier;
     }
 
     public CodeLookupDto getTypeCode() {
