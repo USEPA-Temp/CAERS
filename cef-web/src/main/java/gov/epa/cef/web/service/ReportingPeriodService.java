@@ -3,6 +3,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
+import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
 
 public interface ReportingPeriodService {
 
@@ -18,7 +19,7 @@ public interface ReportingPeriodService {
      * @param dto
      * @return
      */
-    public ReportingPeriodDto update(ReportingPeriodDto dto);
+    public ReportingPeriodUpdateResponseDto update(ReportingPeriodDto dto);
 
     /**
      * Retrieve Reporting Period by id

@@ -5,6 +5,8 @@ import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ReportingPeriodService;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
+import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,12 +61,12 @@ public class ReportingPeriodApi {
      * @return
      */
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ReportingPeriodDto> updateReportingPeriod(
+    public ResponseEntity<ReportingPeriodUpdateResponseDto> updateReportingPeriod(
         @NotNull @PathVariable Long id, @NotNull @RequestBody ReportingPeriodDto dto) {
 
         this.securityService.facilityEnforcer().enforceEntity(id, ReportingPeriodRepository.class);
 
-        ReportingPeriodDto result = reportingPeriodService.update(dto.withId(id));
+        ReportingPeriodUpdateResponseDto result = reportingPeriodService.update(dto.withId(id));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
