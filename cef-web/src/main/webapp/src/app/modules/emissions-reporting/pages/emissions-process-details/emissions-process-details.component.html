@@ -162,7 +162,7 @@
         </ng-container>
     </div>
 
-<div class="row" *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">   
+<div *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">   
     <div *ngIf="createPeriod">
         <div class="row">
             <div class="col-sm-12">
@@ -192,39 +192,52 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="!(process.reportingPeriods && process.reportingPeriods.length)">
+    <div class="row ml-1" *ngIf="!(process.reportingPeriods && process.reportingPeriods.length) && !readOnlyMode">
         <div class="col">
             <div class="float-right pb-3 pr-3">
-            <button *ngIf="!createPeriod" type="button" class="btn btn-success mr-2" (click)="setCreatePeriod(true)">Create Reporting Period</button>
-            <button *ngIf="createPeriod" type="button" class="btn btn-primary mr-2" (click)="setCreatePeriod(false)">Cancel</button>
-            <button *ngIf="createPeriod" type="submit" class="btn btn-success" (click)="createReportingPeriod()">Save</button>
+                <button *ngIf="!createPeriod" type="button" class="btn btn-success mr-2" (click)="setCreatePeriod(true)">Create Reporting Period</button>
+                <button *ngIf="createPeriod" type="button" class="btn btn-primary mr-2" (click)="setCreatePeriod(false)">Cancel</button>
+                <button *ngIf="createPeriod" type="submit" class="btn btn-success" (click)="createReportingPeriod()">Save</button>
             </div>
         </div>
     </div>
 
-        <ng-container *ngFor="let period of process.reportingPeriods">
-        <div class="col-sm-12 col-md-6">
-            <div class="card mb-3">
-                <div class="card-header text-center">
-                    <strong>Emissions Associated with this Process</strong>
-                </div>
-                <div class="card-body">
-                    <app-emission-table [tableData]="period.emissions" [reportingPeriod]="period" [process]="process" [readOnlyMode]="readOnlyMode"></app-emission-table>
+    <ng-container *ngFor="let period of process.reportingPeriods">
+        <div class="row ml-1">
+            <div class="col-sm-12 col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header text-center">
+                        <strong>Emissions Associated with this Process</strong>
+                    </div>
+                    <div class="card-body">
+                        <app-emission-table [tableData]="period.emissions" [reportingPeriod]="period" [process]="process" [readOnlyMode]="readOnlyMode"></app-emission-table>
+                    </div>
                 </div>
             </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header text-center">
+                        <strong>Release Points Associated with this Process</strong>
+                    </div>
+                    <div class="card-body">
+                        <app-release-point-appt-table [facilitySiteId]="facilitySite.id" [tableData]="process.releasePointAppts" [process]="process" [readOnlyMode]="readOnlyMode"></app-release-point-appt-table>
+                    </div>
+                </div> 
+            </div>
         </div>
-        </ng-container>
-        <div class="col-sm-12 col-md-6">
+    </ng-container>
+
+    <div class="col-sm-12 col-md-6 ml-1 mt-10">
             <div class="card mb-3">
                 <div class="card-header text-center">
-                    <strong>Release Points Associated with this Process</strong>
+                    <strong>Controls Associated with this Process</strong>
                 </div>
                 <div class="card-body">
-                    <app-release-point-appt-table [facilitySiteId]="facilitySite.id" [tableData]="process.releasePointAppts" [process]="process" [readOnlyMode]="readOnlyMode"></app-release-point-appt-table>
+                    <app-control-path-panel [tableData]="controlPaths" [readOnlyMode]="readOnlyMode"></app-control-path-panel>
                 </div>
-            </div> 
-        </div>
-</div>
+            </div>
+    </div>  
+    
     <div class="row" *ngIf="(process?.operatingStatusCode?.code === 'PS') || (process?.operatingStatusCode?.code === 'TS')">
         <div class="col-sm-12 col-md-6">
             <div class="card mb-3">
@@ -248,18 +261,6 @@
             </div>
         </div>
     </div>
-    <div class="row" *ngIf="(process?.operatingStatusCode?.code !== 'PS') && (process?.operatingStatusCode?.code !== 'TS')">
-        <div class="col-sm-12 col-md-6">
-            <div class="card mb-3">
-                <div class="card-header text-center">
-                    <strong>Controls Associated with this Process</strong>
-                </div>
-                <div class="card-body">
-                    <app-control-path-panel [tableData]="controlPaths" [readOnlyMode]="readOnlyMode"></app-control-path-panel>
-                </div>
-            </div>
-        </div>
-    </div>
 
-
+</div>
 </div>
