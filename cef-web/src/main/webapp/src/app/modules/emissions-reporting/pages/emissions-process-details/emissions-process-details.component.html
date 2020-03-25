@@ -192,7 +192,7 @@
         </div>
     </div>
 
-    <div class="row ml-1" *ngIf="!(process.reportingPeriods && process.reportingPeriods.length)">
+    <div class="row ml-1" *ngIf="!(process.reportingPeriods && process.reportingPeriods.length) && !readOnlyMode">
         <div class="col">
             <div class="float-right pb-3 pr-3">
                 <button *ngIf="!createPeriod" type="button" class="btn btn-success mr-2" (click)="setCreatePeriod(true)">Create Reporting Period</button>
