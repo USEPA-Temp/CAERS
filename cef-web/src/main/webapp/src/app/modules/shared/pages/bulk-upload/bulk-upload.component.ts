@@ -32,7 +32,7 @@ export class BulkUploadComponent implements OnInit {
         this.jsonFileContents = JSON.parse(fileReader.result.toString());
       }
       catch {
-        this.toastr.error('', 'Invalid File Format', {positionClass: 'toast-top-right'});
+        this.toastr.error('', 'Invalid file format, only json files may be uploaded.', {positionClass: 'toast-top-right'});
         this.selectedFile = null;
       }
     };
@@ -44,14 +44,16 @@ export class BulkUploadComponent implements OnInit {
   onUpload() {
     this.route.paramMap
     .subscribe(map => {
-      this.emissionsReportingService.uploadReport(this.jsonFileContents)
-      .subscribe(report => {
-        console.log(`emissionsReport: ${report.agencyCode}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
-            ${report.status}; ${report.validationStatus}; ${report.year}; `);
-        this.reportUpload = `emissionsReport: ${report.agencyCode}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
-            ${report.status}; ${report.validationStatus}; ${report.year}; `;
-        this.toastr.success('', 'File Successfully Uploaded', {positionClass: 'toast-top-right'})
-      });
+        this.emissionsReportingService.uploadReport(this.jsonFileContents)
+        .subscribe(report => {
+          console.log(`emissionsReport: ${report.agencyCode}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
+              ${report.status}; ${report.validationStatus}; ${report.year}; `);
+          this.reportUpload = `emissionsReport: ${report.agencyCode}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
+              ${report.status}; ${report.validationStatus}; ${report.year}; `;
+          this.toastr.success('', 'File successfully uploaded.', {positionClass: 'toast-top-right'})
+        }, error => {
+          this.toastr.error('', 'The json file failed to upload, please check your formatting and try again.', {positionClass: 'toast-top-right'});
+        });
     });
   }
 
