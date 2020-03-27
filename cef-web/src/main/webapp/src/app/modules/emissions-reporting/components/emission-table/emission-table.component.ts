@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { Emission } from 'src/app/shared/models/emission';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -16,7 +16,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
   templateUrl: './emission-table.component.html',
   styleUrls: ['./emission-table.component.scss']
 })
-export class EmissionTableComponent extends BaseSortableTable implements OnInit {
+export class EmissionTableComponent extends BaseSortableTable implements OnInit, OnChanges {
   @Input() tableData: Emission[];
   @Input() reportingPeriod: ReportingPeriod;
   @Input() process: Process;
@@ -39,6 +39,11 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit 
             this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.REPORTING_PERIOD}/${this.reportingPeriod.id}/${BaseReportUrl.EMISSION}`;
         });
     }
+    
+    ngOnChanges() {
+        this.tableData.sort((a,b) => (a.pollutant.pollutantName > b.pollutant.pollutantName) ? 1 : -1);
+    }
+
 
     openDeleteModal(emissionName: string, emissionId: number) {
         const modalMessage = `Are you sure you want to delete the pollutant ${emissionName} from this process?`;
