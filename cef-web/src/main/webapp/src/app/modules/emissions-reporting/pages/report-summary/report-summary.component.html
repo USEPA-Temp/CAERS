@@ -1,11 +1,11 @@
 <div *ngIf="facilitySite">
     <div class="row">
-        <div class="col-sm-12" *ngIf="tableData">
+        <div class="col-sm-12" [hidden]="!tableData">
             <div class="card  mb-3">
                 <div class="card-header text-center">
                     <strong>Report Summary</strong>
                 </div>
-                <div class="card-body">
+                <div class="card-body" *ngIf="tableData">
                     <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
                                               [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
                 </div>
