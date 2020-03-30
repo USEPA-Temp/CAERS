@@ -175,9 +175,33 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.reportingPeriodService.update(updatedReportingPeriod)
       .subscribe(result => {
 
-        Object.assign(period, result);
+        Object.assign(period, result.reportingPeriod);
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.setEditPeriod(false);
+
+        if (result.failedEmissions.length) {
+          this.toastr.error(
+            `Total Emissions for ${result.failedEmissions.join(', ')} could not be calculated because of invalid data. Please verify that everything is entered correctly.`,
+            '',
+            {timeOut: 20000, extendedTimeOut: 10000, closeButton: true}
+          );
+        }
+
+        if (result.notUpdatedEmissions.length) {
+          this.toastr.warning(
+            `Total Emissions for ${result.notUpdatedEmissions.join(', ')} were not recalculated and must be updated manually.`,
+            '',
+            {timeOut: 20000, extendedTimeOut: 10000, closeButton: true}
+          );
+        }
+
+        if (result.updatedEmissions.length) {
+          this.toastr.success(
+            `Total Emissions were recalculated for ${result.updatedEmissions.join(', ')}.`,
+            '',
+            {timeOut: 20000, extendedTimeOut: 10000, closeButton: true}
+          );
+        }
       });
     }
   }
@@ -208,6 +232,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.reportingPeriodService.create(reportingPeriod)
       .subscribe(result => {
 
+        console.log()
         this.process.reportingPeriods.push(result);
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.setCreatePeriod(false);

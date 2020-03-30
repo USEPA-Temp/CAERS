@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
+import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
 import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +66,7 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
 
     @Test
     public void update_Should_ReportingPeriodObject_When_ReportingPeriodExists(){
-        ReportingPeriodDto reportingPeriod = reportingPeriodServiceImpl.update(reportingPeriodDto);
+        ReportingPeriodUpdateResponseDto reportingPeriod = reportingPeriodServiceImpl.update(reportingPeriodDto);
         assertNotEquals(null, reportingPeriod);
     }
 

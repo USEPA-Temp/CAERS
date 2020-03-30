@@ -40,10 +40,10 @@ export class CreateEmissionsUnitComponent implements OnInit {
         this.reportId = parseInt(map.get('reportId'));
       });
 
-      this.facilitySiteService.retrieveForReport(this.eisProgramId,this.reportId)
+      this.facilitySiteService.retrieveForReport(this.eisProgramId, this.reportId)
       .subscribe(result => {
         this.facilitySiteId = result.id;
-      })
+      });
   }
 
   isValid() {
@@ -59,11 +59,10 @@ export class CreateEmissionsUnitComponent implements OnInit {
 
           Object.assign(emissionUnit, this.infoComponent.emissionUnitForm.value);
           emissionUnit.facilitySiteId = this.facilitySiteId;
+          emissionUnit.unitIdentifier = this.infoComponent.emissionUnitForm.controls.unitIdentifier.value.trim();
 
-          console.log(emissionUnit)
           this.emissionUnitService.create(emissionUnit)
           .subscribe(result => {
-            console.log(result)
             this.sharedService.updateReportStatusAndEmit(this.route);
             this.router.navigate(['../..'], { relativeTo: this.route });
           });

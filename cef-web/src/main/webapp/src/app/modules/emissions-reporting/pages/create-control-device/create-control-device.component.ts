@@ -53,6 +53,7 @@ export class CreateControlDeviceComponent implements OnInit {
 
       Object.assign(saveControlDevice, this.controlDeviceComponent.controlDeviceForm.value);
       saveControlDevice.facilitySiteId = this.facilitySite.id;
+      saveControlDevice.identifier = this.controlDeviceComponent.controlDeviceForm.controls.identifier.value.trim();
 
       this.controlService.create(saveControlDevice)
         .subscribe(() => {

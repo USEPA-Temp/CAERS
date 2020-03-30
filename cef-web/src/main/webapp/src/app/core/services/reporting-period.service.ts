@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
+import { ReportingPeriodUpdateResult } from 'src/app/shared/models/reporting-period-update-result';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,9 @@ export class ReportingPeriodService {
     return this.http.post<ReportingPeriod>(url, period);
   }
 
-  update(period: ReportingPeriod): Observable<ReportingPeriod> {
+  update(period: ReportingPeriod): Observable<ReportingPeriodUpdateResult> {
     const url = `${this.baseUrl}/${period.id}`;
-    return this.http.put<ReportingPeriod>(url, period);
+    return this.http.put<ReportingPeriodUpdateResult>(url, period);
   }
 
   /** GET specified Reporting Period from the server */

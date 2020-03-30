@@ -107,8 +107,10 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
         	Short tempStatusYear = dto.getStatusYear();
 
         	unit.getEmissionsProcesses().forEach(process -> {
-	        	process.setOperatingStatusCode(tempOperatingStatusCode);
-	        	process.setStatusYear(tempStatusYear);
+        		if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
+		        	process.setOperatingStatusCode(tempOperatingStatusCode);
+		        	process.setStatusYear(tempStatusYear);
+        		}
         	});
         }
 

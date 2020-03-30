@@ -21,7 +21,6 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
 
-    @NotNull(message = "I prefer to calculate this emission myself is required.")
     private boolean totalManualEntry;
 
     @Digits(integer = 2, fraction = 6,
@@ -31,8 +30,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @NotNull(message = "Total Emissions is required.")
     private BigDecimal totalEmissions;
 
-    @NotBlank(message = "Emissions UoM Code is required.")
-    @Size(max = 20, message = "Emissions UoM Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotBlank(message = "Emissions Unit of Measure is required.")
+    @Size(max = 20, message = "Emissions Unit of Measure can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsUomCode;
 
     private BigDecimal emissionsFactor;
@@ -43,8 +42,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @Size(max = 100, message = "Emissions Factor Text can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsFactorText;
 
-    @NotBlank(message = "Emissions UoM Code is required.")
-    @Size(max = 20, message = "Emissions UoM Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotBlank(message = "Emissions Calculation Method is required.")
+    @Size(max = 20, message = "Emissions Calculation Method can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsCalcMethodCode;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
