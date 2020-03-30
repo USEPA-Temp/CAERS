@@ -1,11 +1,14 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.ReportingPeriodService;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
+import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
 import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,9 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
+
+    @Autowired
+    private EmissionServiceImpl emissionService;
 
     public ReportingPeriodDto create(ReportingPeriodDto dto) {
 
@@ -61,7 +67,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
         return result;
     }
 
-    public ReportingPeriodDto update(ReportingPeriodDto dto) {
+    public ReportingPeriodUpdateResponseDto update(ReportingPeriodDto dto) {
 
         ReportingPeriod period = repo.findById(dto.getId())
             .orElseThrow(() -> new NotExistException("Reporting Period", dto.getId()));
@@ -88,8 +94,28 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
             period.setReportingPeriodTypeCode(lookupService.retrieveReportingPeriodCodeEntityByCode(dto.getReportingPeriodTypeCode().getCode()));
         }
 
-        ReportingPeriodDto result = mapper.toDto(repo.save(period));
-        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReportingPeriodRepository.class);
+        ReportingPeriodUpdateResponseDto result = new ReportingPeriodUpdateResponseDto();
+
+        period.getEmissions().forEach(emission -> {
+            if (!(Boolean.TRUE.equals(emission.getTotalManualEntry()) 
+                    || Boolean.TRUE.equals(emission.getEmissionsCalcMethodCode().getTotalDirectEntry()))) {
+                try {
+                    Emission updatedEmission = emissionService.calculateTotalEmissions(emission, period);
+                    emission.setEmissionsFactor(updatedEmission.getEmissionsFactor());
+                    emission.setTotalEmissions(updatedEmission.getTotalEmissions());
+                    result.getUpdatedEmissions().add(emission.getPollutant().getPollutantName());
+                } catch (ApplicationException e) {
+                    result.getFailedEmissions().add(emission.getPollutant().getPollutantName());
+                }
+            } else {
+                result.getNotUpdatedEmissions().add(emission.getPollutant().getPollutantName());
+            }
+        });
+
+        ReportingPeriodDto resultDto = mapper.toDto(repo.save(period));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(resultDto.getId()), ReportingPeriodRepository.class);
+
+        result.setReportingPeriod(resultDto);
         return result;
     }
 
