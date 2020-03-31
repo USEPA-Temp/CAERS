@@ -142,7 +142,7 @@ public class EmissionServiceImpl implements EmissionService {
     }
 
     /**
-     * Calculate total emissions for an emission and emission factor if it uses a formula
+     * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula
      * @param dto
      * @return
      */
@@ -154,65 +154,23 @@ public class EmissionServiceImpl implements EmissionService {
         UnitMeasureCode efNumerator = uomRepo.findById(dto.getEmissionsNumeratorUom().getCode()).orElse(null);
         UnitMeasureCode efDenom = uomRepo.findById(dto.getEmissionsDenominatorUom().getCode()).orElse(null);
 
-        if (rp.getCalculationParameterUom() == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Period Calculation Unit of Measure must be set.");
-        }
-        if (totalEmissionUom == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Total Emissions Unit of Measure must be set.");
-        }
-        if (efNumerator == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Numerator Unit of Measure must be set.");
-        }
-        if (efDenom == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Denominator Unit of Measure must be set.");
-        }
+        Emission emission = emissionMapper.fromDto(dto);
 
-        if (!rp.getCalculationParameterUom().getUnitType().equals(efDenom.getUnitType())) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                    String.format("Reporting Period Calculation Unit of Measure %s cannot be converted into Emission Factor Denominator Unit of Measure %s.",
-                            rp.getCalculationParameterUom().getDescription(), efDenom.getDescription()));
-        }
+        emission.setEmissionsUomCode(totalEmissionUom);
+        emission.setEmissionsNumeratorUom(efNumerator);
+        emission.setEmissionsDenominatorUom(efDenom);
 
-        if (!totalEmissionUom.getUnitType().equals(efNumerator.getUnitType())) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                    String.format("Emission Factor Numerator Unit of Measure %s cannot be converted into Total Emissions Unit of Measure %s.",
-                            efNumerator.getDescription(), totalEmissionUom.getDescription()));
-        }
+        EmissionDto result = emissionMapper.toDto(calculateTotalEmissions(emission, rp));
 
-        if (dto.getFormulaIndicator()) {
-            List<EmissionFormulaVariable> variables = emissionMapper.formulaVariableFromDtoList(dto.getVariables());
-
-            BigDecimal ef = CalculationUtils.calculateEmissionFormula(dto.getEmissionsFactorFormula(), variables);
-            dto.setEmissionsFactor(ef);
-        }
-
-        // check if the year is divisible by 4 which would make it a leap year
-        boolean leapYear = rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;
-
-        BigDecimal totalEmissions = dto.getEmissionsFactor().multiply(rp.getCalculationParameterValue());
-
-        // convert units for denominator and throughput
-        if (efDenom != null && rp.getCalculationParameterUom() != null 
-                && !rp.getCalculationParameterUom().getCode().equals(efDenom.getCode())) {
-            totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
-        }
-
-        // convert units for numerator and total emissions
-        if (efNumerator != null && totalEmissionUom != null && !totalEmissionUom.getCode().equals(efNumerator.getCode())) {
-            totalEmissions = CalculationUtils.convertUnits(efNumerator.getCalculationVariable(), totalEmissionUom.getCalculationVariable(), leapYear).multiply(totalEmissions);
-        }
-
-        if (dto.getOverallControlPercent() != null) {
-            BigDecimal controlRate = new BigDecimal("100").subtract(dto.getOverallControlPercent()).divide(new BigDecimal("100"));
-            totalEmissions = totalEmissions.multiply(controlRate);
-        }
-
-        dto.setTotalEmissions(totalEmissions);
-
-        return dto;
+        return result;
     }
 
-    //TODO: consolidate with other calculateTotalEmissions method, CEF-778
+    /**
+     * Calculate total emissions for an emission and reporting period. Also calculates emission factor if it uses a formula
+     * @param emission
+     * @param rp
+     * @return
+     */
     public Emission calculateTotalEmissions(Emission emission, ReportingPeriod rp) {
 
         UnitMeasureCode totalEmissionUom = emission.getEmissionsUomCode();

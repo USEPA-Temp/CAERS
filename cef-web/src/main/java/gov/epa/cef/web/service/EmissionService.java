@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service;
 
+import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 
@@ -33,11 +35,19 @@ public interface EmissionService {
     public void delete(Long id);
 
     /**
-     * Calculate total emissions for an emission and emission factor if it uses a formula
+     * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula
      * @param dto
      * @return
      */
     public EmissionDto calculateTotalEmissions(EmissionDto dto);
+
+    /**
+     * Calculate total emissions for an emission and reporting period. Also calculates emission factor if it uses a formula
+     * @param emission
+     * @param rp
+     * @return
+     */
+    public Emission calculateTotalEmissions(Emission emission, ReportingPeriod rp);
 
     /**
      * Find Emission by Facility and CAS Number.
