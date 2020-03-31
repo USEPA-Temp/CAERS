@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-control-paths-table',
@@ -23,6 +24,7 @@ export class ControlPathsTableComponent extends BaseSortableTable implements OnI
   constructor(private route: ActivatedRoute,
               private modalService: NgbModal,
               private controlPathService: ControlPathService,
+              private userContextService: UserContextService,
               private sharedService: SharedService) {
     super();
                }
@@ -35,7 +37,11 @@ export class ControlPathsTableComponent extends BaseSortableTable implements OnI
 
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
     });
   }
 

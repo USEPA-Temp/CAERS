@@ -9,6 +9,7 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-release-point-table',
@@ -19,12 +20,13 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
   @Input() tableData: ReleasePoint[];
   baseUrl: string;
   facilitySiteId: number;
-  
+
   readOnlyMode = true;
 
   constructor(private modalService: NgbModal,
               private releasePointService: ReleasePointService,
               private route: ActivatedRoute,
+              private userContextService: UserContextService,
               private sharedService: SharedService) {
     super();
   }
@@ -38,7 +40,11 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
     this.route.data
       .subscribe((data: { facilitySite: FacilitySite }) => {
         this.facilitySiteId = (data.facilitySite.id);
-        this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+        this.userContextService.getUser().subscribe( user => {
+          if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+            this.readOnlyMode = false;
+          }
+        });
     });
   }
 

@@ -11,6 +11,7 @@ import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EditFacilitySiteInfoPanelComponent } from '../../components/edit-facility-site-info-panel/edit-facility-site-info-panel.component';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-facility-information',
@@ -32,6 +33,7 @@ export class FacilityInformationComponent implements OnInit {
     private modalService: NgbModal,
     private contactService: FacilitySiteContactService,
     private facilityService: FacilitySiteService,
+    private userContextService: UserContextService,
     private sharedService: SharedService,
     private toastr: ToastrService,
     private route: ActivatedRoute) { }
@@ -53,7 +55,11 @@ export class FacilityInformationComponent implements OnInit {
         this.facilitySite.facilityNAICS = fs.facilityNAICS;
       });
 
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
     });
 
     this.route.paramMap

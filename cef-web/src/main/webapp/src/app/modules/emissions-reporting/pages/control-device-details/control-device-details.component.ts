@@ -7,6 +7,7 @@ import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { EditControlDeviceInfoPanelComponent } from '../../components/edit-control-device-info-panel/edit-control-device-info-panel.component';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-control-device-details',
@@ -27,6 +28,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
   constructor(
     private controlService: ControlService,
     private route: ActivatedRoute,
+    private userContextService: UserContextService,
     private sharedService: SharedService) { }
 
   ngOnInit() {
@@ -47,7 +49,11 @@ export class ControlDeviceDetailsComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
       this.facilitySite = data.facilitySite;
       this.sharedService.emitChange(data.facilitySite);
     });

@@ -10,6 +10,7 @@ import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { EditReleasePointPanelComponent } from '../../components/edit-release-point-panel/edit-release-point-panel.component';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-release-point-details',
@@ -33,6 +34,7 @@ export class ReleasePointDetailsComponent implements OnInit {
     private releasePointService: ReleasePointService,
     private processService: EmissionsProcessService,
     private controlPathService: ControlPathService,
+    private userContextService: UserContextService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -62,7 +64,11 @@ export class ReleasePointDetailsComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
       this.sharedService.emitChange(data.facilitySite);
     });
 

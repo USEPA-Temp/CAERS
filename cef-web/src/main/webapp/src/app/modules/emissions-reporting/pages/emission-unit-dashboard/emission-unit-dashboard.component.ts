@@ -9,6 +9,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class EmissionUnitDashboardComponent implements OnInit {
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
     private controlPathService: ControlPathService,
+    private userContextService: UserContextService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -62,7 +64,11 @@ export class EmissionUnitDashboardComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySiteId = data.facilitySite.id;
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
 
       this.sharedService.emitChange(data.facilitySite);
     });
