@@ -87,7 +87,7 @@ export class EmissionsReportingService {
 
         const url = `${this.baseUrl}/facility/${facility.programId}`;
 
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('workbook', workbook);
         formData.append('metadata', new Blob([JSON.stringify({
             year: reportYear,

@@ -18,6 +18,11 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
   styleUrls: ['./edit-release-point-panel.component.scss']
 })
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
+
+  // TODO: should consider moving these validations into a separate file
+  readonly numberPattern83 = '^[0-9]{0,5}([\.][0-9]{1,3})?$';
+  readonly numberPattern168 = '^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$';
+
   @Input() releasePoint: ReleasePoint;
   releasePointIdentifiers: string[] = [];
   readonly fugitiveType = 'Fugitive';
@@ -71,9 +76,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     ]],
     fenceLineUomCode: [null],
     comments: ['', Validators.maxLength(400)],
-    exitGasVelocity: [null, Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')],
+    exitGasVelocity: [null, Validators.pattern(this.numberPattern83)],
     exitGasVelocityUomCode: [null],
-    exitGasFlowRate: [null, Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')],
+    exitGasFlowRate: [null, Validators.pattern(this.numberPattern168)],
     exitGasFlowUomCode: [null],
     fugitiveHeight: ['', [
       wholeNumberValidator(),
@@ -106,14 +111,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.min(1),
       Validators.max(1300),
-      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
+      Validators.pattern(this.numberPattern83)
     ]],
     stackHeightUomCode: [null],
     stackDiameter: ['', [
       Validators.required,
       Validators.min(0.001),
       Validators.max(300),
-      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
+      Validators.pattern(this.numberPattern83)
     ]],
     stackDiameterUomCode: [null],
     exitGasTemperature: ['', [
@@ -262,20 +267,20 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0), Validators.max(200000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+            Validators.min(0), Validators.max(200000), Validators.pattern(this.numberPattern168)]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
         } else {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0.00000001), Validators.max(200000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+            Validators.min(0.00000001), Validators.max(200000), Validators.pattern(this.numberPattern168)]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
         }
         this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
         this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
       } else {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0), Validators.max(12000000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]);
+            Validators.min(0), Validators.max(12000000), Validators.pattern(this.numberPattern168)]);
         } else {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0.00000001), Validators.max(12000000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]);
+            Validators.min(0.00000001), Validators.max(12000000), Validators.pattern(this.numberPattern168)]);
         }
         this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
         this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
@@ -290,20 +295,20 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       if (this.releasePointForm.controls.exitGasVelocityUomCode.value.code === 'FPS') {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0), Validators.max(400), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0), Validators.max(400), Validators.pattern(this.numberPattern83)]);
         } else {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0.001), Validators.max(1500), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0.001), Validators.max(1500), Validators.pattern(this.numberPattern83)]);
         }
         this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
         this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
       } else {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0), Validators.max(24000), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0), Validators.max(24000), Validators.pattern(this.numberPattern83)]);
         } else {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0.060), Validators.max(90000), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0.060), Validators.max(90000), Validators.pattern(this.numberPattern83)]);
         }
         this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
         this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
@@ -337,8 +342,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         } else {
           control.get('exitGasVelocityUomCode').setErrors(null);
         }
-        return null;
-      };
+      return null;
+    };
   }
 
   // Calculated exit gas velocity range check
@@ -583,7 +588,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         }
       }
       return null;
-    }
+    };
   }
 
 }
