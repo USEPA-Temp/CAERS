@@ -61,14 +61,14 @@ export class ReportSummaryComponent implements OnInit {
                         this.userRole = user.role;
                         if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
                             initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr, 
+                                this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
                                 this.cromerrLoadedEmitter);
                         }
                     });
                 });
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                     .subscribe(pollutants => {
-                    // filter out radiation pollutants to show separately at the end of the table 
+                    // filter out radiation pollutants to show separately at the end of the table
                     // (only radionucleides right now which is code 605)
                     this.tableData = pollutants.filter(pollutant => {
                         return pollutant.pollutantCode !== '605';
@@ -88,19 +88,19 @@ export class ReportSummaryComponent implements OnInit {
      */
     validateReport() {
 
-        let reportId = this.facilitySite.emissionsReport.id;
+        const reportId = this.facilitySite.emissionsReport.id;
 
         this.router.navigateByUrl(`/facility/${this.facilitySite.eisProgramId}/report/${reportId}/validation`);
     }
 
-    reopenReport(){
-        const modalMessage = `Do you wish to reopen the ${this.facilitySite.emissionsReport.year} report for 
-        ${this.facilitySite.name}? This will reset the status of the report to "In progress" and you 
+    reopenReport() {
+        const modalMessage = `Do you wish to reopen the ${this.facilitySite.emissionsReport.year} report for
+        ${this.facilitySite.name}? This will reset the status of the report to "In progress" and you
         will need to resubmit the report to the S/L/T authority for review. `;
         const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
-            let ids = [this.facilitySite.emissionsReport.id];
+            const ids = [this.facilitySite.emissionsReport.id];
             this.resetReport(ids);
         });
     }
@@ -113,8 +113,8 @@ export class ReportSummaryComponent implements OnInit {
 
     downloadReport(emissionsReportId: number, facilitySiteId: number, altFacilityIdentifier: number) {
         this.reportService.retrieveReportDownloadDto(emissionsReportId, facilitySiteId).subscribe(reportDownloadDto => {
-                this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityIdentifier +'_'+
-                this.facilitySite.emissionsReport.year +'_' + 'Emissions_Report');
+                this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityIdentifier + '_' +
+                this.facilitySite.emissionsReport.year + '_' + 'Emissions_Report');
         });
     }
 

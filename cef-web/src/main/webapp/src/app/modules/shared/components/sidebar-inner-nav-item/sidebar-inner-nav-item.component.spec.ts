@@ -12,27 +12,27 @@ import { SideNavItem } from 'src/app/shared/models/side-nav-item';
 describe('SidebarInnerNavItemComponent', () => {
   let component: SidebarInnerNavItemComponent;
   let fixture: ComponentFixture<SidebarInnerNavItemComponent>;
-  let navItemJson = {
-      "id": 1,
-      "description": "Boiler 001",
-      "baseUrl": "emissionUnit",
-      "children": [
+  const navItemJson = {
+      id: 1,
+      description: 'Boiler 001',
+      baseUrl: 'emissionUnit',
+      children: [
           {
-              "id": 1,
-              "description": "Process 007",
-              "baseUrl": "process",
-              "children": [
+              id: 1,
+              description: 'Process 007',
+              baseUrl: 'process',
+              children: [
                   {
-                      "id": 1,
-                      "description": "Release Point 002",
-                      "baseUrl": "release",
-                      "children": null
+                      id: 1,
+                      description: 'Release Point 002',
+                      baseUrl: 'release',
+                      children: null
                   }
               ]
           }
       ]
   };
-  let navItem: SideNavItem = SideNavItem.fromJson(navItemJson);
+  const navItem: SideNavItem = SideNavItem.fromJson(navItemJson);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
