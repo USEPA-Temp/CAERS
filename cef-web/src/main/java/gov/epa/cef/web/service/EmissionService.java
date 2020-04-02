@@ -36,6 +36,8 @@ public interface EmissionService {
 
     /**
      * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula
+     * This method should be used when the Reporting Period in the database should be used for calculations 
+     * and you have an EmissionDto, probably with values that differ from the ones in the database.
      * @param dto
      * @return
      */
@@ -43,6 +45,8 @@ public interface EmissionService {
 
     /**
      * Calculate total emissions for an emission and reporting period. Also calculates emission factor if it uses a formula
+     * This method should be used when you need to specify a Reporting Period with a different throughput or UoM than the 
+     * one in the database. 
      * @param emission
      * @param rp
      * @return
