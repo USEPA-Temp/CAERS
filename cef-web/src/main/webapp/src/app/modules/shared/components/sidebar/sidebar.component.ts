@@ -5,7 +5,6 @@ import { SideNavItem } from 'src/app/shared/models/side-nav-item';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
-import { UserContextService } from 'src/app/core/services/user-context.service';
 
 
 @Component({
@@ -22,7 +21,6 @@ export class SidebarComponent{
 
   constructor(
       private emissionsUnitService: EmissionUnitService,
-      private userContext: UserContextService,
       sharedService: SharedService) {
     sharedService.changeEmitted$
     .subscribe(facilitySite => {
