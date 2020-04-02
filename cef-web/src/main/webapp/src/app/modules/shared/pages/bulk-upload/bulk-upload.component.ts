@@ -30,7 +30,9 @@ export class BulkUploadComponent implements OnInit {
     //prevents erroring when file is selected and then cancel is selected
     try {
       fileReader.readAsText(this.selectedFile, 'UTF-8');
-    } catch {}
+    } catch {
+      console.log("cancelling error has occured")
+    }
     fileReader.onload = () => {
       try {
         this.jsonFileContents = JSON.parse(fileReader.result.toString());
