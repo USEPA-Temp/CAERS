@@ -53,7 +53,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                 }
             });
         this.sharedService.emitChange(null);
-        this.facilitySite = new FacilitySite;
+        this.facilitySite = new FacilitySite();
 
         this.lookupService.retrieveOperatingStatus()
         .subscribe(result => {
@@ -192,7 +192,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
-            let ids = [report.id];
+            const ids = [report.id];
             this.resetReport(ids, report);
         });
     }

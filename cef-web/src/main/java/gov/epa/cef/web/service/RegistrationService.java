@@ -1,9 +1,7 @@
 package gov.epa.cef.web.service;
 
-import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.exception.ApplicationException;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 

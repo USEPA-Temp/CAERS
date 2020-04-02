@@ -14,7 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 describe('FacilityDashboardComponent', () => {
   let component: FacilityDashboardComponent;
   let fixture: ComponentFixture<FacilityDashboardComponent>;
-  let facility = {
+  const facility = {
       cdxFacilityId: 123,
       epaRegistryId: '123',
       programId: '123',
@@ -26,7 +26,7 @@ describe('FacilityDashboardComponent', () => {
       county: 'US',
       zipCode: '22033'
   };
-  let facilities: CdxFacility[] = [facility];
+  const facilities: CdxFacility[] = [facility];
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FacilityDashboardComponent,

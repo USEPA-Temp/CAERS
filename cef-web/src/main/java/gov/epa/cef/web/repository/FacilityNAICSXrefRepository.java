@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
-import gov.epa.cef.web.domain.FacilitySiteContact;
 
 public interface FacilityNAICSXrefRepository extends CrudRepository<FacilityNAICSXref, Long>, ProgramIdRetriever, ReportIdRetriever {
 		

@@ -45,12 +45,6 @@ public class ReportHistory extends BaseAuditEntity {
 	@Column(name = "comments", length = 2000)
 	private String comments;
 
-	/**
-	 * Default constructor
-	 */
-	public ReportHistory() {
-	}
-
 	public EmissionsReport getEmissionsReport() {
 		return emissionsReport;
 	}

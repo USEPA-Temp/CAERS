@@ -1,7 +1,5 @@
 package gov.epa.cef.web.service.dto;
 
-import gov.epa.cef.web.domain.AircraftEngineTypeCode;
-
 import java.io.Serializable;
 import java.util.List;
 
