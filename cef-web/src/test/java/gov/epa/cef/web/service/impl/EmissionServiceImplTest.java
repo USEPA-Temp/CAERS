@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
@@ -39,7 +40,9 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class EmissionServiceImplTest extends BaseServiceTest {
@@ -202,11 +205,37 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         when(emissionsByFacilityAndCASRepo.findByFrsFacilityIdAndPollutantCasIdAndYear("110015680799", "71-43-2", new Short("2019")))
         .thenReturn(emissionsList);
         when(emissionsByFacilityAndCASMapper.toDto(emission1)).thenReturn(emissionsByFacilityAndCASDto);
-        when(emissionMapper.formulaVariableFromDtoList(variableDtoList)).thenReturn(variableList);
         when(periodRepo.findById(1L)).thenReturn(Optional.of(rp));
         when(historyRepo.retrieveMaxSubmissionDateByReportId(37L)).thenReturn(returnDate);
         when(uomRepo.findById("LB")).thenReturn(Optional.of(lbUom));
         when(uomRepo.findById("TON")).thenReturn(Optional.of(tonUom));
+
+        doAnswer(invocation -> {
+
+            EmissionDto dto = invocation.getArgument(0);
+            Emission emission = new Emission();
+
+            emission.setFormulaIndicator(dto.getFormulaIndicator());
+            emission.setEmissionsFactorFormula(dto.getEmissionsFactorFormula());
+            emission.setEmissionsFactor(dto.getEmissionsFactor());
+            emission.setOverallControlPercent(dto.getOverallControlPercent());
+            if (variableDtoList.equals(dto.getVariables())) {
+                emission.setVariables(variableList);
+            }
+
+            return emission;
+        }).when(emissionMapper).fromDto(any());
+
+        doAnswer(invocation -> {
+
+            Emission emission = invocation.getArgument(0);
+            EmissionDto dto = new EmissionDto();
+
+            dto.setEmissionsFactor(emission.getEmissionsFactor());
+            dto.setTotalEmissions(emission.getTotalEmissions());
+
+            return dto;
+        }).when(emissionMapper).toDto(any());
     }
 
     @Test
