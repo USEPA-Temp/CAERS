@@ -4,4 +4,4 @@ UPDATE control_pollutant
 ALTER TABLE control_pollutant 
 	ALTER COLUMN percent_reduction SET NOT NULL;
 ALTER TABLE control_pollutant
-    ALTER COLUMN percent_reduction TYPE numeric(5, 3);
+    ALTER COLUMN percent_reduction TYPE numeric(4, 1);
