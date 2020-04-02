@@ -21,7 +21,7 @@ import java.util.List;
 @Service("registrationService")
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
     private final RegisterFacilityClient registerFacilityClient;
 
@@ -48,17 +48,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (CollectionUtils.isNotEmpty(facilities)) {
 
                 for (ProgramFacility facility : facilities) {
-                    LOGGER.debug("Facility Name: " + facility.getFacilityName());
+                    logger.debug("Facility Name: {}", facility.getFacilityName());
                 }
             } else {
-                LOGGER.debug("No Facility found for user role: " + userRoleId);
+                logger.debug("No Facility found for user role: {}", userRoleId);
             }
 
             return facilities == null ? Collections.emptyList() : facilities;
 
         } catch (Exception e) {
 
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
     }
@@ -83,18 +83,18 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (CollectionUtils.isNotEmpty(facilities)) {
 
                 for (ProgramFacility facility : facilities) {
-                    LOGGER.debug("Facility Name: {}", facility.getFacilityName());
+                    logger.debug("Facility Name: {}", facility.getFacilityName());
                 }
 
             } else {
 
-                LOGGER.debug("No Facilities found for program(s) : {}", String.join(", ", programIds));
+                logger.debug("No Facilities found for program(s) : {}", String.join(", ", programIds));
             }
 
             return facilities == null ? Collections.emptyList() : facilities;
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw ApplicationException.asApplicationException(e);
         }
     }

@@ -57,7 +57,7 @@ import java.util.stream.StreamSupport;
 @Transactional(propagation = Propagation.REQUIRED)
 public class EmissionsReportServiceImpl implements EmissionsReportService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmissionsReportServiceImpl.class);
 
     @Autowired
     private EmissionsReportRepository erRepo;
@@ -192,7 +192,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             }
             return cromerrDocumentId;
         } catch(IOException e) {
-            LOGGER.error("submitToCromerr - " + e.getMessage());
+            logger.error("submitToCromerr - {}", e.getMessage());
             throw ApplicationException.asApplicationException(e);
         } finally {
             if(tmp!=null) {
@@ -311,7 +311,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         EmissionsReport result = this.erRepo.save(emissionsReport);
 
-        LOGGER.debug("Report {} {}.", result.getId(), reportAction.label());
+        logger.debug("Report {} {}.", result.getId(), reportAction.label());
 
         this.reportService.createReportHistory(result.getId(), reportAction);
 

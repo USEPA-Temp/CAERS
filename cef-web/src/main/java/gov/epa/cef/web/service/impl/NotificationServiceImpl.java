@@ -56,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
             message.setText(body);
             emailSender.send(message);
         } catch (MailException e) {
-            LOGGER.error("sendSimpleMessage - unable to send email message. - " + e.getMessage());
+            LOGGER.error("sendSimpleMessage - unable to send email message. - {}", e.getMessage());
         }
     }
     
@@ -71,7 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
         try {
         	emailSender.send(messagePreparator);
         } catch (MailException e) {
-        	LOGGER.error("sendHTMLMessage - unable to send email message. - " + e.getMessage());
+        	LOGGER.error("sendHTMLMessage - unable to send email message. - {}", e.getMessage());
         }
     }
     
