@@ -27,23 +27,22 @@ export class BulkUploadComponent implements OnInit {
     this.selectedFile = event.target.files[0];
     const fileReader = new FileReader();
     
-    //prevents erroring when file is selected and then cancel is selected
-    try {
+    //checks to make sure file is selected so that canceling doesnt cause error
+    if (event.target.files[0]) {
       fileReader.readAsText(this.selectedFile, 'UTF-8');
-    } catch {
-      console.log("cancelling error has occured")
+
+      fileReader.onload = () => {
+        try {
+          this.jsonFileContents = JSON.parse(fileReader.result.toString());
+        } catch {
+          this.toastr.error('', 'Invalid file format, only json files may be uploaded.', {positionClass: 'toast-top-right'});
+          this.selectedFile = null;
+        }
+      };
+      fileReader.onerror = (error) => {
+          console.log(error);
+      };
     }
-    fileReader.onload = () => {
-      try {
-        this.jsonFileContents = JSON.parse(fileReader.result.toString());
-      } catch {
-        this.toastr.error('', 'Invalid file format, only json files may be uploaded.', {positionClass: 'toast-top-right'});
-        this.selectedFile = null;
-      }
-    };
-    fileReader.onerror = (error) => {
-        console.log(error);
-    };
   }
 
   onUpload() {
