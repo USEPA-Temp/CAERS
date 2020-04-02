@@ -26,14 +26,19 @@ export class ReportSummaryTableComponent extends BaseSortableTable implements On
      */
     getPollutantTonsTotal(): number {
         let currentYearTonsTotal = 0;
+        let precision = 0;
 
         if (this.tableData) {
             this.tableData.forEach(reportSummary => {
-                currentYearTonsTotal += reportSummary.emissionsTonsTotal;
+                currentYearTonsTotal += (reportSummary.emissionsTonsTotal);
+
+                if (this.getPrecision(reportSummary.emissionsTonsTotal) > precision) {
+                    precision = this.getPrecision(reportSummary.emissionsTonsTotal);
+                }
             });
         }
 
-        return currentYearTonsTotal;
+        return Math.round(currentYearTonsTotal*Math.pow(10, precision))/Math.pow(10, precision);
     }
 
 
@@ -42,14 +47,31 @@ export class ReportSummaryTableComponent extends BaseSortableTable implements On
      */
     getPreviousPollutantTonsTotal(): number {
         let previousYearTonsTotal = 0;
+        let precision = 0;
 
         if (this.tableData) {
             this.tableData.forEach(reportSummary => {
-                previousYearTonsTotal += reportSummary.previousYearTonsTotal;
+                if (reportSummary.previousYear) {
+                    previousYearTonsTotal += reportSummary.previousYearTonsTotal;
+
+                    if (this.getPrecision(reportSummary.previousYearTonsTotal) > precision) {
+                        precision = this.getPrecision(reportSummary.previousYearTonsTotal);
+                    }
+                }
             });
+
+            return Math.round(previousYearTonsTotal*Math.pow(10, precision))/Math.pow(10, precision);
         }
 
-        return previousYearTonsTotal;
+    }
+
+
+    getPrecision(value: number) {
+        if (value.toString().includes('.')) {
+            return value.toString().split('.')[1].length;
+        } else {
+            return 0;
+        }
     }
 
 }
