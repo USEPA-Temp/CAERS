@@ -4,6 +4,7 @@ import {HttpRequest, HttpHandler, HttpInterceptor, HttpResponse, HttpErrorRespon
 import {Observable, throwError, EMPTY, of, from} from 'rxjs';
 import {retryWhen, delay, concatMap} from 'rxjs/operators';
 import {UserContextService} from "../services/user-context.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 const DELAY_MS : number = 1000;
 const MAX_RETRIES : number = 1;
@@ -12,6 +13,7 @@ const MAX_RETRIES : number = 1;
 export class HttpErrorInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,
+                private modalService: NgbModal,
                 private userContext: UserContextService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
@@ -49,6 +51,15 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         }
 
                         return EMPTY;
+                    }
+
+                    if (error.status === 500) {
+                        this.modalService.dismissAll();
+                        this.router.navigateByUrl('/error');
+
+                        return new Observable<HttpResponse<any>>(subscriber => {
+                            subscriber.error(error);
+                        });
                     }
 
                     if (error instanceof HttpErrorResponse

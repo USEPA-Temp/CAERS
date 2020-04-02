@@ -240,6 +240,12 @@ export class EmissionDetailsComponent implements OnInit {
       this.epaEmissionFactor = false;
     }
 
+    // set validators of emissionsFactorText to null if the "i prefer to calculate the total emissions" check box is selected
+    if(this.emissionForm.get('totalManualEntry').value) {
+        this.emissionForm.get('emissionsFactorText').setValidators(null);
+        this.emissionForm.controls.emissionsFactorText.updateValueAndValidity();
+    }
+
 
     // Reconfigure form after calculation method changes
     this.emissionForm.get('emissionsCalcMethodCode').valueChanges

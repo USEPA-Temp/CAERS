@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 import { Control } from 'src/app/shared/models/control';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlService } from 'src/app/core/services/control.service';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
-import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -20,14 +20,14 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   edit: boolean;
   controlPaths: ControlPath[];
   controls: Control[];
-  controlSelected: String;
-  controlPathChildSelected: String;
+  controlSelected: string;
+  controlPathChildSelected: string;
 
   controlPathAssignmentForm = this.fb.group({
     percentApportionment: ['', [Validators.required, Validators.max(100), Validators.pattern('[0-9]*')]],
     control: [''],
     controlPathChild: [''],
-    sequenceNumber: ['', [Validators.required,Validators.pattern('[0-9]*')]]
+    sequenceNumber: ['', [Validators.required, Validators.pattern('[0-9]*')]]
   }, {validator: this.customValidationFunction});
 
   constructor(private controlService: ControlService,
@@ -84,7 +84,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
           this.controlPathService.updateAssignmentForControlPath(this.selectedControlPathAssignment)
           .subscribe(() => {
             this.activeModal.close();
-          })
+          });
         } else {
           this.controlPathService.createAssignmentForControlPath(this.selectedControlPathAssignment)
           .subscribe(() => {
@@ -94,11 +94,11 @@ export class ControlPathAssignmentModalComponent implements OnInit {
       }
   }
 
-  //sets value of controlPathChild dropdown when editting an assignment
+  // sets value of controlPathChild dropdown when editting an assignment
   setControlPathChild() {
     const controlPathChildField = this.controlPathAssignmentForm.get('controlPathChild').value;
-    if(controlPathChildField){
-      for (let controlPath of this.controlPaths) {
+    if (controlPathChildField) {
+      for (const controlPath of this.controlPaths) {
         if (controlPath.id === controlPathChildField.id) {
           this.controlPathAssignmentForm.controls.controlPathChild.setValue(controlPath);
           break;
@@ -107,11 +107,11 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     }
   }
 
-  //sets value of control dropdown when editting an assignment
+  // sets value of control dropdown when editting an assignment
   setControl() {
     const controlField = this.controlPathAssignmentForm.get('control').value;
     if (controlField) {
-      for (let control of this.controls) {
+      for (const control of this.controls) {
         if (control.id === controlField.id) {
           this.controlPathAssignmentForm.controls.control.setValue(control);
           break;

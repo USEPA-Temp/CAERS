@@ -160,6 +160,8 @@ public class ValidationResult {
                         case STATE_WARNING_CODE:
                             this.stateWarnings.add(error);
                             break;
+                        default:
+                            // do nothing
                     }
                 });
             }

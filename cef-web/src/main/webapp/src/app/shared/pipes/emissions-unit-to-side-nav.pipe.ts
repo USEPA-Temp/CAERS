@@ -8,11 +8,11 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 export class EmissionsUnitToSideNavPipe implements PipeTransform {
 
     transform( value: any ): SideNavItem {
-        let children: SideNavItem[]=[];
+        const children: SideNavItem[] = [];
         let sideNavItem: SideNavItem;
-        if(value.emissionsProcesses){
-            for(let emissionProcess of value.emissionsProcesses){
-                let processChildren: SideNavItem[]=[];
+        if (value.emissionsProcesses) {
+            for (const emissionProcess of value.emissionsProcesses) {
+                const processChildren: SideNavItem[] = [];
                 children.push(new SideNavItem( emissionProcess.id, emissionProcess.emissionsProcessIdentifier, BaseReportUrl.EMISSIONS_PROCESS, processChildren));
             }
         }

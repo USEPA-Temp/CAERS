@@ -22,7 +22,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
   duplicateCheck = true;
   selectedReleasePoint: ReleasePointApportionment;
   releasePoints: ReleasePoint[];
-  rpApptSelected: String;
+  rpApptSelected: string;
   controlPathSelected: ControlPath;
   controlPathId: number;
 
@@ -43,14 +43,14 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
       releasePointApptControl.setValidators(null);
 
       // sets default value in dropdown
-      for (let releasePt of this.releasePointApportionments) {
+      for (const releasePt of this.releasePointApportionments) {
         if (releasePt.releasePointIdentifier === this.selectedReleasePoint.releasePointIdentifier) {
         this.rpApptSelected = releasePt.releasePointIdentifier;
         break;
         }
       }
-      if(this.selectedReleasePoint.controlPath){
-        for (let controlPath of this.controlPaths) {
+      if (this.selectedReleasePoint.controlPath) {
+        for (const controlPath of this.controlPaths) {
           if (controlPath.id === this.selectedReleasePoint.controlPath.id) {
             this.controlPathSelected = controlPath;
             break;

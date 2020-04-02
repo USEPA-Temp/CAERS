@@ -21,6 +21,9 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
+
+import static org.junit.Assert.assertNotNull;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +41,7 @@ import java.util.stream.StreamSupport;
 @WithUserDetails(userDetailsServiceBeanName = "junitUserDetailsServiceImpl")
 public class CalculationUtilsConversionTest {
 
+    @SuppressWarnings("unused")
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -68,6 +72,7 @@ public class CalculationUtilsConversionTest {
 //                        logger.info("Converting {} to {}", code.getDescription(), targetCode.getDescription());
                         BigDecimal result = CalculationUtils.convertUnits(code.getCalculationVariable(), targetCode.getCalculationVariable());
 //                        logger.info("Converted {} to {} result {}", code.getDescription(), targetCode.getDescription(), result);
+                        assertNotNull(result); 
                     }
                 });
             });

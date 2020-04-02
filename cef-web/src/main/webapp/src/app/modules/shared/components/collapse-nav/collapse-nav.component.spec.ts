@@ -12,27 +12,27 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 describe('CollapseNavComponent', () => {
   let component: CollapseNavComponent;
   let fixture: ComponentFixture<CollapseNavComponent>;
-  let navItemJson = {
-      "id": 1,
-      "description": "Boiler 001",
-      "baseUrl": "emissionUnit",
-      "children": [
+  const navItemJson = {
+      id: 1,
+      description: 'Boiler 001',
+      baseUrl: 'emissionUnit',
+      children: [
           {
-              "id": 1,
-              "description": "Process 007",
-              "baseUrl": "process",
-              "children": [
+              id: 1,
+              description: 'Process 007',
+              baseUrl: 'process',
+              children: [
                   {
-                      "id": 1,
-                      "description": "Release Point 002",
-                      "baseUrl": "release",
-                      "children": null
+                      id: 1,
+                      description: 'Release Point 002',
+                      baseUrl: 'release',
+                      children: null
                   }
               ]
           }
       ]
   };
-  let navItems: SideNavItem[] = [SideNavItem.fromJson(navItemJson)];
+  const navItems: SideNavItem[] = [SideNavItem.fromJson(navItemJson)];
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
