@@ -16,8 +16,8 @@ export class EmissionUnitInfoComponent implements OnInit {
   @Input() emissionsUnit: EmissionUnit;
   @Input() facilitySiteId: number;
   @Input() emissionsReport: ReportStatus;
+  @Input() readOnlyMode: boolean;
   editInfo = false;
-  readOnlyMode = true;
   unitId: number;
 
   @ViewChild(EditEmissionUnitInfoPanelComponent, { static: false })
@@ -33,10 +33,6 @@ export class EmissionUnitInfoComponent implements OnInit {
         this.unitId = parseInt(map.get('unitId'));
       });
 
-      this.route.data
-      .subscribe(data => {
-        this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
-      });
   }
 
   setEditInfo(value: boolean) {

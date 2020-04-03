@@ -8,7 +8,6 @@ import { FacilitySiteService } from 'src/app/core/services/facility-site.service
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilityNaicsModalComponent } from '../facility-naics-modal/facility-naics-modal.component';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component({
   selector: 'app-facility-naics-table',
@@ -38,7 +37,6 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
     this.route.data
       .subscribe((data: { facilitySite: FacilitySite }) => {
         this.facilitySiteId = data.facilitySite.id;
-        this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
       });
 
     this.sortTable();

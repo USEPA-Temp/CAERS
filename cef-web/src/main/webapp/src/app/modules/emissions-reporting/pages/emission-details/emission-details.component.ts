@@ -29,6 +29,7 @@ import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-form
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { ControlPollutantTableComponent } from '../../components/control-pollutant-table/control-pollutant-table.component';
 import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-emission-details',
@@ -96,6 +97,7 @@ export class EmissionDetailsComponent implements OnInit {
     private processService: EmissionsProcessService,
     private efService: EmissionFactorService,
     private lookupService: LookupService,
+    private userContextService: UserContextService,
     private route: ActivatedRoute,
     private router: Router,
     private sharedService: SharedService,
@@ -127,11 +129,14 @@ export class EmissionDetailsComponent implements OnInit {
     .subscribe(data => {
       this.createMode = data.create === 'true';
 
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
 
       this.sharedService.emitChange(data.facilitySite);
     });
-
     this.route.paramMap
     .subscribe(params => {
 
