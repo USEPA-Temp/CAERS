@@ -20,7 +20,9 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   // TODO: should consider moving these validations into a separate file
+  // numbers with length of 8 precision of 3
   readonly numberPattern83 = '^[0-9]{0,5}([\.][0-9]{1,3})?$';
+  // numbers with length of 16 precision of 8
   readonly numberPattern168 = '^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$';
 
   @Input() releasePoint: ReleasePoint;
@@ -267,10 +269,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0), Validators.max(200000), Validators.pattern(this.numberPattern168)]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+            Validators.min(0), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
         } else {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0.00000001), Validators.max(200000), Validators.pattern(this.numberPattern168)]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+            Validators.min(0.00000001), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
         }
         this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
         this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
