@@ -104,7 +104,7 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
   searchNAICS = (text$: Observable<string>) =>
     text$.pipe(
-      debounceTime(200),
+      debounceTime(500),
       distinctUntilChanged(),
       map(term => this.facilityNaicsCode.filter(v => v.code.toLowerCase().indexOf(term.toLowerCase()) > -1
                                         || (v.description ? v.description.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
