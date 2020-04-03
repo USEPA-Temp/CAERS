@@ -30,7 +30,7 @@ export class ReportSummaryTableComponent extends BaseSortableTable implements On
 
         if (this.tableData) {
             this.tableData.forEach(reportSummary => {
-                currentYearTonsTotal += (reportSummary.emissionsTonsTotal);
+                currentYearTonsTotal += reportSummary.emissionsTonsTotal;
 
                 if (this.getPrecision(reportSummary.emissionsTonsTotal) > precision) {
                     precision = this.getPrecision(reportSummary.emissionsTonsTotal);
