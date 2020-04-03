@@ -33,14 +33,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EmissionServiceImpl implements EmissionService {
 
-    Logger LOGGER = LoggerFactory.getLogger(EmissionServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(EmissionServiceImpl.class);
 
     @Autowired
     private EmissionRepository emissionRepo;
@@ -219,13 +218,13 @@ public class EmissionServiceImpl implements EmissionService {
         BigDecimal totalEmissions = emission.getEmissionsFactor().multiply(rp.getCalculationParameterValue());
 
         // convert units for denominator and throughput
-        if (efDenom != null && rp.getCalculationParameterUom() != null 
+        if (rp.getCalculationParameterUom() != null 
                 && !rp.getCalculationParameterUom().getCode().equals(efDenom.getCode())) {
             totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
         }
 
         // convert units for numerator and total emissions
-        if (efNumerator != null && totalEmissionUom != null && !totalEmissionUom.getCode().equals(efNumerator.getCode())) {
+        if (!totalEmissionUom.getCode().equals(efNumerator.getCode())) {
             totalEmissions = CalculationUtils.convertUnits(efNumerator.getCalculationVariable(), totalEmissionUom.getCalculationVariable(), leapYear).multiply(totalEmissions);
         }
 
@@ -250,7 +249,7 @@ public class EmissionServiceImpl implements EmissionService {
      * @return
      */
     public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId) {
-        LOGGER.debug("findEmissionsByFacilityAndCAS - Entering");
+        logger.debug("findEmissionsByFacilityAndCAS - Entering");
 
         EmissionsByFacilityAndCASDto emissionsByFacilityDto = new EmissionsByFacilityAndCASDto();
         Short latestReportYear = null;
@@ -260,8 +259,8 @@ public class EmissionServiceImpl implements EmissionService {
         if (!emissionsReports.isEmpty()) {
             latestReportYear = emissionsReports.get(0).getYear();
         } else {
-            LOGGER.debug("findEmissionsByFacilityAndCAS - No Emissions Reports for the given facility - returning empty");
-            String noReportsMessage = new String("No emission reports found for FRS Facility ID = ").concat(frsFacilityId);
+            logger.debug("findEmissionsByFacilityAndCAS - No Emissions Reports for the given facility - returning empty");
+            String noReportsMessage = "No emission reports found for FRS Facility ID = ".concat(frsFacilityId);
             emissionsByFacilityDto.setMessage(noReportsMessage);
             emissionsByFacilityDto.setCode(RETURN_CODE.NO_EMISSIONS_REPORT.toString());
             return emissionsByFacilityDto;
@@ -273,14 +272,14 @@ public class EmissionServiceImpl implements EmissionService {
         //if there are any emissions that match the facility and CAS Id for the most recent year,
         //then loop through them and add them to the point / nonPoint totals
         if (emissionsByFacilityAndCAS.isEmpty()) {
-            LOGGER.debug("findEmissionsByFacilityAndCAS - No emissions for the given CAS number were reported on the most recent report for the facility");
-            String noEmissionsMessage = new String("There were no emissions reported for the CAS number ").concat(pollutantCasId).
+            logger.debug("findEmissionsByFacilityAndCAS - No emissions for the given CAS number were reported on the most recent report for the facility");
+            String noEmissionsMessage = "There were no emissions reported for the CAS number ".concat(pollutantCasId).
                     concat(" on the most recent emissions report for FRS Facility ID = ").concat(frsFacilityId);
             emissionsByFacilityDto.setMessage(noEmissionsMessage);
             emissionsByFacilityDto.setCode(RETURN_CODE.NO_EMISSIONS_REPORTED_FOR_CAS.toString());
             return emissionsByFacilityDto;
         } else {
-            LOGGER.debug("findEmissionsByFacilityAndCAS - found " + emissionsByFacilityAndCAS.size() + " emission records");
+            logger.debug("findEmissionsByFacilityAndCAS - found {} emission records", emissionsByFacilityAndCAS.size());
             //populate the common parts of the DTO object by mapping the first result.
             //since we're matching on facility and CAS, all of these fields should be the same for each instance of the list
             emissionsByFacilityDto = emissionsByFacilityAndCASMapper.toDto(emissionsByFacilityAndCAS.get(0));
@@ -311,7 +310,7 @@ public class EmissionServiceImpl implements EmissionService {
             emissionsByFacilityDto.setCode(RETURN_CODE.EMISSIONS_FOUND.toString());
         }
 
-        LOGGER.debug("findEmissionsByFacilityAndCAS - Exiting");
+        logger.debug("findEmissionsByFacilityAndCAS - Exiting");
         return emissionsByFacilityDto;
     }
     
@@ -322,7 +321,7 @@ public class EmissionServiceImpl implements EmissionService {
                     MassUomConversion.TON);
             return calculatedEmissionsTons;
         } catch (IllegalArgumentException ex) {
-            LOGGER.debug("Could not perform emission conversion. " + ex.getLocalizedMessage());
+            logger.debug("Could not perform emission conversion. {}", ex.getLocalizedMessage());
             return null;
         }
     }

@@ -8,7 +8,7 @@ public class ReviewerFacilityAccessEnforcerImpl implements FacilityAccessEnforce
 
     @Override
     public <T extends ProgramIdRetriever> void enforceEntities(Collection<Long> ids, Class<T> repositoryClazz) {
-
+      //Reviewer should be able to access everything
     }
 
     @Override

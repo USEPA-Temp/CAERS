@@ -19,7 +19,7 @@ import gov.epa.cef.web.service.NotificationService;
 @Service
 public class NotificationServiceImpl implements NotificationService {
     
-    Logger LOGGER = LoggerFactory.getLogger(NotificationServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
     
     private final String REPORT_SUBMITTED_TO_SLT_SUBJECT = "Emission Report Submitted for {0}";
     private final String REPORT_SUBMITTED_TO_SLT_BODY = "A new emissions report has been submitted for the {0} facility "
@@ -56,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
             message.setText(body);
             emailSender.send(message);
         } catch (MailException e) {
-            LOGGER.error("sendSimpleMessage - unable to send email message. - " + e.getMessage());
+            logger.error("sendSimpleMessage - unable to send email message. - {}", e.getMessage());
         }
     }
     
@@ -71,7 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
         try {
         	emailSender.send(messagePreparator);
         } catch (MailException e) {
-        	LOGGER.error("sendHTMLMessage - unable to send email message. - " + e.getMessage());
+        	logger.error("sendHTMLMessage - unable to send email message. - {}", e.getMessage());
         }
     }
     

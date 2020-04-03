@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 import {HttpRequest, HttpHandler, HttpInterceptor, HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError, EMPTY, of, from} from 'rxjs';
 import {retryWhen, delay, concatMap} from 'rxjs/operators';
-import {UserContextService} from "../services/user-context.service";
+import {UserContextService} from '../services/user-context.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-const DELAY_MS : number = 1000;
-const MAX_RETRIES : number = 1;
+const DELAY_MS: number = 1000;
+const MAX_RETRIES: number = 1;
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -40,7 +40,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         // don't repeat the alert -
                         // some pages make multiple requests for children of the entity
                         // that causes the first 403/410
-                        let url = `/facility?error=${error.status}`;
+                        const url = `/facility?error=${error.status}`;
 
                         if (this.router.url !== url) {
 
