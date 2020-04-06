@@ -187,7 +187,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
         if (result.failedEmissions.length) {
           this.toastr.error(
-            `Total Emissions for ${result.failedEmissions.join(', ')} could not be calculated because of invalid data. Please verify that everything is entered correctly.`,
+            `Total Emissions for ${result.failedEmissions.join(', ')} could not be calculated because the Reporting Period Throughput units of measure cannot be converted into the Emission Factor Denominator units of measure.`,
             '',
             {timeOut: 20000, extendedTimeOut: 10000, closeButton: true}
           );
