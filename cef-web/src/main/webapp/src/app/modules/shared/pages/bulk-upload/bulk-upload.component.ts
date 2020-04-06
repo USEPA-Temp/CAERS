@@ -24,21 +24,23 @@ export class BulkUploadComponent implements OnInit {
   }
 
   onFileChanged(event) {
-    this.selectedFile = event.target.files[0];
-    const fileReader = new FileReader();
-    fileReader.readAsText(this.selectedFile, 'UTF-8');
-    fileReader.onload = () => {
-      try {
-        this.jsonFileContents = JSON.parse(fileReader.result.toString());
-      }
-      catch {
-        this.toastr.error('', 'Invalid file format, only json files may be uploaded.', {positionClass: 'toast-top-right'});
-        this.selectedFile = null;
-      }
-    };
-    fileReader.onerror = (error) => {
-        console.log(error);
-    };
+    if (event.target.files[0]) {
+      this.selectedFile = event.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.readAsText(this.selectedFile, 'UTF-8');
+
+      fileReader.onload = () => {
+        try {
+          this.jsonFileContents = JSON.parse(fileReader.result.toString());
+        } catch {
+          this.toastr.error('', 'Invalid file format, only json files may be uploaded.', {positionClass: 'toast-top-right'});
+          this.selectedFile = null;
+        }
+      };
+      fileReader.onerror = (error) => {
+          console.log(error);
+      };
+    }
   }
 
   onUpload() {
