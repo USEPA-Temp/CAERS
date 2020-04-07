@@ -516,6 +516,13 @@ export class EmissionDetailsComponent implements OnInit {
         }
       }
     });
+
+    this.emissionForm.get('emissionsUomCode').valueChanges
+    .subscribe(value => {
+      if (this.emissionForm.enabled) {
+        this.needsCalculation = true;
+      }
+    });
   }
 
   getTotalManualEntry() {
