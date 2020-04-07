@@ -101,7 +101,7 @@
             src/main/java/gov/epa/cef/web/repository/**/*, src/main/java/gov/epa/cef/web/service/dto/**/*,
             src/main/java/gov/epa/cef/web/service/mapper/**/*, src/main/java/gov/epa/cef/web/soap/**/*,
             src/main/java/gov/epa/cef/web/CefWebApplication.*, src/main/java/gov/epa/cef/web/ServletInitializer.*,
-            src/main/java/gov/epa/cef/web/security/mock/*
+            src/main/java/gov/epa/cef/web/security/mock/*, src/main/webapp/**/*
         </sonar.coverage.exclusions>
         <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/coverage/lcov/lcov.info
         </sonar.typescript.lcov.reportPaths>

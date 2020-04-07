@@ -20,9 +20,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   @Input() emissionUnit: EmissionUnit;
   designCapacityWarning: any;
   facilitySite: FacilitySite;
-  emissionUnitIdentifiers: String[] = [];
+  emissionUnitIdentifiers: string[] = [];
   facilityOpCode: BaseCodeLookup;
-  edit: boolean = true;
+  edit = true;
 
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
@@ -41,7 +41,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     designCapacity: ['', [
       Validators.min(0.01),
       Validators.max(100000000),
-      Validators.pattern('[0-9]*'),
+      Validators.pattern('^[0-9]*\\.?[0-9]+$'),
       Validators.maxLength(20)
     ]],
     description: ['', [
@@ -71,7 +71,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
               ) { }
 
   ngOnInit() {
-    
+
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilityOpCode = data.facilitySite.operatingStatusCode;
@@ -146,7 +146,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       const designCapacity = control.get('designCapacity');
 
       if ((designCapacity.value === null || designCapacity.value === '') && type.value !== null) {
-        for (let item of this.typeCodeDesignCapacity) {
+        for (const item of this.typeCodeDesignCapacity) {
           if (type.value.code === item) {
             this.designCapacityWarning = { invalidDesignCapacity: {designCapacity} };
             break;
@@ -171,26 +171,26 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         }
       }
       return null;
-    }
+    };
   }
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const status_perm_shutdown = "PS";
-      const status_temp_shutdown = "TS";
-      const control_status = control.get('operatingStatusCode').value;
+      const statusPermShutdown = 'PS';
+      const statusTempShutdown = 'TS';
+      const controlStatus = control.get('operatingStatusCode').value;
 
-      if (this.facilityOpCode && control_status) {
-        if (this.facilityOpCode.code === status_temp_shutdown
-          && control_status.code !== status_perm_shutdown
-          && control_status.code !== status_temp_shutdown) {
+      if (this.facilityOpCode && controlStatus) {
+        if (this.facilityOpCode.code === statusTempShutdown
+          && controlStatus.code !== statusPermShutdown
+          && controlStatus.code !== statusTempShutdown) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === status_perm_shutdown
-          && control_status.code !== status_perm_shutdown) {
+          } else if (this.facilityOpCode.code === statusPermShutdown
+          && controlStatus.code !== statusPermShutdown) {
             return {invalidStatusCodePS: true};
           }
       }
       return null;
-    }
+    };
   }
 }

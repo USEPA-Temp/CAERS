@@ -3,9 +3,6 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-
 /**
  * @author ahmahfou
  *

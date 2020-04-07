@@ -83,7 +83,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		p.setPollutantName("Nitrogen Oxides");
 		p.setPollutantCode("NOX");
 		cp.setPollutant(p);
-		cp.setPercentReduction(99.999);
+		cp.setPercentReduction(99.9);
 		testData.getPollutants().add(cp);
 		
 		assertTrue(this.validator.validate(cefContext, testData));

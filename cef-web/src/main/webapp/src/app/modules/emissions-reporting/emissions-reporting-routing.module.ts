@@ -23,10 +23,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { FacilitySiteResolverService } from 'src/app/core/services/facility-site-resolver.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EmissionDetailsComponent } from 'src/app/modules/emissions-reporting/pages/emission-details/emission-details.component';
-import {EmissionsReportValidationComponent} from "./pages/emissions-report-validation/emissions-report-validation.component";
+import {EmissionsReportValidationComponent} from './pages/emissions-report-validation/emissions-report-validation.component';
 import { ReportHistoryComponent } from './pages/report-history/report-history.component';
 import { EmissionsReportContainerComponent } from 'src/app/modules/emissions-reporting/pages/emissions-report-container/emissions-report-container.component';
-import {ReportBulkUploadComponent} from "./pages/report-bulk-upload/report-bulk-upload.component";
+import {ReportBulkUploadComponent} from './pages/report-bulk-upload/report-bulk-upload.component';
+
+// TODO: this can probably be moved up a level so that it doesn't need to be in each child
+const emissionsReportBreadcrumb = '&year Emissions Report';
 
 const reportRoutes: Routes = [
   {
@@ -36,7 +39,7 @@ const reportRoutes: Routes = [
     children: [{
         path: 'upload/:year',
         component: ReportBulkUploadComponent
-    },{
+    }, {
         path: ':reportId',
         component: EmissionsReportContainerComponent,
         resolve: {
@@ -46,91 +49,91 @@ const reportRoutes: Routes = [
           {
             path: `${BaseReportUrl.FACILITY_INFO}`,
             component: FacilityInformationComponent,
-            data: { title: 'Facility Information', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Facility Information', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.FACILITY_CONTACT}`,
             component: EditFacilityContactComponent,
-            data: { title: 'Facility Information', breadcrumb: '&year Emissions Report', create: 'true'}
+            data: { title: 'Facility Information', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.FACILITY_CONTACT}/:contactId`,
             component: EditFacilityContactComponent,
-            data: { title: 'Facility Information', breadcrumb: '&year Emissions Report', create: 'false'}
+            data: { title: 'Facility Information', breadcrumb: emissionsReportBreadcrumb, create: 'false'}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}/create`,
             component: CreateControlDeviceComponent,
-            data: { title: 'Control Device', breadcrumb: '&year Emissions Report', create: 'true'}
+            data: { title: 'Control Device', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}/:controlId`,
             component: ControlDeviceDetailsComponent,
-            data: { title: 'Control Device Details', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Control Device Details', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}`,
             component: ControlDevicesSummaryComponent,
-            data: { title: 'Control Devices Summary', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Control Devices Summary', breadcrumb: emissionsReportBreadcrumb}
           }, {
           path: `${BaseReportUrl.CONTROL_PATH}/create`,
             component: CreateControlPathComponent,
-            data: { title: 'Control Path', breadcrumb: '&year Emissions Report', create: 'true'}
+            data: { title: 'Control Path', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.CONTROL_PATH}/:controlPathId`,
             component: ControlPathDetailsComponent,
-            data: { title: 'Control Path Details', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Control Path Details', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.CONTROL_PATH}`,
             component: ControlPathsSummaryComponent,
-            data: { title: 'Control Paths Summary', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Control Paths Summary', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId/process/create`,
             component: CreateEmissionsProcessComponent,
-            data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/unit/create`,
             component: CreateEmissionsUnitComponent,
-            data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/unit/create`,
             component: CreateEmissionsUnitComponent,
-            data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId`,
             component: EmissionUnitDashboardComponent,
-            data: { title: 'Emissions Unit', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}`,
             component: EmissionsUnitsSummaryComponent,
-            data: { title: 'Emissions Units Summary', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Emissions Units Summary', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_PROCESS}/:processId`,
             component: EmissionsProcessDetailsComponent,
-            data: { title: 'Emissions Process Details', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Emissions Process Details', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}`,
             component: EmissionDetailsComponent,
-            data: { title: 'Emission Details', breadcrumb: '&year Emissions Report', create: 'true'}
+            data: { title: 'Emission Details', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}/:emissionId`,
             component: EmissionDetailsComponent,
-            data: { title: 'Emission Details', breadcrumb: '&year Emissions Report', create: 'false'}
+            data: { title: 'Emission Details', breadcrumb: emissionsReportBreadcrumb, create: 'false'}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}/create`,
             component: CreateReleasePointComponent,
-            data: { title: 'Release Point', breadcrumb: '&year Emissions Report', create: 'true'}
+            data: { title: 'Release Point', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}/:releasePointId`,
             component: ReleasePointDetailsComponent,
-            data: { title: 'Release Point', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Release Point', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}`,
             component: ReleasePointsSummaryComponent,
-            data: { title: 'Release Points Summary', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Release Points Summary', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.REPORT_SUMMARY}`,
             component: ReportSummaryComponent,
-            data: { title: 'Report Summary', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Report Summary', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.REPORT_HISTORY}`,
             component: ReportHistoryComponent,
-            data: { title: 'Report History', breadcrumb: '&year Emissions Report'}
+            data: { title: 'Report History', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.VALIDATION}`,
             component: EmissionsReportValidationComponent,
@@ -138,7 +141,7 @@ const reportRoutes: Routes = [
           }, {
             path: '**',
             component: FacilityInformationComponent,
-            data: { title: 'PLACEHOLDER', breadcrumb: '&year Emissions Report'}
+            data: { title: 'PLACEHOLDER', breadcrumb: emissionsReportBreadcrumb}
           }
         ]
       }, {
@@ -154,4 +157,4 @@ const reportRoutes: Routes = [
   imports: [RouterModule.forChild(reportRoutes)],
   exports: [RouterModule]
 })
-export class ReportsRoutingModule {}
+export class ReportsRoutingModule { }

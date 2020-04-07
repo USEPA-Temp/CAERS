@@ -9,6 +9,9 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
   styleUrls: ['./edit-process-operating-detail-panel.component.scss']
 })
 export class EditProcessOperatingDetailPanelComponent implements OnInit, OnChanges {
+
+  readonly numberPattern = '^[0-9]*\\.?[0-9]+$';
+
   @Input() operatingDetails: OperatingDetail;
   operatingDetailsForm = this.fb.group({
     actualHoursPerPeriod: ['', [
@@ -21,13 +24,13 @@ export class EditProcessOperatingDetailPanelComponent implements OnInit, OnChang
       Validators.required,
       Validators.min(0.1),
       Validators.max(24),
-      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+      Validators.pattern(this.numberPattern)
     ]],
     avgDaysPerWeek: ['', [
       Validators.required,
       Validators.min(0.1),
       Validators.max(7),
-      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+      Validators.pattern(this.numberPattern)
     ]],
     avgWeeksPerPeriod: ['', [
       Validators.required,
@@ -39,25 +42,25 @@ export class EditProcessOperatingDetailPanelComponent implements OnInit, OnChang
       Validators.required,
       Validators.min(0),
       Validators.max(100),
-      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+      Validators.pattern(this.numberPattern)
     ]],
     percentSpring: ['', [
       Validators.required,
       Validators.min(0),
       Validators.max(100),
-      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+      Validators.pattern(this.numberPattern)
     ]],
     percentSummer: ['', [
       Validators.required,
       Validators.min(0),
       Validators.max(100),
-      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+      Validators.pattern(this.numberPattern)
     ]],
     percentFall: ['', [
       Validators.required,
       Validators.min(0),
       Validators.max(100),
-      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+      Validators.pattern(this.numberPattern)
     ]]
   });
 
@@ -66,18 +69,17 @@ export class EditProcessOperatingDetailPanelComponent implements OnInit, OnChang
   ngOnInit() {
   }
 
-    validateOperatingPercent(){
-    if((parseFloat(this.operatingDetailsForm.controls.percentFall.value) + 
-        parseFloat(this.operatingDetailsForm.controls.percentSpring.value)+
-        parseFloat(this.operatingDetailsForm.controls.percentWinter.value)+
+    validateOperatingPercent() {
+    if ((parseFloat(this.operatingDetailsForm.controls.percentFall.value) +
+        parseFloat(this.operatingDetailsForm.controls.percentSpring.value) +
+        parseFloat(this.operatingDetailsForm.controls.percentWinter.value) +
         parseFloat(this.operatingDetailsForm.controls.percentSummer.value) > 100.5) || (
-        parseFloat(this.operatingDetailsForm.controls.percentFall.value)+ 
-        parseFloat(this.operatingDetailsForm.controls.percentSpring.value)+
-        parseFloat(this.operatingDetailsForm.controls.percentWinter.value)+
-        parseFloat(this.operatingDetailsForm.controls.percentSummer.value) < 99.5)){
+        parseFloat(this.operatingDetailsForm.controls.percentFall.value) +
+        parseFloat(this.operatingDetailsForm.controls.percentSpring.value) +
+        parseFloat(this.operatingDetailsForm.controls.percentWinter.value) +
+        parseFloat(this.operatingDetailsForm.controls.percentSummer.value) < 99.5)) {
           return false;
-        }
-    else{
+        } else {
           return true;
         }
   }

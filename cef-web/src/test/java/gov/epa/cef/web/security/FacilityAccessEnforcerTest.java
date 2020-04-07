@@ -34,7 +34,7 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Mock
     ProgramIdRetriever programIdRetriever;
 
-    @Test
+    @Test(expected = Test.None.class /* no exception expected */)
     public void enforceEntities_Authorized() {
 
         when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
@@ -69,7 +69,7 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
         createEnforcer(authorized).enforceEntities(Arrays.asList(2L, 4L, 6L), EmissionRepository.class);
     }
 
-    @Test
+    @Test(expected = Test.None.class)
     public void enforceEntity_Authorized() {
 
         when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
@@ -100,7 +100,7 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     }
 
 
-    @Test
+    @Test(expected = Test.None.class)
     public void enforceFacilitySite_Authorized() {
 
         when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
@@ -130,7 +130,7 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
         createEnforcer(authorized).enforceFacilitySite(6L);
     }
 
-    @Test
+    @Test(expected = Test.None.class)
     public void enforceFacilitySites_Authorized() {
 
         when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
@@ -165,7 +165,7 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
         createEnforcer(authorized).enforceFacilitySites(Arrays.asList(2L, 4L, 6L));
     }
 
-    @Test
+    @Test(expected = Test.None.class)
     public void enforceProgramId_Authorized() {
 
         Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
@@ -181,7 +181,7 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
         createEnforcer(authorized).enforceProgramId("5");
     }
 
-    @Test
+    @Test(expected = Test.None.class)
     public void enforceProgramIds_Authorized() {
 
         Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");

@@ -2,18 +2,14 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName; 
 import gov.epa.cef.web.domain.ControlPollutant;
-import gov.epa.cef.web.domain.Pollutant;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-
-import javax.persistence.QueryHint;
 
 public interface ControlPollutantRepository extends CrudRepository<ControlPollutant, Long>, ProgramIdRetriever, ReportIdRetriever {
 

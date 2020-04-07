@@ -8,19 +8,21 @@ import gov.epa.cef.web.config.SLTBaseConfig;
 
 @Service
 public class SLTConfigHelper {
-    
+
     @Autowired
     private CefConfig cefConfig;
 
-    //find and return the current SLT Configuration for the user/report that is currenly being worked on
+    //find and return the current SLT Configuration for the user/report that is currently being worked on
     public SLTBaseConfig getCurrentSLTConfig(String slt) {
         SLTBaseConfig currentConfig = null;
-        switch (slt){
-        case "GA":
-            currentConfig = cefConfig.getGaConfig();
+        switch (slt) {
+            case "GA":
+                currentConfig = cefConfig.getGaConfig();
+            default:
+                // do nothing
         }
-        
+
         return currentConfig;
     }
-    
+
 }

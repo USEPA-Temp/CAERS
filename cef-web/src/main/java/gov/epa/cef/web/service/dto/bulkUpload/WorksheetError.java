@@ -1,6 +1,10 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-public class WorksheetError {
+import java.io.Serializable;
+
+public class WorksheetError implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String message;
 

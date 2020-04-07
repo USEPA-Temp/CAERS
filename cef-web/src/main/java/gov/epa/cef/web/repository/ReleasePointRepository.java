@@ -3,7 +3,6 @@ package gov.epa.cef.web.repository;
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.ReleasePoint;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

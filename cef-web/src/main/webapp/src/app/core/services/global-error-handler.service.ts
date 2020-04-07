@@ -27,7 +27,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
             stackTrace = `HTTP Error: ${errorService.getServerStack(error)}`;
             notifier.showError(message);
             logger.logError(message, stackTrace);
-            alert(message);
+            router.navigateByUrl('/error');
         } else {
             // Client Error
             message = `Client Error: ${errorService.getClientMessage(error)}`;

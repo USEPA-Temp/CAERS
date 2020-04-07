@@ -17,6 +17,7 @@ import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -54,6 +55,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     private reportingPeriodService: ReportingPeriodService,
     private operatingDetailService: OperatingDetailService,
     private controlPathService: ControlPathService,
+    private userContextService: UserContextService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private sharedService: SharedService) { }
@@ -91,8 +93,12 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     // emits the report info to the sidebar
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
       this.facilitySite = data.facilitySite;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
       this.sharedService.emitChange(data.facilitySite);
     });
   }
@@ -181,7 +187,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
         if (result.failedEmissions.length) {
           this.toastr.error(
-            `Total Emissions for ${result.failedEmissions.join(', ')} could not be calculated because of invalid data. Please verify that everything is entered correctly.`,
+            `Total Emissions for ${result.failedEmissions.join(', ')} could not be calculated because the Reporting Period Throughput units of measure cannot be converted into the Emission Factor Denominator units of measure.`,
             '',
             {timeOut: 20000, extendedTimeOut: 10000, closeButton: true}
           );

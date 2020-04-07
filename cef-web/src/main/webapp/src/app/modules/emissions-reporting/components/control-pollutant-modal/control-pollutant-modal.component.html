@@ -12,7 +12,7 @@
         <br>
         <label for="percentReductionSelect" class="col-sm-4 col-lg-4 col-form-label"><strong>Percent Reduction Efficiency:</strong></label>
             <div class="col-sm-8 col-lg-10">
-                <input id="percentReductionSelect" class="form-control" formControlName="percentReduction"/>
+                <input id="percentReductionSelect" class="form-control" formControlName="percentReduction" maxlength="4"/>
                 <app-validation-message [control]="pollutantForm.get('percentReduction')"></app-validation-message>
             </div>
     </div>

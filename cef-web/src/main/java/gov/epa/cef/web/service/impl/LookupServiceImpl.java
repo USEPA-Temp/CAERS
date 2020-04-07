@@ -70,6 +70,8 @@ import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 @Service
 public class LookupServiceImpl implements LookupService {
 
+    private static final String DESCRIPTION = "description";
+
     @Autowired
     private CalculationMaterialCodeRepository materialCodeRepo;
 
@@ -149,7 +151,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveCalcMaterialCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<CalculationMaterialCode> entities = materialCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<CalculationMaterialCode> entities = materialCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -167,7 +169,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CalculationMethodCodeDto> retrieveCalcMethodCodes() {
 
         List<CalculationMethodCodeDto> result = new ArrayList<CalculationMethodCodeDto>();
-        Iterable<CalculationMethodCode> entities = methodCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<CalculationMethodCode> entities = methodCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.calculationMethodCodeToDto(entity));
@@ -182,7 +184,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveCalcParamTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<CalculationParameterTypeCode> entities = paramTypeCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<CalculationParameterTypeCode> entities = paramTypeCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -204,7 +206,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveOperatingStatusCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -325,7 +327,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveUnitTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<UnitTypeCode> entities = unitTypeCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<UnitTypeCode> entities = unitTypeCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -383,7 +385,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveReleasePointTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<ReleasePointTypeCode> entities = releasePtTypeRepository.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<ReleasePointTypeCode> entities = releasePtTypeRepository.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -402,7 +404,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveProgramSystemTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<ProgramSystemCode> entities = programSystemCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<ProgramSystemCode> entities = programSystemCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -421,7 +423,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveControlMeasureCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<ControlMeasureCode> entities = controlMeasureCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<ControlMeasureCode> entities = controlMeasureCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -440,7 +442,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveTribalCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<TribalCode> entities = tribalCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<TribalCode> entities = tribalCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));
@@ -498,7 +500,7 @@ public class LookupServiceImpl implements LookupService {
     public List<FacilityCategoryCodeDto> retrieveFacilityCategoryCodes() {
 
         List<FacilityCategoryCodeDto> result = new ArrayList<FacilityCategoryCodeDto>();
-        Iterable<FacilityCategoryCode> entities = facilityCategoryCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<FacilityCategoryCode> entities = facilityCategoryCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.facilityCategoryCodeToDto(entity));
@@ -510,7 +512,7 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveFacilitySourceTypeCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<FacilitySourceTypeCode> entities = facilitySourceTypeCodeRepo.findAll(Sort.by(Direction.ASC, "description"));
+        Iterable<FacilitySourceTypeCode> entities = facilitySourceTypeCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
             result.add(lookupMapper.toDto(entity));

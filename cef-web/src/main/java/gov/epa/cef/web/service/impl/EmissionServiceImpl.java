@@ -33,14 +33,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EmissionServiceImpl implements EmissionService {
 
-    Logger LOGGER = LoggerFactory.getLogger(EmissionServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(EmissionServiceImpl.class);
 
     @Autowired
     private EmissionRepository emissionRepo;
@@ -142,7 +141,9 @@ public class EmissionServiceImpl implements EmissionService {
     }
 
     /**
-     * Calculate total emissions for an emission and emission factor if it uses a formula
+     * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula
+     * This method should be used when the Reporting Period in the database should be used for calculations 
+     * and you have an EmissionDto, probably with values that differ from the ones in the database.
      * @param dto
      * @return
      */
@@ -154,65 +155,25 @@ public class EmissionServiceImpl implements EmissionService {
         UnitMeasureCode efNumerator = uomRepo.findById(dto.getEmissionsNumeratorUom().getCode()).orElse(null);
         UnitMeasureCode efDenom = uomRepo.findById(dto.getEmissionsDenominatorUom().getCode()).orElse(null);
 
-        if (rp.getCalculationParameterUom() == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Period Calculation Unit of Measure must be set.");
-        }
-        if (totalEmissionUom == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Total Emissions Unit of Measure must be set.");
-        }
-        if (efNumerator == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Numerator Unit of Measure must be set.");
-        }
-        if (efDenom == null) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Denominator Unit of Measure must be set.");
-        }
+        Emission emission = emissionMapper.fromDto(dto);
 
-        if (!rp.getCalculationParameterUom().getUnitType().equals(efDenom.getUnitType())) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                    String.format("Reporting Period Calculation Unit of Measure %s cannot be converted into Emission Factor Denominator Unit of Measure %s.",
-                            rp.getCalculationParameterUom().getDescription(), efDenom.getDescription()));
-        }
+        emission.setEmissionsUomCode(totalEmissionUom);
+        emission.setEmissionsNumeratorUom(efNumerator);
+        emission.setEmissionsDenominatorUom(efDenom);
 
-        if (!totalEmissionUom.getUnitType().equals(efNumerator.getUnitType())) {
-            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                    String.format("Emission Factor Numerator Unit of Measure %s cannot be converted into Total Emissions Unit of Measure %s.",
-                            efNumerator.getDescription(), totalEmissionUom.getDescription()));
-        }
+        EmissionDto result = emissionMapper.toDto(calculateTotalEmissions(emission, rp));
 
-        if (dto.getFormulaIndicator()) {
-            List<EmissionFormulaVariable> variables = emissionMapper.formulaVariableFromDtoList(dto.getVariables());
-
-            BigDecimal ef = CalculationUtils.calculateEmissionFormula(dto.getEmissionsFactorFormula(), variables);
-            dto.setEmissionsFactor(ef);
-        }
-
-        // check if the year is divisible by 4 which would make it a leap year
-        boolean leapYear = rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() % 4 == 0;
-
-        BigDecimal totalEmissions = dto.getEmissionsFactor().multiply(rp.getCalculationParameterValue());
-
-        // convert units for denominator and throughput
-        if (efDenom != null && rp.getCalculationParameterUom() != null 
-                && !rp.getCalculationParameterUom().getCode().equals(efDenom.getCode())) {
-            totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
-        }
-
-        // convert units for numerator and total emissions
-        if (efNumerator != null && totalEmissionUom != null && !totalEmissionUom.getCode().equals(efNumerator.getCode())) {
-            totalEmissions = CalculationUtils.convertUnits(efNumerator.getCalculationVariable(), totalEmissionUom.getCalculationVariable(), leapYear).multiply(totalEmissions);
-        }
-
-        if (dto.getOverallControlPercent() != null) {
-            BigDecimal controlRate = new BigDecimal("100").subtract(dto.getOverallControlPercent()).divide(new BigDecimal("100"));
-            totalEmissions = totalEmissions.multiply(controlRate);
-        }
-
-        dto.setTotalEmissions(totalEmissions);
-
-        return dto;
+        return result;
     }
 
-    //TODO: consolidate with other calculateTotalEmissions method, CEF-778
+    /**
+     * Calculate total emissions for an emission and reporting period. Also calculates emission factor if it uses a formula
+     * This method should be used when you need to specify a Reporting Period with a different throughput or UoM than the 
+     * one in the database. 
+     * @param emission
+     * @param rp
+     * @return
+     */
     public Emission calculateTotalEmissions(Emission emission, ReportingPeriod rp) {
 
         UnitMeasureCode totalEmissionUom = emission.getEmissionsUomCode();
@@ -257,13 +218,13 @@ public class EmissionServiceImpl implements EmissionService {
         BigDecimal totalEmissions = emission.getEmissionsFactor().multiply(rp.getCalculationParameterValue());
 
         // convert units for denominator and throughput
-        if (efDenom != null && rp.getCalculationParameterUom() != null 
+        if (rp.getCalculationParameterUom() != null 
                 && !rp.getCalculationParameterUom().getCode().equals(efDenom.getCode())) {
             totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
         }
 
         // convert units for numerator and total emissions
-        if (efNumerator != null && totalEmissionUom != null && !totalEmissionUom.getCode().equals(efNumerator.getCode())) {
+        if (!totalEmissionUom.getCode().equals(efNumerator.getCode())) {
             totalEmissions = CalculationUtils.convertUnits(efNumerator.getCalculationVariable(), totalEmissionUom.getCalculationVariable(), leapYear).multiply(totalEmissions);
         }
 
@@ -288,7 +249,7 @@ public class EmissionServiceImpl implements EmissionService {
      * @return
      */
     public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId) {
-        LOGGER.debug("findEmissionsByFacilityAndCAS - Entering");
+        logger.debug("findEmissionsByFacilityAndCAS - Entering");
 
         EmissionsByFacilityAndCASDto emissionsByFacilityDto = new EmissionsByFacilityAndCASDto();
         Short latestReportYear = null;
@@ -298,8 +259,8 @@ public class EmissionServiceImpl implements EmissionService {
         if (!emissionsReports.isEmpty()) {
             latestReportYear = emissionsReports.get(0).getYear();
         } else {
-            LOGGER.debug("findEmissionsByFacilityAndCAS - No Emissions Reports for the given facility - returning empty");
-            String noReportsMessage = new String("No emission reports found for FRS Facility ID = ").concat(frsFacilityId);
+            logger.debug("findEmissionsByFacilityAndCAS - No Emissions Reports for the given facility - returning empty");
+            String noReportsMessage = "No emission reports found for FRS Facility ID = ".concat(frsFacilityId);
             emissionsByFacilityDto.setMessage(noReportsMessage);
             emissionsByFacilityDto.setCode(RETURN_CODE.NO_EMISSIONS_REPORT.toString());
             return emissionsByFacilityDto;
@@ -311,14 +272,14 @@ public class EmissionServiceImpl implements EmissionService {
         //if there are any emissions that match the facility and CAS Id for the most recent year,
         //then loop through them and add them to the point / nonPoint totals
         if (emissionsByFacilityAndCAS.isEmpty()) {
-            LOGGER.debug("findEmissionsByFacilityAndCAS - No emissions for the given CAS number were reported on the most recent report for the facility");
-            String noEmissionsMessage = new String("There were no emissions reported for the CAS number ").concat(pollutantCasId).
+            logger.debug("findEmissionsByFacilityAndCAS - No emissions for the given CAS number were reported on the most recent report for the facility");
+            String noEmissionsMessage = "There were no emissions reported for the CAS number ".concat(pollutantCasId).
                     concat(" on the most recent emissions report for FRS Facility ID = ").concat(frsFacilityId);
             emissionsByFacilityDto.setMessage(noEmissionsMessage);
             emissionsByFacilityDto.setCode(RETURN_CODE.NO_EMISSIONS_REPORTED_FOR_CAS.toString());
             return emissionsByFacilityDto;
         } else {
-            LOGGER.debug("findEmissionsByFacilityAndCAS - found " + emissionsByFacilityAndCAS.size() + " emission records");
+            logger.debug("findEmissionsByFacilityAndCAS - found {} emission records", emissionsByFacilityAndCAS.size());
             //populate the common parts of the DTO object by mapping the first result.
             //since we're matching on facility and CAS, all of these fields should be the same for each instance of the list
             emissionsByFacilityDto = emissionsByFacilityAndCASMapper.toDto(emissionsByFacilityAndCAS.get(0));
@@ -349,7 +310,7 @@ public class EmissionServiceImpl implements EmissionService {
             emissionsByFacilityDto.setCode(RETURN_CODE.EMISSIONS_FOUND.toString());
         }
 
-        LOGGER.debug("findEmissionsByFacilityAndCAS - Exiting");
+        logger.debug("findEmissionsByFacilityAndCAS - Exiting");
         return emissionsByFacilityDto;
     }
     
@@ -360,7 +321,7 @@ public class EmissionServiceImpl implements EmissionService {
                     MassUomConversion.TON);
             return calculatedEmissionsTons;
         } catch (IllegalArgumentException ex) {
-            LOGGER.debug("Could not perform emission conversion. " + ex.getLocalizedMessage());
+            logger.debug("Could not perform emission conversion. {}", ex.getLocalizedMessage());
             return null;
         }
     }

@@ -2,9 +2,6 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable; 
 
-import gov.epa.cef.web.domain.ControlPath; 
-
-
 public class ReleasePointApptDto implements Serializable{
 
     /**

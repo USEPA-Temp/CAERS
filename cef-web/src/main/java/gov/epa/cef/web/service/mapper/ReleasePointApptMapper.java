@@ -6,12 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.service.dto.ReleasePointApptDto;
-import gov.epa.cef.web.service.dto.ReleasePointDto;
 import gov.epa.cef.web.service.dto.postOrder.ReleasePointApptPostOrderDto;
-import gov.epa.cef.web.service.dto.postOrder.ReleasePointPostOrderDto;
 
 @Mapper(componentModel = "spring", uses = {})   
 public interface ReleasePointApptMapper {

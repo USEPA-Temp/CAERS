@@ -22,8 +22,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   @Input() process: Process;
   @Input() unitIdentifier: string;
   @Input() emissionsUnit: EmissionUnit;
-  sccAndAircraftCombinations: String[] = [];
-  emissionsProcessIdentifiers: String[] = [];
+  sccAndAircraftCombinations: string[] = [];
+  emissionsProcessIdentifiers: string[] = [];
   emissionUnit: EmissionUnit;
   emissionsReportYear: number;
   sccRetirementYear: number;
@@ -89,22 +89,22 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilityOpCode = data.facilitySite.operatingStatusCode;
       this.emissionsReportYear = data.facilitySite.emissionsReport.year;
-      this.emissionUnitService.retrieveForFacility(data.facilitySite.id).subscribe(emissionUnits =>{
+      this.emissionUnitService.retrieveForFacility(data.facilitySite.id).subscribe(emissionUnits => {
         emissionUnits.forEach(eu => {
           eu['emissionsProcesses'].forEach(process =>{
             this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
 
             if(process['aircraftEngineTypeCode'] && process['sccCode']){
-              //if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
-              //to avoid comparing its own combination to itself, if its a new process then skip this check
+              // if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
+              // to avoid comparing its own combination to itself, if its a new process then skip this check
               if ((!this.process) || (this.process && process['id']!== this.process.id)){
-                let combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
+                const combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
                 this.sccAndAircraftCombinations.push(combination);
               }
             }
           });
 
-          //if a process is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
+          // if a process is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
           if (this.process) {
             this.emissionsProcessIdentifiers = this.emissionsProcessIdentifiers.filter(identifer => identifer.toString() !== this.process.emissionsProcessIdentifier);
           }
@@ -135,7 +135,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   }
 
   onChange(newValue) {
-    if(newValue) {
+    if (newValue) {
       this.processForm.controls.statusYear.reset();
     }
   }
@@ -177,7 +177,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   checkForAircraftSCC() {
     const formSccCode = this.processForm.get('sccCode');
     this.aircraftSCCcheck = false;
-    for (let scc of this.aircraftEngineSCC) {
+    for (const scc of this.aircraftEngineSCC) {
       if (scc === formSccCode.value) {
         this.aircraftSCCcheck = true;
         this.processHasAETC = true;
@@ -212,7 +212,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
       // check if process AETC is valid
       if (this.aircraftSCCcheck && this.aircraftEngineTypeValue !== null && this.aircraftEngineTypeValue !== undefined) {
         if (this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
-          for (let item of this.aircraftEngineTypeValue) {
+          for (const item of this.aircraftEngineTypeValue) {
 
             if (item.code === this.process.aircraftEngineTypeCode.code) {
               this.invalidAircraftSCC = false;
@@ -253,18 +253,19 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
           if (isValidScc !== null) {
             if (isValidScc.lastInventoryYear !== null && (isValidScc.lastInventoryYear >= this.emissionsReportYear)) {
               this.sccRetirementYear = isValidScc.lastInventoryYear;
-              this.sccWarning = 'Warning: ' + control.get('sccCode').value + ' has a retirement date of ' + this.sccRetirementYear + '. If applicable, you may want to add a more recent code.';
+              this.sccWarning = 'Warning: ' + control.get('sccCode').value + ' has a retirement date of ' + this.sccRetirementYear
+                  + '. If applicable, you may want to add a more recent code.';
             } else if (isValidScc.lastInventoryYear !== null && (isValidScc.lastInventoryYear < this.emissionsReportYear)) {
               this.sccRetirementYear = isValidScc.lastInventoryYear;
               control.get('sccCode').markAsTouched();
-              control.get('sccCode').setErrors({'sccCodeRetired': true});
+              control.get('sccCode').setErrors({sccCodeRetire: true});
               this.sccWarning = null;
             } else if (isValidScc.lastInventoryYear === null) {
               this.sccWarning = null;
             }
           } else if (result === null) {
             control.get('sccCode').markAsTouched();
-            control.get('sccCode').setErrors({'sccCodeInvalid': true});
+            control.get('sccCode').setErrors({sccCodeInvalid: true});
             this.sccWarning = null;
           } else {
             this.sccWarning = null;
@@ -272,7 +273,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
         });
       }
       return null;
-    }
+    };
   }
 
   // check for duplicate process identifier
@@ -293,7 +294,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     return (control: FormGroup): ValidationErrors | null => {
       if (this.invalidAircraftSCC) {
         if (control.get('aircraftEngineTypeCode') !== null && control.get('aircraftEngineTypeCode').value !== null) {
-          control.get('aircraftEngineTypeCode').setErrors({'invalidAircraftSCC': true});
+          control.get('aircraftEngineTypeCode').setErrors({invalidAircraftSCC: true});
         } else {
           control.get('aircraftEngineTypeCode').setErrors(null);
         }
@@ -305,13 +306,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
   checkSccAndAircraftDuplicate(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       if ((control.get('aircraftEngineTypeCode').value) && (control.get('sccCode').value)) {
-        let codeCombo = control.get('aircraftEngineTypeCode').value.code + control.get('sccCode').value;
-        this.sccAndAircraftCombinations.forEach(combination =>{
+        const codeCombo = control.get('aircraftEngineTypeCode').value.code + control.get('sccCode').value;
+        this.sccAndAircraftCombinations.forEach(combination => {
           if (codeCombo === combination) {
-            control.get('aircraftEngineTypeCode').setErrors({'invalidAircraftSCCCombination': true});
-            control.get('sccCode').setErrors({'invalidAircraftSCCCombination': true});
-          }
-          else{
+            control.get('aircraftEngineTypeCode').setErrors({invalidAircraftSCCCombination: true});
+            control.get('sccCode').setErrors({invalidAircraftSCCCombination: true});
+          } else {
             control.get('sccCode').setErrors(null);
             control.get('aircraftEngineTypeCode').setErrors(null);
           }
@@ -324,22 +324,22 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const status_perm_shutdown = "PS";
-      const status_temp_shutdown = "TS";
-      const control_status = control.get('operatingStatusCode').value;
+      const statusPermShutdown = 'PS';
+      const statusTempShutdown = 'TS';
+      const controlStatus = control.get('operatingStatusCode').value;
 
-      if (this.facilityOpCode && control_status) {
-        if (this.facilityOpCode.code === status_temp_shutdown
-          && control_status.code !== status_perm_shutdown
-          && control_status.code !== status_temp_shutdown) {
+      if (this.facilityOpCode && controlStatus) {
+        if (this.facilityOpCode.code === statusTempShutdown
+          && controlStatus.code !== statusPermShutdown
+          && controlStatus.code !== statusTempShutdown) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === status_perm_shutdown
-          && control_status.code !== status_perm_shutdown) {
+          } else if (this.facilityOpCode.code === statusPermShutdown
+          && controlStatus.code !== statusPermShutdown) {
             return {invalidStatusCodePS: true};
           }
       }
       return null;
-    }
+    };
   }
 
 }
