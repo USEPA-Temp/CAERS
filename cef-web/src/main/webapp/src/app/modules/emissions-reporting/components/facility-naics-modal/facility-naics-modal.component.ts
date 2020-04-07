@@ -60,9 +60,9 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
     this.facilityNaics.forEach(facilityNaics => {
 
-      if (facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
+      if (this.naicsForm.value.selectedNaics && facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
         this.check = false;
-        this.toastr.error('', "This Facility already contains this NAICS code, duplicates are not allowed.",
+        this.toastr.error('', 'This Facility already contains this NAICS code, duplicates are not allowed.',
         {positionClass: 'toast-top-right'});
       }
 
@@ -106,7 +106,7 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => this.facilityNaicsCode.filter(v => v.code.toLowerCase().indexOf(term.toLowerCase()) > -1
+      map(term => this.facilityNaicsCode && this.facilityNaicsCode.filter(v => v.code.toLowerCase().indexOf(term.toLowerCase()) > -1
                                         || (v.description ? v.description.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
                                         .slice(0, 20))
     )
