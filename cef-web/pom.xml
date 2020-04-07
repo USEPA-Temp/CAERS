@@ -731,7 +731,7 @@
                                     <exclude>gov.epa.cef.web.security.mock.*</exclude>
                                 </excludes>
                                 <includes>
-                                    <include>gov.epa.cef.web.api.rest.*</include>\
+                                    <include>gov.epa.cef.web.api.rest.*</include>
                                     <include>gov.epa.cef.web.security.*</include>
                                     <include>gov.epa.cef.web.service.impl.*</include>
                                     <include>gov.epa.cef.web.service.validation.validator.*</include>
