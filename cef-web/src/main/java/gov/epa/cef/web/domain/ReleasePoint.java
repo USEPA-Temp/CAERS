@@ -1,7 +1,7 @@
 package gov.epa.cef.web.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -131,7 +131,7 @@ public class ReleasePoint extends BaseAuditEntity {
     private String comments;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")
-    private Set<ReleasePointAppt> releasePointAppts = new HashSet<ReleasePointAppt>(0);
+    private List<ReleasePointAppt> releasePointAppts = new ArrayList<ReleasePointAppt>(0);
 
     
     /***
@@ -429,11 +429,11 @@ public class ReleasePoint extends BaseAuditEntity {
 			this.fugitiveAngle = fugitiveAngle;
 		}
 
-		public Set<ReleasePointAppt> getReleasePointAppts() {
+		public List<ReleasePointAppt> getReleasePointAppts() {
         return this.releasePointAppts;
     }
 
-    public void setReleasePointAppts(Set<ReleasePointAppt> releasePointAppts) {
+    public void setReleasePointAppts(List<ReleasePointAppt> releasePointAppts) {
         this.releasePointAppts = releasePointAppts;
     }
     
