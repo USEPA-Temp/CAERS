@@ -20,8 +20,8 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
 
-    @NotBlank(message = "Percent Reduction is required.")
-    @Digits(integer = 2, fraction = 1,
+    @NotNull(message = "Percent Reduction is required.")
+    @Digits(integer = 3, fraction = 1,
         message = "Percent Reduction Efficiency is not in expected numeric format: '{integer}.{fraction}' digits.")
     private Double percentReduction;
 
