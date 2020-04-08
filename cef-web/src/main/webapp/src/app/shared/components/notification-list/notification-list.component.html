@@ -10,31 +10,31 @@
       <br>
       <tr>
         <td style="text-align: center">
-          <fa-layers [fixedWidth]="true">
-              <fa-icon style="color: #ff1a1a;font-size:200%;" [icon]="['fas', 'circle']"></fa-icon>
-              <fa-layers-text content="{{inProgressCount}}" style="color: white;font-size:100%;" transform="shrink-4 right-6"></fa-layers-text>
-          </fa-layers>
-          <strong style="padding-left: 20px;font-size:110%;">In Progress</strong>
+          <span class="fa-layers fa-2x" style="vertical-align: middle;">
+            <fa-icon [icon]="['fas', 'circle']" style="color:#ff1a1a;"></fa-icon>
+            <span class="fa-layers-text" style="color: white;font-size: 40%;align-content: center;">{{inProgressCount}}</span>
+          </span>
+          <strong style="padding-left: 10px;font-size: 110%;vertical-align: middle;">In Progress</strong>
         </td>
       </tr>
       <br>
       <tr>
         <td style="text-align: center">
-          <fa-layers [fixedWidth]="true">
-              <fa-icon style="color: #ffb90f;font-size:200%;" [icon]="['fas', 'circle']"></fa-icon>
-              <fa-layers-text content="{{submittedCount}}" style="color: white;font-size:100%;align-content: center;" transform="shrink-4 right-6"></fa-layers-text>
-          </fa-layers>
-          <strong style="padding-left:20px;font-size:110%;">Pending Review</strong>
+          <span class="fa-layers fa-2x" style="vertical-align: middle;">
+            <fa-icon [icon]="['fas', 'circle']" style="color:#ffb90f;"></fa-icon>
+            <span class="fa-layers-text" style="color: white;font-size: 40%;align-content: center;">{{submittedCount}}</span>
+          </span>
+          <strong style="padding-left: 10px;font-size: 110%;vertical-align: middle;">Pending Review</strong>
         </td>
       </tr>
       <br>
       <tr>
         <td style="text-align: center">
-          <fa-layers [fixedWidth]="true">
-              <fa-icon style="color:#209c98;font-size:200%;" [icon]="['fas', 'circle']"></fa-icon>
-              <fa-layers-text content="{{approvedCount}}" style="color: white;font-size:100%;text-align: center" transform="shrink-4 right-6"></fa-layers-text>
-          </fa-layers>
-          <strong style="padding-left:20px;font-size:110%;">Accepted</strong>
+          <span class="fa-layers fa-2x" style="vertical-align: middle;" >
+            <fa-icon [icon]="['fas', 'circle']" style="color:#209c98;"></fa-icon>
+            <span class="fa-layers-text" style="color: white;font-size: 40%;align-content: center;">{{approvedCount}}</span>
+          </span>
+          <strong style="padding-left: 10px;font-size: 110%;vertical-align: middle;">Accepted</strong>
         </td>
       </tr>
     </div>
