@@ -23,7 +23,7 @@ public class ControlPollutant extends BaseAuditEntity {
     @JoinColumn(name = "pollutant_code")
     private Pollutant pollutant;
     
-    @Column(name = "percent_reduction", precision = 4, scale = 1)
+    @Column(name = "percent_reduction", precision = 4, scale = 1, nullable = false)
     private Double percentReduction;
 
     
