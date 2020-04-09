@@ -67,7 +67,7 @@ export class ControlPollutantModalComponent implements OnInit {
         this.controlPollutants.forEach(pollutant => {
           if (pollutant.pollutant.pollutantName === this.pollutantForm.get('pollutant').value.pollutantName) {
             this.duplicateCheck = false;
-            this.toastr.error('', 'This Control already contains this Control Pollutant, duplicates are not allowed.', {positionClass: 'toast-top-right'});
+            this.toastr.error('', 'This Control already contains this Control Pollutant, duplicates are not allowed.');
           }
         });
       }

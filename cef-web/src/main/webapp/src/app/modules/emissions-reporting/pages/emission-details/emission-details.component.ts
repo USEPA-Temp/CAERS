@@ -329,7 +329,7 @@ export class EmissionDetailsComponent implements OnInit {
               this.emissionForm.get('emissionsFactor').setValue(result.emissionsFactor, {emitEvent: false});
             }
             this.emissionForm.get('totalEmissions').setValue(result.totalEmissions);
-            this.toastr.success('', 'Total emissions successfully calculated', {positionClass: 'toast-top-right'});
+            this.toastr.success('', 'Total emissions successfully calculated');
 
           });
 

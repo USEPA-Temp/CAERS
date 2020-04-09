@@ -147,8 +147,8 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   updateOperatingDetail(detail: OperatingDetail) {
     if (!this.operatingDetailsComponent.operatingDetailsForm.valid || !this.operatingDetailsComponent.validateOperatingPercent()) {
       this.operatingDetailsComponent.operatingDetailsForm.markAllAsTouched();
-      if(!this.operatingDetailsComponent.validateOperatingPercent()){
-        this.toastr.error('',"Total Operating Percent must be between 99.5 and 100.5",{positionClass: 'toast-top-right'})
+      if (!this.operatingDetailsComponent.validateOperatingPercent()) {
+        this.toastr.error('', 'Total Operating Percent must be between 99.5 and 100.5');
       }
     } else {
       const updatedDetail = new OperatingDetail();
@@ -220,7 +220,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.operatingDetailsComponent.operatingDetailsForm.markAllAsTouched();
       this.reportingPeriodComponent.reportingPeriodForm.markAllAsTouched();
       if (!this.operatingDetailsComponent.validateOperatingPercent()) {
-        this.toastr.error('', 'Total Operating Percent must be between 99.5 and 100.5', {positionClass: 'toast-top-right'});
+        this.toastr.error('', 'Total Operating Percent must be between 99.5 and 100.5');
       }
     } else {
 
@@ -238,7 +238,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.reportingPeriodService.create(reportingPeriod)
       .subscribe(result => {
 
-        console.log()
+        console.log();
         this.process.reportingPeriods.push(result);
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.setCreatePeriod(false);

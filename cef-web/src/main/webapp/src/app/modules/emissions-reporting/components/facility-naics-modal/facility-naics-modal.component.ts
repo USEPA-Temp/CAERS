@@ -63,8 +63,7 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
       if (this.naicsForm.value.selectedNaics && facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
         this.check = false;
-        this.toastr.error('', 'This Facility already contains this NAICS code, duplicates are not allowed.',
-        {positionClass: 'toast-top-right'});
+        this.toastr.error('', 'This Facility already contains this NAICS code, duplicates are not allowed.');
       }
 
       if (facilityNaics.primaryFlag && this.primaryFlag && this.check) {
