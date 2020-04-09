@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 public class SecurityService {
 
-    private static final String FacilityRolePrefix = "{EIS}";
+    private static final String FACILITY_ROLE_PREFIX = "{EIS}";
 
     private final CacheManager cacheManager;
 
@@ -209,8 +209,8 @@ public class SecurityService {
     private List<String> getCurrentUserFacilityProgramIds() {
 
         return getCurrentApplicationUser().getAuthorities().stream()
-            .filter(r -> r.getAuthority().startsWith(SecurityService.FacilityRolePrefix))
-            .map(r -> r.getAuthority().substring(SecurityService.FacilityRolePrefix.length()))
+            .filter(r -> r.getAuthority().startsWith(SecurityService.FACILITY_ROLE_PREFIX))
+            .map(r -> r.getAuthority().substring(SecurityService.FACILITY_ROLE_PREFIX.length()))
             .collect(Collectors.toList());
     }
 
@@ -220,7 +220,7 @@ public class SecurityService {
         public GrantedAuthority apply(ProgramFacility programFacility) {
 
             return new SimpleGrantedAuthority(
-                String.format("%s%s", FacilityRolePrefix, programFacility.getProgramId()));
+                String.format("%s%s", FACILITY_ROLE_PREFIX, programFacility.getProgramId()));
         }
     }
 }

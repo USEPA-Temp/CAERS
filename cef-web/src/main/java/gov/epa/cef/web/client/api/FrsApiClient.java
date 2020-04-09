@@ -31,7 +31,7 @@ public class FrsApiClient {
 
     private final FrsConfig config;
 
-    static final String EISProgramAcronym = "EIS";
+    static final String EIS_PROGRAM_ACRONYM = "EIS";
 
     @Autowired
     FrsApiClient(FrsConfig config) {
@@ -52,7 +52,7 @@ public class FrsApiClient {
     public Collection<Association> queryAssociation(@NotBlank String eisProgramId, Integer pageSize, Integer offset) {
 
         return this.client.queryAssociation(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId, pageSize, offset).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId, pageSize, offset).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }
@@ -60,7 +60,7 @@ public class FrsApiClient {
     public Collection<Contact> queryContacts(@NotBlank String eisProgramId) {
 
         return this.client.queryContact(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }
@@ -68,7 +68,7 @@ public class FrsApiClient {
     public Collection<Control> queryEmissionsControl(@NotBlank String eisProgramId, Integer pageSize, Integer offset) {
 
         return this.client.queryEmissionsControl(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId, pageSize, offset).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId, pageSize, offset).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }
@@ -76,7 +76,7 @@ public class FrsApiClient {
     public Collection<Pollutant> queryPollutant(@NotBlank String eisProgramId, Integer pageSize, Integer offset) {
 
         return this.client.queryPollutant(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId, pageSize, offset).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId, pageSize, offset).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }
@@ -84,7 +84,7 @@ public class FrsApiClient {
     public Collection<Process> queryEmissionsProcess(@NotBlank String eisProgramId, Integer pageSize, Integer offset) {
 
         return this.client.queryEmissionsProcess(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId, pageSize, offset).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId, pageSize, offset).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }
@@ -92,7 +92,7 @@ public class FrsApiClient {
     public Collection<Unit> queryEmissionsUnit(@NotBlank String eisProgramId, Integer pageSize, Integer offset) {
 
         return this.client.queryEmissionsUnit(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId, pageSize, offset).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId, pageSize, offset).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }
@@ -100,7 +100,7 @@ public class FrsApiClient {
     public Collection<Naics> queryNaics(@NotBlank String eisProgramId) {
 
         return this.client.queryNaics(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }
@@ -109,7 +109,7 @@ public class FrsApiClient {
 
         // use the first one, assumption is that only one is available after filter
         return this.client.queryProgramFacility(this.config.getNaasUser(), this.config.getNaasPassword(),
-            null, EISProgramAcronym, eisProgramId).stream()
+            null, EIS_PROGRAM_ACRONYM, eisProgramId).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .findFirst();
     }
@@ -118,7 +118,7 @@ public class FrsApiClient {
 
         // use the first one, assumption is that only one is available after filter
         return this.client.queryProgramGis(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .findFirst();
     }
@@ -126,7 +126,7 @@ public class FrsApiClient {
     public Collection<ReleasePoint> queryReleasePoint(@NotBlank String eisProgramId, Integer pageSize, Integer offset) {
 
         return this.client.queryReleasePoint(this.config.getNaasUser(), this.config.getNaasPassword(),
-            EISProgramAcronym, eisProgramId, pageSize, offset).stream()
+            EIS_PROGRAM_ACRONYM, eisProgramId, pageSize, offset).stream()
             .filter(FrsPredicates.identifiable(eisProgramId))
             .collect(Collectors.toList());
     }

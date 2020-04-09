@@ -124,7 +124,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   onChange(newValue) {
     if (newValue && this.edit) {
       this.emissionUnitForm.controls.statusYear.reset();
-      this.toastr.warning('', 'If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated, unless they are already Permanently Shutdown.', {positionClass: 'toast-top-right'});
+      this.toastr.warning('', 'If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated, unless they are already Permanently Shutdown.');
     }
   }
 
