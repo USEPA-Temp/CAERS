@@ -31,6 +31,9 @@ export class BreadcrumbNavComponent implements OnInit {
     ngOnInit() {
         this.router.events.subscribe((val) => {
             this.url = this.location.path();
+            if (this.url.includes('review')) {
+                this.url = '/review'
+            }
         });
         this.userContext.getUser()
         .subscribe(currentUser => {
