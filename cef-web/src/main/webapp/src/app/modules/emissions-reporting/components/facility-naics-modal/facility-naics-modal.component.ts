@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { LookupService } from 'src/app/core/services/lookup.service';
@@ -23,6 +23,7 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
   naicsForm = this.fb.group({
     selectedNaics: [null, Validators.required],
+    }, { validators: [this.checkValidNaics()]
   });
 
   facilityNaicsCode: FacilityNaicsCode[];
@@ -100,6 +101,15 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
       }
     }
     this.check = true;
+  }
+
+  checkValidNaics(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if (this.naicsForm && this.naicsForm.value.selectedNaics === undefined) {
+        return { invalidNaics: true };
+      }
+      return null;
+    };
   }
 
   searchNAICS = (text$: Observable<string>) =>
