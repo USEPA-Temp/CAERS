@@ -10,13 +10,26 @@ public class WorksheetError implements Serializable {
 
     private final int row;
 
+    private final boolean systemError;
+
     private final String worksheet;
 
-    public WorksheetError(String worksheet, int row, String message) {
+    private WorksheetError(String worksheet, int row, String message, boolean systemError) {
 
         this.row = row;
         this.worksheet = worksheet;
         this.message = message;
+        this.systemError = systemError;
+    }
+
+    public WorksheetError(String worksheet, int row, String message) {
+
+        this(worksheet, row, message, false);
+    }
+
+    public static WorksheetError createSystemError(String message) {
+
+        return new WorksheetError("*", -1, message, true);
     }
 
     public String getMessage() {
@@ -32,5 +45,10 @@ public class WorksheetError implements Serializable {
     public String getWorksheet() {
 
         return worksheet;
+    }
+
+    public boolean isSystemError() {
+
+        return systemError;
     }
 }
