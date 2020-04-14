@@ -1,11 +1,10 @@
 import {EmissionsReport} from 'src/app/shared/models/emissions-report';
-import {HttpClient, HttpEvent, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
 import {FacilitySite} from 'src/app/shared/models/facility-site';
-import {last, tap} from "rxjs/operators";
-import {CdxFacility} from "../../shared/models/cdx-facility";
+import {CdxFacility} from '../../shared/models/cdx-facility';
 
 @Injectable({
     providedIn: 'root'
@@ -29,19 +28,19 @@ export class EmissionsReportingService {
         return this.http.get<EmissionsReport>(url);
     }
 
-    acceptReports(reportIds: number[], comments: String): Observable<EmissionsReport[]> {
+    acceptReports(reportIds: number[], comments: string): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/accept`;
         return this.http.post<EmissionsReport[]>(url, {
-            reportIds: reportIds,
-            comments: comments
+            reportIds,
+            comments
         });
     }
 
-    rejectReports(reportIds: number[], comments: String): Observable<EmissionsReport[]> {
+    rejectReports(reportIds: number[], comments: string): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/reject`;
         return this.http.post<EmissionsReport[]>(url, {
-            reportIds: reportIds,
-            comments: comments
+            reportIds,
+            comments
         });
     }
 
@@ -56,9 +55,9 @@ export class EmissionsReportingService {
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
             eisProgramId: eisFacilityId,
-            source: "previous"
+            source: 'previous'
         }, {
-            observe: "response"
+            observe: 'response'
         });
     }
 
@@ -74,10 +73,10 @@ export class EmissionsReportingService {
             frsFacilityId: facility.epaRegistryId,
             stateFacilityId: facility.stateFacilityId,
             stateCode: facility.state,
-            source: "fromScratch",
-            facilitySite: facilitySite
+            source: 'fromScratch',
+            facilitySite
         }, {
-            observe: "response"
+            observe: 'response'
         });
     }
 
@@ -88,21 +87,21 @@ export class EmissionsReportingService {
 
         const url = `${this.baseUrl}/facility/${facility.programId}`;
 
-        let formData = new FormData();
-        formData.append("workbook", workbook);
-        formData.append("metadata", new Blob([JSON.stringify({
+        const formData = new FormData();
+        formData.append('workbook', workbook);
+        formData.append('metadata', new Blob([JSON.stringify({
             year: reportYear,
             eisProgramId: facility.programId,
             frsFacilityId: facility.epaRegistryId,
             stateFacilityId: facility.stateFacilityId,
             stateCode: facility.state,
-            source: "fromScratch"
+            source: 'fromScratch'
         })], {
-            type: "application/json"
+            type: 'application/json'
         }));
 
         return this.http.post<EmissionsReport>(url, formData, {
-            observe: "events",
+            observe: 'events',
             reportProgress: true
         });
     }
@@ -114,7 +113,7 @@ export class EmissionsReportingService {
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
             eisProgramId: eisFacilityId,
-            source: "frs"
+            source: 'frs'
         });
     }
 

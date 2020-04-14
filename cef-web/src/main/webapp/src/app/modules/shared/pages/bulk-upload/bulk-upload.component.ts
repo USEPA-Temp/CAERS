@@ -24,21 +24,23 @@ export class BulkUploadComponent implements OnInit {
   }
 
   onFileChanged(event) {
-    this.selectedFile = event.target.files[0];
-    const fileReader = new FileReader();
-    fileReader.readAsText(this.selectedFile, 'UTF-8');
-    fileReader.onload = () => {
-      try {
-        this.jsonFileContents = JSON.parse(fileReader.result.toString());
-      }
-      catch {
-        this.toastr.error('', 'Invalid file format, only json files may be uploaded.', {positionClass: 'toast-top-right'});
-        this.selectedFile = null;
-      }
-    };
-    fileReader.onerror = (error) => {
-        console.log(error);
-    };
+    if (event.target.files[0]) {
+      this.selectedFile = event.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.readAsText(this.selectedFile, 'UTF-8');
+
+      fileReader.onload = () => {
+        try {
+          this.jsonFileContents = JSON.parse(fileReader.result.toString());
+        } catch {
+          this.toastr.error('', 'Invalid file format, only json files may be uploaded.');
+          this.selectedFile = null;
+        }
+      };
+      fileReader.onerror = (error) => {
+          console.log(error);
+      };
+    }
   }
 
   onUpload() {
@@ -50,9 +52,9 @@ export class BulkUploadComponent implements OnInit {
               ${report.status}; ${report.validationStatus}; ${report.year}; `);
           this.reportUpload = `emissionsReport: ${report.agencyCode}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
               ${report.status}; ${report.validationStatus}; ${report.year}; `;
-          this.toastr.success('', 'File successfully uploaded.', {positionClass: 'toast-top-right'})
+          this.toastr.success('', 'File successfully uploaded.')
         }, error => {
-          this.toastr.error('', 'The json file failed to upload, please check your formatting and try again.', {positionClass: 'toast-top-right'});
+          this.toastr.error('', 'The json file failed to upload, please check your formatting and try again.');
         });
     });
   }

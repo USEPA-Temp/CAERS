@@ -7,6 +7,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { EditControlPathInfoPanelComponent } from '../../components/edit-control-path-info-panel/edit-control-path-info-panel.component';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlAssignment } from 'src/app/shared/models/control-assignment';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-control-path-details',
@@ -25,6 +26,7 @@ export class ControlPathDetailsComponent implements OnInit {
 
   constructor(private controlPathService: ControlPathService,
               private route: ActivatedRoute,
+              private userContextService: UserContextService,
               private sharedService: SharedService) { }
 
   ngOnInit() {
@@ -43,7 +45,11 @@ export class ControlPathDetailsComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.userContextService.getUser().subscribe( user => {
+        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          this.readOnlyMode = false;
+        }
+      });
       this.sharedService.emitChange(data.facilitySite);
     });
 

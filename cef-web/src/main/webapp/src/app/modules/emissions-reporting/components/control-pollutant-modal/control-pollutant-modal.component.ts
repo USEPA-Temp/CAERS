@@ -26,7 +26,12 @@ export class ControlPollutantModalComponent implements OnInit {
 
   pollutantForm = this.fb.group({
       pollutant: [null , Validators.required],
-      percentReduction: ['', [Validators.required, Validators.max(99.999), Validators.min(5), Validators.pattern('[0-9]*')]]
+      percentReduction: ['', [
+        Validators.required,
+        Validators.max(99.9),
+        Validators.min(5),
+        Validators.pattern('^[0-9]*\\.?[0-9]+$')
+      ]]
   });
 
   constructor(private lookupService: LookupService,
@@ -62,7 +67,7 @@ export class ControlPollutantModalComponent implements OnInit {
         this.controlPollutants.forEach(pollutant => {
           if (pollutant.pollutant.pollutantName === this.pollutantForm.get('pollutant').value.pollutantName) {
             this.duplicateCheck = false;
-            this.toastr.error('', 'This Control already contains this Control Pollutant, duplicates are not allowed.', {positionClass: 'toast-top-right'});
+            this.toastr.error('', 'This Control already contains this Control Pollutant, duplicates are not allowed.');
           }
         });
       }

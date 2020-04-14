@@ -8,12 +8,12 @@ export class ReportDownloadService {
   constructor() { }
 
     downloadFile(data: any, filename= 'data') {
-        const csvData = this.ConvertToCSV(data, ['facilitySiteId','reportYear','emissionsUnitId','emissionUnitDescription','processId',
-        'processDescription','pollutantName','emissionsUomCode','totalEmissions','emissionsFactor','emissionsCalcMethod','reportingPeriodType',
-        'emissionsNumeratorUom','emissionsDenominatorUom','emissionsFactorText','emissionsComment','lastModifiedBy','lastModifiedDate']);
+        const csvData = this.ConvertToCSV(data, ['facilitySiteId', 'reportYear', 'emissionsUnitId', 'emissionUnitDescription', 'processId',
+        'processDescription', 'pollutantName', 'emissionsUomCode', 'totalEmissions', 'emissionsFactor', 'emissionsCalcMethod', 'reportingPeriodType',
+        'emissionsNumeratorUom', 'emissionsDenominatorUom', 'emissionsFactorText', 'emissionsComment', 'lastModifiedBy', 'lastModifiedDate']);
         const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
         const dwldLink = document.createElement('a');
-        var url;
+        let url;
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
           window.navigator.msSaveOrOpenBlob(blob, filename + '.csv');
           return;

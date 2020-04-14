@@ -357,7 +357,6 @@ public class EmissionsReportApi {
     // @RolesAllowed(value = {AppRole.ROLE_ADMIN})
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
         EmissionsReportDto savedReport = uploadService.saveBulkEmissionsReport(reportUpload);
-        this.reportService.createReportHistory(savedReport.getId(), ReportAction.CREATED);
         return new ResponseEntity<>(savedReport, HttpStatus.OK);
     }
 

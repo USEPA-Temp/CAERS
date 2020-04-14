@@ -25,6 +25,11 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String PM10FIL = "PM10-FIL";
+    private static final String PM10PRI = "PM10-PRI";
+    private static final String PM25FIL = "PM25-FIL";
+    private static final String PM25PRI = "PM25-PRI";
+    private static final String PMCON = "PM-CON";
   	
     @Override
     public void compose(FluentValidator validator,
@@ -126,16 +131,16 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        }
 	
 	        // start batch of PM validations
-	        if (emissionMap.containsKey("PM10-FIL") || emissionMap.containsKey("PM10-PRI") 
-	                || emissionMap.containsKey("PM25-FIL") || emissionMap.containsKey("PM25-PRI") 
-	                || emissionMap.containsKey("PM-CON")) {
+	        if (emissionMap.containsKey(PM10FIL) || emissionMap.containsKey(PM10PRI) 
+	                || emissionMap.containsKey(PM25FIL) || emissionMap.containsKey(PM25PRI) 
+	                || emissionMap.containsKey(PMCON)) {
 	
 	            // get the values of all the pm emissions
-	            BigDecimal pm10Fil = emissionMap.containsKey("PM10-FIL") ? emissionMap.get("PM10-FIL").get(0).getCalculatedEmissionsTons() : null;
-	            BigDecimal pm10Pri = emissionMap.containsKey("PM10-PRI") ? emissionMap.get("PM10-PRI").get(0).getCalculatedEmissionsTons() : null;
-	            BigDecimal pm25Fil = emissionMap.containsKey("PM25-FIL") ? emissionMap.get("PM25-FIL").get(0).getCalculatedEmissionsTons() : null;
-	            BigDecimal pm25Pri = emissionMap.containsKey("PM25-PRI") ? emissionMap.get("PM25-PRI").get(0).getCalculatedEmissionsTons() : null;
-	            BigDecimal pmCon = emissionMap.containsKey("PM-CON") ? emissionMap.get("PM-CON").get(0).getCalculatedEmissionsTons() : null;
+	            BigDecimal pm10Fil = emissionMap.containsKey(PM10FIL) ? emissionMap.get(PM10FIL).get(0).getCalculatedEmissionsTons() : null;
+	            BigDecimal pm10Pri = emissionMap.containsKey(PM10PRI) ? emissionMap.get(PM10PRI).get(0).getCalculatedEmissionsTons() : null;
+	            BigDecimal pm25Fil = emissionMap.containsKey(PM25FIL) ? emissionMap.get(PM25FIL).get(0).getCalculatedEmissionsTons() : null;
+	            BigDecimal pm25Pri = emissionMap.containsKey(PM25PRI) ? emissionMap.get(PM25PRI).get(0).getCalculatedEmissionsTons() : null;
+	            BigDecimal pmCon = emissionMap.containsKey(PMCON) ? emissionMap.get(PMCON).get(0).getCalculatedEmissionsTons() : null;
 	
 	            // PM10 Filterable should not exceed PM10 Primary
 	            if (pm10Fil != null && pm10Pri != null && pm10Fil.compareTo(pm10Pri) > 0) {

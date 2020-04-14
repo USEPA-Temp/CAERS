@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { LookupService } from 'src/app/core/services/lookup.service';
@@ -23,6 +23,7 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
   naicsForm = this.fb.group({
     selectedNaics: [null, Validators.required],
+    }, { validators: [this.checkValidNaics()]
   });
 
   facilityNaicsCode: FacilityNaicsCode[];
@@ -60,10 +61,9 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
     this.facilityNaics.forEach(facilityNaics => {
 
-      if (facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
+      if (this.naicsForm.value.selectedNaics && facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
         this.check = false;
-        this.toastr.error('', "This Facility already contains this NAICS code, duplicates are not allowed.",
-        {positionClass: 'toast-top-right'});
+        this.toastr.error('', 'This Facility already contains this NAICS code, duplicates are not allowed.');
       }
 
       if (facilityNaics.primaryFlag && this.primaryFlag && this.check) {
@@ -102,11 +102,20 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
     this.check = true;
   }
 
+  checkValidNaics(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if (this.naicsForm && this.naicsForm.value.selectedNaics === undefined) {
+        return { invalidNaics: true };
+      }
+      return null;
+    };
+  }
+
   searchNAICS = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => this.facilityNaicsCode.filter(v => v.code.toLowerCase().indexOf(term.toLowerCase()) > -1
+      map(term => this.facilityNaicsCode && this.facilityNaicsCode.filter(v => v.code.toLowerCase().indexOf(term.toLowerCase()) > -1
                                         || (v.description ? v.description.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
                                         .slice(0, 20))
     )

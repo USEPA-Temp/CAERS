@@ -50,6 +50,8 @@ class FrsUtil {
                 case "PERMANENTLY SHUTDOWN":
                     code = "PS";
                     break;
+                default:
+                    // do nothing
             }
         }
 
@@ -70,6 +72,8 @@ class FrsUtil {
                 case "FEET":
                     code = "FT";
                     break;
+                default:
+                    // do nothing
             }
 
             result.setCode(code);

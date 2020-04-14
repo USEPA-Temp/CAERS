@@ -9,7 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 describe('FacilityListComponent', () => {
   let component: FacilityListComponent;
   let fixture: ComponentFixture<FacilityListComponent>;
-  let facility = {
+  const facility = {
         cdxFacilityId: 123,
         epaRegistryId: '123',
         programId: '123',
@@ -21,7 +21,7 @@ describe('FacilityListComponent', () => {
         county: 'US',
         zipCode: '22033'
   };
-  let facilities: CdxFacility[]=[facility];
+  const facilities: CdxFacility[]=[facility];
   
   beforeEach(async(() => {
     TestBed.configureTestingModule({

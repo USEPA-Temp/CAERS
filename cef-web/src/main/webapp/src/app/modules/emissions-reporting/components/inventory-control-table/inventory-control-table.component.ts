@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ControlService } from 'src/app/core/services/control.service';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-inventory-control-table',
@@ -24,6 +25,7 @@ export class InventoryControlTableComponent extends BaseSortableTable implements
   constructor(private modalService: NgbModal,
               private route: ActivatedRoute,
               private controlService: ControlService,
+              private userContextService: UserContextService,
               private sharedService: SharedService) {
     super();
   }
@@ -36,8 +38,11 @@ export class InventoryControlTableComponent extends BaseSortableTable implements
 
     this.route.data
       .subscribe((data: { facilitySite: FacilitySite }) => {
-        this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
-
+        this.userContextService.getUser().subscribe( user => {
+          if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+            this.readOnlyMode = false;
+          }
+        });
       });
   }
 

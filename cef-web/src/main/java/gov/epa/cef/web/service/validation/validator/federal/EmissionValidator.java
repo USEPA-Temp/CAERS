@@ -185,7 +185,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 		        // check for emission formula variable code % ash value to be between 0.01 and 30
 	        	for (EmissionFormulaVariable formulaVar: efvList) {
 	        		if (ASH_EMISSION_FORMULA_CODE.contentEquals(formulaVar.getVariableCode().getCode()) &&
-	        				(formulaVar.getValue() == null || formulaVar.getValue().compareTo(new BigDecimal(0.01)) == -1 || formulaVar.getValue().compareTo(new BigDecimal(30)) == 1)) {
+	        				(formulaVar.getValue() == null || formulaVar.getValue().compareTo(BigDecimal.valueOf(0.01)) == -1 || formulaVar.getValue().compareTo(new BigDecimal(30)) == 1)) {
 	     
 	        			valid = false;
 	        			context.addFederalError(
@@ -199,7 +199,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        	// check for emission formula variable code % sulfur value to be between 0.01 and 10
 	        	for (EmissionFormulaVariable formulaVar: efvList) {
 	        		if (SULFUR_EMISSION_FORMULA_CODE.contentEquals(formulaVar.getVariableCode().getCode()) &&
-	        				(formulaVar.getValue() == null || (formulaVar.getValue().compareTo(new BigDecimal(0.01)) == -1) || (formulaVar.getValue().compareTo(new BigDecimal(10)) == 1))) {
+	        				(formulaVar.getValue() == null || (formulaVar.getValue().compareTo(BigDecimal.valueOf(0.01)) == -1) || (formulaVar.getValue().compareTo(new BigDecimal(10)) == 1))) {
 	        			
 	        			valid = false;
 	        			context.addFederalError(

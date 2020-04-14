@@ -44,7 +44,7 @@ public class ControlValidator extends BaseValidator<Control> {
 		}
 		
 		for  (ControlPollutant cp: control.getPollutants()) {
-			if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.999) {
+			if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.9) {
 				
 				result = false;
 				context.addFederalError(

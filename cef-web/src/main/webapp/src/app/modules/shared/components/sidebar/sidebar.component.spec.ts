@@ -14,33 +14,33 @@ import { HttpClientModule } from '@angular/common/http';
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
-  let facility = {
+  const facility = {
       cdxFacilityId: 123,
-      epaRegistryId: "123",
-      programId: "123",
-      facilityName: "test-facility",
-      address: "123 elm st",
-      address2: "",
-      city: "Fairfax",
-      state: "Virginia",
-      county: "US",
-      zipCode: "22033"
+      epaRegistryId: '123',
+      programId: '123',
+      facilityName: 'test-facility',
+      address: '123 elm st',
+      address2: '',
+      city: 'Fairfax',
+      state: 'Virginia',
+      county: 'US',
+      zipCode: '22033'
   };
-  let report = {
+  const report = {
       id: 1,
-      facilityId: "123",
-      status: "InProgress",
+      facilityId: '123',
+      status: 'InProgress',
       year: 2019
   };
-  
+
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SidebarComponent, 
+      declarations: [ SidebarComponent,
                       CollapseNavComponent,
                       SidebarInnerNavComponent,
                       SidebarInnerNavItemComponent ],
-      imports: [NgbModule, 
+      imports: [NgbModule,
                 SharedModule,
                 RouterTestingModule,
                 HttpClientModule]

@@ -513,7 +513,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         if (response.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-            logger.info("ExcelJsonParser Result {}", response.getJson().toString());
+            logger.info("ExcelJsonParser Result {}", response.getJson());
 
             EmissionsReportBulkUploadDto bulkEmissionsReport = parseWorkbookJson(response, metadata);
 
@@ -957,8 +957,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             result.setYear(metadata.getYear());
             result.setStatus(ReportStatus.IN_PROGRESS.name());
             result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
-
-            logger.info(result.getEmissionFormulaVariables().toString());
 
         } catch (JsonProcessingException e) {
 

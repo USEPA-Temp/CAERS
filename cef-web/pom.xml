@@ -97,11 +97,12 @@
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
         <sonar.coverage.exclusions>src/main/java/gov/epa/cef/web/config/**/*,
             src/main/java/gov/epa/cef/web/controller/**/*, src/main/java/gov/epa/cef/web/domain/**/*,
-            src/main/java/gov/epa/cef/web/exception/**/*, src/main/java/gov/epa/cef/web/exception/**/*,
+            src/main/java/gov/epa/cef/web/exception/**/*, src/main/java/gov/epa/cef/web/api/rest/**/*,
             src/main/java/gov/epa/cef/web/repository/**/*, src/main/java/gov/epa/cef/web/service/dto/**/*,
             src/main/java/gov/epa/cef/web/service/mapper/**/*, src/main/java/gov/epa/cef/web/soap/**/*,
             src/main/java/gov/epa/cef/web/CefWebApplication.*, src/main/java/gov/epa/cef/web/ServletInitializer.*,
-            src/main/java/gov/epa/cef/web/security/mock/*
+            src/main/java/gov/epa/cef/web/security/mock/*, src/main/java/gov/epa/cef/web/client/api/**/*,
+            src/main/webapp/**/*
         </sonar.coverage.exclusions>
         <sonar.typescript.lcov.reportPaths>${project.testresult.directory}/coverage/lcov/lcov.info
         </sonar.typescript.lcov.reportPaths>
@@ -732,8 +733,9 @@
                                 </excludes>
                                 <includes>
                                     <include>gov.epa.cef.web.api.rest.*</include>
-                                    <include>gov.epa.cef.web.service.impl.*</include>
                                     <include>gov.epa.cef.web.security.*</include>
+                                    <include>gov.epa.cef.web.service.impl.*</include>
+                                    <include>gov.epa.cef.web.service.validation.validator.*</include>
                                     <include>gov.epa.cef.web.util.*</include>
                                 </includes>
                                 <limit>
@@ -763,8 +765,9 @@
                                 </excludes>
                                 <includes>
                                     <include>gov/epa/cef/web/api/rest/**/*</include>
-                                    <include>gov/epa/cef/web/service/impl/**/*</include>
                                     <include>gov/epa/cef/web/security/**/*</include>
+                                    <include>gov/epa/cef/web/service/impl/**/*</include>
+                                    <include>gov/epa/cef/web/service/validation/validator/**/*</include>
                                     <include>gov/epa/cef/web/util/**/*</include>
                                 </includes>
                             </configuration>

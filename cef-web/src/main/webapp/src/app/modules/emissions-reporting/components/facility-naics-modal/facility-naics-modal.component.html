@@ -11,6 +11,9 @@
     <input [attr.aria-multiline]="null" id="facilityNAICS" type="text" class="form-control" formControlName="selectedNaics" aria-label="search NAICS"
     [ngbTypeahead]="searchNAICS" [inputFormatter]="naicsFormatter" [editable]="false" [resultFormatter]="naicsFormatter"/>
     <app-validation-message [control]="naicsForm.get('selectedNaics')"></app-validation-message>
+    <div class="validation-message" *ngIf="naicsForm.errors?.invalidNaics">
+      Selected NAICS Code is invalid. 
+    </div>
   
     <div class="checkbox">
       Make this Primary NAICS for facility?

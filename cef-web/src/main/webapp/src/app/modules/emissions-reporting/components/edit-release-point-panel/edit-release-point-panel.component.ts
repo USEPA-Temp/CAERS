@@ -18,8 +18,15 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
   styleUrls: ['./edit-release-point-panel.component.scss']
 })
 export class EditReleasePointPanelComponent implements OnInit, OnChanges {
+
+  // TODO: should consider moving these validations into a separate file
+  // numbers with length of 8 precision of 3
+  readonly numberPattern83 = '^[0-9]{0,5}([\.][0-9]{1,3})?$';
+  // numbers with length of 16 precision of 8
+  readonly numberPattern168 = '^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$';
+
   @Input() releasePoint: ReleasePoint;
-  releasePointIdentifiers: String[] = [];
+  releasePointIdentifiers: string[] = [];
   readonly fugitiveType = 'Fugitive';
   facilitySite: FacilitySite;
   releaseType: string;
@@ -71,9 +78,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     ]],
     fenceLineUomCode: [null],
     comments: ['', Validators.maxLength(400)],
-    exitGasVelocity: [null, Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')],
+    exitGasVelocity: [null, Validators.pattern(this.numberPattern83)],
     exitGasVelocityUomCode: [null],
-    exitGasFlowRate: [null, Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')],
+    exitGasFlowRate: [null, Validators.pattern(this.numberPattern168)],
     exitGasFlowUomCode: [null],
     fugitiveHeight: ['', [
       wholeNumberValidator(),
@@ -106,14 +113,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.min(1),
       Validators.max(1300),
-      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
+      Validators.pattern(this.numberPattern83)
     ]],
     stackHeightUomCode: [null],
     stackDiameter: ['', [
       Validators.required,
       Validators.min(0.001),
       Validators.max(300),
-      Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')
+      Validators.pattern(this.numberPattern83)
     ]],
     stackDiameterUomCode: [null],
     exitGasTemperature: ['', [
@@ -178,8 +185,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         releasePoints.forEach(rp => {
           this.releasePointIdentifiers.push(rp.releasePointIdentifier);
         });
-        
-        //if a release point is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
+
+        // if a release point is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
         if (this.releasePoint) {
           this.releasePointIdentifiers = this.releasePointIdentifiers.filter(identifer => identifer.toString() !== this.releasePoint.releasePointIdentifier);
         }
@@ -262,20 +269,20 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0), Validators.max(200000),Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]); //, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+            Validators.min(0), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
         } else {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0.00000001), Validators.max(200000),Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]);//, Validators.pattern('^[0-9]{0,8}([\.][0-9]{1,8})?$')]);
+            Validators.min(0.00000001), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
         }
         this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
         this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
       } else {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0), Validators.max(12000000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]);
+            Validators.min(0), Validators.max(12000000), Validators.pattern(this.numberPattern168)]);
         } else {
           this.releasePointForm.controls.exitGasFlowRate.setValidators([
-            Validators.min(0.00000001), Validators.max(12000000), Validators.pattern('^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$')]);
+            Validators.min(0.00000001), Validators.max(12000000), Validators.pattern(this.numberPattern168)]);
         }
         this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
         this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
@@ -290,20 +297,20 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       if (this.releasePointForm.controls.exitGasVelocityUomCode.value.code === 'FPS') {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0), Validators.max(400), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0), Validators.max(400), Validators.pattern(this.numberPattern83)]);
         } else {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0.001), Validators.max(1500), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0.001), Validators.max(1500), Validators.pattern(this.numberPattern83)]);
         }
         this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
         this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
       } else {
         if (this.releaseType === this.fugitiveType) {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0), Validators.max(24000), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0), Validators.max(24000), Validators.pattern(this.numberPattern83)]);
         } else {
           this.releasePointForm.controls.exitGasVelocity.setValidators([
-            Validators.min(0.060), Validators.max(90000), Validators.pattern('^[0-9]{0,5}([\.][0-9]{1,3})?$')]);
+            Validators.min(0.060), Validators.max(90000), Validators.pattern(this.numberPattern83)]);
         }
         this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
         this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
@@ -318,7 +325,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const uom = control.get('exitGasFlowUomCode');
 
       if ((flowRate.value !== null && flowRate.value !== '') && (uom === undefined || uom.value === null)) {
-        control.get('exitGasFlowUomCode').setErrors({'invalidExitGasFlowUomCode': true});
+        control.get('exitGasFlowUomCode').setErrors({invalidExitGasFlowUomCode: true});
       } else {
         control.get('exitGasFlowUomCode').setErrors(null);
       }
@@ -333,12 +340,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const uom = control.get('exitGasVelocityUomCode');
 
       if ((velocity.value !== null && velocity.value !== '') && (uom === undefined || uom.value === null )) {
-          control.get('exitGasVelocityUomCode').setErrors({'invalidExitGasVelocityUomCode': true});
+          control.get('exitGasVelocityUomCode').setErrors({invalidExitGasVelocityUomCode: true});
         } else {
           control.get('exitGasVelocityUomCode').setErrors(null);
         }
-        return null;
-      };
+      return null;
+    };
   }
 
   // Calculated exit gas velocity range check
@@ -355,10 +362,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
         if ((diameter !== null && diameter.value > 0)
         && (flowRate !== null && flowRate.value > 0)) {
-          const computedArea = ((Math.PI)*(Math.pow((diameter.value/2.0), 2)));
+          const computedArea = ((Math.PI) * (Math.pow((diameter.value / 2.0), 2)));
 
           if (control.get('exitGasFlowUomCode').value !== null) {
-            calculatedVelocity = (Math.round((flowRate.value/computedArea)*1000))/1000;
+            calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
 
             if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
               minVelocity = 0.060; // fpm
@@ -377,7 +384,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         return null;
       }
       return null;
-    }
+    };
   }
 
   // Exit gas flow rate or Exit gas velocity must be entered
@@ -470,8 +477,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         && (exitVelocity !== null && exitVelocity.value > 0)
         && (exitFlowRate !== null && exitFlowRate.value > 0)) {
 
-          const computedArea = ((Math.PI)*(Math.pow((diameter.value/2.0), 2))); // sf
-          let calculatedFlowRate = (computedArea*exitVelocity.value); // cfs/cfm
+          const computedArea = ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))); // sf
+          const calculatedFlowRate = (computedArea * exitVelocity.value); // cfs/cfm
           actualFlowRate = exitFlowRate.value;
 
           if ((control.get('exitGasVelocityUomCode').value !== null && control.get('exitGasVelocityUomCode').value !== '')
@@ -481,13 +488,13 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
           if ((control.get('exitGasFlowUomCode').value !== null && control.get('exitGasFlowUomCode').value !== '')
           && (control.get('exitGasFlowUomCode').value.code !== 'ACFS' && this.calculatedFlowRateUom === 'ACFS')) {
-              actualFlowRate = exitFlowRate.value/60; // acfm to acfs
+              actualFlowRate = exitFlowRate.value / 60; // acfm to acfs
             }
 
           // Compare to value with 0.00000001 precision
-          const upperLimit = (Math.round((calculatedFlowRate*1.05)*100000000))/100000000; // cfs
-          const lowerLimit = (Math.round((calculatedFlowRate*0.95)*100000000))/100000000; // cfs
-          actualFlowRate = (Math.round(actualFlowRate*100000000))/100000000; // acfs
+          const upperLimit = (Math.round((calculatedFlowRate * 1.05) * 100000000)) / 100000000; // cfs
+          const lowerLimit = (Math.round((calculatedFlowRate * 0.95) * 100000000)) / 100000000; // cfs
+          actualFlowRate = (Math.round(actualFlowRate * 100000000)) / 100000000; // acfs
 
           if (actualFlowRate > upperLimit || actualFlowRate < lowerLimit) {
             valid = false;
@@ -497,7 +504,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             if ((actualFlowRate === 0.00000001 && upperLimit < 0.00000001)) {
               valid = true;
             }
-            this.calculatedFlowRate = ((Math.round(calculatedFlowRate*100000000))/100000000).toString();
+            this.calculatedFlowRate = ((Math.round(calculatedFlowRate * 100000000)) / 100000000).toString();
             return valid ? null : { invalidFlowRate: true };
           }
         }
@@ -529,22 +536,22 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           }
 
           if (rpLong !== null && rpLong.value !== null && rpLong.value !== '') {
-            longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance)*1000000)/1000000);
-            longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance)*1000000)/1000000);
+            longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance) * 1000000) / 1000000);
+            longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance) * 1000000) / 1000000);
 
             if (((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
               control.get('longitude').markAsTouched();
-              control.get('longitude').setErrors({'invalidLongitude': true});
+              control.get('longitude').setErrors({invalidLongitude: true});
             }
           }
 
           if (rpLat !== null && rpLat.value !== null && rpLat.value !== '') {
-            latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance)*1000000)/1000000);
-            latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance)*1000000)/1000000);
+            latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance) * 1000000) / 1000000);
+            latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance) * 1000000) / 1000000);
 
             if (((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
               control.get('latitude').markAsTouched();
-              control.get('latitude').setErrors({'invalidLatitude': true});
+              control.get('latitude').setErrors({invalidLatitude: true});
             }
           }
         }, 1000);
@@ -555,22 +562,22 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const status_perm_shutdown = "PS";
-      const status_temp_shutdown = "TS";
-      const control_status = control.get('operatingStatusCode').value;
+      const statusPermShutdown = 'PS';
+      const statusTempShutdown = 'TS';
+      const controlStatus = control.get('operatingStatusCode').value;
 
-      if (this.facilityOpCode && control_status) {
-        if (this.facilityOpCode.code === status_temp_shutdown
-          && control_status.code !== status_perm_shutdown
-          && control_status.code !== status_temp_shutdown) {
+      if (this.facilityOpCode && controlStatus) {
+        if (this.facilityOpCode.code === statusTempShutdown
+          && controlStatus.code !== statusPermShutdown
+          && controlStatus.code !== statusTempShutdown) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === status_perm_shutdown
-          && control_status.code !== status_perm_shutdown) {
+          } else if (this.facilityOpCode.code === statusPermShutdown
+          && controlStatus.code !== statusPermShutdown) {
             return {invalidStatusCodePS: true};
           }
       }
       return null;
-    }
+    };
   }
 
   releasePointIdentifierCheck(): ValidatorFn {
@@ -583,7 +590,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         }
       }
       return null;
-    }
+    };
   }
 
 }

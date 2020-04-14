@@ -53,7 +53,7 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   calcTotalPercent() {
     // calculate total percent apportionment of emissions
     let sum = 0;
-    for (let rpa of this.tableData) {
+    for (const rpa of this.tableData) {
       sum += rpa.percent;
     }
     this.totalApptPct = sum;
