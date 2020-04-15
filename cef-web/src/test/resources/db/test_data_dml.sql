@@ -32,7 +32,7 @@ INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_s
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999991', '9999997', '110015680798', '9758611', '1301700008', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant',
-     'OP', '1985', '63JJJJ', '173 Peachtree Rd', 'Fitzgerald', '13313', 'GA' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+     'OP', '1985', '63JJJJ', '173 Peachtree Rd', 'Fitzgerald', '13313', '13' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', '13', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
@@ -40,7 +40,7 @@ INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_s
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999992', '9999999', '110024286002', '2774511', '1331300097', 'HAPCAP', '173', 'Tiarco Chemical', 'Rubber Manufacturing Plant', 'OP', '2005', '63U-SBRubber',
-    '1350 Tiarco Dr.', 'Dalton', '13313', 'GA', '', '30720', '34.688290', '-84.9938603', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
+    '1350 Tiarco Dr.', 'Dalton', '13313', '13', '', '30720', '34.688290', '-84.9938603', '1350 Tiarco Dr.', 'Dalton', '13', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     
 --FACILITY
@@ -48,7 +48,7 @@ INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_s
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999993', '9999912', '110020517412', '3721011', '1331300099', 'HAPCAP', '133', 'GP CELLULOSE', 'GP Cellulose Pulp Mill', 'OP', '2005', 'GADNR',
-    '1400 9th St', 'Brunswick', '13127', 'GA', '', '31520', '31.182550', '-81.500850', '1400 9th St', 'Brunswick', 'GA', '31520', 
+    '1400 9th St', 'Brunswick', '13127', '13', '', '31520', '31.182550', '-81.500850', '1400 9th St', 'Brunswick', '13', '31520', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     
 --FACILITY
@@ -56,7 +56,7 @@ INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_s
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999994', '9999913', '110020517412', '3721011', '1331300099', 'HAPCAP', '133', 'GP CELLULOSE', 'GP Cellulose Pulp Mill', 'OP', '2005', 'GADNR',
-    '1400 9th St', 'Brunswick', '13127', 'GA', '', '31520', '31.182550', '-81.500850', '1400 9th St', 'Brunswick', 'GA', '31520', 
+    '1400 9th St', 'Brunswick', '13127', '13', '', '31520', '31.182550', '-81.500850', '1400 9th St', 'Brunswick', '13', '31520', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     
 
@@ -65,68 +65,68 @@ INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_nam
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999991', '9999991', 'RO', '', 'John', 'Smith', 'johnsmith@gilmanbuilding.com', '3193193119', '001',
-    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '13313', '173 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    '173 Peachtree Rd', 'Fitzgerald', '13' , '', '31750', '13313', '173 Peachtree Rd', 'Fitzgerald', '13', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999992', '9999991', 'FAC', '', 'Jane', 'Doe', 'janedoe@example.com', '5555555555', '',
-    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '13313', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    '173 Peachtree Rd', 'Fitzgerald', '13' , '', '31750', '13313', '174 Peachtree Rd', 'Fitzgerald', '13', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999993', '9999991', 'TECH', '', 'Jane', 'Doe', 'janedoe@example.com', '5555555555', '',
-    '173 Peachtree Rd', 'Fitzgerald', 'GA' , '', '31750', '13313', '174 Peachtree Rd', 'Fitzgerald', 'GA', '31750', 
+    '173 Peachtree Rd', 'Fitzgerald', '13' , '', '31750', '13313', '174 Peachtree Rd', 'Fitzgerald', '13', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999994', '9999992', 'RO', '', 'Danny', 'Welch', '', '7062771300', '',
-    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', '13313', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
+    '1350 Tiarco Dr.', 'Dalton', '13' , '', '30720', '13313', '1350 Tiarco Dr.', 'Dalton', '13', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999995', '9999992', 'FAC', '', 'Danny', 'Welch', '', '7062771300', '',
-    '1350 Tiarco Dr.', 'Dalton', 'GA' , '', '30720', '13313', '1350 Tiarco Dr.', 'Dalton', 'GA', '30720', 
+    '1350 Tiarco Dr.', 'Dalton', '13' , '', '30720', '13313', '1350 Tiarco Dr.', 'Dalton', '13', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999997', '9999993', 'RO', '', 'David', 'Martinez', '', '9122655780', '',
-    '', '', '' , '', '', null, '', '', '', '', 
+    '', '', '13' , '', '', null, '', '', null, '', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999998', '9999993', 'COMP', '', 'Jay', 'Wright', '', '9122655780', '',
-    '', '', '' , '', '', null, '', '', '', '', 
+    '', '', '13' , '', '', null, '', '', null, '', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);   
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999999', '9999993', 'TECH', '', 'Jill', 'Holmes', '', '9127171768', '',
-    '', '', '' , '', '', null, '', '', '', '', 
+    '', '', '13' , '', '', null, '', '', null, '', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999980', '9999994', 'RO', '', 'David', 'Martinez', '', '9122655780', '',
-    '', '', '' , '', '', null, '', '', '', '', 
+    '', '', '13' , '', '', null, '', '', null, '', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999981', '9999994', 'COMP', '', 'Jay', 'Wright', '', '9122655780', '',
-    '', '', '' , '', '', null, '', '', '', '', 
+    '', '', '13' , '', '', null, '', '', null, '', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);   
 INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_name, last_name, email, phone, phone_ext,
     street_address, city, state_code, country_code, postal_code, county_code, mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code, 
     created_by, created_date, last_modified_by, last_modified_date) 
     VALUES ('9999982', '9999994', 'TECH', '', 'Jill', 'Holmes', '', '9127171768', '',
-    '', '', '' , '', '', null, '', '', '', '', 
+    '', '', '13' , '', '', null, '', '', null, '', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 

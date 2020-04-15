@@ -729,14 +729,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setStatusYear(bulkFacility.getStatusYear());
         facility.setStreetAddress(bulkFacility.getStreetAddress());
         facility.setCity(bulkFacility.getCity());
-        facility.setStateCode(bulkFacility.getStateCode());
         facility.setCountryCode(bulkFacility.getCountryCode());
         facility.setPostalCode(bulkFacility.getPostalCode());
         facility.setLatitude(bulkFacility.getLatitude());
         facility.setLongitude(bulkFacility.getLongitude());
         facility.setMailingStreetAddress(bulkFacility.getMailingStreetAddress());
         facility.setMailingCity(bulkFacility.getMailingCity());
-        facility.setMailingStateCode(bulkFacility.getMailingStateCode());
         facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
         facility.setEisProgramId(bulkFacility.getEisProgramId());
         facility.setComments(bulkFacility.getComments());
@@ -757,11 +755,14 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             facility.setTribalCode(tribalCodeRepo.findById(bulkFacility.getTribalCode()).orElse(null));
         }
 
-        if (Strings.emptyToNull(bulkFacility.getStateCode()) != null && Strings.emptyToNull(bulkFacility.getCountyCode()) != null) {
-            FipsStateCode stateCode = stateCodeRepo.findByUspsCode(bulkFacility.getStateCode()).orElse(null);
-            if (stateCode != null) {
-                facility.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(stateCode.getCode(), bulkFacility.getCountyCode()).orElse(null));
+        if (bulkFacility.getStateCode() != null) {
+            facility.setStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getStateCode())).orElse(null));
+            if (facility.getStateCode() != null && Strings.emptyToNull(bulkFacility.getCountyCode()) != null) {
+                facility.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(facility.getStateCode().getCode(), bulkFacility.getCountyCode()).orElse(null));
             }
+        }
+        if (bulkFacility.getMailingStateCode() != null) {
+            facility.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getMailingStateCode())).orElse(null));
         }
 
         return facility;
