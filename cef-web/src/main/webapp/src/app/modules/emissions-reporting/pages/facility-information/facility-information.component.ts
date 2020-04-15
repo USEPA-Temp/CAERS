@@ -107,9 +107,7 @@ export class FacilityInformationComponent implements OnInit {
         this.deleteContact(contactId, facilitySiteId);
       });
     } else {
-      this.toastr.error('You must have at least one contact for Facility Contact Information.',
-      'Cannot delete facility contact.',
-      {positionClass: 'toast-top-right'});
+      this.toastr.error('You must have at least one contact for Facility Contact Information.', 'Cannot delete facility contact.');
     }
   }
 

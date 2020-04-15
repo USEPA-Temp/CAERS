@@ -529,7 +529,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     .replaceAll(EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "")
                     .replaceAll(EmissionsReport.class.getPackage().getName().concat("."), "");
 
-                WorksheetError violation = new WorksheetError("*", -1, msg);
+                WorksheetError violation = WorksheetError.createSystemError(msg);
 
                 throw new BulkReportValidationException(Collections.singletonList(violation));
             }
@@ -537,9 +537,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         } else {
 
             List<WorksheetError> errors = new ArrayList<>();
-            errors.add(new WorksheetError(null, -1, "Unable to read workbook."));
+            errors.add(WorksheetError.createSystemError("Unable to read workbook."));
             if (response.getJson() != null && response.getJson().hasNonNull("message")) {
-                errors.add(new WorksheetError(null, -1, response.getJson().path("message").asText()));
+
+                errors.add(WorksheetError.createSystemError(response.getJson().path("message").asText()));
             }
 
             throw new BulkReportValidationException(errors);
@@ -963,7 +964,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             String msg = e.getMessage().replaceAll(
                 EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
 
-            WorksheetError violation = new WorksheetError("*", -1, msg);
+            WorksheetError violation = WorksheetError.createSystemError(msg);
 
             throw new BulkReportValidationException(Collections.singletonList(violation));
         }

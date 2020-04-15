@@ -25,7 +25,7 @@ public class FrsPredicates {
         note EIS came back as well as an extra programId 536111
          */
 
-        return pi -> FrsApiClient.EISProgramAcronym.equals(pi.getProgramSystemAcronym())
+        return pi -> FrsApiClient.EIS_PROGRAM_ACRONYM.equals(pi.getProgramSystemAcronym())
             && eisProgramId.equals(pi.getProgramSystemId());
     }
 }

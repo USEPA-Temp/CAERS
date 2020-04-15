@@ -95,7 +95,7 @@ export class ReleasePointApportionmentModalComponent implements OnInit {
               this.duplicateCheck = false;
               event.target.disabled = false;
               // tslint:disable-next-line: max-line-length
-              this.toastr.error('', 'This Emissions Process already contains this Release Point Apportionment, duplicates are not allowed.', {positionClass: 'toast-top-right'});
+              this.toastr.error('', 'This Emissions Process already contains this Release Point Apportionment, duplicates are not allowed.');
             }
           }
         });
