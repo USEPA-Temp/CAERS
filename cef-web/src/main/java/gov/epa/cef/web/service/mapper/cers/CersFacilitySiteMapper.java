@@ -41,12 +41,12 @@ public interface CersFacilitySiteMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="streetAddress", target="locationAddressText")
     @Mapping(source="city", target="localityName")
-    @Mapping(source="stateCode", target="locationAddressStateCode")
+    @Mapping(source="stateCode.uspsCode", target="locationAddressStateCode")
     @Mapping(source="postalCode", target="locationAddressPostalCode")
     @Mapping(source="countryCode", target="locationAddressCountryCode")
     @Mapping(source="mailingStreetAddress", target="mailingAddressText")
     @Mapping(source="mailingCity", target="mailingAddressCityName")
-    @Mapping(source="mailingStateCode", target="mailingAddressStateCode")
+    @Mapping(source="mailingStateCode.uspsCode", target="mailingAddressStateCode")
     @Mapping(source="mailingPostalCode", target="mailingAddressPostalCode")
     AddressDataType addressFromFacilitySite(FacilitySite source);
 

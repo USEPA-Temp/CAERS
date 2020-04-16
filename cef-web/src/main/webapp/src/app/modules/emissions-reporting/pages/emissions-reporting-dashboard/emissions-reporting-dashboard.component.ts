@@ -12,6 +12,7 @@ import { FacilitySiteService } from 'src/app/core/services/facility-site.service
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { LookupService } from 'src/app/core/services/lookup.service';
+import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -140,12 +141,14 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                   }
               });
               this.facilitySite.streetAddress = this.facility.address;
-              this.facilitySite.stateCode = this.facility.state;
+              this.facilitySite.stateCode = new FipsStateCode();
+              this.facilitySite.stateCode.uspsCode = this.facility.state;
               this.facilitySite.statusYear = new Date().getFullYear();
               this.facilitySite.frsFacilityId = this.facility.epaRegistryId;
               this.facilitySite.postalCode = this.facility.zipCode;
               this.facilitySite.mailingStreetAddress = this.facility.address;
-              this.facilitySite.mailingStateCode = this.facility.state;
+              this.facilitySite.mailingStateCode = new FipsStateCode();
+              this.facilitySite.mailingStateCode.uspsCode = this.facility.state;
               this.facilitySite.mailingCity = this.facility.city;
               this.facilitySite.mailingPostalCode = this.facility.zipCode;
               this.facilitySite.altSiteIdentifier = this.facility.stateFacilityId;

@@ -143,7 +143,16 @@ public abstract class LookupEntityMapper {
     @Named("FipsStateCode")
     public FipsStateCode dtoToFipsStateCode(FipsStateCodeDto source) {
         if (source != null) {
-            return repos.stateCodeRepo().findById(source.getCode()).orElse(null);
+            
+            FipsStateCode result = null;
+            if (source.getCode() != null) {
+                result = repos.stateCodeRepo().findById(source.getCode()).orElse(null);
+            }
+            if (result == null && source.getUspsCode() != null) {
+                result = repos.stateCodeRepo().findByUspsCode(source.getUspsCode()).orElse(null);
+            }
+            
+            return result;
         }
         return null;
     }

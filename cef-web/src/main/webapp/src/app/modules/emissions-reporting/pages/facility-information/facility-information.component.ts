@@ -83,8 +83,6 @@ export class FacilityInformationComponent implements OnInit {
       updatedFacilitySite.frsFacilityId = this.facilitySite.frsFacilityId;
       updatedFacilitySite.eisProgramId = this.facilitySite.eisProgramId;
       updatedFacilitySite.programSystemCode = this.facilitySite.programSystemCode;
-      updatedFacilitySite.mailingStateCode = this.facilitySiteComponent.facilitySiteForm.value.mailingStateCode.uspsCode;
-      updatedFacilitySite.stateCode = this.facilitySiteComponent.facilitySiteForm.value.stateCode.uspsCode;
 
       this.facilityService.update(updatedFacilitySite)
       .subscribe(result => {

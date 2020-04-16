@@ -154,7 +154,9 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		fs.setLongitude(BigDecimal.valueOf(2.5d));
 		fs.setStreetAddress("123 Test St");
 		fs.setCity("Fitzgerald");
-		fs.setStateCode("GA");
+		fs.setStateCode(new FipsStateCode());
+		fs.getStateCode().setCode("13");
+		fs.getStateCode().setUspsCode("GA");
 
 		OperatingStatusCode status = new OperatingStatusCode();
 		status.setCode("OP");

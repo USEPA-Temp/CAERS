@@ -118,16 +118,9 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     this.lookupService.retrieveFipsStateCode()
     .subscribe(result => {
       this.fipsStateCode = result;
-      result.forEach(item => {
 
-        if (this.facilitySite.mailingStateCode && item.uspsCode == this.facilitySite.mailingStateCode) {
-          this.facilitySiteForm.controls['mailingStateCode'].setValue(item);
-        }
-
-        if (this.facilitySite.stateCode && item.uspsCode == this.facilitySite.stateCode) {
-          this.facilitySiteForm.controls['stateCode'].setValue(item);
-        }
-      });
+      // required to trigger a fetch of counties
+      this.facilitySiteForm.get('stateCode').updateValueAndValidity();
     });
   }
 
