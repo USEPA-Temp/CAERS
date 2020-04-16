@@ -4,6 +4,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.client.frs.iptquery.model.Contact;
@@ -33,13 +34,18 @@ public class FrsFacilityApiTransforms {
             result.setName(pf.getPrimaryName());
             result.setStreetAddress(pf.getLocationAddress());
             result.setCity(pf.getCityName());
-            result.setStateCode(pf.getStateCode());
+//            result.setStateCode(pf.getStateCode());
             result.setPostalCode(pf.getPostalCode());
             result.setCountryCode(pf.getCountryISO31661Alpha2());
 
             result.setStatusYear(pf.getOperatingStatusYear() == null ? null : pf.getOperatingStatusYear().shortValue());
 
             result.setCountyCode(createCounty(pf.getCountyFIPSCode()));
+
+            // placeholder until this code is deleted
+            result.setStateCode(new FipsStateCode());
+            result.getStateCode().setCode("13");
+            result.getStateCode().setUspsCode("GA");
 
             result.setOperatingStatusCode(createOperatingStatus(pf.getOperatingStatus()));
 

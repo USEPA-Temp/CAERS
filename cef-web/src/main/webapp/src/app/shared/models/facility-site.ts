@@ -6,6 +6,7 @@ import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { Control } from 'src/app/shared/models/control';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
+import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 
 export class FacilitySite {
   id: number;
@@ -16,12 +17,12 @@ export class FacilitySite {
   longitude: number;
   streetAddress: string;
   city: string;
-  stateCode: string;
+  stateCode: FipsStateCode;
   postalCode: string;
   countyCode: FipsCounty;
   mailingStreetAddress: string;
   mailingCity: string;
-  mailingStateCode: string;
+  mailingStateCode: FipsStateCode;
   mailingPostalCode: string;
   operatingStatusCode: BaseCodeLookup;
   facilityNAICS: FacilityNaicsCode[];

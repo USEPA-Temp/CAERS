@@ -95,14 +95,14 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                     ValidationField.FACILITY_COUNTY.value(), "facilitySite.county.required",
                     createValidationDetails(facilitySite));
 
-        } else if (!facilitySite.getCountyCode().getFipsStateCode().getUspsCode().equals(facilitySite.getStateCode())) {
+        } else if (!facilitySite.getCountyCode().getFipsStateCode().getUspsCode().equals(facilitySite.getStateCode().getUspsCode())) {
 
             result = false;
             context.addFederalError(
                     ValidationField.FACILITY_COUNTY.value(), "facilitySite.county.invalidState",
                     createValidationDetails(facilitySite),
                     facilitySite.getCountyCode().getName(),
-                    facilitySite.getStateCode());
+                    facilitySite.getStateCode().getUspsCode());
         }
 
         // Postal codes must be entered as 5 digits (XXXXX) or 9 digits (XXXXX-XXXX).

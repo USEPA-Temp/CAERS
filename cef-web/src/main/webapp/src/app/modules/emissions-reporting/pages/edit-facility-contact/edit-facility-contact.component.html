@@ -157,18 +157,28 @@
             </div>
           </div>
 
-          <div class="row pb-2">
+          <div class="row">
+            <div class="col">
+              <div class="float-left form-group form-check">
+                  <input type="checkbox" class="form-check-input" id="mailingSameAsContactAddress" [checked]="sameAddress" (change)="setMailAddress()">
+                  <label for="mailingSameAsContactAddress" class="form-check-label"><strong>Make mailing address the same as contact address.</strong></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row pb-2" *ngIf="!sameAddress">
             <label for="mailingStreetAddress" class="col-sm-4 col-lg-2 col-form-label"><strong>Mailing Street Address:</strong></label>
             <div class="col-sm-8 col-lg-10">
-              <input type="text" class="form-control" id="mailingStreetAddress" formControlName="mailingStreetAddress" [value]="contactForm.value.contact?.mailingStreetAddress" maxlength="100">
+              <input type="text" class="form-control" id="mailingStreetAddress" formControlName="mailingStreetAddress"
+              [value]="contactForm.value.mailingStreetAddress" maxlength="100">
               <app-validation-message [control]="contactForm.controls.mailingStreetAddress"></app-validation-message>
             </div>
           </div>
 
-          <div class="row pb-2">
+          <div class="row pb-2" *ngIf="!sameAddress">
             <label for="mailingCity" class="col-sm-4 col-lg-2 col-form-label"><strong>City:</strong></label>
             <div class="col-sm-8 col-lg-4">
-              <input type="text" class="form-control" id="mailingCity" formControlName="mailingCity" [value]="contactForm.value.contact?.mailingCity" maxlength="60">
+              <input type="text" class="form-control" id="mailingCity" formControlName="mailingCity" [value]="contactForm.value.mailingCity" maxlength="60">
               <app-validation-message [control]="contactForm.controls.mailingCity"></app-validation-message>
               <div class="validation-message" *ngIf="contactForm.getError('mailingStreetAddress')">
                   This field is required for mailing address.
@@ -187,10 +197,10 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" *ngIf="!sameAddress">
             <label for="mailingPostalCode" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
             <div class="col-sm-8 col-lg-2">
-              <input type="text" class="form-control" id="mailingPostalCode" formControlName="mailingPostalCode" [value]="contactForm.value.contact?.mailingPostalCode" maxlength="10">
+              <input type="text" class="form-control" id="mailingPostalCode" formControlName="mailingPostalCode" [value]="contactForm.value.mailingPostalCode" maxlength="10">
               <app-validation-message [control]="contactForm.controls.mailingPostalCode"></app-validation-message>
               <div class="validation-message" *ngIf="contactForm.getError('mailingStreetAddress')">
                   This field is required for mailing address.

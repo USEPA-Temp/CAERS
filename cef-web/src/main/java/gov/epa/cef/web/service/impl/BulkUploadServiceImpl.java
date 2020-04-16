@@ -529,7 +529,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     .replaceAll(EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "")
                     .replaceAll(EmissionsReport.class.getPackage().getName().concat("."), "");
 
-                WorksheetError violation = new WorksheetError("*", -1, msg);
+                WorksheetError violation = WorksheetError.createSystemError(msg);
 
                 throw new BulkReportValidationException(Collections.singletonList(violation));
             }
@@ -537,9 +537,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         } else {
 
             List<WorksheetError> errors = new ArrayList<>();
-            errors.add(new WorksheetError(null, -1, "Unable to read workbook."));
+            errors.add(WorksheetError.createSystemError("Unable to read workbook."));
             if (response.getJson() != null && response.getJson().hasNonNull("message")) {
-                errors.add(new WorksheetError(null, -1, response.getJson().path("message").asText()));
+
+                errors.add(WorksheetError.createSystemError(response.getJson().path("message").asText()));
             }
 
             throw new BulkReportValidationException(errors);
@@ -728,14 +729,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setStatusYear(bulkFacility.getStatusYear());
         facility.setStreetAddress(bulkFacility.getStreetAddress());
         facility.setCity(bulkFacility.getCity());
-        facility.setStateCode(bulkFacility.getStateCode());
         facility.setCountryCode(bulkFacility.getCountryCode());
         facility.setPostalCode(bulkFacility.getPostalCode());
         facility.setLatitude(bulkFacility.getLatitude());
         facility.setLongitude(bulkFacility.getLongitude());
         facility.setMailingStreetAddress(bulkFacility.getMailingStreetAddress());
         facility.setMailingCity(bulkFacility.getMailingCity());
-        facility.setMailingStateCode(bulkFacility.getMailingStateCode());
         facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
         facility.setEisProgramId(bulkFacility.getEisProgramId());
         facility.setComments(bulkFacility.getComments());
@@ -756,11 +755,14 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             facility.setTribalCode(tribalCodeRepo.findById(bulkFacility.getTribalCode()).orElse(null));
         }
 
-        if (Strings.emptyToNull(bulkFacility.getStateCode()) != null && Strings.emptyToNull(bulkFacility.getCountyCode()) != null) {
-            FipsStateCode stateCode = stateCodeRepo.findByUspsCode(bulkFacility.getStateCode()).orElse(null);
-            if (stateCode != null) {
-                facility.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(stateCode.getCode(), bulkFacility.getCountyCode()).orElse(null));
+        if (bulkFacility.getStateCode() != null) {
+            facility.setStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getStateCode())).orElse(null));
+            if (facility.getStateCode() != null && Strings.emptyToNull(bulkFacility.getCountyCode()) != null) {
+                facility.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(facility.getStateCode().getCode(), bulkFacility.getCountyCode()).orElse(null));
             }
+        }
+        if (bulkFacility.getMailingStateCode() != null) {
+            facility.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getMailingStateCode())).orElse(null));
         }
 
         return facility;
@@ -963,7 +965,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             String msg = e.getMessage().replaceAll(
                 EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
 
-            WorksheetError violation = new WorksheetError("*", -1, msg);
+            WorksheetError violation = WorksheetError.createSystemError(msg);
 
             throw new BulkReportValidationException(Collections.singletonList(violation));
         }

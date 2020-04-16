@@ -48,7 +48,7 @@ public class FacilitySiteContact extends BaseAuditEntity {
     private String city;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_code", referencedColumnName = "usps_code", nullable = false)
+    @JoinColumn(name = "state_code", nullable = false)
     private FipsStateCode stateCode;
 
     @Column(name = "country_code", length = 10)
@@ -68,7 +68,7 @@ public class FacilitySiteContact extends BaseAuditEntity {
     private String mailingCity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mailing_state_code", referencedColumnName = "usps_code", nullable = false)
+    @JoinColumn(name = "mailing_state_code")
     private FipsStateCode mailingStateCode;
 
     @Column(name = "mailing_postal_code", length = 10)
