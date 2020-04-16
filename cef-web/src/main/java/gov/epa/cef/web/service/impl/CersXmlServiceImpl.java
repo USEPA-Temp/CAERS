@@ -163,7 +163,8 @@ public class CersXmlServiceImpl implements CersXmlService {
 				//add a new control measure to the control measure list
 				if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
 					ControlMeasureDataType cm = new ControlMeasureDataType();
-					cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getDescription());
+					cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getCode());
+					cm.setControlMeasureSequence(assignment.getSequenceNumber().toString());
 					ca.getControlMeasure().add(cm);
 				}
 
