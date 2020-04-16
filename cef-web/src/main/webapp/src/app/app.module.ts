@@ -18,7 +18,7 @@ import { SubmissionReviewDashboardComponent } from 'src/app/modules/dashboards/p
 import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/components/submission-review-list/submission-review-list.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/redirect.component';
 import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
 import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
@@ -89,6 +89,6 @@ import { HelpPageComponent } from './modules/dashboards/pages/help-page/help-pag
 })
 export class AppModule {
     constructor() {
-        library.add(faUserCircle);
+        library.add(faUserCircle, faQuestionCircle);
       }
 }

@@ -1,15 +1,23 @@
 <form [formGroup]="controlDeviceForm">
     <div class="row pb-1">
-        <label for="controlIdentifierInput" class="col-sm-6 col-md-2 col-form-label"><strong>Control ID:</strong></label>
-        <div class="col-sm-6 col-md-2">
+
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="The identifier of the control, given by the facility." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="controlIdentifierInput" class="ml-1 col-form-label" ><strong>Control ID:</strong></label>
+        </div>
+        <div class="col-sm-3">
             <input [readonly]="control" type="text" class="form-control" maxlength="20" id="controlIdentifierInput" formControlName="identifier">
             <app-validation-message [control]="controlDeviceForm.get('identifier')"></app-validation-message>
             <div class="validation-message" *ngIf="controlDeviceForm.errors?.duplicateControlIdentifier">
                 Control Identifier must be unique within the facility. 
             </div>
         </div>
-        <label for="controlStatusCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Operating Status:</strong></label>
-        <div class="col-sm-6 col-md-2">
+
+        <div class="col-sm-2">
+            <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="controlStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
+        </div>
+        <div class="col-sm-3">
             <select type="text" class="form-control" id="controlStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
@@ -22,37 +30,58 @@
                 If the facility site  status is Permanently Shutdown then each sub-facility component must also be Permanently Shutdown.            
             </div>
         </div>
-        <label for="percentCaptureInput" class="col-sm-6 col-md-2 col-form-label"><strong>Percent Capture:</strong></label>
-        <div class="col-sm-6 col-md-2">
+
+    </div>
+    <div class="row pb-1">
+
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="An estimate of that portion of an affected emission stream that is collected and routed to the control measures when the capture or collection system is operating as designed, reported as a percent." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="percentCaptureInput" class="ml-1 col-form-label"><strong>Percent Capture:</strong></label>
+        </div>
+        <div class="col-sm-3">
             <input type="text" class="form-control" maxlength="5" id="percentCaptureInput" formControlName="percentCapture">
             <app-validation-message [control]="controlDeviceForm.get('percentCapture')"></app-validation-message>
         </div>
-    </div>
-    <div class="row pb-1">
-        <label for="controlMeasureCodeSelect" class="col-sm-6 col-md-2 col-form-label"><strong>Control Measure:</strong></label>
-        <div class="col-sm-6 col-md-6">
+
+        <div class="col-sm-2">
+            <fa-icon class="ml-2 mt-2" title="Code that describes the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="controlMeasureCodeSelect" class="ml-1 col-form-label"><strong>Control Measure:</strong></label>
+        </div>
+        <div class="col-sm-3">
             <select type="text" class="form-control" id="controlMeasureCodeSelect" formControlName="controlMeasureCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of controlMeasureCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="controlDeviceForm.get('controlMeasureCode')"></app-validation-message>
         </div>
-        <label for="percentControlInput" class="col-sm-6 col-md-2 col-form-label"><strong>Percent Control Effectiveness:</strong></label>
-        <div class="col-sm-6 col-md-2">
+
+    </div>
+    <div class="row pb-1">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="An estimate of the portion of the reporting period's activity for which the overall control system or approach (including both capture and control measures) were operating as designed (regardless of whether the control measure is due to rule or voluntary)." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="percentControlInput" class="ml-1 col-form-label"><strong>Percent Control Effectiveness:</strong></label>
+        </div>       
+        <div class="col-sm-3">
             <input type="text" class="form-control" maxlength="5" id="percentControlInput" formControlName="percentControl">
             <app-validation-message [control]="controlDeviceForm.get('percentControl')"></app-validation-message>
         </div>
     </div>
-    <div class="row pb-1">
-        <label for="descriptionInput" class="col-sm-6 col-md-2 col-form-label"><strong>Control Description:</strong></label>
-        <div class="col-sm-6 col-md-10">
-            <textarea rows="3" class="form-control" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
+    <div class="row pb-1 mt-2">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="Description of the Control Measure" [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="descriptionInput" class="ml-1 col-form-label"><strong>Control Description:</strong></label>
+        </div>
+        <div class="col-sm-6">
+            <textarea rows="3" class="mb-2 form-control" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
             <app-validation-message [control]="controlDeviceForm.get('description')"></app-validation-message>
         </div>
     </div>
     <div class="row pb-1">
-        <label for="controlCommentsInput" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
-        <div class="col-sm-6 col-md-10">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="controlCommentsInput" class="ml-1 col-form-label"><strong>Comments:</strong></label>
+        </div>
+        <div class="col-sm-6">
             <textarea rows="3" class="form-control" style="height:100%;" maxlength="400" id="controlCommentsInput" formControlName="comments"></textarea>
             <app-validation-message [control]="controlDeviceForm.get('comments')"></app-validation-message>
         </div>

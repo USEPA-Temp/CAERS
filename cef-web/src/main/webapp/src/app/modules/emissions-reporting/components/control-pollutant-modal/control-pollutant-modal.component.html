@@ -4,17 +4,26 @@
     </div>
 
     <div class="modal-body" style="height: 350px;">
-        <label for="pollutantSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant:</strong></label>
-            <div class="col-sm-8 col-lg-10">
+        <div class="row pb-1">
+            <div class="col-sm-4">
+                <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+                <label for="pollutantSelect" class="ml-1 col-form-label"><strong>Pollutant:</strong></label>
+            </div>
+            <div class="col-sm-6">
                 <input [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
                 <app-validation-message [control]="pollutantForm.get('pollutant')"></app-validation-message>
             </div>
-        <br>
-        <label for="percentReductionSelect" class="col-sm-4 col-lg-4 col-form-label"><strong>Percent Reduction Efficiency:</strong></label>
-            <div class="col-sm-8 col-lg-10">
+        </div>
+        <div class="row pb-1">
+            <div class="col-sm-4">
+                <fa-icon class="mt-2 ml-2" title="An estimate of that portion of an affected emission stream that is collected and routed to the control measures when the capture or collection system is operating as designed, reported as a percent." [icon]="['fas', 'question-circle']"></fa-icon>
+                <label for="percentReductionSelect" class="ml-1 col-form-label"><strong>Percent Reduction Efficiency:</strong></label>
+            </div>
+            <div class="col-sm-6">
                 <input id="percentReductionSelect" class="form-control" formControlName="percentReduction" maxlength="4"/>
                 <app-validation-message [control]="pollutantForm.get('percentReduction')"></app-validation-message>
             </div>
+        </div>
     </div>
 
     <div class="modal-footer">
