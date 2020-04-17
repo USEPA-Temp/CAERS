@@ -1,11 +1,10 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
@@ -23,18 +22,22 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
 
     private boolean totalManualEntry;
 
-    @Digits(integer = 2, fraction = 6,
-        message = "Overall Control Percent is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private BigDecimal overallControlPercent;
+    @Pattern(regexp = "^\\d{0,2}(\\.\\d{1,6})?$",
+        message = "Overall Control Percent is not in expected numeric format: '{2}.{6}' digits; found '${validatedValue}'.")
+    private String overallControlPercent;
 
-    @NotNull(message = "Total Emissions is required.")
-    private BigDecimal totalEmissions;
+    @NotBlank(message = "Total Emissions is required.")
+    @Pattern(regexp = PositiveDecimalPattern,
+        message = "Total Emissions is not in expected numeric format; found '${validatedValue}'.")
+    private String totalEmissions;
 
     @NotBlank(message = "Emissions Unit of Measure is required.")
     @Size(max = 20, message = "Emissions Unit of Measure can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsUomCode;
 
-    private BigDecimal emissionsFactor;
+    @Pattern(regexp = PositiveDecimalPattern,
+        message = "Emissions Factor is not in expected numeric format; found '${validatedValue}'.")
+    private String emissionsFactor;
 
     @Size(max = 100, message = "Emissions Factor Formula can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsFactorFormula;
@@ -58,7 +61,9 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @Size(max = 20, message = "Emissions Denominator UoM Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsDenominatorUom;
 
-    private BigDecimal calculatedEmissionsTons;
+    @Pattern(regexp = PositiveDecimalPattern,
+        message = "Calculated Emissions Tons is not in expected numeric format; found '${validatedValue}'.")
+    private String calculatedEmissionsTons;
 
     public EmissionBulkUploadDto() {
 
@@ -93,17 +98,17 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.totalManualEntry = totalManualEntry;
     }
 
-    public BigDecimal getOverallControlPercent() {
+    public String getOverallControlPercent() {
         return overallControlPercent;
     }
-    public void setOverallControlPercent(BigDecimal overallControlPercent) {
+    public void setOverallControlPercent(String overallControlPercent) {
         this.overallControlPercent = overallControlPercent;
     }
 
-    public BigDecimal getTotalEmissions() {
+    public String getTotalEmissions() {
         return totalEmissions;
     }
-    public void setTotalEmissions(BigDecimal totalEmissions) {
+    public void setTotalEmissions(String totalEmissions) {
         this.totalEmissions = totalEmissions;
     }
 
@@ -114,10 +119,10 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.emissionsUomCode = emissionsUomCode;
     }
 
-    public BigDecimal getEmissionsFactor() {
+    public String getEmissionsFactor() {
         return emissionsFactor;
     }
-    public void setEmissionsFactor(BigDecimal emissionsFactor) {
+    public void setEmissionsFactor(String emissionsFactor) {
         this.emissionsFactor = emissionsFactor;
     }
 
@@ -149,10 +154,10 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.calculationComment = calculationComment;
     }
 
-    public BigDecimal getCalculatedEmissionsTons() {
+    public String getCalculatedEmissionsTons() {
         return calculatedEmissionsTons;
     }
-    public void setCalculatedEmissionsTons(BigDecimal calculatedEmissionsTons) {
+    public void setCalculatedEmissionsTons(String calculatedEmissionsTons) {
         this.calculatedEmissionsTons = calculatedEmissionsTons;
     }
 

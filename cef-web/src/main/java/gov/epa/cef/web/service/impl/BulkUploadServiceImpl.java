@@ -347,13 +347,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                                             Emission emission = mapEmission(bulkEmission);
 
                                             List<EmissionFormulaVariable> variables = bulkEmissionsReport.getEmissionFormulaVariables().stream()
-                                                    .filter(efv -> bulkEmission.getId().equals(efv.getEmissionId()))
-                                                    .map(bulkVariable -> {
-                                                        EmissionFormulaVariable variable = mapEmissionFormulaVariable(bulkVariable);
-                                                        variable.setEmission(emission);
+                                                .filter(efv -> bulkEmission.getId().equals(efv.getEmissionId()))
+                                                .map(bulkVariable -> {
+                                                    EmissionFormulaVariable variable = mapEmissionFormulaVariable(bulkVariable);
+                                                    variable.setEmission(emission);
 
-                                                        return variable;
-                                                    }).collect(Collectors.toList());
+                                                    return variable;
+                                                }).collect(Collectors.toList());
 
                                             emission.setReportingPeriod(period);
                                             emission.setVariables(variables);
@@ -361,7 +361,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                                             if (Boolean.TRUE.equals(emission.getFormulaIndicator()) && !emission.getVariables().isEmpty()) {
                                                 try {
                                                     emission.setEmissionsFactor(CalculationUtils.calculateEmissionFormula(emission.getEmissionsFactorFormula(), emission.getVariables()));
-                                                }catch (CalculationException e) {
+                                                } catch (CalculationException e) {
                                                     // TODO: handle exception
                                                 }
                                             }
@@ -651,6 +651,18 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         return result;
     }
 
+    private EmissionFormulaVariable mapEmissionFormulaVariable(EmissionFormulaVariableBulkUploadDto dto) {
+
+        EmissionFormulaVariable result = new EmissionFormulaVariable();
+        result.setValue(toBigDecimal(dto.getValue()));
+
+        if (dto.getEmissionFormulaVariableCode() != null) {
+            result.setVariableCode(emissionFormulaVariableCodeRepo.findById(dto.getEmissionFormulaVariableCode()).orElse(null));
+        }
+
+        return result;
+    }
+
     /**
      * Map an EmissionsProcessBulkUploadDto to an EmissionsProcess domain model
      */
@@ -698,8 +710,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         emissionsUnit.setUnitIdentifier(bulkEmissionsUnit.getUnitIdentifier());
         emissionsUnit.setDescription(bulkEmissionsUnit.getDescription());
-        emissionsUnit.setStatusYear(bulkEmissionsUnit.getStatusYear());
-        emissionsUnit.setDesignCapacity(bulkEmissionsUnit.getDesignCapacity());
+        emissionsUnit.setStatusYear(toShort(bulkEmissionsUnit.getStatusYear()));
+        emissionsUnit.setDesignCapacity(toBigDecimal(bulkEmissionsUnit.getDesignCapacity()));
         emissionsUnit.setComments(bulkEmissionsUnit.getComments());
 
         if (bulkEmissionsUnit.getTypeCode() != null) {
@@ -726,14 +738,14 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setAltSiteIdentifier(bulkFacility.getAltSiteIdentifier());
         facility.setName(bulkFacility.getName());
         facility.setDescription(bulkFacility.getDescription());
-        facility.setStatusYear(bulkFacility.getStatusYear());
+        facility.setStatusYear(toShort(bulkFacility.getStatusYear()));
         facility.setStreetAddress(bulkFacility.getStreetAddress());
         facility.setCity(bulkFacility.getCity());
         facility.setStateCode(bulkFacility.getStateCode());
         facility.setCountryCode(bulkFacility.getCountryCode());
         facility.setPostalCode(bulkFacility.getPostalCode());
-        facility.setLatitude(bulkFacility.getLatitude());
-        facility.setLongitude(bulkFacility.getLongitude());
+        facility.setLatitude(toBigDecimal(bulkFacility.getLatitude()));
+        facility.setLongitude(toBigDecimal(bulkFacility.getLongitude()));
         facility.setMailingStreetAddress(bulkFacility.getMailingStreetAddress());
         facility.setMailingCity(bulkFacility.getMailingCity());
         facility.setMailingStateCode(bulkFacility.getMailingStateCode());
@@ -814,8 +826,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         facilityNAICS.setPrimaryFlag(bulkFacilityNAICS.isPrimaryFlag());
 
-        if (bulkFacilityNAICS.getCode() != null) {
-            facilityNAICS.setNaicsCode((naicsCodeRepo.findById(bulkFacilityNAICS.getCode())).orElse(null));
+        Integer naics = toInt(bulkFacilityNAICS.getCode());
+        if (naics != null) {
+            facilityNAICS.setNaicsCode((naicsCodeRepo.findById(naics)).orElse(null));
         }
 
         return facilityNAICS;
@@ -840,24 +853,24 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         releasePoint.setReleasePointIdentifier(bulkReleasePoint.getReleasePointIdentifier());
         releasePoint.setDescription(bulkReleasePoint.getDescription());
-        releasePoint.setStackHeight(bulkReleasePoint.getStackHeight());
-        releasePoint.setStackDiameter(bulkReleasePoint.getStackDiameter());
-        releasePoint.setExitGasVelocity(bulkReleasePoint.getExitGasVelocity());
-        releasePoint.setExitGasTemperature(bulkReleasePoint.getExitGasTemperature());
-        releasePoint.setExitGasFlowRate(bulkReleasePoint.getExitGasFlowRate());
-        releasePoint.setStatusYear(bulkReleasePoint.getStatusYear());
-        releasePoint.setFugitiveLine1Latitude(bulkReleasePoint.getFugitiveLine1Latitude());
-        releasePoint.setFugitiveLine1Longitude(bulkReleasePoint.getFugitiveLine1Longitude());
-        releasePoint.setFugitiveLine2Latitude(bulkReleasePoint.getFugitiveLine2Latitude());
-        releasePoint.setFugitiveLine2Longitude(bulkReleasePoint.getFugitiveLine2Longitude());
-        releasePoint.setLatitude(bulkReleasePoint.getLatitude());
-        releasePoint.setLongitude(bulkReleasePoint.getLongitude());
+        releasePoint.setStackHeight(toDouble(bulkReleasePoint.getStackHeight()));
+        releasePoint.setStackDiameter(toDouble(bulkReleasePoint.getStackDiameter()));
+        releasePoint.setExitGasVelocity(toDouble(bulkReleasePoint.getExitGasVelocity()));
+        releasePoint.setExitGasTemperature(toShort(bulkReleasePoint.getExitGasTemperature()));
+        releasePoint.setExitGasFlowRate(toDouble(bulkReleasePoint.getExitGasFlowRate()));
+        releasePoint.setStatusYear(toShort(bulkReleasePoint.getStatusYear()));
+        releasePoint.setFugitiveLine1Latitude(toDouble(bulkReleasePoint.getFugitiveLine1Latitude()));
+        releasePoint.setFugitiveLine1Longitude(toDouble(bulkReleasePoint.getFugitiveLine1Longitude()));
+        releasePoint.setFugitiveLine2Latitude(toDouble(bulkReleasePoint.getFugitiveLine2Latitude()));
+        releasePoint.setFugitiveLine2Longitude(toDouble(bulkReleasePoint.getFugitiveLine2Longitude()));
+        releasePoint.setLatitude(toDouble(bulkReleasePoint.getLatitude()));
+        releasePoint.setLongitude(toDouble(bulkReleasePoint.getLongitude()));
         releasePoint.setComments(bulkReleasePoint.getComments());
-        releasePoint.setFugitiveHeight(bulkReleasePoint.getFugitiveHeight());
-        releasePoint.setFugitiveWidth(bulkReleasePoint.getFugitiveWidth());
-        releasePoint.setFugitiveLength(bulkReleasePoint.getFugitiveLength());
-        releasePoint.setFugitiveAngle(bulkReleasePoint.getFugitiveAngle());
-        releasePoint.setFenceLineDistance(bulkReleasePoint.getFenceLineDistance());
+        releasePoint.setFugitiveHeight(toLong(bulkReleasePoint.getFugitiveHeight()));
+        releasePoint.setFugitiveWidth(toLong(bulkReleasePoint.getFugitiveWidth()));
+        releasePoint.setFugitiveLength(toLong(bulkReleasePoint.getFugitiveLength()));
+        releasePoint.setFugitiveAngle(toLong(bulkReleasePoint.getFugitiveAngle()));
+        releasePoint.setFenceLineDistance(toLong(bulkReleasePoint.getFenceLineDistance()));
 
         if (bulkReleasePoint.getOperatingStatusCode() != null) {
             releasePoint.setOperatingStatusCode(operatingStatusRepo.findById(bulkReleasePoint.getOperatingStatusCode()).orElse(null));
@@ -929,18 +942,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         return result;
     }
 
-    private EmissionFormulaVariable mapEmissionFormulaVariable(EmissionFormulaVariableBulkUploadDto dto) {
-
-        EmissionFormulaVariable result = new EmissionFormulaVariable();
-        result.setValue(dto.getValue());
-
-        if (dto.getEmissionFormulaVariableCode() != null) {
-            result.setVariableCode(emissionFormulaVariableCodeRepo.findById(dto.getEmissionFormulaVariableCode()).orElse(null));
-        }
-
-        return result;
-    }
-
     private EmissionsReportBulkUploadDto parseWorkbookJson(ExcelParserResponse response,
                                                            EmissionsReportStarterDto metadata) {
 
@@ -970,5 +971,30 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
 
         return result;
+    }
+
+    private BigDecimal toBigDecimal(String strval) {
+
+        return Strings.isNullOrEmpty(strval) ? null : new BigDecimal(strval);
+    }
+
+    private Double toDouble(String strval) {
+
+        return Strings.isNullOrEmpty(strval) ? null : Double.parseDouble(strval);
+    }
+
+    private Integer toInt(String strval) {
+
+        return Strings.isNullOrEmpty(strval) ? null : Integer.parseInt(strval);
+    }
+
+    private Long toLong(String strval) {
+
+        return Strings.isNullOrEmpty(strval) ? null : Long.parseLong(strval);
+    }
+
+    private Short toShort(String strval) {
+
+        return Strings.isNullOrEmpty(strval) ? null : Short.parseShort(strval);
     }
 }
