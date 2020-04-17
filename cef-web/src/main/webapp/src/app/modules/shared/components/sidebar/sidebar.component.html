@@ -1,7 +1,21 @@
 <div class="m-3" *ngIf="facility">
     <div class="pb-2 border-bottom border-dark">
         <div class="container">
-            <app-facility-info [facility]="facility"></app-facility-info>
+            <app-facility-info *ngIf="!facilitySite" [facility]="facility"></app-facility-info>
+            <div *ngIf="facilitySite">
+                <div class="row small">
+                    <strong>Agency ID: {{facilitySite?.altSiteIdentifier}}</strong>
+                </div>
+                <div class="row small">
+                    <strong>{{facilitySite?.name}}</strong>
+                </div>
+                <div class="row small">
+                    <span>{{facilitySite?.streetAddress}}</span>
+                </div>
+                <div class="row small">
+                    <span>{{facilitySite?.city}}, {{facilitySite?.stateCode.uspsCode}} {{facilitySite?.postalCode}}</span>
+                </div>
+            </div>
         </div>
         <div class="container" *ngIf="facilitySite && facilitySite.emissionsReport">
             <div class="row small">
