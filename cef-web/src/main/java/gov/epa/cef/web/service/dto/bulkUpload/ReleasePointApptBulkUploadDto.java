@@ -1,7 +1,8 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 public class ReleasePointApptBulkUploadDto extends BaseWorksheetDto implements Serializable{
@@ -17,10 +18,10 @@ public class ReleasePointApptBulkUploadDto extends BaseWorksheetDto implements S
     @NotNull(message = "Emission Process ID is required.")
     private Long emissionProcessId;
 
-    @NotNull(message = "Percent Apportionment is required.")
-    @Digits(integer = 3, fraction = 1,
-        message = "Percent is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double percent;
+    @NotBlank(message = "Percent Apportionment is required.")
+    @Pattern(regexp = PercentPattern,
+        message = "Percent is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String percent;
 
     private Long controlPathId;
 
@@ -50,10 +51,10 @@ public class ReleasePointApptBulkUploadDto extends BaseWorksheetDto implements S
         this.emissionProcessId = emissionProcessId;
     }
 
-    public Double getPercent() {
+    public String getPercent() {
         return percent;
     }
-    public void setPercent(Double percent) {
+    public void setPercent(String percent) {
         this.percent = percent;
     }
 

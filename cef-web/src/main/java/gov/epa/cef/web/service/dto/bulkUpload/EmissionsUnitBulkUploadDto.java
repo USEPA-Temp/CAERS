@@ -2,116 +2,151 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull(message = "Emissions Unit ID is required.")
-    private Long id;
-
-    @NotNull(message = "Facility Site ID is required.")
-    private Long facilitySiteId;
-
-    @NotBlank(message = "Unit Identifier is required.")
-    @Size(max = 20, message = "Unit Identifier can not exceed {max} chars; found '${validatedValue}'.")
-    private String unitIdentifier;
+    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
+    private String comments;
 
     @Size(max = 100, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
 
-    @NotBlank(message = "Type Code is required.")
-    @Size(max = 20, message = "Type Code can not exceed {max} chars; found '${validatedValue}'.")
-    private String typeCode;
+    @Pattern(regexp = PositiveDecimalPattern,
+        message = "Design Capacity is not in expected numeric format; found '${validatedValue}'.")
+    private String designCapacity;
+
+    @NotNull(message = "Facility Site ID is required.")
+    private Long facilitySiteId;
+
+    @NotNull(message = "Emissions Unit ID is required.")
+    private Long id;
 
     @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCodeDescription;
 
-    private Short statusYear;
+    @Pattern(regexp = YearPattern,
+        message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
+    private String statusYear;
+
+    @NotBlank(message = "Type Code is required.")
+    @Size(max = 20, message = "Type Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String typeCode;
+
+    @NotBlank(message = "Unit Identifier is required.")
+    @Size(max = 20, message = "Unit Identifier can not exceed {max} chars; found '${validatedValue}'.")
+    private String unitIdentifier;
 
     @Size(max = 20, message = "Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String unitOfMeasureCode;
-
-    @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
-    private String comments;
-
-    private BigDecimal designCapacity;
 
     public EmissionsUnitBulkUploadDto() {
 
         super(WorksheetName.EmissionsUnit);
     }
 
-    public Long getId() {
-        return this.id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getTypeCode() {
-        return this.typeCode;
-    }
-    public void setTypeCode(String typeCode) {
-        this.typeCode = typeCode;
+    public String getComments() {
+
+        return comments;
     }
 
-    public String getOperatingStatusCodeDescription() {
-        return this.operatingStatusCodeDescription;
-    }
-    public void setOperatingStatusCodeDescription(String operatingStatusCodeDescription) {
-        this.operatingStatusCodeDescription = operatingStatusCodeDescription;
-    }
+    public void setComments(String comments) {
 
-    public Long getFacilitySiteId() {
-        return this.facilitySiteId;
-    }
-    public void setFacilitySiteId(Long facilitySiteId) {
-        this.facilitySiteId = facilitySiteId;
-    }
-
-    public String getUnitIdentifier() {
-        return this.unitIdentifier;
-    }
-    public void setUnitIdentifier(String unitIdentifier) {
-        this.unitIdentifier = unitIdentifier;
+        this.comments = comments;
     }
 
     public String getDescription() {
+
         return this.description;
     }
+
     public void setDescription(String description) {
+
         this.description = description;
     }
 
-    public Short getStatusYear() {
-        return this.statusYear;
-    }
-    public void setStatusYear(Short statusYear) {
-        this.statusYear = statusYear;
-    }
+    public String getDesignCapacity() {
 
-    public String getUnitOfMeasureCode() {
-        return this.unitOfMeasureCode;
-    }
-    public void setUnitOfMeasureCode(String unitOfMeasureCode) {
-        this.unitOfMeasureCode = unitOfMeasureCode;
-    }
-
-    public BigDecimal getDesignCapacity() {
         return designCapacity;
     }
-    public void setDesignCapacity(BigDecimal designCapacity) {
+
+    public void setDesignCapacity(String designCapacity) {
+
         this.designCapacity = designCapacity;
     }
 
-    public String getComments() {
-        return comments;
+    public Long getFacilitySiteId() {
+
+        return this.facilitySiteId;
     }
-    public void setComments(String comments) {
-        this.comments = comments;
+
+    public void setFacilitySiteId(Long facilitySiteId) {
+
+        this.facilitySiteId = facilitySiteId;
+    }
+
+    public Long getId() {
+
+        return this.id;
+    }
+
+    public void setId(Long id) {
+
+        this.id = id;
+    }
+
+    public String getOperatingStatusCodeDescription() {
+
+        return this.operatingStatusCodeDescription;
+    }
+
+    public void setOperatingStatusCodeDescription(String operatingStatusCodeDescription) {
+
+        this.operatingStatusCodeDescription = operatingStatusCodeDescription;
+    }
+
+    public String getStatusYear() {
+
+        return this.statusYear;
+    }
+
+    public void setStatusYear(String statusYear) {
+
+        this.statusYear = statusYear;
+    }
+
+    public String getTypeCode() {
+
+        return this.typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+
+        this.typeCode = typeCode;
+    }
+
+    public String getUnitIdentifier() {
+
+        return this.unitIdentifier;
+    }
+
+    public void setUnitIdentifier(String unitIdentifier) {
+
+        this.unitIdentifier = unitIdentifier;
+    }
+
+    public String getUnitOfMeasureCode() {
+
+        return this.unitOfMeasureCode;
+    }
+
+    public void setUnitOfMeasureCode(String unitOfMeasureCode) {
+
+        this.unitOfMeasureCode = unitOfMeasureCode;
     }
 }
