@@ -168,7 +168,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        	}
 	        }
 	        
-	        // Check exit gas flow rate if exit gas flow rate, exit gas velocity, and stack diameter is submitted.
+	        // Check exit gas flow rate if exit gas flow rate, exit gas velocity, and stack diameter are submitted.
 	        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocity() > 0)
 	        	&& (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
 	        	&& (releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)) {
@@ -187,8 +187,13 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        		uom= "ACFM";
 	        	}
 	        	
-	        	if (releasePoint.getExitGasFlowUomCode() != null && !"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
-	        		inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate()/60));
+	        	// set actual flow rate UoM to compare to computed flow rate
+	        	if (releasePoint.getExitGasFlowUomCode() != null) {
+	        		if (!"ACFS".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFS".contentEquals(uom)) {
+		        		inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate()/60));
+		        	} else if (!"ACFM".contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && "ACFM".contentEquals(uom)) {
+		        		inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate()*60));
+		        	}
 	        	}
 
 	        	lowerLimitFlowRate = BigDecimal.valueOf(0.95*calcFlowRate).setScale(8, RoundingMode.HALF_UP);

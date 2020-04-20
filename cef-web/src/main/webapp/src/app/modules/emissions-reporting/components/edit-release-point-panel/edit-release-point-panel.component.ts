@@ -486,10 +486,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.calculatedFlowRateUom = 'ACFM';
           }
 
-          if ((control.get('exitGasFlowUomCode').value !== null && control.get('exitGasFlowUomCode').value !== '')
-          && (control.get('exitGasFlowUomCode').value.code !== 'ACFS' && this.calculatedFlowRateUom === 'ACFS')) {
+          // set actual flow rate UoM to compare to computed flow rate
+          if (control.get('exitGasFlowUomCode').value !== null && control.get('exitGasFlowUomCode').value !== '') {
+            if (control.get('exitGasFlowUomCode').value.code !== 'ACFS' && this.calculatedFlowRateUom === 'ACFS') {
               actualFlowRate = exitFlowRate.value / 60; // acfm to acfs
+            } else if (control.get('exitGasFlowUomCode').value.code !== 'ACFM' && this.calculatedFlowRateUom === 'ACFM') {
+              actualFlowRate = exitFlowRate.value * 60; // acfs to acfm
             }
+          }
 
           // Compare to value with 0.00000001 precision
           const upperLimit = (Math.round((calculatedFlowRate * 1.05) * 100000000)) / 100000000; // cfs
@@ -500,7 +504,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             valid = false;
 
             // If user enters 0.00000001 and calculated flow is less than 0.000000001
-            // Min allowable actual flow rate user can enter is 0.0.000000001
+            // Min allowable actual flow rate user can enter is 0.000000001
             if ((actualFlowRate === 0.00000001 && upperLimit < 0.00000001)) {
               valid = true;
             }
