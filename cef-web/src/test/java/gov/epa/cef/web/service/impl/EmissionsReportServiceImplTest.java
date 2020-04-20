@@ -127,8 +127,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         programFacility.setProgramSystemAcronym("EIS");
         programFacility.setProgramSystemId("FRSDATA");
         programFacility.setAgencyId("Agency-FRSDATA");
-        when(facilitySiteService.retrieveFromFrs("FRSDATA"))
-            .thenReturn(Optional.of(programFacility));
 
         emissionsReportDto=new EmissionsReportDto();
         emissionsReportDtoList=new ArrayList<>();
