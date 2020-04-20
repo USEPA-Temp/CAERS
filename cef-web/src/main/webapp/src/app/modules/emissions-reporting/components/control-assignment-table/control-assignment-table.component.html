@@ -17,8 +17,8 @@
     <tbody>
       <ng-container *ngFor="let item of tableData">
         <tr>
-          <td>{{item.identifier}}</td>
-          <td><a routerLink="{{baseUrl}}/{{item.type}}/{{item.id}}">{{item.description}}</a></td>
+          <td><a routerLink="{{baseUrl}}/{{item.type}}/{{item.id}}">{{item.identifier}}</a></td>
+          <td>{{item.description}}</td>
           <td>{{item.typeDesc}}</td>
           <!-- Commented out for pilot 
             <ng-container *ngIf="!readOnlyMode">
