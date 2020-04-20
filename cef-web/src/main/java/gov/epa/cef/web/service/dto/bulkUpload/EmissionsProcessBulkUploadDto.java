@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -23,7 +24,9 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
 
-    private Short statusYear;
+    @Pattern(regexp = YearPattern,
+        message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
+    private String statusYear;
 
     @NotBlank(message = "SCC Code is required.")
     @Size(max = 20, message = "SCC Code can not exceed {max} chars; found '${validatedValue}'.")
@@ -84,10 +87,10 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.emissionsProcessIdentifier = emissionsProcessIdentifier;
     }
 
-    public Short getStatusYear() {
+    public String getStatusYear() {
         return statusYear;
     }
-    public void setStatusYear(Short statusYear) {
+    public void setStatusYear(String statusYear) {
         this.statusYear = statusYear;
     }
 

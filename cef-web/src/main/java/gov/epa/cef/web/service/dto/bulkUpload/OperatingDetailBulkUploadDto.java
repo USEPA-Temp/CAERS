@@ -1,7 +1,7 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Serializable{
@@ -17,33 +17,37 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
     @NotNull(message = "Reporting Period ID is required.")
     private Long reportingPeriodId;
 
-    private Short actualHoursPerPeriod;
+    @Pattern(regexp = PositiveShortPattern,
+        message = "Actual Hours Per Period is not in expected numeric format; found '${validatedValue}'.")
+    private String actualHoursPerPeriod;
 
-    @Digits(integer = 2, fraction = 1,
-        message = "Percent Apportionment is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double averageHoursPerDay;
+    @Pattern(regexp = "^\\d{0,2}(\\.\\d)?$",
+        message = "Average Hours Per Day is not in expected numeric format: '{2}.{1}' digits; found '${validatedValue}'.")
+    private String averageHoursPerDay;
 
-    @Digits(integer = 1, fraction = 1,
-        message = "Percent Apportionment is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double averageDaysPerWeek;
+    @Pattern(regexp = "^\\d*(\\.\\d)?$",
+        message = "Average Days Per Week is not in expected numeric format: '{1}.{1}' digits; found '${validatedValue}'.")
+    private String averageDaysPerWeek;
 
-    private Short averageWeeksPerPeriod;
+    @Pattern(regexp = PositiveShortPattern,
+        message = "Average Weeks Per Period is not in expected numeric format; found '${validatedValue}'.")
+    private String averageWeeksPerPeriod;
 
-    @Digits(integer = 3, fraction = 1,
-        message = "Percent Winter is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double percentWinter;
+    @Pattern(regexp = PercentPattern,
+        message = "Percent Winter is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String percentWinter;
 
-    @Digits(integer = 3, fraction = 1,
-        message = "Percent Spring is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double percentSpring;
+    @Pattern(regexp = PercentPattern,
+        message = "Percent Spring is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String percentSpring;
 
-    @Digits(integer = 3, fraction = 1,
-        message = "Percent Summer is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double percentSummer;
+    @Pattern(regexp = PercentPattern,
+        message = "Percent Summer is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String percentSummer;
 
-    @Digits(integer = 3, fraction = 1,
-        message = "Percent Fall is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double percentFall;
+    @Pattern(regexp = PercentPattern,
+        message = "Percent Fall is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String percentFall;
 
     public OperatingDetailBulkUploadDto() {
 
@@ -66,67 +70,67 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.reportingPeriodId = reportingPeriodId;
     }
 
-    public Short getActualHoursPerPeriod() {
+    public String getActualHoursPerPeriod() {
         return actualHoursPerPeriod;
     }
 
-    public void setActualHoursPerPeriod(Short actualHoursPerPeriod) {
+    public void setActualHoursPerPeriod(String actualHoursPerPeriod) {
         this.actualHoursPerPeriod = actualHoursPerPeriod;
     }
 
-    public Double getAverageHoursPerDay() {
+    public String getAverageHoursPerDay() {
         return averageHoursPerDay;
     }
 
-    public void setAverageHoursPerDay(Double averageHoursPerDay) {
+    public void setAverageHoursPerDay(String averageHoursPerDay) {
         this.averageHoursPerDay = averageHoursPerDay;
     }
 
-    public Double getAverageDaysPerWeek() {
+    public String getAverageDaysPerWeek() {
         return averageDaysPerWeek;
     }
 
-    public void setAverageDaysPerWeek(Double averageDaysPerWeek) {
+    public void setAverageDaysPerWeek(String averageDaysPerWeek) {
         this.averageDaysPerWeek = averageDaysPerWeek;
     }
 
-    public Short getAverageWeeksPerPeriod() {
+    public String getAverageWeeksPerPeriod() {
         return averageWeeksPerPeriod;
     }
 
-    public void setAverageWeeksPerPeriod(Short averageWeeksPerPeriod) {
+    public void setAverageWeeksPerPeriod(String averageWeeksPerPeriod) {
         this.averageWeeksPerPeriod = averageWeeksPerPeriod;
     }
 
-    public Double getPercentWinter() {
+    public String getPercentWinter() {
         return percentWinter;
     }
 
-    public void setPercentWinter(Double percentWinter) {
+    public void setPercentWinter(String percentWinter) {
         this.percentWinter = percentWinter;
     }
 
-    public Double getPercentSpring() {
+    public String getPercentSpring() {
         return percentSpring;
     }
 
-    public void setPercentSpring(Double percentSpring) {
+    public void setPercentSpring(String percentSpring) {
         this.percentSpring = percentSpring;
     }
 
-    public Double getPercentSummer() {
+    public String getPercentSummer() {
         return percentSummer;
     }
 
-    public void setPercentSummer(Double percentSummer) {
+    public void setPercentSummer(String percentSummer) {
         this.percentSummer = percentSummer;
     }
 
-    public Double getPercentFall() {
+    public String getPercentFall() {
         return percentFall;
     }
 
-    public void setPercentFall(Double percentFall) {
+    public void setPercentFall(String percentFall) {
         this.percentFall = percentFall;
     }
 

@@ -1,6 +1,8 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Serializable {
@@ -13,8 +15,10 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
     @NotNull(message = "Facility Site ID is required.")
 	private Long facilitySiteId;
 
-    @NotNull(message = "NAICS code is required.")
-	private Integer code;
+    @NotBlank(message = "NAICS code is required.")
+    @Pattern(regexp = PositiveIntPattern,
+        message = "NAICS is not in expected numeric format; found '${validatedValue}'.")
+	private String code;
 
     // Object type boolean is used here only to trigger @NotNull validation, primitive type boolean should be used to only allow true/false values.
     @NotNull(message = "Primary Flag is required.")
@@ -41,11 +45,11 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 		this.facilitySiteId = facilitySiteId;
 	}
 
-	public Integer getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	public void setCode(Integer code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 

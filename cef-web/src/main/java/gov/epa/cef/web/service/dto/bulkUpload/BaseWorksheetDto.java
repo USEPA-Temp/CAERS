@@ -9,6 +9,22 @@ public class BaseWorksheetDto {
     @JsonProperty("_row")
     private int row;
 
+    static final String PositiveDecimalPattern = "^\\d*(\\.\\d+)?$";
+
+    static final String LatitudePattern = "^[+-]?\\d{0,2}(\\.\\d{1,6})?$";
+
+    static final String LongitudePattern = "^[+-]?\\d{0,3}(\\.\\d{1,6})?$";
+
+    static final String PercentPattern = "^\\d{0,3}(\\.\\d)?$";
+
+    static final String PositiveLongPattern = "^\\d{0,19}$";
+
+    static final String PositiveIntPattern = "^\\d{0,10}$";
+
+    static final String PositiveShortPattern = "^\\d{0,5}$";
+
+    static final String YearPattern = "^\\d{0,4}$";
+
     public BaseWorksheetDto(WorksheetName sheetName) {
 
         this.sheetName = sheetName.sheetName();
