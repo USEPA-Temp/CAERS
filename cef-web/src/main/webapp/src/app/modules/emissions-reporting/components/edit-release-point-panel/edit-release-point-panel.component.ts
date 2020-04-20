@@ -469,9 +469,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         const diameter = control.get('stackDiameter'); // ft
         const exitVelocity = control.get('exitGasVelocity'); // fps/fpm
         const exitFlowRate = control.get('exitGasFlowRate'); // acfs/acfm
+        const velocityUomFPS = "FPS";
+        const flowUomACFS = "ACFS";
+        const flowUomACFM = "ACFM";
         let valid = true;
         let actualFlowRate;
-        this.calculatedFlowRateUom = 'ACFS';
+        this.calculatedFlowRateUom = flowUomACFS;
 
         if ((diameter !== null && diameter.value > 0)
         && (exitVelocity !== null && exitVelocity.value > 0)
@@ -482,15 +485,15 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
           actualFlowRate = exitFlowRate.value;
 
           if ((control.get('exitGasVelocityUomCode').value !== null && control.get('exitGasVelocityUomCode').value !== '')
-          && (control.get('exitGasVelocityUomCode').value.code !== 'FPS')) {
-            this.calculatedFlowRateUom = 'ACFM';
+          && (control.get('exitGasVelocityUomCode').value.code !== velocityUomFPS)) {
+            this.calculatedFlowRateUom = flowUomACFM;
           }
 
           // set actual flow rate UoM to compare to computed flow rate
           if (control.get('exitGasFlowUomCode').value !== null && control.get('exitGasFlowUomCode').value !== '') {
-            if (control.get('exitGasFlowUomCode').value.code !== 'ACFS' && this.calculatedFlowRateUom === 'ACFS') {
+            if (control.get('exitGasFlowUomCode').value.code !== flowUomACFS && this.calculatedFlowRateUom === flowUomACFS) {
               actualFlowRate = exitFlowRate.value / 60; // acfm to acfs
-            } else if (control.get('exitGasFlowUomCode').value.code !== 'ACFM' && this.calculatedFlowRateUom === 'ACFM') {
+            } else if (control.get('exitGasFlowUomCode').value.code !== flowUomACFM && this.calculatedFlowRateUom === flowUomACFM) {
               actualFlowRate = exitFlowRate.value * 60; // acfs to acfm
             }
           }
