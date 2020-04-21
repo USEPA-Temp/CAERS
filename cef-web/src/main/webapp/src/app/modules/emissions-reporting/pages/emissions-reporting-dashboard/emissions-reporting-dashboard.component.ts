@@ -90,7 +90,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                 .subscribe(reportResp => {
                     if (reportResp.status === 204) {
                         // 204 No Content
-                        // no previous report, no FRS data
+                        // no previous report
 
                         this.copyFacilitySiteFromCdxModel();
                         this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
@@ -106,19 +106,6 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
                         this.reportCompleted(reportResp.body);
 
-                    } else if (reportResp.status === 202) {
-                        // 202 Accepted
-                        // pull more data from FRS
-
-                        // commented out for future mvp
-                        // modalWindow.componentInstance.message =
-                        //     'Please wait: Searching for Facility Data in EPA\'s Facility Registry System to populate your Emissions Report';
-
-                        // this.reportService.createReportFromFrs(this.facility.programId, reportingYear)
-                        // .subscribe(newReport => {
-                        //     modalWindow.dismiss();
-                        //     this.reportCompleted(newReport);
-                        // });
                     }
                 });
     }

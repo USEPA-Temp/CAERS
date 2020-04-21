@@ -1,8 +1,5 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.client.api.FrsApiClient;
-import gov.epa.cef.web.client.api.FrsFacilityApiTransforms;
-import gov.epa.cef.web.client.api.FrsSubfacilityTransforms;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
@@ -44,87 +41,18 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     private final FacilityNAICSMapper facilityNaicsMapper;
 
-    private final FrsApiClient frsClient;
-
     @Autowired
     FacilitySiteServiceImpl(FacilitySiteRepository facSiteRepo,
                             FacilitySiteMapper facilitySiteMapper,
                             FacilityNAICSXrefRepository facilityNaicsXrefRepo,
                             FacilityNAICSMapper facilityNaicsMapper,
-                            EmissionsReportStatusServiceImpl reportStatusService,
-                            FrsApiClient frsClient) {
+                            EmissionsReportStatusServiceImpl reportStatusService) {
 
         this.facSiteRepo = facSiteRepo;
         this.facilitySiteMapper = facilitySiteMapper;
-        this.frsClient = frsClient;
         this.facilityNaicsXrefRepo = facilityNaicsXrefRepo;
         this.facilityNaicsMapper = facilityNaicsMapper;
         this.reportStatusService = reportStatusService;
-    }
-
-    @Override
-    public FacilitySite copyFromFrs(EmissionsReport report) {
-
-        String eisProgramId = report.getEisProgramId();
-
-        FacilitySite facilitySite = retrieveFromFrs(eisProgramId)
-            .map(FrsFacilityApiTransforms.toFacilitySite(report))
-            .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                String.format("EIS Program ID %s does not exist in FRS.", report.getEisProgramId())));
-
-        this.frsClient.queryProgramGis(eisProgramId)
-            .ifPresent(gis -> {
-
-                facilitySite.setLatitude(gis.getLatitude());
-                facilitySite.setLongitude(gis.getLongitude());
-            });
-
-        facilitySite.getContacts().addAll(this.frsClient.queryContacts(eisProgramId).stream()
-            .map(FrsFacilityApiTransforms.toFacilitySiteContact(facilitySite))
-            .collect(Collectors.toList()));
-
-        facilitySite.getFacilityNAICS().addAll(this.frsClient.queryNaics(eisProgramId).stream()
-            .map(FrsFacilityApiTransforms.toFacilityNaicsXref(facilitySite))
-            .collect(Collectors.toList()));
-
-        facilitySite.getControls().addAll(
-            this.frsClient.queryEmissionsControl(eisProgramId, null, null).stream()
-                .map(FrsSubfacilityTransforms.toControl(facilitySite))
-                .collect(Collectors.toList()));
-
-        // TODO we need to allow nulls or there is either missing data in FRS responser
-//        facilitySite.getReleasePoints().addAll(
-//            this.frsClient.queryReleasePoint(eisProgramId, null, null).stream()
-//                .map(FrsSubfacilityTransforms.toReleasePoint(facilitySite))
-//                .collect(Collectors.toList()));
-
-        Map<String, EmissionsUnit> emissionUnits =
-            this.frsClient.queryEmissionsUnit(eisProgramId, null, null).stream()
-                .map(FrsSubfacilityTransforms.toEmissionsUnit(facilitySite))
-                .collect(Collectors.toMap(EmissionsUnit::getUnitIdentifier, u -> u));
-
-        Map<String, Process> processes =
-            this.frsClient.queryEmissionsProcess(eisProgramId, null, null).stream()
-                .collect(Collectors.toMap(Process::getProcessId, p -> p));
-
-        this.frsClient.queryAssociation(eisProgramId, null, null).stream()
-            .collect(Collectors.groupingBy(Association::getSubComponentId1))
-            .forEach((assoc1, associations) -> {
-
-                if (emissionUnits.containsKey(assoc1)) {
-
-                    EmissionsUnit emissionsUnit = emissionUnits.get(assoc1);
-                    emissionsUnit.setEmissionsProcesses(associations.stream()
-                        .filter(a -> processes.containsKey(a.getSubComponentId2()))
-                        .map(a -> processes.get(a.getSubComponentId2()))
-                        .map(FrsSubfacilityTransforms.toProcess(emissionsUnit))
-                        .collect(Collectors.toList()));
-                }
-            });
-
-        facilitySite.getEmissionsUnits().addAll(emissionUnits.values());
-
-        return this.facSiteRepo.save(facilitySite);
     }
 
     @Override
@@ -195,12 +123,6 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilitySiteRepository.class);
 
     	return result;
-    }
-
-    @Override
-    public Optional<ProgramFacility> retrieveFromFrs(String facilityEisProgramId) {
-
-        return this.frsClient.queryProgramFacility(facilityEisProgramId);
     }
 
     /**
