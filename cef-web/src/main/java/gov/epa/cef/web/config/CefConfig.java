@@ -1,18 +1,17 @@
 package gov.epa.cef.web.config;
 
 import gov.epa.cef.web.config.slt.GAConfig;
+import gov.epa.cef.web.provider.system.PropertyProvider;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@ConfigurationProperties(prefix = "cef", ignoreInvalidFields = true)
 public class CefConfig {
 
     @Autowired
@@ -21,30 +20,17 @@ public class CefConfig {
     @Autowired
     protected GAConfig gaConfig;
 
-    private String defaultEmailAddress;
-
-    private final List<String> admins = new ArrayList<>();
-
-    private BigDecimal emissionsTotalErrorTolerance;
-
-    private BigDecimal emissionsTotalWarningTolerance;
+    @Autowired
+    protected PropertyProvider propertyProvider;
 
     public List<String> getAdmins() {
 
-        return admins;
+        return this.propertyProvider.getStringList(AppPropertyName.EnvAdmins);
     }
 
     public Collection<Object> getAdminsAsLowerCase() {
 
-        return this.admins.stream().map(String::toLowerCase).collect(Collectors.toList());
-    }
-
-    public void setAdmins(List<String> admins) {
-
-        this.admins.clear();
-        if (admins != null) {
-            this.admins.addAll(admins);
-        }
+        return this.getAdmins().stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
     public CdxConfig getCdxConfig() {
@@ -56,27 +42,15 @@ public class CefConfig {
     }
 
     public String getDefaultEmailAddress() {
-        return defaultEmailAddress;
-    }
-
-    public void setDefaultEmailAddress(String defaultEmailAddress) {
-        this.defaultEmailAddress = defaultEmailAddress;
+        return this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress);
     }
 
     public BigDecimal getEmissionsTotalErrorTolerance() {
-        return emissionsTotalErrorTolerance;
-    }
-
-    public void setEmissionsTotalErrorTolerance(BigDecimal emissionsTotalErrorTolerance) {
-        this.emissionsTotalErrorTolerance = emissionsTotalErrorTolerance;
+        return this.propertyProvider.getBigDecimal(AppPropertyName.EmissionsTotalErrorTolerance);
     }
 
     public BigDecimal getEmissionsTotalWarningTolerance() {
-        return emissionsTotalWarningTolerance;
-    }
-
-    public void setEmissionsTotalWarningTolerance(BigDecimal emissionsTotalWarningTolerance) {
-        this.emissionsTotalWarningTolerance = emissionsTotalWarningTolerance;
+        return this.propertyProvider.getBigDecimal(AppPropertyName.EmissionsTotalWarningTolerance);
     }
 
 }

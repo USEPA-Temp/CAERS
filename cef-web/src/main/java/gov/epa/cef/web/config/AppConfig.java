@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -22,6 +23,12 @@ public class AppConfig {
     AppConfig(DataSource dataSource) {
 
         this.dataSource = dataSource;
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate() throws Exception {
+
+        return new JdbcTemplate(this.dataSource);
     }
 
     @Bean(initMethod = "migrate")

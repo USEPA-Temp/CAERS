@@ -51,9 +51,9 @@ public class CacheName {
     public static final String ReleasePointApptEmissionsReportIds = "ReleasePointApptEmissionsReportIds";
 
     public static final String ReleasePointApptProgramIds = "ReleasePointApptProgramIds";
-    
+
     public static final String FacilityNAICSEmissionsReportIds = "FacilityNAICSEmissionsReportIds";
-    
+
     public static final String FacilityNAICSProgramIds = "FacilityNAICSProgramIds";
 
     public static final String ControlPollutantEmissionsReportIds = "ControlPollutantEmissionsReportIds";
@@ -61,8 +61,16 @@ public class CacheName {
     public static final String ControlPollutantProgramIds = "ControlPollutantProgramIds";
 
     public static final String ControlAssignmentsEmissionsReportIds = "ControlAssignmentsEmissionsReportIds";
-    
+
     public static final String ControlAssignmentsProgramIds = "ControlAssignmentsProgramIds";
+
+    public static final String PropertyBigDecimal = "PropertyBigDecimal";
+
+    public static final String PropertyBoolean = "PropertyBoolean";
+
+    public static final String PropertyString = "PropertyString";
+
+    public static final String PropertyStringList = "PropertyStringList";
 
 }
 
