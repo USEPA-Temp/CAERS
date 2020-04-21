@@ -50,7 +50,7 @@
       Enter 5 digit (XXXXX) or 9 digit (XXXXX-XXXX) Zip Code.
     </div>
 
-    <div *ngIf="control.errors?.pattern.requiredPattern === '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+([\.][A-Za-z]{2,3})$'">
+    <div *ngIf="control.errors?.pattern.requiredPattern === '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'">
       Email Address must be valid (ex: name@domain.com).
     </div>
   </div>

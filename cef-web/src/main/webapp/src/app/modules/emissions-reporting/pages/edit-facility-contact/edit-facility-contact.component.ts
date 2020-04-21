@@ -49,7 +49,7 @@ export class EditFacilityContactComponent implements OnInit {
     email: ['', [
       Validators.required,
       Validators.maxLength(255),
-      Validators.pattern('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+([\.][A-Za-z]{2,3})$')]],
+      Validators.pattern('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')]],
     streetAddress: ['', [
       Validators.maxLength(100),
       Validators.required]],
