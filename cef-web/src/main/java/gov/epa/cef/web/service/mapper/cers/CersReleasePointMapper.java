@@ -26,6 +26,15 @@ public interface CersReleasePointMapper {
     @Mapping(source="exitGasFlowRate", target="releasePointExitGasFlowRateMeasure")
     @Mapping(source="exitGasFlowUomCode.code", target="releasePointExitGasFlowRateUnitofMeasureCode")
     @Mapping(source="exitGasTemperature", target="releasePointExitGasTemperatureMeasure")
+    @Mapping(source="fenceLineDistance", target="releasePointFenceLineDistanceMeasure")
+    @Mapping(source="fenceLineUomCode.code", target="releasePointFenceLineDistanceUnitofMeasureCode")
+    @Mapping(source="fugitiveHeight", target="releasePointFugitiveHeightMeasure")
+    @Mapping(source="fugitiveHeightUomCode.code", target="releasePointFugitiveHeightUnitofMeasureCode")
+    @Mapping(source="fugitiveWidth", target="releasePointFugitiveWidthMeasure")
+    @Mapping(source="fugitiveWidthUomCode.code", target="releasePointFugitiveWidthUnitofMeasureCode")
+    @Mapping(source="fugitiveLength", target="releasePointFugitiveLengthMeasure")
+    @Mapping(source="fugitiveLengthUomCode.code", target="releasePointFugitiveLengthUnitofMeasureCode")
+    @Mapping(source="fugitiveAngle", target="releasePointFugitiveAngleMeasure")
     @Mapping(source="comments", target="releasePointComment")
     @Mapping(source="operatingStatusCode.code", target="releasePointStatusCode")
     @Mapping(source="statusYear", target="releasePointStatusCodeYear")
@@ -39,6 +48,7 @@ public interface CersReleasePointMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="releasePointIdentifier", target="identifier")
+    @Mapping(source="facilitySite.programSystemCode.code", target="programSystemCode")
     IdentificationDataType identificationFromReleasePoint(ReleasePoint source);
 
     default List<IdentificationDataType> identificationListFromReleasePoint(ReleasePoint source) {
