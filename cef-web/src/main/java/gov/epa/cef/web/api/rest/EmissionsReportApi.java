@@ -154,12 +154,9 @@ public class EmissionsReportApi {
 
         HttpStatus status = HttpStatus.NO_CONTENT;
         if (result != null) {
-            if (result.getId() == null) {
-                status = HttpStatus.ACCEPTED;
-            } else {
                 status = HttpStatus.OK;
-            }
         }
+        
 
         return new ResponseEntity<>(result, status);
     }
