@@ -24,7 +24,6 @@ public interface CersFacilitySiteMapper {
 
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
     @Mapping(source="name", target="facilitySiteName")
-    @Mapping(source="facilitySourceTypeCode.description", target="sectorTypeCode")
     @Mapping(source="description", target="facilitySiteDescription")
     @Mapping(source="operatingStatusCode.code", target="facilitySiteStatusCode")
     @Mapping(source="statusYear", target="facilitySiteStatusCodeYear")
