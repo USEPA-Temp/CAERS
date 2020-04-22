@@ -43,7 +43,7 @@
             <div class="card-header text-center">
                 <strong>Emission Information</strong>
                 <div class="float-right" *ngIf="emissionForm.disabled && !createMode && !readOnlyMode">
-                    <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
+                    <button type="button" class="btn btn-primary" aria-label="edit emission information" (click)="onEdit()">Edit</button>
                 </div>
             </div>
             <div class="card-body">
@@ -173,7 +173,7 @@
                             <label for="emissionsFactorTextInput" class="ml-1 col-form-label"><strong>Emissions Factor Description:</strong></label>
                         </div>
                         <div class="col-sm-5">
-                            <textarea class="form-control" id="emissionsFactorTextInput" formControlName="emissionsFactorText"></textarea>
+                            <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText"></textarea>
                             <app-validation-message [control]="emissionForm.controls.emissionsFactorText"></app-validation-message>
                         </div>
                     </div>

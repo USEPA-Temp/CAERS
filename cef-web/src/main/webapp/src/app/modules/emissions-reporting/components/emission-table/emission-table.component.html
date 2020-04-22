@@ -13,11 +13,15 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td><a [routerLink]="[baseUrl, item.id]">{{item.pollutant.pollutantName}}</a></td>
+      <td><a [routerLink]="[baseUrl, item.id]" [attr.aria-label]="'emission pollutant' + item?.pollutant?.pollutantName">
+        {{item.pollutant.pollutantName}}
+      </a></td>
       <td>{{item.pollutant.pollutantCode}}</td>
       <td>{{item.pollutant.pollutantCasId}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)" aria-label="delete emission pollutant"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item.pollutant.pollutantName, item.id)" [attr.aria-label]="'delete emission pollutant' + item?.pollutant?.pollutantName">
+          <fa-icon icon="trash-alt"></fa-icon>
+        </a></td>
       </ng-container>
     </tr>
     <ng-container *ngIf="!readOnlyMode">
