@@ -1,7 +1,3 @@
-cef:
-  default-email-address: no-reply-cef-DEV@epa.gov
-  admins:
-    - ECANOLES
 spring:
   profiles:
     active: prod
