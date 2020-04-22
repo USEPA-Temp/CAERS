@@ -6,35 +6,17 @@
       <th scope="col" sortable="identifier" (sort)="onSort($event)"><fa-icon class="mt-2 ml-1 mr-1" title="The identifier for the control device." [icon]="['fas', 'question-circle']"></fa-icon>Identifier</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Component</th>
       <th scope="col" sortable="typeDesc" (sort)="onSort($event)">Type</th>
-      <!-- Commented out for pilot 
-        <ng-container *ngIf="!readOnlyMode">
-          <th scope="col"></th>
-        </ng-container>
-      -->
     </tr>
     </thead>
 
     <tbody>
       <ng-container *ngFor="let item of tableData">
         <tr>
-          <td><a routerLink="{{baseUrl}}/{{item.type}}/{{item.id}}">{{item.identifier}}</a></td>
+          <td><a [attr.aria-label]="item?.typeDesc + 'control device assignment' + item?.identifier" routerLink="{{baseUrl}}/{{item.type}}/{{item.id}}">{{item.identifier}}</a></td>
           <td>{{item.description}}</td>
           <td>{{item.typeDesc}}</td>
-          <!-- Commented out for pilot 
-            <ng-container *ngIf="!readOnlyMode">
-              <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-            </ng-container>
-          -->
         </tr>
       </ng-container>
-      <!-- Commented out for pilot 
-        <ng-container *ngIf="!readOnlyMode">
-          <tr>
-            <td colspan="3"></td>
-            <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td> 
-          </tr>
-        </ng-container> 
-      -->
     </tbody>
     
   </table>

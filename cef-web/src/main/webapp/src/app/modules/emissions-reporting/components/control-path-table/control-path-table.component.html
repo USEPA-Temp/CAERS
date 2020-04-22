@@ -4,40 +4,17 @@
         <th scope="col">Control</th>
         <th scope="col">Description</th>
         <th scope="col">Control Path</th>
-        <!-- Commented out for pilot 
-            <ng-container *ngIf="!readOnlyMode">
-                <th scope="col"></th>
-            </ng-container>
-        -->
     </tr>
     </thead>
     <tbody>
         <ng-container *ngFor="let item of tableData">
             <ng-container *ngFor="let assignment of item.assignments">
                 <tr *ngIf="assignment.control">
-                    <td><a routerLink="{{baseUrl}}/{{assignment.control.id}}">{{assignment.control.identifier}}</a></td>
+                    <td><a routerLink="{{baseUrl}}/{{assignment.control.id}}" [attr.aria-label]="'control assignment' + assignment?.control?.identifier">{{assignment.control.identifier}}</a></td>
                     <td>{{assignment.control.description}}</td>
-                    <td><a routerLink="{{controlPathUrl}}/{{item.id}}">{{item.pathId}}</a></td>
-                    <!-- Commented out for pilot 
-                        <ng-container *ngIf="!readOnlyMode">
-                            <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-                        </ng-container> 
-                    -->
+                    <td><a routerLink="{{controlPathUrl}}/{{item.id}}" [attr.aria-label]="'control path' + item?.pathId">{{item.pathId}}</a></td>
                 </tr>
-                    <!-- Commented out for pilot 
-                        <ng-container *ngIf="!readOnlyMode">
-                            <td><a routerLink="."><fa-icon icon="trash-alt"></fa-icon></a></td>
-                        </ng-container> 
-                    -->
             </ng-container>
         </ng-container>
-        <!-- Commented out for pilot 
-            <ng-container *ngIf="!readOnlyMode">
-                <tr>
-                    <td colspan="4"></td>
-                    <td><a routerLink="."><fa-icon [icon]="['fa', 'plus']"></fa-icon></a></td> 
-                </tr>
-            </ng-container> 
-        -->
     </tbody>
 </table>
