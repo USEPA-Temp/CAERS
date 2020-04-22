@@ -200,6 +200,7 @@ export class EmissionDetailsComponent implements OnInit {
       // set epaEmissionFactor to true for EPA calculation methods
       if (value && value.epaEmissionFactor) {
         this.epaEmissionFactor = true;
+        this.emissionForm.get('emissionsFactor').reset();
       } else {
         this.emissionForm.get('formulaIndicator').reset(false);
         this.setupVariableForm([]);

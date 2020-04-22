@@ -34,7 +34,6 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="comments", target="unitComment")
     @Mapping(source=".", target="unitIdentification")
     @Mapping(source="emissionsProcesses", target="unitEmissionsProcess")
-//    @Mapping(source="", target="unitControlApproach")
     EmissionsUnitDataType fromEmissionsUnit(EmissionsUnit source);
 
     @Mapping(source="sccCode", target="sourceClassificationCode")
@@ -45,9 +44,8 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="reportingPeriods", target="reportingPeriod")
     @Mapping(source="releasePointAppts", target="releasePointApportionment")
     ProcessDataType processFromEmissionsProcess(EmissionsProcess source);
-
+    
     @Mapping(source="percent", target="averagePercentEmissions")
-//    @Mapping(source="", target="releasePointApportionmentComment")
     @Mapping(source="releasePoint", target="releasePointApportionmentIdentification")
     ReleasePointApportionmentDataType rpApptFromReleasePointAppt(ReleasePointAppt source);
 
@@ -82,15 +80,17 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="emissionsCalcMethodCode.code", target="emissionCalculationMethodCode")
     @Mapping(source="comments", target="emissionsComment")
     EmissionsDataType emissionsFromEmission(Emission source);
-
+    
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="unitIdentifier", target="identifier")
+    @Mapping(source="facilitySite.programSystemCode.code", target="programSystemCode")
     IdentificationDataType identificationFromEmissionsUnit(EmissionsUnit source);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="emissionsProcessIdentifier", target="identifier")
+    @Mapping(source="emissionsUnit.facilitySite.programSystemCode.code", target="programSystemCode")
     IdentificationDataType identificationFromEmissionsProcess(EmissionsProcess source);
-
+    
     // TODO: the XML appears to only support 1 operating detail per reporting period, might want to change our db schema
     default OperatingDetailsDataType operatingDetailsFromOperatingDetailList(Collection<OperatingDetail> source) {
 
