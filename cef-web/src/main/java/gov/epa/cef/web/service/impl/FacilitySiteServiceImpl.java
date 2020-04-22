@@ -1,12 +1,8 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
-import gov.epa.cef.web.exception.ApplicationErrorCode;
-import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.service.FacilitySiteService;
@@ -14,18 +10,12 @@ import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
-import gov.epa.client.frs.iptquery.model.Association;
-import gov.epa.client.frs.iptquery.model.Process;
-import gov.epa.client.frs.iptquery.model.ProgramFacility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
