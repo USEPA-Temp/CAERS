@@ -1,12 +1,8 @@
 package gov.epa.cef.web.service;
 
-import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
-import gov.epa.client.frs.iptquery.model.ProgramFacility;
-
-import java.util.Optional;
 
 public interface FacilitySiteService {
 
