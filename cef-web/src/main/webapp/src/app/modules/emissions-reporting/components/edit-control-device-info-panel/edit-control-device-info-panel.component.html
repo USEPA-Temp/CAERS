@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
         </div>
@@ -43,7 +43,7 @@
             <app-validation-message [control]="controlDeviceForm.get('percentCapture')"></app-validation-message>
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <fa-icon class="ml-2 mt-2" title="Code that describes the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlMeasureCodeSelect" class="ml-1 col-form-label"><strong>Control Measure:</strong></label>
         </div>
@@ -71,7 +71,7 @@
             <fa-icon class="mt-2 ml-2" title="Description of the Control Measure" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="descriptionInput" class="ml-1 col-form-label"><strong>Control Description:</strong></label>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-9">
             <textarea rows="3" class="mb-2 form-control" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
             <app-validation-message [control]="controlDeviceForm.get('description')"></app-validation-message>
         </div>
@@ -81,7 +81,7 @@
             <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlCommentsInput" class="ml-1 col-form-label"><strong>Comments:</strong></label>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-9">
             <textarea rows="3" class="form-control" style="height:100%;" maxlength="400" id="controlCommentsInput" formControlName="comments"></textarea>
             <app-validation-message [control]="controlDeviceForm.get('comments')"></app-validation-message>
         </div>
