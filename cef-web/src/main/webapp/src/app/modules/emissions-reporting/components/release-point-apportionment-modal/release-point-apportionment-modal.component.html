@@ -4,29 +4,24 @@
     </div>
 
     <div class="modal-body">
-        <strong>Select a Release Point</strong>
-        <br>
-        <select [(ngModel)]="rpApptSelected" type="text" id="releasePointSelect" class="form-control" formControlName="selectedReleasePointAppt" aria-label="select release point">
+        <strong class="mb-2">Select a Release Point</strong>
+        <select [(ngModel)]="rpApptSelected" type="text" id="releasePointSelect" class="form-control mb-2" formControlName="selectedReleasePointAppt" aria-label="select release point">
             <option [ngValue]="null"></option>
             <option *ngFor="let rp of releasePoints" [ngValue]="rp.releasePointIdentifier">
                 {{rp.releasePointIdentifier}}&nbsp;-&nbsp;{{rp.description}}
             </option>
         </select>
         <app-validation-message [control]="releasePointApptForm.get('selectedReleasePointAppt')"></app-validation-message>
-        <br>
-        <strong>Select a Control Path (optional)</strong>
-        <br>
-        <select [(ngModel)]="controlPathSelected" type="text" id="controlPathSelect" class="form-control" formControlName="controlPath" aria-label="select control path">
+        <strong class="mb-2">Select a Control Path (optional)</strong>
+        <select [(ngModel)]="controlPathSelected" type="text" id="controlPathSelect" class="form-control mb-2" formControlName="controlPath" aria-label="select control path">
             <option [ngValue]="null"></option>
             <option *ngFor="let cp of controlPaths" [ngValue]="cp">
                 {{cp.pathId}}
             </option>
         </select>
-        <br>
-        <br>
+        <fa-icon class="mt-2 mr-2" title="The average annual percent of an emissions process that is vented through a release point. 100% of total emissions from that process should be apportioned to one or more release points." [icon]="['fas', 'question-circle']"></fa-icon>
         <strong>Enter the Emission Percentage</strong>
-        <br>
-        <input type="text" maxlength="3" formControlName="percent" id="percentInput" aria-label="emission percentage">
+        <input class="ml-4 mb-1" type="text" maxlength="3" formControlName="percent" id="percentInput" aria-label="emission percentage">
         <app-validation-message [control]="releasePointApptForm.get('percent')"></app-validation-message>
     </div>
 

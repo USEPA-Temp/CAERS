@@ -1,7 +1,3 @@
-cef:
-  default-email-address: no-reply-cef-DEV@epa.gov
-  admins:
-    - ECANOLES
 spring:
   profiles:
     active: prod
@@ -56,11 +52,6 @@ cdx:
     - https://www2.e-enterprise.gov
 excel-parser:
   base-url: https://devngn.epacdxnode.net/excel-json-parser/api/v1
-frs:
-  facility-ipt-endpoint:  https://ofmext.epa.gov/facilityiptqueryprd/v1/FRS
-  naas-user: caer-cef-admin@epa.gov
-  naas-password: CDXcaercef01
-  debugging: false
 ga:
   slt-email: edward.canoles@cgifederal.com
 network-nodes:

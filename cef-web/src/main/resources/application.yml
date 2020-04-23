@@ -1,6 +1,3 @@
-cef:
-  emissions-total-warning-tolerance: .01
-  emissions-total-error-tolerance: .05
 server:
   use-forward-headers: true
   servlet:

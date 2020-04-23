@@ -11,4 +11,10 @@ public class NotExistException extends ApplicationException {
         super(ApplicationErrorCode.E_NOT_FOUND,
             String.format("Entity {%s} with ID %d was not found.", entityType, id));
     }
+    
+    public NotExistException(String entityType, String id) {
+
+        super(ApplicationErrorCode.E_NOT_FOUND,
+            String.format("Entity {%s} with ID %s was not found.", entityType, id));
+    }
 }

@@ -5,7 +5,7 @@
                 <div class="card-header text-center">
                     <strong>Process Information</strong>
                     <div class="float-right" *ngIf="!editInfo && !readOnlyMode">
-                        <button type="button" class="btn btn-success" (click)="setEditInfo(true)">Edit</button>
+                        <button type="button" class="btn btn-success" aria-label="edit process information" (click)="setEditInfo(true)">Edit</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -66,7 +66,7 @@
                     <div class="card-header text-center">
                         <strong>Operating Details</strong>
                         <div class="float-right" *ngIf="!editDetails && !readOnlyMode">
-                            <button type="button" class="btn btn-success" (click)="setEditDetails(true)">Edit</button>
+                            <button type="button" class="btn btn-success" aria-label="edit operating detail" (click)="setEditDetails(true)">Edit</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -118,7 +118,7 @@
                 <div class="card-header text-center">
                     <strong>Reporting Period</strong>
                     <div class="float-right" *ngIf="!editPeriod && !readOnlyMode">
-                        <button type="button" class="btn btn-success" (click)="setEditPeriod(true)">Edit</button>
+                        <button type="button" class="btn btn-success" aria-label="edit reporting period" (click)="setEditPeriod(true)">Edit</button>
                     </div>
                 </div>
                 <div class="card-body">

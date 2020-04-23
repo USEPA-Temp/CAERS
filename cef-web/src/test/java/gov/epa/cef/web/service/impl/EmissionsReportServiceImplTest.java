@@ -26,7 +26,6 @@ import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
-import gov.epa.client.frs.iptquery.model.ProgramFacility;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -121,14 +120,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
                     return Mappers.getMapper(EmissionsReportMapper.class).toDto(invocationOnMock.getArgument(0));
                 }
             });
-
-        ProgramFacility programFacility = new ProgramFacility();
-        programFacility.setRegistryId("Registry-FRSDATA");
-        programFacility.setProgramSystemAcronym("EIS");
-        programFacility.setProgramSystemId("FRSDATA");
-        programFacility.setAgencyId("Agency-FRSDATA");
-        when(facilitySiteService.retrieveFromFrs("FRSDATA"))
-            .thenReturn(Optional.of(programFacility));
 
         emissionsReportDto=new EmissionsReportDto();
         emissionsReportDtoList=new ArrayList<>();

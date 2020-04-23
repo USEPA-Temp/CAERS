@@ -74,11 +74,11 @@
     </div>
 
     <div class="row pb-1">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Unit of measure for the design capacity of the emissions unit. Required if reporting Design Capacity." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitOfMeasureCodeSelect" class="ml-1 col-form-label"><strong>Unit Design Capacity UoM:</strong></label>
         </div>
-         <div class="col-sm-2">
+         <div class="col-sm-3">
             <select type="text" class="form-control" id="unitOfMeasureCodeSelect" formControlName="unitOfMeasureCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let uom of uomValues" [ngValue]="uom">{{uom.code}}</option>

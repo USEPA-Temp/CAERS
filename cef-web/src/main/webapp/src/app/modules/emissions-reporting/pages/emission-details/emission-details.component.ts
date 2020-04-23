@@ -350,6 +350,7 @@ export class EmissionDetailsComponent implements OnInit, OnChanges {
   }
 
   onEdit() {
+    this.editable = true;
     this.emissionForm.enable();
     this.setupForm();
   }
