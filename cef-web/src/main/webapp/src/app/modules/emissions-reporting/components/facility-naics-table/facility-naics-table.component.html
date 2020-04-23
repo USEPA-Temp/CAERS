@@ -2,9 +2,9 @@
   <table class="table table-sm table-striped table-bordered">
     <thead class="thead-cef-medium">
     <tr>
-      <th scope="col" sortable="description" (sort)="onSort($event)"><fa-icon class="mt-2 ml-1 mr-1" title="The description of the NAICS code. See https://www.census.gov/eos/www/naics/." [icon]="['fas', 'question-circle']"></fa-icon>NAICS Description</th>
-      <th scope="col" sortable="code" (sort)="onSort($event)"><fa-icon class="mt-2 ml-1 mr-1" title="North American Industry Classification System code. The NAICS codes are U.S. Department of Commerce's codes for categorizing businesses by products or services. See: https://www.census.gov/eos/www/naics/." [icon]="['fas', 'question-circle']"></fa-icon>NAICS Code</th>
-      <th scope="col" sortable="primaryFlag"><fa-icon class="mt-2 ml-1 mr-1" title="The 6 digit NAICS Code that represents the largest amount of economic activity of the facility." [icon]="['fas', 'question-circle']"></fa-icon>Primary</th>
+      <th scope="col" sortable="description" (sort)="onSort($event)">NAICS Description</th>
+      <th scope="col" sortable="code" (sort)="onSort($event)">NAICS Code</th>
+      <th scope="col" sortable="primaryFlag">Primary</th>
       <ng-container *ngIf="!readOnlyMode">
         <th scope="col"></th>
       </ng-container>

@@ -1,7 +1,7 @@
 <form [formGroup]="reportingPeriodForm" (ngSubmit)="onSubmit()">
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2 ml-2" title="The time period type for which emissions are reported." [icon]="['fas', 'question-circle']"></fa-icon>
+            <fa-icon class="mt-2" title="The time period type for which emissions are reported." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpTypeCodeSelect" class="ml-1 col-form-label"><strong>Reporting Period:</strong></label>
         </div>
         <div class="col-sm-2">
@@ -12,7 +12,7 @@
             <app-validation-message [control]="reportingPeriodForm.controls.reportingPeriodTypeCode"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2 ml-2" title="Code identifying the operating state for the emissions being reported." [icon]="['fas', 'question-circle']"></fa-icon>
+            <fa-icon class="mt-2" title="Code identifying the operating state for the emissions being reported." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpOperatingCodeSelect" class="ml-1 col-form-label"><strong>Operating Type:</strong></label>
         </div>
         <div class="col-sm-2">
@@ -22,11 +22,11 @@
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.emissionsOperatingTypeCode"></app-validation-message>
         </div>
-        <div class="col-sm-3">
-            <fa-icon class="mt-2 ml-2" title="Code indicating whether the material measured is an input to the process, an output of the process or a static count (not a throughput)." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="rpParamSelect" class="ml-1 col-form-label"><strong>Throughput Parameter:</strong></label>
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Code indicating whether the material measured is an input to the process, an output of the process or a static count (not a throughput)." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpParamSelect" style="font-size:98%" class="ml-1 col-form-label"><strong>Throughput Parameter:</strong></label>
         </div>
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             <select type="text" class="form-control" id="rpParamSelect" formControlName="calculationParameterTypeCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of parameterTypeValues" [ngValue]="opt">{{opt.description}}</option>
@@ -37,7 +37,7 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2 ml-2" title="Code for material or fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
+            <fa-icon class="mt-2" title="Code for material or fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpMaterialSelect" class="ml-1 col-form-label"><strong>Throughput Material:</strong></label>
         </div>
         <div class="col-sm-2">
@@ -48,7 +48,7 @@
             <app-validation-message [control]="reportingPeriodForm.controls.calculationMaterialCode"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2 ml-2" title="Activity or throughput of the process for a given time period." [icon]="['fas', 'question-circle']"></fa-icon>
+            <fa-icon class="mt-2" title="Activity or throughput of the process for a given time period." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpValueInput" class="ml-1 col-form-label"><strong>Throughput Value:</strong></label>
         </div>
         <div class="col-sm-2">
@@ -56,7 +56,7 @@
             <app-validation-message [control]="reportingPeriodForm.controls.calculationParameterValue"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2 ml-2" title="Code for the unit of measure for calculation parameter value." [icon]="['fas', 'question-circle']"></fa-icon>
+            <fa-icon class="mt-2" title="Code for the unit of measure for calculation parameter value." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpUomSelect" class="ml-1 col-form-label"><strong>Throughput UoM:</strong></label>
         </div>
         <div class="col-sm-2">
@@ -70,7 +70,7 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpCommentsInput" class="ml-1 col-form-label"><strong>Comments:</strong></label>
         </div>
         <div class="col-sm-10">

@@ -96,45 +96,45 @@
 
                 <div *ngIf="!readOnlyMode">
                     <div class="row pb-2">
-                        <div class="col-sm-2">
-                            <fa-icon class="mt-2 ml-2" title="Name, Code, and CAS ID of the pollutant." [icon]="['fas', 'question-circle']"></fa-icon>
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Name, Code, and CAS ID of the pollutant." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="pollutantSelect" class="ml-1 col-form-label"><strong>Pollutant:</strong></label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <input [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
                             <app-validation-message [control]="emissionForm.controls.pollutant"></app-validation-message>
                         </div>
-                        <div class="col-sm-2">
-                            <fa-icon class="mt-2 ml-2" title="Code identifying the pollutant for which emissions are reported. See https://epa.gov/srs" [icon]="['fas', 'question-circle']"></fa-icon>
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Code identifying the pollutant for which emissions are reported. See https://epa.gov/srs" [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="pollutantCodeInput" class="ml-1 col-form-label"><strong>Pollutant Code:</strong></label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <input type="text" class="form-control" id="pollutantCodeInput" [value]="emissionForm.value.pollutant?.pollutantCode" disabled>
                         </div>
                     </div>
                     <div class="row pb-2">
-                        <div class="col-sm-2">
-                            <fa-icon class="mt-2 ml-2" title="Pollutant description of pollutant code." [icon]="['fas', 'question-circle']"></fa-icon>
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Pollutant description of pollutant code." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="pollutantNameInput" class="ml-1 col-form-label"><strong>Pollutant Name:</strong></label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <input type="text" class="form-control" id="pollutantNameInput" [value]="emissionForm.value.pollutant?.pollutantName" disabled>
                         </div>
-                        <div class="col-sm-2">
-                            <fa-icon class="mt-2 ml-2" title="Chemical Abstract Service code that represents a specific pollutant or chemical. Note groups of pollutants such as VOCs may not have a CAS ID. See https://epa.gov/srs" [icon]="['fas', 'question-circle']"></fa-icon>
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Chemical Abstract Service code that represents a specific pollutant or chemical. Note groups of pollutants such as VOCs may not have a CAS ID. See https://epa.gov/srs" [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="pollutantCasIdInput" class="ml-1 col-form-label"><strong>CAS ID:</strong></label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <input type="text" class="form-control" id="pollutantCasIdInput" [value]="emissionForm.value.pollutant?.pollutantCasId" disabled>
                         </div>
                     </div>
 
-                    <div class="row pb-2">
-                        <div class="col-sm-2">
-                            <fa-icon class="mt-2 ml-2" title="Code that defines the method used to calculate emissions." [icon]="['fas', 'question-circle']"></fa-icon>
+                    <div class="row pb-3">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Code that defines the method used to calculate emissions." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionsCalcMethodCodeSelect" class="ml-1 col-form-label"><strong>Calculation Method:</strong></label>
                         </div>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <select type="text" class="form-control" id="emissionsCalcMethodCodeSelect" formControlName="emissionsCalcMethodCode" [compareWith]="formUtils.compareCode">
                                 <option [ngValue]="null"></option>
                                 <option *ngFor="let opt of methodValues" [ngValue]="opt">{{opt.description}}</option>
@@ -145,7 +145,7 @@
 
                     <div class="row pb-3 justify-content-end" *ngIf="epaEmissionFactor && !emissionForm.disabled">
                         <div>
-                            <button type="button" class="btn btn-success mr-2" (click)="openSearchEfModal()">Search for Emission Factor</button>
+                            <button type="button" class="btn btn-success mr-3" (click)="openSearchEfModal()">Search for Emission Factor</button>
                             <div class="validation-message" *ngIf="!emissionForm.get('pollutant').valid">
                                 A pollutant must be selected to search for an Emission Factor.
                             </div>
@@ -153,26 +153,26 @@
                     </div>
 
                     <div class="row pb-2">
-                        <div class="col-sm-2">
-                            <fa-icon class="mt-2 ml-2" title="Numerical value or formula for the emission calculation." [icon]="['fas', 'question-circle']"></fa-icon>
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Numerical value or formula for the emission calculation." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionFactorInput" class="ml-1 col-form-label"><strong>Emission Factor:</strong></label>
                         </div>
-                        <div class="col-sm-2" *ngIf="!emissionForm.get('formulaIndicator').value">
+                        <div class="col-sm-3" *ngIf="!emissionForm.get('formulaIndicator').value">
                             <input type="number" class="form-control" id="emissionFactorInput" formControlName="emissionsFactor" [readonly]="epaEmissionFactor">
                             <app-validation-message [control]="emissionForm.controls.emissionsFactor"></app-validation-message>
                             <span class="validation-message" *ngIf="emissionForm.getError('efFactorLessThanOrEqualToZero') && emissionForm.controls.emissionsFactor.valid">
                                 Emission Factor must be greater than zero.
                             </span>
                         </div>
-                        <div class="col-sm-4" *ngIf="emissionForm.get('formulaIndicator').value">
+                        <div class="col-sm-3" *ngIf="emissionForm.get('formulaIndicator').value">
                             <input type="text" class="form-control" id="emissionFactorInput" formControlName="emissionsFactorFormula" [readonly]="true">
                             <app-validation-message [control]="emissionForm.controls.emissionsFactorFormula"></app-validation-message>
                         </div>
                         <div class="col-sm-3">
-                            <fa-icon class="mt-2 ml-2" title="Explanation for emission factor." [icon]="['fas', 'question-circle']"></fa-icon>
-                            <label for="emissionsFactorTextInput" class="ml-1 col-form-label"><strong>Emissions Factor Description:</strong></label>
+                            <fa-icon *ngIf="editable" class="mt-2" title="Explanation for emission factor." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="emissionsFactorTextInput" style="font-size:95%" class="ml-1 col-form-label"><strong>Emissions Factor Description:</strong></label>
                         </div>
-                        <div class="col-sm-5">
+                        <div class="col-sm-3">
                             <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText"></textarea>
                             <app-validation-message [control]="emissionForm.controls.emissionsFactorText"></app-validation-message>
                         </div>
@@ -180,7 +180,7 @@
 
                     <div class="pb-2" *ngIf="emissionForm.get('formulaIndicator').value" formGroupName="formulaVariables">
                         <div class="row" *ngFor="let variable of formulaVariables">
-                            <fa-icon class="mt-2 ml-2" title="The name of your facility." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <fa-icon *ngIf="editable" class="mt-2" title="The name of your facility." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="{{variable.code + 'Input'}}" class="ml-1 col-form-label"><strong>{{variable.code}} - {{variable.description}}:</strong></label>
                             <div class="col-sm-8 col-lg-4">
                                 <input type="number" class="form-control" id="{{variable.code + 'Input'}}" [formControlName]="variable.code">
@@ -198,7 +198,7 @@
                     <fieldset [disabled]="epaEmissionFactor">
                         <div class="row pb-2">
                             <div class="col-sm-3">
-                                <fa-icon class="mt-2 ml-2" title="Units of measure fo the emission factor numerator." [icon]="['fas', 'question-circle']"></fa-icon>
+                                <fa-icon *ngIf="editable" class="mt-2" title="Units of measure of the emission factor numerator." [icon]="['fas', 'question-circle']"></fa-icon>
                                 <label for="emissionsNumeratorSelect" class="ml-1 col-form-label"><strong>Emission Factor Numerator UoM:</strong></label>
                             </div>
                             <div class="col-sm-3">
@@ -214,7 +214,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <fa-icon class="mt-2 ml-2" title="Units of measure fo the emission factor denominator." [icon]="['fas', 'question-circle']"></fa-icon>
+                                <fa-icon *ngIf="editable" class="mt-2" title="Units of measure of the emission factor denominator." [icon]="['fas', 'question-circle']"></fa-icon>
                                 <label for="emissionsDenominatorSelect" class="ml-1 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
                             </div>
                             <div class="col-sm-3">
@@ -234,7 +234,7 @@
 
                     <div class="row pb-2">
                         <div class="col-sm-3">
-                            <fa-icon class="mt-2 ml-2" title="The overall percent of the pollutant that is removed by the controls in the path from the process to the release point." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <fa-icon *ngIf="editable" class="mt-2" title="The overall percent of the pollutant that is removed by the controls in the path from the process to the release point." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="overallControlPercentInput" class="ml-1 col-form-label"><strong>Overall Control %:</strong></label>
                         </div>
                         <div class="col-sm-3">
@@ -245,7 +245,7 @@
 
                     <div class="row pb-2">
                         <div class="col-sm-3">
-                            <fa-icon class="mt-2 ml-2" title="Total calculated or estimated amount of the pollutant. Reported as a float with a maximum of 4 significant figures." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <fa-icon *ngIf="editable" class="mt-2" title="Total calculated or estimated amount of the pollutant. Reported as a float with a maximum of 4 significant figures." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="totalEmissionsInput" class="ml-1 col-form-label"><strong>Total Emissions:</strong></label>
                         </div>
                         <div class="col-sm-3">
@@ -261,7 +261,7 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <fa-icon class="mt-2 ml-2" title="Unit of measure for reported emissions." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <fa-icon *ngIf="editable" class="mt-2" title="Unit of measure for reported emissions." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionsUomCodeSelect" class="ml-1 col-form-label"><strong>Emissions UoM:</strong></label>
                         </div>
                         <div class="col-sm-3">
@@ -292,7 +292,7 @@
 
                     <div class="row pb-2" *ngIf="!getCalcMethodCodeValue()?.totalDirectEntry && getTotalManualEntry().value">
                         <div class="col-sm-3">
-                            <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+                            <fa-icon *ngIf="editable" class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionCalcCommentInput" class="ml-1 col-form-label"><strong>Description of Calculation:</strong></label>
                         </div>
                         <div class="col-sm-9">
@@ -311,7 +311,7 @@
 
                     <div class="row">
                         <div class="col-sm-3">
-                            <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+                            <fa-icon *ngIf="editable" class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionCommentsInput" class="ml-1 col-form-label"><strong>Comments:</strong></label>
                         </div>
                         <div class="col-sm-9">
