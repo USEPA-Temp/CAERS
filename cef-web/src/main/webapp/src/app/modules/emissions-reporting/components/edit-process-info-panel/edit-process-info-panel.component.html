@@ -1,43 +1,25 @@
 <form [formGroup]="processForm" (ngSubmit)="onSubmit()">
     <div class="row pb-1">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="An identifier for the emissions unit in the facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitId" class="ml-1 col-form-label"><strong>Unit ID:</strong></label>
         </div>
-		<div class="col-sm-3 mt-2">{{unitIdentifier}}</div>
+		<div class="col-sm-4 mt-2">{{unitIdentifier}}</div>
     </div>
     <div class="row pb-1">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="An identifier for the process in the facility, given by the facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processIdentifierInput" class="ml-1 col-form-label"><strong>Process ID:</strong></label>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <input [readonly]="process" type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier" maxlength="20">
             <app-validation-message [control]="processForm.get('emissionsProcessIdentifier')"></app-validation-message>
         </div>
-        <div class="col-sm-3">
-            <fa-icon class="mt-2 ml-2" title="A text description of the emissions process." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="processDescriptionInput" class="ml-1 col-form-label"><strong>Process Description:</strong></label>
-        </div>
-        <div class="col-sm-3">
-            <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
-            <app-validation-message [control]="processForm.get('description')"></app-validation-message>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 col-md-10">
-            <div class="validation-message" *ngIf="processForm.errors?.invalidDuplicateProcessIdetifier">
-                This Emissions Process Identifier already exists for this Emissions Unit, duplicates are not allowed.
-            </div>
-        </div>
-    </div>
-
-    <div class="row pb-3">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the emissions process." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processStatusCodeSelect" class="ml-1 col-form-label"><strong>Process Status:</strong></label>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="processStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
@@ -50,29 +32,47 @@
                 If the facility site  status is Permanently Shutdown then each sub-facility component must also be Permanently Shutdown.            
             </div>
         </div>
-        <div class="col-sm-3">
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-10">
+            <div class="validation-message" *ngIf="processForm.errors?.invalidDuplicateProcessIdetifier">
+                This Emissions Process Identifier already exists for this Emissions Unit, duplicates are not allowed.
+            </div>
+        </div>
+    </div>
+
+    <div class="row pb-2">
+        <div class="col-sm-2">
+            <fa-icon class="mt-2 ml-2" title="A text description of the emissions process." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="processDescriptionInput" class="ml-1 col-form-label"><strong>Process Description:</strong></label>
+        </div>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
+            <app-validation-message [control]="processForm.get('description')"></app-validation-message>
+        </div>
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="The year in which the process status became applicable. Required if process Status Code is anything other than operating. Must be between 1900-2050." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processStatusYearInput" class="ml-1 col-form-label"><strong>Process Status Year:</strong></label>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="processForm.get('statusYear')"></app-validation-message>
         </div>
     </div>
 
     <div class="row pb-1">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="EPA Source Classification Code that identifies an emissions process. It should be an SCC from the 'point source' data category." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processSccInput" class="ml-1 col-form-label"><strong>SCC:</strong></label>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()">
             <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.invalidAircraftSCCCombination">
                 Combination of SCC and Aircraft Engine Type Code must be unique within a facility.
             </div>
             <app-validation-message [control]="processForm.get('sccCode')"></app-validation-message>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <button type="button" class="btn btn-success mr-2" (click)="openSccSearchModal()">Search for SCC Code</button>
         </div>
     </div>
@@ -91,22 +91,22 @@
     </div>
 
     <div class="row pb-1">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="SCC Level 1-4 Descriptions." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="sccDescriptionInput" class="ml-1 col-form-label"><strong>SCC Description:</strong></label>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription"></textarea>
             <app-validation-message [control]="processForm.get('sccDescription')"></app-validation-message>
         </div>
     </div>
 
     <div class="row pb-1" *ngIf="processHasAETC">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="Identifies the combination of aircraft and engine type for airport emissions. Required if reporting airport emissions." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processAircraftCodeInput" class="ml-1 col-form-label"><strong>Aircraft Engine Code:</strong></label>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             <select type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCode">
                 <option [ngValue]="null"></option>
                 <option *ngIf="invalidAircraftSCC" disabled [selected]="process?.aircraftEngineTypeCode?.code">{{process?.aircraftEngineTypeCode?.faaAircraftType}}&nbsp;-&nbsp;{{process?.aircraftEngineTypeCode?.engine}}</option>
@@ -125,11 +125,11 @@
     </div>
 
     <div class="row pb-1">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processCommentsInput" class="ml-1 col-form-label"><strong>Comments:</strong></label>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             <textarea rows="3" class="form-control" maxlength="400" style="height:100%;" id="processCommentsInput" formControlName="comments"></textarea>
             <app-validation-message [control]="processForm.get('comments')"></app-validation-message>
         </div>
