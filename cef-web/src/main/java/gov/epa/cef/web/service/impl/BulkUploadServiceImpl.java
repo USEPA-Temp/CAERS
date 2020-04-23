@@ -768,13 +768,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
 
         if (bulkFacility.getStateCode() != null) {
-            facility.setStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getStateCode())).orElse(null));
+            facility.setStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getStateCode().toUpperCase())).orElse(null));
             if (facility.getStateCode() != null && Strings.emptyToNull(bulkFacility.getCountyCode()) != null) {
                 facility.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(facility.getStateCode().getCode(), bulkFacility.getCountyCode()).orElse(null));
             }
         }
         if (bulkFacility.getMailingStateCode() != null) {
-            facility.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getMailingStateCode())).orElse(null));
+            facility.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacility.getMailingStateCode().toUpperCase())).orElse(null));
         }
 
         return facility;
@@ -806,13 +806,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             facilityContact.setType((contactTypeRepo.findById(bulkFacilityContact.getType())).orElse(null));
         }
         if (bulkFacilityContact.getStateCode() != null) {
-            facilityContact.setStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getStateCode())).orElse(null));
+            facilityContact.setStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getStateCode().toUpperCase())).orElse(null));
             if (facilityContact.getStateCode() != null && Strings.emptyToNull(bulkFacilityContact.getCountyCode()) != null) {
                 facilityContact.setCountyCode(countyRepo.findByFipsStateCodeCodeAndCountyCode(facilityContact.getStateCode().getCode(), bulkFacilityContact.getCountyCode()).orElse(null));
             }
         }
         if (bulkFacilityContact.getMailingStateCode() != null) {
-            facilityContact.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getMailingStateCode())).orElse(null));
+            facilityContact.setMailingStateCode((stateCodeRepo.findByUspsCode(bulkFacilityContact.getMailingStateCode().toUpperCase())).orElse(null));
         }
 
         return facilityContact;
