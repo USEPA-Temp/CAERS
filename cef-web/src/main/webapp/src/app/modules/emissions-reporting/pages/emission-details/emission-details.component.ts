@@ -200,6 +200,7 @@ export class EmissionDetailsComponent implements OnInit {
       // set epaEmissionFactor to true for EPA calculation methods
       if (value && value.epaEmissionFactor) {
         this.epaEmissionFactor = true;
+        this.emissionForm.get('emissionsFactor').reset();
       } else {
         this.emissionForm.get('formulaIndicator').reset(false);
         this.setupVariableForm([]);
@@ -591,7 +592,7 @@ export class EmissionDetailsComponent implements OnInit {
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => this.pollutantValues.filter(v => v.pollutantName.toLowerCase().indexOf(term.toLowerCase()) > -1
+      map(term => this.pollutantValues && this.pollutantValues.filter(v => v.pollutantName.toLowerCase().indexOf(term.toLowerCase()) > -1
                                         || v.pollutantCode.toLowerCase().indexOf(term.toLowerCase()) > -1
                                         || (v.pollutantCasId ? v.pollutantCasId.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
                                         .slice(0, 20))

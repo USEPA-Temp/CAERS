@@ -1,9 +1,10 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
@@ -27,8 +28,10 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     @Size(max = 20, message = "Throughput Parameter Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationParameterTypeCode;
 
-    @NotNull(message = "Throughput Value is required.")
-    private BigDecimal calculationParameterValue;
+    @NotBlank(message = "Throughput Value is required.")
+    @Pattern(regexp = PositiveDecimalPattern,
+        message = "Throughput Value is not in expected numeric format; found '${validatedValue}'.")
+    private String calculationParameterValue;
 
     @NotNull(message = "Throughput Unit of Measure Code is required.")
     @Size(max = 20, message = "Throughput Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
@@ -81,10 +84,10 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
-    public BigDecimal getCalculationParameterValue() {
+    public String getCalculationParameterValue() {
         return calculationParameterValue;
     }
-    public void setCalculationParameterValue(BigDecimal calculationParameterValue) {
+    public void setCalculationParameterValue(String calculationParameterValue) {
         this.calculationParameterValue = calculationParameterValue;
     }
 

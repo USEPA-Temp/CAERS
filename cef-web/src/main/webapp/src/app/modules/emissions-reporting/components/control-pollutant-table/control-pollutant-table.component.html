@@ -21,8 +21,12 @@
       <td>{{item.pollutant.pollutantCasId}}</td>
       <td>{{item.percentReduction}}</td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openEditModal(item)" aria-label="edit control pollutant"><fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon></a></td>
-        <td><a routerLink="." (click)="openDeleteModal(item)" aria-label="delete control pollutant"><fa-icon icon="trash-alt"></fa-icon></a></td>
+        <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit control pollutant' + item?.pollutant?.pollutantName">
+          <fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon>
+        </a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item)" [attr.aria-label]="'delete control pollutant' + item?.pollutant?.pollutantName">
+          <fa-icon icon="trash-alt"></fa-icon>
+        </a></td>
       </ng-container>
      
     </tr>

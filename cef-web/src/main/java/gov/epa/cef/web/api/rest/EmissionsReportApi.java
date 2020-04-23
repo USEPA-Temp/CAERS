@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode; 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -87,7 +87,7 @@ public class EmissionsReportApi {
     }
 
     /**
-     * Creates an Emissions Report from either previous report or data from FRS
+     * Creates an Emissions Report from either previous report
      *
      * @param facilityEisProgramId
      * @param reportDto
@@ -130,7 +130,7 @@ public class EmissionsReportApi {
     }
 
     /**
-     * Creates an Emissions Report from either previous report or data from FRS
+     * Creates an Emissions Report from either previous report
      *
      * @param facilityEisProgramId
      * @param reportDto
@@ -152,22 +152,11 @@ public class EmissionsReportApi {
 
         EmissionsReportDto result = createEmissionsReportDto(reportDto);
 
-        /*
-        If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
-        pull of FRS data is possible. The ACCEPTED status allows the UI to notify the user that a
-        process that might take some time is about to be initiated.
-
-        HTTP Status 202/ACCEPTED indicates that request has been accepted for processing,
-        but the processing has not been completed.
-        */
         HttpStatus status = HttpStatus.NO_CONTENT;
         if (result != null) {
-            if (result.getId() == null) {
-                status = HttpStatus.ACCEPTED;
-            } else {
                 status = HttpStatus.OK;
-            }
         }
+        
 
         return new ResponseEntity<>(result, status);
     }
@@ -180,9 +169,6 @@ public class EmissionsReportApi {
         switch (reportDto.getSource()) {
 	        case previous:
 	        	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
-	        	break;
-	        case frs:
-	        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
 	        	break;
 	        case fromScratch:
 	        	result = this.emissionsReportService.createEmissionReport(reportDto);

@@ -49,6 +49,10 @@
     <div *ngIf="control.errors?.pattern.requiredPattern === '^\\d{5}(-\\d{4})?$'">
       Enter 5 digit (XXXXX) or 9 digit (XXXXX-XXXX) Zip Code.
     </div>
+
+    <div *ngIf="control.errors?.pattern.requiredPattern === '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[\.][A-Za-z]{2,}$'">
+      Email Address must be valid (ex: name@domain.com).
+    </div>
   </div>
 
   <div *ngIf="control.errors?.wholeNumber">
@@ -59,9 +63,6 @@
       Value must be a number.
   </div>
 
-  <div *ngIf="control.errors?.email">
-      Email must be a valid email address.
-  </div>
 </div>
 
 <div class="validation-message" *ngIf="control.errors">

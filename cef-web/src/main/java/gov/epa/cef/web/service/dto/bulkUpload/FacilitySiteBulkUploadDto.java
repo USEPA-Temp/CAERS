@@ -1,11 +1,10 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 
 public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Serializable {
@@ -38,7 +37,9 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
 
-    private Short statusYear;
+    @Pattern(regexp = YearPattern,
+        message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
+    private String statusYear;
 
     @Size(max = 20, message = "Program System Code can not exceed {max} chars; found '${validatedValue}'.")
     private String programSystemCode;
@@ -71,15 +72,15 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 10, message = "Postal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String postalCode;
 
-    @NotNull(message = "Latitude is required.")
-    @Digits(integer = 4, fraction = 6,
-        message = "Latitude is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private BigDecimal latitude;
+    @NotBlank(message = "Latitude is required.")
+    @Pattern(regexp = LatitudePattern,
+        message = "Latitude is not in expected numeric format: '+/-{2}.{6}' digits; found '${validatedValue}'.")
+    private String latitude;
 
-    @NotNull(message = "Longitude is required.")
-    @Digits(integer = 4, fraction = 6,
-        message = "Longitude is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private BigDecimal longitude;
+    @NotBlank(message = "Longitude is required.")
+    @Pattern(regexp = LongitudePattern,
+        message = "Longitude is not in expected numeric format: '+/-{3}.{6}' digits; found '${validatedValue}.")
+    private String longitude;
 
     @Size(max = 100, message = "Mailing Street Address can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingStreetAddress;
@@ -187,10 +188,10 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.description = description;
     }
 
-    public Short getStatusYear() {
+    public String getStatusYear() {
         return statusYear;
     }
-    public void setStatusYear(Short statusYear) {
+    public void setStatusYear(String statusYear) {
         this.statusYear = statusYear;
     }
 
@@ -250,17 +251,17 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.postalCode = postalCode;
     }
 
-    public BigDecimal getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
-    public void setLatitude(BigDecimal latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public BigDecimal getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
-    public void setLongitude(BigDecimal longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 

@@ -278,35 +278,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     }
 
     @Override
-    public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {
-
-        return this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
-            .map(programFacility -> {
-
-                EmissionsReport newReport = new EmissionsReport();
-                newReport.setYear(reportYear);
-                newReport.setStatus(ReportStatus.IN_PROGRESS);
-                newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
-
-                newReport.setFrsFacilityId(programFacility.getRegistryId());
-                newReport.setEisProgramId(programFacility.getProgramSystemId());
-
-                // TODO: Remove hard coded value
-                // Using GA for now until FRS has the agency id available for us
-                // https://alm.cgifederal.com/projects/browse/CEF-319
-                newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
-
-                newReport = this.erRepo.save(newReport);
-
-                this.facilitySiteService.copyFromFrs(newReport);
-
-                return this.emissionsReportMapper.toDto(newReport);
-            })
-            .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                String.format("EIS Program ID [%s] is not found in FRS.", facilityEisProgramId)));
-    }
-
-    @Override
     public EmissionsReportDto saveAndAuditEmissionsReport(EmissionsReport emissionsReport, ReportAction reportAction) {
 
         EmissionsReport result = this.erRepo.save(emissionsReport);

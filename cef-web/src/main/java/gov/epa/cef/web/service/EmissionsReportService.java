@@ -18,15 +18,6 @@ public interface EmissionsReportService {
     String __HARD_CODED_AGENCY_CODE__ = "GA";
 
     /**
-     * Creates an emissions report from FRS data
-     * @param facilityEisProgramId
-     * @param year
-     * @return
-     */
-    EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short year);
-
-
-    /**
      * Creates an emissions report from scratch
      * @param reportDto
      * @return

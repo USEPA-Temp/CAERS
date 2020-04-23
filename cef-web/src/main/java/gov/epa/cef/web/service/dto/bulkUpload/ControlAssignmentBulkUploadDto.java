@@ -1,7 +1,8 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 public class ControlAssignmentBulkUploadDto extends BaseWorksheetDto implements Serializable {
@@ -18,13 +19,15 @@ public class ControlAssignmentBulkUploadDto extends BaseWorksheetDto implements 
     @NotNull(message = "Control Assignment ID is required.")
     private Long id;
 
-    @NotNull(message = "Percent Apportionment is required.")
-    @Digits(integer = 3, fraction = 1,
-        message = "Percent Apportionment is not in expected numeric format: '{integer}.{fraction}' digits.")
-    private Double percentApportionment;
+    @NotBlank(message = "Percent Apportionment is required.")
+    @Pattern(regexp = PercentPattern,
+        message = "Percent Apportionment is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String percentApportionment;
 
-    @NotNull(message = "Sequence number is required.")
-    private Integer sequenceNumber;
+    @NotBlank(message = "Sequence number is required.")
+    @Pattern(regexp = PositiveIntPattern,
+        message = "Sequence number is not in expected numeric format: '{10}' digits; found '${validatedValue}'.")
+    private String sequenceNumber;
 
     public ControlAssignmentBulkUploadDto() {
 
@@ -71,22 +74,22 @@ public class ControlAssignmentBulkUploadDto extends BaseWorksheetDto implements 
         this.id = id;
     }
 
-    public Double getPercentApportionment() {
+    public String getPercentApportionment() {
 
         return percentApportionment;
     }
 
-    public void setPercentApportionment(Double percentApportionment) {
+    public void setPercentApportionment(String percentApportionment) {
 
         this.percentApportionment = percentApportionment;
     }
 
-    public Integer getSequenceNumber() {
+    public String getSequenceNumber() {
 
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(Integer sequenceNumber) {
+    public void setSequenceNumber(String sequenceNumber) {
 
         this.sequenceNumber = sequenceNumber;
     }
