@@ -101,7 +101,7 @@
                             <label for="pollutantSelect" class="ml-1 col-form-label"><strong>Pollutant:</strong></label>
                         </div>
                         <div class="col-sm-4">
-                            <input [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
+                            <input (ngModelChange)="onChange($event)" [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
                             <app-validation-message [control]="emissionForm.controls.pollutant"></app-validation-message>
                         </div>
                         <div class="col-sm-2">

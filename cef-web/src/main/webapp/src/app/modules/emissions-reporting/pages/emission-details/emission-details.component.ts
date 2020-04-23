@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Emission } from 'src/app/shared/models/emission';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
@@ -36,7 +36,7 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
   templateUrl: './emission-details.component.html',
   styleUrls: ['./emission-details.component.scss']
 })
-export class EmissionDetailsComponent implements OnInit {
+export class EmissionDetailsComponent implements OnInit, OnChanges {
   @Input() emission: Emission;
   @Input() reportingPeriod: ReportingPeriod;
   @Input() process: Process;
@@ -272,6 +272,10 @@ export class EmissionDetailsComponent implements OnInit {
     });
   }
 
+  onChange() {
+    this.emissionForm.get('emissionsFactor').reset();
+  }
+  
   isCommentRequired() {
     const engJudgment = '2';
     if (this.emissionForm.value.emissionsCalcMethodCode && this.emissionForm.value.emissionsCalcMethodCode.code === engJudgment) {
