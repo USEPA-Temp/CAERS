@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -19,7 +20,6 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
-import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -55,6 +55,7 @@ import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
+import gov.epa.cef.web.service.dto.bulkUpload.BlankToNullModule;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
@@ -92,6 +93,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -252,6 +254,33 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         reportDto.setFacilityContacts(uploadMapper.facilitySiteContactToDtoList(facilityContacts));
 
         return reportDto;
+    }
+
+    @Override
+    public Function<JsonNode, EmissionsReportBulkUploadDto> parseJsonNode(boolean failUnknownProperties) {
+
+        return jsonNode -> {
+
+            EmissionsReportBulkUploadDto result;
+
+            try {
+                result = this.objectMapper.copy()
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, failUnknownProperties)
+                    .registerModule(new BlankToNullModule())
+                    .treeToValue(jsonNode, EmissionsReportBulkUploadDto.class);
+
+            } catch (JsonProcessingException e) {
+
+                String msg = e.getMessage().replaceAll(
+                    EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
+
+                WorksheetError violation = WorksheetError.createSystemError(msg);
+
+                throw new BulkReportValidationException(Collections.singletonList(violation));
+            }
+
+            return result;
+        };
     }
 
     /**
@@ -946,32 +975,19 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private EmissionsReportBulkUploadDto parseWorkbookJson(ExcelParserResponse response,
                                                            EmissionsReportStarterDto metadata) {
 
-        EmissionsReportBulkUploadDto result;
+       return parseJsonNode(true).andThen(result -> {
 
-        try {
-            result = this.objectMapper.copy()
-                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .treeToValue(response.getJson(), EmissionsReportBulkUploadDto.class);
+           result.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
+           result.setEisProgramId(metadata.getEisProgramId());
+           result.setFrsFacilityId(metadata.getFrsFacilityId());
+           result.setAltSiteIdentifier(metadata.getStateFacilityId());
+           result.setYear(metadata.getYear());
+           result.setStatus(ReportStatus.IN_PROGRESS.name());
+           result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
 
-            result.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
-            result.setEisProgramId(metadata.getEisProgramId());
-            result.setFrsFacilityId(metadata.getFrsFacilityId());
-            result.setAltSiteIdentifier(metadata.getStateFacilityId());
-            result.setYear(metadata.getYear());
-            result.setStatus(ReportStatus.IN_PROGRESS.name());
-            result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
+           return result;
 
-        } catch (JsonProcessingException e) {
-
-            String msg = e.getMessage().replaceAll(
-                EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
-
-            WorksheetError violation = WorksheetError.createSystemError(msg);
-
-            throw new BulkReportValidationException(Collections.singletonList(violation));
-        }
-
-        return result;
+       }).apply(response.getJson());
     }
 
     private BigDecimal toBigDecimal(String strval) {

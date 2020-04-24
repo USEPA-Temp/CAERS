@@ -17,11 +17,7 @@ public class BaseWorksheetDto {
 
     static final String PercentPattern = "^\\d{0,3}(\\.\\d)?$";
 
-    static final String PositiveLongPattern = "^\\d{0,19}$";
-
     static final String PositiveIntPattern = "^\\d{0,10}$";
-
-    static final String PositiveShortPattern = "^\\d{0,5}$";
 
     static final String YearPattern = "^\\d{0,4}$";
 
