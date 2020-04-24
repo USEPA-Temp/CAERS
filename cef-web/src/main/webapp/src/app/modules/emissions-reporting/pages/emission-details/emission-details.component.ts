@@ -128,6 +128,7 @@ export class EmissionDetailsComponent implements OnInit {
     this.route.data
     .subscribe(data => {
       this.createMode = data.create === 'true';
+      this.editable = data.create === 'true';
 
       this.userContextService.getUser().subscribe( user => {
         if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
