@@ -48,7 +48,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(100)
     ]],
-    comments: ['', Validators.maxLength(400)]
+    comments: [null, Validators.maxLength(400)]
   }, { validators: [
     this.unitTypeCheck(),
     this.emissionUnitIdentifierCheck(),

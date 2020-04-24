@@ -1,32 +1,43 @@
 package gov.epa.cef.web.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.util.TempFile;
 
+import java.util.function.Function;
+
 public interface BulkUploadService {
 
     /**
-     * Upload, Parse and Save the emissions report to the database.
-     * @param metadata
-     * @param workbook
+     * Testing method for generating upload JSON for a report
+     *
+     * @param reportId
      * @return
      */
-    EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook);
+    EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId);
+
+    /**
+     * Converts JSON to EmissionsReportUploadDto.
+     * @return
+     */
+    Function<JsonNode, EmissionsReportBulkUploadDto> parseJsonNode(boolean failUnknownProperties);
 
     /**
      * Save the emissions report to the database.
+     *
      * @param bulkEmissionsReport
      * @return
      */
     EmissionsReportDto saveBulkEmissionsReport(EmissionsReportBulkUploadDto bulkEmissionsReport);
 
     /**
-     * Testing method for generating upload JSON for a report
-     * @param reportId
+     * Upload, Parse and Save the emissions report to the database.
+     *
+     * @param metadata
+     * @param workbook
      * @return
      */
-    EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId);
-
+    EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook);
 }

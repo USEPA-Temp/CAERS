@@ -16,7 +16,7 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 	private Long facilitySiteId;
 
     @NotBlank(message = "NAICS code is required.")
-    @Pattern(regexp = PositiveIntPattern,
+    @Pattern(regexp = "^\\d{0,6}$",
         message = "NAICS is not in expected numeric format; found '${validatedValue}'.")
 	private String code;
 
