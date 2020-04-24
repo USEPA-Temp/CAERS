@@ -179,9 +179,11 @@
                     </div>
 
                     <div class="pb-2" *ngIf="emissionForm.get('formulaIndicator').value" formGroupName="formulaVariables">
-                        <div class="row" *ngFor="let variable of formulaVariables">
-                            <fa-icon *ngIf="editable" class="mt-2" title="The name of your facility." [icon]="['fas', 'question-circle']"></fa-icon>
-                            <label for="{{variable.code + 'Input'}}" class="ml-1 col-form-label"><strong>{{variable.code}} - {{variable.description}}:</strong></label>
+                        <div class="row pb-2" *ngFor="let variable of formulaVariables">
+                            <div class="col-sm-3">
+                                <fa-icon *ngIf="editable" class="mt-2" title="The name of your facility." [icon]="['fas', 'question-circle']"></fa-icon>
+                                <label for="{{variable.code + 'Input'}}" class="ml-1 col-form-label"><strong>{{variable.code}} - {{variable.description}}:</strong></label>
+                            </div>
                             <div class="col-sm-8 col-lg-4">
                                 <input type="number" class="form-control" id="{{variable.code + 'Input'}}" [formControlName]="variable.code">
                                 <app-validation-message [control]="getFormulaVariableForm().get(variable.code)"></app-validation-message>
