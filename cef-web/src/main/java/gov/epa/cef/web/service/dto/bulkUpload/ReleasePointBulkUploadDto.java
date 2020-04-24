@@ -105,8 +105,8 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Release Point Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String releasePointIdentifier;
 
-    @Pattern(regexp = "^\\d{0,5}(\\.\\d{1,3})?$",
-        message = "Stack Diameter is not in expected numeric format: '{5}.{3}' digits.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
+        message = "Stack Diameter is not in expected numeric format: '{3}.{3}' digits.")
     private String stackDiameter;
 
     @Size(max = 20, message = "Stack Diameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
