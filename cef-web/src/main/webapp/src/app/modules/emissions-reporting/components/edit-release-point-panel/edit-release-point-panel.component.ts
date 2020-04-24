@@ -77,7 +77,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       wholeNumberValidator(),
     ]],
     fenceLineUomCode: [null],
-    comments: ['', Validators.maxLength(400)],
+    comments: [null, Validators.maxLength(400)],
     exitGasVelocity: [null, Validators.pattern(this.numberPattern83)],
     exitGasVelocityUomCode: [null],
     exitGasFlowRate: [null, Validators.pattern(this.numberPattern168)],
