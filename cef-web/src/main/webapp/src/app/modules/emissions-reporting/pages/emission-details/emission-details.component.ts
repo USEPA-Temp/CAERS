@@ -71,7 +71,7 @@ export class EmissionDetailsComponent implements OnInit {
     overallControlPercent: ['', [Validators.min(0), Validators.max(99.999999)]],
     totalEmissions: ['', [Validators.required, Validators.min(0)]],
     emissionsUomCode: [null, [Validators.required, legacyUomValidator()]],
-    comments: ['', [Validators.maxLength(400)]],
+    comments: [null, [Validators.maxLength(400)]],
     calculationComment: ['', [Validators.required, Validators.maxLength(4000)]],
     formulaVariables: this.fb.group({}),
   }, { validators: [
