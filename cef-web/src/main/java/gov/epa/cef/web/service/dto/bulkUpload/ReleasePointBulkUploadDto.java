@@ -24,7 +24,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Exit Gas Flow Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String exitGasFlowUomCode;
 
-    @Pattern(regexp = "^\\d{0,4}",
+    @Pattern(regexp = "^\\d{0,4}$",
         message = "Exit Gas Temperature is not in expected format: {4} digits; found '${validatedValue}'.")
     private String exitGasTemperature;
 
@@ -38,25 +38,25 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @NotNull(message = "Release Point ID is required.")
     private Long facilitySiteId;
 
-    @Pattern(regexp = "^\\d{0,6}",
+    @Pattern(regexp = "^\\d{0,6}$",
         message = "Fence Line Distance is not in expected format: {10} digits; found '${validatedValue}'.")
     private String fenceLineDistance;
 
     @Size(max = 20, message = "Fence Line Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fenceLineUomCode;
 
-    @Pattern(regexp = "^\\d{0,3}",
+    @Pattern(regexp = "^\\d{0,3}$",
         message = "Fugitive Angle is not in expected numeric format: {3} digits; found '${validatedValue}'.")
     private String fugitiveAngle;
 
-    @Pattern(regexp = "^\\d{0,3}",
+    @Pattern(regexp = "^\\d{0,3}$",
         message = "Fugitive Height is not in expected numeric format: {3} digits; found '${validatedValue}'.")
     private String fugitiveHeight;
 
     @Size(max = 20, message = "Fugitive Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fugitiveHeightUomCode;
 
-    @Pattern(regexp = "^\\d{0,6}",
+    @Pattern(regexp = "^\\d{0,6}$",
         message = "Fugitive Length is not in expected numeric format: {6} digits; found '${validatedValue}'.")
     private String fugitiveLength;
 
@@ -79,7 +79,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         message = "Fugitive Line2 Longitude is not in expected numeric format: '+/-{3}.{6}' digits; found '${validatedValue}'.")
     private String fugitiveLine2Longitude;
 
-    @Pattern(regexp = "^\\d{0,6}",
+    @Pattern(regexp = "^\\d{0,6}$",
         message = "Fugitive Width is not in expected numeric format: {6} digits; found '${validatedValue}'.")
     private String fugitiveWidth;
 
@@ -105,8 +105,8 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Release Point Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String releasePointIdentifier;
 
-    @Pattern(regexp = "^\\d{0,5}(\\.\\d{1,3})?$",
-        message = "Stack Diameter is not in expected numeric format: '{5}.{3}' digits.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
+        message = "Stack Diameter is not in expected numeric format: '{3}.{3}' digits.")
     private String stackDiameter;
 
     @Size(max = 20, message = "Stack Diameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
