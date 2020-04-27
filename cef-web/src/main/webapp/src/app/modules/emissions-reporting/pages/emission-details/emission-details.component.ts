@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { Emission } from 'src/app/shared/models/emission';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
@@ -71,7 +71,7 @@ export class EmissionDetailsComponent implements OnInit {
     overallControlPercent: ['', [Validators.min(0), Validators.max(99.999999)]],
     totalEmissions: ['', [Validators.required, Validators.min(0)]],
     emissionsUomCode: [null, [Validators.required, legacyUomValidator()]],
-    comments: ['', [Validators.maxLength(400)]],
+    comments: [null, [Validators.maxLength(400)]],
     calculationComment: ['', [Validators.required, Validators.maxLength(4000)]],
     formulaVariables: this.fb.group({}),
   }, { validators: [
@@ -128,6 +128,7 @@ export class EmissionDetailsComponent implements OnInit {
     this.route.data
     .subscribe(data => {
       this.createMode = data.create === 'true';
+      this.editable = data.create === 'true';
 
       this.userContextService.getUser().subscribe( user => {
         if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
@@ -270,6 +271,10 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsFactorFormula').disable();
       }
     });
+  }
+
+  onChange() {
+    this.emissionForm.get('emissionsFactor').reset();
   }
 
   isCommentRequired() {

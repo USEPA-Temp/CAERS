@@ -17,7 +17,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
     @NotNull(message = "Reporting Period ID is required.")
     private Long reportingPeriodId;
 
-    @Pattern(regexp = PositiveShortPattern,
+    @Pattern(regexp = "^\\d{0,4}$",
         message = "Actual Hours Per Period is not in expected numeric format; found '${validatedValue}'.")
     private String actualHoursPerPeriod;
 
@@ -25,11 +25,11 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         message = "Average Hours Per Day is not in expected numeric format: '{2}.{1}' digits; found '${validatedValue}'.")
     private String averageHoursPerDay;
 
-    @Pattern(regexp = "^\\d*(\\.\\d)?$",
+    @Pattern(regexp = "^\\d?(\\.\\d)?$",
         message = "Average Days Per Week is not in expected numeric format: '{1}.{1}' digits; found '${validatedValue}'.")
     private String averageDaysPerWeek;
 
-    @Pattern(regexp = PositiveShortPattern,
+    @Pattern(regexp = "^\\d{0,2}$",
         message = "Average Weeks Per Period is not in expected numeric format; found '${validatedValue}'.")
     private String averageWeeksPerPeriod;
 
