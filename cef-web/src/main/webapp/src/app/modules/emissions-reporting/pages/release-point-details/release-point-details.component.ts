@@ -87,31 +87,6 @@ export class ReleasePointDetailsComponent implements OnInit {
       Object.assign(updatedReleasePoint, this.releasePointComponent.releasePointForm.value);
       updatedReleasePoint.id = this.releasePoint.id;
 
-      if (this.releasePointComponent.releasePointForm.get('exitGasFlowRate').value === null
-      || this.releasePointComponent.releasePointForm.get('exitGasFlowRate').value === '') {
-        updatedReleasePoint.exitGasFlowUomCode = null;
-      }
-      if (this.releasePointComponent.releasePointForm.get('exitGasVelocity').value === null
-      || this.releasePointComponent.releasePointForm.get('exitGasVelocity').value === '') {
-        updatedReleasePoint.exitGasVelocityUomCode = null;
-      }
-      if (this.releasePointComponent.releasePointForm.get('fenceLineDistance').value === null
-      || this.releasePointComponent.releasePointForm.get('fenceLineDistance').value === '') {
-        updatedReleasePoint.fenceLineUomCode = null;
-      }
-      if (this.releasePointComponent.releasePointForm.get('fugitiveWidth').value === null
-      || this.releasePointComponent.releasePointForm.get('fugitiveWidth').value === '') {
-        updatedReleasePoint.fugitiveWidthUomCode = null;
-      }
-      if (this.releasePointComponent.releasePointForm.get('fugitiveLength').value === null
-      || this.releasePointComponent.releasePointForm.get('fugitiveLength').value === '') {
-        updatedReleasePoint.fugitiveLengthUomCode = null;
-      }
-      if (this.releasePointComponent.releasePointForm.get('fugitiveHeight').value === null
-      || this.releasePointComponent.releasePointForm.get('fugitiveHeight').value === '') {
-        updatedReleasePoint.fugitiveHeightUomCode = null;
-      }
-
       this.releasePointService.update(updatedReleasePoint)
       .subscribe(result => {
 

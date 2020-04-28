@@ -321,13 +321,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   // exit gas flow rate must have uom
   exitGasFlowUomCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const flowRate = control.get('exitGasFlowRate');
-      const uom = control.get('exitGasFlowUomCode');
+      const flowRate = control.get('exitGasFlowRate').value;
+      const uom = control.get('exitGasFlowUomCode').value;
 
-      if ((flowRate.value !== null && flowRate.value !== '') && (uom === undefined || uom.value === null)) {
-        control.get('exitGasFlowUomCode').setErrors({invalidExitGasFlowUomCode: true});
-      } else {
-        control.get('exitGasFlowUomCode').setErrors(null);
+      if ((flowRate && !uom) || (!flowRate && uom)) {
+        return {invalidExitGasFlowUomCode: true};
       }
       return null;
     };
@@ -336,14 +334,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   // exit gas velocity must have uom
   exitGasVelocityUomCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const velocity = control.get('exitGasVelocity');
-      const uom = control.get('exitGasVelocityUomCode');
+      const velocity = control.get('exitGasVelocity').value;
+      const uom = control.get('exitGasVelocityUomCode').value;
 
-      if ((velocity.value !== null && velocity.value !== '') && (uom === undefined || uom.value === null )) {
-          control.get('exitGasVelocityUomCode').setErrors({invalidExitGasVelocityUomCode: true});
-        } else {
-          control.get('exitGasVelocityUomCode').setErrors(null);
-        }
+      if ((velocity && !uom) || (!velocity && uom)) {
+        return {invalidExitGasVelocityUomCode: true};
+      }
       return null;
     };
   }
