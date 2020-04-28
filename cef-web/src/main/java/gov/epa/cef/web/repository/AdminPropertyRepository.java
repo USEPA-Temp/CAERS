@@ -21,7 +21,7 @@ public interface AdminPropertyRepository extends CrudRepository<AdminProperty, S
     @Cacheable(value = CacheName.ConfigProperties)
     Optional<AdminProperty> findById(String id);
 
-    @CachePut(value = CacheName.ConfigProperties)
+    @CachePut(value = CacheName.ConfigProperties, key="#entity.name")
     <S extends AdminProperty> S save(S entity);
 
     @CacheEvict(value = CacheName.ConfigProperties)

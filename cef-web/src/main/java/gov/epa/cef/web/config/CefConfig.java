@@ -53,4 +53,21 @@ public class CefConfig {
         return this.propertyProvider.getBigDecimal(AppPropertyName.EmissionsTotalWarningTolerance);
     }
 
+    public List<String> getErrorEmails() {
+
+        return this.propertyProvider.getStringList(AppPropertyName.ErrorEmailAddresses);
+    }
+
+    public String getLastSccUpdateDate() {
+        return this.propertyProvider.getString(AppPropertyName.LastSccUpdateDate);
+    }
+
+    public String getSccUpdateTaskCron() {
+        return this.propertyProvider.getString(AppPropertyName.SccUpdateTaskCron);
+    }
+
+    public boolean getSccUpdateTaskEnabled() {
+        return this.propertyProvider.getBoolean(AppPropertyName.SccUpdateTaskEnabled);
+    }
+
 }

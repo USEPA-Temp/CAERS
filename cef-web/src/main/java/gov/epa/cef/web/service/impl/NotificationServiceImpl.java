@@ -30,6 +30,9 @@ public class NotificationServiceImpl implements NotificationService {
     
     private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report Accepted";
     private final String REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE = "reportAccepted";
+    
+    private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
+    private final String SCC_UPDATE_FAILED_BODY_TEMPLATE = "sccUpdateFailed";
   
     @Autowired
     public JavaMailSender emailSender;
@@ -101,6 +104,14 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("facilityName", facilityName);
         context.setVariable("comments", comments);
         String emailBody = templateEngine.process(REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE, context);
+        sendHtmlMessage(to, from, emailSubject, emailBody);
+    }
+    
+    public void sendSccUpdateFailedNotification(String to, String from, Exception exception) {
+        String emailSubject = SCC_UPDATE_FAILED_SUBJECT;
+        Context context = new Context();
+        context.setVariable("exception", exception);
+        String emailBody = templateEngine.process(SCC_UPDATE_FAILED_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }
 }

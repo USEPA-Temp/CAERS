@@ -7,7 +7,11 @@ public enum AppPropertyName implements IPropertyKey {
     DefaultEmailAddress("email.default"),
     EnvAdmins("env.admins"),
     EmissionsTotalErrorTolerance("emissions.tolerance.total.error"),
-    EmissionsTotalWarningTolerance("emissions.tolerance.total.warning");
+    EmissionsTotalWarningTolerance("emissions.tolerance.total.warning"),
+    ErrorEmailAddresses("email.error"),
+    LastSccUpdateDate("task.scc-update.last-ran"),
+    SccUpdateTaskCron("task.scc-update.cron"),
+    SccUpdateTaskEnabled("task.scc-update.enabled");
 
     private final String key;
 
