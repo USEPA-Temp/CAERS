@@ -23,7 +23,6 @@ DROP TABLE IF EXISTS facility_site;
 DROP TABLE IF EXISTS report_history;
 DROP TABLE IF EXISTS emissions_report;
 DROP TABLE IF EXISTS admin_properties;
-DROP TABLE IF EXISTS facility;
 
 --REFERENCE TABLES
 DROP TABLE IF EXISTS emission_formula_variable_code;
