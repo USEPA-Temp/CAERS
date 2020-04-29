@@ -102,6 +102,7 @@
         </div>
         <div class="col-sm-3">
             <select type="text" class="form-control" id="fenceLineUomCodeSelect" formControlName="fenceLineUomCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
                 <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>

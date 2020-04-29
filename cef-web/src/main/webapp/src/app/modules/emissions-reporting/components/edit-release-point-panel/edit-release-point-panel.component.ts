@@ -115,14 +115,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.max(1300),
       Validators.pattern(this.numberPattern83)
     ]],
-    stackHeightUomCode: [null],
+    stackHeightUomCode: [null, [Validators.required]],
     stackDiameter: ['', [
       Validators.required,
       Validators.min(0.001),
       Validators.max(300),
       Validators.pattern(this.numberPattern83)
     ]],
-    stackDiameterUomCode: [null],
+    stackDiameterUomCode: [null, [Validators.required]],
     exitGasTemperature: ['', [
       Validators.required,
       Validators.min(-30),
@@ -223,13 +223,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.isReleasePointFugitiveType();
     this.setGasFlowRangeValidation();
     this.setGasVelocityRangeValidation();
-
-    this.releasePointForm.controls.fenceLineUomCode.setValue({ code: 'FT' });
+    this.uomRequiredCheck();
 
     if (this.releaseType === this.fugitiveType) {
-      this.releasePointForm.controls.fugitiveLengthUomCode.setValue({ code: 'FT' });
-      this.releasePointForm.controls.fugitiveWidthUomCode.setValue({ code: 'FT' });
-      this.releasePointForm.controls.fugitiveHeightUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.stackHeight.disable();
       this.releasePointForm.controls.stackDiameter.disable();
       this.releasePointForm.controls.exitGasTemperature.disable();
@@ -246,8 +242,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.releasePointForm.controls.exitGasTemperature.enable();
       this.releasePointForm.controls.stackHeightUomCode.enable();
       this.releasePointForm.controls.stackDiameterUomCode.enable();
-      this.releasePointForm.controls.stackHeightUomCode.setValue({ code: 'FT' });
-      this.releasePointForm.controls.stackDiameterUomCode.setValue({ code: 'FT' });
       this.releasePointForm.controls.fugitiveLine1Latitude.reset();
       this.releasePointForm.controls.fugitiveLine2Latitude.reset();
       this.releasePointForm.controls.fugitiveLine1Longitude.reset();
@@ -262,6 +256,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
   }
 
+  // QA Check - exit gas flow rate range
   setGasFlowRangeValidation() {
     if (this.releasePointForm.controls.exitGasFlowUomCode.value !== null) {
       this.isReleasePointFugitiveType();
@@ -290,6 +285,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
   }
 
+  // QA Check - exit gas velocity range
   setGasVelocityRangeValidation() {
     if (this.releasePointForm.controls.exitGasVelocityUomCode.value !== null) {
       this.isReleasePointFugitiveType();
@@ -318,7 +314,54 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  // exit gas flow rate must have uom
+  // sets uom to required if optional fields have values
+  uomRequiredCheck() {
+    this.releasePointForm.get('fenceLineDistance').valueChanges
+    .subscribe(value => {
+      if (this.releasePointForm.get('fenceLineDistance').value) {
+        this.releasePointForm.get('fenceLineUomCode').setValidators([Validators.required]);
+        this.releasePointForm.controls.fenceLineUomCode.updateValueAndValidity();
+      } else {
+        this.releasePointForm.get('fenceLineUomCode').setValidators(null);
+        this.releasePointForm.controls.fenceLineUomCode.updateValueAndValidity();
+      }
+    });
+
+    this.releasePointForm.get('fugitiveLength').valueChanges
+    .subscribe(value => {
+      if (this.releasePointForm.get('fugitiveLength').value) {
+        this.releasePointForm.get('fugitiveLengthUomCode').setValidators([Validators.required]);
+        this.releasePointForm.controls.fugitiveLengthUomCode.updateValueAndValidity();
+      } else {
+        this.releasePointForm.get('fugitiveLengthUomCode').setValidators(null);
+        this.releasePointForm.controls.fugitiveLengthUomCode.updateValueAndValidity();
+      }
+    });
+
+    this.releasePointForm.get('fugitiveWidth').valueChanges
+    .subscribe(value => {
+      if (this.releasePointForm.get('fugitiveWidth').value) {
+        this.releasePointForm.get('fugitiveWidthUomCode').setValidators([Validators.required]);
+        this.releasePointForm.controls.fugitiveWidthUomCode.updateValueAndValidity();
+      } else {
+        this.releasePointForm.get('fugitiveWidthUomCode').setValidators(null);
+        this.releasePointForm.controls.fugitiveWidthUomCode.updateValueAndValidity();
+      }
+    });
+
+    this.releasePointForm.get('fugitiveHeight').valueChanges
+    .subscribe(value => {
+      if (this.releasePointForm.get('fugitiveHeight').value) {
+        this.releasePointForm.get('fugitiveHeightUomCode').setValidators([Validators.required]);
+        this.releasePointForm.controls.fugitiveHeightUomCode.updateValueAndValidity();
+      } else {
+        this.releasePointForm.get('fugitiveHeightUomCode').setValidators(null);
+        this.releasePointForm.controls.fugitiveHeightUomCode.updateValueAndValidity();
+      }
+    });
+  }
+
+  // QA Check - exit gas flow rate and uom must be submitted together
   exitGasFlowUomCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const flowRate = control.get('exitGasFlowRate').value;
@@ -331,7 +374,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // exit gas velocity must have uom
+  // QA Check - exit velocity and uom must be submitted together
   exitGasVelocityUomCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const velocity = control.get('exitGasVelocity').value;
@@ -344,7 +387,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // Calculated exit gas velocity range check
+  // QA Check - Calculated exit gas velocity range
   exitVelocityCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       if (this.releaseType !== this.fugitiveType) {
@@ -383,7 +426,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // Exit gas flow rate or Exit gas velocity must be entered
+  // QA Check - Exit gas flow rate or Exit gas velocity must be entered
   exitGasFlowCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const flowRate = control.get('exitGasFlowRate');
@@ -398,7 +441,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // Stack diameter must be less than stack height.
+  // QA Check - Stack diameter must be less than stack height.
   stackDiameterCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const diameter = control.get('stackDiameter'); // ft
@@ -417,7 +460,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // Stack Diameter information is reported, Exit Gas Flow Rate and Velocity should be reported
+  // QA Check - Stack Diameter information is reported, Exit Gas Flow Rate and Velocity should be reported
   stackDiameterCheckForVelAndFlow(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const diameter = control.get('stackDiameter');
@@ -438,7 +481,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
+  // QA Check - Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
   stackVelAndFlowCheckForDiameter(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const diameter = control.get('stackDiameter');
@@ -458,7 +501,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  // Exit gas flow input must be within +/-5% of computed flow
+  // QA Check - Exit gas flow input must be within +/-5% of computed flow
   exitFlowConsistencyCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       if (this.releaseType !== this.fugitiveType) {
@@ -517,6 +560,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
+  // QA Check - check if coordinate is within facility coordinate tolerance
   coordinateToleranceCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const DEFAULT_TOLERANCE = 0.003;
@@ -563,6 +607,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
+  // QA Check - operating status check vs facility site operating status
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const statusPermShutdown = 'PS';
@@ -583,6 +628,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
+  // QA Check - identifier must be unique
   releasePointIdentifierCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       if (this.releasePointIdentifiers) {
