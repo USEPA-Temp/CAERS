@@ -2,6 +2,8 @@ package gov.epa.cef.web.client.soap;
 
 import gov.epa.cef.web.config.CdxConfig;
 import gov.epa.cef.web.exception.VirusScanException;
+import gov.epa.cef.web.provider.system.IPropertyKey;
+import gov.epa.cef.web.provider.system.PropertyProvider;
 import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.wsdl.virusscan._1.ScanFilePortType;
 import org.slf4j.Logger;
@@ -24,18 +26,34 @@ public class VirusScanClient extends AbstractClient {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final PropertyProvider propertyProvider;
+
     private final CdxConfig cdxConfig;
 
     private final VirusScanConfig virusScanConfig;
 
     @Autowired
-    VirusScanClient(CdxConfig cdxConfig, VirusScanConfig virusScanConfig) {
+    VirusScanClient(PropertyProvider propertyProvider, CdxConfig cdxConfig, VirusScanConfig virusScanConfig) {
 
+        this.propertyProvider = propertyProvider;
         this.cdxConfig = cdxConfig;
         this.virusScanConfig = virusScanConfig;
     }
 
+    public boolean isEnabled() {
+
+        return this.propertyProvider.getBoolean(VirusScanProperty.VirusScannerEnabled, false);
+    }
+
     public void scanFile(TempFile tempFile) {
+
+        if (isEnabled()) {
+
+            doScanFile(tempFile);
+        }
+    }
+
+    private void doScanFile(TempFile tempFile) {
 
         ScanFilePortType virusScanner = getClient(this.virusScanConfig.getEndpoint(),
             ScanFilePortType.class, true, true);
@@ -50,6 +68,9 @@ public class VirusScanClient extends AbstractClient {
 
         } catch (Exception e) {
 
+            // log the exception we are about to eat
+            logger.warn("Eating exception", e);
+
             result = e.getMessage();
             throw new VirusScanException(e.getMessage());
 
@@ -63,6 +84,24 @@ public class VirusScanClient extends AbstractClient {
             // not clean
             String message = String.format("Virus scan transId %s returned result: %s", transId.toString(), result);
             throw new VirusScanException(message);
+        }
+    }
+
+    private static enum VirusScanProperty implements IPropertyKey {
+
+        VirusScannerEnabled("virus-scanner.enabled");
+
+        private final String configKey;
+
+        VirusScanProperty(String configKey) {
+
+            this.configKey = configKey;
+        }
+
+        @Override
+        public String configKey() {
+
+            return this.configKey;
         }
     }
 

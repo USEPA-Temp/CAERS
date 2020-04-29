@@ -162,7 +162,7 @@ public class EmissionsReportApi {
         } catch (VirusScanException e) {
 
             String msg = String.format("The uploaded file, '%s', is suspected of containing a threat " +
-                "such as a virus or malware and was deleted. The scanner responded with: '%s'.",
+                    "such as a virus or malware and was deleted. The scanner responded with: '%s'.",
                 workbook.getOriginalFilename(), e.getMessage());
 
             throw new BulkReportValidationException(

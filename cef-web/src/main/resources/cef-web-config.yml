@@ -52,6 +52,8 @@ cdx:
     - https://www2.e-enterprise.gov
 excel-parser:
   base-url: https://devngn.epacdxnode.net/excel-json-parser/api/v1
+virus-scanner:
+  endpoint: https://cdxtools.epa.gov/xml/VirusScan.wsdl
 ga:
   slt-email: edward.canoles@cgifederal.com
 network-nodes:
