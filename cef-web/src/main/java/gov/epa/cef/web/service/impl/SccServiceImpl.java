@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.SccService;
 import gov.epa.cef.web.service.dto.SccAttributeDto;
 import gov.epa.cef.web.service.dto.SccDetailDto;
+import gov.epa.cef.web.service.dto.SccResourceSearchApiDto;
 import gov.epa.client.sccwebservices.model.SccDetail;
 
 @Service
@@ -40,19 +42,22 @@ public class SccServiceImpl implements SccService {
      * @param lastUpdated
      * @return
      */
-    private List<SccDetailDto> retrievePointSccDetailsSince(String lastUpdated) {
+    private List<SccDetailDto> retrievePointSccDetailsSince(LocalDate lastUpdated) {
 
-        List<String> facetName = Collections.singletonList("Data Category");
-        List<String> facetValue = Collections.singletonList("Point");
-        List<String> facetQualifier = Collections.singletonList("exact");
-        List<String> facetMatchType = Collections.singletonList("whole_phrase");
+        SccResourceSearchApiDto dto = new SccResourceSearchApiDto();
+        dto.setFacetName(Collections.singletonList("Data Category"));
+        dto.setFacetValue(Collections.singletonList("Point"));
+        dto.setFacetQualifier(Collections.singletonList("exact"));
+        dto.setFacetMatchType(Collections.singletonList("whole_phrase"));
 
-        List<SccDetailDto> result = this.sccClient.getResourceSearchResults(facetName, facetValue, facetQualifier, facetMatchType, null, null, null, lastUpdated, null, null, null)
+        dto.setLastUpdatedSince(lastUpdated);
+
+        List<SccDetailDto> result = this.sccClient.getResourceSearchResults(dto)
                 .stream()
                 .map(scc -> {
-                    SccDetailDto dto = mapSccDetail(scc);
+                    SccDetailDto detailDto = mapSccDetail(scc);
 
-                    return dto;
+                    return detailDto;
                 }).collect(Collectors.toList());
 
         return result;
@@ -64,7 +69,7 @@ public class SccServiceImpl implements SccService {
      * @return
      */
     @Override
-    public Iterable<PointSourceSccCode> updatePointSourceSccCodes(String lastUpdated) {
+    public Iterable<PointSourceSccCode> updatePointSourceSccCodes(LocalDate lastUpdated) {
 
         List<SccDetailDto> updatedCodes = this.retrievePointSccDetailsSince(lastUpdated);
         List<PointSourceSccCode> codeEntities = updatedCodes.stream().map(dto -> {

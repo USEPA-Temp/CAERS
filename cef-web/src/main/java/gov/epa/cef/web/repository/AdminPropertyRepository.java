@@ -3,27 +3,25 @@ package gov.epa.cef.web.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import javax.persistence.QueryHint;
+
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
 
-import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.AdminProperty;
 
 public interface AdminPropertyRepository extends CrudRepository<AdminProperty, String> {
 
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     List<AdminProperty> findAll();
 
     List<AdminProperty> findAll(Sort sort);
 
-    @Cacheable(value = CacheName.ConfigProperties)
     Optional<AdminProperty> findById(String id);
 
-    @CachePut(value = CacheName.ConfigProperties, key="#entity.name")
     <S extends AdminProperty> S save(S entity);
 
-    @CacheEvict(value = CacheName.ConfigProperties)
     void deleteById(String id);
 }

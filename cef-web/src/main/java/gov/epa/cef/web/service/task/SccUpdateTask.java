@@ -1,7 +1,7 @@
 package gov.epa.cef.web.service.task;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,8 @@ public class SccUpdateTask implements Runnable {
         if (this.propertyProvider.getBoolean(AppPropertyName.SccUpdateTaskEnabled, false)) {
             try {
                 logger.info("SCC Update Task running");
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                this.sccService.updatePointSourceSccCodes(this.propertyProvider.getString(AppPropertyName.LastSccUpdateDate));
-                this.propertyProvider.update(AppPropertyName.LastSccUpdateDate, dateFormat.format(new Date()));
+                this.sccService.updatePointSourceSccCodes(this.propertyProvider.getLocalDate(AppPropertyName.LastSccUpdateDate));
+                this.propertyProvider.update(AppPropertyName.LastSccUpdateDate, LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
                 logger.info("SCC Update Task finish");
             } catch (Exception e) {
                 logger.error("Exception thrown while updating SCC Codes", e);

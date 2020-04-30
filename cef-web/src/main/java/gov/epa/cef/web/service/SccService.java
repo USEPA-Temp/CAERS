@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service;
 
+import java.time.LocalDate;
+
 import gov.epa.cef.web.domain.PointSourceSccCode;
 
 public interface SccService {
@@ -9,6 +11,6 @@ public interface SccService {
      * @param lastUpdated
      * @return
      */
-    Iterable<PointSourceSccCode> updatePointSourceSccCodes(String lastUpdated);
+    Iterable<PointSourceSccCode> updatePointSourceSccCodes(LocalDate lastUpdated);
 
 }

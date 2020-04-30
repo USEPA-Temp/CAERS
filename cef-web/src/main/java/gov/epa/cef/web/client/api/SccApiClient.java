@@ -1,5 +1,6 @@
 package gov.epa.cef.web.client.api;
 
+import gov.epa.cef.web.service.dto.SccResourceSearchApiDto;
 import gov.epa.client.sccwebservices.ApiClient;
 import gov.epa.client.sccwebservices.SccSearchApiApi;
 import gov.epa.client.sccwebservices.model.SccDetail;
@@ -34,13 +35,11 @@ public class SccApiClient {
         this.client = new SccSearchApiApi(apiClient);
     }
 
-    public List<SccDetail> getResourceSearchResults(List<String> facetName, List<String> facetValue, 
-            List<String> facetQualifier, List<String> facetMatchType, String paramCallback, String format, 
-            String filename, String lastUpdatedSince, String sortFacet, String pageNum, String pageSize) {
+    public List<SccDetail> getResourceSearchResults(SccResourceSearchApiDto dto) {
 
-        return this.client.getResourceSearchResults(facetName, facetValue, 
-                facetQualifier, facetMatchType, paramCallback, format, 
-                filename, lastUpdatedSince, sortFacet, pageNum, pageSize);
+        return this.client.getResourceSearchResults(dto.getFacetName(), dto.getFacetValue(), 
+                dto.getFacetQualifier(), dto.getFacetMatchType(), dto.getParamCallback(), dto.getFormat(), 
+                dto.getFilename(), dto.getLastUpdatedSinceString(), dto.getSortFacet(), dto.getPageNum(), dto.getPageSize());
     }
 
 

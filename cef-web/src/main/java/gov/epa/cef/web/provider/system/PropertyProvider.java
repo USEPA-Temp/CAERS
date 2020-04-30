@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,6 +105,24 @@ public class PropertyProvider {
         if (exists(name)) {
 
             result = this.getInt(propertyKey);
+        }
+
+        return result;
+    }
+
+    public LocalDate getLocalDate(IPropertyKey propertyKey) {
+
+        String strValue = this.getString(propertyKey);
+
+        LocalDate result = null;
+        try {
+
+            result = LocalDate.parse(strValue, DateTimeFormatter.ISO_LOCAL_DATE);
+
+        } catch (DateTimeParseException e) {
+
+            String msg = String.format("LocalTime '%s' is not a valid LocalTime for '%s'.", strValue, propertyKey.configKey());
+            throw new IllegalStateException(msg, e);
         }
 
         return result;
