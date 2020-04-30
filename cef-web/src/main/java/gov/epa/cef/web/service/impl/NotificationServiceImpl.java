@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import gov.epa.cef.web.config.AppPropertyName;
+import gov.epa.cef.web.provider.system.PropertyProvider;
 import gov.epa.cef.web.service.NotificationService;
 
 @Service
@@ -41,6 +43,9 @@ public class NotificationServiceImpl implements NotificationService {
     //Spring/Thymeleaf will automatically assume that template files are located in the resources/templates folder and end in .html
     @Autowired
     private TemplateEngine templateEngine;
+    
+    @Autowired
+    private PropertyProvider propertyProvider;
  
     /**
      * Utility method to send a simple email message in plain text. 
@@ -78,6 +83,16 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
     
+    private void sendAdminEmail(String from, String subject, String body) {
+        this.propertyProvider.getStringList(AppPropertyName.AdminEmailAddresses).forEach(email -> {
+            sendHtmlMessage(email, from, subject, body);
+        });
+    }
+    
+    private void sendAdminEmail(String subject, String body) {
+        sendAdminEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress), subject, body);
+    }
+    
     public void sendReportSubmittedNotification(String to, String from, String facilityName, String reportingYear)
     {
         String emailSubject = MessageFormat.format(REPORT_SUBMITTED_TO_SLT_SUBJECT, facilityName);
@@ -107,11 +122,11 @@ public class NotificationServiceImpl implements NotificationService {
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }
     
-    public void sendSccUpdateFailedNotification(String to, String from, Exception exception) {
+    public void sendSccUpdateFailedNotification(Exception exception) {
         String emailSubject = SCC_UPDATE_FAILED_SUBJECT;
         Context context = new Context();
         context.setVariable("exception", exception);
         String emailBody = templateEngine.process(SCC_UPDATE_FAILED_BODY_TEMPLATE, context);
-        sendHtmlMessage(to, from, emailSubject, emailBody);
+        sendAdminEmail(emailSubject, emailBody);
     }
 }

@@ -53,9 +53,9 @@ public class CefConfig {
         return this.propertyProvider.getBigDecimal(AppPropertyName.EmissionsTotalWarningTolerance);
     }
 
-    public List<String> getErrorEmails() {
+    public List<String> getAdminEmails() {
 
-        return this.propertyProvider.getStringList(AppPropertyName.ErrorEmailAddresses);
+        return this.propertyProvider.getStringList(AppPropertyName.AdminEmailAddresses);
     }
 
     public String getLastSccUpdateDate() {

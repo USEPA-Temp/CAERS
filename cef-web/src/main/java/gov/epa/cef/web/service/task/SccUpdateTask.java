@@ -39,9 +39,7 @@ public class SccUpdateTask implements Runnable {
                 logger.info("SCC Update Task finish");
             } catch (Exception e) {
                 logger.error("Exception thrown while updating SCC Codes", e);
-                this.propertyProvider.getStringList(AppPropertyName.ErrorEmailAddresses).forEach(email -> {
-                    this.notificationService.sendSccUpdateFailedNotification(email, this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress), e);
-                });
+                this.notificationService.sendSccUpdateFailedNotification(e);
             }
         }
     }
