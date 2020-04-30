@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CdxFacility} from 'src/app/shared/models/cdx-facility';
 
@@ -38,6 +38,9 @@ export class ReportBulkUploadComponent implements OnInit {
     selectedFile: File = null;
 
     bsflags: any;
+
+    @ViewChild('workbookFile', {static: true})
+    workbookFile: ElementRef;
 
     uploadFile: string;
     uploadUserErrors: WorksheetError[];
@@ -199,6 +202,10 @@ export class ReportBulkUploadComponent implements OnInit {
         this.bsflags.showSystemErrors = this.uploadUserErrors.length === 0;
 
         this.uploadFailed = true;
+
+        // deletes selected file from the input
+        this.workbookFile.nativeElement.value = '';
+        this.selectedFile = null;
     }
 
     onUploadComplete() {
