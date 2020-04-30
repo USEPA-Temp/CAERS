@@ -13,20 +13,6 @@
             </div>
         </div>
         <div class="col-sm-3">
-            <fa-icon class="mt-2 ml-2" title="Code that identifies the type of emissions unit activity." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="unitTypeCodeSelect" class="ml-1 col-form-label"><strong>Unit Type Code:</strong></label>
-        </div>
-        <div class="col-sm-3">
-            <select type="text" class="form-control" id="unitTypeCodeSelect" formControlName="unitTypeCode" [compareWith]="formUtils.compareCode">
-                <option [ngValue]="null"></option>
-                <option *ngFor="let unit of unitTypeValues" [ngValue]="unit">{{unit.description}}</option>
-            </select>
-            <app-validation-message [control]="emissionUnitForm.get('unitTypeCode')"></app-validation-message>
-        </div>
-    </div>
-
-    <div class="row pb-1">
-        <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the emissions unit." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitStatusCodeSelect" class="ml-1 col-form-label"><strong>Unit Status:</strong></label>
         </div>
@@ -43,18 +29,20 @@
             </div>
             <app-validation-message [control]="emissionUnitForm.get('operatingStatusCode')"></app-validation-message>
         </div>
-        <div class="col-sm-3">
-            <fa-icon class="mt-2 ml-2" title="Text description of the emissions unit." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="descriptionInput" class="ml-1 col-form-label"><strong>Unit Description:</strong></label>
-        </div>
-        <div class="col-sm-3">
-            <input type="text" class="form-control" maxlength="100" id="descriptionInput" formControlName="description">
-            <app-validation-message [control]="emissionUnitForm.get('description')"></app-validation-message>
-        </div>
-
     </div>
 
     <div class="row pb-1">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="Code that identifies the type of emissions unit activity." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="unitTypeCodeSelect" class="ml-1 col-form-label"><strong>Unit Type Code:</strong></label>
+        </div>
+        <div class="col-sm-3">
+            <select type="text" class="form-control" id="unitTypeCodeSelect" formControlName="unitTypeCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let unit of unitTypeValues" [ngValue]="unit">{{unit.description}}</option>
+            </select>
+            <app-validation-message [control]="emissionUnitForm.get('unitTypeCode')"></app-validation-message>
+        </div>
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The year the current operating status came into effect. Required if Unit Status Code is anything other than operating. Must be between 1900-2050." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitStatusYearInput" class="ml-1 col-form-label"><strong>Unit Status Year:</strong></label>
@@ -63,17 +51,28 @@
             <input type="text" class="form-control" maxlength="4" id="unitStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="emissionUnitForm.get('statusYear')"></app-validation-message>
         </div>
+    </div>
+
+    <div class="row pb-1">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="Text description of the emissions unit." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="descriptionInput" class="ml-1 col-form-label"><strong>Unit Description:</strong></label>
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" maxlength="100" id="descriptionInput" formControlName="description">
+            <app-validation-message [control]="emissionUnitForm.get('description')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The measure of the size of the unit based on the maximum continuous throughput capacity of the unit." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitDesignCapacityInput" class="ml-1 col-form-label"><strong>Unit Design Capacity:</strong></label>
         </div>
         <div class="col-sm-3">
-            <input type="text" class="form-control" maxlength="20" id="unitDesignCapacityInput" formControlName="designCapacity" (ngModelChange)="uomCapacityCheck()">
+            <input type="text" class="form-control" maxlength="20" id="unitDesignCapacityInput" formControlName="designCapacity">
             <app-validation-message [control]="emissionUnitForm.get('designCapacity')"></app-validation-message>
         </div>
-    </div>
-
-    <div class="row pb-1">
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Unit of measure for the design capacity of the emissions unit. Required if reporting Design Capacity." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitOfMeasureCodeSelect" class="ml-1 col-form-label"><strong>Unit Design Capacity UoM:</strong></label>
@@ -86,9 +85,19 @@
             <app-validation-message [control]="emissionUnitForm.get('unitOfMeasureCode')"></app-validation-message>
         </div>
     </div>
-    <div class="row pb-1" *ngIf="designCapacityWarning?.invalidDesignCapacity">
-        <div class="validation-warning">
-            Warning: The design capacity should be reported for unit type code: {{emissionUnitForm.get('unitTypeCode').value.description}}.
+
+    <div class="row" *ngIf="emissionUnitForm.errors?.invalidUom">
+        <div class="col-sm-6">
+            <div class="validation-message" style="padding-left: 10px;">
+                Design Capacity and Design Capacity UoM must both be reported for either to be accepted.
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="designCapacityWarning?.invalidDesignCapacity">
+        <div class="col-sm-6">
+            <div class="validation-warning" style="padding-left: 10px;">
+                Warning: The design capacity should be reported for unit type code: {{emissionUnitForm.get('unitTypeCode').value.description}}.
+            </div>
         </div>
     </div>
 
