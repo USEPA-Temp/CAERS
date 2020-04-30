@@ -58,3 +58,5 @@ network-nodes:
   eis:
     serviceUrl: https://devngn.epacdxnode.net/ngn-enws20/services/NetworkNode2Service
     dataflow: EIS
+scc:
+  sccwebservices-endpoint: https://ofmpub.epa.gov/sccwebservices/v1
