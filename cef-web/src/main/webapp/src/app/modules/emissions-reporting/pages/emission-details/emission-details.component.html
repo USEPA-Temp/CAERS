@@ -73,6 +73,13 @@
                             <div class="col-sm-8 col-lg-4">{{emission.emissionsFactorText}}</div>
                         </div>
 
+                        <div *ngIf="emission.variables.length > 0">
+                            <div class="row" *ngFor="let item of emission.variables">
+                                <div class="col-sm-4 col-lg-2"><strong>{{item?.variableCode?.code}} - {{item?.variableCode?.description}}:</strong></div>
+                                <div class="col-sm-8 col-lg-4">{{item?.value}}</div>
+                            </div>
+                        </div>
+
                         <div class="row pb-2">
                             <div class="col-sm-4 col-lg-2"><strong>Emission Factor Numerator UoM:</strong></div>
                             <div class="col-sm-8 col-lg-4">{{emission.emissionsNumeratorUom?.code}}</div>
@@ -82,10 +89,28 @@
                     </div>
 
                     <div class="row pb-2">
+                        <div class="col-sm-4 col-lg-2"><strong>Overall Control %:</strong></div>
+                        <div class="col-sm-8 col-lg-4">{{emission?.overallControlPercent}}</div>
+                    </div>
+
+                    <div class="row pb-2">
                         <div class="col-sm-4 col-lg-2"><strong>Total Emissions:</strong></div>
                         <div class="col-sm-8 col-lg-4">{{emission.totalEmissions}}</div>
                         <div for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2"><strong>Emissions UoM:</strong></div>
                         <div class="col-sm-8 col-lg-4">{{emission.emissionsUomCode?.code}}</div>
+                    </div>
+
+                    <div class="row" *ngIf="emission.totalManualEntry">
+                        <div class="col-sm-6"></div>
+                        <div class="col" style="float: right">
+                            <input type="checkbox" checked="checked " disabled>
+                            <strong> I prefer to calculate the total emissions of this pollutant</strong>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" *ngIf="emission.totalManualEntry">
+                        <div for="emissionCommentsInput" class="col-sm-4 col-lg-2"><strong>Description of Calculation:</strong></div>
+                        <div class="col-sm-8 col-lg-10">{{emission?.calculationComment}}</div>
                     </div>
 
                     <div class="row">
