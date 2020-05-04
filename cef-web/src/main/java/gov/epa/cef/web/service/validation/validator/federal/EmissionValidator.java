@@ -336,6 +336,18 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        			createValidationDetails(emission));
 	        	
 	        }
+	        
+	        // if totalManualEntry is selected and emission factor is used, calculation description is required
+	        if (emission.getTotalManualEntry() != null && emission.getTotalManualEntry() == true
+	        		&& emission.getEmissionsFactor() != null && Strings.emptyToNull(emission.getCalculationComment()) == null) {
+	        	
+	        	valid = false;
+	        	context.addFederalError(
+	        			ValidationField.EMISSION_CALC_DESC.value(),
+	        			"emission.calculationDescription.required", 
+	        			createValidationDetails(emission));
+	        	
+	        }
         }
         
         return valid;

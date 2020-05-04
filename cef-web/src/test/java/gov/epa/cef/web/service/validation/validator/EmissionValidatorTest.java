@@ -138,6 +138,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         testData.setEmissionsFactor(BigDecimal.TEN);
         testData.setEmissionsDenominatorUom(new UnitMeasureCode());
         testData.setEmissionsNumeratorUom(new UnitMeasureCode());
+        testData.setCalculationComment("manually entered/calculated total emissions");
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -234,6 +235,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         testData.setEmissionsUomCode(new UnitMeasureCode());
         testData.setEmissionsCalcMethodCode(new CalculationMethodCode());
         testData.getEmissionsCalcMethodCode().setTotalDirectEntry(false);
+        testData.setCalculationComment("manually entered/calculated total emissions");
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -273,6 +275,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         testData.setEmissionsUomCode(lbUom);
         testData.setTotalManualEntry(true);
         tonUom.setLegacy(true);
+        testData.setCalculationComment("manually entered/calculated total emissions");
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
@@ -352,6 +355,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         Emission testData = createBaseEmission(false);
         testData.setTotalEmissions(new BigDecimal("10.6"));
+        testData.setCalculationComment("manually entered/calculated total emissions");
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -400,6 +404,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         Emission testData = createBaseEmission(false);
         testData.setTotalEmissions(new BigDecimal("10.2"));
+        testData.setCalculationComment("manually entered/calculated total emissions");
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -660,6 +665,25 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
        errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
+   }
+   
+   /**
+    * There should be one error when total emissions has true total manual entry, has an ef, and a null calculation description
+    */
+   @Test
+   public void totalManualEntryTrue_NullComment_FailTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.setTotalManualEntry(true);
+       testData.setCalculationComment(null);
+       testData.setEmissionsFactor(new BigDecimal(0.005));
+
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_CALC_DESC.value()) && errorMap.get(ValidationField.EMISSION_CALC_DESC.value()).size() == 1);
    }
 
 
