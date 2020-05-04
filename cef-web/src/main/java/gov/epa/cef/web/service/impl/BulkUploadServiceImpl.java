@@ -525,7 +525,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         logger.debug("Warnings {}", warnings);
 
-        return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.CREATED);
+        return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.UPLOADED);
     }
 
     public EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook) {
