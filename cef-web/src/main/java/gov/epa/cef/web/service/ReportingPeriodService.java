@@ -2,6 +2,7 @@ package gov.epa.cef.web.service;
 
 import java.util.List;
 
+import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
 
@@ -34,5 +35,19 @@ public interface ReportingPeriodService {
      * @return
      */
     List<ReportingPeriodDto> retrieveForEmissionsProcess(Long processId);
+
+    /**
+     * Retrieve Reporting Periods for Bulk Entry for a specific facility site
+     * @param facilitySiteId
+     * @return
+     */
+    public List<ReportingPeriodBulkEntryDto> retrieveBulkEntryReportingPeriodsForFacilitySite(Long facilitySiteId);
+
+    /**
+     * Update the throughput for multiple Reporting Periods at once
+     * @param dtos
+     * @return
+     */
+    public List<ReportingPeriodUpdateResponseDto> bulkUpdate(List<ReportingPeriodBulkEntryDto> dtos);
 
 }
