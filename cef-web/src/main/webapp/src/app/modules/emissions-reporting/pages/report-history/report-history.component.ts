@@ -5,6 +5,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ReportHistory } from 'src/app/shared/models/report-history';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
+import { ReportAction } from 'src/app/shared/enums/report-action.enum';
 
 @Component({
   selector: 'app-report-history',
@@ -14,6 +15,7 @@ import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base
 export class ReportHistoryComponent extends BaseSortableTable implements OnInit {
     facilitySite: FacilitySite;
     tableData: ReportHistory[];
+    reportAction: ReportAction;
     emissionsReportId: number;
 
     constructor(
@@ -36,6 +38,10 @@ export class ReportHistoryComponent extends BaseSortableTable implements OnInit 
         .subscribe(report => {
             this.tableData = report;
         });
+    }
+
+    enumValue(action: string) {
+        return ReportAction[action];
     }
 
 }

@@ -22,7 +22,7 @@
                                     <td>{{ report.actionDate | date:'shortDate' }}</td>
                                     <td>{{ report.userId }}</td>
                                     <td>{{ report.userFullName }}</td>
-                                    <td>{{ report.reportAction | titlecase }}</td>
+                                    <td>{{ enumValue(report.reportAction) }}</td>
                                     <td>{{ report.comments }}</td>
                                 </tr>
                             </tbody>
