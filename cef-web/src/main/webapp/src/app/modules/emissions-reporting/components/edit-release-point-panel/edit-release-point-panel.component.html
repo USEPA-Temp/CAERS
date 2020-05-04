@@ -64,28 +64,6 @@
 
     <div class="row pb-1">
         <div class="col-sm-3">
-            <fa-icon class="mt-2" title="The measure of the horizontal distance to the nearest fence line of a property within which the release point is located. If it is a stack release point then either Exit Gas Velocity Measure or Exit Gas Flow Rate is required." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="fenceLineDistance" class="ml-1 col-form-label"><strong>Fence Line Distance Measure:</strong></label>
-        </div>
-        <div class="col-sm-3">
-            <input type="text" class="form-control" id="fenceLineDistance" formControlName="fenceLineDistance" maxlength="6">
-            <app-validation-message [control]="releasePointForm.get('fenceLineDistance')"></app-validation-message>
-        </div>
-        <div class="col-sm-3">
-            <fa-icon class="mt-2" title="The fence line distance unit of measure. Required if reporting ReleasePointFenceLineDistanceMeasure. Must be in 'FT'." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="fenceLineUomCodeSelect" class="ml-1 col-form-label"><strong>Fence Line Distance UoM:</strong></label>
-        </div>
-        <div class="col-sm-3">
-            <select type="text" class="form-control" id="fenceLineUomCodeSelect" formControlName="fenceLineUomCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
-            </select>
-            <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>
-        </div>  
-    </div>
-
-
-    <div class="row pb-1">
-        <div class="col-sm-3">
             <fa-icon class="mt-2" title="Required if release point coordinates are reported. The measure of the angular distance on a meridian North or south of the equator." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="latitude" class="ml-1 col-form-label"><strong>Latitude Measure:</strong></label>
         </div>
@@ -97,6 +75,17 @@
             </div>
         </div>
         <div class="col-sm-3">
+            <fa-icon class="mt-2" title="The measure of the horizontal distance to the nearest fence line of a property within which the release point is located. If it is a stack release point then either Exit Gas Velocity Measure or Exit Gas Flow Rate is required." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="fenceLineDistance" class="ml-1 col-form-label"><strong>Fence Line Distance Measure:</strong></label>
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="fenceLineDistance" formControlName="fenceLineDistance" maxlength="6">
+            <app-validation-message [control]="releasePointForm.get('fenceLineDistance')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <div class="col-sm-3">
             <fa-icon class="mt-2" title="Required if release point coordinates are reported. The measure of the angular distance on a meridian east or west of the prime meridian." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="longitude" class="ml-1 col-form-label"><strong>Longitude Measure:</strong></label>
         </div>
@@ -107,6 +96,17 @@
                 Release Point longitude must within the {{tolerance}} tolerance range of Facility longitude coordinate {{facilitySite.longitude}}.
             </div>
         </div>
+        <div class="col-sm-3">
+            <fa-icon class="mt-2" title="The fence line distance unit of measure. Required if reporting ReleasePointFenceLineDistanceMeasure. Must be in 'FT'." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="fenceLineUomCodeSelect" class="ml-1 col-form-label"><strong>Fence Line Distance UoM:</strong></label>
+        </div>
+        <div class="col-sm-3">
+            <select type="text" class="form-control" id="fenceLineUomCodeSelect" formControlName="fenceLineUomCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
+            </select>
+            <app-validation-message [control]="releasePointForm.get('fenceLineUomCode')"></app-validation-message>
+        </div> 
     </div>
 
     <div class="row pb-1">
@@ -127,6 +127,7 @@
             <app-validation-message [control]="releasePointForm.get('exitGasFlowRate')"></app-validation-message>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-6 col-md-10">
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidFlowRate">
@@ -152,8 +153,8 @@
                 <option *ngFor="let opt of velocityUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('exitGasVelocityUomCode')"></app-validation-message>
-            <div class="validation-message" *ngIf="releasePointForm.get('exitGasVelocityUomCode').errors?.invalidExitGasVelocityUomCode">
-                This field is required.
+            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidExitGasVelocityUomCode">
+                Exit Gas Velocity and Exit Gas Velocity UoM must both be reported for either to be accepted.
             </div>
         </div>
         <div class="col-sm-3">
@@ -166,23 +167,13 @@
                 <option *ngFor="let opt of flowUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('exitGasFlowUomCode')"></app-validation-message>
-            <div class="validation-message" *ngIf="releasePointForm.get('exitGasFlowUomCode').errors?.invalidExitGasFlowUomCode">
-                This field is required.
+            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidExitGasFlowUomCode">
+                Exit Gas Flow Rate and Exit Gas Flow Rate UoM must both be reported for either to be accepted.
             </div>
         </div>
     </div>
 
     <div *ngIf="!isReleasePointFugitiveType()">
-        <div class="row pb-1">
-            <div class="col-sm-3">
-                <fa-icon class="mt-2" title="The temperature of an exit gas stream (measured in degrees Fahrenheit). If it is a stack release point then Release Point Exit Gas Temperature Measure is required.  Must be between 30 and 4000." [icon]="['fas', 'question-circle']"></fa-icon>
-                <label for="exitGasTemperature" class="ml-1 col-form-label"><strong>Exit Gas Temperature Measure (F):</strong></label>
-            </div>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" id="exitGasTemperature" formControlName="exitGasTemperature" maxlength="4">
-                <app-validation-message [control]="releasePointForm.get('exitGasTemperature')"></app-validation-message>
-            </div>
-        </div>
         <div class="row pb-1">
             <div class="col-sm-3">
                 <fa-icon class="mt-2" title="The unit of measure for the stack gas flow rate value. Required if Release Point Exit Gas Flow Rate Measure is reported." [icon]="['fas', 'question-circle']"></fa-icon>
@@ -201,6 +192,7 @@
                 <app-validation-message [control]="releasePointForm.get('stackDiameter')"></app-validation-message>
             </div>
         </div>
+
         <div class="row">
             <div class="col-sm-6 col-md-10">
                 <div class="validation-warning" *ngIf="diameterCheckHeightWarning?.length > 0">
@@ -214,6 +206,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="row pb-1">
             <div class="col-sm-3">
                 <fa-icon class="mt-2" title="The stack height unit of measure. Required if ReleasePointStackHeighMeasure is reported. Must be 'FT'." [icon]="['fas', 'question-circle']"></fa-icon>
@@ -236,6 +229,17 @@
                     <option *ngFor="let opt of uomValues" [ngValue]="opt">{{opt.code}}</option>
                 </select>
                 <app-validation-message [control]="releasePointForm.get('stackDiameterUomCode')"></app-validation-message>
+            </div>
+        </div>
+        
+        <div class="row pb-1">
+            <div class="col-sm-3">
+                <fa-icon class="mt-2" title="The temperature of an exit gas stream (measured in degrees Fahrenheit). If it is a stack release point then Release Point Exit Gas Temperature Measure is required.  Must be between 30 and 4000." [icon]="['fas', 'question-circle']"></fa-icon>
+                <label for="exitGasTemperature" class="ml-1 col-form-label"><strong>Exit Gas Temperature Measure (F):</strong></label>
+            </div>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="exitGasTemperature" formControlName="exitGasTemperature" maxlength="4">
+                <app-validation-message [control]="releasePointForm.get('exitGasTemperature')"></app-validation-message>
             </div>
         </div>
     </div>

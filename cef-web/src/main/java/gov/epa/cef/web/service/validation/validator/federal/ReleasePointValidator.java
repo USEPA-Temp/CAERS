@@ -338,7 +338,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
           	result = false;
           	context.addFederalError(
                     ValidationField.RP_GAS_FLOW.value(),
-                    "releasePoint.exitGasFlowRate.required",
+                    "releasePoint.exitGasFlowRate.uom.required",
                     createValidationDetails(releasePoint));
           }
         
@@ -464,7 +464,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
           	result = false;
           	context.addFederalError(
                     ValidationField.RP_GAS_VELOCITY.value(),
-                    "releasePoint.exitGasVelocity.required",
+                    "releasePoint.exitGasVelocity.uom.required",
                     createValidationDetails(releasePoint));
           }
 
