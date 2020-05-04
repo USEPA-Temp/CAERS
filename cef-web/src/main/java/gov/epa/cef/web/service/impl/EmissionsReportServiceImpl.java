@@ -217,7 +217,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.clearId();
 
-            	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.CREATED);
+            	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
 
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
