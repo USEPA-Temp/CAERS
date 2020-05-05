@@ -10,6 +10,7 @@ public enum ValidationField {
     FACILITY_CONTACT("report.facilitySite.contacts"),
     FACILITY_CONTACT_COUNTY("report.facilitySite.contacts.countyCode"),
     FACILITY_CONTACT_POSTAL("report.facilitySite.contacts.postalCode"),
+    FACILITY_EMAIL_ADDRESS("report.facilitySite.contacts.emailAddress"),
     FACILITY_STATUS("report.facilitySite.status"),
     FACILITY_NAICS("report.facilitySite.naics"),
     FACILITY_EMISSION_REPORTED("report.facilitySite.reportedEmissions"),
