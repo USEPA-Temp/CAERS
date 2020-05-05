@@ -175,6 +175,27 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void simpleValidateContactEmailAddressFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).setEmail("notAValidEmail");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void simpleValidateContactEmailAddressPassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).setEmail("validemail@gmail.com");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+    }
+    
+    @Test
     public void simpleValidateContactPostalCodeFailTest() {
 
         CefValidatorContext cefContext = createContext();

@@ -118,7 +118,7 @@ export class ReportSummaryComponent implements OnInit {
 
     downloadReport(emissionsReportId: number, facilitySiteId: number, altFacilityIdentifier: number) {
         this.reportService.retrieveReportDownloadDto(emissionsReportId, facilitySiteId).subscribe(reportDownloadDto => {
-            if (this.facilitySite.emissionsReport.status==='APPROVED') {
+            if ((this.facilitySite.emissionsReport.status==='APPROVED') ||(this.facilitySite.emissionsReport.status==='SUBMITTED')) {
                 this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityIdentifier + '_' +
                 this.facilitySite.emissionsReport.year + '_' + 'Emissions_Report' + '_Final_Submission');
             } else {
