@@ -1,0 +1,32 @@
+<div *ngIf="facilitySite">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card  mb-3">
+        <div class="card-header text-center">
+          <strong>Data Bulk Entry</strong>
+        </div>
+
+        <div class="card-body" *ngIf="reportingPeriods">
+          <nav ngbNav #nav="ngbNav" class="nav-tabs">
+            <ng-container ngbNavItem>
+              <a ngbNavLink>Process Information</a>
+              <ng-template ngbNavContent>
+                <app-bulk-entry-reporting-period-table [tableData]="reportingPeriods">
+                </app-bulk-entry-reporting-period-table>
+              </ng-template>
+            </ng-container>
+            <ng-container ngbNavItem>
+              <a ngbNavLink>Emission Information</a>
+              <ng-template ngbNavContent>
+                <p>Not yet implemented</p>
+              </ng-template>
+            </ng-container>
+          </nav>
+
+          <div [ngbNavOutlet]="nav" class="mt-4"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

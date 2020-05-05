@@ -559,11 +559,50 @@
                                 <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
                                 <wsdlFile>RegisterSignService.wsdl</wsdlFile>
                                 <wsdlFile>NetworkNode2Service.wsdl</wsdlFile>
+                                <wsdlFile>virusscanMTOM.wsdl</wsdlFile>
                             </wsdlFiles>
                         </configuration>
                         <goals>
                             <goal>wsimport</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>${swagger-codegen-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- specify the swagger yaml -->
+                            <inputSpec>src/main/schema/json/sccwebservices-swagger-v1-modified.json</inputSpec>
+
+                            <!-- target to generate java client code -->
+                            <language>java</language>
+                            <library>resttemplate</library>
+
+                            <configOptions>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>true</java8>
+                                <serializableModel>true</serializableModel>
+                            </configOptions>
+
+                            <modelPackage>gov.epa.client.sccwebservices.model</modelPackage>
+                            <apiPackage>gov.epa.client.sccwebservices</apiPackage>
+                            <invokerPackage>gov.epa.client.sccwebservices</invokerPackage>
+
+                            <generateApis>true</generateApis>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

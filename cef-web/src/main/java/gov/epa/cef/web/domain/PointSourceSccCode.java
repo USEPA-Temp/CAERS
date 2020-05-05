@@ -17,7 +17,7 @@ import org.hibernate.annotations.Immutable;
 @Table(name = "point_source_scc_code")
 @Immutable
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PointSourceSccCode implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
