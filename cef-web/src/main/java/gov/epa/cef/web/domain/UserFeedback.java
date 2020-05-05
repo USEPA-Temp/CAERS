@@ -11,7 +11,7 @@ import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 public class UserFeedback extends BaseAuditEntity {
     
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
     // Fields
     
@@ -19,19 +19,19 @@ public class UserFeedback extends BaseAuditEntity {
     private String reportId;
     
     @Column(name = "easy_and_intuitive")
-    private Double intuitiveRating;
+    private Integer intuitiveRating;
 
     @Column(name = "data_entry_via_screens")
-    private Double dataEntryScreens;
+    private Integer dataEntryScreens;
 
     @Column(name = "calculation_screens")
-    private Double calculationScreens;
+    private Integer calculationScreens;
     
     @Column(name = "controls_and_control_paths")
-    private Double controlsAndControlPathAssignments;
+    private Integer controlsAndControlPathAssignments;
 
     @Column(name = "overall_reporting_time")
-    private Double overallReportingTime;
+    private Integer overallReportingTime;
 
     @Column(name = "beneficial_functionality_description")
     private String beneficialFunctionalityComments;
@@ -43,10 +43,10 @@ public class UserFeedback extends BaseAuditEntity {
     private String enhancementComments;
     
     @Column(name = "data_entry_via_bulk_upload")
-    private Double dataEntryBulkUpload;
+    private Integer dataEntryBulkUpload;
 
     @Column(name = "quality_assurance_checks")
-    private Double qualityAssuranceChecks;
+    private Integer qualityAssuranceChecks;
     
 	/***
      * Default constructor
@@ -61,43 +61,43 @@ public class UserFeedback extends BaseAuditEntity {
 		this.reportId = reportId;
 	}
 
-	public Double getIntuitiveRating() {
+	public Integer getIntuitiveRating() {
 		return intuitiveRating;
 	}
 
-	public void setIntuitiveRating(Double intuitiveRating) {
+	public void setIntuitiveRating(Integer intuitiveRating) {
 		this.intuitiveRating = intuitiveRating;
 	}
 
-	public Double getDataEntryScreens() {
+	public Integer getDataEntryScreens() {
 		return dataEntryScreens;
 	}
 
-	public void setDataEntryScreens(Double dataEntryScreens) {
+	public void setDataEntryScreens(Integer dataEntryScreens) {
 		this.dataEntryScreens = dataEntryScreens;
 	}
 
-	public Double getCalculationScreens() {
+	public Integer getCalculationScreens() {
 		return calculationScreens;
 	}
 
-	public void setCalculationScreens(Double calculationScreens) {
+	public void setCalculationScreens(Integer calculationScreens) {
 		this.calculationScreens = calculationScreens;
 	}
 
-	public Double getControlsAndControlPathAssignments() {
+	public Integer getControlsAndControlPathAssignments() {
 		return controlsAndControlPathAssignments;
 	}
 
-	public void setControlsAndControlPathAssignments(Double controlsAndControlPathAssignments) {
+	public void setControlsAndControlPathAssignments(Integer controlsAndControlPathAssignments) {
 		this.controlsAndControlPathAssignments = controlsAndControlPathAssignments;
 	}
 
-	public Double getOverallReportingTime() {
+	public Integer getOverallReportingTime() {
 		return overallReportingTime;
 	}
 
-	public void setOverallReportingTime(Double overallReportingTime) {
+	public void setOverallReportingTime(Integer overallReportingTime) {
 		this.overallReportingTime = overallReportingTime;
 	}
 
@@ -125,20 +125,20 @@ public class UserFeedback extends BaseAuditEntity {
 		this.enhancementComments = enhancementComments;
 	}
 
-	public Double getDataEntryBulkUpload() {
+	public Integer getDataEntryBulkUpload() {
 		return dataEntryBulkUpload;
 	}
 
-	public void setDataEntryBulkUpload(Double dataEntryBulkUpload) {
+	public void setDataEntryBulkUpload(Integer dataEntryBulkUpload) {
 		this.dataEntryBulkUpload = dataEntryBulkUpload;
 	}
 
-	public Double getQualityAssuranceChecks() {
+	public Integer getQualityAssuranceChecks() {
 		return qualityAssuranceChecks;
 	}
 
-	public void setQualityAssuranceChecks(Double qualityAssuranceChecks) {
+	public void setQualityAssuranceChecks(Integer qualityAssuranceChecks) {
 		this.qualityAssuranceChecks = qualityAssuranceChecks;
 	}
-
+    
 }

@@ -1,5 +1,5 @@
 <form [formGroup]="feedbackForm">
-	<div class="row pb-3 ml-2">
+	<div class="row pb-3 ml-2" aria-label="User feedback page">
 		Thank you for reporting with the Combined Air Emissions Reporting System! The Common Emission Form is continuously evolving to better fit the needs of our user base. We appreciate you taking the time to tell us about your experience while using the application. The feedback you provide will help enhance future application functionality to better fit your needs. 
 	</div>
 	<div class="row pb-3 ml-2">
@@ -10,7 +10,7 @@
 			1. Easy and intuitive navigation through the system:
 		</div>
 		<div class="col-sm-2">
-			<ngb-rating style="font-size: 175%; border-style: hidden" max="5" formControlName="intuitiveRating" class="form-control"></ngb-rating>
+			<ngb-rating aria-label="1 through 5 star rating for easy and intuitive navigation throughout the system" style="font-size: 175%; border-style: hidden" max="5" formControlName="intuitiveRating" class="form-control"></ngb-rating>
 		</div>
 	</div>
 	<div class="row ml-2">
@@ -18,7 +18,7 @@
 			2. Data entry via screens:
 		</div>
 		<div class="col-sm-2">
-			<ngb-rating style="font-size: 175%; border-style: hidden" max="5" formControlName="dataEntryScreens" class="form-control"></ngb-rating>
+			<ngb-rating aria-label="1 through 5 star rating for data entry via screens" style="font-size: 175%; border-style: hidden" max="5" formControlName="dataEntryScreens" class="form-control"></ngb-rating>
 		</div>
 	</div>
 	<div class="row ml-2">
@@ -26,7 +26,7 @@
 			3. Data entry via bulk upload template:
 		</div>
 		<div class="col-sm-2">
-			<ngb-rating style="font-size: 175%; border-style: hidden" max="5" formControlName="dataEntryBulkUpload" class="form-control"></ngb-rating>
+			<ngb-rating aria-label="1 through 5 star rating for data entry via bulk upload template" style="font-size: 175%; border-style: hidden" max="5" formControlName="dataEntryBulkUpload" class="form-control"></ngb-rating>
 		</div>
 	</div>
 	<div class="row ml-2">
@@ -34,7 +34,7 @@
 			4. Calculation screens and features:
 		</div>
 		<div class="col-sm-2">
-			<ngb-rating style="font-size: 175%; border-style: hidden" max="5" formControlName="calculationScreens" class="form-control"></ngb-rating>
+			<ngb-rating aria-label="1 through 5 star rating for calculation screens and features" style="font-size: 175%; border-style: hidden" max="5" formControlName="calculationScreens" class="form-control"></ngb-rating>
 		</div>
 	</div>
 	<div class="row ml-2">
@@ -42,7 +42,7 @@
 			5. Controls and control path assignments:
 		</div>
 		<div class="col-sm-2">
-			<ngb-rating style="font-size: 175%; border-style: hidden" max="5" formControlName="controlsAndControlPathAssignments" class="form-control"></ngb-rating>
+			<ngb-rating aria-label="1 through 5 star rating for controls and control path assignments" style="font-size: 175%; border-style: hidden" max="5" formControlName="controlsAndControlPathAssignments" class="form-control"></ngb-rating>
 		</div>
 	</div>
 	<div class="row ml-2">
@@ -50,7 +50,7 @@
 			6. Quality assurance checks:
 		</div>
 		<div class="col-sm-2">
-			<ngb-rating style="font-size: 175%; border-style: hidden" max="5" formControlName="qualityAssuranceChecks" class="form-control"></ngb-rating>
+			<ngb-rating aria-label="1 through 5 star rating for quality assurance checks" style="font-size: 175%; border-style: hidden" max="5" formControlName="qualityAssuranceChecks" class="form-control"></ngb-rating>
 		</div>
 	</div>
 	<div class="row ml-2">
@@ -58,7 +58,7 @@
 			7. Overall reporting time:
 		</div>
 		<div class="col-sm-2">
-			<ngb-rating style="font-size: 175%; border-style: hidden" max="5" formControlName="overallReportingTime" class="form-control" [(rate)]="currentRate"></ngb-rating>
+			<ngb-rating aria-label="1 through 5 star rating for overall reporting time" style="font-size: 175%; border-style: hidden" max="5" formControlName="overallReportingTime" class="form-control" [(rate)]="currentRate"></ngb-rating>
 		</div>
 	</div>
 	<div class="row pb-2 ml-1">
@@ -66,7 +66,7 @@
 	</div>
 	<div class="row pb-3">
 		<div class="col-sm-12">
-			<textarea rows="3" maxlength="500"  formControlName="beneficialFunctionalityComments" class="form-control" style="height:100%;" id="beneficialApplicationFunctionalityComments"></textarea>
+			<textarea aria-label="Input text area for what application functionality did you find to be beneficial to your reporting experience?" rows="3" maxlength="500"  formControlName="beneficialFunctionalityComments" class="form-control" style="height:100%;" id="beneficialApplicationFunctionalityComments"></textarea>
 		</div>
 	</div>
 	<div class="row pb-2 ml-1">
@@ -74,7 +74,7 @@
 	</div>
 	<div class="row pb-3">
 		<div class="col-sm-12">
-			<textarea rows="3" maxlength="500"  formControlName="difficultFunctionalityComments" class="form-control" style="height:100%;" id="difficultApplicationFunctionalityComments"></textarea>
+			<textarea aria-label="Input text area for what additional features or enhancements would improve your experience in the future?" rows="3" maxlength="500"  formControlName="difficultFunctionalityComments" class="form-control" style="height:100%;" id="difficultApplicationFunctionalityComments"></textarea>
 		</div>
 	</div>
 	<div class="row pb-2 ml-1">
@@ -82,7 +82,7 @@
 	</div>
 	<div class="row pb-3">
 		<div class="col-sm-12">
-			<textarea rows="3" maxlength="500"  formControlName="enhancementComments" class="form-control" style="height:100%;" id="enhancementComments"></textarea>
+			<textarea aria-label="Input text area for what additional features or enhancements would improve your experience in the future?" rows="3" maxlength="500"  formControlName="enhancementComments" class="form-control" style="height:100%;" id="enhancementComments"></textarea>
 		</div>
 	</div>
 	<div class="row pb-3">

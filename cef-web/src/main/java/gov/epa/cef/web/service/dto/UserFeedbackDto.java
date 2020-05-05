@@ -10,14 +10,13 @@ public class UserFeedbackDto implements Serializable {
     private String difficultFunctionalityComments;
     private String enhancementComments;
     private String reportId;
-    private Double intuitiveRating;
-    private Double dataEntryScreens;
-    private Double dataEntryBulkUpload;
-    private Double calculationScreens;
-    private Double controlsAndControlPathAssignments;
-    private Double qualityAssuranceChecks;
-    private Double overallReportingTime;
-    
+    private Integer intuitiveRating;
+    private Integer dataEntryScreens;
+    private Integer dataEntryBulkUpload;
+    private Integer calculationScreens;
+    private Integer controlsAndControlPathAssignments;
+    private Integer qualityAssuranceChecks;
+    private Integer overallReportingTime;
 	public String getBeneficialFunctionalityComments() {
 		return beneficialFunctionalityComments;
 	}
@@ -36,53 +35,53 @@ public class UserFeedbackDto implements Serializable {
 	public void setEnhancementComments(String enhancementComments) {
 		this.enhancementComments = enhancementComments;
 	}
-	public Double getIntuitiveRating() {
-		return intuitiveRating;
-	}
-	public void setIntuitiveRating(Double intuitiveRating) {
-		this.intuitiveRating = intuitiveRating;
-	}
-	public Double getDataEntryScreens() {
-		return dataEntryScreens;
-	}
-	public void setDataEntryScreens(Double dataEntryScreens) {
-		this.dataEntryScreens = dataEntryScreens;
-	}
-	public Double getDataEntryBulkUpload() {
-		return dataEntryBulkUpload;
-	}
-	public void setDataEntryBulkUpload(Double dataEntryBulkUpload) {
-		this.dataEntryBulkUpload = dataEntryBulkUpload;
-	}
-	public Double getCalculationScreens() {
-		return calculationScreens;
-	}
-	public void setCalculationScreens(Double calculationScreens) {
-		this.calculationScreens = calculationScreens;
-	}
-	public Double getQualityAssuranceChecks() {
-		return qualityAssuranceChecks;
-	}
-	public void setQualityAssuranceChecks(Double qualityAssuranceChecks) {
-		this.qualityAssuranceChecks = qualityAssuranceChecks;
-	}
-	public Double getControlsAndControlPathAssignments() {
-		return controlsAndControlPathAssignments;
-	}
-	public void setControlsAndControlPathAssignments(Double controlsAndControlPathAssignments) {
-		this.controlsAndControlPathAssignments = controlsAndControlPathAssignments;
-	}
 	public String getReportId() {
 		return reportId;
 	}
 	public void setReportId(String reportId) {
 		this.reportId = reportId;
 	}
-	public Double getOverallReportingTime() {
+	public Integer getIntuitiveRating() {
+		return intuitiveRating;
+	}
+	public void setIntuitiveRating(Integer intuitiveRating) {
+		this.intuitiveRating = intuitiveRating;
+	}
+	public Integer getDataEntryScreens() {
+		return dataEntryScreens;
+	}
+	public void setDataEntryScreens(Integer dataEntryScreens) {
+		this.dataEntryScreens = dataEntryScreens;
+	}
+	public Integer getDataEntryBulkUpload() {
+		return dataEntryBulkUpload;
+	}
+	public void setDataEntryBulkUpload(Integer dataEntryBulkUpload) {
+		this.dataEntryBulkUpload = dataEntryBulkUpload;
+	}
+	public Integer getCalculationScreens() {
+		return calculationScreens;
+	}
+	public void setCalculationScreens(Integer calculationScreens) {
+		this.calculationScreens = calculationScreens;
+	}
+	public Integer getControlsAndControlPathAssignments() {
+		return controlsAndControlPathAssignments;
+	}
+	public void setControlsAndControlPathAssignments(Integer controlsAndControlPathAssignments) {
+		this.controlsAndControlPathAssignments = controlsAndControlPathAssignments;
+	}
+	public Integer getQualityAssuranceChecks() {
+		return qualityAssuranceChecks;
+	}
+	public void setQualityAssuranceChecks(Integer qualityAssuranceChecks) {
+		this.qualityAssuranceChecks = qualityAssuranceChecks;
+	}
+	public Integer getOverallReportingTime() {
 		return overallReportingTime;
 	}
-	public void setOverallReportingTime(Double overallReportingTime) {
+	public void setOverallReportingTime(Integer overallReportingTime) {
 		this.overallReportingTime = overallReportingTime;
 	}
-    
+       
 }
