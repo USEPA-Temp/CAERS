@@ -13,6 +13,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 import { Subject } from 'rxjs';
+import { UserFeedbackService } from 'src/app/core/services/user-feedback.service';
 
 declare const initCromerrWidget: any;
 
@@ -40,7 +41,8 @@ export class ReportSummaryComponent implements OnInit {
         private userContextService: UserContextService,
         private modalService: NgbModal,
         private emissionsReportingService: EmissionsReportingService,
-        private reportDownloadService: ReportDownloadService) { }
+        private reportDownloadService: ReportDownloadService,
+        private userFeedbackService: UserFeedbackService) { }
 
     ngOnInit() {
         this.cromerrLoadedEmitter
@@ -48,22 +50,25 @@ export class ReportSummaryComponent implements OnInit {
             this.cromerrLoaded = result;
         });
 
+
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
 
             this.facilitySite = data.facilitySite;
             this.sharedService.emitChange(data.facilitySite);
+            this.emissionsReportYear = this.facilitySite.emissionsReport.year;
 
             if (this.facilitySite.id) {
-                this.emissionsReportYear = this.facilitySite.emissionsReport.year;
-                this.userService.getCurrentUserNaasToken()
-                .subscribe(userToken => {
-                    this.userContextService.getUser().subscribe( user => {
-                        this.userRole = user.role;
-                        if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                            initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
-                                this.cromerrLoadedEmitter);
-                        }
+                this.userFeedbackService.retrieveByReportId(this.facilitySite.emissionsReport.id).subscribe((userFeedback) => {
+                    this.userService.getCurrentUserNaasToken()
+                    .subscribe(userToken => {
+                        this.userContextService.getUser().subscribe( user => {
+                            this.userRole = user.role;
+                            if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
+                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
+                                    this.cromerrLoadedEmitter, userFeedback);
+                            }
+                        });
                     });
                 });
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)

@@ -19,13 +19,14 @@ export class SidebarComponent implements OnInit {
   emissionsNavItems: SideNavItem[];
   facilityNavItems: SideNavItem[];
   paginate: boolean;
+  hideSideBar: boolean = false;
 
   bulkEntryEnabled: boolean;
 
   constructor(
       private emissionsUnitService: EmissionUnitService,
-      private propertyService: ConfigPropertyService,
-      sharedService: SharedService) {
+      private sharedService: SharedService,
+      private propertyService: ConfigPropertyService) {
     sharedService.changeEmitted$
     .subscribe(facilitySite => {
       if (facilitySite != null) {
@@ -37,10 +38,15 @@ export class SidebarComponent implements OnInit {
           this.facilityNavItems = null;
           this.facilitySite = null;
       }
-    });
+    })
   }
 
+
+
   ngOnInit() {
+    this.sharedService.hideBoolChangeEmitted$.subscribe((result) => {
+      this.hideSideBar = result;
+    });
 
     this.propertyService.retrieveBulkEntryEnabled()
     .subscribe(result => {

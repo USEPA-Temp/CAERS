@@ -16,6 +16,7 @@ export class SharedService {
   private emitSubmissionReviewChangeSource = new Subject<any>();
   private emitValidationResultChangeSource = new Subject<ValidationResult>();
   private emitControlsSource = new Subject<ControlPath[]>();
+  private emitHideBoolSource = new Subject<any>();
   constructor(private toastr: ToastrService) { }
 
   // Observable string streams
@@ -23,10 +24,15 @@ export class SharedService {
   submissionReviewChangeEmitted$ = this.emitSubmissionReviewChangeSource.asObservable();
   validationResultChangeEmitted$ = this.emitValidationResultChangeSource.asObservable();
   controlsResultChangeEmitted$ = this.emitControlsSource.asObservable();
+  hideBoolChangeEmitted$ = this.emitHideBoolSource.asObservable();
 
   // Service message commands
   emitChange(change: any) {
     this.emitChangeSource.next(change);
+  }
+
+  emitHideBoolChange(change: any) {
+    this.emitHideBoolSource.next(change);
   }
 
   emitSubmissionChange(change: any) {
