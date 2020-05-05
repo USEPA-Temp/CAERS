@@ -114,10 +114,10 @@ public class EmissionsReportApi {
     @ExceptionHandler(value = BulkReportValidationException.class)
     public ResponseEntity<JsonNode> bulkUploadValidationError(BulkReportValidationException exception) {
 
-        ObjectNode objectNode = this.objectMapper.createObjectNode();
+        ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("failed", true);
         ArrayNode arrayNode = objectNode.putArray("errors");
-        exception.getErrors().forEach(error -> arrayNode.add(this.objectMapper.convertValue(error, JsonNode.class)));
+        exception.getErrors().forEach(error -> arrayNode.add(objectMapper.convertValue(error, JsonNode.class)));
 
         return ResponseEntity.badRequest().body(objectNode);
     }

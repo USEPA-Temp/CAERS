@@ -1,9 +1,11 @@
 package gov.epa.cef.web.client.soap;
 
+import com.google.common.collect.ImmutableMap;
 import gov.epa.cef.web.config.CdxConfig;
 import gov.epa.cef.web.exception.VirusScanException;
 import gov.epa.cef.web.provider.system.IPropertyKey;
 import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.wsdl.virusscan._1.ScanFilePortType;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import java.util.UUID;
 public class VirusScanClient extends AbstractClient {
 
     private static final String CleanFile = "The file is clean";
+    private static final String VirusFound = "Virus Found";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,9 +35,15 @@ public class VirusScanClient extends AbstractClient {
 
     private final VirusScanConfig virusScanConfig;
 
-    @Autowired
-    VirusScanClient(PropertyProvider propertyProvider, CdxConfig cdxConfig, VirusScanConfig virusScanConfig) {
+    private final NotificationService notificationService;
 
+    @Autowired
+    VirusScanClient(NotificationService notificationService,
+                    PropertyProvider propertyProvider,
+                    CdxConfig cdxConfig,
+                    VirusScanConfig virusScanConfig) {
+
+        this.notificationService = notificationService;
         this.propertyProvider = propertyProvider;
         this.cdxConfig = cdxConfig;
         this.virusScanConfig = virusScanConfig;
@@ -72,18 +81,33 @@ public class VirusScanClient extends AbstractClient {
             logger.warn("Eating exception", e);
 
             result = e.getMessage();
-            throw new VirusScanException(e.getMessage());
+
+            if (VirusFound.equals(e.getMessage())) {
+
+                throw new VirusScanException(tempFile, e.getMessage());
+
+            } else {
+
+                // unknown exception, eat it and send email to admins
+                // TODO this should be async, suggest to an event/message queue to decouple actions
+                this.notificationService.sendAdminNotification(
+                    NotificationService.AdminEmailType.VirusScanFailure,
+                    ImmutableMap.of("exception", e));
+            }
 
         } finally {
 
             logger.debug("VirusScan {} returned: {}", transId, result);
         }
 
+        // if we get here then the result should be "clean file"
+        // otherwise send an email for unexpected result
         if (CleanFile.equals(result) == false) {
 
-            // not clean
-            String message = String.format("Virus scan transId %s returned result: %s", transId.toString(), result);
-            throw new VirusScanException(message);
+            this.notificationService.sendAdminNotification(
+                NotificationService.AdminEmailType.VirusScanFailure,
+                ImmutableMap.of("exception",
+                    new IllegalStateException("Unexpected result returned: ".concat(result))));
         }
     }
 
