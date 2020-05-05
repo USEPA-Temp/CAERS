@@ -202,6 +202,9 @@ export class EmissionDetailsComponent implements OnInit {
       if (value && value.epaEmissionFactor) {
         this.epaEmissionFactor = true;
         this.emissionForm.get('emissionsFactor').reset();
+        this.emissionForm.get('emissionsFactorFormula').reset();
+        this.emissionForm.get('formulaIndicator').reset();
+        this.emissionForm.get('formulaVariables').reset();
       } else {
         this.emissionForm.get('formulaIndicator').reset(false);
         this.setupVariableForm([]);
@@ -275,6 +278,9 @@ export class EmissionDetailsComponent implements OnInit {
 
   onChange() {
     this.emissionForm.get('emissionsFactor').reset();
+    this.emissionForm.get('emissionsFactorFormula').reset();
+    this.emissionForm.get('formulaIndicator').reset();
+    this.emissionForm.get('formulaVariables').reset();
   }
 
   isCommentRequired() {
@@ -348,6 +354,7 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.createMode) {
       this.emissionForm.reset(this.emission);
     }
+    this.editable = false;
   }
 
   onEdit() {
@@ -364,6 +371,7 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.emissionForm.valid) {
       this.emissionForm.markAllAsTouched();
     } else {
+      this.editable = false;
 
       const saveEmission = new Emission();
       Object.assign(saveEmission, this.emissionForm.value);
