@@ -9,7 +9,8 @@ import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication
 @PropertySources({
-    @PropertySource(factory = YamlPropertySourceFactory.class, value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true),
+    @PropertySource(factory = YamlPropertySourceFactory.class,
+        value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true)
 })
 public class CefWebApplication extends SpringBootServletInitializer {
 

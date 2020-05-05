@@ -16,7 +16,7 @@ public class BulkReportValidationException extends ApplicationException {
 
     public BulkReportValidationException(List<WorksheetError> errors) {
 
-        super(ApplicationErrorCode.E_INVALID_ARGUMENT, "Bulk Report failed validation.");
+        super(ApplicationErrorCode.E_VALIDATION, "Bulk Report failed validation.");
 
         this.errors = new ArrayList<>();
         if (errors != null) {

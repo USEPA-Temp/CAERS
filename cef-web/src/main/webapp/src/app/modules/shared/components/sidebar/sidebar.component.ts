@@ -5,6 +5,7 @@ import { SideNavItem } from 'src/app/shared/models/side-nav-item';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit{
+export class SidebarComponent implements OnInit {
   @Input() facility: CdxFacility;
   facilitySite: FacilitySite;
   emissionsNavItems: SideNavItem[];
@@ -20,9 +21,12 @@ export class SidebarComponent implements OnInit{
   paginate: boolean;
   hideSideBar: boolean = false;
 
+  bulkEntryEnabled: boolean;
+
   constructor(
       private emissionsUnitService: EmissionUnitService,
-      private sharedService: SharedService) {
+      private sharedService: SharedService,
+      private propertyService: ConfigPropertyService) {
     sharedService.changeEmitted$
     .subscribe(facilitySite => {
       if (facilitySite != null) {
@@ -37,9 +41,16 @@ export class SidebarComponent implements OnInit{
     })
   }
 
+
+
   ngOnInit() {
     this.sharedService.hideBoolChangeEmitted$.subscribe((result) => {
       this.hideSideBar = result;
+    });
+
+    this.propertyService.retrieveBulkEntryEnabled()
+    .subscribe(result => {
+      this.bulkEntryEnabled = result;
     });
   }
 

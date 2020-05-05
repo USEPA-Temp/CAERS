@@ -1,26 +1,34 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.ReportingPeriodService;
+import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
 import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
     @Autowired
     private ReportingPeriodRepository repo;
+
+    @Autowired
+    private EmissionsReportRepository reportRepo;
 
     @Autowired
     private LookupService lookupService;
@@ -137,6 +145,59 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
     public List<ReportingPeriodDto> retrieveForEmissionsProcess(Long processId) {
         List<ReportingPeriod> result = repo.findByEmissionsProcessId(processId);
         return mapper.toDtoList(result);
+    }
+
+    /**
+     * Retrieve Reporting Periods for Bulk Entry for a specific facility site
+     * @param facilitySiteId
+     * @return
+     */
+    public List<ReportingPeriodBulkEntryDto> retrieveBulkEntryReportingPeriodsForFacilitySite(Long facilitySiteId) {
+
+        List<ReportingPeriod> entities = repo.findByFacilitySiteId(facilitySiteId);
+
+        List<ReportingPeriodBulkEntryDto> result = mapper.toBulkEntryDtoList(entities);
+
+        if (!entities.isEmpty()) {
+            // find the last year reported
+            Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEisProgramId(),
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
+
+            if (lastReport.isPresent()) {
+                result.forEach(dto -> {
+                    List<ReportingPeriod> oldEntities = repo.retrieveByTypeIdentifierParentFacilityYear(dto.getReportingPeriodTypeCode().getCode(),
+                            dto.getEmissionsProcessIdentifier(),
+                            dto.getUnitIdentifier(), 
+                            lastReport.get().getEisProgramId(), 
+                            lastReport.get().getYear());
+                    if (!oldEntities.isEmpty()) {
+                        dto.setPreviousCalculationParameterValue(oldEntities.get(0).getCalculationParameterValue());
+                        dto.setPreviousCalculationParameterUomCode(oldEntities.get(0).getCalculationParameterUom().getCode());
+                    }
+                });
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Update the throughput for multiple Reporting Periods at once
+     * @param dtos
+     * @return
+     */
+    public List<ReportingPeriodUpdateResponseDto> bulkUpdate(List<ReportingPeriodBulkEntryDto> dtos) {
+
+        List<ReportingPeriodDto> updateDtos = mapper.toUpdateDtoFromBulkList(dtos);
+
+        List<ReportingPeriodUpdateResponseDto> result = new ArrayList<>();
+
+        updateDtos.forEach(dto -> {
+            result.add(update(dto));
+        });
+
+        return result;
     }
 
 }

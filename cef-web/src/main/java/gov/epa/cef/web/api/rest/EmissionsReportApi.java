@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import gov.epa.cef.web.client.soap.VirusScanClient;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.BulkReportValidationException;
+import gov.epa.cef.web.exception.VirusScanException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
@@ -20,6 +22,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -45,6 +48,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -63,6 +67,8 @@ public class EmissionsReportApi {
 
     private final BulkUploadService uploadService;
 
+    private final VirusScanClient virusScanClient;
+
     private final EmissionsReportValidationService validationService;
 
     Logger LOGGER = LoggerFactory.getLogger(EmissionsReportApi.class);
@@ -74,6 +80,7 @@ public class EmissionsReportApi {
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
                        BulkUploadService uploadService,
+                       VirusScanClient virusScanClient,
                        ObjectMapper objectMapper) {
 
         this.securityService = securityService;
@@ -82,6 +89,7 @@ public class EmissionsReportApi {
         this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
+        this.virusScanClient = virusScanClient;
 
         this.objectMapper = objectMapper;
     }
@@ -106,10 +114,10 @@ public class EmissionsReportApi {
     @ExceptionHandler(value = BulkReportValidationException.class)
     public ResponseEntity<JsonNode> bulkUploadValidationError(BulkReportValidationException exception) {
 
-        ObjectNode objectNode = this.objectMapper.createObjectNode();
+        ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("failed", true);
         ArrayNode arrayNode = objectNode.putArray("errors");
-        exception.getErrors().forEach(error -> arrayNode.add(this.objectMapper.convertValue(error, JsonNode.class)));
+        exception.getErrors().forEach(error -> arrayNode.add(objectMapper.convertValue(error, JsonNode.class)));
 
         return ResponseEntity.badRequest().body(objectNode);
     }
@@ -145,9 +153,20 @@ public class EmissionsReportApi {
             LOGGER.debug("Workbook filename {}", tempFile.getFileName());
             LOGGER.debug("ReportDto {}", reportDto);
 
+            this.virusScanClient.scanFile(tempFile);
+
             result = this.uploadService.saveBulkWorkbook(reportDto, tempFile);
 
             status = HttpStatus.OK;
+
+        } catch (VirusScanException e) {
+
+            String msg = String.format("The uploaded file, '%s', is suspected of containing a threat " +
+                    "such as a virus or malware and was deleted. The scanner responded with: '%s'.",
+                workbook.getOriginalFilename(), e.getMessage());
+
+            throw new BulkReportValidationException(
+                Collections.singletonList(WorksheetError.createSystemError(msg)));
 
         } catch (IOException e) {
 

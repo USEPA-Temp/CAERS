@@ -1,0 +1,59 @@
+<div  *ngIf="tableData">
+  <form [formGroup]="reportingPeriodForm">
+    <div  class="overflow-auto" style="max-height: 60vh;">
+      <table class="table table-sm table-striped table-bordered">
+        <thead class="thead-cef-medium">
+        <tr>
+          <th scope="col" sortable="unitIdentifier" (sort)="onSort($event)">Unit ID</th>
+          <th scope="col" sortable="emissionsProcessIdentifier" (sort)="onSort($event)">Process ID</th>
+          <th scope="col" sortable="calculationMaterialCode.description" (sort)="onSort($event)">Throughput Material</th>
+          <th scope="col">Throughput Value</th>
+          <th scope="col">Previously Reported Throughput Value</th>
+          <th scope="col">% Change in Throughput</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableData">
+            <td><u [title]="item.unitDescription">{{item.unitIdentifier}}</u></td>
+            <td>
+              <a routerLink="{{baseUrl}}/process/{{item.emissionsProcessId}}" [title]="item.emissionsProcessDescription" 
+                    [attr.aria-label]="'emissions process' + item?.emissionsProcessIdentifier">
+                {{item.emissionsProcessIdentifier}}
+              </a>
+            </td>
+            <td>{{item.calculationMaterialCode?.description}}</td>
+            <td>
+              <div class="row">
+                <div class="col-sm-12 col-lg-9">
+                <input type="text" class="form-control" id="{{item.reportingPeriodId + 'Input'}}" formControlName="{{item.reportingPeriodId}}" 
+                        [attr.aria-label]="'Throughput for Process ' + item.emissionsProcessIdentifier + ' of Unit ' + item.unitIdentifier">
+                  <app-validation-message [control]="reportingPeriodForm.get('' + item.reportingPeriodId)"></app-validation-message> 
+                </div>
+                <div class="col-sm-12 col-lg-3">
+                  {{item.calculationParameterUom?.code}}
+                </div>
+              </div>
+            </td>
+            <td>
+              <span *ngIf="item.previousCalculationParameterValue; else elseBlock">
+                {{item.previousCalculationParameterValue}} {{item.previousCalculationParameterUomCode}}
+              </span>
+              <ng-template #elseBlock>N/A</ng-template>
+            </td>
+            <td>
+              <span *ngIf="item.previousCalculationParameterValue; else elseBlock">
+                {{(reportingPeriodForm.get('' + item.reportingPeriodId).value - item.previousCalculationParameterValue) / item.previousCalculationParameterValue * 100}}
+              </span>
+              <ng-template #elseBlock>N/A</ng-template>
+              
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="float-right mt-3">
+      <button type="button" class="btn btn-success" (click)="onSubmit()">Save and Update</button>
+    </div>
+  </form>
+</div>
