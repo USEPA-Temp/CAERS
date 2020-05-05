@@ -18,6 +18,6 @@ public interface UserFeedbackService {
      * @param pointId
      * @return
      */
-	UserFeedbackDto retrieveById(String reportId);
+	UserFeedbackDto retrieveById(Integer reportId);
 	
 }

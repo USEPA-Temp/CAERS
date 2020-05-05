@@ -16,7 +16,7 @@ public class UserFeedback extends BaseAuditEntity {
     // Fields
     
     @Column(name = "report_id")
-    private String reportId;
+    private Integer reportId;
     
     @Column(name = "easy_and_intuitive")
     private Integer intuitiveRating;
@@ -53,11 +53,11 @@ public class UserFeedback extends BaseAuditEntity {
      */
     public UserFeedback() {}
     
-    public String getReportId() {
+    public Integer getReportId() {
 		return reportId;
 	}
 
-	public void setReportId(String reportId) {
+	public void setReportId(Integer reportId) {
 		this.reportId = reportId;
 	}
 

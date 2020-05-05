@@ -34,7 +34,7 @@ public class UserFeedbackApi {
      * @return
      */
     @PostMapping
-    public ResponseEntity<UserFeedbackDto> createReleasePoint(
+    public ResponseEntity<UserFeedbackDto> createUserFeedbackSubmission(
     		@NotNull @RequestBody UserFeedbackDto dto) {
     	    	
     	UserFeedbackDto result = userFeedbackService.create(dto);
@@ -48,7 +48,7 @@ public class UserFeedbackApi {
      * @return
      */
     @GetMapping(value = "/{reportId}")
-    public ResponseEntity<UserFeedbackDto> retrieveUserFeedback(@NotNull @PathVariable String reportId) {
+    public ResponseEntity<UserFeedbackDto> retrieveUserFeedback(@NotNull @PathVariable Integer reportId) {
 
     	UserFeedbackDto result = userFeedbackService.retrieveById(reportId);
 

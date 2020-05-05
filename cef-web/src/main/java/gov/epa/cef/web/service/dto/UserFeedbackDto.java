@@ -9,7 +9,7 @@ public class UserFeedbackDto implements Serializable {
     private String beneficialFunctionalityComments;
     private String difficultFunctionalityComments;
     private String enhancementComments;
-    private String reportId;
+    private Integer reportId;
     private Integer intuitiveRating;
     private Integer dataEntryScreens;
     private Integer dataEntryBulkUpload;
@@ -35,10 +35,10 @@ public class UserFeedbackDto implements Serializable {
 	public void setEnhancementComments(String enhancementComments) {
 		this.enhancementComments = enhancementComments;
 	}
-	public String getReportId() {
+	public Integer getReportId() {
 		return reportId;
 	}
-	public void setReportId(String reportId) {
+	public void setReportId(Integer reportId) {
 		this.reportId = reportId;
 	}
 	public Integer getIntuitiveRating() {

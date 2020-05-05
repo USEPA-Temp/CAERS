@@ -12,6 +12,6 @@ public interface UserFeedbackRepository extends CrudRepository<UserFeedback, Lon
      * @param id
      * @return userFeedback
      */
-    UserFeedback findByReportId(@Param("id") String id);
+    UserFeedback findByReportId(@Param("id") Integer id);
     
 }
