@@ -29,7 +29,7 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
     	return result;
 	}
 	
-	public UserFeedbackDto retrieveById(Integer reportId) {
+	public UserFeedbackDto retrieveById(Long reportId) {
 		
         UserFeedback userFeedback = userFeedbackRepo.findByReportId(reportId);
         

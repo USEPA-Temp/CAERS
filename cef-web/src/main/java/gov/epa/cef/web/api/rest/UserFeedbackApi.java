@@ -48,7 +48,7 @@ public class UserFeedbackApi {
      * @return
      */
     @GetMapping(value = "/{reportId}")
-    public ResponseEntity<UserFeedbackDto> retrieveUserFeedback(@NotNull @PathVariable Integer reportId) {
+    public ResponseEntity<UserFeedbackDto> retrieveUserFeedback(@NotNull @PathVariable Long reportId) {
 
     	UserFeedbackDto result = userFeedbackService.retrieveById(reportId);
 

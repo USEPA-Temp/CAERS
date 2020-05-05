@@ -9,14 +9,15 @@ public class UserFeedbackDto implements Serializable {
     private String beneficialFunctionalityComments;
     private String difficultFunctionalityComments;
     private String enhancementComments;
-    private Integer reportId;
-    private Integer intuitiveRating;
-    private Integer dataEntryScreens;
-    private Integer dataEntryBulkUpload;
-    private Integer calculationScreens;
-    private Integer controlsAndControlPathAssignments;
-    private Integer qualityAssuranceChecks;
-    private Integer overallReportingTime;
+    private Long reportId;
+    private Long intuitiveRating;
+    private Long dataEntryScreens;
+    private Long dataEntryBulkUpload;
+    private Long calculationScreens;
+    private Long controlsAndControlPathAssignments;
+    private Long qualityAssuranceChecks;
+    private Long overallReportingTime;
+    
 	public String getBeneficialFunctionalityComments() {
 		return beneficialFunctionalityComments;
 	}
@@ -35,53 +36,54 @@ public class UserFeedbackDto implements Serializable {
 	public void setEnhancementComments(String enhancementComments) {
 		this.enhancementComments = enhancementComments;
 	}
-	public Integer getReportId() {
+	public Long getReportId() {
 		return reportId;
 	}
-	public void setReportId(Integer reportId) {
+	public void setReportId(Long reportId) {
 		this.reportId = reportId;
 	}
-	public Integer getIntuitiveRating() {
+	public Long getIntuitiveRating() {
 		return intuitiveRating;
 	}
-	public void setIntuitiveRating(Integer intuitiveRating) {
+	public void setIntuitiveRating(Long intuitiveRating) {
 		this.intuitiveRating = intuitiveRating;
 	}
-	public Integer getDataEntryScreens() {
+	public Long getDataEntryScreens() {
 		return dataEntryScreens;
 	}
-	public void setDataEntryScreens(Integer dataEntryScreens) {
+	public void setDataEntryScreens(Long dataEntryScreens) {
 		this.dataEntryScreens = dataEntryScreens;
 	}
-	public Integer getDataEntryBulkUpload() {
+	public Long getDataEntryBulkUpload() {
 		return dataEntryBulkUpload;
 	}
-	public void setDataEntryBulkUpload(Integer dataEntryBulkUpload) {
+	public void setDataEntryBulkUpload(Long dataEntryBulkUpload) {
 		this.dataEntryBulkUpload = dataEntryBulkUpload;
 	}
-	public Integer getCalculationScreens() {
+	public Long getCalculationScreens() {
 		return calculationScreens;
 	}
-	public void setCalculationScreens(Integer calculationScreens) {
+	public void setCalculationScreens(Long calculationScreens) {
 		this.calculationScreens = calculationScreens;
 	}
-	public Integer getControlsAndControlPathAssignments() {
+	public Long getControlsAndControlPathAssignments() {
 		return controlsAndControlPathAssignments;
 	}
-	public void setControlsAndControlPathAssignments(Integer controlsAndControlPathAssignments) {
+	public void setControlsAndControlPathAssignments(Long controlsAndControlPathAssignments) {
 		this.controlsAndControlPathAssignments = controlsAndControlPathAssignments;
 	}
-	public Integer getQualityAssuranceChecks() {
+	public Long getQualityAssuranceChecks() {
 		return qualityAssuranceChecks;
 	}
-	public void setQualityAssuranceChecks(Integer qualityAssuranceChecks) {
+	public void setQualityAssuranceChecks(Long qualityAssuranceChecks) {
 		this.qualityAssuranceChecks = qualityAssuranceChecks;
 	}
-	public Integer getOverallReportingTime() {
+	public Long getOverallReportingTime() {
 		return overallReportingTime;
 	}
-	public void setOverallReportingTime(Integer overallReportingTime) {
+	public void setOverallReportingTime(Long overallReportingTime) {
 		this.overallReportingTime = overallReportingTime;
 	}
+	
        
 }

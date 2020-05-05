@@ -16,22 +16,22 @@ public class UserFeedback extends BaseAuditEntity {
     // Fields
     
     @Column(name = "report_id")
-    private Integer reportId;
+    private Long reportId;
     
     @Column(name = "easy_and_intuitive")
-    private Integer intuitiveRating;
+    private Long intuitiveRating;
 
     @Column(name = "data_entry_via_screens")
-    private Integer dataEntryScreens;
+    private Long dataEntryScreens;
 
     @Column(name = "calculation_screens")
-    private Integer calculationScreens;
+    private Long calculationScreens;
     
     @Column(name = "controls_and_control_paths")
-    private Integer controlsAndControlPathAssignments;
+    private Long controlsAndControlPathAssignments;
 
     @Column(name = "overall_reporting_time")
-    private Integer overallReportingTime;
+    private Long overallReportingTime;
 
     @Column(name = "beneficial_functionality_description")
     private String beneficialFunctionalityComments;
@@ -43,61 +43,61 @@ public class UserFeedback extends BaseAuditEntity {
     private String enhancementComments;
     
     @Column(name = "data_entry_via_bulk_upload")
-    private Integer dataEntryBulkUpload;
+    private Long dataEntryBulkUpload;
 
     @Column(name = "quality_assurance_checks")
-    private Integer qualityAssuranceChecks;
+    private Long qualityAssuranceChecks;
     
 	/***
      * Default constructor
      */
     public UserFeedback() {}
-    
-    public Integer getReportId() {
+
+	public Long getReportId() {
 		return reportId;
 	}
 
-	public void setReportId(Integer reportId) {
+	public void setReportId(Long reportId) {
 		this.reportId = reportId;
 	}
 
-	public Integer getIntuitiveRating() {
+	public Long getIntuitiveRating() {
 		return intuitiveRating;
 	}
 
-	public void setIntuitiveRating(Integer intuitiveRating) {
+	public void setIntuitiveRating(Long intuitiveRating) {
 		this.intuitiveRating = intuitiveRating;
 	}
 
-	public Integer getDataEntryScreens() {
+	public Long getDataEntryScreens() {
 		return dataEntryScreens;
 	}
 
-	public void setDataEntryScreens(Integer dataEntryScreens) {
+	public void setDataEntryScreens(Long dataEntryScreens) {
 		this.dataEntryScreens = dataEntryScreens;
 	}
 
-	public Integer getCalculationScreens() {
+	public Long getCalculationScreens() {
 		return calculationScreens;
 	}
 
-	public void setCalculationScreens(Integer calculationScreens) {
+	public void setCalculationScreens(Long calculationScreens) {
 		this.calculationScreens = calculationScreens;
 	}
 
-	public Integer getControlsAndControlPathAssignments() {
+	public Long getControlsAndControlPathAssignments() {
 		return controlsAndControlPathAssignments;
 	}
 
-	public void setControlsAndControlPathAssignments(Integer controlsAndControlPathAssignments) {
+	public void setControlsAndControlPathAssignments(Long controlsAndControlPathAssignments) {
 		this.controlsAndControlPathAssignments = controlsAndControlPathAssignments;
 	}
 
-	public Integer getOverallReportingTime() {
+	public Long getOverallReportingTime() {
 		return overallReportingTime;
 	}
 
-	public void setOverallReportingTime(Integer overallReportingTime) {
+	public void setOverallReportingTime(Long overallReportingTime) {
 		this.overallReportingTime = overallReportingTime;
 	}
 
@@ -125,19 +125,19 @@ public class UserFeedback extends BaseAuditEntity {
 		this.enhancementComments = enhancementComments;
 	}
 
-	public Integer getDataEntryBulkUpload() {
+	public Long getDataEntryBulkUpload() {
 		return dataEntryBulkUpload;
 	}
 
-	public void setDataEntryBulkUpload(Integer dataEntryBulkUpload) {
+	public void setDataEntryBulkUpload(Long dataEntryBulkUpload) {
 		this.dataEntryBulkUpload = dataEntryBulkUpload;
 	}
 
-	public Integer getQualityAssuranceChecks() {
+	public Long getQualityAssuranceChecks() {
 		return qualityAssuranceChecks;
 	}
 
-	public void setQualityAssuranceChecks(Integer qualityAssuranceChecks) {
+	public void setQualityAssuranceChecks(Long qualityAssuranceChecks) {
 		this.qualityAssuranceChecks = qualityAssuranceChecks;
 	}
     
