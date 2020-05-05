@@ -42,13 +42,13 @@
         <div class="card mb-3">
             <div class="card-header text-center">
                 <strong>Emission Information</strong>
-                <div class="float-right" *ngIf="emissionForm.disabled && !createMode && !readOnlyMode">
-                    <button type="button" class="btn btn-primary" aria-label="edit emission information" (click)="onEdit()">Edit</button>
+                <div class="float-right" *ngIf="!editable && !createMode && !readOnlyMode">
+                    <button type="button" class="btn btn-success" aria-label="edit emission information" (click)="onEdit()">Edit</button>
                 </div>
             </div>
             <div class="card-body">
 
-                <div *ngIf="readOnlyMode && emission">
+                <div *ngIf="emission && !editable">
                     <div class="row pb-2">
                         <div class="col-sm-6 col-md-2"><strong>Pollutant Name:</strong></div>
                         <div class="col-sm-6 col-md-2">{{emission.pollutant.pollutantName}}</div>
@@ -119,7 +119,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="!readOnlyMode">
+                <div *ngIf="!readOnlyMode && editable">
                     <div class="row pb-2">
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Name, Code, and CAS ID of the pollutant." [icon]="['fas', 'question-circle']"></fa-icon>
@@ -360,14 +360,14 @@
             </div>
         </div>
     </form>
-    <div class="float-right pb-3 pr-3" *ngIf="!readOnlyMode">
-        <span *ngIf="!getTotalManualEntry().value && !emissionForm.disabled">
+    <div class="float-right pb-3 pr-3" *ngIf="!readOnlyMode && editable">
+        <span *ngIf="!getTotalManualEntry().value">
             <button type="button" class="btn btn-success mr-2" (click)="onCalculate()">Calculate Emissions</button>
         </span>
         <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Cancel</button>
-        <button type="submit" class="btn btn-success" (click)="onSubmit()" [disabled]="emissionForm.disabled">Save</button>
+        <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
     </div>
-    <div class="float-right pb-3 pr-3" *ngIf="readOnlyMode">
+    <div class="float-right pb-3 pr-3" *ngIf="!editable">
         <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Back</button>
     </div>
 </div>
