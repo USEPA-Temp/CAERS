@@ -33,6 +33,11 @@ public class CefConfig {
         return this.getAdmins().stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
+    public List<String> getAdminEmails() {
+
+        return this.propertyProvider.getStringList(AppPropertyName.AdminEmailAddresses);
+    }
+
     public CdxConfig getCdxConfig() {
         return cdxConfig;
     }
@@ -53,9 +58,8 @@ public class CefConfig {
         return this.propertyProvider.getBigDecimal(AppPropertyName.EmissionsTotalWarningTolerance);
     }
 
-    public List<String> getAdminEmails() {
-
-        return this.propertyProvider.getStringList(AppPropertyName.AdminEmailAddresses);
+    public boolean getFeatureBulkEntryEnabled() {
+        return this.propertyProvider.getBoolean(AppPropertyName.FeatureBulkEntryEnabled);
     }
 
     public String getLastSccUpdateDate() {

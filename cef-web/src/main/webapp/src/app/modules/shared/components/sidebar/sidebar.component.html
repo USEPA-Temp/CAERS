@@ -68,7 +68,8 @@
         </div>
 
         <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
-                [routerLinkActiveOptions]="{exact: true}" #bulkEntryRla="routerLinkActive">
+                [routerLinkActiveOptions]="{exact: true}" #bulkEntryRla="routerLinkActive"
+                *ngIf="bulkEntryEnabled">
             <div class="nav-link pl-0 pr-0">
                 <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
                         [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/bulkEntry" 
