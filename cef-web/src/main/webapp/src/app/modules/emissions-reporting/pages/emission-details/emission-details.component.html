@@ -100,7 +100,7 @@
                         <div class="col-sm-8 col-lg-4">{{emission.emissionsUomCode?.code}}</div>
                     </div>
 
-                    <div class="row" *ngIf="emission.totalManualEntry">
+                    <div class="row" *ngIf="emission.totalManualEntry && !getCalcMethodCodeValue()?.totalDirectEntry">
                         <div class="col-sm-6"></div>
                         <div class="col" style="float: right">
                             <input type="checkbox" checked="checked " disabled>
