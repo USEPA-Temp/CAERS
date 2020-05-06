@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { BulkEntryReportingPeriod } from 'src/app/shared/models/bulk-entry-reporting-period';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { ReportingPeriodService } from 'src/app/core/services/reporting-period.s
   templateUrl: './bulk-entry-reporting-period-table.component.html',
   styleUrls: ['./bulk-entry-reporting-period-table.component.scss']
 })
-export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable implements OnInit {
+export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable implements OnInit, OnChanges {
   @Input() tableData: BulkEntryReportingPeriod[];
   baseUrl: string;
 
@@ -39,6 +39,10 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
     .subscribe(map => {
       this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
     });
+  }
+
+  ngOnChanges() {
+    this.tableData.sort((a, b) => (a.unitIdentifier > b.unitIdentifier) ? 1 : -1);
   }
 
   onSubmit() {

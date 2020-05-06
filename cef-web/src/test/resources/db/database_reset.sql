@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS facility_site_contact;
 DROP TABLE IF EXISTS facility_site;
 DROP TABLE IF EXISTS report_history;
 DROP TABLE IF EXISTS emissions_report;
+DROP TABLE IF EXISTS user_feedback;
 DROP TABLE IF EXISTS admin_properties;
 
 --REFERENCE TABLES

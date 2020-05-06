@@ -95,12 +95,16 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     retrieveFacilitiesReportsByYearAndStatus(year,reportStatus): void{
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus)
-            .subscribe( submissions => this.submissions = submissions);
+            .subscribe((submissions) => {
+                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1)
+            });
     }
 
     retrieveFacilitiesReportsByReportStatus(reportStatus): void{
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus)
-            .subscribe(submissions => this.submissions = submissions);
+            .subscribe((submissions) => {
+                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1)
+            });
     }
 
     onStatusSelected(value: string) {

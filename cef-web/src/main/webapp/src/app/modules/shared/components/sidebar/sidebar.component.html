@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-2" *ngIf="emissionsNavItems && facilityNavItems">
+    <div class="mt-2" *ngIf="emissionsNavItems && facilityNavItems && !hideSideBar">
         <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
                 [routerLinkActiveOptions]="{exact: true}" #summaryRla="routerLinkActive">
             <div class="nav-link pl-0 pr-0">
@@ -55,7 +55,7 @@
 
         <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
                 [routerLinkActiveOptions]="{exact: true}" #validationRla="routerLinkActive"
-                *ngIf="facilitySite.emissionsReport.status !== 'APPROVED'">
+                *ngIf="facilitySite.emissionsReport.status !== 'APPROVED' && !hideSideBar">
             <div class="nav-link pl-0 pr-0">
                 <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
                         [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/validation" 
@@ -74,7 +74,7 @@
                 <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
                         [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/bulkEntry" 
                         >
-                    <span>Bulk Entry
+                    <span>Data Bulk Entry
                           <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !bulkEntryRla.isActive}" size="lg"></fa-icon>
                     </span>
                 </a>

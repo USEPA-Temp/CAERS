@@ -40,7 +40,7 @@ function loadScript(srciptUrl){
     return script;
 }
 
-function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter){
+function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback){
     $( document ).ready(function() {
         $.cromerrWidget({
             esignButtonId : "certifyAndSubmit",
@@ -62,9 +62,14 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
                         reportId: emissionsReportId
                       },
                       success: function(response) {
-                          toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
-                          event.unblockUI();
-                          window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report";
+                        if (userFeedback) {
+                            toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
+                            event.unblockUI();
+                            window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report";
+                        } else {
+                            event.unblockUI()
+                            window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report/"+emissionsReportId+"/userfeedback";
+                        }
                       },
                       error: function(xhr) {
                           event.unblockUI();
