@@ -14,7 +14,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of tableData">
-            <td><u [title]="item.unitDescription">{{item.unitIdentifier}}</u></td>
+            <td><span [title]="item.unitDescription">{{item.unitIdentifier}}</span></td>
             <td>
               <a routerLink="{{baseUrl}}/process/{{item.emissionsProcessId}}" [title]="item.emissionsProcessDescription" 
                     [attr.aria-label]="'emissions process' + item?.emissionsProcessIdentifier">
@@ -42,7 +42,7 @@
             </td>
             <td>
               <span *ngIf="item.previousCalculationParameterValue; else elseBlock">
-                {{(reportingPeriodForm.get('' + item.reportingPeriodId).value - item.previousCalculationParameterValue) / item.previousCalculationParameterValue * 100}}
+                {{((reportingPeriodForm.get('' + item.reportingPeriodId).value - item.previousCalculationParameterValue) / item.previousCalculationParameterValue * 100).toFixed(3)}}
               </span>
               <ng-template #elseBlock>N/A</ng-template>
               
