@@ -276,11 +276,11 @@ export class EmissionDetailsComponent implements OnInit {
     });
   }
 
+  // reset ef and ef formula when pollutant is changed
   onChange() {
     this.emissionForm.get('emissionsFactor').reset();
     this.emissionForm.get('emissionsFactorFormula').reset();
-    this.emissionForm.get('formulaIndicator').reset();
-    this.emissionForm.get('formulaVariables').reset();
+    this.emissionForm.get('formulaIndicator').reset(false);
   }
 
   isCommentRequired() {
