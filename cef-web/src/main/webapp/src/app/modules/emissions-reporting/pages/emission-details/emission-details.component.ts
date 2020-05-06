@@ -205,6 +205,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsFactorFormula').reset();
         this.emissionForm.get('formulaIndicator').reset();
         this.emissionForm.get('formulaVariables').reset();
+        this.emissionForm.get('totalManualEntry').reset();
       } else {
         this.emissionForm.get('formulaIndicator').reset(false);
         this.setupVariableForm([]);
@@ -281,6 +282,7 @@ export class EmissionDetailsComponent implements OnInit {
     this.emissionForm.get('emissionsFactorFormula').reset();
     this.emissionForm.get('formulaIndicator').reset();
     this.emissionForm.get('formulaVariables').reset();
+    this.emissionForm.get('totalManualEntry').reset();
   }
 
   isCommentRequired() {
