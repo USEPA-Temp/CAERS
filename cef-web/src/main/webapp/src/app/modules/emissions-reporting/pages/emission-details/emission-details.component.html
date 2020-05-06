@@ -108,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div class="row pb-2" *ngIf="emission.totalManualEntry">
+                    <div class="row pb-2" *ngIf="emission.totalManualEntry && !getCalcMethodCodeValue()?.totalDirectEntry">
                         <div for="emissionCommentsInput" class="col-sm-4 col-lg-2"><strong>Description of Calculation:</strong></div>
                         <div class="col-sm-8 col-lg-10">{{emission?.calculationComment}}</div>
                     </div>
