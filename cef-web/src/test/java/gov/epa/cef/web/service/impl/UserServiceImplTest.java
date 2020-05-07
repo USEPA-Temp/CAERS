@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
+import gov.epa.cef.web.client.soap.SecurityToken;
 import gov.epa.cef.web.config.CdxConfig;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.exception.ApplicationException;
@@ -55,19 +56,19 @@ public class UserServiceImplTest extends BaseServiceTest {
         when(cefConfig.getCdxConfig().getNaasUser()).thenReturn("naas-user");
         when(cefConfig.getCdxConfig().getNaasPassword()).thenReturn("naas-password");
         when(cefConfig.getCdxConfig().getNaasIp()).thenReturn("127.0.0.1");
-        when(cefConfig.getCdxConfig().getCdxBaseUrl()).thenReturn("http:\\frs-url");
+        when(cefConfig.getCdxConfig().getCdxBaseUrl()).thenReturn("http://frs-url");
     }
 
 
     @Test
     public void createToken_Should_ReturnValidToken_When_ValidUserIdPassed() throws MalformedURLException {
-        when(tokenClient.createSecurityToken(new URL("http:\\mockurl"), "naas-user", "naas-password", "mock-user", "127.0.0.1")).thenReturn("token");
-        when(cefConfig.getCdxConfig().getNaasTokenUrl()).thenReturn("http:\\mockurl");
+        when(tokenClient.createSecurityToken("mock-user", "127.0.0.1")).thenReturn(new SecurityToken().withToken("token"));
+        when(cefConfig.getCdxConfig().getNaasTokenUrl()).thenReturn(new URL("http://mockurl"));
         TokenDto token=userServiceImpl.createToken();
         assertEquals("token", token.getToken());
         assertEquals(new Long(123), token.getUserRoleId());
         assertEquals("token", token.getToken());
-        assertEquals("http:\\frs-url", token.getBaseServiceUrl());
+        assertEquals("http://frs-url", token.getBaseServiceUrl());
     }
 
     @Test(expected=ApplicationException.class)

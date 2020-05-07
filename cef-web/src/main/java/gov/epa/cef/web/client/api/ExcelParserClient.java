@@ -3,6 +3,8 @@ package gov.epa.cef.web.client.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
+import gov.epa.cef.web.client.soap.SecurityToken;
+import gov.epa.cef.web.client.soap.SecurityTokenClient;
 import gov.epa.cef.web.util.TempFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +36,15 @@ public class ExcelParserClient {
 
     private final ObjectMapper objectMapper;
 
+    private final SecurityTokenClient tokenClient;
+
     @Autowired
-    ExcelParserClient(ExcelParserClientConfig config, ObjectMapper objectMapper) {
+    ExcelParserClient(ExcelParserClientConfig config,
+                      SecurityTokenClient tokenClient,
+                      ObjectMapper objectMapper) {
 
         this.config = config;
+        this.tokenClient = tokenClient;
         this.objectMapper = objectMapper;
     }
 
@@ -54,6 +61,8 @@ public class ExcelParserClient {
         Profiler profiler = new Profiler("ExcelParser");
         profiler.setLogger(logger);
 
+        SecurityToken token = this.tokenClient.createSecurityToken("-=>CaerUser<=-", "127.0.0.1");
+
         URL url = makeUrl("/parse");
         HttpURLConnection http = null;
 
@@ -67,6 +76,7 @@ public class ExcelParserClient {
             http.setDoOutput(true);
 
             http.setRequestProperty("Content-Type", "multipart/form-data;boundary=".concat(boundary));
+            http.setRequestProperty("X-SSO-Token", token.asCombinedSsoToken());
 
             try (DataOutputStream request = new DataOutputStream(http.getOutputStream())) {
 
