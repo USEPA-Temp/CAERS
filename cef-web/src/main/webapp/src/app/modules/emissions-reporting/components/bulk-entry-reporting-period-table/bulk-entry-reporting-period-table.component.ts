@@ -42,7 +42,13 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
   }
 
   ngOnChanges() {
-    this.tableData.sort((a, b) => (a.unitIdentifier > b.unitIdentifier) ? 1 : -1);
+    this.tableData.sort((a, b) => {
+
+      if (a.unitIdentifier === b.unitIdentifier) {
+        return a.emissionsProcessIdentifier > b.emissionsProcessIdentifier ? 1 : -1;
+      }
+      return a.unitIdentifier > b.unitIdentifier ? 1 : -1;
+    });
   }
 
   onSubmit() {
