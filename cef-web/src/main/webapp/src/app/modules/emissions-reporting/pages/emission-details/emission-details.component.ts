@@ -188,7 +188,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
         this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
         this.isCommentRequired();
-        this.getTotalManualEntry().setValue(true);
+        this.getTotalManualEntry().setValue(false);
       } else {
         this.emissionForm.get('emissionsFactor').enable();
         this.emissionForm.get('emissionsFactorText').enable();
@@ -225,7 +225,7 @@ export class EmissionDetailsComponent implements OnInit {
       this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
       this.emissionForm.get('calculationComment').reset({value: null, disabled: true});
       this.isCommentRequired();
-      this.getTotalManualEntry().setValue(true);
+      this.getTotalManualEntry().setValue(false);
     } else {
       this.emissionForm.get('emissionsFactor').enable();
       this.emissionForm.get('emissionsFactorText').enable();
@@ -278,9 +278,9 @@ export class EmissionDetailsComponent implements OnInit {
 
   // reset ef and ef formula when pollutant is changed
   onChange() {
-    this.emissionForm.get('emissionsFactor').reset();
-    this.emissionForm.get('emissionsFactorFormula').reset();
-    this.emissionForm.get('formulaIndicator').reset(false);
+    if (this.emissionForm.value.emissionsCalcMethodCode) {
+      this.onMethodChange(this.emissionForm.get('emissionsCalcMethodCode').value, this.emissionForm.get('emissionsCalcMethodCode').status);
+    }
   }
 
   isCommentRequired() {
