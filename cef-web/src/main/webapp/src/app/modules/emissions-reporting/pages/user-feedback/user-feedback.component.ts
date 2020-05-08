@@ -69,13 +69,7 @@ export class UserFeedbackComponent implements OnInit {
   }
 
   onNoThanks() {
-    const saveUserFeedback = new UserFeedback();
-    saveUserFeedback.reportId = this.reportId;
-    Object.assign(saveUserFeedback, this.feedbackForm.value);
-
-    this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
-      this.router.navigateByUrl(this.baseUrl);
-    });
+    this.router.navigateByUrl(this.baseUrl);
   }
 
 }

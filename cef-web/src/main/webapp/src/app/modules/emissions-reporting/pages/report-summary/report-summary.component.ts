@@ -31,7 +31,7 @@ export class ReportSummaryComponent implements OnInit {
     cromerrLoaded = false;
     cromerrLoadedEmitter = new Subject<boolean>();
     userRole: string;
-    feedbackSubmitted: boolean;
+    feedbackSubmitted = true;
     feedbackEnabled: boolean;
 
     constructor(
@@ -70,18 +70,11 @@ export class ReportSummaryComponent implements OnInit {
                             this.userContextService.getUser().subscribe( user => {
                                 this.userRole = user.role;
 
-                                if (this.feedbackEnabled) {
-                                    if (userFeedback === null && this.facilitySite.emissionsReport.status === 'SUBMITTED' && user.role === 'NEI Certifier') {
-                                        this.feedbackSubmitted = false;
-                                    }
-                                } else {
-                                    this.feedbackSubmitted = true;
-                                }
-
                                 if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                                    if (!userFeedback && this.feedbackEnabled) {
+                                    if (this.feedbackEnabled) {
                                         this.feedbackSubmitted = false;
                                     }
+
                                     initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                         this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
                                         this.cromerrLoadedEmitter, this.feedbackSubmitted);
@@ -148,9 +141,5 @@ export class ReportSummaryComponent implements OnInit {
             }
         });
     }
-
-    // userFeedback() {
-    //     this.router.navigateByUrl(`/facility/${this.facilitySite.eisProgramId}/report/${this.facilitySite.emissionsReport.id}/userfeedback`);
-    // }
 
 }
