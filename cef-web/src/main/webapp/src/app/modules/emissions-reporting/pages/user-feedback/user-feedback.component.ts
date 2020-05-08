@@ -5,6 +5,7 @@ import { UserFeedback } from 'src/app/shared/models/user-feedback';
 import { ActivatedRoute, Router} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Component({
   selector: 'app-user-feedback',
@@ -14,6 +15,8 @@ import { SharedService } from 'src/app/core/services/shared.service';
 export class UserFeedbackComponent implements OnInit {
   reportId: string;
   facilityId: string;
+  facilitySite: FacilitySite;
+  baseUrl: string;
 
   feedbackForm = this.fb.group({
     beneficialFunctionalityComments: [null],
@@ -40,9 +43,18 @@ export class UserFeedbackComponent implements OnInit {
     .subscribe(params => {
       this.reportId = params.get('reportId');
       this.facilityId = params.get('facilityId')
+
+      this.baseUrl = `/facility/${params.get('facilityId')}/report`;
     });
+
+    // emits the report info to the sidebar
+    this.route.data
+    .subscribe((data: { facilitySite: FacilitySite }) => {
+      this.facilitySite = data.facilitySite;
+      this.sharedService.emitChange(data.facilitySite);
+    });
+
     this.sharedService.emitHideBoolChange(true);
-    this.toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
   }
 
   onSubmit()  {
@@ -51,16 +63,13 @@ export class UserFeedbackComponent implements OnInit {
     Object.assign(saveUserFeedback, this.feedbackForm.value);
 
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
-      const url = '/facility/'+this.facilityId+'/report';
       this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
-      this.router.navigateByUrl(url);
+      this.router.navigateByUrl(this.baseUrl);
     });
   }
 
   onNoThanks() {
-    this.sharedService.emitHideBoolChange(false);
-    const url = '/facility/'+this.facilityId+'/report';
-    this.router.navigateByUrl(url);
+    this.router.navigateByUrl(this.baseUrl);
   }
 
 }
