@@ -19,7 +19,6 @@ export class SidebarComponent implements OnInit {
   emissionsNavItems: SideNavItem[];
   facilityNavItems: SideNavItem[];
   paginate: boolean;
-  hideSideBar: boolean = false;
 
   bulkEntryEnabled: boolean;
 
@@ -44,9 +43,6 @@ export class SidebarComponent implements OnInit {
 
 
   ngOnInit() {
-    this.sharedService.hideBoolChangeEmitted$.subscribe((result) => {
-      this.hideSideBar = result;
-    });
 
     this.propertyService.retrieveBulkEntryEnabled()
     .subscribe(result => {
