@@ -64,11 +64,13 @@ export class UserFeedbackComponent implements OnInit {
 
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
       this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
+      this.sharedService.emitHideBoolChange(false);
       this.router.navigateByUrl(this.baseUrl);
     });
   }
 
   onNoThanks() {
+    this.sharedService.emitHideBoolChange(false);
     this.router.navigateByUrl(this.baseUrl);
   }
 

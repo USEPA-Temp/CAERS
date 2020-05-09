@@ -13,7 +13,6 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 import { Subject } from 'rxjs';
-import { UserFeedbackService } from 'src/app/core/services/user-feedback.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 declare const initCromerrWidget: any;
@@ -45,7 +44,6 @@ export class ReportSummaryComponent implements OnInit {
         private modalService: NgbModal,
         private emissionsReportingService: EmissionsReportingService,
         private reportDownloadService: ReportDownloadService,
-        private userFeedbackService: UserFeedbackService,
         private propertyService: ConfigPropertyService) { }
 
     ngOnInit() {
@@ -64,22 +62,20 @@ export class ReportSummaryComponent implements OnInit {
                 .subscribe(result => {
                     this.feedbackEnabled = result;
 
-                    this.userFeedbackService.retrieveByReportId(this.facilitySite.emissionsReport.id).subscribe((userFeedback) => {
-                        this.userService.getCurrentUserNaasToken()
-                        .subscribe(userToken => {
-                            this.userContextService.getUser().subscribe( user => {
-                                this.userRole = user.role;
+                    this.userService.getCurrentUserNaasToken()
+                    .subscribe(userToken => {
+                        this.userContextService.getUser().subscribe( user => {
+                            this.userRole = user.role;
 
-                                if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                                    if (this.feedbackEnabled) {
-                                        this.feedbackSubmitted = false;
-                                    }
-
-                                    initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                        this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
-                                        this.cromerrLoadedEmitter, this.feedbackSubmitted);
+                            if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                                if (this.feedbackEnabled) {
+                                    this.feedbackSubmitted = false;
                                 }
-                            });
+
+                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
+                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
+                                    this.cromerrLoadedEmitter, this.feedbackSubmitted);
+                            }
                         });
                     });
                 });
