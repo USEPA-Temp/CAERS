@@ -21,6 +21,7 @@ import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
+import gov.epa.cef.web.service.UserFeedbackService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
@@ -97,7 +98,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private LookupService lookupService;
-
+    
+    @Autowired
+    private UserFeedbackService userFeedbackService;
+    
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
@@ -294,6 +298,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @param id
      */
     public void delete(Long id) {
+    	if(userFeedbackService.retrieveById(id) != null){
+    		userFeedbackService.setReportIdToNull(id);
+    	}
     	erRepo.deleteById(id);
     }
 
