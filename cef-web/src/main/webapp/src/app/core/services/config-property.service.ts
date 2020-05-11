@@ -15,4 +15,9 @@ export class ConfigPropertyService {
     const url = `${this.baseUrl}/bulkEntry/enabled`;
     return this.http.get<boolean>(url);
   }
+
+  retrieveUserFeedbackEnabled(): Observable<boolean> {
+    const url = `${this.baseUrl}/userFeedback/enabled`;
+    return this.http.get<boolean>(url);
+  }
 }

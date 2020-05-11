@@ -28,5 +28,16 @@ public class PropertyApi {
             Boolean result = propertyProvider.getBoolean(AppPropertyName.FeatureBulkEntryEnabled);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
+    
+    /**
+     * Retrieve user feedback enabled property
+     * @return
+     */
+    @GetMapping(value = "/userFeedback/enabled")
+    @ResponseBody
+    public ResponseEntity<Boolean> retrieveUserFeedbackEnabled() {
+            Boolean result = propertyProvider.getBoolean(AppPropertyName.FeatureUserFeedbackEnabled);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
 }
