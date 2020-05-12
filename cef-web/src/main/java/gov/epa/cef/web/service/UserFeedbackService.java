@@ -20,10 +20,6 @@ public interface UserFeedbackService {
      */
 	UserFeedbackDto retrieveById(Long reportId);
 	
-	/**
-	 * Set User Feedback submission's report id to null
-	 * @param reportId
-	 */
-	void setReportIdToNull(Long reportId);
+	void removeReportFromUserFeedback(Long reportId);
 	
 }

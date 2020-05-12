@@ -298,9 +298,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @param id
      */
     public void delete(Long id) {
-    	if(userFeedbackService.retrieveById(id) != null){
-    		userFeedbackService.setReportIdToNull(id);
-    	}
+    	userFeedbackService.removeReportFromUserFeedback(id);
     	erRepo.deleteById(id);
     }
 
