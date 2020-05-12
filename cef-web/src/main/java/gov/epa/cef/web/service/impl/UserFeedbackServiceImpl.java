@@ -36,11 +36,13 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
         return userFeedbackMapper.toDto(userFeedback);
 	}
 	
-	public void setReportIdToNull(Long reportId) {
-		if(userFeedbackRepo.findByReportId(reportId) != null){
-			UserFeedback userFeedback = userFeedbackRepo.findByReportId(reportId);
-			userFeedback.setReportId(null);
-			userFeedbackRepo.save(userFeedback);
+	public void removeReportFromUserFeedback(Long reportId) {
+		if(userFeedbackRepo.findAllByReportId(reportId) != null){
+			List<UserFeedback> userFeedback = userFeedbackRepo.findAllByReportId(reportId);
+			userFeedback.forEach(submission -> {
+				submission.setReportId(null);
+				userFeedbackRepo.save(submission);
+			});
 		}
 	}
 }
