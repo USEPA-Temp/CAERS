@@ -20,4 +20,6 @@ public interface UserFeedbackService {
      */
 	UserFeedbackDto retrieveById(Long reportId);
 	
+	void removeReportFromUserFeedback(Long reportId);
+	
 }

@@ -35,4 +35,14 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
         
         return userFeedbackMapper.toDto(userFeedback);
 	}
+	
+	public void removeReportFromUserFeedback(Long reportId) {
+		if(userFeedbackRepo.findAllByReportId(reportId) != null){
+			List<UserFeedback> userFeedback = userFeedbackRepo.findAllByReportId(reportId);
+			userFeedback.forEach(submission -> {
+				submission.setReportId(null);
+				userFeedbackRepo.save(submission);
+			});
+		}
+	}
 }

@@ -10,6 +10,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +33,8 @@ public class CdxConfig {
     @NotBlank
     private String naasPassword;
 
-    @NotBlank
-    private String naasTokenUrl;
+    @NotNull
+    private URL naasTokenUrl;
 
     @NotBlank
     private String naasIp;
@@ -80,11 +82,11 @@ public class CdxConfig {
         this.naasPassword = naasPassword;
     }
 
-    public String getNaasTokenUrl() {
+    public URL getNaasTokenUrl() {
         return naasTokenUrl;
     }
 
-    public void setNaasTokenUrl(String naasTokenUrl) {
+    public void setNaasTokenUrl(URL naasTokenUrl) {
         this.naasTokenUrl = naasTokenUrl;
     }
 

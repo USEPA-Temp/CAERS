@@ -29,7 +29,7 @@
                 [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'summary']"
                 [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>
           <button class="btn btn-primary btn-sm" 
-                (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId)"
+                (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId, submission.reportStatus)"
                 [attr.aria-label]="'download' + submission?.year + submission?.facilityName + 'report'">Download Report</button>
         </td>
       </tr>

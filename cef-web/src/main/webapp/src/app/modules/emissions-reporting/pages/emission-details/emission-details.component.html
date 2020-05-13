@@ -100,7 +100,7 @@
                         <div class="col-sm-8 col-lg-4">{{emission.emissionsUomCode?.code}}</div>
                     </div>
 
-                    <div class="row" *ngIf="emission.totalManualEntry">
+                    <div class="row" *ngIf="emission.totalManualEntry && !getCalcMethodCodeValue()?.totalDirectEntry">
                         <div class="col-sm-6"></div>
                         <div class="col" style="float: right">
                             <input type="checkbox" checked="checked " disabled>
@@ -108,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div class="row pb-2" *ngIf="emission.totalManualEntry">
+                    <div class="row pb-2" *ngIf="emission.totalManualEntry && !getCalcMethodCodeValue()?.totalDirectEntry">
                         <div for="emissionCommentsInput" class="col-sm-4 col-lg-2"><strong>Description of Calculation:</strong></div>
                         <div class="col-sm-8 col-lg-10">{{emission?.calculationComment}}</div>
                     </div>
@@ -276,7 +276,7 @@
                             <label for="totalEmissionsInput" class="ml-1 col-form-label"><strong>Total Emissions:</strong></label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value">
+                            <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry">
                             <app-validation-message [control]="emissionForm.controls.totalEmissions"></app-validation-message>
                             <div class="validation-message" *ngIf="emissionForm.errors && (emissionForm.dirty || emissionForm.touched)">
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
@@ -361,7 +361,7 @@
         </div>
     </form>
     <div class="float-right pb-3 pr-3" *ngIf="!readOnlyMode && editable">
-        <span *ngIf="!getTotalManualEntry().value">
+        <span *ngIf="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry && !emissionForm.disabled">
             <button type="button" class="btn btn-success mr-2" (click)="onCalculate()">Calculate Emissions</button>
         </span>
         <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Cancel</button>

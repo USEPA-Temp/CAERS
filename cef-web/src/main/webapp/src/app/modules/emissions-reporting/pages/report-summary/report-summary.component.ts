@@ -13,7 +13,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 import { Subject } from 'rxjs';
-import { UserFeedbackService } from 'src/app/core/services/user-feedback.service';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 declare const initCromerrWidget: any;
 
@@ -30,6 +30,8 @@ export class ReportSummaryComponent implements OnInit {
     cromerrLoaded = false;
     cromerrLoadedEmitter = new Subject<boolean>();
     userRole: string;
+    feedbackSubmitted = true;
+    feedbackEnabled: boolean;
 
     constructor(
         private router: Router,
@@ -42,7 +44,7 @@ export class ReportSummaryComponent implements OnInit {
         private modalService: NgbModal,
         private emissionsReportingService: EmissionsReportingService,
         private reportDownloadService: ReportDownloadService,
-        private userFeedbackService: UserFeedbackService) { }
+        private propertyService: ConfigPropertyService) { }
 
     ngOnInit() {
         this.cromerrLoadedEmitter
@@ -50,27 +52,34 @@ export class ReportSummaryComponent implements OnInit {
             this.cromerrLoaded = result;
         });
 
-
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
 
             this.facilitySite = data.facilitySite;
-            this.sharedService.emitChange(data.facilitySite);
             this.emissionsReportYear = this.facilitySite.emissionsReport.year;
 
             if (this.facilitySite.id) {
-                this.userFeedbackService.retrieveByReportId(this.facilitySite.emissionsReport.id).subscribe((userFeedback) => {
+                this.propertyService.retrieveUserFeedbackEnabled()
+                .subscribe(result => {
+                    this.feedbackEnabled = result;
+
                     this.userService.getCurrentUserNaasToken()
                     .subscribe(userToken => {
                         this.userContextService.getUser().subscribe( user => {
                             this.userRole = user.role;
+
                             if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                                if (this.feedbackEnabled) {
+                                    this.feedbackSubmitted = false;
+                                }
+
                                 initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                     this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
-                                    this.cromerrLoadedEmitter, userFeedback);
+                                    this.cromerrLoadedEmitter, this.feedbackSubmitted);
                             }
                         });
                     });
                 });
+
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                     .subscribe(pollutants => {
                     // filter out radiation pollutants to show separately at the end of the table
@@ -84,6 +93,7 @@ export class ReportSummaryComponent implements OnInit {
                     });
                 });
             }
+            this.sharedService.emitChange(data.facilitySite);
         });
     }
 
