@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CdxFacility} from 'src/app/shared/models/cdx-facility';
 
@@ -19,6 +19,13 @@ interface PleaseWaitConfig {
     keepAliveTicker: number;
 }
 
+interface WorksheetError {
+    worksheet: string;
+    row: number;
+    message: string;
+    systemError: boolean;
+}
+
 @Component({
     selector: 'app-report-bulk-upload',
     templateUrl: './report-bulk-upload.component.html',
@@ -30,8 +37,14 @@ export class ReportBulkUploadComponent implements OnInit {
     facility: CdxFacility;
     selectedFile: File = null;
 
+    bsflags: any;
+
+    @ViewChild('workbookFile', {static: true})
+    workbookFile: ElementRef;
+
     uploadFile: string;
-    uploadErrors: string[];
+    uploadUserErrors: WorksheetError[];
+    uploadSystemErrors: WorksheetError[];
     uploadFailed: boolean;
 
     @ViewChild('PleaseWaitModal', {static: true})
@@ -44,6 +57,11 @@ export class ReportBulkUploadComponent implements OnInit {
                 private modalService: NgbModal,
                 public router: Router,
                 private route: ActivatedRoute) {
+
+        this.bsflags = {
+            showSystemErrors: false,
+            showUserErrors: true
+        };
     }
 
     ngOnInit() {
@@ -138,6 +156,9 @@ export class ReportBulkUploadComponent implements OnInit {
                 this.pleaseWait.message = 'Receiving response from server...';
                 return EMPTY;
 
+            case HttpEventType.ResponseHeader:
+                return EMPTY;
+
             case HttpEventType.Response:
 
                 // 200 - Success
@@ -160,9 +181,31 @@ export class ReportBulkUploadComponent implements OnInit {
 
         this.onUploadComplete();
 
-        this.uploadErrors = resp.error.errors;
+        this.uploadUserErrors = [];
+        this.uploadSystemErrors = [];
+
+        for (let sheetError of resp.error.errors) {
+
+            if (sheetError.systemError) {
+
+                this.uploadSystemErrors.push(sheetError);
+
+            } else {
+
+                this.uploadUserErrors.push(sheetError);
+            }
+        }
+
+        this.bsflags.showUserErrors = true;
+
+        // if no user errors, show system errors
+        this.bsflags.showSystemErrors = this.uploadUserErrors.length === 0;
 
         this.uploadFailed = true;
+
+        // deletes selected file from the input
+        this.workbookFile.nativeElement.value = '';
+        this.selectedFile = null;
     }
 
     onUploadComplete() {

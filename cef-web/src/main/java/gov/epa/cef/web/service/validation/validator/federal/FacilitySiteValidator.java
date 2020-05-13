@@ -95,14 +95,14 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                     ValidationField.FACILITY_COUNTY.value(), "facilitySite.county.required",
                     createValidationDetails(facilitySite));
 
-        } else if (!facilitySite.getCountyCode().getFipsStateCode().getUspsCode().equals(facilitySite.getStateCode())) {
+        } else if (!facilitySite.getCountyCode().getFipsStateCode().getUspsCode().equals(facilitySite.getStateCode().getUspsCode())) {
 
             result = false;
             context.addFederalError(
                     ValidationField.FACILITY_COUNTY.value(), "facilitySite.county.invalidState",
                     createValidationDetails(facilitySite),
                     facilitySite.getCountyCode().getName(),
-                    facilitySite.getStateCode());
+                    facilitySite.getStateCode().getUspsCode());
         }
 
         // Postal codes must be entered as 5 digits (XXXXX) or 9 digits (XXXXX-XXXX).
@@ -150,6 +150,21 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             			"facilitysite.postalCode.requiredFormat",
             			createValidationDetails(facilitySite));
         	}	
+    	}
+    	
+    	// Email address must be in a valid format.
+    	pattern = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[\\.][A-Za-z]{2,}$");
+    	for(FacilitySiteContact fc: facilitySite.getContacts()){
+        	if(!StringUtils.isEmpty(fc.getEmail())){
+            	Matcher matcher = pattern.matcher(fc.getPostalCode());
+            	if(!pattern.matcher(fc.getEmail()).matches()){
+                	result = false;
+                	context.addFederalError(
+                			ValidationField.FACILITY_EMAIL_ADDRESS.value(), 
+                			"facilitySite.contacts.emailAddress.requiredFormat",
+                			createContactValidationDetails(facilitySite));
+            	}	
+        	}
     	}
         
         // Facility must have a facility NAICS code reported

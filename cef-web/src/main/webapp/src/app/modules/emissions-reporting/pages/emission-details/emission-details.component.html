@@ -42,13 +42,13 @@
         <div class="card mb-3">
             <div class="card-header text-center">
                 <strong>Emission Information</strong>
-                <div class="float-right" *ngIf="emissionForm.disabled && !createMode && !readOnlyMode">
-                    <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
+                <div class="float-right" *ngIf="!editable && !createMode && !readOnlyMode">
+                    <button type="button" class="btn btn-success" aria-label="edit emission information" (click)="onEdit()">Edit</button>
                 </div>
             </div>
             <div class="card-body">
 
-                <div *ngIf="readOnlyMode && emission">
+                <div *ngIf="emission && !editable">
                     <div class="row pb-2">
                         <div class="col-sm-6 col-md-2"><strong>Pollutant Name:</strong></div>
                         <div class="col-sm-6 col-md-2">{{emission.pollutant.pollutantName}}</div>
@@ -73,6 +73,13 @@
                             <div class="col-sm-8 col-lg-4">{{emission.emissionsFactorText}}</div>
                         </div>
 
+                        <div *ngIf="emission.variables.length > 0">
+                            <div class="row" *ngFor="let item of emission.variables">
+                                <div class="col-sm-4 col-lg-2"><strong>{{item?.variableCode?.code}} - {{item?.variableCode?.description}}:</strong></div>
+                                <div class="col-sm-8 col-lg-4">{{item?.value}}</div>
+                            </div>
+                        </div>
+
                         <div class="row pb-2">
                             <div class="col-sm-4 col-lg-2"><strong>Emission Factor Numerator UoM:</strong></div>
                             <div class="col-sm-8 col-lg-4">{{emission.emissionsNumeratorUom?.code}}</div>
@@ -82,10 +89,28 @@
                     </div>
 
                     <div class="row pb-2">
+                        <div class="col-sm-4 col-lg-2"><strong>Overall Control %:</strong></div>
+                        <div class="col-sm-8 col-lg-4">{{emission?.overallControlPercent}}</div>
+                    </div>
+
+                    <div class="row pb-2">
                         <div class="col-sm-4 col-lg-2"><strong>Total Emissions:</strong></div>
                         <div class="col-sm-8 col-lg-4">{{emission.totalEmissions}}</div>
                         <div for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2"><strong>Emissions UoM:</strong></div>
                         <div class="col-sm-8 col-lg-4">{{emission.emissionsUomCode?.code}}</div>
+                    </div>
+
+                    <div class="row" *ngIf="emission.totalManualEntry && !getCalcMethodCodeValue()?.totalDirectEntry">
+                        <div class="col-sm-6"></div>
+                        <div class="col" style="float: right">
+                            <input type="checkbox" checked="checked " disabled>
+                            <strong> I prefer to calculate the total emissions of this pollutant</strong>
+                        </div>
+                    </div>
+
+                    <div class="row pb-2" *ngIf="emission.totalManualEntry && !getCalcMethodCodeValue()?.totalDirectEntry">
+                        <div for="emissionCommentsInput" class="col-sm-4 col-lg-2"><strong>Description of Calculation:</strong></div>
+                        <div class="col-sm-8 col-lg-10">{{emission?.calculationComment}}</div>
                     </div>
 
                     <div class="row">
@@ -94,33 +119,47 @@
                     </div>
                 </div>
 
-                <div *ngIf="!readOnlyMode">
+                <div *ngIf="!readOnlyMode && editable">
                     <div class="row pb-2">
-                        <label for="pollutantSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant:</strong></label>
-                        <div class="col-sm-8 col-lg-5">
-                            <input [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Name, Code, and CAS ID of the pollutant." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="pollutantSelect" class="ml-1 col-form-label"><strong>Pollutant:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input (ngModelChange)="onChange($event)" [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
                             <app-validation-message [control]="emissionForm.controls.pollutant"></app-validation-message>
                         </div>
-                        <label for="pollutantCodeInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant Code:</strong></label>
-                        <div class="col-sm-8 col-lg-3">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Code identifying the pollutant for which emissions are reported. See https://epa.gov/srs" [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="pollutantCodeInput" class="ml-1 col-form-label"><strong>Pollutant Code:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
                             <input type="text" class="form-control" id="pollutantCodeInput" [value]="emissionForm.value.pollutant?.pollutantCode" disabled>
                         </div>
                     </div>
-                    <div class="row pb-5">
-                        <label for="pollutantNameInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Pollutant Name:</strong></label>
-                        <div class="col-sm-8 col-lg-5">
+                    <div class="row pb-2">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Pollutant description of pollutant code." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="pollutantNameInput" class="ml-1 col-form-label"><strong>Pollutant Name:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
                             <input type="text" class="form-control" id="pollutantNameInput" [value]="emissionForm.value.pollutant?.pollutantName" disabled>
                         </div>
-                        <label for="pollutantCasIdInput" class="col-sm-4 col-lg-2 col-form-label"><strong>CAS ID:</strong></label>
-                        <div class="col-sm-8 col-lg-3">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Chemical Abstract Service code that represents a specific pollutant or chemical. Note groups of pollutants such as VOCs may not have a CAS ID. See https://epa.gov/srs" [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="pollutantCasIdInput" class="ml-1 col-form-label"><strong>CAS ID:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
                             <input type="text" class="form-control" id="pollutantCasIdInput" [value]="emissionForm.value.pollutant?.pollutantCasId" disabled>
                         </div>
                     </div>
 
-                    <div class="row pb-2">
-                        
-                        <label for="emissionsCalcMethodCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Calculation Method:</strong></label>
-                        <div class="col-sm-8 col-lg-10">
+                    <div class="row pb-3">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Code that defines the method used to calculate emissions." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="emissionsCalcMethodCodeSelect" class="ml-1 col-form-label"><strong>Calculation Method:</strong></label>
+                        </div>
+                        <div class="col-sm-9">
                             <select type="text" class="form-control" id="emissionsCalcMethodCodeSelect" formControlName="emissionsCalcMethodCode" [compareWith]="formUtils.compareCode">
                                 <option [ngValue]="null"></option>
                                 <option *ngFor="let opt of methodValues" [ngValue]="opt">{{opt.description}}</option>
@@ -131,7 +170,7 @@
 
                     <div class="row pb-3 justify-content-end" *ngIf="epaEmissionFactor && !emissionForm.disabled">
                         <div>
-                            <button type="button" class="btn btn-success mr-2" (click)="openSearchEfModal()">Search for Emission Factor</button>
+                            <button type="button" class="btn btn-success mr-3" (click)="openSearchEfModal()">Search for Emission Factor</button>
                             <div class="validation-message" *ngIf="!emissionForm.get('pollutant').valid">
                                 A pollutant must be selected to search for an Emission Factor.
                             </div>
@@ -139,29 +178,38 @@
                     </div>
 
                     <div class="row pb-2">
-                        <label for="emissionFactorInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor:</strong></label>
-                        <div class="col-sm-8 col-lg-4" *ngIf="!emissionForm.get('formulaIndicator').value">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Numerical value or formula for the emission calculation." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="emissionFactorInput" class="ml-1 col-form-label"><strong>Emission Factor:</strong></label>
+                        </div>
+                        <div class="col-sm-3" *ngIf="!emissionForm.get('formulaIndicator').value">
                             <input type="number" class="form-control" id="emissionFactorInput" formControlName="emissionsFactor" [readonly]="epaEmissionFactor">
                             <app-validation-message [control]="emissionForm.controls.emissionsFactor"></app-validation-message>
                             <span class="validation-message" *ngIf="emissionForm.getError('efFactorLessThanOrEqualToZero') && emissionForm.controls.emissionsFactor.valid">
                                 Emission Factor must be greater than zero.
                             </span>
                         </div>
-                        <div class="col-sm-8 col-lg-4" *ngIf="emissionForm.get('formulaIndicator').value">
+                        <div class="col-sm-3" *ngIf="emissionForm.get('formulaIndicator').value">
                             <input type="text" class="form-control" id="emissionFactorInput" formControlName="emissionsFactorFormula" [readonly]="true">
                             <app-validation-message [control]="emissionForm.controls.emissionsFactorFormula"></app-validation-message>
                         </div>
-                        <label for="emissionsFactorTextInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions Factor Description:</strong></label>
-                        <div class="col-sm-8 col-lg-4">
-                            <textarea class="form-control" id="emissionsFactorTextInput" formControlName="emissionsFactorText"></textarea>
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Explanation for emission factor." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="emissionsFactorTextInput" style="font-size:95%" class="ml-1 col-form-label"><strong>Emissions Factor Description:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText"></textarea>
                             <app-validation-message [control]="emissionForm.controls.emissionsFactorText"></app-validation-message>
                         </div>
                     </div>
 
                     <div class="pb-2" *ngIf="emissionForm.get('formulaIndicator').value" formGroupName="formulaVariables">
-                        <div class="row" *ngFor="let variable of formulaVariables">
-                            <label for="{{variable.code + 'Input'}}" class="col-sm-4 col-lg-2 col-form-label"><strong>{{variable.code}} - {{variable.description}}:</strong></label>
-                            <div class="col-sm-8 col-lg-4">
+                        <div class="row pb-2" *ngFor="let variable of formulaVariables">
+                            <div class="col-sm-3">
+                                <fa-icon *ngIf="editable" class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+                                <label for="{{variable.code + 'Input'}}" class="ml-1 col-form-label"><strong>{{variable.code}} - {{variable.description}}:</strong></label>
+                            </div>
+                            <div class="col-sm-3">
                                 <input type="number" class="form-control" id="{{variable.code + 'Input'}}" [formControlName]="variable.code">
                                 <app-validation-message [control]="getFormulaVariableForm().get(variable.code)"></app-validation-message>
                                 <div class="validation-message" *ngIf="emissionForm.getError('invalidSulfurRange')">
@@ -176,8 +224,11 @@
 
                     <fieldset [disabled]="epaEmissionFactor">
                         <div class="row pb-2">
-                            <label for="emissionsNumeratorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Numerator UoM:</strong></label>
-                            <div class="col-sm-8 col-lg-4">
+                            <div class="col-sm-3">
+                                <fa-icon *ngIf="editable" class="mt-2" title="Units of measure of the emission factor numerator." [icon]="['fas', 'question-circle']"></fa-icon>
+                                <label for="emissionsNumeratorSelect" class="ml-1 col-form-label"><strong>Emission Factor Numerator UoM:</strong></label>
+                            </div>
+                            <div class="col-sm-3">
                                 <select type="text" class="form-control" id="emissionsNumeratorSelect" formControlName="emissionsNumeratorUom" [compareWith]="formUtils.compareCode">
                                     <option [ngValue]="null"></option>
                                     <option *ngFor="let opt of numeratorUomValues" [ngValue]="opt">{{opt.code}}</option>
@@ -189,8 +240,11 @@
                                     Calculation cannot be completed.
                                 </div>
                             </div>
-                            <label for="emissionsDenominatorSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
-                            <div class="col-sm-8 col-lg-4">
+                            <div class="col-sm-3">
+                                <fa-icon *ngIf="editable" class="mt-2" title="Units of measure of the emission factor denominator." [icon]="['fas', 'question-circle']"></fa-icon>
+                                <label for="emissionsDenominatorSelect" class="ml-1 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
+                            </div>
+                            <div class="col-sm-3">
                                 <select type="text" class="form-control" id="emissionsDenominatorSelect" formControlName="emissionsDenominatorUom" [compareWith]="formUtils.compareCode">
                                     <option [ngValue]="null"></option>
                                     <option *ngFor="let opt of denominatorUomValues" [ngValue]="opt">{{opt.code}}</option>
@@ -206,17 +260,23 @@
                     </fieldset>
 
                     <div class="row pb-2">
-                        <label for="overallControlPercentInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Overall Control %:</strong></label>
-                        <div class="col-sm-8 col-lg-4">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="The overall percent of the pollutant that is removed by the controls in the path from the process to the release point." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="overallControlPercentInput" class="ml-1 col-form-label"><strong>Overall Control %:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
                             <input type="number" class="form-control" id="overallControlPercentInput" formControlName="overallControlPercent">
                             <app-validation-message [control]="emissionForm.get('overallControlPercent')"></app-validation-message>
                         </div>
                     </div>
 
                     <div class="row pb-2">
-                        <label for="totalEmissionsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Total Emissions:</strong></label>
-                        <div class="col-sm-8 col-lg-4">
-                            <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Total calculated or estimated amount of the pollutant. Reported as a float with a maximum of 4 significant figures." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="totalEmissionsInput" class="ml-1 col-form-label"><strong>Total Emissions:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry">
                             <app-validation-message [control]="emissionForm.controls.totalEmissions"></app-validation-message>
                             <div class="validation-message" *ngIf="emissionForm.errors && (emissionForm.dirty || emissionForm.touched)">
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
@@ -227,8 +287,11 @@
                                 </div>
                             </div>
                         </div>
-                        <label for="emissionsUomCodeSelect" class="col-sm-4 col-lg-2 col-form-label"><strong>Emissions UoM:</strong></label>
-                        <div class="col-sm-8 col-lg-4">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" title="Unit of measure for reported emissions." [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="emissionsUomCodeSelect" class="ml-1 col-form-label"><strong>Emissions UoM:</strong></label>
+                        </div>
+                        <div class="col-sm-3">
                             <select type="text" class="form-control" id="emissionsUomCodeSelect" formControlName="emissionsUomCode" [compareWith]="formUtils.compareCode">
                                 <option [ngValue]="null"></option>
                                 <option *ngFor="let opt of numeratorUomValues" [ngValue]="opt">{{opt.code}}</option>
@@ -255,8 +318,11 @@
                     </div>
 
                     <div class="row pb-2" *ngIf="!getCalcMethodCodeValue()?.totalDirectEntry && getTotalManualEntry().value">
-                        <label for="emissionCalcCommentInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Description of Calculation:</strong></label>
-                        <div class="col-sm-8 col-lg-10">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="emissionCalcCommentInput" class="ml-1 col-form-label"><strong>Description of Calculation:</strong></label>
+                        </div>
+                        <div class="col-sm-9">
                             <textarea rows="3" class="form-control" maxlength="4000" id="emissionCalcCommentInput" formControlName="calculationComment"></textarea>
                             <div class="validation-message" *ngIf="emissionForm.get('calculationComment').errors 
                                     && (emissionForm.get('calculationComment').dirty || emissionForm.get('calculationComment').touched)">
@@ -271,8 +337,11 @@
                     </div>
 
                     <div class="row">
-                        <label for="emissionCommentsInput" class="col-sm-4 col-lg-2 col-form-label"><strong>Comments:</strong></label>
-                        <div class="col-sm-8 col-lg-10">
+                        <div class="col-sm-3">
+                            <fa-icon *ngIf="editable" class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
+                            <label for="emissionCommentsInput" class="ml-1 col-form-label"><strong>Comments:</strong></label>
+                        </div>
+                        <div class="col-sm-9">
                             <textarea rows="3" class="form-control" maxlength="400" id="emissionCommentsInput" formControlName="comments"></textarea>
                             <div class="validation-message" *ngIf="emissionForm.get('comments').errors && (emissionForm.get('comments').dirty || emissionForm.get('comments').touched)">
                                 <div *ngIf="emissionForm.get('comments').getError('required')">
@@ -291,14 +360,14 @@
             </div>
         </div>
     </form>
-    <div class="float-right pb-3 pr-3" *ngIf="!readOnlyMode">
-        <span *ngIf="!getTotalManualEntry().value && !emissionForm.disabled">
+    <div class="float-right pb-3 pr-3" *ngIf="!readOnlyMode && editable">
+        <span *ngIf="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry && !emissionForm.disabled">
             <button type="button" class="btn btn-success mr-2" (click)="onCalculate()">Calculate Emissions</button>
         </span>
         <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Cancel</button>
-        <button type="submit" class="btn btn-success" (click)="onSubmit()" [disabled]="emissionForm.disabled">Save</button>
+        <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
     </div>
-    <div class="float-right pb-3 pr-3" *ngIf="readOnlyMode">
+    <div class="float-right pb-3 pr-3" *ngIf="!editable">
         <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Back</button>
     </div>
 </div>

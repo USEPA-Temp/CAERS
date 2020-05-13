@@ -37,7 +37,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(200)
     ]],
-    comments: ['', Validators.maxLength(400)]
+    comments: [null, Validators.maxLength(400)]
   }, { validators: [
     this.controlIdentifierCheck(),
     this.facilitySiteStatusCheck()

@@ -175,6 +175,27 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void simpleValidateContactEmailAddressFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).setEmail("notAValidEmail");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    }
+    
+    @Test
+    public void simpleValidateContactEmailAddressPassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).setEmail("validemail@gmail.com");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+    }
+    
+    @Test
     public void simpleValidateContactPostalCodeFailTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -217,7 +238,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         FacilitySite testData = createBaseFacilitySite();
-        testData.setStateCode("NC");
+        testData.getStateCode().setUspsCode("NC");;
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -547,13 +568,21 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         countyCode.setName("Whitfield");
         countyCode.setFipsStateCode(countyStateCode);
         
+        FipsStateCode stateCode = new FipsStateCode();
+        stateCode.setCode("13");
+        stateCode.setUspsCode("GA");
+        
+        FipsStateCode mailingStateCode = new FipsStateCode();
+        mailingStateCode.setCode("13");
+        mailingStateCode.setUspsCode("GA");
+        
         FacilitySite result = new FacilitySite();
         result.setEisProgramId("1");
         result.setStatusYear(null);
         result.setPostalCode("31750");
         result.setMailingPostalCode("31750");
         result.setCountyCode(countyCode);
-        result.setStateCode("GA");
+        result.setStateCode(stateCode);
         
         EmissionsReport er = new EmissionsReport();
         er.setId(2L);
@@ -568,13 +597,13 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         ContactTypeCode contactTypeCode = new ContactTypeCode();
         contactTypeCode.setCode("EI");
         
-        FipsStateCode stateCode = new FipsStateCode();
-        stateCode.setCode("13");
-        stateCode.setUspsCode("GA");
+        FipsStateCode contactStateCode = new FipsStateCode();
+        contactStateCode.setCode("13");
+        contactStateCode.setUspsCode("GA");
         
-        FipsStateCode mailingStateCode = new FipsStateCode();
-        mailingStateCode.setCode("13");     
-        mailingStateCode.setUspsCode("GA");
+        FipsStateCode contactMailingStateCode = new FipsStateCode();
+        contactMailingStateCode.setCode("13");
+        contactMailingStateCode.setUspsCode("GA");
         
         List<FacilitySiteContact> contactList = new ArrayList<FacilitySiteContact>();
         FacilitySiteContact contact = new FacilitySiteContact();
@@ -587,7 +616,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         contact.setPhoneExt("");
         contact.setStreetAddress("123 Test Street");
         contact.setCity("Fitzgerald");
-        contact.setStateCode(stateCode);
+        contact.setStateCode(contactStateCode);
         contact.setPostalCode("31750");
         contact.setMailingPostalCode("31750");
         contact.setCountyCode(countyCode);

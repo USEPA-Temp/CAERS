@@ -10,5 +10,6 @@ export enum BaseReportUrl {
   CONTROL_PATH = 'path',
   REPORT_SUMMARY = 'summary',
   VALIDATION = 'validation',
+  BULK_ENTRY = 'bulkEntry',
   REPORT_HISTORY = 'history'
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { Emission } from 'src/app/shared/models/emission';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
@@ -71,7 +71,7 @@ export class EmissionDetailsComponent implements OnInit {
     overallControlPercent: ['', [Validators.min(0), Validators.max(99.999999)]],
     totalEmissions: ['', [Validators.required, Validators.min(0)]],
     emissionsUomCode: [null, [Validators.required, legacyUomValidator()]],
-    comments: ['', [Validators.maxLength(400)]],
+    comments: [null, [Validators.maxLength(400)]],
     calculationComment: ['', [Validators.required, Validators.maxLength(4000)]],
     formulaVariables: this.fb.group({}),
   }, { validators: [
@@ -128,6 +128,7 @@ export class EmissionDetailsComponent implements OnInit {
     this.route.data
     .subscribe(data => {
       this.createMode = data.create === 'true';
+      this.editable = data.create === 'true';
 
       this.userContextService.getUser().subscribe( user => {
         if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
@@ -187,7 +188,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsNumeratorUom').reset({value: null, disabled: true});
         this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
         this.isCommentRequired();
-        this.getTotalManualEntry().setValue(true);
+        this.getTotalManualEntry().setValue(false);
       } else {
         this.emissionForm.get('emissionsFactor').enable();
         this.emissionForm.get('emissionsFactorText').enable();
@@ -200,6 +201,10 @@ export class EmissionDetailsComponent implements OnInit {
       // set epaEmissionFactor to true for EPA calculation methods
       if (value && value.epaEmissionFactor) {
         this.epaEmissionFactor = true;
+        this.emissionForm.get('emissionsFactor').reset();
+        this.emissionForm.get('emissionsFactorFormula').reset();
+        this.emissionForm.get('formulaIndicator').reset();
+        this.emissionForm.get('formulaVariables').reset();
       } else {
         this.emissionForm.get('formulaIndicator').reset(false);
         this.setupVariableForm([]);
@@ -220,7 +225,7 @@ export class EmissionDetailsComponent implements OnInit {
       this.emissionForm.get('emissionsDenominatorUom').reset({value: null, disabled: true});
       this.emissionForm.get('calculationComment').reset({value: null, disabled: true});
       this.isCommentRequired();
-      this.getTotalManualEntry().setValue(true);
+      this.getTotalManualEntry().setValue(false);
     } else {
       this.emissionForm.get('emissionsFactor').enable();
       this.emissionForm.get('emissionsFactorText').enable();
@@ -269,6 +274,13 @@ export class EmissionDetailsComponent implements OnInit {
         this.emissionForm.get('emissionsFactorFormula').disable();
       }
     });
+  }
+
+  // reset ef and ef formula when pollutant is changed
+  onChange() {
+    if (this.emissionForm.value.emissionsCalcMethodCode) {
+      this.onMethodChange(this.emissionForm.get('emissionsCalcMethodCode').value, this.emissionForm.get('emissionsCalcMethodCode').status);
+    }
   }
 
   isCommentRequired() {
@@ -342,9 +354,11 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.createMode) {
       this.emissionForm.reset(this.emission);
     }
+    this.editable = false;
   }
 
   onEdit() {
+    this.editable = true;
     this.emissionForm.enable();
     this.setupForm();
   }
@@ -357,6 +371,7 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.emissionForm.valid) {
       this.emissionForm.markAllAsTouched();
     } else {
+      this.editable = false;
 
       const saveEmission = new Emission();
       Object.assign(saveEmission, this.emissionForm.value);
@@ -590,7 +605,7 @@ export class EmissionDetailsComponent implements OnInit {
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => this.pollutantValues.filter(v => v.pollutantName.toLowerCase().indexOf(term.toLowerCase()) > -1
+      map(term => this.pollutantValues && this.pollutantValues.filter(v => v.pollutantName.toLowerCase().indexOf(term.toLowerCase()) > -1
                                         || v.pollutantCode.toLowerCase().indexOf(term.toLowerCase()) > -1
                                         || (v.pollutantCasId ? v.pollutantCasId.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
                                         .slice(0, 20))

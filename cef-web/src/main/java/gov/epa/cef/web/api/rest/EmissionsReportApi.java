@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import gov.epa.cef.web.client.soap.VirusScanClient;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.BulkReportValidationException;
+import gov.epa.cef.web.exception.VirusScanException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
@@ -20,6 +22,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -45,27 +48,30 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/emissionsReport")
 public class EmissionsReportApi {
 
-    Logger LOGGER = LoggerFactory.getLogger(EmissionsReportApi.class);
-
     private final EmissionsReportService emissionsReportService;
 
     private final EmissionsReportStatusService emissionsReportStatusService;
 
+    private final ObjectMapper objectMapper;
+
     private final ReportService reportService;
-
-    private final EmissionsReportValidationService validationService;
-
-    private final BulkUploadService uploadService;
 
     private final SecurityService securityService;
 
-    private final ObjectMapper objectMapper;
+    private final BulkUploadService uploadService;
+
+    private final VirusScanClient virusScanClient;
+
+    private final EmissionsReportValidationService validationService;
+
+    Logger LOGGER = LoggerFactory.getLogger(EmissionsReportApi.class);
 
     @Autowired
     EmissionsReportApi(SecurityService securityService,
@@ -74,6 +80,7 @@ public class EmissionsReportApi {
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
                        BulkUploadService uploadService,
+                       VirusScanClient virusScanClient,
                        ObjectMapper objectMapper) {
 
         this.securityService = securityService;
@@ -82,12 +89,41 @@ public class EmissionsReportApi {
         this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
+        this.virusScanClient = virusScanClient;
 
         this.objectMapper = objectMapper;
     }
 
     /**
-     * Creates an Emissions Report from either previous report or data from FRS
+     * Approve the specified reports and move to approved
+     *
+     * @param reviewDTO
+     * @return
+     */
+    @PostMapping(value = "/accept")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody ReviewDTO reviewDTO) {
+
+        this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
+
+        List<EmissionsReportDto> result = emissionsReportService.acceptEmissionsReports(reviewDTO.reportIds, reviewDTO.comments);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = BulkReportValidationException.class)
+    public ResponseEntity<JsonNode> bulkUploadValidationError(BulkReportValidationException exception) {
+
+        ObjectNode objectNode = objectMapper.createObjectNode();
+        objectNode.put("failed", true);
+        ArrayNode arrayNode = objectNode.putArray("errors");
+        exception.getErrors().forEach(error -> arrayNode.add(objectMapper.convertValue(error, JsonNode.class)));
+
+        return ResponseEntity.badRequest().body(objectNode);
+    }
+
+    /**
+     * Creates an Emissions Report from either previous report
      *
      * @param facilityEisProgramId
      * @param reportDto
@@ -117,9 +153,20 @@ public class EmissionsReportApi {
             LOGGER.debug("Workbook filename {}", tempFile.getFileName());
             LOGGER.debug("ReportDto {}", reportDto);
 
+            this.virusScanClient.scanFile(tempFile);
+
             result = this.uploadService.saveBulkWorkbook(reportDto, tempFile);
 
             status = HttpStatus.OK;
+
+        } catch (VirusScanException e) {
+
+            String msg = String.format("The uploaded file, '%s', is suspected of containing a threat " +
+                    "such as a virus or malware and was deleted. The scanner responded with: '%s'.",
+                workbook.getOriginalFilename(), e.getMessage());
+
+            throw new BulkReportValidationException(
+                Collections.singletonList(WorksheetError.createSystemError(msg)));
 
         } catch (IOException e) {
 
@@ -130,7 +177,7 @@ public class EmissionsReportApi {
     }
 
     /**
-     * Creates an Emissions Report from either previous report or data from FRS
+     * Creates an Emissions Report from either previous report
      *
      * @param facilityEisProgramId
      * @param reportDto
@@ -152,66 +199,48 @@ public class EmissionsReportApi {
 
         EmissionsReportDto result = createEmissionsReportDto(reportDto);
 
-        /*
-        If the new report should copy data from FRS then we return ACCEPTED to the UI to indicate a
-        pull of FRS data is possible. The ACCEPTED status allows the UI to notify the user that a
-        process that might take some time is about to be initiated.
-
-        HTTP Status 202/ACCEPTED indicates that request has been accepted for processing,
-        but the processing has not been completed.
-        */
         HttpStatus status = HttpStatus.NO_CONTENT;
         if (result != null) {
-            if (result.getId() == null) {
-                status = HttpStatus.ACCEPTED;
-            } else {
-                status = HttpStatus.OK;
-            }
+            status = HttpStatus.OK;
         }
+
 
         return new ResponseEntity<>(result, status);
     }
 
-    private EmissionsReportDto createEmissionsReportDto(EmissionsReportStarterDto reportDto) {
-        EmissionsReportDto result;
+    /**
+     * Delete a report for given id
+     *
+     * @param reportId
+     * @return
+     */
+    @DeleteMapping(value = "/{reportId}")
+    public void deleteReport(@PathVariable Long reportId) {
 
-        String facilityEisProgramId = reportDto.getEisProgramId();
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
-        switch (reportDto.getSource()) {
-	        case previous:
-	        	result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
-	        	break;
-	        case frs:
-	        	result = this.emissionsReportService.createEmissionReportFromFrs(facilityEisProgramId, reportDto.getYear());
-	        	break;
-	        case fromScratch:
-	        	result = this.emissionsReportService.createEmissionReport(reportDto);
-	        	break;
-	        default:
-	        	result = null;
-        }
-
-        return result;
+        emissionsReportService.delete(reportId);
     }
 
     /**
-     * Approve the specified reports and move to approved
-     * @param reviewDTO
+     * Testing method for generating upload JSON for a report
+     *
+     * @param reportId
      * @return
      */
-    @PostMapping(value = "/accept")
-    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
-    public ResponseEntity<List<EmissionsReportDto>> acceptReports(@NotNull @RequestBody ReviewDTO reviewDTO) {
+    @GetMapping(value = "/export/{reportId}")
+    public ResponseEntity<EmissionsReportBulkUploadDto> exportReport(
+        @NotNull @PathVariable Long reportId) {
 
-        this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
-
-        List<EmissionsReportDto> result = emissionsReportService.acceptEmissionsReports(reviewDTO.reportIds, reviewDTO.comments);
+        EmissionsReportBulkUploadDto result =
+            uploadService.generateBulkUploadDto(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
      * Reject the specified reports and move back to in progress
+     *
      * @param reviewDTO
      * @return
      */
@@ -228,6 +257,7 @@ public class EmissionsReportApi {
 
     /**
      * Reset report status. Sets report status to in progress and validation status to unvalidated.
+     *
      * @param reportIds
      * @return
      */
@@ -277,21 +307,6 @@ public class EmissionsReportApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/validation",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ValidationResult> validateReport(@NotNull @RequestBody EntityRefDto entityRefDto) {
-
-        this.securityService.facilityEnforcer()
-            .enforceEntity(entityRefDto.requireNonNullId(), EmissionsReportRepository.class);
-
-        ValidationResult result =
-            this.validationService.validateAndUpdateStatus(entityRefDto.getId());
-
-        return ResponseEntity.ok().body(result);
-    }
-
-
     /**
      * Retrieve reports for a given facility
      *
@@ -308,19 +323,6 @@ public class EmissionsReportApi {
             emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId, true);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    /**
-     * Delete a report for given id
-     * @param reportId
-     * @return
-     */
-    @DeleteMapping(value = "/{reportId}")
-    public void deleteReport(@PathVariable Long reportId) {
-
-        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
-
-        emissionsReportService.delete(reportId);
     }
 
     /**
@@ -348,60 +350,80 @@ public class EmissionsReportApi {
     /**
      * Inserts a new emissions report, facility, sub-facility components, and emissions based on a JSON input string
      *
-     * @param reportUpload
+     * @param jsonNode
      * @return
      */
     @PostMapping(value = "/upload",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     // @RolesAllowed(value = {AppRole.ROLE_ADMIN})
-    public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody EmissionsReportBulkUploadDto reportUpload) {
-        EmissionsReportDto savedReport = uploadService.saveBulkEmissionsReport(reportUpload);
+    public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody JsonNode jsonNode) {
+
+        EmissionsReportDto savedReport = this.uploadService.parseJsonNode(false)
+            .andThen(this.uploadService::saveBulkEmissionsReport)
+            .apply(jsonNode);
+
         return new ResponseEntity<>(savedReport, HttpStatus.OK);
     }
 
-    /**
-     * Testing method for generating upload JSON for a report
-     * @param reportId
-     * @return
-     */
-    @GetMapping(value = "/export/{reportId}")
-    public ResponseEntity<EmissionsReportBulkUploadDto> exportReport(
-        @NotNull @PathVariable Long reportId) {
+    @PostMapping(value = "/validation",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ValidationResult> validateReport(@NotNull @RequestBody EntityRefDto entityRefDto) {
 
-        EmissionsReportBulkUploadDto result =
-            uploadService.generateBulkUploadDto(reportId);
+        this.securityService.facilityEnforcer()
+            .enforceEntity(entityRefDto.requireNonNullId(), EmissionsReportRepository.class);
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        ValidationResult result =
+            this.validationService.validateAndUpdateStatus(entityRefDto.getId());
+
+        return ResponseEntity.ok().body(result);
     }
 
-    @ExceptionHandler(value = BulkReportValidationException.class)
-    public ResponseEntity<JsonNode> bulkUploadValidationError(BulkReportValidationException exception) {
+    private EmissionsReportDto createEmissionsReportDto(EmissionsReportStarterDto reportDto) {
 
-        ObjectNode objectNode = this.objectMapper.createObjectNode();
-        objectNode.put("failed", true);
-        ArrayNode arrayNode = objectNode.putArray("errors");
-        exception.getErrors().forEach(error -> arrayNode.add(this.objectMapper.convertValue(error, JsonNode.class)));
+        EmissionsReportDto result;
 
-        return ResponseEntity.badRequest().body(objectNode);
+        String facilityEisProgramId = reportDto.getEisProgramId();
+
+        switch (reportDto.getSource()) {
+            case previous:
+                result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+                break;
+            case fromScratch:
+                result = this.emissionsReportService.createEmissionReport(reportDto);
+                break;
+            default:
+                result = null;
+        }
+
+        return result;
     }
 
     static class ReviewDTO {
-    	private List<Long> reportIds;
 
-    	private String comments;
+        private String comments;
 
-		public List<Long> getReportIds() {
-			return reportIds;
-		}
-		public void setReportIds(List<Long> reportIds) {
-			this.reportIds = reportIds;
-		}
-		public String getComments() {
-			return comments;
-		}
-		public void setComments(String comments) {
-			this.comments = comments;
-		}
+        private List<Long> reportIds;
+
+        public String getComments() {
+
+            return comments;
+        }
+
+        public void setComments(String comments) {
+
+            this.comments = comments;
+        }
+
+        public List<Long> getReportIds() {
+
+            return reportIds;
+        }
+
+        public void setReportIds(List<Long> reportIds) {
+
+            this.reportIds = reportIds;
+        }
     }
 }

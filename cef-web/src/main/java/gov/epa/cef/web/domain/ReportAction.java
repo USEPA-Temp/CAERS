@@ -1,7 +1,9 @@
 package gov.epa.cef.web.domain;
 
 public enum ReportAction {
-	CREATED("Created"), 
+	CREATED("Created New"),
+	COPIED_FWD("Copied Forward"),
+	UPLOADED("Report Uploaded"),
 	REOPENED("Reopened"), 
 	ACCEPTED("Accepted"), 
 	REJECTED("Rejected"), 

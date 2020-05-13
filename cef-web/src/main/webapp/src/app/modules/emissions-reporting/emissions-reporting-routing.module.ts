@@ -27,6 +27,8 @@ import {EmissionsReportValidationComponent} from './pages/emissions-report-valid
 import { ReportHistoryComponent } from './pages/report-history/report-history.component';
 import { EmissionsReportContainerComponent } from 'src/app/modules/emissions-reporting/pages/emissions-report-container/emissions-report-container.component';
 import {ReportBulkUploadComponent} from './pages/report-bulk-upload/report-bulk-upload.component';
+import { UserFeedbackComponent } from './pages/user-feedback/user-feedback.component';
+import { DataBulkEntryComponent } from 'src/app/modules/emissions-reporting/pages/data-bulk-entry/data-bulk-entry.component';
 
 // TODO: this can probably be moved up a level so that it doesn't need to be in each child
 const emissionsReportBreadcrumb = '&year Emissions Report';
@@ -47,6 +49,9 @@ const reportRoutes: Routes = [
         },
         children: [
           {
+            path: 'userfeedback',
+            component: UserFeedbackComponent
+          }, {
             path: `${BaseReportUrl.FACILITY_INFO}`,
             component: FacilityInformationComponent,
             data: { title: 'Facility Information', breadcrumb: emissionsReportBreadcrumb}
@@ -138,6 +143,10 @@ const reportRoutes: Routes = [
             path: `${BaseReportUrl.VALIDATION}`,
             component: EmissionsReportValidationComponent,
             data: { title: 'Report Validation', breadcrumb: 'Report Validation'}
+          }, {
+            path: `${BaseReportUrl.BULK_ENTRY}`,
+            component: DataBulkEntryComponent,
+            data: { title: 'Data Bulk Entry', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: '**',
             component: FacilityInformationComponent,

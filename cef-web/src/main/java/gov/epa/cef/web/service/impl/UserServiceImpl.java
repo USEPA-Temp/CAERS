@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.URL;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -43,8 +41,7 @@ public class UserServiceImpl implements UserService {
         try {
             Long userRoleId= securityService.getCurrentApplicationUser().getUserRoleId();
             String userId= securityService.getCurrentApplicationUser().getUserId();
-            URL securityTokenUrl = new URL(cefConfig.getCdxConfig().getNaasTokenUrl());
-            String token=tokenClient.createSecurityToken(securityTokenUrl, cefConfig.getCdxConfig().getNaasUser(), cefConfig.getCdxConfig().getNaasPassword(), userId, cefConfig.getCdxConfig().getNaasIp());
+            String token = tokenClient.createSecurityToken(userId, cefConfig.getCdxConfig().getNaasIp()).getToken();
             tokenDto=new TokenDto();
             tokenDto.setToken(token);
             tokenDto.setUserRoleId(userRoleId);

@@ -21,6 +21,7 @@ import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
+import gov.epa.cef.web.service.UserFeedbackService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
@@ -97,7 +98,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private LookupService lookupService;
-
+    
+    @Autowired
+    private UserFeedbackService userFeedbackService;
+    
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
@@ -217,7 +221,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.clearId();
 
-            	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.CREATED);
+            	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
 
                 return this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport));
             })
@@ -278,35 +282,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     }
 
     @Override
-    public EmissionsReportDto createEmissionReportFromFrs(String facilityEisProgramId, short reportYear) {
-
-        return this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
-            .map(programFacility -> {
-
-                EmissionsReport newReport = new EmissionsReport();
-                newReport.setYear(reportYear);
-                newReport.setStatus(ReportStatus.IN_PROGRESS);
-                newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
-
-                newReport.setFrsFacilityId(programFacility.getRegistryId());
-                newReport.setEisProgramId(programFacility.getProgramSystemId());
-
-                // TODO: Remove hard coded value
-                // Using GA for now until FRS has the agency id available for us
-                // https://alm.cgifederal.com/projects/browse/CEF-319
-                newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
-
-                newReport = this.erRepo.save(newReport);
-
-                this.facilitySiteService.copyFromFrs(newReport);
-
-                return this.emissionsReportMapper.toDto(newReport);
-            })
-            .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                String.format("EIS Program ID [%s] is not found in FRS.", facilityEisProgramId)));
-    }
-
-    @Override
     public EmissionsReportDto saveAndAuditEmissionsReport(EmissionsReport emissionsReport, ReportAction reportAction) {
 
         EmissionsReport result = this.erRepo.save(emissionsReport);
@@ -323,6 +298,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @param id
      */
     public void delete(Long id) {
+    	userFeedbackService.removeReportFromUserFeedback(id);
     	erRepo.deleteById(id);
     }
 

@@ -258,7 +258,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
             } else if (isValidScc.lastInventoryYear !== null && (isValidScc.lastInventoryYear < this.emissionsReportYear)) {
               this.sccRetirementYear = isValidScc.lastInventoryYear;
               control.get('sccCode').markAsTouched();
-              control.get('sccCode').setErrors({sccCodeRetire: true});
+              control.get('sccCode').setErrors({sccCodeRetired: true});
               this.sccWarning = null;
             } else if (isValidScc.lastInventoryYear === null) {
               this.sccWarning = null;

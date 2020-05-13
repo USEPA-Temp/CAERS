@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { ReportingPeriodUpdateResult } from 'src/app/shared/models/reporting-period-update-result';
+import { BulkEntryReportingPeriod } from 'src/app/shared/models/bulk-entry-reporting-period';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +33,15 @@ export class ReportingPeriodService {
   retrieveForEmissionsProcess(processId: number): Observable<ReportingPeriod[]> {
     const url = `${this.baseUrl}/process/${processId}`;
     return this.http.get<ReportingPeriod[]>(url);
+  }
+
+  retrieveForBulkEntry(facilitySiteId: number): Observable<BulkEntryReportingPeriod[]> {
+    const url = `${this.baseUrl}/bulkEntry/${facilitySiteId}`;
+    return this.http.get<BulkEntryReportingPeriod[]>(url);
+  }
+
+  bulkUpdate(periods: BulkEntryReportingPeriod[]): Observable<ReportingPeriodUpdateResult[]> {
+    const url = `${this.baseUrl}/bulkEntry`;
+    return this.http.put<ReportingPeriodUpdateResult[]>(url, periods);
   }
 }

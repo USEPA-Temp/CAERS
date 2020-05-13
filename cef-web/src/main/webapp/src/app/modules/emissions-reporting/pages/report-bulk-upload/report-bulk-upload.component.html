@@ -18,7 +18,7 @@
                 <span style="color: red">*</span>
             </label>
             <div class="custom-file">
-                <input id="file-excel-workbook" type="file"
+                <input #workbookFile id="file-excel-workbook" type="file"
                        class="custom-file-input" (change)="onFileChanged($event.target.files)">
                 <label for="file-excel-workbook" class="custom-file-label">Click to browse...</label>
             </div>
@@ -30,18 +30,52 @@
                 <p>Below is a list of data error(s) found after parsing the workbook "{{uploadFile}}".</p>
                 <p class="mb-0">Please correct all data errors in the workbook and try again.</p>
             </div>
-            <div class="validation-item-error">
-                <div class="h5 font-weight-bolder">Data Error(s)</div>
-                <ol>
-                    <li *ngFor="let error of uploadErrors">
-                        <span class="font-weight-bold mr-1">Sheet:</span>
-                        <span [textContent]="error.worksheet"></span>
-                        <span class="font-weight-bold ml-2 mr-1">Row:</span>
-                        <span [textContent]="error.row"></span>
-                        <span class="font-weight-bold ml-2 mr-1">Message:</span>
-                        <span [textContent]="error.message"></span>
-                    </li>
-                </ol>
+            <div class="text-validation-error">
+                <div class="validation-user-errors"
+                     *ngIf="uploadUserErrors.length">
+                    <div class="h5 font-weight-bolder">
+                        <span>Data Error(s)</span>
+                        <button type="button" class="ml-2 btn btn-sm btn-link text-validation-error"
+                                (click)="bsflags.showUserErrors = !bsflags.showUserErrors"
+                                [attr.aria-expanded]="bsflags.showUserErrors" aria-controls="id-user-errors">
+                            <span *ngIf="bsflags.showUserErrors === false">Show List</span>
+                            <span *ngIf="bsflags.showUserErrors">Hide List</span>
+                        </button>
+                    </div>
+                    <div id="id-user-errors" [ngbCollapse]="bsflags.showUserErrors === false">
+                        <ol>
+                            <li *ngFor="let error of uploadUserErrors">
+                                <span class="font-weight-bold mr-1">Sheet:</span>
+                                <span [textContent]="error.worksheet"></span>
+                                <span class="font-weight-bold ml-2 mr-1">Row:</span>
+                                <span [textContent]="error.row"></span>
+                                <span class="font-weight-bold ml-2 mr-1">Message:</span>
+                                <span [textContent]="error.message"></span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="validation-system-errors"
+                     *ngIf="uploadSystemErrors.length">
+                    <div class="h5 font-weight-bolder">
+                        <span>Additional Diagnostic Error(s)</span>
+                        <button type="button" class="ml-2 btn btn-sm btn-link text-validation-error"
+                                (click)="bsflags.showSystemErrors = !bsflags.showSystemErrors"
+                                [attr.aria-expanded]="bsflags.showSystemErrors" aria-controls="id-system-errors">
+                            <span *ngIf="bsflags.showSystemErrors === false">Show List</span>
+                            <span *ngIf="bsflags.showSystemErrors">Hide List</span>
+                        </button>
+                    </div>
+                    <div id="id-system-errors" [ngbCollapse]="bsflags.showSystemErrors === false">
+                        <ol>
+                            <li *ngFor="let error of uploadSystemErrors">
+                                <span class="font-weight-bold ml-2 mr-1">Message:</span>
+                                <span [textContent]="error.message"></span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
 
         </div>

@@ -265,6 +265,10 @@ public class Emission extends BaseAuditEntity {
      */
     public void clearId() {
     	this.id = null;
+    	
+    	for (EmissionFormulaVariable variable : this.variables) {
+    		variable.clearId();
+    	}
     }
 
 }

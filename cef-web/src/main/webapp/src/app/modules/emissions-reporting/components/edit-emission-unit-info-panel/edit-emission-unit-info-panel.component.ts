@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
@@ -48,11 +48,12 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(100)
     ]],
-    comments: ['', Validators.maxLength(400)]
+    comments: [null, Validators.maxLength(400)]
   }, { validators: [
     this.unitTypeCheck(),
     this.emissionUnitIdentifierCheck(),
-    this.facilitySiteStatusCheck()]
+    this.facilitySiteStatusCheck(),
+    this.capacityUomCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -114,7 +115,6 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         });
         this.unitTypeValues = result;
     });
-    this.uomCapacityCheck();
   }
 
   ngOnChanges() {
@@ -125,17 +125,6 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     if (newValue && this.edit) {
       this.emissionUnitForm.controls.statusYear.reset();
       this.toastr.warning('', 'If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated, unless they are already Permanently Shutdown.');
-    }
-  }
-
-  uomCapacityCheck() {
-    if (this.emissionUnitForm.controls.designCapacity.value !== null && this.emissionUnitForm.controls.designCapacity.value !== '') {
-      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([Validators.required, legacyUomValidator()]);
-      this.emissionUnitForm.controls.designCapacity.updateValueAndValidity();
-      this.emissionUnitForm.controls.unitOfMeasureCode.updateValueAndValidity();
-    } else {
-      this.emissionUnitForm.controls.unitOfMeasureCode.setValidators([legacyUomValidator()]);
-      this.emissionUnitForm.controls.unitOfMeasureCode.reset();
     }
   }
 
@@ -189,6 +178,18 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
           && controlStatus.code !== statusPermShutdown) {
             return {invalidStatusCodePS: true};
           }
+      }
+      return null;
+    };
+  }
+
+  capacityUomCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const designCapacity = control.get('designCapacity').value;
+      const designCapacityUom = control.get('unitOfMeasureCode').value;
+
+      if ((designCapacity && !designCapacityUom) || (!designCapacity && designCapacityUom)) {
+        return {invalidUom: true};
       }
       return null;
     };

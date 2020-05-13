@@ -63,6 +63,9 @@ import { CreateControlPathComponent } from './pages/create-control-path/create-c
 import { ControlPathAssignmentTableComponent } from './components/control-path-assignment-table/control-path-assignment-table.component';
 import { ControlPathAssignmentModalComponent } from './components/control-path-assignment-modal/control-path-assignment-modal.component';
 import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bulk-upload.component';
+import { UserFeedbackComponent } from './pages/user-feedback/user-feedback.component';
+import { DataBulkEntryComponent } from './pages/data-bulk-entry/data-bulk-entry.component';
+import { BulkEntryReportingPeriodTableComponent } from './components/bulk-entry-reporting-period-table/bulk-entry-reporting-period-table.component';
 
 @NgModule({
   declarations: [
@@ -120,7 +123,10 @@ import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bul
     CreateControlPathComponent,
     ControlPathAssignmentTableComponent,
     ControlPathAssignmentModalComponent,
-    ReportBulkUploadComponent
+    ReportBulkUploadComponent,
+    UserFeedbackComponent,
+    DataBulkEntryComponent,
+    BulkEntryReportingPeriodTableComponent
   ],
   imports: [
     CommonModule,

@@ -3,22 +3,10 @@ package gov.epa.cef.web.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.io.Resources;
-import gov.epa.cef.web.client.api.FrsApiClient;
-import gov.epa.cef.web.domain.EmissionsProcess;
-import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.EmissionsUnit;
-import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
-import gov.epa.client.frs.iptquery.model.Association;
-import gov.epa.client.frs.iptquery.model.Contact;
-import gov.epa.client.frs.iptquery.model.Naics;
-import gov.epa.client.frs.iptquery.model.Process;
-import gov.epa.client.frs.iptquery.model.ProgramFacility;
-import gov.epa.client.frs.iptquery.model.ProgramGIS;
-import gov.epa.client.frs.iptquery.model.Unit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,17 +15,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -54,9 +38,6 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
 
     @InjectMocks
     private FacilitySiteServiceImpl facilitySiteServiceImpl;
-
-    @Mock
-    private FrsApiClient frsClient;
 
     @Before
     public void _init() throws Exception {
@@ -79,79 +60,6 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
         when(facSiteRepo.findByStateCode("AK")).thenReturn(nullSiteList);
         when(facilitySiteMapper.toDtoList(nullSiteList)).thenReturn(null);
 
-        when(frsClient.queryProgramFacility("554711")).thenReturn(
-            hydrateFrsJsonObject("frs-queryProgramFacility.json", ProgramFacility.class));
-
-        when(frsClient.queryProgramGis("554711")).thenReturn(
-            hydrateFrsJsonObject("frs-queryProgramGis.json", ProgramGIS.class));
-
-        when(frsClient.queryContacts("554711")).thenReturn(
-            hydrateFrsJsonList("frs-queryContact.json", Contact.class));
-
-        when(frsClient.queryNaics("554711")).thenReturn(
-            hydrateFrsJsonList("frs-queryNaics.json", Naics.class));
-
-        when(frsClient.queryEmissionsUnit("554711", null, null)).thenReturn(
-            hydrateFrsJsonList("frs-queryEmissionsUnit.json", Unit.class));
-
-        when(frsClient.queryAssociation("554711", null, null)).thenReturn(
-            hydrateFrsJsonList("frs-queryAssociation.json", Association.class));
-
-        when(frsClient.queryEmissionsProcess("554711", null, null)).thenReturn(
-            hydrateFrsJsonList("frs-queryEmissionsProcess.json", Process.class));
-    }
-
-    @Test
-    public void copyFacilityFromFrsTest() {
-
-        EmissionsReport report = new EmissionsReport();
-        report.setId(1234L);
-        report.setEisProgramId("554711");
-
-        FacilitySite facilitySite = this.facilitySiteServiceImpl.copyFromFrs(report);
-
-        assertEquals(report.getEisProgramId(), facilitySite.getEisProgramId());
-        assertEquals("ROME", facilitySite.getCity());
-//        assertEquals("FLOYD", facilitySite.getCounty());
-        assertEquals("13115", facilitySite.getCountyCode().getCode());
-        assertEquals("GA", facilitySite.getStateCode());
-
-        assertNotNull(facilitySite.getOperatingStatusCode());
-        assertEquals("OP", facilitySite.getOperatingStatusCode().getCode());
-
-        assertEquals(new BigDecimal("34.252502"), facilitySite.getLatitude());
-        assertEquals(new BigDecimal("-85.321754"), facilitySite.getLongitude());
-
-        assertTrue(facilitySite.getContacts().isEmpty());
-
-        assertEquals(1, facilitySite.getFacilityNAICS().size());
-        FacilityNAICSXref naics = facilitySite.getFacilityNAICS().iterator().next();
-        assertTrue(naics.isPrimaryFlag());
-        assertEquals(321113L, naics.getNaicsCode().getCode().longValue());
-
-        assertFalse(facilitySite.getEmissionsUnits().isEmpty());
-        assertEquals(10, facilitySite.getEmissionsUnits().size());
-
-        EmissionsUnit unit = facilitySite.getEmissionsUnits().stream()
-            .filter(u -> "108744513".equals(u.getUnitIdentifier()))
-            .findFirst()
-            .orElse(null);
-
-        assertNotNull(unit);
-        assertEquals("108744513", unit.getUnitIdentifier());
-        assertNotNull(unit.getUnitTypeCode());
-        assertEquals("160", unit.getUnitTypeCode().getCode());
-        assertNotNull(unit.getUnitOfMeasureCode());
-        assertEquals("HP", unit.getUnitOfMeasureCode().getCode());
-        assertEquals(new BigDecimal("64"), unit.getDesignCapacity());
-        assertNotNull(unit.getOperatingStatusCode());
-        assertEquals("OP", unit.getOperatingStatusCode().getCode());
-
-        assertEquals(1, unit.getEmissionsProcesses().size());
-
-        EmissionsProcess process = unit.getEmissionsProcesses().get(0);
-        assertEquals(unit, process.getEmissionsUnit());
-        assertEquals("153969914", process.getEmissionsProcessIdentifier());
     }
 
     @Test

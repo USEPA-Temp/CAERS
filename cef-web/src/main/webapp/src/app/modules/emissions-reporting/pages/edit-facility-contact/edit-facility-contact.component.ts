@@ -24,6 +24,7 @@ export class EditFacilityContactComponent implements OnInit {
   @Input() facilitySite: FacilitySite;
   @Input() createMode = false;
   mailingStreetAddress: string;
+  sameAddress = false;
 
   readOnlyMode = true;
 
@@ -48,7 +49,7 @@ export class EditFacilityContactComponent implements OnInit {
     email: ['', [
       Validators.required,
       Validators.maxLength(255),
-      Validators.email]],
+      Validators.pattern('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[\.][A-Za-z]{2,}$')]],
     streetAddress: ['', [
       Validators.maxLength(100),
       Validators.required]],
@@ -64,9 +65,7 @@ export class EditFacilityContactComponent implements OnInit {
     mailingStateCode: [null],
     mailingPostalCode: ['', Validators.pattern('^\\d{5}(-\\d{4})?$')],
     countyCode: [null]
-  }, {validators: [
-    this.mailingAddressValidator()
-   ]});
+  });
 
   facilityContactType: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
@@ -140,6 +139,10 @@ export class EditFacilityContactComponent implements OnInit {
     });
   }
 
+  setMailAddress() {
+    this.sameAddress = !this.sameAddress;
+  }
+
   onCancelEdit() {
     this.contactForm.enable();
     if (!this.createMode) {
@@ -148,6 +151,8 @@ export class EditFacilityContactComponent implements OnInit {
   }
 
   onSubmit() {
+    this.checkMailingAddress();
+
     if (!this.contactForm.valid) {
       this.contactForm.markAllAsTouched();
     } else {
@@ -178,18 +183,22 @@ export class EditFacilityContactComponent implements OnInit {
     }
   }
 
-  mailingAddressValidator(): ValidatorFn {
-    return (control: FormGroup): ValidationErrors | null => {
-      const addressControl = control.get('mailingStreetAddress');
-      const uspsControl = control.get('mailingStateCode');
-      const cityControl = control.get('mailingCity');
-      const postalCodeControl = control.get('mailingPostalCode');
+  checkMailingAddress() {
+    if (this.contactForm.get('mailingStreetAddress').value && this.contactForm.get('mailingStreetAddress').value.toString().length > 0) {
+      if (this.contactForm.get('mailingStateCode').value === null || this.contactForm.get('mailingCity').value === '' || this.contactForm.get('mailingPostalCode').value === '') {
+        this.contactForm.setErrors({mailingStreetAddress: true});
+      }
+    } else {
+      this.contactForm.get('mailingCity').reset();
+      this.contactForm.get('mailingStateCode').reset();
+      this.contactForm.get('mailingPostalCode').reset();
+    }
 
-      if(addressControl.enabled) {
-        if (uspsControl.value === null || cityControl.value === '' || postalCodeControl.value === '') {
-          return addressControl.value === '' ? null : {mailingStreetAddress : {value: this.mailingStreetAddress}};
-      }}
-      return null;
+    if (this.sameAddress) {
+      this.contactForm.get('mailingStreetAddress').setValue(this.contactForm.get('streetAddress').value);
+      this.contactForm.get('mailingCity').setValue(this.contactForm.get('city').value);
+      this.contactForm.get('mailingStateCode').setValue(this.contactForm.get('stateCode').value);
+      this.contactForm.get('mailingPostalCode').setValue(this.contactForm.get('postalCode').value);
     }
   }
 

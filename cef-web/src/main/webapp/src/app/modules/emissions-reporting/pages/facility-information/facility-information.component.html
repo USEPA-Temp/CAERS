@@ -2,7 +2,7 @@
     <div class="card-header text-center">
         <strong>Facility Information</strong>
         <div class="float-right" *ngIf="!editInfo && !readOnlyMode">
-            <button type="button" class="btn btn-success" aria-label="edit facility info" (click)="setEditInfo(true)">Edit</button>
+            <button type="button" class="btn btn-success" aria-label="edit facility information" (click)="setEditInfo(true)">Edit</button>
         </div>
     </div>
     <div *ngIf="facilitySite" class="card-body">
@@ -34,11 +34,11 @@
             
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Facility Address:</strong></div>
-                <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite?.stateCode}}&nbsp;{{facilitySite.postalCode}}</div>
+                <div class="col-sm-6 col-md-2">{{facilitySite.streetAddress}}<br/>{{facilitySite.city}}, {{facilitySite?.stateCode?.uspsCode}}&nbsp;{{facilitySite.postalCode}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Mailing Address:</strong></div>
                 <div class="col-sm-6 col-md-2">
                     <span *ngIf="facilitySite.mailingStreetAddress">
-                        {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite?.mailingStateCode}}&nbsp;{{facilitySite.mailingPostalCode}}
+                        {{facilitySite.mailingStreetAddress}}<br/>{{facilitySite.mailingCity}}, {{facilitySite?.mailingStateCode?.uspsCode}}&nbsp;{{facilitySite.mailingPostalCode}}
                     </span>
                 </div>
             </div>
@@ -90,7 +90,7 @@
         <div class="card-header text-center">
             <strong>Facility Contact Information</strong>
             <div class="float-right" *ngIf="!editDetails && !readOnlyMode">
-                <button type="button" class="btn btn-success" [routerLink]="[createUrl, contact.id]" aria-label="edit contact">Edit</button>&nbsp;
+                <button type="button" class="btn btn-success" [routerLink]="[createUrl, contact.id]" [attr.aria-label]="'edit' + contact?.firstName + contact?.lastName + 'contact information'">Edit</button>&nbsp;
                 <a routerLink="." (click)="openDeleteModal(contact.firstName, contact.lastName, contact.id, contact.facilitySiteId)" aria-label="delete contact">
                     <fa-icon icon="trash-alt"></fa-icon>
                 </a>
@@ -128,6 +128,6 @@
         </div>
     </div>
     <div class="float-right pb-3 pr-3" *ngIf="!editDetails && !readOnlyMode">
-        <button type="button" class="btn btn-success btn-md my-3 ml-3" aria-label="add contact" [routerLink]="[createUrl]">Add Facility Contact Information</button>
+        <button type="button" class="btn btn-success btn-md my-3 ml-3" [routerLink]="[createUrl]">Add Facility Contact Information</button>
     </div>
 </div>

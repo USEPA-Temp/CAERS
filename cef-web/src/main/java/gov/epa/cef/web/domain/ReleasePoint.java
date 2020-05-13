@@ -41,7 +41,7 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "type_code", nullable = false)
     private ReleasePointTypeCode typeCode;
 
-    @Column(name = "description", nullable = false, length = 200)
+    @Column(name = "description", length = 200)
     private String description;
     
     @Column(name = "fence_line_distance", precision = 6, scale = 0)

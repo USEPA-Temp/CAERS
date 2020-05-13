@@ -12,6 +12,7 @@ import { FacilitySiteService } from 'src/app/core/services/facility-site.service
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { LookupService } from 'src/app/core/services/lookup.service';
+import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -89,7 +90,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                 .subscribe(reportResp => {
                     if (reportResp.status === 204) {
                         // 204 No Content
-                        // no previous report, no FRS data
+                        // no previous report
 
                         this.copyFacilitySiteFromCdxModel();
                         this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
@@ -105,19 +106,6 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
                         this.reportCompleted(reportResp.body);
 
-                    } else if (reportResp.status === 202) {
-                        // 202 Accepted
-                        // pull more data from FRS
-
-                        // commented out for future mvp
-                        // modalWindow.componentInstance.message =
-                        //     'Please wait: Searching for Facility Data in EPA\'s Facility Registry System to populate your Emissions Report';
-
-                        // this.reportService.createReportFromFrs(this.facility.programId, reportingYear)
-                        // .subscribe(newReport => {
-                        //     modalWindow.dismiss();
-                        //     this.reportCompleted(newReport);
-                        // });
                     }
                 });
     }
@@ -140,12 +128,14 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                   }
               });
               this.facilitySite.streetAddress = this.facility.address;
-              this.facilitySite.stateCode = this.facility.state;
+              this.facilitySite.stateCode = new FipsStateCode();
+              this.facilitySite.stateCode.uspsCode = this.facility.state;
               this.facilitySite.statusYear = new Date().getFullYear();
               this.facilitySite.frsFacilityId = this.facility.epaRegistryId;
               this.facilitySite.postalCode = this.facility.zipCode;
               this.facilitySite.mailingStreetAddress = this.facility.address;
-              this.facilitySite.mailingStateCode = this.facility.state;
+              this.facilitySite.mailingStateCode = new FipsStateCode();
+              this.facilitySite.mailingStateCode.uspsCode = this.facility.state;
               this.facilitySite.mailingCity = this.facility.city;
               this.facilitySite.mailingPostalCode = this.facility.zipCode;
               this.facilitySite.altSiteIdentifier = this.facility.stateFacilityId;
