@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,19 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         			"controlPath.releasePointApportionment.notAssigned",
         			createValidationDetails(controlPath));
 		}
-	
+		
+        Map<Object, List<ControlAssignment>> caMap = controlPath.getAssignments().stream()
+                .filter(cpa -> (cpa.getControl() != null))
+                .collect(Collectors.groupingBy(cpa -> cpa));
+        
+        	if (caMap.size() == 0) {
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
+            			"controlPath.assignment.notAssigned",
+            			createValidationDetails(controlPath));
+        	}
+        
 	return result;
   }
 	
