@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Emission } from 'src/app/shared/models/emission';
 import { Observable } from 'rxjs';
+import { BulkEntryEmissionHolder } from 'src/app/shared/models/bulk-entry-emission-holder';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,16 @@ export class EmissionService {
   calculateEmissionTotal(emission: Emission): Observable<Emission> {
     const url = `${this.baseUrl}/calculate`;
     return this.http.post<Emission>(url, emission);
+  }
+
+  retrieveForBulkEntry(facilitySiteId: number): Observable<BulkEntryEmissionHolder[]> {
+    const url = `${this.baseUrl}/bulkEntry/${facilitySiteId}`;
+    return this.http.get<BulkEntryEmissionHolder[]>(url);
+  }
+
+  bulkUpdate(facilitySiteId: number, emissions: Emission[]): Observable<BulkEntryEmissionHolder[]> {
+    const url = `${this.baseUrl}/bulkEntry/${facilitySiteId}`;
+    return this.http.put<BulkEntryEmissionHolder[]>(url, emissions);
   }
 
 }

@@ -66,6 +66,7 @@ import { ReportBulkUploadComponent } from './pages/report-bulk-upload/report-bul
 import { UserFeedbackComponent } from './pages/user-feedback/user-feedback.component';
 import { DataBulkEntryComponent } from './pages/data-bulk-entry/data-bulk-entry.component';
 import { BulkEntryReportingPeriodTableComponent } from './components/bulk-entry-reporting-period-table/bulk-entry-reporting-period-table.component';
+import { BulkEntryEmissionsTableComponent } from './components/bulk-entry-emissions-table/bulk-entry-emissions-table.component';
 
 @NgModule({
   declarations: [
@@ -126,7 +127,8 @@ import { BulkEntryReportingPeriodTableComponent } from './components/bulk-entry-
     ReportBulkUploadComponent,
     UserFeedbackComponent,
     DataBulkEntryComponent,
-    BulkEntryReportingPeriodTableComponent
+    BulkEntryReportingPeriodTableComponent,
+    BulkEntryEmissionsTableComponent
   ],
   imports: [
     CommonModule,

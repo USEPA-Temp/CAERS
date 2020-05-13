@@ -13,6 +13,7 @@ import { ReportingPeriodService } from 'src/app/core/services/reporting-period.s
 })
 export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable implements OnInit, OnChanges {
   @Input() tableData: BulkEntryReportingPeriod[];
+  @Input() readOnlyMode: boolean;
   baseUrl: string;
 
   reportingPeriodForm = this.fb.group({});
