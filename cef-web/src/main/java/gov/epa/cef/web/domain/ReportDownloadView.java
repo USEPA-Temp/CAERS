@@ -66,6 +66,12 @@ public class ReportDownloadView extends BaseEntity{
     
     @Column(name = "reporting_period_type", length = 50)
     private String reportingPeriodType;
+    
+    @Column(name = "throughput_uom", length = 20)
+    private String throughputUom;
+    
+    @Column(name = "throughput_amount", length = 50)
+    private BigDecimal throughputAmount;
 
 	@Column(name = "total_emissions")
     private BigDecimal totalEmissions;
@@ -75,6 +81,22 @@ public class ReportDownloadView extends BaseEntity{
     
 	@Column(name = "last_modified_date")
 	private Date lastModifiedDate;
+	
+	public String getThroughputUom() {
+		return throughputUom;
+	}
+
+	public void setThroughputUom(String throughputUom) {
+		this.throughputUom = throughputUom;
+	}
+
+	public BigDecimal getThroughputAmount() {
+		return throughputAmount;
+	}
+
+	public void setThroughputAmount(BigDecimal throughputAmount) {
+		this.throughputAmount = throughputAmount;
+	}
 	
     public String getLastModifiedBy() {
 		return lastModifiedBy;
