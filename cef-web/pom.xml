@@ -87,6 +87,8 @@
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <sonar-maven-plugin.version>3.5.0.1254</sonar-maven-plugin.version>
 
+        <plugin.jaxb-fluent-api.version>2.1.8</plugin.jaxb-fluent-api.version>
+
         <!-- Sonar properties -->
         <sonar.host.url>https://alm.cgifederal.com/sonar</sonar.host.url>
         <sonar.exclusions>src/main/webapp/src/assets/content/**/*.*, target/www/**/*.*,
@@ -477,6 +479,34 @@
                             <forceRegenerate>false</forceRegenerate>
                             <schemaLanguage>XMLSCHEMA</schemaLanguage>
                             <removeOldOutput>true</removeOldOutput>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>header_v2.0</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaDirectory>src/main/resources/schema/header</schemaDirectory>
+                            <generateDirectory>${project.build.directory}/generated-sources/xjc/header_2_0</generateDirectory>
+                            <extension>true</extension>
+                            <verbose>false</verbose>
+                            <debug>false</debug>
+                            <strict>true</strict>
+                            <forceRegenerate>false</forceRegenerate>
+                            <schemaLanguage>XMLSCHEMA</schemaLanguage>
+                            <removeOldOutput>true</removeOldOutput>
+                            <args>
+                                <arg>-Xfluent-api</arg>
+                            </args>
+                            <plugins>
+                                <plugin>
+                                    <groupId>net.java.dev.jaxb2-commons</groupId>
+                                    <artifactId>jaxb-fluent-api</artifactId>
+                                    <version>${plugin.jaxb-fluent-api.version}</version>
+                                </plugin>
+                            </plugins>
                         </configuration>
                     </execution>
                 </executions>

@@ -31,8 +31,7 @@ import org.springframework.stereotype.Service;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -78,24 +77,19 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @see gov.epa.cef.web.service.impl.CersXmlService#retrieveCersXml(java.lang.Long)
      */
     @Override
-    public byte[] retrieveCersXml(Long reportId) {
+    public void writeCersXmlTo(long reportId, OutputStream outputStream) {
 
         CERSDataType cers = generateCersData(reportId);
 
         try {
             ObjectFactory objectFactory = new ObjectFactory();
-            JAXBContext jaxbContext = JAXBContext.newInstance( CERSDataType.class );
+            JAXBContext jaxbContext = JAXBContext.newInstance(CERSDataType.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-            try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            jaxbMarshaller.marshal(objectFactory.createCERS(cers), outputStream);
 
-                jaxbMarshaller.marshal(objectFactory.createCERS(cers), os);
-
-                return os.toByteArray();
-            }
-
-        } catch (IOException | JAXBException e) {
+        } catch (JAXBException e) {
 
             LOGGER.error("error while marshalling", e);
             throw ApplicationException.asApplicationException(e);
