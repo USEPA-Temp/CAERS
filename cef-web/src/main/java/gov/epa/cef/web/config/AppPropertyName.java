@@ -9,6 +9,8 @@ public enum AppPropertyName implements IPropertyKey {
     EnvAdmins("env.admins"),
     EmissionsTotalErrorTolerance("emissions.tolerance.total.error"),
     EmissionsTotalWarningTolerance("emissions.tolerance.total.warning"),
+    FeatureAnnouncementEnabled("feature.announcement.enabled"),
+    FeatureAnnouncementText("feature.announcement.text"),
     FeatureBulkEntryEnabled("feature.bulk-entry.enabled"),
     FeatureUserFeedbackEnabled("feature.user-feedback.enabled"),
     LastSccUpdateDate("task.scc-update.last-ran"),
