@@ -108,7 +108,7 @@ public class ReportingPeriodApi {
 
     /**
      * Retrieve Reporting Periods for bulk entry by Report Id
-     * @param reportId
+     * @param facilitySiteId
      * @return
      */
     @GetMapping(value = "/bulkEntry/{facilitySiteId}")

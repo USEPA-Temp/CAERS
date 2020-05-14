@@ -16,7 +16,7 @@
     <tbody>
     <tr *ngFor="let item of tableData">
       <td>{{item.sequenceNumber}}</td>
-      <td>{{item?.control?.identifier}}{{item?.controlPathChild?.pathId}}</td>
+      <td><a routerLink="{{baseUrlForControlDevice}}/{{item?.control?.id}}" [attr.aria-label]="'control device' + item?.control?.identifier">{{item?.control?.identifier}}</a><a routerLink="{{baseUrlForControlPath}}/{{item?.controlPathChild?.id}}" [attr.aria-label]="'control path' + item?.controlPathChild?.pathId">{{item?.controlPathChild?.pathId}}</a></td>
       <td>{{item.percentApportionment}}</td>
       <ng-container *ngIf="!readOnlyMode">
         <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit control path assignment sequence number' + item?.sequenceNumber">

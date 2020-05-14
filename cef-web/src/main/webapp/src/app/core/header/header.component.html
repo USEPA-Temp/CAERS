@@ -12,8 +12,8 @@
     </div>
   </div>
   
-  <!-- <div class="announcement-bar">
-      <strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</strong>
-  </div> -->
+  <div class="announcement-bar" *ngIf="announcementEnabled && announcementText">
+      <strong>{{announcementText}}</strong>
+  </div>
 </header>
 

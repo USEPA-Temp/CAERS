@@ -15,6 +15,8 @@ import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.service.EmissionService;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryDto;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 import gov.epa.cef.web.service.mapper.EmissionMapper;
@@ -34,7 +36,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmissionServiceImpl implements EmissionService {
@@ -124,10 +128,21 @@ public class EmissionServiceImpl implements EmissionService {
             v.setEmission(emission);
         });
 
+        EmissionDto result = emissionMapper.toDto(update(emission));
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionRepository.class);
+        return result;
+    }
+
+    /**
+     * Update an Emission directly and calculate all calculated values
+     * @param emission
+     * @return
+     */
+    private Emission update(Emission emission) {
+
         emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
 
-        EmissionDto result = emissionMapper.toDto(emissionRepo.save(emission));
-        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionRepository.class);
+        Emission result = emissionRepo.save(emission);
         return result;
     }
 
@@ -138,6 +153,123 @@ public class EmissionServiceImpl implements EmissionService {
     public void delete(Long id) {
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), EmissionRepository.class);
         emissionRepo.deleteById(id);
+    }
+
+    /**
+     * Retrieve Emissions grouped by Reporting Period for Bulk Entry
+     * @param facilitySiteId
+     * @return
+     */
+    public List<EmissionBulkEntryHolderDto> retrieveBulkEntryEmissionsForFacilitySite(Long facilitySiteId) {
+
+        List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId);
+
+        List<EmissionBulkEntryHolderDto> result = emissionMapper.periodToEmissionBulkEntryDtoList(entities);
+
+        if (!entities.isEmpty()) {
+            // find the last year reported
+            Optional<EmissionsReport> lastReport = emissionsReportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEisProgramId(),
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
+
+            if (lastReport.isPresent()) {
+                result.forEach(dto -> {
+                    dto.getEmissions().forEach(e -> {
+                        List<Emission> oldEntities = emissionRepo.retrieveMatchingForYear(e.getPollutant().getPollutantCode(),
+                                dto.getReportingPeriodTypeCode().getCode(),
+                                dto.getEmissionsProcessIdentifier(),
+                                dto.getUnitIdentifier(), 
+                                lastReport.get().getEisProgramId(), 
+                                lastReport.get().getYear());
+                        // Add previous emissions values if they exist
+                        if (!oldEntities.isEmpty()) {
+                            e.setPreviousTotalEmissions(oldEntities.get(0).getTotalEmissions());
+                            e.setPreviousEmissionsUomCode(oldEntities.get(0).getEmissionsUomCode().getCode());
+                        }
+                    });
+                });
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Update the total emissions for the provided emissions and recalculate all emissions for the facility
+     * @param facilitySiteId
+     * @param dtos
+     * @return
+     */
+    public List<EmissionBulkEntryHolderDto> bulkUpdate(Long facilitySiteId, List<EmissionDto> dtos) {
+
+        List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId);
+
+        Map<Long, BigDecimal> updateMap = dtos.stream().collect(Collectors.toMap(EmissionDto::getId, EmissionDto::getTotalEmissions));
+
+        if (!entities.isEmpty()) {
+            // find the last year reported
+            EmissionsReport lastReport = emissionsReportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEisProgramId(),
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear()).orElse(null);
+
+            List<EmissionBulkEntryHolderDto> result = entities.stream().map(rp -> {
+
+                EmissionBulkEntryHolderDto rpDto = emissionMapper.periodToEmissionBulkEntryDto(rp);
+
+                List<EmissionBulkEntryDto> emissions = rp.getEmissions().stream().map(emission -> {
+
+                    String calculationFailureMessage = null;
+
+                    // update total emissions when manual entry is enabled
+                    if (Boolean.TRUE.equals(emission.getTotalManualEntry()) 
+                            || Boolean.TRUE.equals(emission.getEmissionsCalcMethodCode().getTotalDirectEntry())) {
+
+                        if (updateMap.containsKey(emission.getId())) {
+
+                            emission.setTotalEmissions(updateMap.get(emission.getId()));
+                            update(emission);
+                        }
+                    } else {
+
+                        // recalculate calculated emissions and record if there is an issue
+                        try {
+                            calculateTotalEmissions(emission, rp);
+                            update(emission);
+                        } catch (ApplicationException e) {
+
+                            calculationFailureMessage = e.getMessage();
+                        }
+                    }
+
+                    EmissionBulkEntryDto eDto = emissionMapper.toBulkDto(emission);
+                    eDto.setCalculationFailed(calculationFailureMessage != null);
+                    eDto.setCalculationFailureMessage(calculationFailureMessage);
+
+                    // find previous reporting period
+                    List<Emission> oldEntities = emissionRepo.retrieveMatchingForYear(eDto.getPollutant().getPollutantCode(),
+                            rpDto.getReportingPeriodTypeCode().getCode(),
+                            rpDto.getEmissionsProcessIdentifier(),
+                            rpDto.getUnitIdentifier(), 
+                            lastReport.getEisProgramId(), 
+                            lastReport.getYear());
+                    if (!oldEntities.isEmpty()) {
+                        eDto.setPreviousTotalEmissions(oldEntities.get(0).getTotalEmissions());
+                        eDto.setPreviousEmissionsUomCode(oldEntities.get(0).getEmissionsUomCode().getCode());
+                    }
+
+                    return eDto;
+                }).collect(Collectors.toList());
+
+                rpDto.setEmissions(emissions);
+
+                return rpDto;
+            }).collect(Collectors.toList());
+
+            return result;
+            
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     /**

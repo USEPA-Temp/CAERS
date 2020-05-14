@@ -25,7 +25,7 @@
             <td>
               <div class="row">
                 <div class="col-sm-12 col-lg-9">
-                <input type="text" class="form-control" id="{{item.reportingPeriodId + 'Input'}}" formControlName="{{item.reportingPeriodId}}" 
+                <input type="text" class="form-control" id="{{item.reportingPeriodId + 'Input'}}" formControlName="{{item.reportingPeriodId}}" [readOnly]="readOnlyMode"
                         [attr.aria-label]="'Throughput for Process ' + item.emissionsProcessIdentifier + ' of Unit ' + item.unitIdentifier">
                   <app-validation-message [control]="reportingPeriodForm.get('' + item.reportingPeriodId)"></app-validation-message> 
                 </div>
@@ -52,7 +52,7 @@
       </table>
     </div>
 
-    <div class="float-right mt-3">
+    <div class="float-right mt-3" *ngIf="!readOnlyMode">
       <button type="button" class="btn btn-success" (click)="onSubmit()">Save and Update</button>
     </div>
   </form>
