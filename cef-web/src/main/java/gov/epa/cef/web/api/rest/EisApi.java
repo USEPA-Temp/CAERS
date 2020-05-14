@@ -1,5 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.EisDataCategory;
@@ -40,9 +41,13 @@ public class EisApi {
 
         this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
+        ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
+
         OutputStream outputStream = response.getOutputStream();
 
         EisHeaderDto eisHeader = new EisHeaderDto();
+        eisHeader.setAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()));
+        eisHeader.setOrganizationName(appUser.getOrganization());
         eisHeader.setDataCategory(EisDataCategory.FacilityInventory);
         eisHeader.setSubmissionType(EisSubmissionType.QA);
         eisHeader.setEmissionReports(Collections.singletonList(reportId));

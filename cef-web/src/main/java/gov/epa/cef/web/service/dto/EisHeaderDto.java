@@ -6,15 +6,39 @@ import java.util.Set;
 
 public class EisHeaderDto {
 
+    private final Set<Long> emissionReports;
+
+    private String authorName;
+
     private EisDataCategory dataCategory;
 
-    private EisSubmissionType submissionType;
+    private String organizationName;
 
-    private final Set<Long> emissionReports;
+    private EisSubmissionType submissionType;
 
     public EisHeaderDto() {
 
         this.emissionReports = new HashSet<>();
+    }
+
+    public String getAuthorName() {
+
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+
+        this.authorName = authorName;
+    }
+
+    public EisDataCategory getDataCategory() {
+
+        return dataCategory;
+    }
+
+    public void setDataCategory(EisDataCategory dataCategory) {
+
+        this.dataCategory = dataCategory;
     }
 
     public Set<Long> getEmissionReports() {
@@ -30,14 +54,14 @@ public class EisHeaderDto {
         }
     }
 
-    public EisDataCategory getDataCategory() {
+    public String getOrganizationName() {
 
-        return dataCategory;
+        return organizationName;
     }
 
-    public void setDataCategory(EisDataCategory dataCategory) {
+    public void setOrganizationName(String organizationName) {
 
-        this.dataCategory = dataCategory;
+        this.organizationName = organizationName;
     }
 
     public EisSubmissionType getSubmissionType() {
@@ -48,5 +72,35 @@ public class EisHeaderDto {
     public void setSubmissionType(EisSubmissionType submissionType) {
 
         this.submissionType = submissionType;
+    }
+
+    public EisHeaderDto withAuthorName(final String authorName) {
+
+        setAuthorName(authorName);
+        return this;
+    }
+
+    public EisHeaderDto withDataCategory(final EisDataCategory dataCategory) {
+
+        setDataCategory(dataCategory);
+        return this;
+    }
+
+    public EisHeaderDto withEmissionReports(Collection<Long> ids) {
+
+        setEmissionReports(ids);
+        return this;
+    }
+
+    public EisHeaderDto withOrganizationName(final String organizationName) {
+
+        setOrganizationName(organizationName);
+        return this;
+    }
+
+    public EisHeaderDto withSubmissionType(final EisSubmissionType submissionType) {
+
+        setSubmissionType(submissionType);
+        return this;
     }
 }

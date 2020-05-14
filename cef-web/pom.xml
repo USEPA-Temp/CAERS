@@ -470,8 +470,8 @@
                         </goals>
                         <configuration>
                             <schemaDirectory>src/main/resources/schema/CERS</schemaDirectory>
-                            <generateDirectory>${project.build.directory}/generated-sources/xjc/cers_1_2
-                            </generateDirectory>
+                            <generateDirectory>${project.build.directory}/generated-sources/xjc/cers_1_2</generateDirectory>
+                            <generatePackage>net.exchangenetwork.schema.cer._1._2</generatePackage>
                             <extension>true</extension>
                             <verbose>false</verbose>
                             <debug>false</debug>
