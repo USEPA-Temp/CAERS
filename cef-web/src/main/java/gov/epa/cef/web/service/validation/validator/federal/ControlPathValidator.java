@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 
+import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.service.dto.EntityType;
@@ -54,12 +55,15 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         			"controlPath.releasePointApportionment.notAssigned",
         			createValidationDetails(controlPath));
 		}
+
+    	List<Control> controls = new ArrayList<Control>(); 
+		List<Control> controlsList = buildAssignedControlsList(controlPath.getAssignments(), controls);
 		
         Map<Object, List<ControlAssignment>> caMap = controlPath.getAssignments().stream()
                 .filter(cpa -> (cpa.getControl() != null))
                 .collect(Collectors.groupingBy(cpa -> cpa));
         
-        	if (caMap.size() == 0) {
+        	if ((caMap.size() == 0) && (controlsList.size() == 0)) {
             	result = false;
             	context.addFederalError(
             			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
@@ -78,6 +82,19 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	    return dto;
 	}
 	
+    private List<Control> buildAssignedControlsList(List<ControlAssignment> controlAssignments,List<Control> controls) {
+    	for(ControlAssignment ca: controlAssignments){
+    		if(ca.getControl() != null) {
+    			controls.add(ca.getControl());
+    			return controls;
+    		}
+			if(ca.getControlPathChild() != null) {
+				buildAssignedControlsList(ca.getControlPathChild().getAssignments(), controls);
+			}
+    	}
+    	return controls;
+    }
+    
 	private List<String> controlMeasureCodeListBuilder(List<ControlAssignment> controlAssignments){
     	List<String> controlMeasureCodeList = new ArrayList<String>(); 
     	for(ControlAssignment ca: controlAssignments){
