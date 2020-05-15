@@ -6,19 +6,20 @@
           <strong>Data Bulk Entry</strong>
         </div>
 
-        <div class="card-body" *ngIf="reportingPeriods">
+        <div class="card-body" *ngIf="reportingPeriods && emissions">
           <nav ngbNav #nav="ngbNav" class="nav-tabs">
             <ng-container ngbNavItem>
               <a ngbNavLink>Process Information</a>
               <ng-template ngbNavContent>
-                <app-bulk-entry-reporting-period-table [tableData]="reportingPeriods">
+                <app-bulk-entry-reporting-period-table [tableData]="reportingPeriods" [readOnlyMode]="readOnlyMode">
                 </app-bulk-entry-reporting-period-table>
               </ng-template>
             </ng-container>
             <ng-container ngbNavItem>
               <a ngbNavLink>Emission Information</a>
               <ng-template ngbNavContent>
-                <p>Not yet implemented</p>
+                <app-bulk-entry-emissions-table [tableData]="emissions" [readOnlyMode]="readOnlyMode" (emissionsUpdated)="onEmissionsUpdated($event)">
+                </app-bulk-entry-emissions-table>
               </ng-template>
             </ng-container>
           </nav>
