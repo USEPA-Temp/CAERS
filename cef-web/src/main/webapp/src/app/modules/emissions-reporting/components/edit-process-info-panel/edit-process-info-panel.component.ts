@@ -99,21 +99,23 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
   }
 
   ngAfterContentChecked() {
-    if(this.emissionsUnit && this.emissionUnit.emissionsProcesses){
-      this.emissionsUnit.emissionsProcesses.forEach(process => {
-        this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
-        if(process['aircraftEngineTypeCode'] && process['sccCode']){
-          // if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
-          // to avoid comparing its own combination to itself, if its a new process then skip this check
-          if ((!this.process) || (this.process && process['id']!== this.process.id)){
-            const combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
-            this.sccAndAircraftCombinations.push(combination);
+    if (this.emissionsUnit) {
+      if (this.emissionUnit.emissionsProcesses) {
+        this.emissionsUnit.emissionsProcesses.forEach(process => {
+          this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
+          if(process['aircraftEngineTypeCode'] && process['sccCode']){
+            // if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
+            // to avoid comparing its own combination to itself, if its a new process then skip this check
+            if ((!this.process) || (this.process && process['id']!== this.process.id)){
+              const combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
+              this.sccAndAircraftCombinations.push(combination);
+            }
           }
-        }
-        if (this.process) {
-          this.emissionsProcessIdentifiers = this.emissionsProcessIdentifiers.filter(identifer => identifer.toString() !== this.process.emissionsProcessIdentifier);
-        }
-      })
+          if (this.process) {
+            this.emissionsProcessIdentifiers = this.emissionsProcessIdentifiers.filter(identifer => identifer.toString() !== this.process.emissionsProcessIdentifier);
+          }
+        })
+      }
     }
   }
 
