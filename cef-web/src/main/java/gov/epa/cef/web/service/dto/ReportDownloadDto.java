@@ -31,9 +31,24 @@ public class ReportDownloadDto implements Serializable{
     private String emissionsFactorText;
     private String emissionsComment;
     private String reportingPeriodType;
-    private String emissionsCalcMethod;
+    private String throughputUom;
+    private BigDecimal throughputAmount;
+	private String emissionsCalcMethod;
     private String lastModifiedBy;
 	private String lastModifiedDate;
+	
+    public String getThroughputUom() {
+		return throughputUom;
+	}
+	public void setThroughputUom(String throughputUom) {
+		this.throughputUom = throughputUom;
+	}
+	public BigDecimal getThroughputAmount() {
+		return throughputAmount;
+	}
+	public void setThroughputAmount(BigDecimal throughputAmount) {
+		this.throughputAmount = throughputAmount;
+	}
 	
     public String getLastModifiedBy() {
 		return lastModifiedBy;
