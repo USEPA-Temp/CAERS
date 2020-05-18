@@ -25,10 +25,14 @@
                                     <td>{{ report.userFullName }}</td>
                                     <td>{{ enumValue(report.reportAction) }}</td>
                                     <td>{{ report.comments }}</td>
-                                    <td *ngIf="!report.fileDeleted">
-                                        <a routerLink="." (click)="download(report)">{{ report?.fileName}}</a>
+                                    <td>
+                                        <div *ngIf="!report.fileDeleted">
+                                            <a routerLink="." (click)="download(report)">{{ report?.fileName}}</a>
+                                        </div>
+                                        <div *ngIf="report.fileDeleted">
+                                            {{ report?.fileName }}
+                                        </div>
                                     </td>
-                                    <td *ngIf="report.fileDeleted">{{ report?.filename }}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -49,7 +49,6 @@ export class ReportHistoryComponent extends BaseSortableTable implements OnInit 
     }
 
     download(data: ReportHistory) {
-        console.log(data)
         this.reportAttachmentService.downloadAttachment(this.facilitySite.id, data.reportAttachmentId)
         .subscribe(file => {
             this.fileDownloadService.downloadFile(file, data.fileName);
