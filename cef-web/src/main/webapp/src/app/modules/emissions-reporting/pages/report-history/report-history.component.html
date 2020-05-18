@@ -15,6 +15,7 @@
                                     <th scope="col" sortable="userFullName" (sort)="onSort($event)">User Name</th>
                                     <th scope="col" sortable="reportAction" (sort)="onSort($event)">Action</th>
                                     <th scope="col" sortable="comments" (sort)="onSort($event)">Comments</th>
+                                    <th scope="col" sortable="attachments" (sort)="onSort($event)">Attachments</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -24,6 +25,10 @@
                                     <td>{{ report.userFullName }}</td>
                                     <td>{{ enumValue(report.reportAction) }}</td>
                                     <td>{{ report.comments }}</td>
+                                    <td *ngIf="!report.fileDeleted">
+                                        <a routerLink="." (click)="download(report)">{{ report?.fileName}}</a>
+                                    </td>
+                                    <td *ngIf="report.fileDeleted">{{ report?.filename }}</td>
                                 </tr>
                             </tbody>
                         </table>

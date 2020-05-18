@@ -8,9 +8,26 @@
                 <div class="card-body" *ngIf="tableData">
                     <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
                                               [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
+                    <div class="float-right pr-3">
+                        <button class="btn btn-success btn-md my-3 ml-3" 
+                                aria-label="download report"
+                                (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
+                            Download Report
+                        </button>
+                    </div>
                 </div>
-
-                <div class="card-footer d-flex flex-row justify-content-end">
+            </div>
+            <div class="card  mb-3">
+                <div class="card-header text-center">
+                    <strong>Preparer/NEI Certifier Attachments</strong>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="true">
+                        <app-report-attachment-table [facilitySite]="facilitySite"></app-report-attachment-table>
+                    </div>
+                </div>
+            </div>
+                <div class="float-right pb-3 pr-3">
                     <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
                         <button *ngIf="userRole!=='Reviewer'"
                                 class="btn btn-primary btn-md my-3 ml-3"
@@ -22,7 +39,7 @@
                                 && userRole==='NEI Certifier'"
                                 [disabled]="!cromerrLoaded"
                                 id="certifyAndSubmit"
-                                aria-label="certify and submit"
+                                aria-label="certify and submit to SLT"
                                 class="btn btn-success btn-md my-3 ml-3">
                             Certify and Submit to SLT
                             <div *ngIf="!cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
@@ -38,15 +55,7 @@
                             Reopen Report
                         </button>
                     </div>
-                    <div>
-                        <button class="btn btn-success btn-md my-3 ml-3" 
-                                aria-label="download report"
-                                (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
-                            Download Report
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </div>

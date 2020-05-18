@@ -24,6 +24,8 @@ import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bu
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StripPeriodEndingPipe } from './pipes/strip-period-ending.pipe';
 import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.directive';
+import { FileAttachmentModalComponent } from './components/file-attachment-modal/file-attachment-modal.component';
+import { ReportAttachmentTableComponent } from './components/report-attachment-table/report-attachment-table.component';
 
 
 @NgModule({
@@ -39,10 +41,12 @@ import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.d
     PhoneNumberPipe,
     ErrorComponent,
     ReportSummaryTableComponent,
+    ReportAttachmentTableComponent,
     ValidationMessageComponent,
     WholeNumberValidatorDirective,
     NumberValidatorDirective,
     BaseConfirmationModalComponent,
+    FileAttachmentModalComponent,
     BulkUploadComponent,
     StripPeriodEndingPipe,
     LegacyUomValidatorDirective
@@ -59,6 +63,7 @@ import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.d
         SortableHeaderDirective,
         PhoneNumberPipe,
         ReportSummaryTableComponent,
+        ReportAttachmentTableComponent,
         ValidationMessageComponent,
         StripPeriodEndingPipe
     ],
@@ -71,7 +76,8 @@ import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.d
     ReactiveFormsModule,
   ],
   entryComponents: [
-    BaseConfirmationModalComponent
+    BaseConfirmationModalComponent,
+    FileAttachmentModalComponent
   ]
 })
 export class SharedModule {

@@ -55,6 +55,9 @@ public class EmissionsReport extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private List<ReportHistory> reportHistory = new ArrayList<>();
     
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
+    private List<ReportAttachment> reportAttachments = new ArrayList<>();
+    
     /***
      * Default constructor
      */
@@ -144,14 +147,26 @@ public class EmissionsReport extends BaseAuditEntity {
     public List<ReportHistory> getReportHistory() {
       	return this.reportHistory;
     }
-
-	  public void setReportHistory(List<ReportHistory> reportHistory) {
-	
-	      this.reportHistory.clear();
-	      if (reportHistory != null) {
-	          this.reportHistory.addAll(reportHistory);
-	      }
-	  }
+    
+    public void setReportHistory(List<ReportHistory> reportHistory) {
+    	
+    	this.reportHistory.clear();
+    	if (reportHistory != null) {
+    		this.reportHistory.addAll(reportHistory);
+    	}
+    }
+    
+    public List<ReportAttachment> getReportAttachments() {
+      	return this.reportAttachments;
+    }
+    
+    public void setReportAttachments(List<ReportAttachment> reportAttachments) {
+    	
+    	this.reportAttachments.clear();
+    	if (reportAttachments != null) {
+    		this.reportAttachments.addAll(reportAttachments);
+    	}
+    }
 
     public String getCromerrActivityId() {
         return cromerrActivityId;
