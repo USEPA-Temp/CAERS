@@ -70,8 +70,8 @@ public class ReportDownloadView extends BaseEntity{
     @Column(name = "throughput_uom", length = 20)
     private String throughputUom;
     
-    @Column(name = "throughput_amount")
-    private BigDecimal throughputAmount;
+    @Column(name = "throughput_value")
+    private BigDecimal throughputValue;
 
 	@Column(name = "total_emissions")
     private BigDecimal totalEmissions;
@@ -90,12 +90,12 @@ public class ReportDownloadView extends BaseEntity{
 		this.throughputUom = throughputUom;
 	}
 
-	public BigDecimal getThroughputAmount() {
-		return throughputAmount;
+	public BigDecimal getThroughputValue() {
+		return throughputValue;
 	}
 
-	public void setThroughputAmount(BigDecimal throughputAmount) {
-		this.throughputAmount = throughputAmount;
+	public void setThroughputValue(BigDecimal throughputValue) {
+		this.throughputValue = throughputValue;
 	}
 	
     public String getLastModifiedBy() {
