@@ -1,13 +1,5 @@
 package gov.epa.cef.web.service.mapper.cers;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -21,6 +13,13 @@ import net.exchangenetwork.schema.cer._1._2.OperatingDetailsDataType;
 import net.exchangenetwork.schema.cer._1._2.ProcessDataType;
 import net.exchangenetwork.schema.cer._1._2.ReleasePointApportionmentDataType;
 import net.exchangenetwork.schema.cer._1._2.ReportingPeriodDataType;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {CersReleasePointMapper.class})
 public interface CersEmissionsUnitMapper {
@@ -44,7 +43,7 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="reportingPeriods", target="reportingPeriod")
     @Mapping(source="releasePointAppts", target="releasePointApportionment")
     ProcessDataType processFromEmissionsProcess(EmissionsProcess source);
-    
+
     @Mapping(source="percent", target="averagePercentEmissions")
     @Mapping(source="releasePoint", target="releasePointApportionmentIdentification")
     ReleasePointApportionmentDataType rpApptFromReleasePointAppt(ReleasePointAppt source);
@@ -71,7 +70,7 @@ public interface CersEmissionsUnitMapper {
     OperatingDetailsDataType operatingDetailsFromOperatingDetail(OperatingDetail source);
 
     @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
-    @Mapping(source="totalEmissions", target="totalEmissions")
+    @Mapping(source="totalEmissions", target="totalEmissions", numberFormat = "0.0#####")
     @Mapping(source="emissionsUomCode.code", target="emissionsUnitofMeasureCode")
     @Mapping(source="emissionsFactor", target="emissionFactor")
     @Mapping(source="emissionsNumeratorUom.code", target="emissionFactorNumeratorUnitofMeasureCode")
@@ -80,7 +79,7 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="emissionsCalcMethodCode.code", target="emissionCalculationMethodCode")
     @Mapping(source="comments", target="emissionsComment")
     EmissionsDataType emissionsFromEmission(Emission source);
-    
+
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="unitIdentifier", target="identifier")
     @Mapping(source="facilitySite.programSystemCode.code", target="programSystemCode")
@@ -90,7 +89,7 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="emissionsProcessIdentifier", target="identifier")
     @Mapping(source="emissionsUnit.facilitySite.programSystemCode.code", target="programSystemCode")
     IdentificationDataType identificationFromEmissionsProcess(EmissionsProcess source);
-    
+
     // TODO: the XML appears to only support 1 operating detail per reporting period, might want to change our db schema
     default OperatingDetailsDataType operatingDetailsFromOperatingDetailList(Collection<OperatingDetail> source) {
 
