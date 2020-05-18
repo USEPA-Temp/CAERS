@@ -70,7 +70,7 @@ public class ReportDownloadView extends BaseEntity{
     @Column(name = "throughput_uom", length = 20)
     private String throughputUom;
     
-    @Column(name = "throughput_amount", length = 50)
+    @Column(name = "throughput_amount")
     private BigDecimal throughputAmount;
 
 	@Column(name = "total_emissions")
