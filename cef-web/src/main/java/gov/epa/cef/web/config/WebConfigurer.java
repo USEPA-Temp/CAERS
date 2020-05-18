@@ -7,7 +7,12 @@ import org.springframework.boot.web.server.WebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.task.support.TaskExecutorAdapter;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -15,6 +20,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.concurrent.Executor;
 
 import static java.net.URLDecoder.decode;
 
@@ -22,9 +28,17 @@ import static java.net.URLDecoder.decode;
  * Configuration of web application with Servlet 3.0 APIs.
  */
 @Configuration
-public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
+public class WebConfigurer implements ServletContextInitializer,
+        WebMvcConfigurer, WebServerFactoryCustomizer<WebServerFactory> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfigurer.class);
+
+    private final ApplicationContext applicationContext;
+
+    public WebConfigurer(ApplicationContext applicationContext) {
+
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
@@ -40,6 +54,14 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
 
         // When running in an IDE or with ./mvnw spring-boot:run, set location of the static web assets.
         setLocationForStaticAssets(server);
+    }
+
+    @Override
+    @DependsOn("taskScheduler")
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+
+        Executor executor = this.applicationContext.getBean(Executor.class);
+        configurer.setTaskExecutor(new TaskExecutorAdapter(executor));
     }
 
     private void setLocationForStaticAssets(WebServerFactory server) {
