@@ -99,7 +99,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
   }
 
   ngAfterContentChecked() {
-    if(this.emissionsUnit){
+    if(this.emissionsUnit && this.emissionUnit.emissionsProcesses){
       this.emissionsUnit.emissionsProcesses.forEach(process => {
         this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
         if(process['aircraftEngineTypeCode'] && process['sccCode']){
