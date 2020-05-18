@@ -5,7 +5,7 @@ export class ReportHistory {
   userRole: string;
   actionDate: Date;
   reportAction: string;
-  attachmentId: number;
+  reportAttachmentId: number;
   fileName: string;
   comments: string;
   fileDeleted: boolean;

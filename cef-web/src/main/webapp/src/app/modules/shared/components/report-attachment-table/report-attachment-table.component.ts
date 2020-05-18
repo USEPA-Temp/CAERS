@@ -45,7 +45,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
     }
 
     download(data: ReportHistory) {
-        this.reportAttachmentService.downloadAttachment(this.facilitySite.id, data.attachmentId)
+        this.reportAttachmentService.downloadAttachment(this.facilitySite.id, data.reportAttachmentId)
         .subscribe(file => {
             this.fileDownloadService.downloadFile(file, data.fileName);
             error => console.error(error);
