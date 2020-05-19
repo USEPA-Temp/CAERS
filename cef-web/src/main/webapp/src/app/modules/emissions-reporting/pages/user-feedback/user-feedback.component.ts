@@ -42,9 +42,24 @@ export class UserFeedbackComponent implements OnInit {
     this.route.paramMap
     .subscribe(params => {
       this.reportId = params.get('reportId');
-      this.facilityId = params.get('facilityId')
+      this.facilityId = params.get('facilityId');
 
       this.baseUrl = `/facility/${params.get('facilityId')}/report`;
+
+      // If a user visits the feedback page, a feedback submission will automatically be created (if one doesnt already exist for the
+      // report) to keep track of their page visit, the rest of the actual feedback values will remain null until actually submitted
+      this.userFeedbackService.retrieveByReportId(this.reportId).subscribe((report) => {
+        if (report === null) {
+          const saveUserFeedback = new UserFeedback();
+          saveUserFeedback.reportId = this.reportId;
+          saveUserFeedback.hasSubmitted = false;
+          saveUserFeedback.hasVisitedPage = true;
+          this.feedbackForm.reset();
+          Object.assign(saveUserFeedback, this.feedbackForm.value)
+          this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
+          });
+        }
+      });
     });
 
     // emits the report info to the sidebar
@@ -58,20 +73,39 @@ export class UserFeedbackComponent implements OnInit {
   }
 
   onSubmit()  {
-    const saveUserFeedback = new UserFeedback();
-    saveUserFeedback.reportId = this.reportId;
-    Object.assign(saveUserFeedback, this.feedbackForm.value);
-
-    this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
-      this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
-      this.sharedService.emitHideBoolChange(false);
-      this.router.navigateByUrl(this.baseUrl);
-    });
+     this.userFeedbackService.retrieveByReportId(this.reportId).subscribe((report) => {
+       if (report !== null) {
+        const saveUserFeedback = new UserFeedback();
+        saveUserFeedback.reportId = this.reportId;
+        saveUserFeedback.hasSubmitted = true;
+        saveUserFeedback.hasVisitedPage = true;
+        saveUserFeedback.id = report.id;
+        Object.assign(saveUserFeedback, this.feedbackForm.value);
+        this.userFeedbackService.update(saveUserFeedback).subscribe(() => {
+          this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
+          this.sharedService.emitHideBoolChange(false);
+          this.router.navigateByUrl(this.baseUrl);
+        });
+       }
+     });
   }
 
   onNoThanks() {
-    this.sharedService.emitHideBoolChange(false);
-    this.router.navigateByUrl(this.baseUrl);
+     this.userFeedbackService.retrieveByReportId(this.reportId).subscribe((report) => {
+      if (report !== null) {
+        const saveUserFeedback = new UserFeedback();
+        saveUserFeedback.reportId = this.reportId;
+        saveUserFeedback.hasSubmitted = true;
+        saveUserFeedback.hasVisitedPage = true;
+        saveUserFeedback.id = report.id;
+        this.feedbackForm.reset();
+        Object.assign(saveUserFeedback, this.feedbackForm.value)
+        this.userFeedbackService.update(saveUserFeedback).subscribe(() => {
+              this.sharedService.emitHideBoolChange(false);
+              this.router.navigateByUrl(this.baseUrl);
+        });
+      }
+    });
   }
 
 }

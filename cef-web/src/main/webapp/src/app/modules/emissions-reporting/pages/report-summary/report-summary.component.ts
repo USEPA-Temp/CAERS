@@ -14,6 +14,7 @@ import { EmissionsReportingService } from 'src/app/core/services/emissions-repor
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 import { Subject } from 'rxjs';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { UserFeedbackService } from 'src/app/core/services/user-feedback.service';
 
 declare const initCromerrWidget: any;
 
@@ -30,8 +31,10 @@ export class ReportSummaryComponent implements OnInit {
     cromerrLoaded = false;
     cromerrLoadedEmitter = new Subject<boolean>();
     userRole: string;
-    feedbackSubmitted = true;
+    feedbackSubmitted: boolean;
     feedbackEnabled: boolean;
+    hasVisitedFeedbackPage: boolean;
+    feedbackUrl: string;
 
     constructor(
         private router: Router,
@@ -44,12 +47,18 @@ export class ReportSummaryComponent implements OnInit {
         private modalService: NgbModal,
         private emissionsReportingService: EmissionsReportingService,
         private reportDownloadService: ReportDownloadService,
-        private propertyService: ConfigPropertyService) { }
+        private propertyService: ConfigPropertyService,
+        private userFeedbackService: UserFeedbackService) { }
 
     ngOnInit() {
         this.cromerrLoadedEmitter
         .subscribe(result => {
             this.cromerrLoaded = result;
+        });
+
+        this.route.paramMap
+        .subscribe(map => {
+            this.feedbackUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/userfeedback`;
         });
 
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
@@ -61,25 +70,28 @@ export class ReportSummaryComponent implements OnInit {
                 this.propertyService.retrieveUserFeedbackEnabled()
                 .subscribe(result => {
                     this.feedbackEnabled = result;
+                    this.userFeedbackService.retrieveByReportId(this.facilitySite.emissionsReport.id.toString()).subscribe((userFeedback) => {
+                        if (userFeedback !== null) {
+                            this.feedbackSubmitted = userFeedback.hasSubmitted;
+                            this.hasVisitedFeedbackPage = userFeedback.hasVisitedPage;
+                        } else {
+                            this.feedbackSubmitted = false;
+                            this.hasVisitedFeedbackPage = false;
+                        }
+                        this.userService.getCurrentUserNaasToken()
+                        .subscribe(userToken => {
+                            this.userContextService.getUser().subscribe( user => {
+                                this.userRole = user.role;
+                                if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
 
-                    this.userService.getCurrentUserNaasToken()
-                    .subscribe(userToken => {
-                        this.userContextService.getUser().subscribe( user => {
-                            this.userRole = user.role;
-
-                            if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                                if (this.feedbackEnabled) {
-                                    this.feedbackSubmitted = false;
+                                    initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
+                                        this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
+                                        this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted)
                                 }
-
-                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
-                                    this.cromerrLoadedEmitter, this.feedbackSubmitted);
-                            }
+                            });
                         });
                     });
                 });
-
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                     .subscribe(pollutants => {
                     // filter out radiation pollutants to show separately at the end of the table
@@ -136,6 +148,10 @@ export class ReportSummaryComponent implements OnInit {
                 this.facilitySite.emissionsReport.year + '_' + 'Emissions_Report' + '_Submission_In_Progress');
             }
         });
+    }
+
+    navigateToFeedbackPage(){
+        this.router.navigateByUrl(this.feedbackUrl);
     }
 
 }

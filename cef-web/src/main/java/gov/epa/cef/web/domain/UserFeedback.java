@@ -48,10 +48,24 @@ public class UserFeedback extends BaseAuditEntity {
     @Column(name = "quality_assurance_checks")
     private Long qualityAssuranceChecks;
     
+    @Column(name = "has_submitted")
+    private Boolean hasSubmitted;
+    
+    @Column(name = "has_visited_page")
+    private Boolean hasVisitedPage;
+    
 	/***
      * Default constructor
      */
     public UserFeedback() {}
+    
+	public Boolean getHasVisitedPage() {
+		return hasVisitedPage;
+	}
+
+	public void setHasVisitedPage(Boolean hasVisitedPage) {
+		this.hasVisitedPage = hasVisitedPage;
+	}
 
 	public Long getReportId() {
 		return reportId;
@@ -139,6 +153,14 @@ public class UserFeedback extends BaseAuditEntity {
 
 	public void setQualityAssuranceChecks(Long qualityAssuranceChecks) {
 		this.qualityAssuranceChecks = qualityAssuranceChecks;
+	}
+	
+	public Boolean getHasSubmitted() {
+		return hasSubmitted;
+	}
+
+	public void setHasSubmitted(Boolean hasSubmitted) {
+		this.hasSubmitted = hasSubmitted;
 	}
     
 }

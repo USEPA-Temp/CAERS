@@ -1,4 +1,5 @@
 export class UserFeedback {
+    id: number;
 	reportId: string;
 	beneficialFunctionalityComments: string;
     difficultFunctionalityComments: string;
@@ -10,4 +11,6 @@ export class UserFeedback {
     controlsAndControlPathAssignments: number;
     qualityAssuranceChecks: number;
     overallReportingTime: number;
+    hasSubmitted: boolean;
+    hasVisitedPage: boolean;
 }

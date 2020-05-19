@@ -22,4 +22,11 @@ public interface UserFeedbackService {
 	
 	void removeReportFromUserFeedback(Long reportId);
 	
+    /**
+     * Update an existing user feedback by id
+     * @param dto
+     * @return
+     */
+    UserFeedbackDto update(UserFeedbackDto dto);
+	
 }
