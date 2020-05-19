@@ -9,8 +9,6 @@ CREATE TABLE user_feedback
   controls_and_control_paths						SMALLINT,
   quality_assurance_checks							SMALLINT,
   overall_reporting_time							SMALLINT,
-  has_submitted										BOOLEAN,
-  has_visited_page									BOOLEAN,
   beneficial_functionality_description				VARCHAR(2000),
   difficult_application_functionality_description 	VARCHAR(2000),
   additional_features_or_enhancements_description 	VARCHAR(2000),
