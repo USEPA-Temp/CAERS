@@ -1,8 +1,6 @@
 package gov.epa.cef.web.service;
 
 import java.io.OutputStream;
-import java.util.List;
-
 import gov.epa.cef.web.service.dto.ReportAttachmentDto;
 import gov.epa.cef.web.util.TempFile;
 
@@ -22,19 +20,12 @@ public interface ReportAttachmentService {
      */
 	void writeFileTo(Long id, OutputStream outputStream);
     
-    /***
-     * Return list of report attachment records for the chosen report id
-     * @param reportId
-     * @return
-     */
-//    List<ReportAttachmentDto> findAttachmentsByEmissionsReportId(Long reportId);
-    
     /**
      * Save a report attachment
      * @param dto
      * @return
      */
-    ReportAttachmentDto saveAttachment(TempFile file, String comments, ReportAttachmentDto metadata);
+    ReportAttachmentDto saveAttachment(TempFile file, ReportAttachmentDto metadata);
     
     /**
      * Delete an report attachment record for a given id

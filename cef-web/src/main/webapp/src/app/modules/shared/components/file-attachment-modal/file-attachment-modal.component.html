@@ -17,8 +17,9 @@
       <div class="col-sm-6 col-md-10">
       <div class="custom-file">
         <input #fileAttachment id="file-attachment" type="file" enctype="multipart/form-data"
-              class="form-control" (change)="onFileChanged($event.target.files)">
+              class="form-control" (change)="onFileChanged($event.target.files)" formControlName="attachment">
         <label for="file-attachment" class="custom-file-label">Click to browse...</label>
+        <app-validation-message [control]="attachmentForm.get('attachment')"></app-validation-message>
       </div>
       </div>
     </div>
@@ -30,51 +31,37 @@
         (200 character limit)
       </div>
     </div>
-  
-      <div *ngIf="uploadFailed">
-        <!-- <div class="alert alert-danger" role="alert">
-        </div> -->
 
-        <div class="text-validation-error">
-          <div class="validation-user-errors"
-                *ngIf="uploadUserErrors?.length">
-              <div class="h5 font-weight-bolder">
-                  <span>Error(s)</span>
-              </div>
-              <div id="id-user-errors" [ngbCollapse]="bsflags.showUserErrors === false">
-                  <ol>
-                      <li *ngFor="let error of uploadUserErrors" style="color: #BF211E;">
-                          <span class="font-weight-bold mr-1">Selected File:</span>
-                          <span [textContent]="error.attachmentString"></span>
-                          <span class="font-weight-bold ml-2 mr-1">Message:</span>
-                          <span [textContent]="error.message"></span>
-                      </li>
-                  </ol>
-              </div>
-          </div>
+    <div *ngIf="uploadFailed">
+      <div class="validation-user-errors" *ngIf="uploadUserErrors.length">
+        <div class="h5 font-weight-bolder">
+            <span>Error(s)</span>
         </div>
-
-        <div class="validation-system-errors" *ngIf="uploadSystemErrors?.length">
-            <div class="h5 font-weight-bolder">
-              <span>Diagnostic Error(s)</span>
-              <button type="button" class="ml-2 btn btn-sm btn-link text-validation-error"
-                      (click)="bsflags.showSystemErrors = !bsflags.showSystemErrors"
-                      [attr.aria-expanded]="bsflags.showSystemErrors" aria-controls="id-system-errors">
-                  <span *ngIf="bsflags.showSystemErrors === false">Show List</span>
-                  <span *ngIf="bsflags.showSystemErrors">Hide List</span>
-              </button>
-            </div>
-            <div id="id-system-errors" [ngbCollapse]="bsflags.showSystemErrors === false">
-              <ol>
-                  <li *ngFor="let error of uploadSystemErrors">
-                      <span class="font-weight-bold ml-2 mr-1">Message:</span>
-                      <span [textContent]="error.message"></span>
-                  </li>
-              </ol>
-            </div>
+        <div id="id-user-errors" [ngbCollapse]="bsflags.showUserErrors === false">
+            <ol>
+                <li *ngFor="let error of uploadUserErrors" style="color: #BF211E;">
+                    <span class="font-weight-bold ml-2 mr-1">Message:</span>
+                    <span [textContent]="error.message"></span>
+                </li>
+            </ol>
         </div>
-
       </div>
+      
+      <div class="validation-system-errors" *ngIf="uploadSystemErrors?.length">
+          <div class="h5 font-weight-bolder">
+            <span>Diagnostic Error(s): </span>
+          </div>
+          <div id="id-system-errors" [ngbCollapse]="bsflags.showSystemErrors === false">
+            <ol>
+                <li *ngFor="let error of uploadSystemErrors" style="color: #BF211E;">
+                    <span class="font-weight-bold ml-2 mr-1">Message:</span>
+                    <span [textContent]="error.message"></span>
+                </li>
+            </ol>
+          </div>
+      </div>
+
+    </div>
   </div>
 
   <div class="modal-footer">

@@ -1,13 +1,18 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.config.CefConfig;
+import gov.epa.cef.web.domain.AttachmentMIMEType;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.domain.ReportHistory;
+import gov.epa.cef.web.exception.NotExistException;
+import gov.epa.cef.web.exception.ReportAttachmentValidationException;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.ReportAttachmentService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.ReportAttachmentDto;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.ReportAttachmentMapper;
 import gov.epa.cef.web.service.mapper.ReportHistoryMapper;
 import gov.epa.cef.web.service.mapper.ReportSummaryMapper;
@@ -17,13 +22,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.Collections;
+
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 
 @Service
 @Transactional
@@ -38,17 +48,19 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
     private ReportHistoryRepository reportHistoryRepo;
 
     @Autowired
-    ReportSummaryMapper reportSummaryMapper;
+    private ReportSummaryMapper reportSummaryMapper;
 
     @Autowired
-    ReportHistoryMapper reportHistoryMapper;
+    private ReportHistoryMapper reportHistoryMapper;
     
     @Autowired
-    ReportAttachmentMapper reportAttachmentMapper;
+    private ReportAttachmentMapper reportAttachmentMapper;
     
     @Autowired
     private ReportService reportService;
     
+    @Autowired
+    private CefConfig cefConfig;
     
     /***
      * Return attachment for the chosen attachment id
@@ -60,7 +72,6 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
 		
 		return reportAttachmentMapper.toDto(attachment);
 	}
-    
     
     /***
      * Write file to output stream
@@ -88,25 +99,50 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
      * @param file
      * @return
      */
-    public ReportAttachmentDto saveAttachment(TempFile file, String comments, ReportAttachmentDto metadata) {
+    public ReportAttachmentDto saveAttachment(@NotNull TempFile file, @NotNull ReportAttachmentDto metadata) {
+
+    	Preconditions.checkArgument(file != null, "File can not be null");
+    	
     	ReportAttachment attachment = reportAttachmentMapper.fromDto(metadata);
     	attachment.getEmissionsReport().setId(metadata.getReportId());
-    	
-    	 if (file != null) {
 
-             try {
+		 try {
+		
+			 attachment.setAttachment(file.createBlob());
+		
+		 } catch (IOException e) {
+		
+		     throw new IllegalStateException(e);
+		 }
+		 
+		 if (file.length() > this.cefConfig.getAttachmentMaxSize()) {
+         	String msg = String.format("The file size %d MB exceeds the maximum file upload size %d MB.",
+         			(file.length()/1048576), this.cefConfig.getAttachmentMaxSize()/1048576);
 
-            	 attachment.setAttachment(file.createBlob());
+         	throw new ReportAttachmentValidationException(
+                     Collections.singletonList(WorksheetError.createSystemError(msg)));
+          }
+         
+         boolean acceptedType = false;
+         String fileName = metadata.getFileName();
+		 	for (AttachmentMIMEType type : AttachmentMIMEType.values()) {
+	            if (type.label().equals(metadata.getFileType())) {
+	            	acceptedType = true;
+	            	break;
+	            }
+	         }
+	        
+	        if (!acceptedType) {
+	        	String msg = String.format("The file extension '%s' is not in an accepted file format.",
+	        			(fileName.substring(fileName.indexOf('.'), fileName.length())));
 
-             } catch (IOException e) {
-
-                 throw new IllegalStateException(e);
-             }
-         }
-    	
+	        	throw new ReportAttachmentValidationException(
+	                    Collections.singletonList(WorksheetError.createSystemError(msg)));
+	        }
+		 
 		ReportAttachment result = reportAttachmentsRepo.save(attachment);
 		
-		reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT, comments, result);
+		reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT, attachment.getComments(), result);
 		
 		return reportAttachmentMapper.toDto(result);
 
@@ -117,9 +153,10 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
      * @param id
      */
     public void deleteAttachment(Long id) {
-    	ReportAttachment attachment = reportAttachmentsRepo.findById(id).orElse(null);
+    	ReportAttachment attachment = reportAttachmentsRepo.findById(id)
+    			.orElseThrow(() -> new NotExistException("Report Attachment", id));
     	
-    	String comment = "\"" + attachment.getFileName() + "\" was been deleted.";
+    	String comment = "\"" + attachment.getFileName() + "\" was deleted.";
     	
     	reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT_DELETED, comment);
     	ReportHistory history = reportHistoryRepo.findByAttachmentId(attachment.getId());

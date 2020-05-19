@@ -51,7 +51,7 @@ public class ReportHistory extends BaseAuditEntity {
 	@Column(name = "attachment_id")
 	private Long reportAttachmentId;
 	
-	@Column(name = "file_name", length = 50)
+	@Column(name = "file_name", length = 255)
 	private String fileName;
 	
 	@Column(name = "file_deleted")

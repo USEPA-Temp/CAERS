@@ -17,8 +17,9 @@ interface PleaseWaitConfig {
     keepAliveTicker: number;
 }
 
-interface AttachmentError {
-    attachmentString: string;
+interface WorksheetError {
+    worksheet: string;
+    row: number;
     message: string;
     systemError: boolean;
 }
@@ -36,7 +37,6 @@ export class FileAttachmentModalComponent implements OnInit {
   @Input() confirmButtonText = 'Upload';
   @Input() facilitySite: FacilitySite;
   attachment: ReportAttachment;
-  acceptedFileFormats: string[];
   selectedFile: File = null;
   bsflags: any;
 
@@ -45,8 +45,8 @@ export class FileAttachmentModalComponent implements OnInit {
 
   uploadFile: string;
   uploadFailed: boolean;
-  uploadUserErrors: AttachmentError[];
-  uploadSystemErrors: AttachmentError[];
+  uploadUserErrors: WorksheetError[];
+  uploadSystemErrors: WorksheetError[];
 
   @ViewChild('PleaseWaitModal', {static: true})
   pleaseWaitTemplate: TemplateRef<any>;
@@ -54,6 +54,7 @@ export class FileAttachmentModalComponent implements OnInit {
   pleaseWait: PleaseWaitConfig;
 
   attachmentForm = this.fb.group({
+    attachment: [null, [Validators.required]],
     comments: ['', [Validators.maxLength(200)]]
   });
 
@@ -72,13 +73,6 @@ export class FileAttachmentModalComponent implements OnInit {
   ngOnInit() {
     bsCustomFileInput.init('#file-attachment');
 
-    this.acceptedFileFormats = [
-      '.xlsx',
-      '.csv',
-      '.docx',
-      '.txt',
-      '.pdf'
-    ];
   }
 
   onClose() {
@@ -117,8 +111,8 @@ export class FileAttachmentModalComponent implements OnInit {
       this.reportAttachmentService.uploadAttachment(
         this.facilitySite.id, reportAttachment, this.selectedFile)
         .subscribe(respEvent =>
-          this. onUploadEvent(respEvent),
-          errorResp => this.onUploadError(errorResp)
+          this.onUploadEvent(respEvent),
+          errorResp => this.onUploadError(errorResp),
         );
     }
   }
@@ -246,11 +240,9 @@ export class FileAttachmentModalComponent implements OnInit {
       fileReader.readAsText(this.selectedFile, 'UTF-8');
 
       fileReader.onload = () => {
-          const fileName = file.item(0).name.toLowerCase();
-          let fileFormat = this.checkFileFormat(fileName);
-          let fileSize = this.checkFileSize(this.selectedFile);
+          let fileNameLength = this.checkFileNameLenght(file.item(0).name);
 
-          if (!fileFormat || fileSize) {
+          if (fileNameLength) {
 
             this.bsflags.showUserErrors = true;
             this.uploadFailed = true;
@@ -263,37 +255,17 @@ export class FileAttachmentModalComponent implements OnInit {
           console.log(error);
       };
     }
+
   }
 
-  checkFileFormat(fileName: string) {
-    let acceptedFormat = false;
+  checkFileNameLenght(fileName: string) {
+    let nameLength = fileName.length;
+    const maxLength = 255;
 
-    for (const format of this.acceptedFileFormats) {
-      if (fileName.endsWith(format)) {
-        acceptedFormat = true;
-        break;
-      }
-    }
-
-    if (!acceptedFormat) {
-      this.uploadUserErrors.push({ attachmentString: fileName,
-          message: 'The file extension "' + fileName.substring(fileName.indexOf('.'), fileName.length + 1)
-                    + '" is not in an accepted file format.',
+    if (nameLength > maxLength) {
+      this.uploadUserErrors.push({ worksheet: fileName, row: null,
+          message: 'File name "' + fileName + '" exceeds the maximum file name length of ' + maxLength + ' characters.',
           systemError: false});
-    }
-
-    return acceptedFormat;
-  }
-
-  checkFileSize(file) {
-    const maxFileSize = 1024 * 1024 * 10; // 10 MB
-    let fileSize = Math.round(file.size / 1048576); //MB
-    //1048576 byte = 1 MB, 1024 byte = 1 KB
-
-    if (fileSize > maxFileSize) {
-      this.uploadUserErrors.push({ attachmentString: file.name,
-        message: 'The selected file size, ' + fileSize + ' MB, exceeds maximum allowable upload size '  + maxFileSize + ' MB',
-        systemError: false});
 
       return true;
     }

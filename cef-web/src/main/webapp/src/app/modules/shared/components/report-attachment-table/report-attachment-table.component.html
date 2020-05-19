@@ -21,7 +21,7 @@
                 <a routerLink="." (click)="download(item)">{{ item.fileName }}</a>
             </td>
             <td>{{ item.comments }}</td>
-            <ng-container *ngIf="reportStatus!=='APPROVED' && userRole !== 'Reviewer'">
+            <ng-container *ngIf="reportStatus !== 'APPROVED' && userRole !== 'Reviewer'">
                 <td>
                     <a routerLink="." (click)="openDeleteModal(item.reportAttachmentId, item.fileName)"
                         [attr.aria-label]="'delete attachment' + item?.filename">
@@ -33,7 +33,7 @@
         </tbody>
     </table>
 </div>
-<div class="float-right pr-3" *ngIf="userRole !== 'Reviewer' && facilitySite.emissionsReport.status==='IN_PROGRESS'">
+<div class="float-right pr-3" *ngIf="userRole !== 'Reviewer' && reportStatus !== 'APPROVED'">
     <button class="btn btn-success btn-md my-3 ml-3" (click)="openAttachmentModal()">
         Attach Report Document
     </button>

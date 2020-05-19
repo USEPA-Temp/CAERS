@@ -24,7 +24,7 @@ public class ReportAttachment extends BaseAuditEntity {
     @JoinColumn(name = "report_id")
     private EmissionsReport emissionsReport;
 
-	@Column(name = "file_name", length = 50)
+	@Column(name = "file_name", length = 255)
 	private String fileName;
 	
 	@Lob
@@ -33,6 +33,9 @@ public class ReportAttachment extends BaseAuditEntity {
 	
 	@Column(name = "file_type", length = 1000)
 	private String fileType;
+	
+	@Column(name = "comments", length = 200)
+	private String comments;
 	
 	/***
      * Default constructor
@@ -69,6 +72,14 @@ public class ReportAttachment extends BaseAuditEntity {
 
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 
 }
