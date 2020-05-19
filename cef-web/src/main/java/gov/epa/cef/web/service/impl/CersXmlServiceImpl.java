@@ -142,16 +142,24 @@ public class CersXmlServiceImpl implements CersXmlService {
 				ca.setControlApproachDescription(assignment.getControl().getDescription());
 
 				//add to the capture efficiency and %effectiveness to the control approach
-				if (ca.getPercentControlApproachCaptureEfficiency() == null) {
-					ca.setPercentControlApproachCaptureEfficiency(new BigDecimal(assignment.getControl().getPercentCapture().toString()));
-				} else {
-					ca.setPercentControlApproachCaptureEfficiency(ca.getPercentControlApproachCaptureEfficiency().add(new BigDecimal(assignment.getControl().getPercentCapture().toString())));
+				if (assignment.getControl().getPercentCapture() != null) {
+					if (ca.getPercentControlApproachCaptureEfficiency() == null) {
+						ca.setPercentControlApproachCaptureEfficiency(
+								new BigDecimal(assignment.getControl().getPercentCapture().toString()));
+					} else {
+						ca.setPercentControlApproachCaptureEfficiency(ca.getPercentControlApproachCaptureEfficiency().add(
+								new BigDecimal(assignment.getControl().getPercentCapture().toString())));
+					}
 				}
 
-				if (ca.getPercentControlApproachEffectiveness() == null) {
-					ca.setPercentControlApproachEffectiveness(new BigDecimal(assignment.getControl().getPercentControl().toString()));
-				} else {
-					ca.setPercentControlApproachEffectiveness(ca.getPercentControlApproachEffectiveness().add(new BigDecimal(assignment.getControl().getPercentControl().toString())));
+				if (assignment.getControl().getPercentControl() != null) {
+					if (ca.getPercentControlApproachEffectiveness() == null) {
+						ca.setPercentControlApproachEffectiveness(
+								new BigDecimal(assignment.getControl().getPercentControl().toString()));
+					} else {
+						ca.setPercentControlApproachEffectiveness(ca.getPercentControlApproachEffectiveness().add(
+								new BigDecimal(assignment.getControl().getPercentControl().toString())));
+					}
 				}
 
 				//add a new control measure to the control measure list
