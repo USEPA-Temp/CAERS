@@ -85,7 +85,7 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
     	
         assertNotNull(dto);
         
-        this.rptAttachmentSvc.saveAttachment(temp, comments, dto);
+        this.rptAttachmentSvc.saveAttachment(temp, dto);
 
         List<Map<String, Object>> reportAttachments = this.jdbcTemplate.queryForList(
                 "select * from report_attachment", new MapSqlParameterSource());
