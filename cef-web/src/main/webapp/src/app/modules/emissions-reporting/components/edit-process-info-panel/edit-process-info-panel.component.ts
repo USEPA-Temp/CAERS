@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges,AfterContentChecked } from '@angular/core';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
@@ -18,7 +18,7 @@ import { EmissionUnit } from 'src/app/shared/models/emission-unit';
   templateUrl: './edit-process-info-panel.component.html',
   styleUrls: ['./edit-process-info-panel.component.scss']
 })
-export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
+export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterContentChecked{
   @Input() process: Process;
   @Input() unitIdentifier: string;
   @Input() emissionsUnit: EmissionUnit;
@@ -77,10 +77,9 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     private emissionUnitService: EmissionUnitService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder) {}
 
   ngOnInit() {
-
     this.lookupService.retrieveOperatingStatus()
     .subscribe(result => {
       this.operatingStatusValues = result;
@@ -89,28 +88,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilityOpCode = data.facilitySite.operatingStatusCode;
       this.emissionsReportYear = data.facilitySite.emissionsReport.year;
-      this.emissionUnitService.retrieveForFacility(data.facilitySite.id).subscribe(emissionUnits => {
-        emissionUnits.forEach(eu => {
-          eu['emissionsProcesses'].forEach(process =>{
-            this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
-
-            if(process['aircraftEngineTypeCode'] && process['sccCode']){
-              // if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
-              // to avoid comparing its own combination to itself, if its a new process then skip this check
-              if ((!this.process) || (this.process && process['id']!== this.process.id)){
-                const combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
-                this.sccAndAircraftCombinations.push(combination);
-              }
-            }
-          });
-
-          // if a process is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
-          if (this.process) {
-            this.emissionsProcessIdentifiers = this.emissionsProcessIdentifiers.filter(identifer => identifer.toString() !== this.process.emissionsProcessIdentifier);
-          }
-
-        });
-      });
     });
 
     // SCC codes associated with Aircraft Engine Type Codes
@@ -119,6 +96,25 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges {
     ];
 
     this.checkAircraftSCC();
+  }
+
+  ngAfterContentChecked() {
+    if(this.emissionsUnit && this.emissionsUnit.emissionsProcesses){
+      this.emissionsUnit.emissionsProcesses.forEach(process => {
+        this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
+        if(process['aircraftEngineTypeCode'] && process['sccCode']){
+          // if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
+          // to avoid comparing its own combination to itself, if its a new process then skip this check
+          if ((!this.process) || (this.process && process['id']!== this.process.id)){
+            const combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
+            this.sccAndAircraftCombinations.push(combination);
+          }
+        }
+        if (this.process) {
+          this.emissionsProcessIdentifiers = this.emissionsProcessIdentifiers.filter(identifer => identifer.toString() !== this.process.emissionsProcessIdentifier);
+        }
+      })
+    }
   }
 
   ngOnChanges() {
