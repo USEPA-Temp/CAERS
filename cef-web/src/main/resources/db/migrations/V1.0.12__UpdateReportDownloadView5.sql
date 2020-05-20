@@ -19,3 +19,15 @@ SELECT row_number() OVER (ORDER BY p.pollutant_cas_id) AS id,
     e.last_modified_date,
     replace(e.emissions_factor_text::text, ','::text, ''::text) AS emissions_factor_text,
     replace(e.comments::text, ','::text, ''::text) AS emissions_comment,
+    e.total_emissions
+   FROM emission e
+     JOIN calculation_method_code cmc ON cmc.code::text = e.emissions_calc_method_code::text
+     JOIN reporting_period repper ON repper.id = e.reporting_period_id
+     JOIN reporting_period_code repcode ON repper.reporting_period_type_code::text = repcode.code::text
+     JOIN emissions_process ep ON ep.id = repper.emissions_process_id
+     JOIN emissions_unit eu ON ep.emissions_unit_id = eu.id
+     JOIN facility_site fs ON fs.id = eu.facility_site_id
+     JOIN emissions_report er ON er.id = fs.report_id
+     JOIN pollutant p ON p.pollutant_code::text = e.pollutant_code::text
+  WHERE ep.status_code::text = 'OP'::text
+  ORDER BY er.id, eu.unit_identifier, ep.emissions_process_identifier, p.pollutant_code;
