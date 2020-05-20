@@ -9,6 +9,7 @@ import { FileDownloadService } from 'src/app/core/services/file-download.service
 import { ReportAttachmentService } from 'src/app/core/services/report-attachment.service';
 import { ReportService } from 'src/app/core/services/report.service';
 import { ReportHistory } from 'src/app/shared/models/report-history';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-report-attachment-table',
@@ -27,6 +28,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
                 private reportService: ReportService,
                 private reportAttachmentService: ReportAttachmentService,
                 private fileDownloadService: FileDownloadService,
+                private sharedService: SharedService,
                 private modalService: NgbModal) {
         super();
      }
@@ -45,7 +47,8 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
     }
 
     download(data: ReportHistory) {
-        this.reportAttachmentService.downloadAttachment(this.facilitySite.id, data.reportAttachmentId)
+        this.sharedService.emitReportIdChange(this.facilitySite.emissionsReport.id);
+        this.reportAttachmentService.downloadAttachment(data.reportAttachmentId)
         .subscribe(file => {
             this.fileDownloadService.downloadFile(file, data.fileName);
             error => console.error(error);
@@ -54,7 +57,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
 
     openAttachmentModal() {
         const modalRef = this.modalService.open(FileAttachmentModalComponent, {size: 'lg', backdrop: 'static'});
-        modalRef.componentInstance.facilitySite = this.facilitySite;
+        modalRef.componentInstance.reportId = this.facilitySite.emissionsReport.id;
         modalRef.componentInstance.title = `Attach Report Document`;
         modalRef.componentInstance.message = `Search for document file to be attached to the ${this.facilitySite.emissionsReport.year} Emissions Report for ${this.facilitySite.name}.`;
         modalRef.result.then(() => {
@@ -77,6 +80,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
     }
 
     deleteAttachment(id: number) {
+        this.sharedService.emitReportIdChange(this.facilitySite.emissionsReport.id);
         this.reportAttachmentService.deleteAttachment(id).subscribe(() => {
 
             this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)

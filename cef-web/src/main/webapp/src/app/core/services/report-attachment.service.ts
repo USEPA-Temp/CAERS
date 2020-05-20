@@ -2,34 +2,36 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReportAttachment } from 'src/app/shared/models/report-attachment';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportAttachmentService {
+  reportId: string;
 
-  private baseUrl = 'api/reportAttachments';  // URL to web api
+  private baseUrl = 'api/reports/reportId/attachments';  // URL to web api
 
-  constructor(private http: HttpClient) { }
+  constructor(private sharedService: SharedService,
+              private http: HttpClient) {
 
-  /** GET report attachment from server for specified report and facility */
-  retrieveAttachments(reportId: number, facilitySiteId: number): Observable<ReportAttachment[]> {
-    const url = `${this.baseUrl}/report/${reportId}/facilitySiteId/${facilitySiteId}`;
-    return this.http.get<ReportAttachment[]>(url);
+    this.sharedService.reportIdChangeEmitted$.subscribe(reportId => {
+      this.reportId = reportId.toString();
+      this.baseUrl = 'api/reports/' + this.reportId + '/attachments';
+    });
   }
 
   /** GET download specified report attachment */
-  downloadAttachment(facilitySiteId: number, attachmentId: number): Observable<any> {
-    const url = `${this.baseUrl}/facilitySiteId/${facilitySiteId}/${attachmentId}`;
-    return this.http.get(url, {responseType: 'blob'});
+  downloadAttachment(attachmentId: number, ): Observable<any> {
+    const url = `${this.baseUrl}/${attachmentId}`;
+    return this.http.get(url, { responseType: 'blob' });
   }
 
   /** POST upload report attachment */
-  uploadAttachment( facilitySiteId: number,
-                    reportAttachment: ReportAttachment,
+  uploadAttachment( reportAttachment: ReportAttachment,
                     attachment: File): Observable<HttpEvent<ReportAttachment>> {
 
-    const url = `${this.baseUrl}/facilitySiteId/${facilitySiteId}/uploadAttachment`;
+    const url = `${this.baseUrl}/uploadAttachment`;
 
     const formData = new FormData();
     formData.append('file', attachment);

@@ -3,11 +3,11 @@ import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstra
 import { Validators, FormBuilder } from '@angular/forms';
 import bsCustomFileInput from 'bs-custom-file-input';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { EMPTY } from 'rxjs';
 import { UserService } from 'src/app/core/services/user.service';
 import { ReportAttachmentService } from 'src/app/core/services/report-attachment.service';
 import { ReportAttachment } from 'src/app/shared/models/report-attachment';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 interface PleaseWaitConfig {
     modal: NgbModalRef;
@@ -35,7 +35,7 @@ export class FileAttachmentModalComponent implements OnInit {
   @Input() message: string;
   @Input() cancelButtonText = 'Cancel';
   @Input() confirmButtonText = 'OK';
-  @Input() facilitySite: FacilitySite;
+  @Input() reportId: number;
   attachment: ReportAttachment;
   selectedFile: File = null;
   bsflags: any;
@@ -62,6 +62,7 @@ export class FileAttachmentModalComponent implements OnInit {
               private fb: FormBuilder,
               private reportAttachmentService: ReportAttachmentService,
               private userService: UserService,
+              private sharedService: SharedService,
               private modalService: NgbModal) {
 
     this.bsflags = {
@@ -105,11 +106,12 @@ export class FileAttachmentModalComponent implements OnInit {
       this.uploadFile = this.selectedFile.name;
 
       const reportAttachment = new ReportAttachment();
-      reportAttachment.reportId = this.facilitySite.emissionsReport.id;
+      reportAttachment.reportId = this.reportId;
       Object.assign(reportAttachment, this.attachmentForm.value);
 
+      this.sharedService.emitReportIdChange(this.reportId);
       this.reportAttachmentService.uploadAttachment(
-        this.facilitySite.id, reportAttachment, this.selectedFile)
+        reportAttachment, this.selectedFile)
         .subscribe(respEvent =>
           this.onUploadEvent(respEvent),
           errorResp => this.onUploadError(errorResp),
