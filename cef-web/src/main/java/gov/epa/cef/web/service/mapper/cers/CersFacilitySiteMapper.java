@@ -1,12 +1,5 @@
 package gov.epa.cef.web.service.mapper.cers;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
@@ -18,6 +11,12 @@ import net.exchangenetwork.schema.cer._1._2.FacilityNAICSDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 import net.exchangenetwork.schema.cer._1._2.GeographicCoordinatesDataType;
 import net.exchangenetwork.schema.cer._1._2.IndividualDataType;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.util.Collections;
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {CersEmissionsUnitMapper.class, CersReleasePointMapper.class})
 public interface CersFacilitySiteMapper {
@@ -31,7 +30,7 @@ public interface CersFacilitySiteMapper {
     @Mapping(source=".", target="facilityIdentification")
     @Mapping(source=".", target="facilitySiteAddress")
     @Mapping(source=".", target="facilitySiteGeographicCoordinates")
-    @Mapping(source=".", target="facilitySiteAffiliation")
+    // @Mapping(source=".", target="facilitySiteAffiliation")
     @Mapping(source="comments", target="facilitySiteComment")
     @Mapping(source="emissionsUnits", target="emissionsUnit")
     @Mapping(source="releasePoints", target="releasePoint")
@@ -47,7 +46,7 @@ public interface CersFacilitySiteMapper {
     @Mapping(source="countyCode.code", target="stateAndCountyFIPSCode")
     @Mapping(source="tribalCode.code", target="tribalCode")
     FacilityIdentificationDataType facilityIdentificationFromFacilitySite(FacilitySite source);
-    
+
     @Mapping(source="latitude", target="latitudeMeasure")
     @Mapping(source="longitude", target="longitudeMeasure")
     GeographicCoordinatesDataType facilityGeographicCoordinatesFromFacilitySite(FacilitySite source);
@@ -63,10 +62,10 @@ public interface CersFacilitySiteMapper {
     @Mapping(source="mailingStateCode.uspsCode", target="mailingAddressStateCode")
     @Mapping(source="mailingPostalCode", target="mailingAddressPostalCode")
     AddressDataType addressFromFacilitySite(FacilitySite source);
-    
+
     @Mapping(source="contacts", target="affiliationIndividual")
     AffiliationDataType facilitySiteAffiliation(FacilitySite source);
-    
+
     @Mapping(source="type.code", target="individualTitleText")
     @Mapping(source="prefix", target="namePrefixText")
     @Mapping(source="firstName", target="firstName")
@@ -74,7 +73,7 @@ public interface CersFacilitySiteMapper {
     @Mapping(source=".", target="individualAddress")
     @Mapping(source=".", target="individualCommunication")
     IndividualDataType facilitySiteContact(FacilitySiteContact source);
-    
+
     @Mapping(source="streetAddress", target="locationAddressText")
     @Mapping(source="city", target="localityName")
     @Mapping(source="stateCode.uspsCode", target="locationAddressStateCode")
@@ -85,7 +84,7 @@ public interface CersFacilitySiteMapper {
     @Mapping(source="mailingStateCode.uspsCode", target="mailingAddressStateCode")
     @Mapping(source="mailingPostalCode", target="mailingAddressPostalCode")
     AddressDataType addressFromFacilitySiteContact(FacilitySiteContact source);
-    
+
     @Mapping(source="phone", target="telephoneNumberText")
     @Mapping(source="phoneExt", target="telephoneExtensionNumberText")
     @Mapping(source="email", target="electronicAddressText")
@@ -97,33 +96,33 @@ public interface CersFacilitySiteMapper {
         }
         return Collections.singletonList(facilityIdentificationFromFacilitySite(source));
     }
-    
+
     default List<AddressDataType> addressListFromFacilitySite(FacilitySite source) {
         if (source == null) {
             return Collections.emptyList();
         }
         return Collections.singletonList(addressFromFacilitySite(source));
     }
-    
+
     default List<AffiliationDataType> contactListFromFacilitySite(FacilitySite source) {
       if (source == null) {
           return Collections.emptyList();
       }
       return Collections.singletonList(facilitySiteAffiliation(source));
     }
-    
+
     default List<AddressDataType> addressListFromFacilitySiteContact(FacilitySiteContact source) {
       if (source == null) {
           return Collections.emptyList();
       }
       return Collections.singletonList(addressFromFacilitySiteContact(source));
     }
-    
+
     default List<CommunicationDataType> contactCommunicationListFromFacilitySiteContact(FacilitySiteContact source) {
       if (source == null) {
           return Collections.emptyList();
       }
       return Collections.singletonList(contactCommunicationFacilitySiteContact(source));
     }
-    
+
 }

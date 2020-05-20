@@ -3,7 +3,11 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.util.DateUtils;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
-import net.exchangenetwork.schema.header._2.*;
+import net.exchangenetwork.schema.header._2.DocumentHeaderType;
+import net.exchangenetwork.schema.header._2.DocumentPayloadType;
+import net.exchangenetwork.schema.header._2.ExchangeNetworkDocumentType;
+import net.exchangenetwork.schema.header._2.NameValuePair;
+import net.exchangenetwork.schema.header._2.ObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,7 @@ import java.util.UUID;
 @Service
 public class EisXmlServiceImpl {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String DataCategoryPropertyName = "DataCategory";
 
     private static final String DataflowName = "EIS_v1_0";
 
@@ -26,9 +30,9 @@ public class EisXmlServiceImpl {
 
     private static final String SubmissionTypePropertyName = "SubmissionType";
 
-    private static final String DataCategoryPropertyName = "DataCategory";
-
     private final CersXmlServiceImpl cersXmlService;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     EisXmlServiceImpl(CersXmlServiceImpl cersXmlService) {
@@ -50,10 +54,12 @@ public class EisXmlServiceImpl {
             new net.exchangenetwork.schema.cer._1._2.ObjectFactory();
 
         return new ExchangeNetworkDocumentType()
-            .withId(UUID.randomUUID().toString())
+            .withId("_".concat(UUID.randomUUID().toString()))
             .withHeader(
                 new DocumentHeaderType()
                     .withDataFlowName(DataflowName)
+                    .withAuthorName(eisHeader.getAuthorName())
+                    .withOrganizationName(eisHeader.getOrganizationName())
                     .withDocumentTitle(DocumentTitle)
                     .withProperty(
                         new NameValuePair()
@@ -65,7 +71,7 @@ public class EisXmlServiceImpl {
                     .withCreationDateTime(DateUtils.createGregorianCalendar()))
             .withPayload(
                 new DocumentPayloadType()
-                    .withId(UUID.randomUUID().toString())
+                    .withId("_".concat(UUID.randomUUID().toString()))
                     .withAny(cersObjectFactory.createCERS(cersData)));
     }
 
