@@ -117,7 +117,6 @@ public class ReportAttachmentApi {
             
             dto.setFileName(file.getOriginalFilename());
             dto.setFileType(file.getContentType());
-            System.out.println(dto.getReportId());
             dto.setReportId(dto.getReportId());
             dto.setAttachment(tempFile);
             

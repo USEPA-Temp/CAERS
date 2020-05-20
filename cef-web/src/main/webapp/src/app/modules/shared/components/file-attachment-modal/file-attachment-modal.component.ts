@@ -34,7 +34,7 @@ export class FileAttachmentModalComponent implements OnInit {
   @Input() title: string;
   @Input() message: string;
   @Input() cancelButtonText = 'Cancel';
-  @Input() confirmButtonText = 'Upload';
+  @Input() confirmButtonText = 'OK';
   @Input() facilitySite: FacilitySite;
   attachment: ReportAttachment;
   selectedFile: File = null;

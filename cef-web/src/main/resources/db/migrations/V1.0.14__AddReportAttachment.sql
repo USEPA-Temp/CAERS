@@ -24,4 +24,4 @@ ALTER TABLE report_history ADD COLUMN file_name character varying(50);
 ALTER TABLE report_history ADD COLUMN file_deleted boolean DEFAULT false;
 
 
-insert into admin_properties (name, value) values ('attachment.max-size', 1048576);
+insert into admin_properties (name, value) values ('attachment.max-size', 100);
