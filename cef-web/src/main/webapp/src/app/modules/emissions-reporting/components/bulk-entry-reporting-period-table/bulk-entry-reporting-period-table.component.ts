@@ -5,6 +5,8 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
+import { BulkEntryEmissionHolder } from 'src/app/shared/models/bulk-entry-emission-holder';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Component({
   selector: 'app-bulk-entry-reporting-period-table',
@@ -14,8 +16,9 @@ import { ReportingPeriodService } from 'src/app/core/services/reporting-period.s
 export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable implements OnInit, OnChanges {
   @Input() tableData: BulkEntryReportingPeriod[];
   @Input() readOnlyMode: boolean;
-  @Output() periodsUpdated = new EventEmitter<BulkEntryReportingPeriod[]>();
+  @Output() periodsUpdated = new EventEmitter<BulkEntryEmissionHolder[]>();
   baseUrl: string;
+  facilitySite: FacilitySite;
 
   reportingPeriodForm = this.fb.group({});
 
@@ -41,6 +44,12 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
     .subscribe(map => {
       this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}`;
     });
+
+    this.route.data
+    .subscribe((data: { facilitySite: FacilitySite }) => {
+
+      this.facilitySite = data.facilitySite;
+    });
   }
 
   ngOnChanges() {
@@ -62,10 +71,10 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
         rp.calculationParameterValue = this.reportingPeriodForm.get('' + rp.reportingPeriodId).value;
       });
 
-      this.reportingPeriodService.bulkUpdate(this.tableData)
+      this.reportingPeriodService.bulkUpdate(this.facilitySite.id, this.tableData)
       .subscribe(result => {
-        this.periodsUpdated.emit(this.tableData);
-        this.toastr.success('', 'Total emissions successfully calculated');
+        this.periodsUpdated.emit(result);
+        this.toastr.success('', 'Throughput values successfully saved and Total Emissions have been recalculated.');
         // reset dirty flags
         this.reportingPeriodForm.markAsPristine();
       });

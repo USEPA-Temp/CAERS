@@ -5,6 +5,7 @@ import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ReportingPeriodService;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
@@ -127,15 +128,16 @@ public class ReportingPeriodApi {
      * @param dtos
      * @return
      */
-    @PutMapping(value = "/bulkEntry")
-    public ResponseEntity<Collection<ReportingPeriodUpdateResponseDto>> bulkUpdate(
-        @NotNull @RequestBody List<ReportingPeriodBulkEntryDto> dtos) {
+    @PutMapping(value = "/bulkEntry/{facilitySiteId}")
+    public ResponseEntity<Collection<EmissionBulkEntryHolderDto>> bulkUpdate(
+            @NotNull @PathVariable Long facilitySiteId, @NotNull @RequestBody List<ReportingPeriodBulkEntryDto> dtos) {
+
+        this.securityService.facilityEnforcer().enforceEntity(facilitySiteId, FacilitySiteRepository.class);
 
         List<Long> periodIds = dtos.stream().map(ReportingPeriodBulkEntryDto::getReportingPeriodId).collect(Collectors.toList());
-
         this.securityService.facilityEnforcer().enforceEntities(periodIds, ReportingPeriodRepository.class);
 
-        Collection<ReportingPeriodUpdateResponseDto> result = reportingPeriodService.bulkUpdate(dtos);
+        Collection<EmissionBulkEntryHolderDto> result = reportingPeriodService.bulkUpdate(facilitySiteId, dtos);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
