@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -41,7 +41,8 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
         this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
         .subscribe(report => {
             this.tableData = report.filter(data =>
-                data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted);
+                data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
+                .sort((a, b) => (a.actionDate < b.actionDate) ? 1 : -1);
         });
 
     }
@@ -63,7 +64,9 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
         modalRef.result.then(() => {
             this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
             .subscribe(report => {
-                this.tableData = report.filter(data => data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted);
+                this.tableData = report.filter(data => 
+                    data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
+                    .sort((a, b) => (a.actionDate < b.actionDate) ? 1 : -1);
             });
         }, () => {
             // needed for dismissing without errors
@@ -85,7 +88,9 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
 
             this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
             .subscribe(report => {
-                this.tableData = report.filter(data => data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted);
+                this.tableData = report.filter(data => 
+                    data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
+                    .sort((a, b) => (a.actionDate < b.actionDate) ? 1 : -1);
             });
         });
     }

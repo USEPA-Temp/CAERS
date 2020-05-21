@@ -62,5 +62,17 @@ public class PropertyApi {
         Boolean result = propertyProvider.getBoolean(AppPropertyName.FeatureUserFeedbackEnabled);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve user maximum file upload size
+     * @return
+     */
+    @GetMapping(value = "/attachments/maxSize")
+    @ResponseBody
+    public ResponseEntity<PropertyDto> retrieveReportAttachmentMaxSize() {
+        Long result = propertyProvider.getLong(AppPropertyName.ReportAttachmentMaxSize);
+        return new ResponseEntity<>(new PropertyDto().withValue(result.toString()), HttpStatus.OK);
+    }
+
 
 }

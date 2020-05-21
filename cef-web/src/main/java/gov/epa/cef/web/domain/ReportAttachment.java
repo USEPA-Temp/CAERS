@@ -34,7 +34,7 @@ public class ReportAttachment extends BaseAuditEntity {
 	@Column(name = "file_type", length = 1000)
 	private String fileType;
 	
-	@Column(name = "comments", length = 200)
+	@Column(name = "comments", length = 2000)
 	private String comments;
 	
 	/***
