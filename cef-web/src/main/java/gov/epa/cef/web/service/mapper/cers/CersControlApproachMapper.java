@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.mapper.cers;
 
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -8,7 +9,7 @@ import gov.epa.cef.web.domain.ControlPollutant;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlPollutantDataType;
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = {})
 public interface CersControlApproachMapper {
 
     @Mapping(source="control.description", target="controlApproachDescription")

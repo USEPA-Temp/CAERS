@@ -14,6 +14,7 @@ import net.exchangenetwork.schema.cer._1._2.ProcessDataType;
 import net.exchangenetwork.schema.cer._1._2.ReleasePointApportionmentDataType;
 import net.exchangenetwork.schema.cer._1._2.ReportingPeriodDataType;
 import org.mapstruct.BeanMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -21,7 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CersReleasePointMapper.class})
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+    uses = {CersReleasePointMapper.class})
 public interface CersEmissionsUnitMapper {
 
     @Mapping(source="description", target="unitDescription")
