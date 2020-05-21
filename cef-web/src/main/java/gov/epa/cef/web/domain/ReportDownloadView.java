@@ -1,14 +1,13 @@
 package gov.epa.cef.web.domain;
 
 
-import java.math.BigDecimal;
-import java.util.Date; 
+import gov.epa.cef.web.domain.common.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import gov.epa.cef.web.domain.common.BaseEntity;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Table(name = "vw_report_download")
@@ -21,67 +20,67 @@ public class ReportDownloadView extends BaseEntity{
 
     @Column(name = "report_id", nullable = false)
     private Long reportId;
-    
+
     @Column(name = "facility_site_id")
     private Long facilitySiteId;
-    
+
     @Column(name = "inventory_year")
     private Short reportYear;
-    
+
     @Column(name = "emissions_unit_id", length = 20)
     private String emissionsUnitId;
-    
+
     @Column(name = "emission_unit_description", length = 100)
     private String emissionUnitDescription;
-    
+
     @Column(name = "process_id", length = 20)
     private String processId;
-    
+
     @Column(name = "process_description", length = 200)
     private String processDescription;
-        
+
     @Column(name = "pollutant_name", length = 200)
-    private String pollutantName;  
-    
+    private String pollutantName;
+
     @Column(name = "emissions_uom_code", length = 20)
     private String emissionsUomCode;
-    
+
     @Column(name = "emission_calc_method", length = 200)
     private String emissionsCalcMethod;
-    
+
 	@Column(name = "emissions_numerator_uom", length = 20)
     private String emissionsNumeratorUom;
-    
+
     @Column(name = "emissions_denominator_uom", length = 20)
     private String emissionsDenominatorUom;
-    
+
     @Column(name = "emissions_factor")
     private BigDecimal emissionsFactor;
-    
+
     @Column(name = "emissions_factor_text", length = 100)
     private String emissionsFactorText;
-    
+
     @Column(name = "emissions_comment", length = 400)
     private String emissionsComment;
-    
+
     @Column(name = "reporting_period_type", length = 50)
     private String reportingPeriodType;
-    
+
     @Column(name = "throughput_uom", length = 20)
     private String throughputUom;
-    
+
     @Column(name = "throughput_amount")
     private BigDecimal throughputValue;
 
 	@Column(name = "total_emissions")
     private BigDecimal totalEmissions;
-	
+
     @Column(name = "last_modified_by", length = 255)
     private String lastModifiedBy;
-    
+
 	@Column(name = "last_modified_date")
 	private Date lastModifiedDate;
-	
+
 	public String getThroughputUom() {
 		return throughputUom;
 	}
@@ -97,7 +96,7 @@ public class ReportDownloadView extends BaseEntity{
 	public void setThroughputValue(BigDecimal throughputValue) {
 		this.throughputValue = throughputValue;
 	}
-	
+
     public String getLastModifiedBy() {
 		return lastModifiedBy;
 	}
@@ -239,7 +238,7 @@ public class ReportDownloadView extends BaseEntity{
 	public void setEmissionsUomCode(String emissionsUomCode) {
 		this.emissionsUomCode = emissionsUomCode;
 	}
-	     
+
 	public String getReportingPeriodType() {
 		return reportingPeriodType;
 	}

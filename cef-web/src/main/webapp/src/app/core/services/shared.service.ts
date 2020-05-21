@@ -17,6 +17,7 @@ export class SharedService {
   private emitValidationResultChangeSource = new Subject<ValidationResult>();
   private emitControlsSource = new Subject<ControlPath[]>();
   private emitHideBoolSource = new Subject<any>();
+  private emitReportIdSource = new Subject<any>();
   constructor(private toastr: ToastrService) { }
 
   // Observable string streams
@@ -25,6 +26,7 @@ export class SharedService {
   validationResultChangeEmitted$ = this.emitValidationResultChangeSource.asObservable();
   controlsResultChangeEmitted$ = this.emitControlsSource.asObservable();
   hideBoolChangeEmitted$ = this.emitHideBoolSource.asObservable();
+  reportIdChangeEmitted$ = this.emitReportIdSource.asObservable();
 
   // Service message commands
   emitChange(change: any) {
@@ -45,6 +47,10 @@ export class SharedService {
 
   emitControlsChange(change: ControlPath[]){
     this.emitControlsSource.next(change);
+  }
+
+  emitReportIdChange(change: any) {
+    this.emitReportIdSource.next(change);
   }
 
   updateReportStatusAndEmit(route: ActivatedRoute) {

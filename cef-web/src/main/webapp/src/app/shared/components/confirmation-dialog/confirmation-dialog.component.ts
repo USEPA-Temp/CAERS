@@ -23,10 +23,14 @@ export class ConfirmationDialogComponent implements OnInit {
 
   onContinue() {
     this.continue.emit(null);
-    this.activeModal.close();
+    this.activeModal.close(true);
+  }
+
+  onCancel() {
+    this.activeModal.close(false);
   }
 
   onClose() {
-    this.activeModal.close();
+    this.activeModal.close(false);
   }
 }

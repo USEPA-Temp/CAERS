@@ -45,23 +45,46 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
   }
 
   ngOnChanges() {
-    this.tableData.sort((a, b) => (a.unitIdentifier > b.unitIdentifier) ? 1 : -1);
+    this.tableData.sort((a, b) => {
+
+      if (a.unitIdentifier === b.unitIdentifier) {
+        return a.emissionsProcessIdentifier > b.emissionsProcessIdentifier ? 1 : -1;
+      }
+      return a.unitIdentifier > b.unitIdentifier ? 1 : -1;
+    });
+
     this.tableData.forEach(rp => {
       rp.emissions.sort((a, b) => (a.pollutant.pollutantName > b.pollutant.pollutantName) ? 1 : -1);
     });
 
     this.tableData.forEach(rp => {
       rp.emissions.forEach(e => {
-        this.emissionForm.addControl('' + e.id, new FormControl({
-            value: e.totalEmissions,
-            disabled: !(e.totalManualEntry || e.emissionsCalcMethodCode.totalDirectEntry)
-          }, {
-            validators: [
-              Validators.required,
-              Validators.min(0)
-            ],
-            updateOn: 'blur'
-          }));
+        if (e.totalManualEntry || e.emissionsCalcMethodCode.totalDirectEntry) {
+          if (!this.emissionForm.contains('' + e.id)) {
+            this.emissionForm.setControl('' + e.id, new FormControl({
+              value: e.totalEmissions,
+              disabled: false
+            }, {
+              validators: [
+                Validators.required,
+                Validators.min(0)
+              ],
+              updateOn: 'blur'
+            }));
+          }
+        } else {
+          // use setControl to make sure new values are applied
+          this.emissionForm.setControl('' + e.id, new FormControl({
+              value: e.totalEmissions,
+              disabled: true
+            }, {
+              validators: [
+                Validators.required,
+                Validators.min(0)
+              ],
+              updateOn: 'blur'
+            }));
+        }
       });
     });
   }
@@ -81,13 +104,12 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
         emissionDtos.push(e);
       }
 
-      console.log(emissionDtos);
-
       this.emissionService.bulkUpdate(this.facilitySite.id, emissionDtos)
       .subscribe(result => {
-        console.log(result);
         this.emissionsUpdated.emit(result);
         this.toastr.success('', 'Changes successfully saved and Total Emissions recalculated.');
+        // reset dirty flags
+        this.emissionForm.markAsPristine();
       });
 
     }

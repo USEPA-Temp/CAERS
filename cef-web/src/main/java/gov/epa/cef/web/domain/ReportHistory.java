@@ -41,10 +41,22 @@ public class ReportHistory extends BaseAuditEntity {
 
 	@Column(name = "user_full_name", nullable = false)
 	private String userFullName;
+	
+	@Column(name = "user_role")
+	private String userRole;
 
 	@Column(name = "comments", length = 2000)
 	private String comments;
-
+	
+	@Column(name = "attachment_id")
+	private Long reportAttachmentId;
+	
+	@Column(name = "file_name", length = 255)
+	private String fileName;
+	
+	@Column(name = "file_deleted")
+	private boolean fileDeleted;
+	
 	public EmissionsReport getEmissionsReport() {
 		return emissionsReport;
 	}
@@ -91,6 +103,38 @@ public class ReportHistory extends BaseAuditEntity {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public Long getReportAttachmentId() {
+		return reportAttachmentId;
+	}
+
+	public void setReportAttachmentId(Long reportAttachmentId) {
+		this.reportAttachmentId = reportAttachmentId;
+	}
+	
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public boolean isFileDeleted() {
+		return fileDeleted;
+	}
+
+	public void setFileDeleted(boolean fileDeleted) {
+		this.fileDeleted = fileDeleted;
 	}
 
 }

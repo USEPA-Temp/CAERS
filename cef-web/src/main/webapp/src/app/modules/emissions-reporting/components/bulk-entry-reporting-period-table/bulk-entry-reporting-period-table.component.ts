@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { BulkEntryReportingPeriod } from 'src/app/shared/models/bulk-entry-reporting-period';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -14,6 +14,7 @@ import { ReportingPeriodService } from 'src/app/core/services/reporting-period.s
 export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable implements OnInit, OnChanges {
   @Input() tableData: BulkEntryReportingPeriod[];
   @Input() readOnlyMode: boolean;
+  @Output() periodsUpdated = new EventEmitter<BulkEntryReportingPeriod[]>();
   baseUrl: string;
 
   reportingPeriodForm = this.fb.group({});
@@ -63,8 +64,11 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
 
       this.reportingPeriodService.bulkUpdate(this.tableData)
       .subscribe(result => {
+        this.periodsUpdated.emit(this.tableData);
         this.toastr.success('', 'Total emissions successfully calculated');
-      })
+        // reset dirty flags
+        this.reportingPeriodForm.markAsPristine();
+      });
 
     }
   }

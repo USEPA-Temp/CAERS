@@ -7,11 +7,11 @@
         </div>
 
         <div class="card-body" *ngIf="reportingPeriods && emissions">
-          <nav ngbNav #nav="ngbNav" class="nav-tabs">
+          <nav ngbNav #nav="ngbNav" class="nav-tabs" [destroyOnHide]="false">
             <ng-container ngbNavItem>
               <a ngbNavLink>Process Information</a>
               <ng-template ngbNavContent>
-                <app-bulk-entry-reporting-period-table [tableData]="reportingPeriods" [readOnlyMode]="readOnlyMode">
+                <app-bulk-entry-reporting-period-table [tableData]="reportingPeriods" [readOnlyMode]="readOnlyMode" (periodsUpdated)="onPeriodsUpdated($event)">
                 </app-bulk-entry-reporting-period-table>
               </ng-template>
             </ng-container>
