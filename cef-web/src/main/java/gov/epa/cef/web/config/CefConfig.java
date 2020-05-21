@@ -77,5 +77,9 @@ public class CefConfig {
     public boolean getSccUpdateTaskEnabled() {
         return this.propertyProvider.getBoolean(AppPropertyName.SccUpdateTaskEnabled);
     }
+    
+    public long getAttachmentMaxSize() {
+        return this.propertyProvider.getInt(AppPropertyName.ReportAttachmentMaxSize);
+    }
 
 }

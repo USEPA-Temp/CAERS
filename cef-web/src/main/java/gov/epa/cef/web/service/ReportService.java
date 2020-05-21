@@ -3,6 +3,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.service.dto.ReportDownloadDto;
 import gov.epa.cef.web.service.dto.ReportHistoryDto;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
@@ -29,6 +30,15 @@ public interface ReportService {
      * @param userIds
      * @param reportAction
      * @param comments
+     * @param reportAttachment
+     */
+    void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment);
+    
+    /**
+     * Create Report History record 
+     * @param userIds
+     * @param reportAction
+     * @param comments
      */
     void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments);
     
@@ -38,13 +48,37 @@ public interface ReportService {
      * @param reportAction
      */
     void createReportHistory(List<Long> reportIds, ReportAction reportAction);
+    
+    /**
+     * Create Report History record
+     * @param reportId
+     * @param reportAction
+     * @param comments
+     * @param reportAttachment
+     */
+    void createReportHistory(Long reportId, ReportAction reportAction, String comments, ReportAttachment reportAttachment);
 
+    /**
+     * Create Report History record 
+     * @param userId
+     * @param reportAction
+     * @param comments
+     */
+    void createReportHistory(Long reportId, ReportAction reportAction, String comments);
+    
     /**
      * Create Report History record 
      * @param userId
      * @param reportAction
      */
     void createReportHistory(Long reportId, ReportAction reportAction);
+    
+    /**
+     * Update Report History record to indicate attachment was deleted
+     * @param id
+     * @param deleted
+     */
+    void updateReportHistoryAttachment(Long id, boolean deleted);
     
     /***
      * Return ReportDownloadDto for the chosen report id
