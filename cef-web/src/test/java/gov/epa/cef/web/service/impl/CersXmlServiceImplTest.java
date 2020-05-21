@@ -213,7 +213,7 @@ public class CersXmlServiceImplTest {
             });
         });
 
-        assertFalse(found.isEmpty());
+        assertEquals(1, found.size());
 
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
