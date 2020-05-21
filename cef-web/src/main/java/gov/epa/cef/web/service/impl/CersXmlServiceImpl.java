@@ -128,7 +128,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 						}
 					}
 
-					if (ca.getControlPollutant().size() > 0 || ca.getControlMeasure().size() > 0) {
+					if (ca.getControlPollutant().size() > 0 && ca.getControlMeasure().size() > 0) {
 
 						addControlToCersProcess(ca, process, cers);
 					}
