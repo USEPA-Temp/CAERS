@@ -10,25 +10,27 @@
       {{message}}
     </p>
 
-    <div class="row pb-1">
+    <div class="row pb-2">
+      <label for="attachmentComments" class="col-sm-6 col-md-2 col-form-label">
+        <strong>Comments:</strong>
+      </label>
+      <div class="col-sm-6 col-md-10">
+        <textarea maxlength="200" rows="3" class="form-control" id="attachmentComments" formControlName="comments"></textarea>
+        (200 character limit)
+      </div>
+    </div>
+    
+    <div class="row pb-2">
       <label for="file-attachment" class="col-sm-6 col-md-2 col-form-label" title="A file is required.">
           <strong>Attachment:</strong>
       </label>
       <div class="col-sm-6 col-md-10">
-      <div class="custom-file">
-        <input #fileAttachment id="file-attachment" type="file" enctype="multipart/form-data"
-              class="form-control" (change)="onFileChanged($event.target.files)" formControlName="attachment">
-        <label for="file-attachment" class="custom-file-label">Click to browse...</label>
-        <app-validation-message [control]="attachmentForm.get('attachment')"></app-validation-message>
-      </div>
-      </div>
-    </div>
-    
-    <div class="row pb-1">
-      <label for="attachmentComments" class="col-sm-6 col-md-2 col-form-label"><strong>Comments:</strong></label>
-      <div class="col-sm-6 col-md-10">
-        <textarea maxlength="200" rows="3" class="form-control" id="attachmentComments" formControlName="comments"></textarea>
-        (200 character limit)
+        <div class="custom-file">
+          <input #fileAttachment id="file-attachment" type="file" enctype="multipart/form-data"
+                class="form-control" (change)="onFileChanged($event.target.files)" formControlName="attachment">
+          <label for="file-attachment" class="custom-file-label">Click to browse...</label>
+          <app-validation-message [control]="attachmentForm.get('attachment')"></app-validation-message>
+        </div>
       </div>
     </div>
 
