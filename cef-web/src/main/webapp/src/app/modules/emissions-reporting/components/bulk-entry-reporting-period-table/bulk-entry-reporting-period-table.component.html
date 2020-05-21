@@ -14,7 +14,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of tableData">
-            <td><span [title]="item.unitDescription">{{item.unitIdentifier}}</span></td>
+            <td>
+              {{item.unitIdentifier}}
+              <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.unitDescription"></fa-icon>
+            </td>
             <td>
               <a routerLink="{{baseUrl}}/process/{{item.emissionsProcessId}}" [title]="item.emissionsProcessDescription" 
                     [attr.aria-label]="'emissions process' + item?.emissionsProcessIdentifier">

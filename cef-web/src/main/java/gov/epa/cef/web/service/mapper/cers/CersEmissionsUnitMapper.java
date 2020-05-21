@@ -72,7 +72,7 @@ public interface CersEmissionsUnitMapper {
     OperatingDetailsDataType operatingDetailsFromOperatingDetail(OperatingDetail source);
 
     @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
-    @Mapping(source="totalEmissions", target="totalEmissions")
+    @Mapping(source="totalEmissions", target="totalEmissions", numberFormat = "0.0#####")
     @Mapping(source="emissionsUomCode.code", target="emissionsUnitofMeasureCode")
     @Mapping(source="emissionsFactor", target="emissionFactor")
     @Mapping(source="emissionsNumeratorUom.code", target="emissionFactorNumeratorUnitofMeasureCode")

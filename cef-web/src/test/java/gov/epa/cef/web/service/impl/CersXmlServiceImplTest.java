@@ -11,6 +11,7 @@ import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EfVariableValidationType;
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
@@ -56,12 +57,14 @@ import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapperImpl;
 import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapper;
 import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapperImpl;
+import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapper;
 import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapperImpl;
 import gov.epa.cef.web.service.mapper.cers.CersFacilitySiteMapper;
 import gov.epa.cef.web.service.mapper.cers.CersFacilitySiteMapperImpl;
 import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapperImpl;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
+import net.exchangenetwork.schema.cer._1._2.EmissionsDataType;
 import net.exchangenetwork.schema.cer._1._2.ObjectFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,6 +80,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -93,11 +97,36 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Category(TestCategories.FastTest.class)
-public class CersXmlServiceImlTest {
+public class CersXmlServiceImplTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    public void totalEmissionsRoundingTest() {
+
+        CersEmissionsUnitMapper emissionsUnitMapper =
+            new CersEmissionsUnitMapperImpl(new CersReleasePointMapperImpl());
+
+        Emission emission = new Emission();
+        emission.setTotalEmissions(new BigDecimal("7323.234258245252345"));
+
+        EmissionsDataType emissionsDataType = emissionsUnitMapper.emissionsFromEmission(emission);
+        assertEquals("7323.234258", emissionsDataType.getTotalEmissions());
+
+        emission.setTotalEmissions(new BigDecimal("7323.234258745252345"));
+        emissionsDataType = emissionsUnitMapper.emissionsFromEmission(emission);
+        assertEquals("7323.234259", emissionsDataType.getTotalEmissions());
+
+        emission.setTotalEmissions(new BigDecimal("7323.234257745252345"));
+        emissionsDataType = emissionsUnitMapper.emissionsFromEmission(emission);
+        assertEquals("7323.234258", emissionsDataType.getTotalEmissions());
+
+        emission.setTotalEmissions(new BigDecimal("7323.234257345252345"));
+        emissionsDataType = emissionsUnitMapper.emissionsFromEmission(emission);
+        assertEquals("7323.234257", emissionsDataType.getTotalEmissions());
+    }
 
     @Test
     public void noFacilitySiteAffiliationTest() throws Exception {
