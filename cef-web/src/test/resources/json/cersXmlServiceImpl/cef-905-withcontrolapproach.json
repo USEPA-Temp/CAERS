@@ -1237,11 +1237,23 @@
       "comments": "This is a test.",
       "controlMeasureCode": "112",
       "_row": 24,
+      "percentControl": "75",
       "operatingStatusCode": "OP",
       "description": "CEF-916 Test",
-      "percentCapture": "56",
-      "percentControl": "41",
+      "percentCapture": "25",
       "id": "24",
+      "facilitySiteId": "24"
+    },
+    {
+      "identifier": "Test25 Control",
+      "comments": "This is a test.",
+      "controlMeasureCode": "112",
+      "_row": 25,
+      "percentControl": "75",
+      "operatingStatusCode": "OP",
+      "description": "Test 25 Control CEF-905",
+      "percentCapture": "25",
+      "id": "25",
       "facilitySiteId": "24"
     }
   ],
@@ -1256,7 +1268,15 @@
       "percentApportionment": "100"
     }
   ],
-  "controlPollutants": [],
+  "controlPollutants": [
+    {
+      "pollutantCode": "58899",
+      "_row": 24,
+      "id": "24",
+      "controlId": "24",
+      "percentReduction": "2"
+    }
+  ],
   "facilityContacts": [
     {
       "lastName": "Martin",
