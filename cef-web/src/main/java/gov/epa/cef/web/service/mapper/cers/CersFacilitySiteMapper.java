@@ -12,13 +12,15 @@ import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 import net.exchangenetwork.schema.cer._1._2.GeographicCoordinatesDataType;
 import net.exchangenetwork.schema.cer._1._2.IndividualDataType;
 import org.mapstruct.BeanMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.Collections;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CersEmissionsUnitMapper.class, CersReleasePointMapper.class})
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+    uses = {CersEmissionsUnitMapper.class, CersReleasePointMapper.class})
 public interface CersFacilitySiteMapper {
 
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
@@ -30,7 +32,6 @@ public interface CersFacilitySiteMapper {
     @Mapping(source=".", target="facilityIdentification")
     @Mapping(source=".", target="facilitySiteAddress")
     @Mapping(source=".", target="facilitySiteGeographicCoordinates")
-    // @Mapping(source=".", target="facilitySiteAffiliation")
     @Mapping(source="comments", target="facilitySiteComment")
     @Mapping(source="emissionsUnits", target="emissionsUnit")
     @Mapping(source="releasePoints", target="releasePoint")

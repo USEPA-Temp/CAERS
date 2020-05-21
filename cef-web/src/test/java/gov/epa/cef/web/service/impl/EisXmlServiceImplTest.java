@@ -156,11 +156,6 @@ public class EisXmlServiceImplTest {
 
             Unmarshaller um = this.cersJaxbContext.createUnmarshaller();
 
-            // TODO investigate
-            // for some reason our XML is not valid
-            // - it might be that our XML mapping is not populating XSD required fields
-            // um.setSchema(schema);
-
             JAXBElement<CERSDataType> root = um.unmarshal(source, CERSDataType.class);
             result = root.getValue();
 
@@ -210,10 +205,6 @@ public class EisXmlServiceImplTest {
             Schema schema = schemaFactory.newSchema(schemaUrl);
 
             Unmarshaller um = jaxbContext.createUnmarshaller();
-
-            // TODO investigate
-            // for some reason our XML is not valid
-            // - it might be that our XML mapping is not populating XSD required fields
             um.setSchema(schema);
 
             StreamSource streamSource = new StreamSource(inputStream);
