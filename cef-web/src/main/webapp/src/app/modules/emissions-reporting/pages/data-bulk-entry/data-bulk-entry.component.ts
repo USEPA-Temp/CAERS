@@ -75,12 +75,9 @@ export class DataBulkEntryComponent implements OnInit {
     this.emissions = updatedEmissions;
   }
 
-  onPeriodsUpdated(updatedPeriods: BulkEntryReportingPeriod[]) {
+  onPeriodsUpdated(updatedPeriods: BulkEntryEmissionHolder[]) {
 
-    this.emissionService.retrieveForBulkEntry(this.facilitySite.id)
-    .subscribe(rp => {
-      this.emissions = rp;
-    });
+    this.emissions = updatedPeriods;
   }
 
   canDeactivate(): Promise<boolean> | boolean {
