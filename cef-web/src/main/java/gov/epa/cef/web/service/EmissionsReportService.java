@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.EmissionsReport;
+
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
@@ -93,4 +94,9 @@ public interface EmissionsReportService {
 	List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds, String comments);
 
 	List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds, String comments);
+	
+    /**
+     * Update an existing Emissions Report from a DTO
+     */
+    public EmissionsReportDto update(EmissionsReportDto dto);
 }

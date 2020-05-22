@@ -13,20 +13,7 @@ public interface UserFeedbackService {
      */
 	UserFeedbackDto create(UserFeedbackDto dto);
 	
-    /**
-     * Retrieve a feedback submission by report ID
-     * @param pointId
-     * @return
-     */
-	UserFeedbackDto retrieveById(Long reportId);
-	
 	void removeReportFromUserFeedback(Long reportId);
 	
-    /**
-     * Update an existing user feedback by id
-     * @param dto
-     * @return
-     */
-    UserFeedbackDto update(UserFeedbackDto dto);
 	
 }

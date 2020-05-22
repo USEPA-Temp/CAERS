@@ -29,16 +29,9 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
  
     	return result;
 	}
-	
-	public UserFeedbackDto retrieveById(Long reportId) {
 		
-        UserFeedback userFeedback = userFeedbackRepo.findByReportId(reportId);
-        
-        return userFeedbackMapper.toDto(userFeedback);
-	}
-	
 	public void removeReportFromUserFeedback(Long reportId) {
-		if(userFeedbackRepo.findAllByReportId(reportId) != null){
+		if(userFeedbackRepo.findAllByReportId(reportId) != null) {
 			List<UserFeedback> userFeedback = userFeedbackRepo.findAllByReportId(reportId);
 			userFeedback.forEach(submission -> {
 				submission.setReportId(null);
@@ -46,17 +39,4 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 			});
 		}
 	}
-	
-    /**
-     * Update an existing User Feedback from a DTO
-     */
-    public UserFeedbackDto update(UserFeedbackDto dto) {
-    	
-    	UserFeedback userFeedback = userFeedbackRepo.findById(dto.getId()).orElse(null);
-    	userFeedbackMapper.updateFromDto(dto, userFeedback);
-    	
-    	UserFeedbackDto result = userFeedbackMapper.toDto(userFeedbackRepo.save(userFeedback));
-
-        return result;
-    }
 }

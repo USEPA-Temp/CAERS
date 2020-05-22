@@ -17,13 +17,4 @@ export class UserFeedbackService {
     return this.http.post<UserFeedback>(url, userFeedback);
   }
 
-  retrieveByReportId(reportId: string): Observable<UserFeedback> {
-    const url = `${this.baseUrl}/${reportId}`;
-    return this.http.get<UserFeedback>(url);
-  }
-
-  update(userFeedback: UserFeedback): Observable<UserFeedback> {
-    const url = `${this.baseUrl}/${userFeedback.reportId}`;
-    return this.http.put<UserFeedback>(url, userFeedback);
-  }
 }

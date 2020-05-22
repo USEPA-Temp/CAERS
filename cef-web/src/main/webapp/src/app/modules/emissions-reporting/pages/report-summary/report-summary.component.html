@@ -45,7 +45,7 @@
                             Download Report
                         </button>
                     </div>
-                    <div *ngIf="feedbackEnabled && !feedbackSubmitted && hasVisitedFeedbackPage">
+                    <div *ngIf="feedbackEnabled && !feedbackSubmitted && (facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
                        <button class="btn btn-success btn-md my-3 ml-3" 
                                 aria-label="user feedback"
                                 (click)="navigateToFeedbackPage()">

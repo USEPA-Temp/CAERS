@@ -18,8 +18,6 @@ public class UserFeedbackDto implements Serializable {
     private Long controlsAndControlPathAssignments;
     private Long qualityAssuranceChecks;
     private Long overallReportingTime;
-    private Boolean hasSubmitted;
-    private Boolean hasVisitedPage;
     
     public Long getId() {
 		return id;
@@ -29,18 +27,6 @@ public class UserFeedbackDto implements Serializable {
 		this.id = id;
 	}
     
-	public Boolean getHasVisitedPage() {
-		return hasVisitedPage;
-	}
-	public void setHasVisitedPage(Boolean hasVisitedPage) {
-		this.hasVisitedPage = hasVisitedPage;
-	}
-	public Boolean getHasSubmitted() {
-		return hasSubmitted;
-	}
-	public void setHasSubmitted(Boolean hasSubmitted) {
-		this.hasSubmitted = hasSubmitted;
-	}
 	public String getBeneficialFunctionalityComments() {
 		return beneficialFunctionalityComments;
 	}

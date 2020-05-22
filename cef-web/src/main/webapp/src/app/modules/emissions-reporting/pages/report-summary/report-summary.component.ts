@@ -14,7 +14,6 @@ import { EmissionsReportingService } from 'src/app/core/services/emissions-repor
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 import { Subject } from 'rxjs';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
-import { UserFeedbackService } from 'src/app/core/services/user-feedback.service';
 
 declare const initCromerrWidget: any;
 
@@ -33,8 +32,9 @@ export class ReportSummaryComponent implements OnInit {
     userRole: string;
     feedbackSubmitted: boolean;
     feedbackEnabled: boolean;
-    hasVisitedFeedbackPage: boolean;
     feedbackUrl: string;
+    reportId: string;
+
 
     constructor(
         private router: Router,
@@ -47,8 +47,7 @@ export class ReportSummaryComponent implements OnInit {
         private modalService: NgbModal,
         private emissionsReportingService: EmissionsReportingService,
         private reportDownloadService: ReportDownloadService,
-        private propertyService: ConfigPropertyService,
-        private userFeedbackService: UserFeedbackService) { }
+        private propertyService: ConfigPropertyService) { }
 
     ngOnInit() {
         this.cromerrLoadedEmitter
@@ -59,37 +58,30 @@ export class ReportSummaryComponent implements OnInit {
         this.route.paramMap
         .subscribe(map => {
             this.feedbackUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/userfeedback`;
+            this.reportId = map.get('reportId');
         });
 
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
 
             this.facilitySite = data.facilitySite;
             this.emissionsReportYear = this.facilitySite.emissionsReport.year;
-
+            this.emissionsReportingService.getReport(this.reportId).subscribe((report) => {
+                this.feedbackSubmitted = report.hasSubmitted;
+            });
             if (this.facilitySite.id) {
                 this.propertyService.retrieveUserFeedbackEnabled()
                 .subscribe(result => {
                     this.feedbackEnabled = result;
-                    this.userFeedbackService.retrieveByReportId(this.facilitySite.emissionsReport.id.toString()).subscribe((userFeedback) => {
-                        if (userFeedback !== null) {
-                            this.feedbackSubmitted = userFeedback.hasSubmitted;
-                            this.hasVisitedFeedbackPage = userFeedback.hasVisitedPage;
-                        } else {
-                            this.feedbackSubmitted = false;
-                            this.hasVisitedFeedbackPage = false;
-                        }
                         this.userService.getCurrentUserNaasToken()
                         .subscribe(userToken => {
                             this.userContextService.getUser().subscribe( user => {
                                 this.userRole = user.role;
                                 if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-
                                     initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                         this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
                                         this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted)
                                 }
                             });
-                        });
                     });
                 });
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)

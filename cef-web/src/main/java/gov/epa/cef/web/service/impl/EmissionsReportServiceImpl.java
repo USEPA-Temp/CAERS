@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.client.soap.DocumentDataSource;
+import gov.epa.cef.web.client.soap.DocumentDataSource; 
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -215,6 +216,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setYear(reportYear);
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+                cloneReport.setHasSubmitted(false);
                 cloneReport.clearId();
 
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
@@ -261,6 +263,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setAgencyCode(reportDto.getStateCode());
+        newReport.setHasSubmitted(false);
 
         FacilitySite facilitySite = this.facilitySiteService.transform(reportDto.getFacilitySite());
         facilitySite.setEmissionsReport(newReport);
@@ -421,5 +424,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         }
         return false;
     }
+    
+    public EmissionsReportDto update(EmissionsReportDto dto){
+    	EmissionsReport emissionsReport = erRepo.findById(dto.getId()).orElse(null);
+    	emissionsReportMapper.updateFromDto(dto, emissionsReport);
+    	emissionsReport.setHasSubmitted(true);
+    	
+    	EmissionsReportDto result = emissionsReportMapper.toDto(erRepo.save(emissionsReport));
+
+        return result;
+    }
+
 
 }

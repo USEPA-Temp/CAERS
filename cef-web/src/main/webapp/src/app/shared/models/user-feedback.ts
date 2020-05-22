@@ -11,6 +11,4 @@ export class UserFeedback {
     controlsAndControlPathAssignments: number;
     qualityAssuranceChecks: number;
     overallReportingTime: number;
-    hasSubmitted: boolean;
-    hasVisitedPage: boolean;
 }

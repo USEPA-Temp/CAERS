@@ -48,8 +48,11 @@ public class EmissionsReport extends BaseAuditEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
+    
+    @Column(name = "has_submitted")
+    private Boolean hasSubmitted;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private List<FacilitySite> facilitySites = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
@@ -88,6 +91,14 @@ public class EmissionsReport extends BaseAuditEntity {
     public void setFrsFacilityId(String frsFacilityId) {
         this.frsFacilityId = frsFacilityId;
     }
+    
+    public Boolean getHasSubmitted() {
+		return hasSubmitted;
+	}
+
+	public void setHasSubmitted(Boolean hasSubmitted) {
+		this.hasSubmitted = hasSubmitted;
+	}
 
     public String getEisProgramId() {
         return this.eisProgramId;

@@ -41,32 +41,4 @@ public class UserFeedbackApi {
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
-    /**
-     * Retrieve a feedback submission by report ID
-     * @param pointId
-     * @return
-     */
-    @GetMapping(value = "/{reportId}")
-    public ResponseEntity<UserFeedbackDto> retrieveUserFeedback(@NotNull @PathVariable Long reportId) {
-
-    	UserFeedbackDto result = userFeedbackService.retrieveById(reportId);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    
-    /**
-     * Update a User Feedback by ID
-     * @param pointId
-     * @param dto
-     * @return
-     */
-    @PutMapping(value = "/{reportId}")
-    public ResponseEntity<UserFeedbackDto> updateUserFeedback(
-        @NotNull @PathVariable Long reportId, @NotNull @RequestBody UserFeedbackDto dto) {
-
-    	UserFeedbackDto result = userFeedbackService.update(dto.withId(reportId));
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    
 }
