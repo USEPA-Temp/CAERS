@@ -72,7 +72,7 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
                 RoleType role = AppRole.RoleType.PREPARER;
 
                 String userId = "thomas.fesperman";
-                List<GrantedAuthority> roles = this.securityService.createUserRoles(userId, role, USER_ROLE_ID);
+                List<GrantedAuthority> roles = this.securityService.createUserRoles(role, USER_ROLE_ID);
 
                 user = new ApplicationUser(userId, roles);
 
@@ -117,7 +117,7 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
             RoleType role = RoleType.fromId(Long.parseLong(properties.getProperty("roleId")));
             long userRoleId = Long.parseLong(properties.getProperty("userRoleId"));
 
-            List<GrantedAuthority> roles = this.securityService.createUserRoles(userId, role, userRoleId);
+            List<GrantedAuthority> roles = this.securityService.createUserRoles(role, userRoleId);
 
             result = new ApplicationUser(userId, roles);
 

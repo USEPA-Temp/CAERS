@@ -33,6 +33,8 @@ import {XhrInterceptor} from "./core/interceptors/http-xhr.interceptor";
 import { ConfirmationDialogComponent } from './shared/components/confirmation-dialog/confirmation-dialog.component';
 import { SubmissionReviewModalComponent } from './modules/dashboards/components/submission-review-modal/submission-review-modal.component';
 import { HelpPageComponent } from './modules/dashboards/pages/help-page/help-page.component';
+import { AdminPropertiesComponent } from './modules/dashboards/pages/admin-properties/admin-properties.component';
+import { AdminAnnouncementPropertiesComponent } from './modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
 
 
 @NgModule({
@@ -55,7 +57,9 @@ import { HelpPageComponent } from './modules/dashboards/pages/help-page/help-pag
     TimeoutModalComponent,
     ConfirmationDialogComponent,
     SubmissionReviewModalComponent,
-    HelpPageComponent
+    HelpPageComponent,
+    AdminPropertiesComponent,
+    AdminAnnouncementPropertiesComponent
   ],
   imports: [
     BrowserModule,

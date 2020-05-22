@@ -63,7 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .hasAnyRole(
                 AppRole.RoleType.PREPARER.roleName(),
                 AppRole.RoleType.NEI_CERTIFIER.roleName(),
-                AppRole.RoleType.REVIEWER.roleName())
+                AppRole.RoleType.REVIEWER.roleName(),
+                AppRole.RoleType.CAERS_ADMIN.roleName())
             .anyRequest().denyAll().and()
             .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(logoutUrl));
     }

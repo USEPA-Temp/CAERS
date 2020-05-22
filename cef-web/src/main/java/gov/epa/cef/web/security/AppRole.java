@@ -18,6 +18,7 @@ public class AppRole {
         PREPARER(142710L, ROLE_PREPARER),
         NEI_CERTIFIER(142720L, ROLE_NEI_CERTIFIER),
         REVIEWER(142730L, ROLE_REVIEWER),
+        CAERS_ADMIN(142740L, ROLE_CAERS_ADMIN),
         ADMIN(-1, ROLE_ADMIN),
         UNKNOWN(-9999, "UNKNOWN");
 
@@ -154,6 +155,8 @@ public class AppRole {
     public static final String ROLE_NEI_CERTIFIER = "ROLE_NEI Certifier";
 
     public static final String ROLE_REVIEWER = "ROLE_Reviewer";
+    
+    public static final String ROLE_CAERS_ADMIN = "ROLE_CAERS Administrator";
 
     public static final String ROLE_ADMIN = "ROLE_Admin";
 
