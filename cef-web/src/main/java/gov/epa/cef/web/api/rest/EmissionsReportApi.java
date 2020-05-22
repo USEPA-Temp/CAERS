@@ -356,7 +356,7 @@ public class EmissionsReportApi {
     @PostMapping(value = "/upload",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    // @RolesAllowed(value = {AppRole.ROLE_ADMIN})
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody JsonNode jsonNode) {
 
         EmissionsReportDto savedReport = this.uploadService.parseJsonNode(false)

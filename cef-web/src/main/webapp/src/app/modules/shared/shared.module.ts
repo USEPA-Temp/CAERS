@@ -26,6 +26,7 @@ import { StripPeriodEndingPipe } from './pipes/strip-period-ending.pipe';
 import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.directive';
 import { FileAttachmentModalComponent } from './components/file-attachment-modal/file-attachment-modal.component';
 import { ReportAttachmentTableComponent } from './components/report-attachment-table/report-attachment-table.component';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { ReportAttachmentTableComponent } from './components/report-attachment-t
     FileAttachmentModalComponent,
     BulkUploadComponent,
     StripPeriodEndingPipe,
-    LegacyUomValidatorDirective
+    LegacyUomValidatorDirective,
+    AdminNavComponent
 ],
     exports: [
         FacilityInfoComponent,
@@ -65,7 +67,8 @@ import { ReportAttachmentTableComponent } from './components/report-attachment-t
         ReportSummaryTableComponent,
         ReportAttachmentTableComponent,
         ValidationMessageComponent,
-        StripPeriodEndingPipe
+        StripPeriodEndingPipe,
+        AdminNavComponent
     ],
   imports: [
     CommonModule,

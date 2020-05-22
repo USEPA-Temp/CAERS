@@ -29,7 +29,7 @@ public class CefPreAuthenticationUserDetailsServiceTest extends BaseSecurityTest
     @Before
     public void init() {
 
-        when(securityService.createUserRoles("FRED", 142710L, 1111142710L))
+        when(securityService.createUserRoles(142710L, 1111142710L))
             .thenReturn(Collections.singletonList(new SimpleGrantedAuthority("ROLE_Preparer")));
     }
 

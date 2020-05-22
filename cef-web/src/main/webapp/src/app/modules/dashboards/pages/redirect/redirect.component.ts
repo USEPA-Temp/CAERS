@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserContextService } from "src/app/core/services/user-context.service";
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-redirect',
@@ -11,7 +11,7 @@ export class RedirectComponent {
   constructor(public userContext: UserContextService, public router: Router) {
     this.userContext.getUser()
     .subscribe(currentUser => {
-        if (currentUser.role === 'Reviewer') {
+        if (currentUser.canReview()) {
             this.router.navigateByUrl('/submissionReviewDashboard');
         } else {
             this.router.navigateByUrl('/facility');

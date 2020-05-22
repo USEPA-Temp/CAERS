@@ -214,9 +214,21 @@ public class PropertyProvider {
         return result;
     }
 
-    public Map<String, String> retrieveAll() {
+    public AdminProperty retrieve(IPropertyKey propertyKey) {
 
-        return this.propertyRepo.findAll().stream().collect(Collectors.toMap(AdminProperty::getName, AdminProperty::getValue));
+        String name = propertyKey.configKey();
+
+        AdminProperty property = this.propertyRepo.findById(name).orElseThrow(() -> {
+
+            return new NotExistException("AdminProperty", name);
+        });
+
+        return property;
+    }
+
+    public List<AdminProperty> retrieveAll() {
+
+        return this.propertyRepo.findAll();
     }
 
     public AdminProperty update(IPropertyKey propertyKey, String value) {
