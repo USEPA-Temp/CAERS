@@ -35,8 +35,6 @@ public class SecurityService {
 
     private final CacheManager cacheManager;
 
-    private final CefConfig cefConfig;
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final ProgramIdRepoLocator programIdRepoLocator;
@@ -46,8 +44,7 @@ public class SecurityService {
     @Autowired
     SecurityService(RegistrationService registrationService,
                     CacheManager cacheManager,
-                    ProgramIdRepoLocator programIdRepoLocator,
-                    CefConfig cefConfig) {
+                    ProgramIdRepoLocator programIdRepoLocator) {
 
         this.registrationService = registrationService;
 
@@ -55,17 +52,11 @@ public class SecurityService {
 
         this.programIdRepoLocator = programIdRepoLocator;
 
-        this.cefConfig = cefConfig;
     }
 
-    public List<GrantedAuthority> createUserRoles(String userId, AppRole.RoleType role, Long userRoleId) {
+    public List<GrantedAuthority> createUserRoles(AppRole.RoleType role, Long userRoleId) {
 
         List<GrantedAuthority> roles = new ArrayList<>();
-
-        if (this.cefConfig.getAdminsAsLowerCase().contains(userId.toLowerCase())) {
-
-            roles.add(new SimpleGrantedAuthority(AppRole.ROLE_ADMIN));
-        }
 
         if (role != null) {
             roles.add(new SimpleGrantedAuthority(role.grantedRoleName()));
@@ -141,7 +132,7 @@ public class SecurityService {
             && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null;
     }
 
-    List<GrantedAuthority> createUserRoles(String userId, Long roleId, Long userRoleId) {
+    List<GrantedAuthority> createUserRoles(Long roleId, Long userRoleId) {
 
         AppRole.RoleType role = null;
         if (roleId != null) {
@@ -155,7 +146,7 @@ public class SecurityService {
             logger.warn("RoleId is null.");
         }
 
-        return createUserRoles(userId, role, userRoleId);
+        return createUserRoles(role, userRoleId);
     }
 
     void evictUserCachedItems(long userRoleId) {

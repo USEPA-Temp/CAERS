@@ -15,6 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,6 +35,7 @@ import static gov.epa.cef.web.controller.HandoffLandingController.HANDOFF_LANDIN
 @Profile("dev")
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
 
     private final Environment environment;
@@ -65,7 +67,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
             .hasAnyRole(
                 AppRole.RoleType.PREPARER.roleName(),
                 AppRole.RoleType.NEI_CERTIFIER.roleName(),
-                AppRole.RoleType.REVIEWER.roleName())
+                AppRole.RoleType.REVIEWER.roleName(),
+                AppRole.RoleType.CAERS_ADMIN.roleName())
             .anyRequest().denyAll().and()
             .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(loginRedirectUrl));
     }

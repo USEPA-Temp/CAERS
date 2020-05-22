@@ -8,6 +8,8 @@ import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/red
 import { ErrorComponent } from 'src/app/modules/shared/pages/error/error.component';
 import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
 import { HelpPageComponent } from 'src/app/modules/dashboards/pages/help-page/help-page.component';
+import { AdminPropertiesComponent } from 'src/app/modules/dashboards/pages/admin-properties/admin-properties.component';
+import { AdminAnnouncementPropertiesComponent } from 'src/app/modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -34,6 +36,24 @@ const routes: Routes = [
         path: '',
         component: FacilityDashboardComponent,
         data: { title: 'Facility Dashboard' },
+      }
+    ]
+  },
+  {
+    path: 'admin',
+    children: [
+      {
+        path: 'properties',
+        component: AdminPropertiesComponent,
+        data: { title: 'Admin Properties' },
+      }, {
+        path: 'announcement',
+        component: AdminAnnouncementPropertiesComponent,
+        data: { title: 'Announcement Banner' },
+      }, {
+        path: '',
+        redirectTo: 'properties',
+        pathMatch: 'full'
       }
     ]
   },

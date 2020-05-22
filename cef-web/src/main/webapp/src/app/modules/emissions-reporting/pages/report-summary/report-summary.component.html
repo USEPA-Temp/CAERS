@@ -5,18 +5,61 @@
                 <div class="card-header text-center">
                     <strong>Report Summary</strong>
                 </div>
-                <div class="card-body" *ngIf="tableData">
-                    <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
-                                              [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
-                    <div class="float-right pr-3">
-                        <button class="btn btn-success btn-md my-3 ml-3" 
-                                aria-label="download report"
-                                (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
-                            Download Report
-                        </button>
-                    </div>
+        <div class="row-sm-12">
+            <div *ngIf="tableData">
+                <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
+                                            [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
+                <div class="float-right pr-3">
+                    <button class="btn btn-success btn-md my-3 ml-1" 
+                            aria-label="download report"
+                            (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
+                        Download Report
+                    </button>
                 </div>
             </div>
+            <div class="float-right pr-3">
+                <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
+                    <button *ngIf="userRole!=='Reviewer'"
+                            class="btn btn-primary btn-md my-3 ml-1"
+                            aria-label="run quality checks"
+                            (click)="validateReport()">
+                        Run Quality Checks
+                    </button>
+                </div>
+            </div>
+            <div class="float-right pr-3">
+                <button *ngIf="(facilitySite.emissionsReport.validationStatus==='PASSED'|| facilitySite.emissionsReport.validationStatus==='PASSED_WARNINGS')
+                        && userRole==='NEI Certifier'"
+                        [disabled]="!cromerrLoaded"
+                        id="certifyAndSubmit"
+                        aria-label="certify and submit to SLT"
+                        class="btn btn-success btn-md my-3 ml-1">
+                    Certify and Submit to SLT
+                    <div *ngIf="!cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </button>
+            </div>
+            <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
+                <div class="float-right pr-3">
+                    <button *ngIf="userRole==='NEI Certifier' || userRole==='Preparer'"
+                            class="btn btn-success btn-md my-3 ml-1" 
+                            aria-label="reopen report"
+                            (click)="reopenReport()">
+                        Reopen Report
+                    </button>
+                </div>
+            </div>
+            <div class="float-right pr-3">
+                <div *ngIf="feedbackEnabled && !feedbackSubmitted && (facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
+                    <button class="btn btn-success btn-md my-3 ml-1" 
+                            aria-label="user feedback"
+                            (click)="navigateToFeedbackPage()">
+                        User Feedback
+                    </button>
+                </div>
+            </div>
+        </div>
             <div class="card  mb-3">
                 <div class="card-header text-center">
                     <strong>Preparer/NEI Certifier Attachments</strong>
@@ -27,35 +70,6 @@
                     </div>
                 </div>
             </div>
-                <div class="float-right pb-3 pr-3">
-                    <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
-                        <button *ngIf="userRole!=='Reviewer'"
-                                class="btn btn-primary btn-md my-3 ml-3"
-                                aria-label="run quality checks"
-                                (click)="validateReport()">
-                            Run Quality Checks
-                        </button>
-                        <button *ngIf="(facilitySite.emissionsReport.validationStatus==='PASSED'|| facilitySite.emissionsReport.validationStatus==='PASSED_WARNINGS')
-                                && userRole==='NEI Certifier'"
-                                [disabled]="!cromerrLoaded"
-                                id="certifyAndSubmit"
-                                aria-label="certify and submit to SLT"
-                                class="btn btn-success btn-md my-3 ml-3">
-                            Certify and Submit to SLT
-                            <div *ngIf="!cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </button>
-                    </div>
-                    <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
-                        <button *ngIf="userRole==='NEI Certifier' || userRole==='Preparer'"
-                                class="btn btn-success btn-md my-3 ml-3" 
-                                aria-label="reopen report"
-                                (click)="reopenReport()">
-                            Reopen Report
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 </div>
