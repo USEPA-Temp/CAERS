@@ -300,13 +300,13 @@ export class FileAttachmentModalComponent implements OnInit {
   }
 
   checkFileSize(file) {
-    const maxSize = this.maxFileSize; // MB from config properties
-    let fileSize = Math.round(file.size / 1048576); // convert Bytes to MB
+    const maxSize = (this.maxFileSize * 1048576); // MB from config properties convert to Bytes
+    let fileSize = file.size; // Bytes
     //1048576 byte = 1 MB, 1024 byte = 1 KB
 
     if (fileSize > maxSize) {
       this.uploadUserErrors.push({ worksheet: file.name, row: null,
-        message: 'The selected file size, ' + fileSize + ' MB, exceeds maximum allowable upload size '  + maxSize + ' MB',
+        message: 'The selected file size exceeds maximum allowable upload size '  + this.maxFileSize + ' MB',
         systemError: false});
 
       return true;

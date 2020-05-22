@@ -38,12 +38,15 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
         this.userContextService.getUser().subscribe( user => {
             this.userRole = user.role;
         });
+
         this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
         .subscribe(report => {
             this.tableData = report.filter(data =>
                 data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
                 .sort((a, b) => (a.actionDate < b.actionDate) ? 1 : -1);
         });
+
+        this.reportStatus = this.facilitySite.emissionsReport.status;
 
     }
 
