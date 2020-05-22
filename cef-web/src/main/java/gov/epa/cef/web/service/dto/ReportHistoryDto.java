@@ -13,6 +13,10 @@ public class ReportHistoryDto implements Serializable {
 	private Date actionDate;
 	private String reportAction;
 	private String comments;
+	private Long reportAttachmentId;
+	private String userRole;
+	private String fileName;
+	private boolean fileDeleted;
 
 	public Long getId() {
 		return id;
@@ -69,4 +73,37 @@ public class ReportHistoryDto implements Serializable {
 	public void setEmissionsReportId(Long emissionsReportId) {
 		this.emissionsReportId = emissionsReportId;
 	}
+
+	public Long getReportAttachmentId() {
+		return reportAttachmentId;
+	}
+
+	public void setReportAttachmentId(Long reportAttachmentId) {
+		this.reportAttachmentId = reportAttachmentId;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+	
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public boolean isFileDeleted() {
+		return fileDeleted;
+	}
+
+	public void setFileDeleted(boolean fileDeleted) {
+		this.fileDeleted = fileDeleted;
+	}
+	
 }

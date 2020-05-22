@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -20,6 +21,8 @@ public class TempFile implements AutoCloseable {
     private final File file;
 
     private final String fileName;
+    
+    private TempFileBlob tempFileBlob;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -83,8 +86,29 @@ public class TempFile implements AutoCloseable {
     @Override
     public void close() {
 
-        new FileCloser().accept(file);
+    	if (this.tempFileBlob != null) {
+            try {
+
+                this.tempFileBlob.close();
+            } catch (Exception e) {
+
+                logger.error("Unable to close blob.", e);
+            }
+        }
+    	
+    	new FileCloser().accept(file);
     }
+    
+    public TempFileBlob createBlob() throws FileNotFoundException {
+
+        if (this.tempFileBlob == null) {
+
+            this.tempFileBlob = new TempFileBlob(this);
+        }
+
+        return this.tempFileBlob;
+    }
+
 
     public File getFile() {
 
@@ -94,6 +118,11 @@ public class TempFile implements AutoCloseable {
     public String getFileName() {
 
         return fileName;
+    }
+    
+    public long length() {
+
+        return this.file.length();
     }
 
     public Path toPath() {

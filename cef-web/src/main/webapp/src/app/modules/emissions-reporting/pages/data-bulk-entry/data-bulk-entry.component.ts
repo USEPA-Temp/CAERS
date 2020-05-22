@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
@@ -8,6 +8,11 @@ import { EmissionService } from 'src/app/core/services/emission.service';
 import { BulkEntryEmissionHolder } from 'src/app/shared/models/bulk-entry-emission-holder';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { Observable } from 'rxjs';
+import { BulkEntryEmissionsTableComponent } from 'src/app/modules/emissions-reporting/components/bulk-entry-emissions-table/bulk-entry-emissions-table.component';
+import { BulkEntryReportingPeriodTableComponent } from 'src/app/modules/emissions-reporting/components/bulk-entry-reporting-period-table/bulk-entry-reporting-period-table.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-data-bulk-entry',
@@ -22,11 +27,18 @@ export class DataBulkEntryComponent implements OnInit {
 
   readOnlyMode = true;
 
+  @ViewChild(BulkEntryReportingPeriodTableComponent, { static: false })
+  periodComponent: BulkEntryReportingPeriodTableComponent;
+
+  @ViewChild(BulkEntryEmissionsTableComponent, { static: false })
+  emissionComponent: BulkEntryEmissionsTableComponent;
+
   constructor(
     private emissionService: EmissionService,
     private reportingPeriodService: ReportingPeriodService,
     private userContextService: UserContextService,
     private route: ActivatedRoute,
+    private modalService: NgbModal,
     private sharedService: SharedService) { }
 
   ngOnInit() {
@@ -61,6 +73,26 @@ export class DataBulkEntryComponent implements OnInit {
   onEmissionsUpdated(updatedEmissions: BulkEntryEmissionHolder[]) {
 
     this.emissions = updatedEmissions;
+  }
+
+  onPeriodsUpdated(updatedPeriods: BulkEntryEmissionHolder[]) {
+
+    this.emissions = updatedPeriods;
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if both forms are clean
+    if (this.readOnlyMode || (!this.periodComponent.reportingPeriodForm.dirty && !this.emissionComponent.emissionForm.dirty)) {
+      return true;
+    }
+    // Otherwise ask the user with the dialog service and return its
+    // promise which resolves to true or false when the user decides
+    const modalMessage = 'You have unsaved changes which will be lost if you navigate away. Are you sure you wish to discard these changes?';
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.title = 'Unsaved Changes';
+    modalRef.componentInstance.confirmButtonText = 'Discard';
+    return modalRef.result;
   }
 
 }

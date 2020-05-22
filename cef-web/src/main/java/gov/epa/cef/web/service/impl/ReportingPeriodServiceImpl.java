@@ -9,6 +9,7 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.ReportingPeriodService;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
@@ -16,10 +17,10 @@ import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportingPeriodServiceImpl implements ReportingPeriodService {
@@ -184,20 +185,22 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
     /**
      * Update the throughput for multiple Reporting Periods at once
+     * @param facilitySiteId
      * @param dtos
      * @return
      */
-    public List<ReportingPeriodUpdateResponseDto> bulkUpdate(List<ReportingPeriodBulkEntryDto> dtos) {
+    public List<EmissionBulkEntryHolderDto> bulkUpdate(Long facilitySiteId, List<ReportingPeriodBulkEntryDto> dtos) {
 
-        List<ReportingPeriodDto> updateDtos = mapper.toUpdateDtoFromBulkList(dtos);
+        List<ReportingPeriod> periods = dtos.stream().map(dto -> {
+            ReportingPeriod period = repo.findById(dto.getReportingPeriodId())
+                    .orElseThrow(() -> new NotExistException("Reporting Period", dto.getReportingPeriodId()));
+            period.setCalculationParameterValue(dto.getCalculationParameterValue());
+            return period;
+        }).collect(Collectors.toList());
 
-        List<ReportingPeriodUpdateResponseDto> result = new ArrayList<>();
+        repo.saveAll(periods);
 
-        updateDtos.forEach(dto -> {
-            result.add(update(dto));
-        });
-
-        return result;
+        return emissionService.bulkUpdate(facilitySiteId, Collections.emptyList());
     }
 
 }

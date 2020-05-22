@@ -20,6 +20,14 @@ public interface ReportHistoryRepository extends CrudRepository<ReportHistory, L
     List<ReportHistory> findByEmissionsReportIdOrderByActionDate(Long emissionsReportId);
     
     /**
+     * Retrieve Log for an upload attachment file
+     * @param reportAttachmentId
+     * @return
+     */
+    @Query("SELECT rh FROM ReportHistory rh WHERE rh.reportAttachmentId = :reportAttachmentId")
+    ReportHistory findByAttachmentId(@Param("reportAttachmentId") Long reportAttachmentId);
+    
+    /**
     * Return the latest submission date for a given report
     * @param id Report ID
     * @return 
