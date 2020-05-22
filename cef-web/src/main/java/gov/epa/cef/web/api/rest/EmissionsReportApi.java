@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode; 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -207,7 +208,24 @@ public class EmissionsReportApi {
 
         return new ResponseEntity<>(result, status);
     }
+    
+    /**
+     * Set Emissions Report HasSubmitted column to true
+     * @param pointId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/{reportId}")
+    public ResponseEntity<EmissionsReportDto> updateEmissionsReportHasSubmitted(
+        @NotNull @PathVariable Long reportId, @NotNull @RequestBody EmissionsReportDto dto) {
 
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
+        EmissionsReportDto result = emissionsReportService.update(dto.withId(reportId));
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
     /**
      * Delete a report for given id
      *

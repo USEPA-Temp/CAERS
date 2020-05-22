@@ -6,6 +6,7 @@ public class UserFeedbackDto implements Serializable {
 	
     private static final long serialVersionUID = 1L;
     
+	private Long id;
     private String beneficialFunctionalityComments;
     private String difficultFunctionalityComments;
     private String enhancementComments;
@@ -17,6 +18,14 @@ public class UserFeedbackDto implements Serializable {
     private Long controlsAndControlPathAssignments;
     private Long qualityAssuranceChecks;
     private Long overallReportingTime;
+    
+    public Long getId() {
+		return id;
+	}
+    
+	public void setId(Long id) {
+		this.id = id;
+	}
     
 	public String getBeneficialFunctionalityComments() {
 		return beneficialFunctionalityComments;
@@ -84,6 +93,9 @@ public class UserFeedbackDto implements Serializable {
 	public void setOverallReportingTime(Long overallReportingTime) {
 		this.overallReportingTime = overallReportingTime;
 	}
-	
+	public UserFeedbackDto withId(Long reportId) {
+        setReportId(reportId);
+        return this;
+    }
        
 }

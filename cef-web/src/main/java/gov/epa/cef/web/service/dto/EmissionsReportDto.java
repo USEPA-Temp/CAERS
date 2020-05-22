@@ -13,6 +13,7 @@ public class EmissionsReportDto implements Serializable {
     private Short year;
     private String status;
     private String validationStatus;
+    private Boolean hasSubmitted;
 
     public Long getId() {
         return id;
@@ -68,6 +69,19 @@ public class EmissionsReportDto implements Serializable {
 
     public void setValidationStatus(String validationStatus) {
         this.validationStatus = validationStatus;
+    }
+
+	public Boolean getHasSubmitted() {
+		return hasSubmitted;
+	}
+
+	public void setHasSubmitted(Boolean hasSubmitted) {
+		this.hasSubmitted = hasSubmitted;
+	}
+	
+	public EmissionsReportDto withId(Long id) {
+        setId(id);
+        return this;
     }
 
 

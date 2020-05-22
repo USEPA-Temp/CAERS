@@ -40,7 +40,7 @@ function loadScript(srciptUrl){
     return script;
 }
 
-function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback){
+function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, feedbackEnabled, feedbackSubmitted){
     $( document ).ready(function() {
         $.cromerrWidget({
             esignButtonId : "certifyAndSubmit",
@@ -62,14 +62,15 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
                         reportId: emissionsReportId
                       },
                       success: function(response) {
-                        if (userFeedback) {
+                        //if feedback is enabled and the user hasn't already submitted feedback for this report go to feedback page after signing
+                        if (feedbackEnabled && !feedbackSubmitted) {
+                            toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
+                            event.unblockUI();
+                            window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report/"+emissionsReportId+"/userfeedback";
+                        } else {
                             toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
                             event.unblockUI();
                             window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report";
-                        } else {
-                            toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
-                            event.unblockUI()
-                            window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report/"+emissionsReportId+"/userfeedback";
                         }
                       },
                       error: function(xhr) {

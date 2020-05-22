@@ -30,8 +30,11 @@ export class ReportSummaryComponent implements OnInit {
     cromerrLoaded = false;
     cromerrLoadedEmitter = new Subject<boolean>();
     userRole: string;
-    feedbackSubmitted = true;
+    feedbackSubmitted: boolean;
     feedbackEnabled: boolean;
+    feedbackUrl: string;
+    reportId: string;
+
 
     constructor(
         private router: Router,
@@ -52,34 +55,35 @@ export class ReportSummaryComponent implements OnInit {
             this.cromerrLoaded = result;
         });
 
+        this.route.paramMap
+        .subscribe(map => {
+            this.feedbackUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/userfeedback`;
+            this.reportId = map.get('reportId');
+        });
+
         this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
 
             this.facilitySite = data.facilitySite;
             this.emissionsReportYear = this.facilitySite.emissionsReport.year;
-
+            this.emissionsReportingService.getReport(this.reportId).subscribe((report) => {
+                this.feedbackSubmitted = report.hasSubmitted;
+            });
             if (this.facilitySite.id) {
                 this.propertyService.retrieveUserFeedbackEnabled()
                 .subscribe(result => {
                     this.feedbackEnabled = result;
-
-                    this.userService.getCurrentUserNaasToken()
-                    .subscribe(userToken => {
-                        this.userContextService.getUser().subscribe( user => {
-                            this.userRole = user.role;
-
-                            if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                                if (this.feedbackEnabled) {
-                                    this.feedbackSubmitted = false;
+                        this.userService.getCurrentUserNaasToken()
+                        .subscribe(userToken => {
+                            this.userContextService.getUser().subscribe( user => {
+                                this.userRole = user.role;
+                                if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                                    initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
+                                        this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
+                                        this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted)
                                 }
-
-                                initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                    this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
-                                    this.cromerrLoadedEmitter, this.feedbackSubmitted);
-                            }
-                        });
+                            });
                     });
                 });
-
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
                     .subscribe(pollutants => {
                     // filter out radiation pollutants to show separately at the end of the table
@@ -136,6 +140,10 @@ export class ReportSummaryComponent implements OnInit {
                 this.facilitySite.emissionsReport.year + '_' + 'Emissions_Report' + '_Submission_In_Progress');
             }
         });
+    }
+
+    navigateToFeedbackPage(){
+        this.router.navigateByUrl(this.feedbackUrl);
     }
 
 }
