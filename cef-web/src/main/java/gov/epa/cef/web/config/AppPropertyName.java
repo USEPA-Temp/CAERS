@@ -15,8 +15,7 @@ public enum AppPropertyName implements IPropertyKey {
     FeatureUserFeedbackEnabled("feature.user-feedback.enabled"),
     LastSccUpdateDate("task.scc-update.last-ran"),
     SccUpdateTaskCron("task.scc-update.cron"),
-    SccUpdateTaskEnabled("task.scc-update.enabled"),
-    ReportAttachmentMaxSize("attachment.max-size");
+    SccUpdateTaskEnabled("task.scc-update.enabled");
 
     private final String key;
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.config.AppPropertyName;
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.provider.system.PropertyProvider;
 import gov.epa.cef.web.service.dto.PropertyDto;
 
@@ -18,6 +19,9 @@ public class PropertyApi {
 
     @Autowired
     private PropertyProvider propertyProvider;
+    
+    @Autowired
+    private CefConfig cefConfig;
 
     /**
      * Retrieve announcement enabled property
@@ -62,5 +66,17 @@ public class PropertyApi {
         Boolean result = propertyProvider.getBoolean(AppPropertyName.FeatureUserFeedbackEnabled);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve multipartfile maximum file upload size
+     * @return
+     */
+    @GetMapping(value = "/attachments/maxSize")
+    @ResponseBody
+    public ResponseEntity<PropertyDto> retrieveReportAttachmentMaxSize() {
+    	Long result = Long.valueOf(this.cefConfig.getMaxFileSize().replaceAll("[^0-9]", ""));
+        return new ResponseEntity<>(new PropertyDto().withValue(result.toString()), HttpStatus.OK);
+    }
+
 
 }
