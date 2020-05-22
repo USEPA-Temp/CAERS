@@ -6,8 +6,8 @@
                 <th scope="col" sortable="actionDate" (sort)="onSort($event)">Date</th>
                 <th scope="col" sortable="userId" (sort)="onSort($event)">User ID</th>
                 <th scope="col" sortable="userFullName" (sort)="onSort($event)">User Name</th>
-                <th scope="col" sortable="fileName" (sort)="onSort($event)" style="width:30%;">Document Name</th>
-                <th scope="col" sortable="comments" (sort)="onSort($event)" style="width:30%;">Comments</th>
+                <th scope="col" sortable="comments" (sort)="onSort($event)" style="width:35%;">Comments</th>
+                <th scope="col" sortable="fileName" (sort)="onSort($event)" style="width:25%;">Attachments</th>
                 <ng-container *ngIf="reportStatus!=='APPROVED' && userRole !== 'Reviewer'">
                     <th scope="col"></th>
                 </ng-container>
@@ -15,13 +15,13 @@
         </thead>
         <tbody>
             <tr *ngFor="let item of tableData">
-            <td style="width:10px">{{ item.actionDate | date:'shortDate' }}</td>
+            <td>{{ item.actionDate | date:'shortDate' }}</td>
             <td>{{ item.userRole }} - {{ item.userId }}</td>
             <td>{{ item.userFullName }}</td>
+            <td>{{ item.comments }}</td>
             <td >
                 <a routerLink="." (click)="download(item)">{{ item.fileName }}</a>
             </td>
-            <td>{{ item.comments }}</td>
             <ng-container *ngIf="reportStatus !== 'APPROVED' && userRole !== 'Reviewer'">
                 <td>
                     <a routerLink="." (click)="openDeleteModal(item.reportAttachmentId, item.fileName)"

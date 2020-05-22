@@ -14,14 +14,14 @@
                                     <th scope="col" sortable="userId" (sort)="onSort($event)">User ID</th>
                                     <th scope="col" sortable="userFullName" (sort)="onSort($event)">User Name</th>
                                     <th scope="col" sortable="reportAction" (sort)="onSort($event)">Action</th>
-                                    <th scope="col" sortable="comments" (sort)="onSort($event)" style="width:25%;">Comments</th>
-                                    <th scope="col" sortable="fileName" (sort)="onSort($event)" style="width:25%;">Attachments</th>
+                                    <th scope="col" sortable="comments" (sort)="onSort($event)" style="width:30%;">Comments</th>
+                                    <th scope="col" sortable="fileName" (sort)="onSort($event)" style="width:20%;">Attachments</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let report of tableData">
                                     <td>{{ report.actionDate | date:'shortDate' }}</td>
-                                    <td>{{ report.userId }}</td>
+                                    <td>{{ report.userRole }} - {{ report.userId }}</td>
                                     <td>{{ report.userFullName }}</td>
                                     <td>{{ enumValue(report.reportAction) }}</td>
                                     <td>{{ report.comments }}</td>
