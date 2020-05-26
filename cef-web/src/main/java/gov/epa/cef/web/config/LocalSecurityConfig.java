@@ -35,7 +35,7 @@ import static gov.epa.cef.web.controller.HandoffLandingController.HANDOFF_LANDIN
 @Profile("dev")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter{
 
     private final Environment environment;

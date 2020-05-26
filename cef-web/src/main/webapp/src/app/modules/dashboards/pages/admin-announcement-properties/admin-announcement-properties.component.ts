@@ -58,6 +58,7 @@ export class AdminAnnouncementPropertiesComponent implements OnInit {
       .subscribe(result => {
         console.log(result);
         this.toastr.success('', 'Properties updated successfully. Changes will appear after a refresh.');
+        location.reload();
       });
 
     }
