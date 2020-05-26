@@ -139,7 +139,6 @@ public class ControlPathApi {
      * @return
      */
     @GetMapping(value = "/unit/{unitId}")
-    @PreAuthorize("hasPermission(#unitId, 'EmissionsUnitRepository', null)")
     public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForEmissionsUnit(
         @NotNull @PathVariable Long unitId) {
 
@@ -156,7 +155,6 @@ public class ControlPathApi {
      * @return
      */
     @GetMapping(value = "/releasePoint/{pointId}")
-    @PreAuthorize("hasPermission(#unitId, 'ReleasePointRepository', null)")
     public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForReleasePoint(
         @NotNull @PathVariable Long pointId) {
 

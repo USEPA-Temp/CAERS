@@ -5,16 +5,28 @@
                 <div class="card-header text-center">
                     <strong>Report Summary</strong>
                 </div>
-        <div class="row-sm-12">
-            <div *ngIf="tableData">
-                <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
-                                            [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
-                <div class="float-right pr-3">
-                    <button class="btn btn-success btn-md my-3 ml-1" 
-                            aria-label="download report"
-                            (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
-                        Download Report
-                    </button>
+                <div class="row-sm-12">
+                    <div *ngIf="tableData">
+                        <app-report-summary-table [tableData]="tableData" [radiationData]="radiationData"
+                                                  [emissionsReportYear]='emissionsReportYear'></app-report-summary-table>
+                        <div class="float-right pr-3">
+                            <button class="btn btn-success btn-md my-3 ml-1" 
+                                    aria-label="download report"
+                                    (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
+                                Download Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card  mb-3">
+                <div class="card-header text-center">
+                    <strong>Preparer/NEI Certifier Attachments</strong>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="true">
+                        <app-report-attachment-table [facilitySite]="facilitySite"></app-report-attachment-table>
+                    </div>
                 </div>
             </div>
             <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
@@ -60,16 +72,5 @@
                 </div>
             </div> -->
         </div>
-            <div class="card  mb-3">
-                <div class="card-header text-center">
-                    <strong>Preparer/NEI Certifier Attachments</strong>
-                </div>
-                <div class="card-body">
-                    <div *ngIf="true">
-                        <app-report-attachment-table [facilitySite]="facilitySite"></app-report-attachment-table>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
+    </div>
 </div>

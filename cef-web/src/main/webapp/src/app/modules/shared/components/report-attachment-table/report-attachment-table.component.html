@@ -34,7 +34,7 @@
         </tbody>
     </table>
 </div>
-<div class="float-right pr-3" *ngIf="userRole !== 'Reviewer' && reportStatus !== 'APPROVED'">
+<div class="float-right" *ngIf="userRole !== 'Reviewer' && reportStatus !== 'APPROVED'">
     <button class="btn btn-success btn-md my-3 ml-3" (click)="openAttachmentModal()">
         Attach Report Document
     </button>
