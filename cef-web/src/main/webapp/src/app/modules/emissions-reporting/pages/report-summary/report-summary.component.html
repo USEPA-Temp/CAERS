@@ -17,8 +17,8 @@
                     </button>
                 </div>
             </div>
-            <div class="float-right pr-3">
-                <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
+            <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
+                <div class="float-right pr-3">
                     <button *ngIf="userRole!=='Reviewer'"
                             class="btn btn-primary btn-md my-3 ml-1"
                             aria-label="run quality checks"
@@ -26,19 +26,19 @@
                         Run Quality Checks
                     </button>
                 </div>
-            </div>
-            <div class="float-right pr-3">
-                <button *ngIf="(facilitySite.emissionsReport.validationStatus==='PASSED'|| facilitySite.emissionsReport.validationStatus==='PASSED_WARNINGS')
-                        && userRole==='NEI Certifier'"
-                        [disabled]="!cromerrLoaded"
-                        id="certifyAndSubmit"
-                        aria-label="certify and submit to SLT"
-                        class="btn btn-success btn-md my-3 ml-1">
-                    Certify and Submit to SLT
-                    <div *ngIf="!cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </button>
+                <div class="float-right pr-3">
+                    <button *ngIf="(facilitySite.emissionsReport.validationStatus==='PASSED'|| facilitySite.emissionsReport.validationStatus==='PASSED_WARNINGS')
+                            && userRole==='NEI Certifier'"
+                            [disabled]="!cromerrLoaded"
+                            id="certifyAndSubmit"
+                            aria-label="certify and submit to SLT"
+                            class="btn btn-success btn-md my-3 ml-1">
+                        Certify and Submit to SLT
+                        <div *ngIf="!cromerrLoaded" class="spinner-border spinner-border-sm" role="status" title="Loading...">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
+                </div>
             </div>
             <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
                 <div class="float-right pr-3">
@@ -50,7 +50,7 @@
                     </button>
                 </div>
             </div>
-            <div class="float-right pr-3">
+            <!-- <div class="float-right pr-3">
                 <div *ngIf="feedbackEnabled && !feedbackSubmitted && (facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
                     <button class="btn btn-success btn-md my-3 ml-1" 
                             aria-label="user feedback"
@@ -58,7 +58,7 @@
                         User Feedback
                     </button>
                 </div>
-            </div>
+            </div> -->
         </div>
             <div class="card  mb-3">
                 <div class="card-header text-center">
