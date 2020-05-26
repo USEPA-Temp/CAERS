@@ -1,7 +1,7 @@
 /*
  * Custom JS function to load the Cromerr Widget
  */
-function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback){
+function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted){
 
     var fancyboxJS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.js";
     var fancyboxCSS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.css";
@@ -10,7 +10,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
     var jqueryJS="assets/js/jquery-1.6.4.min.js";
 
     if(checkIfScriptExists(baseServiceUrl+cromerrJS)){
-        initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback);
+        initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted);
     }else{
         var jqueryScript=loadScript(jqueryJS);
         jqueryScript.onload=function(){
@@ -24,7 +24,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
                 loadScript(baseServiceUrl+jqueryValidate);
                 var cromerrScript=loadScript(baseServiceUrl+cromerrJS);
                 cromerrScript.onload=function(){
-                    initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback);
+                    initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted);
                 }
                 cromerrScript.setAttribute('id', "cromerrServerSign");
             }

@@ -78,16 +78,12 @@ export class UserFeedbackComponent implements OnInit {
   }
 
   onNoThanks() {
-        const saveUserFeedback = new UserFeedback();
-        saveUserFeedback.reportId = this.reportId;
-        this.feedbackForm.reset();
-        Object.assign(saveUserFeedback, this.feedbackForm.value)
         this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId, this.report).subscribe((result) => {
           this.sharedService.emitHideBoolChange(false);
           this.router.navigateByUrl(this.baseUrl);
         });
   }
-  
+
 }
 
 
