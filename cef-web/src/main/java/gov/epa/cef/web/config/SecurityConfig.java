@@ -35,7 +35,7 @@ import static gov.epa.cef.web.controller.HandoffLandingController.HANDOFF_LANDIN
 @Profile("prod")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
 @ComponentScan(basePackages = {"gov.epa.cdx.shared"})
 @ImportResource(locations = {"file:${spring.config.dir}/cdx-shared/cdx-shared-config.xml"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
