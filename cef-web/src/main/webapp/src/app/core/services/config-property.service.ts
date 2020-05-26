@@ -31,4 +31,10 @@ export class ConfigPropertyService {
     const url = `${this.baseUrl}/announcement/text`;
     return this.http.get<AppProperty>(url);
   }
+
+  retrieveReportAttachmentMaxSize(): Observable<AppProperty> {
+    const url = `${this.baseUrl}/attachments/maxSize`;
+    return this.http.get<AppProperty>(url);
+  }
+
 }

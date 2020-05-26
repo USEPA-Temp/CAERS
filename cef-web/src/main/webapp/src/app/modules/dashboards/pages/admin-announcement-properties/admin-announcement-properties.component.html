@@ -1,0 +1,34 @@
+<div *ngIf="announcementEnabled && announcementText">
+  <div class="container">
+      <div class="card  mb-3">
+        <div class="card-header text-center">
+          <strong>Announcement Banner</strong>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="propertyForm" class="px-3">
+            <div class="row pb-2">
+              Announcement Banner will be displayed for all NEI Certifiers and Preparers based on the criteria entered below.
+            </div>
+            <div class="row pb-2">
+              <div class="float-right form-group form-check">
+                  <input type="checkbox" class="form-check-input" id="enabledCb" formControlName="enabled" >
+                  <label for="enabledCb" class="form-check-label"><strong>Display announcement</strong></label>
+              </div>
+            </div>
+            <div class="row pb-2">
+              <div class="form-group">
+                <label for="announcementTextTa"><strong>Announcement:</strong></label>
+                <textarea rows="3" class="form-control" maxlength="2000" id="announcementTextTa" formControlName="text"></textarea>
+                <app-validation-message [control]="propertyForm.get('text')"></app-validation-message>
+              </div>
+            </div>
+
+            <div class="float-right mt-3">
+              <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>

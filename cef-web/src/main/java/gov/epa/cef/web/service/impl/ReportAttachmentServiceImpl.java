@@ -115,9 +115,9 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
 		     throw new IllegalStateException(e);
 		 }
 		 
-		 if (file.length()/1048576 > this.cefConfig.getAttachmentMaxSize()) {
-         	String msg = String.format("The file size %d MB exceeds the maximum file upload size %d MB.",
-         			(file.length()/1048576), this.cefConfig.getAttachmentMaxSize());
+		 if(file.length() > Long.valueOf(this.cefConfig.getMaxFileSize().replaceAll("[^0-9]", ""))*1048576) {
+	         	String msg = String.format("The selected file size exceeds the maximum file upload size %d MB.",
+	         			Long.valueOf(this.cefConfig.getMaxFileSize().replaceAll("[^0-9]", "")));
 
          	throw new ReportAttachmentValidationException(
                      Collections.singletonList(WorksheetError.createSystemError(msg)));

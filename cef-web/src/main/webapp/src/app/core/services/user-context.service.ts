@@ -1,7 +1,7 @@
 import { User } from 'src/app/shared/models/user';
 import { UserService } from 'src/app/core/services/user.service';
 import { Injectable } from '@angular/core';
-import { Observable, of } from "rxjs";
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,15 +22,15 @@ export class UserContextService {
       return this.userService.initHandoffToCdx(whereTo);
   }
 
-  logoutUser() : void {
+  logoutUser(): void {
 
     return this.userService.logoutUser();
   }
 
-  getUser():Observable<User>{
-    if(this.user){
+  getUser(): Observable<User> {
+    if (this.user) {
         return of(this.user);
-    }else{
+    } else {
         return this.userService.getCurrentUser();
     }
   }
