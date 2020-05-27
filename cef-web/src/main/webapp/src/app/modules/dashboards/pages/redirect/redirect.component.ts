@@ -12,7 +12,7 @@ export class RedirectComponent {
     this.userContext.getUser()
     .subscribe(currentUser => {
         if (currentUser.canReview()) {
-            this.router.navigateByUrl('/submissionReviewDashboard');
+            this.router.navigateByUrl('/reviewer');
         } else {
             this.router.navigateByUrl('/facility');
         }

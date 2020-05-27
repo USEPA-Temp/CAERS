@@ -1,0 +1,35 @@
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-1 mb-3">
+   <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+   <button class="navbar-toggler" type="button"
+           data-toggle="collapse" data-target="#nb-reviewer-component"
+           aria-controls="nb-reviewer-component" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div id="nb-reviewer-component" class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+         <li class="nav-item" [routerLinkActive]="'active'">
+            <a class="nav-link" routerLink="/reviewer/dashboard">Submission Review</a>
+         </li>
+         <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle id="nb-eis-transmission"
+               class="nav-link dropdown-toggle" style="cursor: pointer"
+               role="button" aria-haspopup="true" aria-expanded="false">
+               <span>EIS Transmission</span>
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="nb-eis-transmission">
+               <a ngbDropdownItem class="dropdown-item disabled"
+                  routerLink="/reviewer/submitData"
+                  [routerLinkActive]="'active'">Submit Data</a>
+               <a ngbDropdownItem class="dropdown-item disabled"
+                  routerLink="/reviewer/transactions"
+                  [routerLinkActive]="'active'">Review Transactions</a>
+            </div>
+         </li>
+         <li class="nav-item" [routerLinkActive]="'active'">
+            <a class="nav-link disabled" href="#">Statistics and Reports</a>
+         </li>
+      </ul>
+   </div>
+</nav>

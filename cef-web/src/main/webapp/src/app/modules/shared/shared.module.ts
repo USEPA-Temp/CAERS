@@ -28,7 +28,6 @@ import { FileAttachmentModalComponent } from './components/file-attachment-modal
 import { ReportAttachmentTableComponent } from './components/report-attachment-table/report-attachment-table.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 
-
 @NgModule({
   declarations: [
     FacilityInfoComponent,
