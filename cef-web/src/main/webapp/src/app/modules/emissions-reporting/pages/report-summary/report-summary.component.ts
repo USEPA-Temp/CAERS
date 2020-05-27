@@ -65,23 +65,24 @@ export class ReportSummaryComponent implements OnInit {
 
             this.facilitySite = data.facilitySite;
             this.emissionsReportYear = this.facilitySite.emissionsReport.year;
-            this.emissionsReportingService.getReport(this.reportId).subscribe((report) => {
-                this.feedbackSubmitted = report.hasSubmitted;
-            });
+
             if (this.facilitySite.id) {
-                this.propertyService.retrieveUserFeedbackEnabled()
-                .subscribe(result => {
-                    this.feedbackEnabled = result;
-                        this.userService.getCurrentUserNaasToken()
-                        .subscribe(userToken => {
-                            this.userContextService.getUser().subscribe( user => {
-                                this.userRole = user.role;
-                                if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
-                                    initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                        this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
-                                        this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted)
-                                }
+                this.emissionsReportingService.getReport(this.reportId).subscribe((report) => {
+                    this.feedbackSubmitted = report.hasSubmitted;
+                    this.propertyService.retrieveUserFeedbackEnabled()
+                    .subscribe(result => {
+                        this.feedbackEnabled = result;
+                            this.userService.getCurrentUserNaasToken()
+                            .subscribe(userToken => {
+                                this.userContextService.getUser().subscribe( user => {
+                                    this.userRole = user.role;
+                                    if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                                        initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
+                                            this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
+                                            this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted)
+                                    }
                             });
+                        });
                     });
                 });
                 this.reportService.retrieve(this.emissionsReportYear, this.facilitySite.id)
