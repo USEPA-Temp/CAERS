@@ -1,6 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
-import gov.epa.cef.web.client.soap.DocumentDataSource;
+import gov.epa.cef.web.client.soap.DocumentDataSource; 
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
@@ -9,7 +9,6 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
-import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -41,14 +40,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.activation.DataHandler;
 import javax.validation.constraints.NotBlank;
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -98,10 +96,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private LookupService lookupService;
-    
+
     @Autowired
     private UserFeedbackService userFeedbackService;
-    
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
@@ -170,13 +168,12 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 EmissionsReport emissionsReport=emissionsReportOptional.get();
                 URL signatureServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterSignServiceEndpoint());
                 String signatureToken = signatureServiceClient.authenticate(signatureServiceUrl, cefConfig.getCdxConfig().getNaasUser(), cefConfig.getCdxConfig().getNaasPassword());
-                byte[] xmlData=cersXmlService.retrieveCersXml(emissionsReportId);
                 SignatureDocumentType sigDoc = new SignatureDocumentType();
                 sigDoc.setName("emissionsReport.xml");
                 sigDoc.setFormat(SignatureDocumentFormatType.XML);
                 tmp = File.createTempFile("Attachment", ".xml");
-                try (InputStream is = new ByteArrayInputStream(xmlData)) {
-                    Files.copy(is, tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                try (OutputStream outputStream = new FileOutputStream(tmp)) {
+                    cersXmlService.writeCersXmlTo(emissionsReportId, outputStream);
                 }
                 sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
                 cromerrDocumentId =
@@ -219,6 +216,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setYear(reportYear);
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
+                cloneReport.setHasSubmitted(false);
                 cloneReport.clearId();
 
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
@@ -265,6 +263,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setAgencyCode(reportDto.getStateCode());
+        newReport.setHasSubmitted(false);
 
         FacilitySite facilitySite = this.facilitySiteService.transform(reportDto.getFacilitySite());
         facilitySite.setEmissionsReport(newReport);
@@ -425,5 +424,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         }
         return false;
     }
+    
+    public EmissionsReportDto update(EmissionsReportDto dto){
+    	EmissionsReport emissionsReport = erRepo.findById(dto.getId()).orElse(null);
+    	emissionsReportMapper.updateFromDto(dto, emissionsReport);
+    	emissionsReport.setHasSubmitted(true);
+    	
+    	EmissionsReportDto result = emissionsReportMapper.toDto(erRepo.save(emissionsReport));
+
+        return result;
+    }
+
 
 }

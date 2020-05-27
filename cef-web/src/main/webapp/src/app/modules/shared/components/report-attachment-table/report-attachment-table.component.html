@@ -1,0 +1,41 @@
+<div class="mh-100 overflow-auto" style="overflow-y: auto;" tabindex="0">
+    <table class="table table-sm table-striped table-bordered">
+        <thead class="thead-cef-medium">
+
+            <tr>
+                <th scope="col" sortable="actionDate" (sort)="onSort($event)">Date</th>
+                <th scope="col" sortable="userId" (sort)="onSort($event)">User ID</th>
+                <th scope="col" sortable="userFullName" (sort)="onSort($event)">User Name</th>
+                <th scope="col" sortable="comments" (sort)="onSort($event)" style="width:35%;">Comments</th>
+                <th scope="col" sortable="fileName" (sort)="onSort($event)" style="width:25%;">Attachments</th>
+                <ng-container *ngIf="reportStatus!=='APPROVED' && userRole !== 'Reviewer'">
+                    <th scope="col"></th>
+                </ng-container>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of tableData">
+            <td>{{ item.actionDate | date:'shortDate' }}</td>
+            <td>{{ item.userRole }} - {{ item.userId }}</td>
+            <td>{{ item.userFullName }}</td>
+            <td>{{ item.comments }}</td>
+            <td >
+                <a routerLink="." (click)="download(item)">{{ item.fileName }}</a>
+            </td>
+            <ng-container *ngIf="reportStatus !== 'APPROVED' && userRole !== 'Reviewer'">
+                <td>
+                    <a routerLink="." (click)="openDeleteModal(item.reportAttachmentId, item.fileName)"
+                        [attr.aria-label]="'delete attachment' + item?.filename">
+                        <fa-icon icon="trash-alt"></fa-icon>
+                    </a>
+                </td>
+            </ng-container>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="float-right" *ngIf="userRole !== 'Reviewer' && reportStatus !== 'APPROVED'">
+    <button class="btn btn-success btn-md my-3 ml-3" (click)="openAttachmentModal()">
+        Attach Report Document
+    </button>
+</div>

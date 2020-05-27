@@ -259,28 +259,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     @Override
     public Function<JsonNode, EmissionsReportBulkUploadDto> parseJsonNode(boolean failUnknownProperties) {
 
-        return jsonNode -> {
-
-            EmissionsReportBulkUploadDto result;
-
-            try {
-                result = this.objectMapper.copy()
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, failUnknownProperties)
-                    .registerModule(new BlankToNullModule())
-                    .treeToValue(jsonNode, EmissionsReportBulkUploadDto.class);
-
-            } catch (JsonProcessingException e) {
-
-                String msg = e.getMessage().replaceAll(
-                    EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
-
-                WorksheetError violation = WorksheetError.createSystemError(msg);
-
-                throw new BulkReportValidationException(Collections.singletonList(violation));
-            }
-
-            return result;
-        };
+        return new JsonNodeToBulkUploadDto(this.objectMapper, failUnknownProperties);
     }
 
     /**
@@ -292,238 +271,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     @Override
     public EmissionsReportDto saveBulkEmissionsReport(EmissionsReportBulkUploadDto bulkEmissionsReport) {
 
-        Collection<String> warnings = new ArrayList<>();
-
-        EmissionsReport emissionsReport = mapEmissionsReport(bulkEmissionsReport);
-
-        for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
-            FacilitySite facility = mapFacility(bulkFacility);
-
-            Preconditions.checkArgument(bulkFacility.getId() != null,
-                "FacilitySite ID can not be null.");
-
-            // Maps for storing the entity referenced by a certain id in the JSON
-            Map<Long, ReleasePoint> releasePointMap = new HashMap<>();
-            Map<Long, EmissionsProcess> processMap = new HashMap<>();
-            Map<Long, ControlPath> controlPathMap = new HashMap<>();
-            Map<Long, Control> controlMap = new HashMap<>();
-
-            // Map Facility Contacts
-            for (FacilitySiteContactBulkUploadDto bulkFacilityContact : bulkEmissionsReport.getFacilityContacts()) {
-                FacilitySiteContact facilityContact = mapFacilityContact(bulkFacilityContact);
-
-                if (bulkFacility.getId().equals(bulkFacilityContact.getFacilitySiteId())) {
-                    facilityContact.setFacilitySite(facility);
-                    facility.getContacts().add(facilityContact);
-                }
-            }
-
-            // Map Facility NAICS
-            for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
-                FacilityNAICSXref facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
-
-                if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {
-                    facilityNAICS.setFacilitySite(facility);
-                    facility.getFacilityNAICS().add(facilityNAICS);
-                }
-            }
-
-            // Map Release Points
-            for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
-                ReleasePoint releasePoint = mapReleasePoint(bulkRp);
-
-                if (bulkFacility.getId().equals(bulkRp.getFacilitySiteId())) {
-                    releasePoint.setFacilitySite(facility);
-                    facility.getReleasePoints().add(releasePoint);
-                    releasePointMap.put(bulkRp.getId(), releasePoint);
-                }
-            }
-
-            // Map Emissions Units
-            for (EmissionsUnitBulkUploadDto bulkEmissionsUnit : bulkEmissionsReport.getEmissionsUnits()) {
-
-                if (bulkFacility.getId().equals(bulkEmissionsUnit.getFacilitySiteId())) {
-
-                    EmissionsUnit emissionsUnit = mapEmissionsUnit(bulkEmissionsUnit);
-                    emissionsUnit.setFacilitySite(facility);
-
-                    // Map Emissions Processes
-                    List<EmissionsProcess> processes = bulkEmissionsReport.getEmissionsProcesses().stream()
-                        .filter(p -> bulkEmissionsUnit.getId().equals(p.getEmissionsUnitId()))
-                        .map(bulkProcess -> {
-                            EmissionsProcess process = mapEmissionsProcess(bulkProcess);
-
-                            // Map Reporting Periods
-                            List<ReportingPeriod> periods = bulkEmissionsReport.getReportingPeriods().stream()
-                                .filter(rp -> bulkProcess.getId().equals(rp.getEmissionsProcessId()))
-                                .map(bulkPeriod -> {
-                                    ReportingPeriod period = mapReportingPeriod(bulkPeriod);
-
-                                    // Map Operating Details, should only be 1
-                                    List<OperatingDetail> details = bulkEmissionsReport.getOperatingDetails().stream()
-                                        .filter(od -> bulkPeriod.getId().equals(od.getReportingPeriodId()))
-                                        .map(bulkDetail -> {
-                                            OperatingDetail detail = mapOperatingDetail(bulkDetail);
-                                            detail.setReportingPeriod(period);
-
-                                            return detail;
-                                        }).collect(Collectors.toList());
-
-                                    // Map Emissions
-                                    List<Emission> emissions = bulkEmissionsReport.getEmissions().stream()
-                                        .filter(e -> bulkPeriod.getId().equals(e.getReportingPeriodId()))
-                                        .map(bulkEmission -> {
-                                            Emission emission = mapEmission(bulkEmission);
-
-                                            List<EmissionFormulaVariable> variables = bulkEmissionsReport.getEmissionFormulaVariables().stream()
-                                                .filter(efv -> bulkEmission.getId().equals(efv.getEmissionId()))
-                                                .map(bulkVariable -> {
-                                                    EmissionFormulaVariable variable = mapEmissionFormulaVariable(bulkVariable);
-                                                    variable.setEmission(emission);
-
-                                                    return variable;
-                                                }).collect(Collectors.toList());
-
-                                            emission.setReportingPeriod(period);
-                                            emission.setVariables(variables);
-
-                                            if (Boolean.TRUE.equals(emission.getFormulaIndicator()) && !emission.getVariables().isEmpty()) {
-                                                try {
-                                                    emission.setEmissionsFactor(CalculationUtils.calculateEmissionFormula(emission.getEmissionsFactorFormula(), emission.getVariables()));
-                                                } catch (CalculationException e) {
-                                                    // TODO: handle exception
-                                                }
-                                            }
-
-                                            return emission;
-                                        }).collect(Collectors.toList());
-
-                                    period.setEmissionsProcess(process);
-                                    period.setEmissions(emissions);
-                                    period.setOperatingDetails(details);
-
-                                    return period;
-                                }).collect(Collectors.toList());
-
-                            process.setEmissionsUnit(emissionsUnit);
-                            process.setReportingPeriods(periods);
-
-                            processMap.put(bulkProcess.getId(), process);
-
-                            return process;
-                        }).collect(Collectors.toList());
-
-                    emissionsUnit.setEmissionsProcesses(processes);
-
-                    facility.getEmissionsUnits().add(emissionsUnit);
-
-                }
-            }
-
-            // Map Control Paths
-            List<ControlPath> controlPaths = bulkEmissionsReport.getControlPaths().stream()
-                .filter(c -> bulkFacility.getId().equals(c.getFacilitySiteId()))
-                .map(bulkControlPath -> {
-                    ControlPath path = mapControlPath(bulkControlPath);
-                    path.setFacilitySite(facility);
-
-                    controlPathMap.put(bulkControlPath.getId(), path);
-
-                    return path;
-                }).collect(Collectors.toList());
-
-            facility.setControlPaths(controlPaths);
-
-            // Map Controls
-            List<Control> controls = bulkEmissionsReport.getControls().stream()
-                .filter(c -> bulkFacility.getId().equals(c.getFacilitySiteId()))
-                .map(bulkControl -> {
-                    Control control = mapControl(bulkControl);
-                    control.setFacilitySite(facility);
-
-                    // Map Control Pollutants
-                    List<ControlPollutant> controlPollutants = bulkEmissionsReport.getControlPollutants().stream()
-                        .filter(c -> bulkControl.getId().equals(c.getControlId()))
-                        .map(bulkControlPollutant -> {
-                            ControlPollutant controlPollutant = mapControlPollutant(bulkControlPollutant);
-                            controlPollutant.setControl(control);
-
-                            return controlPollutant;
-                        }).collect(Collectors.toList());
-
-                    control.setPollutants(controlPollutants);
-
-                    controlMap.put(bulkControl.getId(), control);
-
-                    return control;
-                }).collect(Collectors.toList());
-
-            facility.setControls(controls);
-
-            // Map Control Assignments into controls and control paths
-            bulkEmissionsReport.getControlAssignments().forEach(bulkControlAssignment -> {
-                ControlAssignment controlAssignment = mapControlAssignment(bulkControlAssignment);
-
-                ControlPath controlPath = controlPathMap.get(bulkControlAssignment.getControlPathId());
-                if (controlPath != null) {
-                    controlAssignment.setControlPath(controlPath);
-                    controlPath.getAssignments().add(controlAssignment);
-                } else {
-
-                    warnings.add(String.format("ControlPath %s referenced by assigned %s does not exist.",
-                        bulkControlAssignment.getControlPathId(), bulkControlAssignment.getId()));
-                }
-
-                ControlPath controlPathChild = controlPathMap.get(bulkControlAssignment.getControlPathChildId());
-                if (controlPathChild != null) {
-                    controlAssignment.setControlPathChild(controlPathChild);
-                    controlPathChild.getChildAssignments().add(controlAssignment);
-                } else {
-
-                    warnings.add(String.format("ControlPath %s referenced by assigned %s does not exist.",
-                        bulkControlAssignment.getControlPathChildId(), bulkControlAssignment.getId()));
-                }
-
-                Control control = controlMap.get(bulkControlAssignment.getControlId());
-                if (control != null) {
-                    controlAssignment.setControl(control);
-                    control.getAssignments().add(controlAssignment);
-                } else {
-
-                    warnings.add(String.format("Control %s referenced by assigned %s does not exist.",
-                        bulkControlAssignment.getControlId(), bulkControlAssignment.getId()));
-                }
-
-            });
-
-            // Map Release Point Apportionments into release points and emissions processes, along with control paths
-            bulkEmissionsReport.getReleasePointAppts().forEach(bulkRpAppt -> {
-                ReleasePoint rp = releasePointMap.get(bulkRpAppt.getReleasePointId());
-                EmissionsProcess ep = processMap.get(bulkRpAppt.getEmissionProcessId());
-                if (rp != null && ep != null) {
-                    ReleasePointAppt rpAppt = mapReleasePointAppt(bulkRpAppt);
-                    rpAppt.setReleasePoint(rp);
-                    rpAppt.setEmissionsProcess(ep);
-
-                    if (bulkRpAppt.getControlPathId() != null) {
-                        ControlPath controlPath = controlPathMap.get(bulkRpAppt.getControlPathId());
-
-                        if (controlPath != null) {
-                            rpAppt.setControlPath(controlPath);
-                            controlPath.getReleasePointAppts().add(rpAppt);
-                        }
-                    }
-
-                    rp.getReleasePointAppts().add(rpAppt);
-                    ep.getReleasePointAppts().add(rpAppt);
-                }
-            });
-
-            facility.setEmissionsReport(emissionsReport);
-            emissionsReport.getFacilitySites().add(facility);
-        }
-
-        logger.debug("Warnings {}", warnings);
+        EmissionsReport emissionsReport = toEmissionsReport().apply(bulkEmissionsReport);
 
         return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.UPLOADED);
     }
@@ -576,6 +324,247 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
 
         return result;
+    }
+
+    protected Function<EmissionsReportBulkUploadDto, EmissionsReport> toEmissionsReport() {
+
+        return bulkEmissionsReport -> {
+
+            Collection<String> warnings = new ArrayList<>();
+
+            EmissionsReport emissionsReport = mapEmissionsReport(bulkEmissionsReport);
+
+            for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
+                FacilitySite facility = mapFacility(bulkFacility);
+
+                Preconditions.checkArgument(bulkFacility.getId() != null,
+                    "FacilitySite ID can not be null.");
+
+                // Maps for storing the entity referenced by a certain id in the JSON
+                Map<Long, ReleasePoint> releasePointMap = new HashMap<>();
+                Map<Long, EmissionsProcess> processMap = new HashMap<>();
+                Map<Long, ControlPath> controlPathMap = new HashMap<>();
+                Map<Long, Control> controlMap = new HashMap<>();
+
+                // Map Facility Contacts
+                for (FacilitySiteContactBulkUploadDto bulkFacilityContact : bulkEmissionsReport.getFacilityContacts()) {
+                    FacilitySiteContact facilityContact = mapFacilityContact(bulkFacilityContact);
+
+                    if (bulkFacility.getId().equals(bulkFacilityContact.getFacilitySiteId())) {
+                        facilityContact.setFacilitySite(facility);
+                        facility.getContacts().add(facilityContact);
+                    }
+                }
+
+                // Map Facility NAICS
+                for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
+                    FacilityNAICSXref facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
+
+                    if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {
+                        facilityNAICS.setFacilitySite(facility);
+                        facility.getFacilityNAICS().add(facilityNAICS);
+                    }
+                }
+
+                // Map Release Points
+                for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
+                    ReleasePoint releasePoint = mapReleasePoint(bulkRp);
+
+                    if (bulkFacility.getId().equals(bulkRp.getFacilitySiteId())) {
+                        releasePoint.setFacilitySite(facility);
+                        facility.getReleasePoints().add(releasePoint);
+                        releasePointMap.put(bulkRp.getId(), releasePoint);
+                    }
+                }
+
+                // Map Emissions Units
+                for (EmissionsUnitBulkUploadDto bulkEmissionsUnit : bulkEmissionsReport.getEmissionsUnits()) {
+
+                    if (bulkFacility.getId().equals(bulkEmissionsUnit.getFacilitySiteId())) {
+
+                        EmissionsUnit emissionsUnit = mapEmissionsUnit(bulkEmissionsUnit);
+                        emissionsUnit.setFacilitySite(facility);
+
+                        // Map Emissions Processes
+                        List<EmissionsProcess> processes = bulkEmissionsReport.getEmissionsProcesses().stream()
+                            .filter(p -> bulkEmissionsUnit.getId().equals(p.getEmissionsUnitId()))
+                            .map(bulkProcess -> {
+                                EmissionsProcess process = mapEmissionsProcess(bulkProcess);
+
+                                // Map Reporting Periods
+                                List<ReportingPeriod> periods = bulkEmissionsReport.getReportingPeriods().stream()
+                                    .filter(rp -> bulkProcess.getId().equals(rp.getEmissionsProcessId()))
+                                    .map(bulkPeriod -> {
+                                        ReportingPeriod period = mapReportingPeriod(bulkPeriod);
+
+                                        // Map Operating Details, should only be 1
+                                        List<OperatingDetail> details = bulkEmissionsReport.getOperatingDetails().stream()
+                                            .filter(od -> bulkPeriod.getId().equals(od.getReportingPeriodId()))
+                                            .map(bulkDetail -> {
+                                                OperatingDetail detail = mapOperatingDetail(bulkDetail);
+                                                detail.setReportingPeriod(period);
+
+                                                return detail;
+                                            }).collect(Collectors.toList());
+
+                                        // Map Emissions
+                                        List<Emission> emissions = bulkEmissionsReport.getEmissions().stream()
+                                            .filter(e -> bulkPeriod.getId().equals(e.getReportingPeriodId()))
+                                            .map(bulkEmission -> {
+                                                Emission emission = mapEmission(bulkEmission);
+
+                                                List<EmissionFormulaVariable> variables = bulkEmissionsReport.getEmissionFormulaVariables().stream()
+                                                    .filter(efv -> bulkEmission.getId().equals(efv.getEmissionId()))
+                                                    .map(bulkVariable -> {
+                                                        EmissionFormulaVariable variable = mapEmissionFormulaVariable(bulkVariable);
+                                                        variable.setEmission(emission);
+
+                                                        return variable;
+                                                    }).collect(Collectors.toList());
+
+                                                emission.setReportingPeriod(period);
+                                                emission.setVariables(variables);
+
+                                                if (Boolean.TRUE.equals(emission.getFormulaIndicator()) && !emission.getVariables().isEmpty()) {
+                                                    try {
+                                                        emission.setEmissionsFactor(CalculationUtils.calculateEmissionFormula(emission.getEmissionsFactorFormula(), emission.getVariables()));
+                                                    } catch (CalculationException e) {
+                                                        // TODO: handle exception
+                                                    }
+                                                }
+
+                                                return emission;
+                                            }).collect(Collectors.toList());
+
+                                        period.setEmissionsProcess(process);
+                                        period.setEmissions(emissions);
+                                        period.setOperatingDetails(details);
+
+                                        return period;
+                                    }).collect(Collectors.toList());
+
+                                process.setEmissionsUnit(emissionsUnit);
+                                process.setReportingPeriods(periods);
+
+                                processMap.put(bulkProcess.getId(), process);
+
+                                return process;
+                            }).collect(Collectors.toList());
+
+                        emissionsUnit.setEmissionsProcesses(processes);
+
+                        facility.getEmissionsUnits().add(emissionsUnit);
+
+                    }
+                }
+
+                // Map Control Paths
+                List<ControlPath> controlPaths = bulkEmissionsReport.getControlPaths().stream()
+                    .filter(c -> bulkFacility.getId().equals(c.getFacilitySiteId()))
+                    .map(bulkControlPath -> {
+                        ControlPath path = mapControlPath(bulkControlPath);
+                        path.setFacilitySite(facility);
+
+                        controlPathMap.put(bulkControlPath.getId(), path);
+
+                        return path;
+                    }).collect(Collectors.toList());
+
+                facility.setControlPaths(controlPaths);
+
+                // Map Controls
+                List<Control> controls = bulkEmissionsReport.getControls().stream()
+                    .filter(c -> bulkFacility.getId().equals(c.getFacilitySiteId()))
+                    .map(bulkControl -> {
+                        Control control = mapControl(bulkControl);
+                        control.setFacilitySite(facility);
+
+                        // Map Control Pollutants
+                        List<ControlPollutant> controlPollutants = bulkEmissionsReport.getControlPollutants().stream()
+                            .filter(c -> bulkControl.getId().equals(c.getControlId()))
+                            .map(bulkControlPollutant -> {
+                                ControlPollutant controlPollutant = mapControlPollutant(bulkControlPollutant);
+                                controlPollutant.setControl(control);
+
+                                return controlPollutant;
+                            }).collect(Collectors.toList());
+
+                        control.setPollutants(controlPollutants);
+
+                        controlMap.put(bulkControl.getId(), control);
+
+                        return control;
+                    }).collect(Collectors.toList());
+
+                facility.setControls(controls);
+
+                // Map Control Assignments into controls and control paths
+                bulkEmissionsReport.getControlAssignments().forEach(bulkControlAssignment -> {
+                    ControlAssignment controlAssignment = mapControlAssignment(bulkControlAssignment);
+
+                    ControlPath controlPath = controlPathMap.get(bulkControlAssignment.getControlPathId());
+                    if (controlPath != null) {
+                        controlAssignment.setControlPath(controlPath);
+                        controlPath.getAssignments().add(controlAssignment);
+                    } else {
+
+                        warnings.add(String.format("ControlPath %s referenced by assigned %s does not exist.",
+                            bulkControlAssignment.getControlPathId(), bulkControlAssignment.getId()));
+                    }
+
+                    ControlPath controlPathChild = controlPathMap.get(bulkControlAssignment.getControlPathChildId());
+                    if (controlPathChild != null) {
+                        controlAssignment.setControlPathChild(controlPathChild);
+                        controlPathChild.getChildAssignments().add(controlAssignment);
+                    } else {
+
+                        warnings.add(String.format("ControlPath %s referenced by assigned %s does not exist.",
+                            bulkControlAssignment.getControlPathChildId(), bulkControlAssignment.getId()));
+                    }
+
+                    Control control = controlMap.get(bulkControlAssignment.getControlId());
+                    if (control != null) {
+                        controlAssignment.setControl(control);
+                        control.getAssignments().add(controlAssignment);
+                    } else {
+
+                        warnings.add(String.format("Control %s referenced by assigned %s does not exist.",
+                            bulkControlAssignment.getControlId(), bulkControlAssignment.getId()));
+                    }
+
+                });
+
+                // Map Release Point Apportionments into release points and emissions processes, along with control paths
+                bulkEmissionsReport.getReleasePointAppts().forEach(bulkRpAppt -> {
+                    ReleasePoint rp = releasePointMap.get(bulkRpAppt.getReleasePointId());
+                    EmissionsProcess ep = processMap.get(bulkRpAppt.getEmissionProcessId());
+                    if (rp != null && ep != null) {
+                        ReleasePointAppt rpAppt = mapReleasePointAppt(bulkRpAppt);
+                        rpAppt.setReleasePoint(rp);
+                        rpAppt.setEmissionsProcess(ep);
+
+                        if (bulkRpAppt.getControlPathId() != null) {
+                            ControlPath controlPath = controlPathMap.get(bulkRpAppt.getControlPathId());
+
+                            if (controlPath != null) {
+                                rpAppt.setControlPath(controlPath);
+                                controlPath.getReleasePointAppts().add(rpAppt);
+                            }
+                        }
+
+                        rp.getReleasePointAppts().add(rpAppt);
+                        ep.getReleasePointAppts().add(rpAppt);
+                    }
+                });
+
+                facility.setEmissionsReport(emissionsReport);
+                emissionsReport.getFacilitySites().add(facility);
+            }
+
+            logger.debug("Warnings {}", warnings);
+
+            return emissionsReport;
+        };
     }
 
     /**
@@ -1013,5 +1002,38 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private Short toShort(String strval) {
 
         return Strings.isNullOrEmpty(strval) ? null : Short.parseShort(strval);
+    }
+
+    public static class JsonNodeToBulkUploadDto implements Function<JsonNode, EmissionsReportBulkUploadDto> {
+
+        private final ObjectMapper objectMapper;
+
+        public JsonNodeToBulkUploadDto(ObjectMapper objectMapper, boolean failUnknownProperties) {
+
+            this.objectMapper = objectMapper.copy()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, failUnknownProperties)
+                .registerModule(new BlankToNullModule());
+        }
+
+        @Override
+        public EmissionsReportBulkUploadDto apply(JsonNode jsonNode) {
+
+            EmissionsReportBulkUploadDto result;
+
+            try {
+                result = this.objectMapper.treeToValue(jsonNode, EmissionsReportBulkUploadDto.class);
+
+            } catch (JsonProcessingException e) {
+
+                String msg = e.getMessage().replaceAll(
+                    EmissionsReportBulkUploadDto.class.getPackage().getName().concat("."), "");
+
+                WorksheetError violation = WorksheetError.createSystemError(msg);
+
+                throw new BulkReportValidationException(Collections.singletonList(violation));
+            }
+
+            return result;
+        }
     }
 }

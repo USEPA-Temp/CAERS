@@ -31,8 +31,7 @@ import org.springframework.stereotype.Service;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -41,16 +40,23 @@ public class CersXmlServiceImpl implements CersXmlService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CersXmlServiceImpl.class);
 
-    @Autowired
-    private EmissionsReportRepository reportRepo;
+    private final EmissionsReportRepository reportRepo;
+
+    private final UserService userService;
+
+    private final CersDataTypeMapper cersMapper;
 
     @Autowired
-    private UserService userService;
+	CersXmlServiceImpl(UserService userService,
+					   EmissionsReportRepository reportRepo,
+					   CersDataTypeMapper cersMapper) {
 
-    @Autowired
-    private CersDataTypeMapper cersMapper;
+    	this.userService = userService;
+    	this.reportRepo = reportRepo;
+    	this.cersMapper = cersMapper;
+	}
 
-    /* (non-Javadoc)
+	/* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.CersXmlService#generateCersData(java.lang.Long)
      */
     @Override
@@ -78,24 +84,19 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @see gov.epa.cef.web.service.impl.CersXmlService#retrieveCersXml(java.lang.Long)
      */
     @Override
-    public byte[] retrieveCersXml(Long reportId) {
+    public void writeCersXmlTo(long reportId, OutputStream outputStream) {
 
         CERSDataType cers = generateCersData(reportId);
 
         try {
             ObjectFactory objectFactory = new ObjectFactory();
-            JAXBContext jaxbContext = JAXBContext.newInstance( CERSDataType.class );
+            JAXBContext jaxbContext = JAXBContext.newInstance(CERSDataType.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-            try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            jaxbMarshaller.marshal(objectFactory.createCERS(cers), outputStream);
 
-                jaxbMarshaller.marshal(objectFactory.createCERS(cers), os);
-
-                return os.toByteArray();
-            }
-
-        } catch (IOException | JAXBException e) {
+        } catch (JAXBException e) {
 
             LOGGER.error("error while marshalling", e);
             throw ApplicationException.asApplicationException(e);
@@ -127,7 +128,10 @@ public class CersXmlServiceImpl implements CersXmlService {
 						}
 					}
 
-					addControlToCersProcess(ca, process, cers);
+					if (ca.getControlPollutant().size() > 0 && ca.getControlMeasure().size() > 0) {
+
+						addControlToCersProcess(ca, process, cers);
+					}
 				}
 			}
 		}
@@ -147,26 +151,31 @@ public class CersXmlServiceImpl implements CersXmlService {
 				ca.setControlApproachComment(assignment.getControl().getComments());
 				ca.setControlApproachDescription(assignment.getControl().getDescription());
 
-				//add to the capture efficiency and %effectiveness to the control approach
-				if (assignment.getControl().getPercentCapture() != null) {
-					if (ca.getPercentControlApproachCaptureEfficiency() == null) {
-						ca.setPercentControlApproachCaptureEfficiency(
-								new BigDecimal(assignment.getControl().getPercentCapture().toString()));
-					} else {
-						ca.setPercentControlApproachCaptureEfficiency(ca.getPercentControlApproachCaptureEfficiency().add(
-								new BigDecimal(assignment.getControl().getPercentCapture().toString())));
-					}
-				}
+				// CEF-905 Commenting out
+				// PercentControlApproachCaptureEfficiency and Capture Effectiveness are
+				// currently being generated greater than 100% by the code. We need to comment
+				// these out until we have firm guidance on how to proceed with calculating these
 
-				if (assignment.getControl().getPercentControl() != null) {
-					if (ca.getPercentControlApproachEffectiveness() == null) {
-						ca.setPercentControlApproachEffectiveness(
-								new BigDecimal(assignment.getControl().getPercentControl().toString()));
-					} else {
-						ca.setPercentControlApproachEffectiveness(ca.getPercentControlApproachEffectiveness().add(
-								new BigDecimal(assignment.getControl().getPercentControl().toString())));
-					}
-				}
+//				//add to the capture efficiency and %effectiveness to the control approach
+//				if (assignment.getControl().getPercentCapture() != null) {
+//					if (ca.getPercentControlApproachCaptureEfficiency() == null) {
+//						ca.setPercentControlApproachCaptureEfficiency(
+//								new BigDecimal(assignment.getControl().getPercentCapture().toString()));
+//					} else {
+//						ca.setPercentControlApproachCaptureEfficiency(ca.getPercentControlApproachCaptureEfficiency().add(
+//								new BigDecimal(assignment.getControl().getPercentCapture().toString())));
+//					}
+//				}
+//
+//				if (assignment.getControl().getPercentControl() != null) {
+//					if (ca.getPercentControlApproachEffectiveness() == null) {
+//						ca.setPercentControlApproachEffectiveness(
+//								new BigDecimal(assignment.getControl().getPercentControl().toString()));
+//					} else {
+//						ca.setPercentControlApproachEffectiveness(ca.getPercentControlApproachEffectiveness().add(
+//								new BigDecimal(assignment.getControl().getPercentControl().toString())));
+//					}
+//				}
 
 				//add a new control measure to the control measure list
 				if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {

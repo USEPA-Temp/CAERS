@@ -91,10 +91,23 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ControlPath testData = new ControlPath();
         
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_RPA_WARNING.value()) && errorMap.get(ValidationField.CONTROL_PATH_RPA_WARNING.value()).size() == 1);
+    }
+    
+    @Test
+    public void controlDeviceAssignmentFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = new ControlPath();
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()).size() == 1);
     }
     
     @Test
@@ -114,12 +127,22 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		
 		ControlPath result = new ControlPath();
 		ReleasePointAppt rpa = new ReleasePointAppt();
+		ControlMeasureCode cmc = new ControlMeasureCode();
+		cmc.setCode("test code");
+		cmc.setDescription("test code description");
+		Control c = new Control();
+		c.setDescription("test control");
+		c.setId(1234L);
+		c.setControlMeasureCode(cmc);
+		ControlAssignment ca = new ControlAssignment();
+		ca.setControl(c);
 		result.setPathId("test control path");
 		result.setDescription("test description");
 		result.getReleasePointAppts().add(rpa);
 		FacilitySite fs = new FacilitySite();
 		fs.getControlPaths().add(result);
 		result.setFacilitySite(fs);
+		result.getAssignments().add(ca);
 		
 		return result;
 	}

@@ -1,10 +1,13 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.repository.EmissionRepository;
+import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.EmissionService;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -94,6 +101,41 @@ public class EmissionApi {
         this.securityService.facilityEnforcer().enforceEntity(id, EmissionRepository.class);
 
         emissionService.delete(id);
+    }
+
+    /**
+     * Retrieve Reporting Periods for bulk entry by Report Id
+     * @param facilitySiteId
+     * @return
+     */
+    @GetMapping(value = "/bulkEntry/{facilitySiteId}")
+    public ResponseEntity<Collection<EmissionBulkEntryHolderDto>> retrieveBulkEntryEmissionsForFacilitySite(
+        @NotNull @PathVariable Long facilitySiteId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(facilitySiteId, FacilitySiteRepository.class);
+
+        Collection<EmissionBulkEntryHolderDto> result = emissionService.retrieveBulkEntryEmissionsForFacilitySite(facilitySiteId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Update the total emissions for multiple Emissions at once and recalculate all Emissions for this facility
+     * @param dtos
+     * @return
+     */
+    @PutMapping(value = "/bulkEntry/{facilitySiteId}")
+    public ResponseEntity<Collection<EmissionBulkEntryHolderDto>> bulkUpdate(
+        @NotNull @PathVariable Long facilitySiteId, @RequestBody List<EmissionDto> dtos) {
+
+        this.securityService.facilityEnforcer().enforceEntity(facilitySiteId, FacilitySiteRepository.class);
+
+        List<Long> emissionIds = dtos.stream().map(EmissionDto::getId).collect(Collectors.toList());
+        this.securityService.facilityEnforcer().enforceEntities(emissionIds, EmissionRepository.class);
+
+        Collection<EmissionBulkEntryHolderDto> result = emissionService.bulkUpdate(facilitySiteId, dtos);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**

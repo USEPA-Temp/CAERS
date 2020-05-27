@@ -42,7 +42,7 @@ public class UserDetailsServiceImpl extends CdxHandoffPreAuthenticationUserDetai
 
         String userId = userProperties.get(USER_ID);
 
-        List<GrantedAuthority> roles = this.securityService.createUserRoles(userId,
+        List<GrantedAuthority> roles = this.securityService.createUserRoles(
             nullSafeLong(userProperties.get(ROLE_ID)), nullSafeLong(userProperties.get(USER_ROLE_ID)));
 
         // detailed logging of the roles from a handoff

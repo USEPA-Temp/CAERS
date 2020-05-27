@@ -14,7 +14,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of tableData">
-            <td><span [title]="item.unitDescription">{{item.unitIdentifier}}</span></td>
+            <td>
+              {{item.unitIdentifier}}
+              <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.unitDescription"></fa-icon>
+            </td>
             <td>
               <a routerLink="{{baseUrl}}/process/{{item.emissionsProcessId}}" [title]="item.emissionsProcessDescription" 
                     [attr.aria-label]="'emissions process' + item?.emissionsProcessIdentifier">
@@ -25,7 +28,7 @@
             <td>
               <div class="row">
                 <div class="col-sm-12 col-lg-9">
-                <input type="text" class="form-control" id="{{item.reportingPeriodId + 'Input'}}" formControlName="{{item.reportingPeriodId}}" 
+                <input type="text" class="form-control" id="{{item.reportingPeriodId + 'Input'}}" formControlName="{{item.reportingPeriodId}}" [readOnly]="readOnlyMode"
                         [attr.aria-label]="'Throughput for Process ' + item.emissionsProcessIdentifier + ' of Unit ' + item.unitIdentifier">
                   <app-validation-message [control]="reportingPeriodForm.get('' + item.reportingPeriodId)"></app-validation-message> 
                 </div>
@@ -52,7 +55,7 @@
       </table>
     </div>
 
-    <div class="float-right mt-3">
+    <div class="float-right mt-3" *ngIf="!readOnlyMode">
       <button type="button" class="btn btn-success" (click)="onSubmit()">Save and Update</button>
     </div>
   </form>

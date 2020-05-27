@@ -1,18 +1,18 @@
 package gov.epa.cef.web.service.mapper.cers;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import gov.epa.cef.web.domain.ReleasePoint;
 import net.exchangenetwork.schema.cer._1._2.GeographicCoordinatesDataType;
 import net.exchangenetwork.schema.cer._1._2.IdentificationDataType;
 import net.exchangenetwork.schema.cer._1._2.ReleasePointDataType;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {})
+import java.util.Collections;
+import java.util.List;
+
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = {})
 public interface CersReleasePointMapper {
 
     @Mapping(source="typeCode.code", target="releasePointTypeCode")

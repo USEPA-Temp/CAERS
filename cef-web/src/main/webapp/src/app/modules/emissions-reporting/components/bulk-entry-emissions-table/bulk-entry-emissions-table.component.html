@@ -1,0 +1,85 @@
+<div  *ngIf="tableData">
+  <form [formGroup]="emissionForm">
+    <div  class="overflow-auto" style="max-height: 60vh;">
+      <table class="table table-sm table-bordered">
+        <thead class="thead-cef-medium">
+        <tr>
+          <th scope="col" sortable="unitIdentifier" (sort)="onSort($event)">Unit ID</th>
+          <th scope="col" sortable="emissionsProcessIdentifier" (sort)="onSort($event)">Process ID</th>
+          <th scope="col">Pollutant</th>
+          <th scope="col">Calculation Method</th>
+          <th scope="col">Emission Factor</th>
+          <th scope="col">Total Emissions</th>
+          <th scope="col">Previously Reported Total Emissions</th>
+          <th scope="col">% Change in Emissions</th>
+        </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of tableData; let i=index">
+          <tr [class.striped]="!(i%2)">
+            <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1">
+              {{item.unitIdentifier}}
+              <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.unitDescription"></fa-icon>
+            </td>
+            <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1">
+              {{item.emissionsProcessIdentifier}}
+              <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.emissionsProcessDescription"></fa-icon>
+            </td>
+          </tr>
+            <ng-container *ngFor="let emission of item.emissions">
+              <tr [class.striped]="!(i%2)">
+              <td>
+                <a routerLink="{{baseUrl}}/period/{{item.reportingPeriodId}}/emission/{{emission.id}}" 
+                      [attr.aria-label]="'emissions process' + item?.emissionsProcessIdentifier">
+                  {{emission.pollutant?.pollutantName}}
+                </a>
+              </td>
+              <td>{{emission.emissionsCalcMethodCode?.description}}</td>
+              <td>
+                {{emission.emissionsFactor}}
+                <span *ngIf="emission.emissionsNumeratorUom && emission.emissionsDenominatorUom">
+                  {{emission.emissionsNumeratorUom.code}}/{{emission.emissionsDenominatorUom.code}}
+                </span>
+              </td>
+              <td>
+                <div class="row">
+                  <div class="col-sm-12 col-lg-8">
+                  <input type="number" class="form-control" id="{{emission.id + 'Input'}}" formControlName="{{emission.id}}" [readOnly]="readOnlyMode"
+                          [attr.aria-label]="'Total Emissions for ' + emission.pollutant?.pollutantName">
+                    <app-validation-message [control]="emissionForm.get('' + emission.id)"></app-validation-message> 
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                    {{emission.emissionsUomCode?.code}} 
+                    <span *ngIf="!(emission.totalManualEntry || emission.emissionsCalcMethodCode.totalDirectEntry)">
+                      <fa-icon *ngIf="emission.calculationFailed === false" class="mt-2" style="color: #28a745" [icon]="['fas', 'check']" title="Total Emissions were recalculated."></fa-icon>
+                      <fa-icon *ngIf="emission.calculationFailed === true" class="mt-2 text-danger" [icon]="['fas', 'times-circle']" 
+                          [title]="'Total Emissions could not be calculated because ' + emission.calculationFailureMessage + ' To update click the Pollutant to be redicrect to the Emission Information Page.'"></fa-icon>
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span *ngIf="emission.previousTotalEmissions; else elseBlock">
+                  {{emission.previousTotalEmissions}} {{emission.previousEmissionsUomCode}}
+                </span>
+                <ng-template #elseBlock>N/A</ng-template>
+              </td>
+              <td>
+                <span *ngIf="emission.previousTotalEmissions; else elseBlock">
+                  {{((emissionForm.get('' + emission.id).value - emission.previousTotalEmissions) / emission.previousTotalEmissions * 100).toFixed(3)}}
+                </span>
+                <ng-template #elseBlock>N/A</ng-template>
+                
+              </td>
+            </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="float-right mt-3" *ngIf="!readOnlyMode">
+      <button type="button" class="btn btn-success" (click)="onSubmit()">Save and Update</button>
+    </div>
+  </form>
+</div>

@@ -7,7 +7,9 @@ public enum ReportAction {
 	REOPENED("Reopened"), 
 	ACCEPTED("Accepted"), 
 	REJECTED("Rejected"), 
-	SUBMITTED("Submitted");
+	SUBMITTED("Submitted"),
+	ATTACHMENT("Uploaded Attachment"),
+	ATTACHMENT_DELETED("Attachment Deleted");
 
 	private final String label;
 

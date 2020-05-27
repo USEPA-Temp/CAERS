@@ -2,6 +2,8 @@ package gov.epa.cef.web.service;
 
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 
+import java.io.OutputStream;
+
 public interface CersXmlService {
 
     /**
@@ -16,6 +18,5 @@ public interface CersXmlService {
      * @param reportId
      * @return
      */
-    byte[] retrieveCersXml(Long reportId);
-
+    void writeCersXmlTo(long reportId, OutputStream outputStream);
 }

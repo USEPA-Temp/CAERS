@@ -14,4 +14,5 @@ export class EmissionUnit {
   designCapacity: number;
   comments: string;
   processes: Process[];
+  emissionsProcesses: Process[];
 }

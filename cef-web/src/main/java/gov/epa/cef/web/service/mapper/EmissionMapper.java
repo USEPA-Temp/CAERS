@@ -8,6 +8,9 @@ import org.mapstruct.MappingTarget;
 
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
+import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryDto;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableDto;
 
@@ -25,7 +28,7 @@ public interface EmissionMapper {
     @Mapping(target = "emissionsDenominatorUom", qualifiedByName  = "UnitMeasureCode")
     @Mapping(target = "variables", ignore = true)
     void updateFromDto(EmissionDto source, @MappingTarget Emission target);
-    
+
     @Mapping(source="emission.id", target="emissionId")
     EmissionFormulaVariableDto formulaVariableToDto(EmissionFormulaVariable source);
 
@@ -36,4 +39,17 @@ public interface EmissionMapper {
     @Mapping(target = "emission", ignore = true)
     @Mapping(target = "variableCode", ignore = true)
     EmissionFormulaVariable updateFormulaVariableFromDto(EmissionFormulaVariableDto source, @MappingTarget EmissionFormulaVariable target);
+
+    @Mapping(source="emissionsProcess.emissionsUnit.id", target="emissionsUnitId")
+    @Mapping(source="emissionsProcess.emissionsUnit.unitIdentifier", target="unitIdentifier")
+    @Mapping(source="emissionsProcess.emissionsUnit.description", target="unitDescription")
+    @Mapping(source="emissionsProcess.id", target="emissionsProcessId")
+    @Mapping(source="emissionsProcess.emissionsProcessIdentifier", target="emissionsProcessIdentifier")
+    @Mapping(source="emissionsProcess.description", target="emissionsProcessDescription")
+    @Mapping(source="id", target="reportingPeriodId")
+    EmissionBulkEntryHolderDto periodToEmissionBulkEntryDto(ReportingPeriod source);
+
+    List<EmissionBulkEntryHolderDto> periodToEmissionBulkEntryDtoList(List<ReportingPeriod> source);
+
+    EmissionBulkEntryDto toBulkDto(Emission source);
 }

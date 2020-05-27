@@ -45,6 +45,10 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
 
             // emit the facility data back to the sidebar to reflect the updated
             // list of emission processes
+            this.route.data
+            .subscribe((data: { facilitySite: FacilitySite }) => {
+                this.sharedService.emitChange(data.facilitySite);
+            });
             this.sharedService.updateReportStatusAndEmit(this.route);
         }, error => {
             if (error.error && error.status === 422) {

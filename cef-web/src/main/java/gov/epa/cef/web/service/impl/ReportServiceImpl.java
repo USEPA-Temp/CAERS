@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.domain.ReportDownloadView;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportSummary;
@@ -80,15 +81,17 @@ public class ReportServiceImpl implements ReportService {
         List<ReportHistory> reportHistory = reportHistoryRepo.findByEmissionsReportIdOrderByActionDate(reportId);
         return reportHistoryMapper.toDtoList(reportHistory);
     }
-
+    
     /**
      * Create Report History records for specified reports
      * @param reportIds
      * @param reportAction
      * @param comments
+     * @param reportAttachment
      */
-    public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments) {
-        UserDto appUser = this.userService.getCurrentUser();
+    public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment) {
+
+    	UserDto appUser = this.userService.getCurrentUser();
         String userId = appUser.getCdxUserId();
         String fullName = String.format("%s %s", appUser.getFirstName(), appUser.getLastName());
 
@@ -103,10 +106,16 @@ public class ReportServiceImpl implements ReportService {
 
                 ReportHistory rptActionLog = new ReportHistory();
                 rptActionLog.setUserId(userId);
+                rptActionLog.setUserRole(appUser.getRole());
                 rptActionLog.setUserFullName(fullName);
                 rptActionLog.setEmissionsReport(report);
                 rptActionLog.setReportAction(reportAction);
                 rptActionLog.setComments(comments);
+                
+                if (reportAttachment != null) {
+                	rptActionLog.setReportAttachmentId(reportAttachment.getId());
+                	rptActionLog.setFileName(reportAttachment.getFileName());
+                }
 
                 reportHistoryRepo.save(rptActionLog);
             });
@@ -124,14 +133,48 @@ public class ReportServiceImpl implements ReportService {
             throw new IllegalStateException(msg);
         }
     }
-
+    
+    /**
+     * Create Report History records for specified reports
+     * @param reportIds
+     * @param reportAction
+     * @param comments
+     */
+    public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments) {
+    	createReportHistory(reportIds, reportAction, null, null);
+    }
+    
     /**
      * Create Report History records for specified reports
      * @param reportIds
      * @param reportAction
      */
     public void createReportHistory(List<Long> reportIds, ReportAction reportAction) {
-        createReportHistory(reportIds, reportAction, null);
+    	
+        createReportHistory(reportIds, reportAction, null, null);
+    }
+    
+    /**
+     * Create Report History record
+     * @param reportId
+     * @param reportAction
+     * @param reportAttachment
+     */
+    public void createReportHistory(Long reportId, ReportAction reportAction, String comments, ReportAttachment reportAttachment) {
+    	
+    	createReportHistory(Collections.singletonList(reportId), reportAction, comments, reportAttachment);
+    	
+    }
+    
+    /**
+     * Create Report History record
+     * @param reportId
+     * @param reportAction
+     * @param comments
+     */
+    public void createReportHistory(Long reportId, ReportAction reportAction, String comments) {
+
+        createReportHistory(Collections.singletonList(reportId), reportAction, comments, null);
     }
 
     /**
@@ -142,6 +185,19 @@ public class ReportServiceImpl implements ReportService {
     public void createReportHistory(Long reportId, ReportAction reportAction) {
 
         createReportHistory(Collections.singletonList(reportId), reportAction);
+    }
+    
+    /**
+     * Update Report History record to indicate attachment was deleted
+     * @param id
+     * @param deleted
+     */
+    public void updateReportHistoryAttachment(Long id, boolean deleted) {
+    	ReportHistory updateLog = reportHistoryRepo.findById(id).orElse(null);
+    	
+    	updateLog.setFileDeleted(true);
+    	
+    	reportHistoryRepo.save(updateLog);
     }
 
     /***

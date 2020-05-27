@@ -9,6 +9,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
@@ -46,6 +47,9 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
     @Mock
     private EmissionsReportStatusServiceImpl emissionsReportStatusService;
 
+    @Mock
+    private EmissionServiceImpl emissionService;
+
     @InjectMocks
     private ReportingPeriodServiceImpl reportingPeriodServiceImpl;
 
@@ -53,6 +57,7 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
     private ReportingPeriodDto reportingPeriodDto;
     private List<ReportingPeriodDto> reportingPeriodDtoList;
     private List<ReportingPeriodBulkEntryDto> reportingPeriodBulkDtoList;
+    private List<EmissionBulkEntryHolderDto> emissionBulkHolderDtoList;
 
     private EmissionsReport report2019;
     private EmissionsReport report2018;
@@ -118,6 +123,10 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
 
         when(emissionsReportStatusService.resetEmissionsReportForEntity(ArgumentMatchers.anyList(), ArgumentMatchers.any())).thenReturn(null);
 
+        emissionBulkHolderDtoList = new ArrayList<>();
+        emissionBulkHolderDtoList.add(new EmissionBulkEntryHolderDto());
+        when(emissionService.bulkUpdate(ArgumentMatchers.any(), ArgumentMatchers.anyList())).thenReturn(emissionBulkHolderDtoList);
+
     }
 
     @Test
@@ -164,7 +173,7 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
 
     @Test
     public void bulkUpdatee_Should_Return_UpdateResponseList_When_Valid() {
-        Collection<ReportingPeriodUpdateResponseDto> updateResponseList = reportingPeriodServiceImpl.bulkUpdate(reportingPeriodBulkDtoList);
+        Collection<EmissionBulkEntryHolderDto> updateResponseList = reportingPeriodServiceImpl.bulkUpdate(1L, reportingPeriodBulkDtoList);
         assertNotEquals(new ArrayList<ReportingPeriodBulkEntryDto>(), updateResponseList);
     }
 

@@ -1,7 +1,10 @@
 package gov.epa.cef.web.service;
 
+import java.util.List;
+
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 
@@ -33,6 +36,21 @@ public interface EmissionService {
      * @param id
      */
     public void delete(Long id);
+
+    /**
+     * Retrieve Emissions grouped by Reporting Period for Bulk Entry
+     * @param facilitySiteId
+     * @return
+     */
+    public List<EmissionBulkEntryHolderDto> retrieveBulkEntryEmissionsForFacilitySite(Long facilitySiteId);
+
+    /**
+     * Update the total emissions for the provided emissions and recalculate all emissions for the facility
+     * @param facilitySiteId
+     * @param dtos
+     * @return
+     */
+    public List<EmissionBulkEntryHolderDto> bulkUpdate(Long facilitySiteId, List<EmissionDto> dtos);
 
     /**
      * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula

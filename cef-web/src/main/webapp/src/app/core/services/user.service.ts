@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserToken } from 'src/app/shared/models/user-token';
 import { HttpHeaders } from "@angular/common/http";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,10 @@ export class UserService {
     /** GET the current user from the server */
   getCurrentUser(): Observable<User> {
     const url = `${this.userUrl}/me`;
-    return this.http.get<User>(url);
+    // retrieve user and then create a User class from it so functions work
+    return this.http.get<User>(url).pipe(
+      map(user => Object.assign(new User(), user))
+    );
   }
 
   /** GET the current user new NAAS token from the server */

@@ -57,6 +57,10 @@ thead.thead-cef-medium {
     border-color: $gray-300;
 }
 
+tr.striped {
+    background-color: #ecf0f1;
+}
+
 .ng-touched.ng-invalid {
   border-color: #dc3545;
 }
