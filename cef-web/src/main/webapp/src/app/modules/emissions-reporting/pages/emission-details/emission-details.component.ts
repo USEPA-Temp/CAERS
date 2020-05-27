@@ -407,7 +407,6 @@ export class EmissionDetailsComponent implements OnInit {
         .subscribe(result => {
 
           this.sharedService.updateReportStatusAndEmit(this.route);
-          this.router.navigate([this.processUrl]);
         });
       }
     }
@@ -670,4 +669,5 @@ export class EmissionDetailsComponent implements OnInit {
       }
     };
   }
+
 }
