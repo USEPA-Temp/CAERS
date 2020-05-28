@@ -13,6 +13,7 @@ public interface NotificationService {
 
     enum AdminEmailType {
 
+        AdminTest("CAER CEF Admin Email Test", "adminTest"),
         VirusScanFailure("Virus Scanner Web Service Failed", "virusScanFailed");
 
         private final String subject;
