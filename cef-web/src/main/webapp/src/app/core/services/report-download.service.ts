@@ -9,7 +9,7 @@ export class ReportDownloadService {
 
     downloadFile(data: any, filename= 'data') {
         const csvData = this.ConvertToCSV(data, ['facilitySiteId', 'reportYear', 'emissionsUnitId', 'emissionUnitDescription', 'processId',
-        'processDescription', 'pollutantName', 'emissionsUomCode', 'totalEmissions', 'emissionsFactor', 'emissionsCalcMethod', 'reportingPeriodType',
+        'processDescription', 'pollutantName', 'emissionsUomCode', 'totalEmissions', 'overallControlPercent', 'emissionsFactor', 'emissionsCalcMethod', 'reportingPeriodType',
         'throughputUom','throughputValue','emissionsNumeratorUom', 'emissionsDenominatorUom', 'emissionsFactorText', 'emissionsComment', 'lastModifiedBy', 'lastModifiedDate']);
         const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
         const dwldLink = document.createElement('a');
