@@ -5,8 +5,8 @@ import gov.epa.cef.web.provider.system.IPropertyKey;
 public enum AppPropertyName implements IPropertyKey {
 
     AdminEmailAddresses("email.admin"),
+    AdminEmailEnabled("email.admin.enabled"),
     DefaultEmailAddress("email.default"),
-    EnvAdmins("env.admins"),
     EmissionsTotalErrorTolerance("emissions.tolerance.total.error"),
     EmissionsTotalWarningTolerance("emissions.tolerance.total.warning"),
     FeatureAnnouncementEnabled("feature.announcement.enabled"),

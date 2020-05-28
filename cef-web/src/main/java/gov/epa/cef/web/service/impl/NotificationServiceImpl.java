@@ -93,9 +93,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private void sendAdminEmail(String from, String subject, String body) {
-        this.propertyProvider.getStringList(AppPropertyName.AdminEmailAddresses).forEach(email -> {
-            sendHtmlMessage(email, from, subject, body);
-        });
+        if (this.propertyProvider.getBoolean(AppPropertyName.AdminEmailEnabled)) {
+            this.propertyProvider.getStringList(AppPropertyName.AdminEmailAddresses).forEach(email -> {
+                sendHtmlMessage(email, from, subject, body);
+            });
+        } else {
+            logger.info("Admin email not sent because Admin emails are disabled.");
+        }
     }
 
     private void sendAdminEmail(String subject, String body) {
@@ -138,4 +142,5 @@ public class NotificationServiceImpl implements NotificationService {
         String emailBody = templateEngine.process(SCC_UPDATE_FAILED_BODY_TEMPLATE, context);
         sendAdminEmail(emailSubject, emailBody);
     }
+
 }
