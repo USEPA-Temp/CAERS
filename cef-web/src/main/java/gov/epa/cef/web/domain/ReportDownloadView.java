@@ -68,6 +68,9 @@ public class ReportDownloadView extends BaseEntity{
 
     @Column(name = "throughput_uom", length = 20)
     private String throughputUom;
+    
+    @Column(name= "overall_control_percent")
+    private BigDecimal overallControlPercent;
 
     @Column(name = "throughput_amount")
     private BigDecimal throughputValue;
@@ -245,5 +248,13 @@ public class ReportDownloadView extends BaseEntity{
 
 	public void setReportingPeriodType(String reportingPeriodType) {
 		this.reportingPeriodType = reportingPeriodType;
+	}
+	
+    public BigDecimal getOverallControlPercent() {
+		return overallControlPercent;
+	}
+
+	public void setOverallControlPercent(BigDecimal overallControlPercent) {
+		this.overallControlPercent = overallControlPercent;
 	}
 }
