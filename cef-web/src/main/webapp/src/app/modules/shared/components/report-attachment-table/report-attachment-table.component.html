@@ -25,7 +25,7 @@
             <ng-container *ngIf="reportStatus !== 'APPROVED' && userRole !== 'Reviewer'">
                 <td>
                     <a routerLink="." (click)="openDeleteModal(item.reportAttachmentId, item.fileName)"
-                        [attr.aria-label]="'delete attachment' + item?.filename">
+                        [attr.aria-label]="'delete attachment' + item.filename">
                         <fa-icon icon="trash-alt"></fa-icon>
                     </a>
                 </td>

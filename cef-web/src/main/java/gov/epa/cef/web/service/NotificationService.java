@@ -5,7 +5,7 @@ import java.util.Map;
 public interface NotificationService {
 
     void sendReportSubmittedNotification(String to, String from, String facilityName, String reportingYear);
-    void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments);
+    void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments, Long attachmentId);
     void sendReportAcceptedNotification(String to, String from, String facilityName, String reportingYear, String comments);
     void sendSccUpdateFailedNotification(Exception exception);
 

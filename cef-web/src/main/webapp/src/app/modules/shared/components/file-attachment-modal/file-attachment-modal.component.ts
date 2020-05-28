@@ -41,7 +41,9 @@ export class FileAttachmentModalComponent implements OnInit {
   selectedFile: File = null;
   maxFileSize: number;
   acceptedMIMEtypes: string [];
+  userRole: string;
   bsflags: any;
+  disableButton = false;
 
   @ViewChild('fileAttachment', {static: true})
   fileAttachment: ElementRef;
@@ -57,8 +59,8 @@ export class FileAttachmentModalComponent implements OnInit {
   pleaseWait: PleaseWaitConfig;
 
   attachmentForm = this.fb.group({
-    attachment: [null, [Validators.required]],
-    comments: ['', [Validators.maxLength(2000)]]
+    attachment: [null],
+    comments: [null, [Validators.maxLength(2000)]]
   });
 
   constructor(public activeModal: NgbActiveModal,
@@ -92,6 +94,15 @@ export class FileAttachmentModalComponent implements OnInit {
       'text/csv'
     ];
 
+    this.userService.getCurrentUser().subscribe( user => {
+      this.userRole = user.role;
+
+      if (this.userRole !== 'Reviewer') {
+        this.attachmentForm.controls.attachment.setValidators([Validators.required]);
+        this.attachmentForm.controls.attachment.updateValueAndValidity();
+      }
+    });
+
   }
 
   onClose() {
@@ -104,36 +115,44 @@ export class FileAttachmentModalComponent implements OnInit {
 
   onSubmit() {
 
-    if (!this.isValid()) {
-      this.attachmentForm.markAllAsTouched();
-      this.attachmentForm.controls.control.markAsDirty();
-    } else if (this.selectedFile) {
+    if (!this.selectedFile && this.userRole === 'Reviewer' && this.isValid()) {
 
-      this.pleaseWait = {
-          keepAliveTicker: null,
-          serverTicker: null,
-          modal: this.modalService.open(this.pleaseWaitTemplate, {
-              backdrop: 'static',
-              size: 'lg'
-          }),
-          message: '',
-          progress: 0
-      };
+      this.activeModal.close(this.attachmentForm.value);
 
-      this.uploadFailed = false;
-      this.uploadFile = this.selectedFile.name;
+    } else {
 
-      const reportAttachment = new ReportAttachment();
-      reportAttachment.reportId = this.reportId;
-      Object.assign(reportAttachment, this.attachmentForm.value);
+      if (!this.isValid()) {
+        this.attachmentForm.markAllAsTouched();
+        this.attachmentForm.controls.attachment.markAsDirty();
 
-      this.sharedService.emitReportIdChange(this.reportId);
-      this.reportAttachmentService.uploadAttachment(
-        reportAttachment, this.selectedFile)
-        .subscribe(respEvent =>
-          this.onUploadEvent(respEvent),
-          errorResp => this.onUploadError(errorResp),
-        );
+      } else if (this.selectedFile) {
+
+        this.pleaseWait = {
+            keepAliveTicker: null,
+            serverTicker: null,
+            modal: this.modalService.open(this.pleaseWaitTemplate, {
+                backdrop: 'static',
+                size: 'lg'
+            }),
+            message: '',
+            progress: 0
+        };
+
+        this.uploadFailed = false;
+        this.uploadFile = this.selectedFile.name;
+
+        const reportAttachment = new ReportAttachment();
+        reportAttachment.reportId = this.reportId;
+        Object.assign(reportAttachment, this.attachmentForm.value);
+
+        this.sharedService.emitReportIdChange(this.reportId);
+        this.reportAttachmentService.uploadAttachment(
+          reportAttachment, this.selectedFile)
+          .subscribe(respEvent =>
+            this.onUploadEvent(respEvent),
+            errorResp => this.onUploadError(errorResp),
+          );
+      }
     }
   }
 
@@ -197,7 +216,7 @@ export class FileAttachmentModalComponent implements OnInit {
                 // 200 - Success
                 this.onUploadComplete();
 
-                this.activeModal.close();
+                this.activeModal.close(event.body);
 
             default:
 
@@ -236,6 +255,7 @@ export class FileAttachmentModalComponent implements OnInit {
         // deletes selected file from the input
         this.fileAttachment.nativeElement.value = '';
         this.selectedFile = null;
+        this.disableButton = true;
     }
 
     onUploadComplete() {
@@ -252,14 +272,18 @@ export class FileAttachmentModalComponent implements OnInit {
   onFileChanged(file: FileList) {
     this.bsflags.showUserErrors = false;
     this.bsflags.showSystemErrors = false;
-
-    this.selectedFile = file.length ? file.item(0) : null;
     this.uploadUserErrors = [];
     this.uploadSystemErrors = [];
+
+    this.selectedFile = file.length ? file.item(0) : null;
+    if (this.selectedFile === null && this.userRole === 'Reviewer') {
+      this.disableButton = false;
+    }
 
     if (file.item(0)) {
       this.selectedFile = file.item(0);
       const fileReader = new FileReader();
+      this.disableButton = false;
 
       fileReader.readAsText(this.selectedFile, 'UTF-8');
 
@@ -270,6 +294,7 @@ export class FileAttachmentModalComponent implements OnInit {
 
         if (fileNameLength || fileSize || fileType) {
 
+          this.disableButton = true;
           this.bsflags.showUserErrors = true;
           this.uploadFailed = true;
 

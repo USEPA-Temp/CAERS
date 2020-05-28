@@ -35,6 +35,15 @@ public interface ReportService {
     void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment);
     
     /**
+     * Create Report History records for specified rejected reports
+     * @param reportIds
+     * @param reportAction
+     * @param comments
+     * @param attachmentId
+     */
+    void createRejectReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, Long attachmentIds);
+    
+    /**
      * Create Report History record 
      * @param userIds
      * @param reportAction
@@ -78,7 +87,7 @@ public interface ReportService {
      * @param id
      * @param deleted
      */
-    void updateReportHistoryAttachment(Long id, boolean deleted);
+    void updateReportHistoryDeletedAttachment(Long id, boolean deleted);
     
     /***
      * Return ReportDownloadDto for the chosen report id

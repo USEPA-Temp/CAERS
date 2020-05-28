@@ -356,10 +356,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     @Override
-    public List<EmissionsReportDto>rejectEmissionsReports(List<Long> reportIds, String comments) {
+    public List<EmissionsReportDto>rejectEmissionsReports(List<Long> reportIds, String comments, Long attachmentIds) {
     	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reportIds);
-        reportService.createReportHistory(reportIds, ReportAction.REJECTED, comments);
-
+		reportService.createRejectReportHistory(reportIds, ReportAction.REJECTED, comments, attachmentIds);
+		
     	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
 	      .forEach(report -> {
 
@@ -378,7 +378,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  cefConfig.getDefaultEmailAddress(),
 			        		  reportFacilitySite.getName(),
 			        		  report.getYear().toString(),
-			        		  comments);
+			        		  comments, attachmentIds);
 	    		  }
 	    	  });
 	      });
