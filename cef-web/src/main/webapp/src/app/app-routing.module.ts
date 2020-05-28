@@ -10,6 +10,7 @@ import {BulkUploadComponent} from 'src/app/modules/shared/pages/bulk-upload/bulk
 import {HelpPageComponent} from 'src/app/modules/dashboards/pages/help-page/help-page.component';
 import {AdminPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-properties/admin-properties.component';
 import {AdminAnnouncementPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
+import { AdminAuthGuard } from 'src/app/core/guards/admin-auth.guard';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -41,6 +42,7 @@ const routes: Routes = [
   },
   {
     path: 'admin',
+    canActivate: [AdminAuthGuard],
     children: [
       {
         path: 'properties',
@@ -50,6 +52,10 @@ const routes: Routes = [
         path: 'announcement',
         component: AdminAnnouncementPropertiesComponent,
         data: { title: 'Announcement Banner' },
+      }, {
+        path: 'upload',
+        component: BulkUploadComponent,
+        data: { title: 'Bulk Upload' },
       }, {
         path: '',
         redirectTo: 'properties',
@@ -72,7 +78,7 @@ const routes: Routes = [
     ]
   },
   { path: 'helpPage', component: HelpPageComponent, data: { title: 'Help Page' } },
-  { path: 'upload', component: BulkUploadComponent, data: { title: 'Bulk Upload' } },
+  { path: 'upload', redirectTo: 'admin/upload', pathMatch: 'full' },
   { path: 'error', component: ErrorComponent, data: { title: 'Error Page' } },
   { path: '*', component: RedirectComponent, data: { title: 'Redirect Page' } }
 ];

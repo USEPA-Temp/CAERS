@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.epa.cef.web.domain.AdminProperty;
 import gov.epa.cef.web.provider.system.PropertyProvider;
 import gov.epa.cef.web.security.AppRole;
+import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.PropertyDto;
 import gov.epa.cef.web.service.mapper.AppPropertyMapper;
 
@@ -30,6 +31,9 @@ public class AdminPropertyApi {
 
     @Autowired
     private PropertyProvider propertyProvider;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private AppPropertyMapper mapper;
@@ -49,7 +53,6 @@ public class AdminPropertyApi {
      * @return
      */
     @GetMapping
-    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<List<PropertyDto>> retrieveAllProperties() {
         List<PropertyDto> result = mapper.toDtoList(propertyProvider.retrieveAll());
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -60,7 +63,6 @@ public class AdminPropertyApi {
      * @return
      */
     @PutMapping(value = "/{propName}")
-    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<PropertyDto> updateProperty(@NotNull @PathVariable String propName,
             @NotNull @RequestBody PropertyDto dto) {
 
@@ -73,7 +75,6 @@ public class AdminPropertyApi {
      * @return
      */
     @PostMapping
-    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<List<PropertyDto>> updateProperties(@NotNull @RequestBody List<PropertyDto> dtos) {
 
         List<PropertyDto> result = dtos.stream().map(dto -> {
@@ -82,6 +83,15 @@ public class AdminPropertyApi {
         }).collect(Collectors.toList());
         
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Send a test email to the Admin email list
+     */
+    @PostMapping(value = "/sendTestEmail")
+    public void sendTestAdminEmail() {
+
+        this.notificationService.sendAdminNotification(NotificationService.AdminEmailType.AdminTest, null);
     }
 
 }
