@@ -29,6 +29,14 @@ public interface ControlPathRepository extends CrudRepository<ControlPath, Long>
     List<ControlPath> findByEmissionsUnitId(@Param("unitId") Long unitId);
 
     /**
+     * Retrieve Control Paths for an control device
+     * @param unitId
+     * @return
+     */
+	@Query("SELECT DISTINCT cp FROM ControlPath cp INNER JOIN cp.assignments ca INNER JOIN ca.control c WHERE c.id = :deviceId")
+    List<ControlPath> findByControlId(@Param("deviceId") Long deviceId);
+
+    /**
      * Retrieve Control Paths for a release point
      * @param pointId
      * @return

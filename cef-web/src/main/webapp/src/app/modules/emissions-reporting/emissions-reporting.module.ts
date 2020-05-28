@@ -67,6 +67,7 @@ import { UserFeedbackComponent } from './pages/user-feedback/user-feedback.compo
 import { DataBulkEntryComponent } from './pages/data-bulk-entry/data-bulk-entry.component';
 import { BulkEntryReportingPeriodTableComponent } from './components/bulk-entry-reporting-period-table/bulk-entry-reporting-period-table.component';
 import { BulkEntryEmissionsTableComponent } from './components/bulk-entry-emissions-table/bulk-entry-emissions-table.component';
+import { ControlDevicePathsTableComponent } from './components/control-device-paths-table/control-device-paths-table.component';
 
 @NgModule({
   declarations: [
@@ -128,7 +129,8 @@ import { BulkEntryEmissionsTableComponent } from './components/bulk-entry-emissi
     UserFeedbackComponent,
     DataBulkEntryComponent,
     BulkEntryReportingPeriodTableComponent,
-    BulkEntryEmissionsTableComponent
+    BulkEntryEmissionsTableComponent,
+    ControlDevicePathsTableComponent
   ],
   imports: [
     CommonModule,

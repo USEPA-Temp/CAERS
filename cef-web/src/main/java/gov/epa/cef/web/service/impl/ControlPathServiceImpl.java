@@ -76,6 +76,13 @@ public class ControlPathServiceImpl implements ControlPathService {
     }
 	
 	@Override
+    public List<ControlPathDto> retrieveForControlDevice(Long controlDeviceId) {
+        List<ControlPath> result = repo.findByControlId(controlDeviceId);
+        result.addAll(getChildren(result));
+        return mapper.toDtoList(result);
+    }
+	
+	@Override
     public List<ControlAssignmentDto> retrieveForControlPath(Long controlPathId) {
         List<ControlAssignment> result = assignmentRepo.findByControlPathIdOrderBySequenceNumber(controlPathId);
         return assignmentMapper.toDtoList(result);

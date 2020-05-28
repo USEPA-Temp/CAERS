@@ -150,6 +150,20 @@ public class ControlPathApi {
     }
 
     /**
+     * Retrieve Control Paths for a control device
+     * @param pointId
+     * @return
+     */
+    @GetMapping(value = "/controlDevice/{deviceId}")
+    public ResponseEntity<List<ControlPathDto>> retrieveControlPathsForControlDevice(
+        @NotNull @PathVariable Long deviceId) {
+
+        List<ControlPathDto> result = controlPathService.retrieveForControlDevice(deviceId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
      * Retrieve Control Paths for an release point
      * @param pointId
      * @return
@@ -194,7 +208,7 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+     
     /**
      * Delete a Control Path Assignment for given id
      * @param controlPathId
