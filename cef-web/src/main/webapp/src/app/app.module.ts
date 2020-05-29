@@ -37,6 +37,7 @@ import { AdminPropertiesComponent } from './modules/dashboards/pages/admin-prope
 import { AdminAnnouncementPropertiesComponent } from './modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
 import { ReviewerNavComponent } from './modules/shared/components/reviewer-nav/reviewer-nav.component';
 import {AdminNavComponent} from "./modules/shared/components/admin-nav/admin-nav.component";
+import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submission/eis-submission.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import {AdminNavComponent} from "./modules/shared/components/admin-nav/admin-nav
     HelpPageComponent,
     AdminPropertiesComponent,
     AdminAnnouncementPropertiesComponent,
-    ReviewerNavComponent
+    ReviewerNavComponent,
+    EisSubmissionComponent
   ],
   imports: [
     BrowserModule,

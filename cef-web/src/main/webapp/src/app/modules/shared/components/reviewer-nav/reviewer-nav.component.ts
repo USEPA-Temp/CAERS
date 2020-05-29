@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {UserContextService} from "src/app/core/services/user-context.service";
 import {User} from "src/app/shared/models/user";
+import {ActivatedRoute} from "@angular/router";
+import {map} from "rxjs/operators";
 
 @Component({
    selector: 'app-reviewer-nav',
@@ -11,9 +13,18 @@ export class ReviewerNavComponent implements OnInit {
 
    user: User;
 
-   constructor(private userContext: UserContextService) { }
+   eisTransmissionActive: boolean;
+
+   constructor(private userContext: UserContextService,
+               private route: ActivatedRoute) { }
 
    ngOnInit() {
+
+      this.route.url.pipe(map(segments => segments.join('')))
+         .subscribe(result => {
+
+            this.eisTransmissionActive = result.indexOf("eis") == 0;
+         });
 
       this.userContext.getUser()
          .subscribe(result => {
