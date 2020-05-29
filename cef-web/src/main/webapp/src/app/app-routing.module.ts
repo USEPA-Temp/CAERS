@@ -13,6 +13,7 @@ import {AdminPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-p
 import {AdminAnnouncementPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
 import { AdminAuthGuard } from 'src/app/core/guards/admin-auth.guard';
 import { ReviewerAuthGuard } from 'src/app/core/guards/reviewer-auth.guard';
+import {EisTransactionsComponent} from "src/app/modules/dashboards/pages/eis-transactions/eis-transactions.component";
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -77,6 +78,10 @@ const routes: Routes = [
         path: 'eisSubmitData',
         component: EisSubmissionComponent,
         data: { title: 'Submit Data' },
+      }, {
+        path: 'eisTransactions',
+        component: EisTransactionsComponent,
+        data: { title: 'Review Transactions' },
       }, {
         path: '',
         redirectTo: 'dashboard',

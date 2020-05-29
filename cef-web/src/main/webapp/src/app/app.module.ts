@@ -35,9 +35,12 @@ import { SubmissionReviewModalComponent } from './modules/dashboards/components/
 import { HelpPageComponent } from './modules/dashboards/pages/help-page/help-page.component';
 import { AdminPropertiesComponent } from './modules/dashboards/pages/admin-properties/admin-properties.component';
 import { AdminAnnouncementPropertiesComponent } from './modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
-import { ReviewerNavComponent } from './modules/shared/components/reviewer-nav/reviewer-nav.component';
+import { ReviewerNavComponent } from './modules/dashboards/components/reviewer-nav/reviewer-nav.component';
 import {AdminNavComponent} from "./modules/shared/components/admin-nav/admin-nav.component";
 import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submission/eis-submission.component';
+import { EisNotificationsComponent } from './modules/dashboards/components/eis-notifications/eis-notifications.component';
+import { EisTransactionsComponent } from './modules/dashboards/pages/eis-transactions/eis-transactions.component';
+import { EisDataListComponent } from './modules/dashboards/components/eis-data-list/eis-data-list.component';
 
 
 @NgModule({
@@ -64,7 +67,10 @@ import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submissio
     AdminPropertiesComponent,
     AdminAnnouncementPropertiesComponent,
     ReviewerNavComponent,
-    EisSubmissionComponent
+    EisSubmissionComponent,
+    EisNotificationsComponent,
+    EisTransactionsComponent,
+    EisDataListComponent
   ],
   imports: [
     BrowserModule,
