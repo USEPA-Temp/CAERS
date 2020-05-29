@@ -1,10 +1,5 @@
 package gov.epa.cef.web.service.mapper;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
@@ -35,8 +30,14 @@ import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {LookupEntityMapper.class})
+import java.util.List;
+
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+    uses = {LookupEntityMapper.class})
 public interface BulkUploadMapper {
 
     @Mapping(target = "facilitySites", ignore = true)
@@ -79,7 +80,7 @@ public interface BulkUploadMapper {
     EmissionsProcessBulkUploadDto emissionsProcessToDto(EmissionsProcess source);
 
     List<EmissionsProcessBulkUploadDto> emissionsProcessToDtoList(List<EmissionsProcess> source);
-    
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target="reportingPeriodTypeCode", ignore = true)
     @Mapping(target="emissionsOperatingTypeCode", ignore = true)
@@ -111,7 +112,7 @@ public interface BulkUploadMapper {
     OperatingDetailBulkUploadDto operatingDetailToDto(OperatingDetail source);
 
     List<OperatingDetailBulkUploadDto> operatingDetailToDtoList(List<OperatingDetail> source);
-    
+
     @Mapping(target="id", ignore = true)
     @Mapping(target="pollutant", ignore = true)
     @Mapping(target="emissionsUomCode", ignore = true)

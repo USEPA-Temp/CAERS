@@ -1,7 +1,7 @@
 /*
  * Custom JS function to load the Cromerr Widget
  */
-function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback){
+function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted){
 
     var fancyboxJS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.js";
     var fancyboxCSS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.css";
@@ -10,7 +10,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
     var jqueryJS="assets/js/jquery-1.6.4.min.js";
 
     if(checkIfScriptExists(baseServiceUrl+cromerrJS)){
-        initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback);
+        initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted);
     }else{
         var jqueryScript=loadScript(jqueryJS);
         jqueryScript.onload=function(){
@@ -24,7 +24,7 @@ function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId,
                 loadScript(baseServiceUrl+jqueryValidate);
                 var cromerrScript=loadScript(baseServiceUrl+cromerrJS);
                 cromerrScript.onload=function(){
-                    initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback);
+                    initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted);
                 }
                 cromerrScript.setAttribute('id', "cromerrServerSign");
             }
@@ -40,7 +40,7 @@ function loadScript(srciptUrl){
     return script;
 }
 
-function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedback){
+function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, feedbackEnabled, feedbackSubmitted){
     $( document ).ready(function() {
         $.cromerrWidget({
             esignButtonId : "certifyAndSubmit",
@@ -62,14 +62,15 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
                         reportId: emissionsReportId
                       },
                       success: function(response) {
-                        if (userFeedback) {
+                        //if feedback is enabled and the user hasn't already submitted feedback for this report go to feedback page after signing
+                        if (feedbackEnabled && !feedbackSubmitted) {
+                            toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
+                            event.unblockUI();
+                            window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report/"+emissionsReportId+"/userfeedback";
+                        } else {
                             toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
                             event.unblockUI();
                             window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report";
-                        } else {
-                            toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
-                            event.unblockUI()
-                            window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report/"+emissionsReportId+"/userfeedback";
                         }
                       },
                       error: function(xhr) {

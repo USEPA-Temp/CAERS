@@ -9,4 +9,5 @@ export class EmissionsReport {
   validationStatus: string;
   year: number;
   facilitySite: FacilitySite;
+  hasSubmitted: boolean;
 }

@@ -22,13 +22,15 @@ export class EmissionsReportingService {
         return this.http.get<EmissionsReport[]>(url);
     }
 
-    getReport(reportId: string): Observable<EmissionsReport> {
-        const url = `${this.baseUrl}/${reportId}`;
-        return this.http.get<EmissionsReport>(url);
-    }
     /** GET most recent report for specified facility from the server */
     getCurrentReport(facilityId: string): Observable<EmissionsReport> {
         const url = `${this.baseUrl}/facility/${facilityId}/current`;
+        return this.http.get<EmissionsReport>(url);
+    }
+
+    /** Get report by report id */
+    getReport(reportId: string): Observable<EmissionsReport> {
+        const url = `${this.baseUrl}/${reportId}`;
         return this.http.get<EmissionsReport>(url);
     }
 
@@ -140,5 +142,11 @@ export class EmissionsReportingService {
     delete(reportId: number): Observable<{}> {
         const url = `${this.baseUrl}/${reportId}`;
         return this.http.delete(url);
+    }
+
+    /** Sets hasSubmitted flag on specified emissions report to true */
+    updateHasSubmittedFeedback(reportId: string, report: EmissionsReport): Observable<{}> {
+        const url = `${this.baseUrl}/${reportId}`;
+        return this.http.put(url, report);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,6 +35,7 @@ import static gov.epa.cef.web.controller.HandoffLandingController.HANDOFF_LANDIN
 @Profile("prod")
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
 @ComponentScan(basePackages = {"gov.epa.cdx.shared"})
 @ImportResource(locations = {"file:${spring.config.dir}/cdx-shared/cdx-shared-config.xml"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -63,7 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .hasAnyRole(
                 AppRole.RoleType.PREPARER.roleName(),
                 AppRole.RoleType.NEI_CERTIFIER.roleName(),
-                AppRole.RoleType.REVIEWER.roleName())
+                AppRole.RoleType.REVIEWER.roleName(),
+                AppRole.RoleType.CAERS_ADMIN.roleName())
             .anyRequest().denyAll().and()
             .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(logoutUrl));
     }

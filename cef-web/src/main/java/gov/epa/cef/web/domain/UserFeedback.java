@@ -52,7 +52,7 @@ public class UserFeedback extends BaseAuditEntity {
      * Default constructor
      */
     public UserFeedback() {}
-
+    
 	public Long getReportId() {
 		return reportId;
 	}

@@ -1,7 +1,7 @@
 <div  *ngIf="tableData">
   <form [formGroup]="emissionForm">
     <div  class="overflow-auto" style="max-height: 60vh;">
-      <table class="table table-sm table-striped table-bordered">
+      <table class="table table-sm table-bordered">
         <thead class="thead-cef-medium">
         <tr>
           <th scope="col" sortable="unitIdentifier" (sort)="onSort($event)">Unit ID</th>
@@ -15,17 +15,19 @@
         </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let item of tableData">
-          <tr >
-            <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1"><span [title]="item.unitDescription">{{item.unitIdentifier}}</span></td>
+          <ng-container *ngFor="let item of tableData; let i=index">
+          <tr [class.striped]="!(i%2)">
             <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1">
-              <span [title]="item.emissionsProcessDescription">
-                {{item.emissionsProcessIdentifier}}
-              </span>
+              {{item.unitIdentifier}}
+              <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.unitDescription"></fa-icon>
+            </td>
+            <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1">
+              {{item.emissionsProcessIdentifier}}
+              <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.emissionsProcessDescription"></fa-icon>
             </td>
           </tr>
             <ng-container *ngFor="let emission of item.emissions">
-              <tr>
+              <tr [class.striped]="!(i%2)">
               <td>
                 <a routerLink="{{baseUrl}}/period/{{item.reportingPeriodId}}/emission/{{emission.id}}" 
                       [attr.aria-label]="'emissions process' + item?.emissionsProcessIdentifier">
@@ -41,15 +43,15 @@
               </td>
               <td>
                 <div class="row">
-                  <div class="col-sm-12 col-lg-9">
+                  <div class="col-sm-12 col-lg-8">
                   <input type="number" class="form-control" id="{{emission.id + 'Input'}}" formControlName="{{emission.id}}" [readOnly]="readOnlyMode"
                           [attr.aria-label]="'Total Emissions for ' + emission.pollutant?.pollutantName">
                     <app-validation-message [control]="emissionForm.get('' + emission.id)"></app-validation-message> 
                   </div>
-                  <div class="col-sm-12 col-lg-3">
+                  <div class="col-sm-12 col-lg-4">
                     {{emission.emissionsUomCode?.code}} 
                     <span *ngIf="!(emission.totalManualEntry || emission.emissionsCalcMethodCode.totalDirectEntry)">
-                      <fa-icon *ngIf="emission.calculationFailed === false" class="mt-2 text-success" [icon]="['fas', 'check']" title="Total Emissions were recalculated."></fa-icon>
+                      <fa-icon *ngIf="emission.calculationFailed === false" class="mt-2" style="color: #28a745" [icon]="['fas', 'check']" title="Total Emissions were recalculated."></fa-icon>
                       <fa-icon *ngIf="emission.calculationFailed === true" class="mt-2 text-danger" [icon]="['fas', 'times-circle']" 
                           [title]="'Total Emissions could not be calculated because ' + emission.calculationFailureMessage + ' To update click the Pollutant to be redicrect to the Emission Information Page.'"></fa-icon>
                     </span>

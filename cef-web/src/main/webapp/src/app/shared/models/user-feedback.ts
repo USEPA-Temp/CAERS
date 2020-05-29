@@ -1,4 +1,5 @@
 export class UserFeedback {
+    id: number;
 	reportId: string;
 	beneficialFunctionalityComments: string;
     difficultFunctionalityComments: string;

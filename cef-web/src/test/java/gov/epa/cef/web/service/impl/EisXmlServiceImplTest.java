@@ -44,11 +44,11 @@ import static org.mockito.Mockito.when;
 @Category(TestCategories.FastTest.class)
 public class EisXmlServiceImplTest {
 
-    private EisXmlServiceImpl eisXmlService;
-
     private JAXBContext cersJaxbContext;
 
     private Schema cersSchema;
+
+    private EisXmlServiceImpl eisXmlService;
 
     @Before
     public void _onJunitBeginTest() {
@@ -87,10 +87,11 @@ public class EisXmlServiceImplTest {
     public void generateEisDataTest() throws Exception {
 
         EisHeaderDto eisHeader = new EisHeaderDto()
-                .withAuthorName("Jim Horner")
-                .withDataCategory(EisDataCategory.PointEmission)
-                .withSubmissionType(EisSubmissionType.Production)
-                .withEmissionReports(Arrays.asList(1L, 2L, 3L));
+            .withAuthorName("Jim Horner")
+            .withOrganizationName("Slate Rock and Gravel")
+            .withDataCategory(EisDataCategory.PointEmission)
+            .withSubmissionType(EisSubmissionType.Production)
+            .withEmissionReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType document = this.eisXmlService.generateEisDocument(eisHeader);
 
@@ -104,7 +105,7 @@ public class EisXmlServiceImplTest {
         for (int i = 0; i < 3; ++i) {
 
             assertEquals(String.format("FacilitySite-%d", i + 1),
-                    cersData.getFacilitySite().get(i).getFacilitySiteName());
+                cersData.getFacilitySite().get(i).getFacilitySiteName());
         }
     }
 
@@ -112,10 +113,11 @@ public class EisXmlServiceImplTest {
     public void writeEisXmlToTest() throws Exception {
 
         EisHeaderDto eisHeader = new EisHeaderDto()
-                .withAuthorName("Jim Horner")
-                .withDataCategory(EisDataCategory.PointEmission)
-                .withSubmissionType(EisSubmissionType.Production)
-                .withEmissionReports(Arrays.asList(1L, 2L, 3L));
+            .withAuthorName("Jim Horner")
+            .withOrganizationName("Slate Rock and Gravel")
+            .withDataCategory(EisDataCategory.PointEmission)
+            .withSubmissionType(EisSubmissionType.Production)
+            .withEmissionReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType momento;
 
@@ -125,14 +127,14 @@ public class EisXmlServiceImplTest {
 
             try (InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray())) {
 
-                 momento = eisDatafromInputStream(inputStream);
+                momento = eisDatafromInputStream(inputStream);
             }
         }
 
         DocumentHeaderType header = momento.getHeader();
         Map<String, String> properties = header.getProperty().stream()
-                .collect(Collectors.toMap(
-                        NameValuePair::getPropertyName, np -> np.getPropertyValue().toString()));
+            .collect(Collectors.toMap(
+                NameValuePair::getPropertyName, np -> np.getPropertyValue().toString()));
 
         assertEquals(eisHeader.getDataCategory().name(), properties.get("DataCategory"));
         assertEquals(eisHeader.getSubmissionType().name(), properties.get("SubmissionType"));
@@ -146,41 +148,20 @@ public class EisXmlServiceImplTest {
         assertEquals(3, cersData.getFacilitySite().size());
     }
 
-    private ExchangeNetworkDocumentType eisDatafromInputStream(InputStream inputStream) {
+    private CERSDataType cersDataFromSource(Source source) {
 
-        ExchangeNetworkDocumentType result;
+        CERSDataType result;
 
         try {
 
-            JAXBContext jaxbContext =
-                    JAXBContext.newInstance(ExchangeNetworkDocumentType.class, CERSDataType.class);
+            Unmarshaller um = this.cersJaxbContext.createUnmarshaller();
 
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
-            String schemaLocation = "schema/header/header_v2.0.xsd";
-            URL schemaUrl = Resources.getResource(schemaLocation);
-            if (schemaUrl == null) {
-                String msg = String.format("XSD is missing; not found on classpath at %s.", schemaLocation);
-                throw new IllegalStateException(msg);
-            }
-
-            Schema schema = schemaFactory.newSchema(schemaUrl);
-
-            Unmarshaller um = jaxbContext.createUnmarshaller();
-
-            // TODO investigate
-            // for some reason our XML is not valid
-            // - it might be that our XML mapping is not populating XSD required fields
-            // um.setSchema(schema);
-
-            StreamSource streamSource = new StreamSource(inputStream);
-            JAXBElement<ExchangeNetworkDocumentType> root =
-                    um.unmarshal(streamSource, ExchangeNetworkDocumentType.class);
+            JAXBElement<CERSDataType> root = um.unmarshal(source, CERSDataType.class);
             result = root.getValue();
 
-        } catch (JAXBException | SAXException e) {
+        } catch (JAXBException e) {
 
-            throw new IllegalStateException("Unable to create JAXBContext.", e);
+            throw new IllegalStateException(e);
         }
 
         return result;
@@ -203,25 +184,37 @@ public class EisXmlServiceImplTest {
         return result;
     }
 
-    private CERSDataType cersDataFromSource(Source source) {
+    private ExchangeNetworkDocumentType eisDatafromInputStream(InputStream inputStream) {
 
-        CERSDataType result;
+        ExchangeNetworkDocumentType result;
 
         try {
 
-            Unmarshaller um = this.cersJaxbContext.createUnmarshaller();
+            JAXBContext jaxbContext =
+                JAXBContext.newInstance(ExchangeNetworkDocumentType.class, CERSDataType.class);
 
-            // TODO investigate
-            // for some reason our XML is not valid
-            // - it might be that our XML mapping is not populating XSD required fields
-            // um.setSchema(schema);
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-            JAXBElement<CERSDataType> root = um.unmarshal(source, CERSDataType.class);
+            String schemaLocation = "schema/header/header_v2.0.xsd";
+            URL schemaUrl = Resources.getResource(schemaLocation);
+            if (schemaUrl == null) {
+                String msg = String.format("XSD is missing; not found on classpath at %s.", schemaLocation);
+                throw new IllegalStateException(msg);
+            }
+
+            Schema schema = schemaFactory.newSchema(schemaUrl);
+
+            Unmarshaller um = jaxbContext.createUnmarshaller();
+            um.setSchema(schema);
+
+            StreamSource streamSource = new StreamSource(inputStream);
+            JAXBElement<ExchangeNetworkDocumentType> root =
+                um.unmarshal(streamSource, ExchangeNetworkDocumentType.class);
             result = root.getValue();
 
-        } catch (JAXBException e) {
+        } catch (JAXBException | SAXException e) {
 
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Unable to create JAXBContext.", e);
         }
 
         return result;

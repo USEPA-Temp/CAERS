@@ -1,13 +1,16 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { FacilityDashboardComponent } from 'src/app/modules/dashboards/pages/facility-dashboard/facility-dashboard.component';
-import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
-import { SubmissionReviewDashboardComponent } from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
-import { FacilityResolverService } from 'src/app/core/services/facility-resolver.service';
-import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/redirect.component';
-import { ErrorComponent } from 'src/app/modules/shared/pages/error/error.component';
-import { BulkUploadComponent } from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
-import { HelpPageComponent } from 'src/app/modules/dashboards/pages/help-page/help-page.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {FacilityDashboardComponent} from 'src/app/modules/dashboards/pages/facility-dashboard/facility-dashboard.component';
+import {FacilityDataReviewComponent} from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
+import {SubmissionReviewDashboardComponent} from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
+import {FacilityResolverService} from 'src/app/core/services/facility-resolver.service';
+import {RedirectComponent} from 'src/app/modules/dashboards/pages/redirect/redirect.component';
+import {ErrorComponent} from 'src/app/modules/shared/pages/error/error.component';
+import {BulkUploadComponent} from 'src/app/modules/shared/pages/bulk-upload/bulk-upload.component';
+import {HelpPageComponent} from 'src/app/modules/dashboards/pages/help-page/help-page.component';
+import {AdminPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-properties/admin-properties.component';
+import {AdminAnnouncementPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
+import { AdminAuthGuard } from 'src/app/core/guards/admin-auth.guard';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -37,9 +40,45 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'submissionReviewDashboard', component: SubmissionReviewDashboardComponent, data: { title: 'Submission Review Dashboard' } },
+  {
+    path: 'admin',
+    canActivate: [AdminAuthGuard],
+    children: [
+      {
+        path: 'properties',
+        component: AdminPropertiesComponent,
+        data: { title: 'Admin Properties' },
+      }, {
+        path: 'announcement',
+        component: AdminAnnouncementPropertiesComponent,
+        data: { title: 'Announcement Banner' },
+      }, {
+        path: 'upload',
+        component: BulkUploadComponent,
+        data: { title: 'Bulk Upload' },
+      }, {
+        path: '',
+        redirectTo: 'properties',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'reviewer',
+    children: [
+      {
+        path: 'dashboard',
+        component: SubmissionReviewDashboardComponent,
+        data: { title: 'Submission Review Dashboard' },
+      }, {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      }
+    ]
+  },
   { path: 'helpPage', component: HelpPageComponent, data: { title: 'Help Page' } },
-  { path: 'upload', component: BulkUploadComponent, data: { title: 'Bulk Upload' } },
+  { path: 'upload', redirectTo: 'admin/upload', pathMatch: 'full' },
   { path: 'error', component: ErrorComponent, data: { title: 'Error Page' } },
   { path: '*', component: RedirectComponent, data: { title: 'Redirect Page' } }
 ];

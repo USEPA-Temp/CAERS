@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SubmissionsReviewDashboardService } from 'src/app/core/services/submissions-review-dashboard.service';
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
 import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/components/submission-review-list/submission-review-list.component';
+import { ReviewerNavComponent } from 'src/app/modules/shared/components/reviewer-nav/reviewer-nav.component';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
-import {SharedService} from "../../../../core/services/shared.service";
-import { faTheaterMasks } from '@fortawesome/free-solid-svg-icons';
+import {SharedService} from "src/app/core/services/shared.service";
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -15,7 +15,9 @@ import { faTheaterMasks } from '@fortawesome/free-solid-svg-icons';
 } )
 export class SubmissionReviewDashboardComponent implements OnInit {
 
+    @ViewChild(ReviewerNavComponent, {static: true})
     @ViewChild(SubmissionReviewListComponent, {static: true})
+
     private listComponent: SubmissionReviewListComponent;
 
     submissions: SubmissionUnderReview[] = [];

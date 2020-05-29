@@ -4,6 +4,7 @@ import gov.epa.cef.web.config.slt.GAConfig;
 import gov.epa.cef.web.provider.system.PropertyProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -23,15 +24,8 @@ public class CefConfig {
     @Autowired
     protected PropertyProvider propertyProvider;
 
-    public List<String> getAdmins() {
-
-        return this.propertyProvider.getStringList(AppPropertyName.EnvAdmins);
-    }
-
-    public Collection<Object> getAdminsAsLowerCase() {
-
-        return this.getAdmins().stream().map(String::toLowerCase).collect(Collectors.toList());
-    }
+    @Autowired
+    protected Environment environment;
 
     public List<String> getAdminEmails() {
 
@@ -76,6 +70,10 @@ public class CefConfig {
 
     public boolean getSccUpdateTaskEnabled() {
         return this.propertyProvider.getBoolean(AppPropertyName.SccUpdateTaskEnabled);
+    }
+    
+    public String getMaxFileSize() {
+    	return environment.getProperty("spring.servlet.multipart.max-file-size");
     }
 
 }

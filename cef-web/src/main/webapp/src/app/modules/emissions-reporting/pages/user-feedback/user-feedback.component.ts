@@ -12,6 +12,7 @@ import { EmissionsReport } from 'src/app/shared/models/emissions-report';
 import { UserService } from 'src/app/core/services/user.service';
 import { User } from 'src/app/shared/models/user';
 
+
 @Component({
   selector: 'app-user-feedback',
   templateUrl: './user-feedback.component.html',
@@ -45,7 +46,9 @@ export class UserFeedbackComponent implements OnInit {
               private sharedService: SharedService,
               private router: Router,
               private reportingService: EmissionsReportingService,
-              private userService: UserService) { }
+              private userService: UserService,
+              private emissionsReportingService: EmissionsReportingService) { }
+
 
   ngOnInit() {
     this.route.paramMap
@@ -85,13 +88,20 @@ export class UserFeedbackComponent implements OnInit {
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
       this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
       this.sharedService.emitHideBoolChange(false);
-      this.router.navigateByUrl(this.baseUrl);
+          this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId, this.report).subscribe((result) => {
+              this.sharedService.emitHideBoolChange(false);
+              this.router.navigateByUrl(this.baseUrl);
+      });
     });
   }
 
   onNoThanks() {
-    this.sharedService.emitHideBoolChange(false);
-    this.router.navigateByUrl(this.baseUrl);
+        this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId, this.report).subscribe((result) => {
+          this.sharedService.emitHideBoolChange(false);
+          this.router.navigateByUrl(this.baseUrl);
+        });
   }
 
 }
+
+

@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.List;
+import java.util.List; 
 
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,18 +40,4 @@ public class UserFeedbackApi {
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
-    /**
-     * Retrieve a feedback submission by report ID
-     * @param pointId
-     * @return
-     */
-    @GetMapping(value = "/{reportId}")
-    public ResponseEntity<UserFeedbackDto> retrieveUserFeedback(@NotNull @PathVariable Long reportId) {
-
-    	UserFeedbackDto result = userFeedbackService.retrieveById(reportId);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-
 }

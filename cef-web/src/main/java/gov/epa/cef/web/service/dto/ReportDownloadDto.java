@@ -28,11 +28,12 @@ public class ReportDownloadDto implements Serializable{
     private String emissionsNumeratorUom;
     private String emissionsDenominatorUom;
     private BigDecimal emissionsFactor;
+    private BigDecimal overallControlPercent;
     private String emissionsFactorText;
     private String emissionsComment;
     private String reportingPeriodType;
     private String throughputUom;
-    private BigDecimal throughputAmount;
+    private BigDecimal throughputValue;
 	private String emissionsCalcMethod;
     private String lastModifiedBy;
 	private String lastModifiedDate;
@@ -43,11 +44,11 @@ public class ReportDownloadDto implements Serializable{
 	public void setThroughputUom(String throughputUom) {
 		this.throughputUom = throughputUom;
 	}
-	public BigDecimal getThroughputAmount() {
-		return throughputAmount;
+	public BigDecimal getThroughputValue() {
+		return throughputValue;
 	}
-	public void setThroughputAmount(BigDecimal throughputAmount) {
-		this.throughputAmount = throughputAmount;
+	public void setThroughputValue(BigDecimal throughputValue) {
+		this.throughputValue = throughputValue;
 	}
 	
     public String getLastModifiedBy() {
@@ -163,6 +164,12 @@ public class ReportDownloadDto implements Serializable{
 	}
 	public void setEmissionsCalcMethod(String emissionsCalcMethod) {
 		this.emissionsCalcMethod = emissionsCalcMethod;
+	}
+	public BigDecimal getOverallControlPercent() {
+		return overallControlPercent;
+	}
+	public void setOverallControlPercent(BigDecimal overallControlPercent) {
+		this.overallControlPercent = overallControlPercent;
 	}
 
 }
