@@ -3,6 +3,9 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.provider.system.PropertyProvider;
 import gov.epa.cef.web.service.NotificationService;
+import gov.epa.cef.web.service.NotificationService.UserFeedbackEmailType;
+import gov.epa.cef.web.service.dto.UserFeedbackDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
     private final String SCC_UPDATE_FAILED_BODY_TEMPLATE = "sccUpdateFailed";
+    
+    private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "Userfeedback Submitted for {1}";
+    private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "userFeedback";
 
     @Autowired
     public JavaMailSender emailSender;
@@ -76,6 +82,14 @@ public class NotificationServiceImpl implements NotificationService {
 
         sendAdminEmail(type.subject(), emailBody);
     }
+    
+    public void sendUserFeedbackNotification(UserFeedbackEmailType type, Map<String, Object> variables) {
+    	Context context = new Context();
+    	context.setVariables(variables);
+    	String emailBody = this.templateEngine.process(type.template(), context);
+    	
+    	sendFeedbackEmail(type.subject(),emailBody);
+    }
 
     public void sendHtmlMessage(String to, String from, String subject, String body) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -100,6 +114,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     private void sendAdminEmail(String subject, String body) {
         sendAdminEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress), subject, body);
+    }
+    
+    private void sendFeedbackEmail(String from, String subject, String body) {
+    	sendHtmlMessage("caer@cgifederal.com",from,subject, body);
+    }
+    
+    private void sendFeedbackEmail(String subject, String body) {
+    	sendFeedbackEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress),subject, body);
     }
 
     public void sendReportSubmittedNotification(String to, String from, String facilityName, String reportingYear)
@@ -138,4 +160,29 @@ public class NotificationServiceImpl implements NotificationService {
         String emailBody = templateEngine.process(SCC_UPDATE_FAILED_BODY_TEMPLATE, context);
         sendAdminEmail(emailSubject, emailBody);
     }
+    
+    public void sendUserFeedbackNotification(UserFeedbackDto userFeedback, String facilityName, String reportingYear){
+    	
+    	String emailSubject = MessageFormat.format(USER_FEEDBACK_SUBMITTED_SUBJECT, reportingYear, facilityName);
+    	Context context = new Context();
+    	context.setVariable("facilityName", facilityName);
+    	context.setVariable("reportingYear", reportingYear);
+    	context.setVariable("userName", userFeedback.getUserName());
+    	context.setVariable("userRole", userFeedback.getUserRole());
+    	context.setVariable("userId", userFeedback.getUserId());
+    	context.setVariable("intuitiveRating", userFeedback.getIntuitiveRating());
+    	context.setVariable("dataEntryScreens", userFeedback.getDataEntryScreens());
+    	context.setVariable("dataEntryBulkUpload", userFeedback.getDataEntryBulkUpload());
+    	context.setVariable("calculationScreens", userFeedback.getCalculationScreens());
+    	context.setVariable("controlsAndControlPathAssignments", userFeedback.getControlsAndControlPathAssignments());
+    	context.setVariable("qualityAssurance", userFeedback.getQualityAssuranceChecks());
+    	context.setVariable("overallReportingTime", userFeedback.getOverallReportingTime());
+    	context.setVariable("openQuestion1", userFeedback.getBeneficialFunctionalityComments());
+    	context.setVariable("openQuestion2", userFeedback.getDifficultFunctionalityComments());
+    	context.setVariable("openQuestion3", userFeedback.getEnhancementComments());
+
+    	String emailBody = templateEngine.process(USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE, context);
+    	sendFeedbackEmail(emailSubject, emailBody);
+    }
+
 }

@@ -22,6 +22,10 @@ export class EmissionsReportingService {
         return this.http.get<EmissionsReport[]>(url);
     }
 
+    getReport(reportId: string): Observable<EmissionsReport> {
+        const url = `${this.baseUrl}/${reportId}`;
+        return this.http.get<EmissionsReport>(url);
+    }
     /** GET most recent report for specified facility from the server */
     getCurrentReport(facilityId: string): Observable<EmissionsReport> {
         const url = `${this.baseUrl}/facility/${facilityId}/current`;

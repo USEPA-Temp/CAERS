@@ -6,6 +6,11 @@ import { ActivatedRoute, Router} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
+import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
+import { EmissionsReport } from 'src/app/shared/models/emissions-report';
+import { UserService } from 'src/app/core/services/user.service';
+import { User } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-user-feedback',
@@ -17,6 +22,8 @@ export class UserFeedbackComponent implements OnInit {
   facilityId: string;
   facilitySite: FacilitySite;
   baseUrl: string;
+  report: EmissionsReport;
+  user: User;
 
   feedbackForm = this.fb.group({
     beneficialFunctionalityComments: [null],
@@ -36,13 +43,21 @@ export class UserFeedbackComponent implements OnInit {
               private route: ActivatedRoute,
               private toastr: ToastrService,
               private sharedService: SharedService,
-              private router: Router) { }
+              private router: Router,
+              private reportingService: EmissionsReportingService,
+              private userService: UserService) { }
 
   ngOnInit() {
     this.route.paramMap
     .subscribe(params => {
       this.reportId = params.get('reportId');
-      this.facilityId = params.get('facilityId')
+      this.facilityId = params.get('facilityId');
+      this.userService.getCurrentUser().subscribe((user) => {
+        this.user = user;
+      });
+      this.reportingService.getReport(this.reportId).subscribe((report) =>{
+        this.report = report;
+      });
 
       this.baseUrl = `/facility/${params.get('facilityId')}/report`;
     });
@@ -60,8 +75,13 @@ export class UserFeedbackComponent implements OnInit {
   onSubmit()  {
     const saveUserFeedback = new UserFeedback();
     saveUserFeedback.reportId = this.reportId;
+    saveUserFeedback.facilityName = this.facilitySite.name;
+    saveUserFeedback.year = this.report.year;
+    saveUserFeedback.userName = this.user.firstName + ' ' + this.user.lastName;
+    saveUserFeedback.userId = this.user.userRoleId.toString();
+    saveUserFeedback.userRole = this.user.role;
     Object.assign(saveUserFeedback, this.feedbackForm.value);
-
+    
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
       this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
       this.sharedService.emitHideBoolChange(false);

@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.UserFeedbackService;
-import gov.epa.cef.web.service.dto.ReleasePointDto;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
 
 
@@ -34,8 +32,7 @@ public class UserFeedbackApi {
      * @return
      */
     @PostMapping
-    public ResponseEntity<UserFeedbackDto> createUserFeedbackSubmission(
-    		@NotNull @RequestBody UserFeedbackDto dto) {
+    public ResponseEntity<UserFeedbackDto> createUserFeedbackSubmission(@NotNull @RequestBody UserFeedbackDto dto) {
     	    	
     	UserFeedbackDto result = userFeedbackService.create(dto);
     	
