@@ -38,8 +38,8 @@ public class NotificationServiceImpl implements NotificationService {
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
     private final String SCC_UPDATE_FAILED_BODY_TEMPLATE = "sccUpdateFailed";
     
-    private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "User feedback Submitted for {1}";
-    private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "User feedback";
+    private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "User feedback Submitted for {0} {1}";
+    private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "userFeedback";
 
     @Autowired
     public JavaMailSender emailSender;
@@ -111,14 +111,6 @@ public class NotificationServiceImpl implements NotificationService {
         sendAdminEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress), subject, body);
     }
     
-    private void sendFeedbackEmail(String from, String subject, String body) {
-    	sendHtmlMessage(this.propertyProvider.getString(AppPropertyName.DevEmailAddress),from,subject, body);
-    }
-    
-    private void sendFeedbackEmail(String subject, String body) {
-    	sendFeedbackEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress),subject, body);
-    }
-
     public void sendReportSubmittedNotification(String to, String from, String facilityName, String reportingYear)
     {
         String emailSubject = MessageFormat.format(REPORT_SUBMITTED_TO_SLT_SUBJECT, facilityName);
@@ -156,7 +148,7 @@ public class NotificationServiceImpl implements NotificationService {
         sendAdminEmail(emailSubject, emailBody);
     }
     
-    public void sendUserFeedbackNotification(UserFeedbackDto userFeedback, String facilityName, String reportingYear){
+    public void sendUserFeedbackNotification(String facilityName, String reportingYear, UserFeedbackDto userFeedback){
     	
     	String emailSubject = MessageFormat.format(USER_FEEDBACK_SUBMITTED_SUBJECT, reportingYear, facilityName);
     	Context context = new Context();
@@ -177,7 +169,7 @@ public class NotificationServiceImpl implements NotificationService {
     	context.setVariable("openQuestion3", userFeedback.getEnhancementComments());
 
     	String emailBody = templateEngine.process(USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE, context);
-    	sendFeedbackEmail(emailSubject, emailBody);
+    	sendAdminEmail(emailSubject, emailBody);
     }
 
 }
