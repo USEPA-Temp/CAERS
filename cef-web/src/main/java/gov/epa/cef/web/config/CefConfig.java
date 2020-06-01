@@ -23,19 +23,9 @@ public class CefConfig {
 
     @Autowired
     protected PropertyProvider propertyProvider;
-    
+
     @Autowired
     protected Environment environment;
-    
-    public List<String> getAdmins() {
-
-        return this.propertyProvider.getStringList(AppPropertyName.EnvAdmins);
-    }
-
-    public Collection<Object> getAdminsAsLowerCase() {
-
-        return this.getAdmins().stream().map(String::toLowerCase).collect(Collectors.toList());
-    }
 
     public List<String> getAdminEmails() {
 

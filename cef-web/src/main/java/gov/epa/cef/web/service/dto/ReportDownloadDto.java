@@ -28,6 +28,7 @@ public class ReportDownloadDto implements Serializable{
     private String emissionsNumeratorUom;
     private String emissionsDenominatorUom;
     private BigDecimal emissionsFactor;
+    private BigDecimal overallControlPercent;
     private String emissionsFactorText;
     private String emissionsComment;
     private String reportingPeriodType;
@@ -163,6 +164,12 @@ public class ReportDownloadDto implements Serializable{
 	}
 	public void setEmissionsCalcMethod(String emissionsCalcMethod) {
 		this.emissionsCalcMethod = emissionsCalcMethod;
+	}
+	public BigDecimal getOverallControlPercent() {
+		return overallControlPercent;
+	}
+	public void setOverallControlPercent(BigDecimal overallControlPercent) {
+		this.overallControlPercent = overallControlPercent;
 	}
 
 }
