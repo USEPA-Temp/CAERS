@@ -10,6 +10,7 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.util.CalculationUtils;
+import gov.epa.cef.web.util.DateUtils;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -42,8 +43,19 @@ public class EmissionValidator extends BaseValidator<Emission> {
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
         if (!emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_TEMPORARILY_SHUTDOWN)
-            && !emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_PERMANENTLY_SHUTDOWN)) {
-            
+                && !emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_PERMANENTLY_SHUTDOWN)) {
+
+            if (emission.getPollutant() != null && emission.getPollutant().getLastInventoryYear() != null
+                    && emission.getPollutant().getLastInventoryYear() < DateUtils.getCurrentReportingYear()) {
+
+                valid = false;
+                context.addFederalError(
+                        ValidationField.EMISSION_POLLUTANT.value(),
+                        "emission.pollutant.legacy", 
+                        createValidationDetails(emission),
+                        getPollutantName(emission));
+            }
+
             if (emission.getEmissionsCalcMethodCode() == null) {
 
 	            // prevented by db constraints

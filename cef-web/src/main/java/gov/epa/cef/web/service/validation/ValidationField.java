@@ -55,6 +55,7 @@ public enum ValidationField {
     DETAIL_PCT_FALL("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percentFall"),
     DETAIL_PCT_WINTER("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percentWinter"),
     DETAIL_PCT("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.percents"),
+    EMISSION_POLLUTANT("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.pollutant"),
     EMISSION_CALC_METHOD("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsCalcMethodCode"),
     EMISSION_COMMENTS("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.comments"),
     EMISSION_CALC_DESC("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.calculationDescription"),

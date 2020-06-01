@@ -2,6 +2,8 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 
+import gov.epa.cef.web.util.DateUtils;
+
 public class PollutantDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -12,6 +14,7 @@ public class PollutantDto implements Serializable {
     private String pollutantSrsId;
     private String pollutantType;
     private String pollutantStandardUomCode;
+    private Integer lastInventoryYear;
     
     public String getPollutantCode() {
         return pollutantCode;
@@ -48,6 +51,19 @@ public class PollutantDto implements Serializable {
     }
     public void setPollutantStandardUomCode(String pollutantStandardUomCode) {
         this.pollutantStandardUomCode = pollutantStandardUomCode;
+    }
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
+    }
+    public boolean getLegacy() {
+        if (lastInventoryYear == null) {
+            return false;
+        } else {
+            return lastInventoryYear < DateUtils.getCurrentReportingYear();
+        }
     }
     public static long getSerialversionuid() {
         return serialVersionUID;

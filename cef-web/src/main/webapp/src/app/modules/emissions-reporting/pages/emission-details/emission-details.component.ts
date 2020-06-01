@@ -30,6 +30,7 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { ControlPollutantTableComponent } from '../../components/control-pollutant-table/control-pollutant-table.component';
 import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-emission-details',
@@ -59,7 +60,7 @@ export class EmissionDetailsComponent implements OnInit {
   unitIdentifier: string;
 
   emissionForm = this.fb.group({
-    pollutant: [null, Validators.required],
+    pollutant: [null, [Validators.required, legacyItemValidator()]],
     formulaIndicator: [false, Validators.required],
     emissionsFactor: ['', [Validators.required]],
     emissionsFactorFormula: [''],

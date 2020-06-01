@@ -66,6 +66,7 @@ import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
+import gov.epa.cef.web.util.DateUtils;
 
 @Service
 public class LookupServiceImpl implements LookupService {
@@ -252,6 +253,19 @@ public class LookupServiceImpl implements LookupService {
         entities.forEach(entity -> {
             result.add(lookupMapper.pollutantToDto(entity));
         });
+        return result;
+    }
+
+    /**
+     * Retrieve non-legacy Pollutants
+     * @return
+     */
+    @Override
+    public List<PollutantDto> retrieveCurrentPollutants() {
+
+        List<Pollutant> entities = pollutantRepo.findAllCurrent(DateUtils.getCurrentReportingYear(), Sort.by(Direction.ASC, "pollutantName"));
+
+        List<PollutantDto> result = lookupMapper.pollutantToDtoList(entities);
         return result;
     }
 

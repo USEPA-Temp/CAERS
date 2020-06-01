@@ -8,6 +8,7 @@ import { ControlService } from 'src/app/core/services/control.service';
 import { Validators, FormBuilder, ValidatorFn, FormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-control-pollutant-modal',
@@ -25,7 +26,7 @@ export class ControlPollutantModalComponent implements OnInit {
   duplicateCheck = true;
 
   pollutantForm = this.fb.group({
-      pollutant: [null , Validators.required],
+      pollutant: [null , [Validators.required, legacyItemValidator()]],
       percentReduction: ['', [
         Validators.required,
         Validators.max(99.9),

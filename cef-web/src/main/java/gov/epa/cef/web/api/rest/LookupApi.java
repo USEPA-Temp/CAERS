@@ -100,7 +100,7 @@ public class LookupApi {
     @ResponseBody
     public ResponseEntity<List<PollutantDto>> retrievePollutants() {
 
-        List<PollutantDto> result = lookupService.retrievePollutants();
+        List<PollutantDto> result = lookupService.retrieveCurrentPollutants();
         return new ResponseEntity<List<PollutantDto>>(result, HttpStatus.OK);
     }
 
