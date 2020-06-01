@@ -3,8 +3,10 @@ package gov.epa.cef.web.api.rest;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 
 import gov.epa.cef.web.repository.ControlPathRepository;
+import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
+import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
@@ -150,6 +152,22 @@ public class ControlPathApi {
     }
 
     /**
+     * Retrieve Control Paths for a control device
+     * @param pointId
+     * @return
+     */
+    @GetMapping(value = "/controlDevice/{deviceId}")
+    public ResponseEntity<List<ControlPathDto>> retrieveControlPathsForControlDevice(
+        @NotNull @PathVariable Long deviceId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(deviceId, ControlRepository.class);;
+
+        List<ControlPathDto> result = controlPathService.retrieveForControlDevice(deviceId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
      * Retrieve Control Paths for an release point
      * @param pointId
      * @return
@@ -157,6 +175,8 @@ public class ControlPathApi {
     @GetMapping(value = "/releasePoint/{pointId}")
     public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForReleasePoint(
         @NotNull @PathVariable Long pointId) {
+    	
+        this.securityService.facilityEnforcer().enforceEntity(pointId, ReleasePointRepository.class);;
 
         List<ControlPathDto> result = controlPathService.retrieveForReleasePoint(pointId);
 
@@ -194,7 +214,7 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+     
     /**
      * Delete a Control Path Assignment for given id
      * @param controlPathId
