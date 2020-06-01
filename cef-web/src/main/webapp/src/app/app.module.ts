@@ -38,9 +38,10 @@ import { AdminAnnouncementPropertiesComponent } from './modules/dashboards/pages
 import { ReviewerNavComponent } from './modules/dashboards/components/reviewer-nav/reviewer-nav.component';
 import {AdminNavComponent} from "./modules/shared/components/admin-nav/admin-nav.component";
 import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submission/eis-submission.component';
-import { EisNotificationsComponent } from './modules/dashboards/components/eis-notifications/eis-notifications.component';
 import { EisTransactionsComponent } from './modules/dashboards/pages/eis-transactions/eis-transactions.component';
-import { EisDataListComponent } from './modules/dashboards/components/eis-data-list/eis-data-list.component';
+import { KeysPipe } from './shared/pipes/keys.pipe';
+import { MembersPipe } from './shared/pipes/members.pipe';
+import { SortByPipe } from './shared/pipes/sort-by.pipe';
 
 
 @NgModule({
@@ -68,9 +69,10 @@ import { EisDataListComponent } from './modules/dashboards/components/eis-data-l
     AdminAnnouncementPropertiesComponent,
     ReviewerNavComponent,
     EisSubmissionComponent,
-    EisNotificationsComponent,
     EisTransactionsComponent,
-    EisDataListComponent
+    KeysPipe,
+    MembersPipe,
+    SortByPipe
   ],
   imports: [
     BrowserModule,
