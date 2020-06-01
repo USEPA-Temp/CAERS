@@ -7,6 +7,8 @@ public enum AppPropertyName implements IPropertyKey {
     AdminEmailAddresses("email.admin"),
     AdminEmailEnabled("email.admin.enabled"),
     DefaultEmailAddress("email.default"),
+    DevEmailAddress("email.dev"),
+    ProdEmailAddress("email.prod"),
     EmissionsTotalErrorTolerance("emissions.tolerance.total.error"),
     EmissionsTotalWarningTolerance("emissions.tolerance.total.warning"),
     FeatureAnnouncementEnabled("feature.announcement.enabled"),

@@ -12,8 +12,6 @@ public interface NotificationService {
     void sendSccUpdateFailedNotification(Exception exception);
     void sendUserFeedbackNotification(UserFeedbackDto userFeedback, String facilityName, String reportingYear);
     
-    void sendUserFeedbackNotification(UserFeedbackEmailType type, Map<String, Object> context);
-
     void sendAdminNotification(AdminEmailType type, Map<String, Object> context);
 
     enum AdminEmailType {
@@ -39,25 +37,4 @@ public interface NotificationService {
         }
     }
     
-    enum UserFeedbackEmailType {
-
-        VirusScanFailure("Virus Scanner Web Service Failed", "virusScanFailed");
-
-        private final String subject;
-        private final String template;
-
-        UserFeedbackEmailType(String subject, String template) {
-
-            this.subject = subject;
-            this.template = template;
-        }
-
-        public String template() {
-            return this.template;
-        }
-
-        public String subject() {
-            return this.subject;
-        }
-    }
 }

@@ -3,7 +3,6 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.provider.system.PropertyProvider;
 import gov.epa.cef.web.service.NotificationService;
-import gov.epa.cef.web.service.NotificationService.UserFeedbackEmailType;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
 
 import org.slf4j.Logger;
@@ -39,8 +38,8 @@ public class NotificationServiceImpl implements NotificationService {
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
     private final String SCC_UPDATE_FAILED_BODY_TEMPLATE = "sccUpdateFailed";
     
-    private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "Userfeedback Submitted for {1}";
-    private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "userFeedback";
+    private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "User feedback Submitted for {1}";
+    private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "User feedback";
 
     @Autowired
     public JavaMailSender emailSender;
@@ -82,14 +81,6 @@ public class NotificationServiceImpl implements NotificationService {
 
         sendAdminEmail(type.subject(), emailBody);
     }
-    
-    public void sendUserFeedbackNotification(UserFeedbackEmailType type, Map<String, Object> variables) {
-    	Context context = new Context();
-    	context.setVariables(variables);
-    	String emailBody = this.templateEngine.process(type.template(), context);
-    	
-    	sendFeedbackEmail(type.subject(),emailBody);
-    }
 
     public void sendHtmlMessage(String to, String from, String subject, String body) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -121,7 +112,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
     
     private void sendFeedbackEmail(String from, String subject, String body) {
-    	sendHtmlMessage("caer@cgifederal.com",from,subject, body);
+    	sendHtmlMessage(this.propertyProvider.getString(AppPropertyName.DevEmailAddress),from,subject, body);
     }
     
     private void sendFeedbackEmail(String subject, String body) {
