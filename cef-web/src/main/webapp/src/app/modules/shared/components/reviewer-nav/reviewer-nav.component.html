@@ -14,15 +14,15 @@
          </li>
          <li ngbDropdown class="nav-item dropdown">
             <a ngbDropdownToggle id="nb-eis-transmission"
-               class="nav-link dropdown-toggle" style="cursor: pointer"
+               class="nav-link dropdown-toggle disabled" style="cursor: pointer"
                role="button" aria-haspopup="true" aria-expanded="false">
                <span>EIS Transmission</span>
             </a>
             <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="nb-eis-transmission">
-               <a ngbDropdownItem class="dropdown-item disabled"
+               <a ngbDropdownItem class="dropdown-item"
                   routerLink="/reviewer/submitData"
                   [routerLinkActive]="'active'">Submit Data</a>
-               <a ngbDropdownItem class="dropdown-item disabled"
+               <a ngbDropdownItem class="dropdown-item"
                   routerLink="/reviewer/transactions"
                   [routerLinkActive]="'active'">Review Transactions</a>
             </div>
