@@ -88,19 +88,23 @@ public class EmissionsReportValidator
             context.addFederalError(ValidationField.REPORT_EIS_ID.value(), "report.eisProgramId.required");
         }
         
-	        List<Emission> emissionsList = emissionRepo.findAllByReportId(report.getId()).stream()
-	        		.filter(e -> (e.getEmissionsCalcMethodCode().getTotalDirectEntry() == true || e.getTotalManualEntry() == true))
-					.collect(Collectors.toList());
-	        
-	        List<ReportAttachment> attachmentList = attachmentRepo.findAllByReportId(report.getId());
-	        
-	        if (emissionsList.size() > 0 && attachmentList.isEmpty()) {
-	
-	            valid = false;
-	            context.addFederalError(
-	            		ValidationField.REPORT_ATTACHMENT.value(),
-	            		"report.reportAttachment.required",
-	            		createValidationDetails(report));
+        	try {
+		        List<Emission> emissionsList = emissionRepo.findAllByReportId(report.getId()).stream()
+		        		.filter(e -> (e.getEmissionsCalcMethodCode().getTotalDirectEntry() == true || e.getTotalManualEntry() == true))
+						.collect(Collectors.toList());
+		        
+		        List<ReportAttachment> attachmentList = attachmentRepo.findAllByReportId(report.getId());
+		        
+		        if (emissionsList.size() > 0 && attachmentList.isEmpty()) {
+		
+		            valid = false;
+		            context.addFederalError(
+		            		ValidationField.REPORT_ATTACHMENT.value(),
+		            		"report.reportAttachment.required",
+		            		createValidationDetails(report));
+		        }
+        	} catch (NullPointerException e) {
+	        	System.out.println("No Emissions found for Emissions Report");
 	        }
         
         return valid;

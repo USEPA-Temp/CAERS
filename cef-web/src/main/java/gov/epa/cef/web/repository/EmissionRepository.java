@@ -20,7 +20,7 @@ public interface EmissionRepository extends CrudRepository<Emission, Long>, Prog
    * @return
    */
 	@Query("select e from Emission e join e.reportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r "
-			+ "where r.id = :reportId and ep.operatingStatusCode.code != 'TS' and ep.operatingStatusCode.code != 'PS'")	
+			+ "where r.id = :reportId and ep.operatingStatusCode.code = 'OP'")	
 	List<Emission> findAllByReportId(@Param("reportId") Long reportId);
 
 	
