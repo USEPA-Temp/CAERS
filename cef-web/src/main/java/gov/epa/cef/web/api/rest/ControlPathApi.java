@@ -6,6 +6,7 @@ import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
+import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
@@ -174,6 +175,8 @@ public class ControlPathApi {
     @GetMapping(value = "/releasePoint/{pointId}")
     public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForReleasePoint(
         @NotNull @PathVariable Long pointId) {
+    	
+        this.securityService.facilityEnforcer().enforceEntity(pointId, ReleasePointRepository.class);;
 
         List<ControlPathDto> result = controlPathService.retrieveForReleasePoint(pointId);
 
