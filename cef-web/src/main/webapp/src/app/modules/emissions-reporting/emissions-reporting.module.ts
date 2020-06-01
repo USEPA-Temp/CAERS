@@ -128,7 +128,7 @@ import { BulkEntryEmissionsTableComponent } from './components/bulk-entry-emissi
     UserFeedbackComponent,
     DataBulkEntryComponent,
     BulkEntryReportingPeriodTableComponent,
-    BulkEntryEmissionsTableComponent,
+    BulkEntryEmissionsTableComponent
   ],
   imports: [
     CommonModule,
