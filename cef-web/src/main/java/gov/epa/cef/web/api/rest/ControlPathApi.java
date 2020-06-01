@@ -3,6 +3,7 @@ package gov.epa.cef.web.api.rest;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 
 import gov.epa.cef.web.repository.ControlPathRepository;
+import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.security.SecurityService;
@@ -157,6 +158,8 @@ public class ControlPathApi {
     @GetMapping(value = "/controlDevice/{deviceId}")
     public ResponseEntity<List<ControlPathDto>> retrieveControlPathsForControlDevice(
         @NotNull @PathVariable Long deviceId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(deviceId, ControlRepository.class);;
 
         List<ControlPathDto> result = controlPathService.retrieveForControlDevice(deviceId);
 

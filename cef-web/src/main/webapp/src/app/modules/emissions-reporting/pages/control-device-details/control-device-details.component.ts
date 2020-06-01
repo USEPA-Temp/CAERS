@@ -10,6 +10,7 @@ import { EditControlDeviceInfoPanelComponent } from '../../components/edit-contr
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
 @Component({
   selector: 'app-control-device-details',
@@ -21,7 +22,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
   emissionsReportItems: EmissionsReportItem[];
   facilitySite: FacilitySite;
   controlPaths: ControlPath[];
-
+  baseUrl: string;
   editInfo = false;
   readOnlyMode = true;
 
@@ -38,6 +39,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap
     .subscribe(map => {
+      this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_PATH}`;
       this.controlService.retrieve(+map.get('controlId'))
       .subscribe(control => {
         this.control = control;
