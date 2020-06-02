@@ -33,8 +33,7 @@ public class UserFeedbackApi {
      * @return
      */
     @PostMapping
-    public ResponseEntity<UserFeedbackDto> createUserFeedbackSubmission(
-    		@NotNull @RequestBody UserFeedbackDto dto) {
+    public ResponseEntity<UserFeedbackDto> createUserFeedbackSubmission(@NotNull @RequestBody UserFeedbackDto dto) {
     	    	
     	UserFeedbackDto result = userFeedbackService.create(dto);
     	
