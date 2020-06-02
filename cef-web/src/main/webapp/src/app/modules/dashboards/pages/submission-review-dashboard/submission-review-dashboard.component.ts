@@ -6,6 +6,7 @@ import { EmissionsReportingService } from 'src/app/core/services/emissions-repor
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
 import {SharedService} from "src/app/core/services/shared.service";
+import { FileAttachmentModalComponent } from 'src/app/modules/shared/components/file-attachment-modal/file-attachment-modal.component';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -34,7 +35,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         const CURRENT_REPORTING_YEAR = 'CURRENT_REPORTING_YEAR';
         this.currentYear = new Date().getFullYear() - 1;
         this.selectedYear = CURRENT_REPORTING_YEAR;
-            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, "SUBMITTED");
+        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, 'SUBMITTED');
     }
 
     onApprove(year) {
@@ -55,7 +56,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                         this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
                     }
                     if (year === 'CURRENT_REPORTING_YEAR') {
-                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, 'SUBMITTED');
                     }
                     this.emitAllSubmissions();
                 });
@@ -72,18 +73,19 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.invalidSelection = true;
         } else {
             this.invalidSelection = false;
-            const modalRef = this.modalService.open(SubmissionReviewModalComponent, { size: 'lg', backdrop: 'static' });
+            const modalRef = this.modalService.open(FileAttachmentModalComponent, { size: 'lg', backdrop: 'static' });
+            modalRef.componentInstance.reportId = selectedSubmissions[0];
             modalRef.componentInstance.title = 'Reject Submissions';
             modalRef.componentInstance.message = 'Would you like to reject the selected submissions?';
 
-            modalRef.result.then((comments) => {
-                this.emissionReportService.rejectReports(selectedSubmissions,comments)
+            modalRef.result.then((resp) => {
+                this.emissionReportService.rejectReports(selectedSubmissions, resp.comments, resp.id)
                 .subscribe(() => {
                     if (year === 'ALL_YEARS') {
                         this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
                     }
                     if (year === 'CURRENT_REPORTING_YEAR') {
-                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,'SUBMITTED');
+                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, 'SUBMITTED');
                     }
                     this.emitAllSubmissions();
                 });
@@ -93,17 +95,17 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    retrieveFacilitiesReportsByYearAndStatus(year,reportStatus): void{
+    retrieveFacilitiesReportsByYearAndStatus(year, reportStatus): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus)
             .subscribe((submissions) => {
-                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1)
+                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1);
             });
     }
 
-    retrieveFacilitiesReportsByReportStatus(reportStatus): void{
+    retrieveFacilitiesReportsByReportStatus(reportStatus): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus)
             .subscribe((submissions) => {
-                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1)
+                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1);
             });
     }
 
@@ -114,7 +116,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.hideButtons = true;
         }
         if (this.selectedYear === 'CURRENT_REPORTING_YEAR') {
-            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear,value);
+            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, value);
         } else {
             this.retrieveFacilitiesReportsByReportStatus(value);
         }
@@ -128,7 +130,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     // emits the updated submission list to the notification component
     emitAllSubmissions(): void {
         this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear)
-        .subscribe(submissions =>{
+        .subscribe(submissions => {
             this.sharedService.emitSubmissionChange(submissions);
         });
     }

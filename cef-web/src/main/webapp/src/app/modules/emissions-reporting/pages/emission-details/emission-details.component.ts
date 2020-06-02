@@ -407,7 +407,15 @@ export class EmissionDetailsComponent implements OnInit {
         .subscribe(result => {
 
           this.sharedService.updateReportStatusAndEmit(this.route);
+          this.emissionService.retrieve(this.emission.id)
+          .subscribe(result => {
+            this.emission = result;
+            this.emissionForm.reset(this.emission);
+            this.setupVariableFormFromValues(this.emission.variables);
+            this.emissionForm.disable();
+          });
         });
+
       }
     }
   }

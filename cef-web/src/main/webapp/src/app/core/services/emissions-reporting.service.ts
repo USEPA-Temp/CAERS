@@ -42,11 +42,12 @@ export class EmissionsReportingService {
         });
     }
 
-    rejectReports(reportIds: number[], comments: string): Observable<EmissionsReport[]> {
+    rejectReports(reportIds: number[], comments: string, attachmentId: number): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/reject`;
         return this.http.post<EmissionsReport[]>(url, {
             reportIds,
-            comments
+            comments,
+            attachmentId
         });
     }
 

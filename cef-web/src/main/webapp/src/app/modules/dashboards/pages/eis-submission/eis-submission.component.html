@@ -15,7 +15,7 @@
                <div class="form-inline">
 
                   <label for="id-filter-year" class="col-form-label mr-2">
-                     <strong>Submission Year:</strong>
+                     <strong>Reporting Year:</strong>
                   </label>
                   <select id="id-filter-year" class="mr-3 form-control form-control-sm" style="width: 150px"></select>
 
@@ -31,10 +31,8 @@
                </div>
 
                <p class="mt-3">
-                  Choose the facilities .... transfer that you would ... EIS and
-                  then select the "Initiate Transfer" button.
-                  Or choose the facilities and the status you would like to apply and then select
-                  the "Set Submittal Status" ...
+                  Choose the facilities and type of transfer that you would like to make to EIS and then select the
+                  "Submit to EIS" button.
                </p>
 
                <div>
@@ -44,12 +42,13 @@
                         <th scope="col">Select</th>
                         <th scope="col" sortable="facilityName" (sort)="onSort($event)">Facility Name</th>
                         <th scope="col" sortable="altFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
-                        <th scope="col" sortable="stateFacilityId" (sort)="onSort($event)">State Facility ID</th>
-                        <th scope="col" sortable="year" (sort)="onSort($event)">Submission Year</th>
+                        <th scope="col" sortable="eisId" (sort)="onSort($event)">EIS ID</th>
+                        <th scope="col" sortable="year" (sort)="onSort($event)">Reporting Year</th>
                         <th scope="col" sortable="lastTransactionId" (sort)="onSort($event)">Last Transaction ID</th>
-                        <th scope="col" sortable="lastSubmissionStatus" (sort)="onSort($event)">Last Submission to EIS</th>
+                        <th scope="col" sortable="lastSubmissionStatus" (sort)="onSort($event)">Last Submission to EIS
+                        </th>
                         <th scope="col" sortable="isLastPassed" (sort)="onSort($event)">Passed</th>
-                        <th scope="col" >Comments</th>
+                        <th scope="col">Comments</th>
                      </tr>
                      </thead>
                      <tbody>
@@ -99,37 +98,68 @@
             <div class="card-body">
 
                <div class="mb-3 align-middle">
-                  <a href="javascript:void(0);" class="badge badge-pill badge-danger"
-                     style="font-size: larger"
-                     (click)="onFilterNotStarted()">{{ stats.notStarted }}</a>
-                  <strong class="ml-3">Not Started</strong>
+                  <a href="javascript:void(0);"
+                     class="text-nowrap text-decoration-none text-body"
+                     (click)="onFilterNotStarted()">
+
+                     <span class="badge badge-pill badge-danger text-larger mr-3"
+                        [textContent]="stats.notStarted"></span>
+                     <strong class="mr-2">Not Started</strong>
+                     <fa-icon icon="filter" title="Filter reports for Not Started"></fa-icon>
+                  </a>
                </div>
 
                <div class="my-3 align-middle">
-                  <a href="javascript:void(0);" class="badge badge-pill badge-warning"
-                     style="font-size: larger"
-                     (click)="onFilterQaFacility()">{{ stats.qaFacility }}</a>
-                  <strong class="ml-3">QA Facility</strong>
+                  <a href="javascript:void(0);"
+                     class="text-nowrap text-decoration-none text-body"
+                     (click)="onFilterQaFacility()">
+
+                     <span class="badge badge-pill badge-warning text-larger mr-3"
+                           [textContent]="stats.qaFacility"></span>
+                     <strong class="mr-2">QA Facility</strong>
+                     <fa-icon icon="filter" title="Filter reports for QA Facility"></fa-icon>
+                  </a>
                </div>
 
                <div class="my-3 align-middle">
-                  <a href="javascript:void(0);" class="badge badge-pill badge-warning"
-                     style="font-size: larger"
-                     (click)="onFilterQaEmissions()">{{ stats.qaEmissions }}</a>
-                  <strong class="ml-3">QA Emissions</strong>
+                  <a href="javascript:void(0);"
+                     class="text-nowrap text-decoration-none text-body"
+                     (click)="onFilterProdFacility()">
+
+                     <span class="badge badge-pill badge-warning text-larger mr-3"
+                           [textContent]="stats.prodFacility"></span>
+                     <strong class="mr-2">Prod Emissions</strong>
+                     <fa-icon icon="filter" title="Filter reports for Prod Facility"></fa-icon>
+                  </a>
                </div>
 
                <div class="my-3 align-middle">
-                  <a href="javascript:void(0);" class="badge badge-pill badge-warning"
-                     style="font-size: larger"
-                     (click)="onFilterProdEmissions()">{{ stats.prodEmissions }}</a>
-                  <strong class="ml-3">Prod Emissions</strong>
+                  <a href="javascript:void(0);"
+                     class="text-nowrap text-decoration-none text-body"
+                     (click)="onFilterQaEmissions()">
+
+                     <span class="badge badge-pill badge-warning text-larger mr-3"
+                           [textContent]="stats.qaEmissions"></span>
+                     <strong class="mr-2">QA Emissions</strong>
+                     <fa-icon icon="filter" title="Filer reports for QA Emissions"></fa-icon>
+                  </a>
                </div>
 
                <div class="my-3 align-middle">
-                  <a href="javascript:void(0);" class="badge badge-pill badge-success"
-                     style="font-size: larger"
-                     (click)="onFilterComplete()">{{ stats.complete }}</a>
+                  <a href="javascript:void(0);"
+                     class="text-nowrap text-decoration-none text-body"
+                     (click)="onFilterProdEmissions()">
+
+                     <span class="badge badge-pill badge-warning text-larger mr-3"
+                           [textContent]="stats.prodEmissions"></span>
+                     <strong class="mr-2">Prod Emissions</strong>
+                     <fa-icon icon="filter" title="Show Prod Emissions"></fa-icon>
+                  </a>
+               </div>
+
+               <div class="my-3 align-middle">
+                  <span class="badge badge-pill badge-success text-larger"
+                        [textContent]="stats.complete"></span>
                   <strong class="ml-3">Complete</strong>
                </div>
             </div>

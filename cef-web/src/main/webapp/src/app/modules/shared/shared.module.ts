@@ -4,7 +4,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCaretRight, faEdit, faCaretDown, faAngleLeft, faTrashAlt, faPlus, faCircle, faInfoCircle, faCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+   faCaretRight,
+   faEdit,
+   faCaretDown,
+   faAngleLeft,
+   faTrashAlt,
+   faPlus,
+   faCircle,
+   faInfoCircle,
+   faCheck,
+   faTimesCircle,
+   faFilter
+} from '@fortawesome/free-solid-svg-icons';
 import { CollapseIconComponent } from 'src/app/modules/shared/components/collapse-icon/collapse-icon.component';
 import { FacilityWidgetComponent } from 'src/app/modules/shared/components/facility-widget/facility-widget.component';
 import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/sidebar.component';
@@ -95,5 +107,6 @@ export class SharedModule {
     library.add(faInfoCircle);
     library.add(faCheck);
     library.add(faTimesCircle);
+    library.add(faFilter);
   }
 }

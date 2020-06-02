@@ -60,10 +60,6 @@ export class EisSubmissionComponent implements OnInit {
 
   }
 
-  onFilterComplete() {
-
-  }
-
   onFilterProdEmissions() {
 
   }
@@ -71,4 +67,8 @@ export class EisSubmissionComponent implements OnInit {
   onFilterQaEmissions() {
 
   }
+
+   onFilterProdFacility() {
+
+   }
 }

@@ -57,4 +57,10 @@ public class EisApi {
 
         }, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/emissionsReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<> retrieveEisXml() {
+
+
+    }
 }
