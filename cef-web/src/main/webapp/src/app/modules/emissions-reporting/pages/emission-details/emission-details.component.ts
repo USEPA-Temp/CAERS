@@ -89,6 +89,7 @@ export class EmissionDetailsComponent implements OnInit {
   uomValues: UnitMeasureCode[];
   numeratorUomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
+  currentCalcMethod: CalculationMethodCode;
 
   constructor(
     private emissionService: EmissionService,
@@ -149,10 +150,9 @@ export class EmissionDetailsComponent implements OnInit {
           this.emissionForm.reset(this.emission);
           this.setupVariableFormFromValues(this.emission.variables);
           this.emissionForm.disable();
-
+          this.currentCalcMethod = this.emissionForm.get('emissionsCalcMethodCode').value;
         });
       } else {
-
         this.emissionForm.enable();
 
         this.setupForm();
@@ -199,14 +199,18 @@ export class EmissionDetailsComponent implements OnInit {
       }
 
       // set epaEmissionFactor to true for EPA calculation methods
-      if (value && value.epaEmissionFactor) {
+      if (value && value.epaEmissionFactor ) {
         this.epaEmissionFactor = true;
-        this.emissionForm.get('emissionsFactor').reset();
-        this.emissionForm.get('emissionsFactorFormula').reset();
-        this.emissionForm.get('formulaIndicator').reset();
-        this.emissionForm.get('formulaVariables').reset();
+        if (this.currentCalcMethod) {
+          if (this.currentCalcMethod.code !== this.emissionForm.get('emissionsCalcMethodCode').value.code) {
+            this.emissionForm.get('emissionsFactor').reset();
+            this.emissionForm.get('emissionsFactorFormula').reset();
+            this.emissionForm.get('formulaIndicator').reset();
+            this.emissionForm.get('formulaVariables').reset();
+          }
+        }
       } else {
-        this.emissionForm.get('formulaIndicator').reset(false);
+        this.emissionForm.get('formulaIndicator').reset();
         this.setupVariableForm([]);
         this.epaEmissionFactor = false;
       }
@@ -352,7 +356,13 @@ export class EmissionDetailsComponent implements OnInit {
   onCancelEdit() {
     this.emissionForm.enable();
     if (!this.createMode) {
-      this.emissionForm.reset(this.emission);
+      this.emissionService.retrieve(this.emission.id)
+      .subscribe(result => {
+        this.emission = result;
+        this.emissionForm.reset(this.emission);
+        this.setupVariableFormFromValues(this.emission.variables);
+        this.emissionForm.disable();
+      });
     }
     this.editable = false;
   }
