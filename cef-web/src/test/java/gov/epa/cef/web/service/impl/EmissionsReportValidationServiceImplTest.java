@@ -3,8 +3,8 @@ package gov.epa.cef.web.service.impl;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 import com.baidu.unbiz.fluentvalidator.ValidatorChain;
 
+import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Control;
-import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
@@ -15,7 +15,10 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.repository.EmissionRepository;
+import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
@@ -35,6 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,11 +62,41 @@ public class EmissionsReportValidationServiceImplTest {
     @Mock
     private ValidationRegistry validationRegistry;
 
+    @Spy
+    private EmissionRepository emissionRepo;
+    
+    @Spy
+    private ReportHistoryRepository historyRepo;
+    
+    @Spy
+    @InjectMocks
+    private EmissionsReportValidator erValidator;
+    
     @InjectMocks
     private EmissionsReportValidationServiceImpl validationService;
 
     @Before
     public void _onJunitBeginTest() {
+    	
+    	List<Emission> eList = new ArrayList<Emission>();
+    	Emission e = new Emission();
+        e.setId(1L);
+        e.setTotalManualEntry(true);
+        CalculationMethodCode cmc = new CalculationMethodCode();
+        cmc.setTotalDirectEntry(false);
+        e.setEmissionsCalcMethodCode(cmc);
+        eList.add(e);
+        
+        List<ReportHistory> raList = new ArrayList<ReportHistory>();
+        ReportHistory ra = new ReportHistory();
+        ra.setId(1L);
+        ra.setUserRole("Preparer");
+        ra.setReportAttachmentId(1L);
+        ra.setFileDeleted(false);
+        raList.add(ra);
+        
+        when(emissionRepo.findAllByReportId(1L)).thenReturn(eList);
+        when(historyRepo.findByEmissionsReportIdOrderByActionDate(1L)).thenReturn(raList);
 
         when(validationRegistry.findOneByType(FacilitySiteValidator.class))
             .thenReturn(new FacilitySiteValidator());
@@ -92,7 +126,7 @@ public class EmissionsReportValidationServiceImplTest {
         .thenReturn(new ControlPathValidator());
 
         ValidatorChain reportChain = new ValidatorChain();
-        reportChain.setValidators(Arrays.asList(new EmissionsReportValidator(), new GeorgiaValidator()));
+        reportChain.setValidators(Arrays.asList(erValidator, new GeorgiaValidator()));
 
         when(validationRegistry.createValidatorChain(IEmissionsReportValidator.class))
             .thenReturn(reportChain);
@@ -102,6 +136,7 @@ public class EmissionsReportValidationServiceImplTest {
     public void simpleValidateFailureTest() {
 
         EmissionsReport report = new EmissionsReport();
+        report.setId(1L);
         report.setYear((short) 2020);
 
         FacilitySite facilitySite = new FacilitySite();
