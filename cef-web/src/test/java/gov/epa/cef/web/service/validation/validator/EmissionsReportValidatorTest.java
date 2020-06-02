@@ -21,9 +21,9 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.repository.EmissionRepository;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsReportValidator;
@@ -38,7 +38,7 @@ public class EmissionsReportValidatorTest extends BaseValidatorTest {
     private EmissionRepository emissionRepo;
     
     @Mock
-	private ReportAttachmentRepository attachmentRepo;
+	private ReportHistoryRepository historyRepo;
     
     @Before
     public void init(){
@@ -52,17 +52,20 @@ public class EmissionsReportValidatorTest extends BaseValidatorTest {
         e.setEmissionsCalcMethodCode(cmc);
         eList.add(e);
         
-        List<ReportAttachment> raList = new ArrayList<ReportAttachment>();
-        List<ReportAttachment> raList2 = new ArrayList<ReportAttachment>();
-        ReportAttachment ra = new ReportAttachment();
+        List<ReportHistory> raList = new ArrayList<ReportHistory>();
+        List<ReportHistory> raList2 = new ArrayList<ReportHistory>();
+        ReportHistory ra = new ReportHistory();
         ra.setId(1L);
+        ra.setUserRole("Preparer");
+        ra.setReportAttachmentId(1L);
+        ra.setFileDeleted(false);
         raList.add(ra);
         
     	when(emissionRepo.findAllByReportId(1L)).thenReturn(eList);
-    	when(attachmentRepo.findAllByReportId(1L)).thenReturn(raList);
+    	when(historyRepo.findByEmissionsReportIdOrderByActionDate(1L)).thenReturn(raList);
     	
     	when(emissionRepo.findAllByReportId(2L)).thenReturn(eList);
-    	when(attachmentRepo.findAllByReportId(2L)).thenReturn(raList2);
+    	when(historyRepo.findByEmissionsReportIdOrderByActionDate(2L)).thenReturn(raList2);
     }
 
     @Test

@@ -6,9 +6,9 @@ import com.google.common.base.Strings;
 
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.repository.EmissionRepository;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -22,6 +22,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,11 +32,15 @@ public class EmissionsReportValidator
     extends BaseValidator<EmissionsReport>
     implements IEmissionsReportValidator {
 	
+	Logger logger = LoggerFactory.getLogger(EmissionsReportValidator.class);
+	
 	@Autowired
 	private EmissionRepository emissionRepo;
 	
 	@Autowired
-	private ReportAttachmentRepository attachmentRepo;
+	private ReportHistoryRepository historyRepo;
+	
+	private static final String USER_ROLE_REVIEWER = "Reviewer";
 
     @Override
     public void compose(FluentValidator validator,
@@ -88,25 +94,23 @@ public class EmissionsReportValidator
             context.addFederalError(ValidationField.REPORT_EIS_ID.value(), "report.eisProgramId.required");
         }
         
-        	try {
-		        List<Emission> emissionsList = emissionRepo.findAllByReportId(report.getId()).stream()
+	        List<Emission> emissionsList = emissionRepo.findAllByReportId(report.getId()).stream()
 		        		.filter(e -> (e.getEmissionsCalcMethodCode().getTotalDirectEntry() == true || e.getTotalManualEntry() == true))
+		                .collect(Collectors.toList());
+	        		
+	        List<ReportHistory> attachmentList = historyRepo.findByEmissionsReportIdOrderByActionDate(report.getId()).stream()
+		        		.filter(a -> (a.getReportAttachmentId() != null && a.isFileDeleted() == false && !USER_ROLE_REVIEWER.equalsIgnoreCase(a.getUserRole())))
 						.collect(Collectors.toList());
 		        
-		        List<ReportAttachment> attachmentList = attachmentRepo.findAllByReportId(report.getId());
-		        
-		        if (emissionsList.size() > 0 && attachmentList.isEmpty()) {
-		
-		            valid = false;
-		            context.addFederalError(
-		            		ValidationField.REPORT_ATTACHMENT.value(),
-		            		"report.reportAttachment.required",
-		            		createValidationDetails(report));
-		        }
-        	} catch (NullPointerException e) {
-	        	System.out.println("No Emissions found for Emissions Report");
+	        if (emissionsList.size() > 0 && attachmentList.isEmpty()) {
+	
+	            valid = false;
+	            context.addFederalError(
+	            		ValidationField.REPORT_ATTACHMENT.value(),
+	            		"report.reportAttachment.required",
+	            		createValidationDetails(report));
 	        }
-        
+	        
         return valid;
     }
     
