@@ -39,6 +39,11 @@ export class ControlPathService {
     return this.http.get<ControlPath[]>(url);
   }
 
+  retrieveForControlDevice(deviceId: number): Observable<ControlPath[]> {
+    const url = `${this.baseUrl}/controlDevice/${deviceId}`;
+    return this.http.get<ControlPath[]>(url);
+  }
+
   update(controlPath: ControlPath): Observable<ControlPath> {
     const url = `${this.baseUrl}/${controlPath.id}`;
     return this.http.put<ControlPath>(url, controlPath);

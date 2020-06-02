@@ -30,24 +30,6 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	CefValidatorContext context = getCefValidatorContext(validatorContext);
 	
 	
-    	List<String> controlMeasureCodeList = new ArrayList<String>(); 
-    	controlMeasureCodeList = controlMeasureCodeListBuilder(controlPath.getAssignments());
-    	
-		Map<Object, List<String>> cmMap = controlMeasureCodeList.stream()
-				.collect(Collectors.groupingBy(cm -> cm));
-		
-		for (List<String> cmList: cmMap.values()) {
-			if (cmList.size() > 1) {
- 				result = false;
- 				context.addFederalError(
- 	  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
- 	  			"controlPath.assignment.duplicate",
- 	  			createValidationDetails(controlPath)
- 	  			,cmList.get(0));
-					
-			}
-		}
-		
 		if(controlPath.getReleasePointAppts().isEmpty()){
         	result = false;
         	context.addFederalWarning(
@@ -95,17 +77,4 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
     	return controls;
     }
     
-	private List<String> controlMeasureCodeListBuilder(List<ControlAssignment> controlAssignments){
-    	List<String> controlMeasureCodeList = new ArrayList<String>(); 
-    	for(ControlAssignment ca: controlAssignments){
-    		if(ca.getControl() != null){
-    			controlMeasureCodeList.add(ca.getControl().getControlMeasureCode().getDescription());
-    		}
-    		if(ca.getControlPathChild() != null){
-    			controlMeasureCodeList.addAll(controlMeasureCodeListBuilder(ca.getControlPathChild().getAssignments()));
-    		}
-    	}
-    	return controlMeasureCodeList;
-	}
-
 }

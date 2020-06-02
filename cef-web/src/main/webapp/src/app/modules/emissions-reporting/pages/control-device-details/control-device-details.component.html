@@ -74,5 +74,36 @@
             
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <strong>Paths Associated with this Control</strong>
+                </div>
+                <div class="card-body">
+                    <div class="mh-100 overflow-auto">
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead class="thead-cef-medium">
+                        <tr>
+                        <th scope="col" sortable="identifier" (sort)="onSort($event)">Path Identifier</th>
+                        <th scope="col" sortable="description" (sort)="onSort($event)">Path Description</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <ng-container *ngFor="let path of controlPaths">
+                            <tr>
+                            <td><a routerLink="{{baseUrl}}/{{path.id}}" [attr.aria-label]="'path identifer' + path?.pathId" >{{path.pathId}}</a></td>
+                            <td [attr.aria-label]="'path description' + path?.description">{{path.description}}</td>
+                            </tr>
+                        </ng-container>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
