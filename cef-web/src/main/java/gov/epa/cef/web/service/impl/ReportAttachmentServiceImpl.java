@@ -11,6 +11,7 @@ import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.ReportAttachmentService;
 import gov.epa.cef.web.service.ReportService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.ReportAttachmentDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.ReportAttachmentMapper;
@@ -61,6 +62,9 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
     
     @Autowired
     private CefConfig cefConfig;
+    
+    @Autowired
+    private UserService userService;
     
     /***
      * Return attachment for the chosen attachment id
@@ -142,7 +146,9 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
 		 
 		ReportAttachment result = reportAttachmentsRepo.save(attachment);
 		
-		reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT, attachment.getComments(), result);
+		if (!this.userService.getCurrentUser().getRole().equalsIgnoreCase("Reviewer")) {
+			reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT, attachment.getComments(), result);
+		}
 		
 		return reportAttachmentMapper.toDto(result);
 
@@ -161,7 +167,7 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
     	reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT_DELETED, comment);
     	ReportHistory history = reportHistoryRepo.findByAttachmentId(attachment.getId());
     	
-    	reportService.updateReportHistoryAttachment(history.getId(), true);
+    	reportService.updateReportHistoryDeletedAttachment(history.getId(), true);
         reportAttachmentsRepo.deleteById(id);
     }
 }

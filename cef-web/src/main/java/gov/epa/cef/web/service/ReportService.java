@@ -78,7 +78,7 @@ public interface ReportService {
      * @param id
      * @param deleted
      */
-    void updateReportHistoryAttachment(Long id, boolean deleted);
+    void updateReportHistoryDeletedAttachment(Long id, boolean deleted);
     
     /***
      * Return ReportDownloadDto for the chosen report id

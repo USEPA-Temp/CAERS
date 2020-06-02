@@ -69,8 +69,8 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="onClose()">{{cancelButtonText}}</button>
     <button type="button" class="btn btn-success"
-            [ngClass]="{'disable-click' : selectedFile === null}"
-            [disabled]="selectedFile === null"
+            [ngClass]="{'disable-click' : disableButton }"
+            [disabled]="disableButton"
             (click)="onSubmit()">
         {{confirmButtonText}}
     </button>

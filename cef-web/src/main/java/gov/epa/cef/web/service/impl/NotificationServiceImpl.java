@@ -1,7 +1,10 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.config.AppPropertyName;
+import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +49,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
     private PropertyProvider propertyProvider;
+    
+    @Autowired
+    private ReportAttachmentRepository reportAttachmentsRepo;
 
     /**
      * Utility method to send a simple email message in plain text.
@@ -113,13 +119,21 @@ public class NotificationServiceImpl implements NotificationService {
         sendSimpleMessage(to, from, emailSubject, emailBody);
     }
 
-    public void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments)
+    public void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments, Long attachmentId)
     {
     	String emailSubject = MessageFormat.format(REPORT_REJECTED_BY_SLT_SUBJECT, reportingYear, facilityName);
         Context context = new Context();
         context.setVariable("reportingYear", reportingYear);
         context.setVariable("facilityName", facilityName);
         context.setVariable("comments", comments);
+        
+    	if (attachmentId != null) {
+			ReportAttachment attachment = reportAttachmentsRepo.findById(attachmentId)
+					.orElseThrow(() -> new NotExistException("Report Attachment", attachmentId));
+			
+			context.setVariable("attachment", attachment.getFileName());
+		}
+    	
         String emailBody = templateEngine.process(REPORT_REJECTED_BY_SLT_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }

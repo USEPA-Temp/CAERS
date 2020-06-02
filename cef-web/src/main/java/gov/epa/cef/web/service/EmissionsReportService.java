@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service;
 
+import gov.epa.cef.web.api.rest.EmissionsReportApi.ReviewDTO;
 import gov.epa.cef.web.domain.EmissionsReport;
 
 import gov.epa.cef.web.domain.ReportAction;
@@ -92,11 +93,12 @@ public interface EmissionsReportService {
     void delete(Long id);
 
 	List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds, String comments);
-
-	List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds, String comments);
 	
+	List<EmissionsReportDto> rejectEmissionsReports(ReviewDTO reviewDTO);
+
     /**
      * Update an existing Emissions Report from a DTO
      */
     public EmissionsReportDto update(EmissionsReportDto dto);
+
 }
