@@ -42,6 +42,17 @@ public class ReportAttachment extends BaseAuditEntity {
      */
     public ReportAttachment() {}
     
+    /***
+     * Copy constructor
+     * 
+     */
+    public ReportAttachment(ReportAttachment originalAttachment) {
+    	this.fileName = originalAttachment.fileName;
+    	this.attachment = originalAttachment.attachment;
+    	this.fileType = originalAttachment.fileType;
+    	this.comments = originalAttachment.comments;
+    }
+    
 	public EmissionsReport getEmissionsReport() {
 		return emissionsReport;
 	}
@@ -81,5 +92,12 @@ public class ReportAttachment extends BaseAuditEntity {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
+	
+	/***
+     * Set the id property to null for this object.  This method is useful to INSERT the updated object instead of UPDATE.
+     */
+    public void clearId() {
+    	this.id = null;
+    }
 
 }

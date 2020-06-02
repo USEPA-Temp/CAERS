@@ -268,7 +268,7 @@ public class EmissionsReportApi {
 
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reviewDTO.reportIds, reviewDTO.comments);
+        List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reviewDTO);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -418,11 +418,13 @@ public class EmissionsReportApi {
         return result;
     }
 
-    static class ReviewDTO {
+    public static class ReviewDTO {
 
         private String comments;
 
         private List<Long> reportIds;
+        
+        private Long attachmentId;
 
         public String getComments() {
 
@@ -443,5 +445,16 @@ public class EmissionsReportApi {
 
             this.reportIds = reportIds;
         }
+        
+        public void setAttachmentId(Long attachmentId) {
+
+            this.attachmentId = attachmentId;
+        }
+        
+        public Long getAttachmentId() {
+
+            return attachmentId;
+        }
+
     }
 }
