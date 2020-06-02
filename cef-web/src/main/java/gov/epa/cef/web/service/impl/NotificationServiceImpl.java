@@ -1,8 +1,13 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.config.AppPropertyName;
+import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.service.NotificationService;
+import gov.epa.cef.web.service.dto.UserFeedbackDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +40,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
     private final String SCC_UPDATE_FAILED_BODY_TEMPLATE = "sccUpdateFailed";
+    
+    private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "User feedback Submitted for {0} {1}";
+    private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "userFeedback";
 
     @Autowired
     public JavaMailSender emailSender;
@@ -46,6 +54,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
     private PropertyProvider propertyProvider;
+    
+    @Autowired
+    private ReportAttachmentRepository reportAttachmentsRepo;
 
     /**
      * Utility method to send a simple email message in plain text.
@@ -105,7 +116,7 @@ public class NotificationServiceImpl implements NotificationService {
     private void sendAdminEmail(String subject, String body) {
         sendAdminEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress), subject, body);
     }
-
+    
     public void sendReportSubmittedNotification(String to, String from, String facilityName, String reportingYear)
     {
         String emailSubject = MessageFormat.format(REPORT_SUBMITTED_TO_SLT_SUBJECT, facilityName);
@@ -113,13 +124,21 @@ public class NotificationServiceImpl implements NotificationService {
         sendSimpleMessage(to, from, emailSubject, emailBody);
     }
 
-    public void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments)
+    public void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments, Long attachmentId)
     {
     	String emailSubject = MessageFormat.format(REPORT_REJECTED_BY_SLT_SUBJECT, reportingYear, facilityName);
         Context context = new Context();
         context.setVariable("reportingYear", reportingYear);
         context.setVariable("facilityName", facilityName);
         context.setVariable("comments", comments);
+        
+    	if (attachmentId != null) {
+			ReportAttachment attachment = reportAttachmentsRepo.findById(attachmentId)
+					.orElseThrow(() -> new NotExistException("Report Attachment", attachmentId));
+			
+			context.setVariable("attachment", attachment.getFileName());
+		}
+    	
         String emailBody = templateEngine.process(REPORT_REJECTED_BY_SLT_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }
@@ -141,6 +160,30 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("exception", exception);
         String emailBody = templateEngine.process(SCC_UPDATE_FAILED_BODY_TEMPLATE, context);
         sendAdminEmail(emailSubject, emailBody);
+    }
+    
+    public void sendUserFeedbackNotification(UserFeedbackDto userFeedback){
+    	
+    	String emailSubject = MessageFormat.format(USER_FEEDBACK_SUBMITTED_SUBJECT, userFeedback.getYear(), userFeedback.getFacilityName());
+    	Context context = new Context();
+    	context.setVariable("facilityName", userFeedback.getFacilityName());
+    	context.setVariable("reportingYear", userFeedback.getYear());
+    	context.setVariable("userName", userFeedback.getUserName());
+    	context.setVariable("userRole", userFeedback.getUserRole());
+    	context.setVariable("userId", userFeedback.getUserId());
+    	context.setVariable("intuitiveRating", userFeedback.getIntuitiveRating());
+    	context.setVariable("dataEntryScreens", userFeedback.getDataEntryScreens());
+    	context.setVariable("dataEntryBulkUpload", userFeedback.getDataEntryBulkUpload());
+    	context.setVariable("calculationScreens", userFeedback.getCalculationScreens());
+    	context.setVariable("controlsAndControlPathAssignments", userFeedback.getControlsAndControlPathAssignments());
+    	context.setVariable("qualityAssurance", userFeedback.getQualityAssuranceChecks());
+    	context.setVariable("overallReportingTime", userFeedback.getOverallReportingTime());
+    	context.setVariable("openQuestion1", userFeedback.getBeneficialFunctionalityComments());
+    	context.setVariable("openQuestion2", userFeedback.getDifficultFunctionalityComments());
+    	context.setVariable("openQuestion3", userFeedback.getEnhancementComments());
+
+    	String emailBody = templateEngine.process(USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE, context);
+    	sendAdminEmail(emailSubject, emailBody);
     }
 
 }
