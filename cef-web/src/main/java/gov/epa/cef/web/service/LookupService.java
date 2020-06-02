@@ -74,9 +74,10 @@ public interface LookupService {
 
     /**
      * Retrieve non-legacy Pollutants
+     * @param year
      * @return
      */
-    List<PollutantDto> retrieveCurrentPollutants();
+    List<PollutantDto> retrieveCurrentPollutants(Integer year);
 
     /**
      * Retrieve Operating Status code database object by code

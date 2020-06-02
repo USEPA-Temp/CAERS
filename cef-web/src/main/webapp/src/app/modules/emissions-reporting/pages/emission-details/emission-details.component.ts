@@ -60,7 +60,7 @@ export class EmissionDetailsComponent implements OnInit {
   unitIdentifier: string;
 
   emissionForm = this.fb.group({
-    pollutant: [null, [Validators.required, legacyItemValidator()]],
+    pollutant: [null, [Validators.required]],
     formulaIndicator: [false, Validators.required],
     emissionsFactor: ['', [Validators.required]],
     emissionsFactorFormula: [''],
@@ -114,11 +114,6 @@ export class EmissionDetailsComponent implements OnInit {
       this.methodValues = result;
     });
 
-    this.lookupService.retrievePollutant()
-    .subscribe(result => {
-      this.pollutantValues = result;
-    });
-
     this.lookupService.retrieveUom()
     .subscribe(result => {
       this.uomValues = result;
@@ -128,6 +123,17 @@ export class EmissionDetailsComponent implements OnInit {
 
     this.route.data
     .subscribe(data => {
+
+      const year = data.facilitySite.emissionsReport.year;
+
+      this.emissionForm.get('pollutant').setValidators([Validators.required, legacyItemValidator(year, 'Pollutant')]);
+
+      this.lookupService.retrieveCurrentPollutants(year)
+      .subscribe(result => {
+        this.pollutantValues = result;
+      });
+
+
       this.createMode = data.create === 'true';
       this.editable = data.create === 'true';
 

@@ -10,7 +10,6 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.util.CalculationUtils;
-import gov.epa.cef.web.util.DateUtils;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -46,7 +45,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 && !emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_PERMANENTLY_SHUTDOWN)) {
 
             if (emission.getPollutant() != null && emission.getPollutant().getLastInventoryYear() != null
-                    && emission.getPollutant().getLastInventoryYear() < DateUtils.getCurrentReportingYear()) {
+                    && emission.getPollutant().getLastInventoryYear() < getReportYear(emission)) {
 
                 valid = false;
                 context.addFederalError(
@@ -385,6 +384,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
             return emission.getPollutant().getPollutantName();
         }
         return null;
+    }
+
+    private int getReportYear(Emission emission) {
+        return emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().intValue();
     }
 
     private ValidationDetailDto createValidationDetails(Emission source) {

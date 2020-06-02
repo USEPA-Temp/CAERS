@@ -71,6 +71,6 @@
   </div>
 
   <div *ngIf="control.errors?.legacyItem">
-      The selected value is no longer a valid. Please select a different value.
+      The selected {{control.errors.legacyItem.type}} is no longer valid. Please select a different {{control.errors.legacyItem.type}}.
   </div>
 </div>

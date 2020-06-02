@@ -22,11 +22,12 @@ export class ControlPollutantModalComponent implements OnInit {
   selectedControlPollutant: ControlPollutant;
   controlId: number;
   facilitySiteId: number;
+  year: number;
   edit: boolean;
   duplicateCheck = true;
 
   pollutantForm = this.fb.group({
-      pollutant: [null , [Validators.required, legacyItemValidator()]],
+      pollutant: [null , [Validators.required]],
       percentReduction: ['', [
         Validators.required,
         Validators.max(99.9),
@@ -47,7 +48,10 @@ export class ControlPollutantModalComponent implements OnInit {
     } else {
       this.selectedControlPollutant = new ControlPollutant();
     }
-    this.lookupService.retrievePollutant()
+
+    this.pollutantForm.get('pollutant').setValidators([Validators.required, legacyItemValidator(this.year, 'Pollutant')]);
+
+    this.lookupService.retrieveCurrentPollutants(this.year)
     .subscribe(result => {
       this.pollutantValues = result;
     });

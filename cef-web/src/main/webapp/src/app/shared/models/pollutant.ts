@@ -6,5 +6,5 @@ export class Pollutant {
     pollutantSrsId: string;
     pollutantType: string;
     pollutantStandardUomCode: string;
-    legacy: boolean;
+    lastInventoryYear: number;
 }

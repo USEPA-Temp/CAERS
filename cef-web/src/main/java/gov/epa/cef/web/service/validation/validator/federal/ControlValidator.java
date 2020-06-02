@@ -16,7 +16,6 @@ import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
-import gov.epa.cef.web.util.DateUtils;
 
 @Component
 public class ControlValidator extends BaseValidator<Control> {
@@ -46,7 +45,7 @@ public class ControlValidator extends BaseValidator<Control> {
 		
 		for  (ControlPollutant cp: control.getPollutants()) {
 
-		    if (cp.getPollutant().getLastInventoryYear() != null && cp.getPollutant().getLastInventoryYear() < DateUtils.getCurrentReportingYear()) {
+		    if (cp.getPollutant().getLastInventoryYear() != null && cp.getPollutant().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
 
                 result = false;
                 context.addFederalError(
