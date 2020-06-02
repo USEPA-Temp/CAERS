@@ -268,7 +268,7 @@ public class EmissionsReportApi {
 
         this.securityService.facilityEnforcer().enforceEntities(reviewDTO.reportIds, EmissionsReportRepository.class);
 
-        List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reviewDTO.reportIds, reviewDTO.comments, reviewDTO.attachmentId);
+        List<EmissionsReportDto> result = emissionsReportService.rejectEmissionsReports(reviewDTO);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -418,7 +418,7 @@ public class EmissionsReportApi {
         return result;
     }
 
-    static class ReviewDTO {
+    public static class ReviewDTO {
 
         private String comments;
 

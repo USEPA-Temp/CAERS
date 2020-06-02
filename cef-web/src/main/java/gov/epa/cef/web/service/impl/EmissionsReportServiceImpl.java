@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.api.rest.EmissionsReportApi.ReviewDTO;
 import gov.epa.cef.web.client.soap.DocumentDataSource; 
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
@@ -7,11 +8,14 @@ import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReportAction;
+import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
@@ -63,6 +67,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
+    
+    @Autowired
+    private ReportAttachmentRepository reportAttachmentsRepo;
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
@@ -350,17 +357,40 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     }
 
     /**
-     * Approve the specified reports and move to approved
+     * Reject the specified reports and move to Rejected
      * @param reportIds
      * @param comments
      * @return
      */
     @Override
-    public List<EmissionsReportDto>rejectEmissionsReports(List<Long> reportIds, String comments, Long attachmentIds) {
-    	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reportIds);
-		reportService.createRejectReportHistory(reportIds, ReportAction.REJECTED, comments, attachmentIds);
+    public List<EmissionsReportDto>rejectEmissionsReports(ReviewDTO reviewDTO) {
+    	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reviewDTO.getReportIds());
 		
-    	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+    	if(reviewDTO.getAttachmentId() != null) {
+    		ReportAttachment attachment = this.reportAttachmentsRepo.findById(reviewDTO.getAttachmentId())
+    			.orElseThrow(() -> new NotExistException("Report Attachment", reviewDTO.getAttachmentId()));
+    		
+    		this.erRepo.findAllById(reviewDTO.getReportIds())
+            .forEach(report -> {
+            	
+    			if (attachment.getEmissionsReport().getId() == report.getId()) {
+    				reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), attachment);
+    				
+    			} else {
+    				ReportAttachment copyAttachment = new ReportAttachment(attachment);
+    	    		copyAttachment.clearId();
+    	    		copyAttachment.setEmissionsReport(report);
+    	    		
+    	    		ReportAttachment result = reportAttachmentsRepo.save(copyAttachment);
+    	    		reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), result);
+    			}
+    		});
+
+    	} else {
+    		reportService.createReportHistory(reviewDTO.getReportIds(), ReportAction.REJECTED, reviewDTO.getComments());
+    	}
+    	
+    	StreamSupport.stream(this.erRepo.findAllById(reviewDTO.getReportIds()).spliterator(), false)
 	      .forEach(report -> {
 
 	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
@@ -378,7 +408,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  cefConfig.getDefaultEmailAddress(),
 			        		  reportFacilitySite.getName(),
 			        		  report.getYear().toString(),
-			        		  comments, attachmentIds);
+			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId());
 	    		  }
 	    	  });
 	      });

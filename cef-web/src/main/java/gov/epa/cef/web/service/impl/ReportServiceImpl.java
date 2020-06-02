@@ -139,39 +139,6 @@ public class ReportServiceImpl implements ReportService {
         }
     }
     
-    /**
-     * Create Report History records for specified rejected reports
-     * @param reportIds
-     * @param reportAction
-     * @param comments
-     * @param attachmentId
-     */
-    public void createRejectReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, Long attachmentId) {
-
-    	if(attachmentId != null) {
-    		ReportAttachment attachment = this.reportAttachmentsRepo.findById(attachmentId)
-    			.orElseThrow(() -> new NotExistException("Report Attachment", attachmentId));
-    		
-    		this.erRepo.findAllById(reportIds)
-            .forEach(report -> {
-            	
-    			if (attachment.getEmissionsReport().getId() == report.getId()) {
-    				createReportHistory(report.getId(), reportAction, comments, attachment);
-    				
-    			} else {
-    				ReportAttachment copyAttachment = new ReportAttachment(attachment);
-    	    		copyAttachment.clearId();
-    	    		copyAttachment.setEmissionsReport(report);
-    	    		
-    	    		ReportAttachment result = reportAttachmentsRepo.save(copyAttachment);
-    	    		createReportHistory(report.getId(), reportAction, comments, result);
-    			}
-    		});
-
-    	} else {
-    		createReportHistory(reportIds, reportAction, comments);
-    	}
-    }
     
     /**
      * Create Report History records for specified reports
