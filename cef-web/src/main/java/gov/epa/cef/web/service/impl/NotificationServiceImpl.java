@@ -148,12 +148,12 @@ public class NotificationServiceImpl implements NotificationService {
         sendAdminEmail(emailSubject, emailBody);
     }
     
-    public void sendUserFeedbackNotification(String facilityName, String reportingYear, UserFeedbackDto userFeedback){
+    public void sendUserFeedbackNotification(UserFeedbackDto userFeedback){
     	
-    	String emailSubject = MessageFormat.format(USER_FEEDBACK_SUBMITTED_SUBJECT, reportingYear, facilityName);
+    	String emailSubject = MessageFormat.format(USER_FEEDBACK_SUBMITTED_SUBJECT, userFeedback.getYear(), userFeedback.getFacilityName());
     	Context context = new Context();
-    	context.setVariable("facilityName", facilityName);
-    	context.setVariable("reportingYear", reportingYear);
+    	context.setVariable("facilityName", userFeedback.getFacilityName());
+    	context.setVariable("reportingYear", userFeedback.getYear());
     	context.setVariable("userName", userFeedback.getUserName());
     	context.setVariable("userRole", userFeedback.getUserRole());
     	context.setVariable("userId", userFeedback.getUserId());

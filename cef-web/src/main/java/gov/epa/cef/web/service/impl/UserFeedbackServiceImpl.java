@@ -31,7 +31,7 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
     	
     	UserFeedbackDto result = userFeedbackMapper.toDto(userFeedbackRepo.save(userFeedback));
     	
-        notificationService.sendUserFeedbackNotification( dto.getFacilityName(), dto.getYear().toString(), dto);
+        notificationService.sendUserFeedbackNotification(dto);
 	  
     	return result;
 	}
