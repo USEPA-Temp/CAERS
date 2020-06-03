@@ -7,7 +7,11 @@ import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
+import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
 import { EmissionsReport } from 'src/app/shared/models/emissions-report';
+import { UserService } from 'src/app/core/services/user.service';
+import { User } from 'src/app/shared/models/user';
+
 
 @Component({
   selector: 'app-user-feedback',
@@ -20,6 +24,7 @@ export class UserFeedbackComponent implements OnInit {
   facilitySite: FacilitySite;
   baseUrl: string;
   report: EmissionsReport;
+  user: User;
 
   feedbackForm = this.fb.group({
     beneficialFunctionalityComments: [null],
@@ -40,16 +45,23 @@ export class UserFeedbackComponent implements OnInit {
               private toastr: ToastrService,
               private sharedService: SharedService,
               private router: Router,
+              private reportingService: EmissionsReportingService,
+              private userService: UserService,
               private emissionsReportingService: EmissionsReportingService) { }
+
 
   ngOnInit() {
     this.route.paramMap
     .subscribe(params => {
       this.reportId = params.get('reportId');
       this.facilityId = params.get('facilityId');
-      this.emissionsReportingService.getCurrentReport(this.facilityId).subscribe((report) => {
+      this.userService.getCurrentUser().subscribe((user) => {
+        this.user = user;
+      });
+      this.reportingService.getReport(this.reportId).subscribe((report) =>{
         this.report = report;
       });
+
       this.baseUrl = `/facility/${params.get('facilityId')}/report`;
     });
 
@@ -64,17 +76,23 @@ export class UserFeedbackComponent implements OnInit {
   }
 
   onSubmit()  {
-        const saveUserFeedback = new UserFeedback();
-        saveUserFeedback.reportId = this.reportId;
-        Object.assign(saveUserFeedback, this.feedbackForm.value);
-        this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
-          this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
+    const saveUserFeedback = new UserFeedback();
+    saveUserFeedback.reportId = this.reportId;
+    saveUserFeedback.facilityName = this.facilitySite.name;
+    saveUserFeedback.year = this.report.year;
+    saveUserFeedback.userName = this.user.firstName + ' ' + this.user.lastName;
+    saveUserFeedback.userId = this.user.userRoleId.toString();
+    saveUserFeedback.userRole = this.user.role;
+    Object.assign(saveUserFeedback, this.feedbackForm.value);
+    
+    this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
+      this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
+      this.sharedService.emitHideBoolChange(false);
           this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId, this.report).subscribe((result) => {
               this.sharedService.emitHideBoolChange(false);
               this.router.navigateByUrl(this.baseUrl);
-          });
-
-        });
+      });
+    });
   }
 
   onNoThanks() {

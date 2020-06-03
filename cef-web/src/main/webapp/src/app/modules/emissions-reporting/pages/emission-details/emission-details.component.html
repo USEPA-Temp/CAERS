@@ -364,7 +364,7 @@
         <span *ngIf="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry && !emissionForm.disabled">
             <button type="button" class="btn btn-success mr-2" (click)="onCalculate()">Calculate Emissions</button>
         </span>
-        <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Cancel</button>
+        <button type="button" class="btn btn-primary mr-2" (click)="onCancelEdit()">Cancel</button>
         <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
     </div>
     <div class="float-right pb-3 pr-3" *ngIf="!editable">

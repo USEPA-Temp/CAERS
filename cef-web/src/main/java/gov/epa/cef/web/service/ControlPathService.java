@@ -50,6 +50,13 @@ public interface ControlPathService {
     List<ControlPathDto> retrieveForReleasePoint(Long pointId);
     
     /**
+     * Retrieve Control Paths by control device id
+     * @param controlPathId
+     * @return
+     */
+	List<ControlPathDto> retrieveForControlDevice(Long controlDeviceId);
+
+    /**
      * Update an existing Control Path by id
      * @param dto
      * @return

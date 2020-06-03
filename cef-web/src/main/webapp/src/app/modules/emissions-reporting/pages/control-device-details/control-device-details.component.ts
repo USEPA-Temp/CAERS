@@ -8,6 +8,9 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { EditControlDeviceInfoPanelComponent } from '../../components/edit-control-device-info-panel/edit-control-device-info-panel.component';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { ControlPath } from 'src/app/shared/models/control-path';
+import { ControlPathService } from 'src/app/core/services/control-path.service';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
 @Component({
   selector: 'app-control-device-details',
@@ -18,7 +21,8 @@ export class ControlDeviceDetailsComponent implements OnInit {
   @Input() control: Control;
   emissionsReportItems: EmissionsReportItem[];
   facilitySite: FacilitySite;
-
+  controlPaths: ControlPath[];
+  baseUrl: string;
   editInfo = false;
   readOnlyMode = true;
 
@@ -29,15 +33,21 @@ export class ControlDeviceDetailsComponent implements OnInit {
     private controlService: ControlService,
     private route: ActivatedRoute,
     private userContextService: UserContextService,
-    private sharedService: SharedService) { }
+    private sharedService: SharedService,
+    private controlPathService: ControlPathService) { }
 
   ngOnInit() {
     this.route.paramMap
     .subscribe(map => {
+      this.baseUrl = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_PATH}`;
       this.controlService.retrieve(+map.get('controlId'))
       .subscribe(control => {
         this.control = control;
         this.control.pollutants = control.pollutants.sort((a, b) => (a.pollutant.pollutantName > b.pollutant.pollutantName ? 1 : -1));
+      });
+
+      this.controlPathService.retrieveForControlDevice(+map.get('controlId')).subscribe((controlPaths) => {
+        this.controlPaths = controlPaths;
       });
 
       this.controlService.retrieveComponents(+map.get('controlId'))

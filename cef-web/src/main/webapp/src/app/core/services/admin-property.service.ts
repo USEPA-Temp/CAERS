@@ -30,4 +30,9 @@ export class AdminPropertyService {
     const url = `${this.baseUrl}`;
     return this.http.post<AppProperty[]>(url, props);
   }
+
+  sendTestEmail(): Observable<{}> {
+    const url = `${this.baseUrl}/sendTestEmail`;
+    return this.http.post<any>(url, {});
+  }
 }

@@ -39,7 +39,7 @@ public class ReportDownloadView extends BaseEntity{
     @Column(name = "process_description", length = 200)
     private String processDescription;
 
-    @Column(name = "pollutant_name", length = 200)
+	@Column(name = "pollutant_name", length = 200)
     private String pollutantName;
 
     @Column(name = "emissions_uom_code", length = 20)
