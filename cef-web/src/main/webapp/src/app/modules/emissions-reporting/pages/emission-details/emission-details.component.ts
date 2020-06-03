@@ -89,6 +89,7 @@ export class EmissionDetailsComponent implements OnInit {
   uomValues: UnitMeasureCode[];
   numeratorUomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
+  currentCalcMethod: CalculationMethodCode;
 
   constructor(
     private emissionService: EmissionService,
@@ -149,10 +150,9 @@ export class EmissionDetailsComponent implements OnInit {
           this.emissionForm.reset(this.emission);
           this.setupVariableFormFromValues(this.emission.variables);
           this.emissionForm.disable();
-
+          this.currentCalcMethod = this.emissionForm.get('emissionsCalcMethodCode').value;
         });
       } else {
-
         this.emissionForm.enable();
 
         this.setupForm();
@@ -178,7 +178,7 @@ export class EmissionDetailsComponent implements OnInit {
     });
   }
 
-  private onMethodChange(value: CalculationMethodCode, status: string) {
+  private onMethodChange(value: CalculationMethodCode, status: string, forceReset: boolean) {
 
     if ('DISABLED' !== status) {
       if (value && value.totalDirectEntry) {
@@ -198,13 +198,20 @@ export class EmissionDetailsComponent implements OnInit {
         this.getTotalManualEntry().setValue(false);
       }
 
+      const sameCalcMethod = (this.currentCalcMethod && this.currentCalcMethod.code === value.code);
+      if (!sameCalcMethod) {
+        this.currentCalcMethod = value;
+      }
+
       // set epaEmissionFactor to true for EPA calculation methods
       if (value && value.epaEmissionFactor) {
         this.epaEmissionFactor = true;
-        this.emissionForm.get('emissionsFactor').reset();
-        this.emissionForm.get('emissionsFactorFormula').reset();
-        this.emissionForm.get('formulaIndicator').reset();
-        this.emissionForm.get('formulaVariables').reset();
+        if (!sameCalcMethod || forceReset) {
+          this.emissionForm.get('emissionsFactor').reset();
+          this.emissionForm.get('emissionsFactorFormula').reset();
+          this.emissionForm.get('formulaIndicator').reset();
+          this.emissionForm.get('formulaVariables').reset();
+        }
       } else {
         this.emissionForm.get('formulaIndicator').reset(false);
         this.setupVariableForm([]);
@@ -260,7 +267,7 @@ export class EmissionDetailsComponent implements OnInit {
     // Reconfigure form after calculation method changes
     this.emissionForm.get('emissionsCalcMethodCode').valueChanges
     .subscribe(value => {
-      this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status);
+      this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status, false);
     });
 
     // Make user calculate total emissions after changes
@@ -279,7 +286,7 @@ export class EmissionDetailsComponent implements OnInit {
   // reset ef and ef formula when pollutant is changed
   onChange() {
     if (this.emissionForm.value.emissionsCalcMethodCode) {
-      this.onMethodChange(this.emissionForm.get('emissionsCalcMethodCode').value, this.emissionForm.get('emissionsCalcMethodCode').status);
+      this.onMethodChange(this.emissionForm.get('emissionsCalcMethodCode').value, this.emissionForm.get('emissionsCalcMethodCode').status, true);
     }
   }
 
@@ -351,8 +358,17 @@ export class EmissionDetailsComponent implements OnInit {
 
   onCancelEdit() {
     this.emissionForm.enable();
-    if (!this.createMode) {
-      this.emissionForm.reset(this.emission);
+    if (this.createMode) {
+      this.router.navigate([this.processUrl]);
+    } else {
+      this.emissionService.retrieve(this.emission.id)
+      .subscribe(result => {
+        this.emission = result;
+        this.currentCalcMethod = this.emission.emissionsCalcMethodCode;
+        this.emissionForm.reset(this.emission);
+        this.setupVariableFormFromValues(this.emission.variables);
+        this.emissionForm.disable();
+      });
     }
     this.editable = false;
   }
@@ -410,6 +426,7 @@ export class EmissionDetailsComponent implements OnInit {
           this.emissionService.retrieve(this.emission.id)
           .subscribe(result => {
             this.emission = result;
+            this.currentCalcMethod = this.emission.emissionsCalcMethodCode;
             this.emissionForm.reset(this.emission);
             this.setupVariableFormFromValues(this.emission.variables);
             this.emissionForm.disable();
