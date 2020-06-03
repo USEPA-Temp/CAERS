@@ -375,8 +375,18 @@ export class EmissionDetailsComponent implements OnInit {
 
   onEdit() {
     this.editable = true;
-    this.emissionForm.enable();
+    // this prevents events from triggering that shouldn't be.
+    this.emissionForm.enable({emitEvent: false});
     this.setupForm();
+
+    // reset carryover variables
+    this.needsCalculation = false;
+    this.efNumeratorMismatch = false;
+    this.failedNumDesc = null;
+    this.failedTotalDesc = null;
+    this.efDenominatorMismatch = false;
+    this.failedRpCalcDesc = null;
+    this.failedDenomDesc = null;
   }
 
   onSubmit() {
