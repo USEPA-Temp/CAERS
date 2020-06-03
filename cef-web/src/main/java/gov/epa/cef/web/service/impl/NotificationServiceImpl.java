@@ -164,7 +164,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     public void sendUserFeedbackNotification(UserFeedbackDto userFeedback){
     	
-    	String emailSubject = MessageFormat.format(USER_FEEDBACK_SUBMITTED_SUBJECT, userFeedback.getYear(), userFeedback.getFacilityName());
+    	String emailSubject = MessageFormat.format(USER_FEEDBACK_SUBMITTED_SUBJECT, userFeedback.getYear().toString(), userFeedback.getFacilityName());
     	Context context = new Context();
     	context.setVariable("facilityName", userFeedback.getFacilityName());
     	context.setVariable("reportingYear", userFeedback.getYear());
