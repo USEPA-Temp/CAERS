@@ -1,6 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
-import com.fasterxml.jackson.databind.JsonNode; 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -208,7 +208,7 @@ public class EmissionsReportApi {
 
         return new ResponseEntity<>(result, status);
     }
-    
+
     /**
      * Set Emissions Report HasSubmitted column to true
      * @param pointId
@@ -219,13 +219,16 @@ public class EmissionsReportApi {
     public ResponseEntity<EmissionsReportDto> updateEmissionsReportHasSubmitted(
         @NotNull @PathVariable Long reportId, @NotNull @RequestBody EmissionsReportDto dto) {
 
+        // TODO should update path to /{reportId}/submitted to be concise/clear
+
         this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
-        EmissionsReportDto result = emissionsReportService.update(dto.withId(reportId));
+        EmissionsReportDto result =
+            emissionsReportService.updateSubmitted(reportId, Boolean.TRUE.equals(dto.getHasSubmitted()));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Delete a report for given id
      *
@@ -423,7 +426,7 @@ public class EmissionsReportApi {
         private String comments;
 
         private List<Long> reportIds;
-        
+
         private Long attachmentId;
 
         public String getComments() {
@@ -445,12 +448,12 @@ public class EmissionsReportApi {
 
             this.reportIds = reportIds;
         }
-        
+
         public void setAttachmentId(Long attachmentId) {
 
             this.attachmentId = attachmentId;
         }
-        
+
         public Long getAttachmentId() {
 
             return attachmentId;

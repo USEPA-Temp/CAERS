@@ -10,6 +10,8 @@ public interface FacilityAccessEnforcer {
 
     <T extends ProgramIdRetriever> void enforceEntity(Long id, Class<T> repositoryClazz);
 
+    Collection<String> getAuthorizedProgramIds();
+
     void enforceFacilitySite(Long id);
 
     void enforceFacilitySites(Collection<Long> ids);

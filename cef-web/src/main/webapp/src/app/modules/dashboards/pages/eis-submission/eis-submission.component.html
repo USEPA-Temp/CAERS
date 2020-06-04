@@ -17,12 +17,22 @@
                   <label for="id-filter-year" class="col-form-label mr-2">
                      <strong>Reporting Year:</strong>
                   </label>
-                  <select id="id-filter-year" class="mr-3 form-control form-control-sm" style="width: 150px"></select>
+                  <select id="id-filter-year"
+                          class="mr-3 form-control form-control-sm"
+                          style="width: 150px">
+                     <option *ngFor="let item of availableYears"
+                             [value]="item">{{item}}</option>
+                  </select>
 
                   <label for="id-filter-status" class="col-form-label mr-2">
                      <strong>Submission Status:</strong>
                   </label>
-                  <select id="id-filter-status" class="mr-3 form-control form-control-sm" style="width: 150px"></select>
+                  <select id="id-filter-status"
+                          class="mr-3 form-control form-control-sm"
+                          style="width: 150px">
+                     <option *ngFor="let item of availableStatuses"
+                             [value]="item">{{item}}</option>
+                  </select>
 
                   <label for="id-filter-text" class="col-form-label mr-2">
                      <strong>Filter Table:</strong>
@@ -82,7 +92,10 @@
                              [value]="item.key">{{item.value}}</option>
                   </select>
 
-                  <button type="button" class="btn btn-success">Submit to EIS</button>
+                  <button type="button" class="btn btn-success disabled"
+                          style="pointer-events: none">
+                     <span>Submit to EIS</span>
+                  </button>
                </div>
             </div>
          </div>
@@ -100,60 +113,75 @@
                <div class="mb-3 align-middle">
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
+                     [style.pointer-events]="stats.notStarted > 0 ? 'all' : 'none'"
                      (click)="onFilterNotStarted()">
 
                      <span class="badge badge-pill badge-danger text-larger mr-3"
-                        [textContent]="stats.notStarted"></span>
+                           [textContent]="stats.notStarted"></span>
                      <strong class="mr-2">Not Started</strong>
-                     <fa-icon icon="filter" title="Filter reports for Not Started"></fa-icon>
+                     <fa-icon icon="filter"
+                              title="Filter reports for Not Started"
+                              *ngIf="stats.notStarted > 0"></fa-icon>
                   </a>
                </div>
 
                <div class="my-3 align-middle">
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
+                     [style.pointer-events]="stats.qaFacility > 0 ? 'all' : 'none'"
                      (click)="onFilterQaFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            [textContent]="stats.qaFacility"></span>
                      <strong class="mr-2">QA Facility</strong>
-                     <fa-icon icon="filter" title="Filter reports for QA Facility"></fa-icon>
+                     <fa-icon icon="filter"
+                              title="Filter reports for QA Facility"
+                              *ngIf="stats.qaFacility > 0"></fa-icon>
                   </a>
                </div>
 
                <div class="my-3 align-middle">
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
+                     [style.pointer-events]="stats.prodFacility > 0 ? 'all' : 'none'"
                      (click)="onFilterProdFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            [textContent]="stats.prodFacility"></span>
-                     <strong class="mr-2">Prod Emissions</strong>
-                     <fa-icon icon="filter" title="Filter reports for Prod Facility"></fa-icon>
+                     <strong class="mr-2">Prod Facility</strong>
+                     <fa-icon icon="filter"
+                              title="Filter reports for Prod Facility"
+                              *ngIf="stats.prodFacility > 0"></fa-icon>
                   </a>
                </div>
 
                <div class="my-3 align-middle">
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
+                     [style.pointer-events]="stats.qaEmissions > 0 ? 'all' : 'none'"
                      (click)="onFilterQaEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            [textContent]="stats.qaEmissions"></span>
                      <strong class="mr-2">QA Emissions</strong>
-                     <fa-icon icon="filter" title="Filer reports for QA Emissions"></fa-icon>
+                     <fa-icon icon="filter"
+                              title="Filer reports for QA Emissions"
+                              *ngIf="stats.qaEmissions > 0"></fa-icon>
                   </a>
                </div>
 
                <div class="my-3 align-middle">
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
+                     [style.pointer-events]="stats.prodEmissions > 0 ? 'all' : 'none'"
                      (click)="onFilterProdEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            [textContent]="stats.prodEmissions"></span>
                      <strong class="mr-2">Prod Emissions</strong>
-                     <fa-icon icon="filter" title="Show Prod Emissions"></fa-icon>
+                     <fa-icon icon="filter"
+                              title="Show Prod Emissions"
+                              *ngIf="stats.prodEmissions > 0"></fa-icon>
                   </a>
                </div>
 
