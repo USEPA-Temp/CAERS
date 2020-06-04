@@ -44,6 +44,17 @@ public class ControlValidator extends BaseValidator<Control> {
 		}
 		
 		for  (ControlPollutant cp: control.getPollutants()) {
+
+		    if (cp.getPollutant().getLastInventoryYear() != null && cp.getPollutant().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
+
+                result = false;
+                context.addFederalError(
+                ValidationField.CONTROL_POLLUTANT.value(),
+                "control.controlPollutant.legacy",
+                createValidationDetails(control),
+                cp.getPollutant().getPollutantName());
+            }
+
 			if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.9) {
 				
 				result = false;
@@ -54,7 +65,7 @@ public class ControlValidator extends BaseValidator<Control> {
 	  			cp.getPollutant().getPollutantName());
 			}
 		}
-			
+
 		Map<Object, List<ControlPollutant>> cpMap = control.getPollutants().stream()
 				.filter(cp -> cp.getPollutant() != null)
 				.collect(Collectors.groupingBy(p -> p.getPollutant().getPollutantName()));

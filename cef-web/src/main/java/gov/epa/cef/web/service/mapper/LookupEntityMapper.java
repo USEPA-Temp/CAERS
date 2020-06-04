@@ -70,6 +70,8 @@ public abstract class LookupEntityMapper {
 
     public abstract PollutantDto pollutantToDto(Pollutant source);
 
+    public abstract List<PollutantDto> pollutantToDtoList(List<Pollutant> source);
+
     public abstract FipsCountyDto fipsCountyToDto(FipsCounty source);
 
     public abstract List<FipsCountyDto> fipsCountyToDtoList(List<FipsCounty> source);

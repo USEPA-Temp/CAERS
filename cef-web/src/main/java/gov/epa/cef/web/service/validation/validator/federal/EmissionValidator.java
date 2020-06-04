@@ -42,8 +42,19 @@ public class EmissionValidator extends BaseValidator<Emission> {
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
         if (!emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_TEMPORARILY_SHUTDOWN)
-            && !emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_PERMANENTLY_SHUTDOWN)) {
-            
+                && !emission.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().getCode().equals(STATUS_PERMANENTLY_SHUTDOWN)) {
+
+            if (emission.getPollutant() != null && emission.getPollutant().getLastInventoryYear() != null
+                    && emission.getPollutant().getLastInventoryYear() < getReportYear(emission)) {
+
+                valid = false;
+                context.addFederalError(
+                        ValidationField.EMISSION_POLLUTANT.value(),
+                        "emission.pollutant.legacy", 
+                        createValidationDetails(emission),
+                        getPollutantName(emission));
+            }
+
             if (emission.getEmissionsCalcMethodCode() == null) {
 
 	            // prevented by db constraints
@@ -373,6 +384,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
             return emission.getPollutant().getPollutantName();
         }
         return null;
+    }
+
+    private int getReportYear(Emission emission) {
+        return emission.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().intValue();
     }
 
     private ValidationDetailDto createValidationDetails(Emission source) {
