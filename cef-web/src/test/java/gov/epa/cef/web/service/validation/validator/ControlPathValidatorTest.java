@@ -47,6 +47,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ControlPath testData = createBaseControlPath();
 		ControlAssignment ca1 = new ControlAssignment();
 		Control c1 = new Control();
+		ca1.setSequenceNumber(1);
 		ControlMeasureCode cmc = new ControlMeasureCode();
 		cmc.setDescription("test");
 		c1.setControlMeasureCode(cmc);
@@ -93,8 +94,20 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
-	
-	
+    
+    @Test
+    public void sequenceNumberNullFailTest() {
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		testData.getAssignments().get(0).setSequenceNumber(null);
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);
+    }
+    
 	private ControlPath createBaseControlPath() {
 		
 		ControlPath result = new ControlPath();
@@ -106,8 +119,11 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		c.setDescription("test control");
 		c.setId(1234L);
 		c.setControlMeasureCode(cmc);
+		c.setIdentifier("test control");
 		ControlAssignment ca = new ControlAssignment();
 		ca.setControl(c);
+		ca.setSequenceNumber(1);
+		ca.setId(1234L);
 		result.setPathId("test control path");
 		result.setDescription("test description");
 		result.getReleasePointAppts().add(rpa);
