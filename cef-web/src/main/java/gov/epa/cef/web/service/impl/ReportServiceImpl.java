@@ -5,7 +5,9 @@ import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.domain.ReportDownloadView;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportSummary;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.repository.ReportDownloadRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportSummaryRepository;
@@ -43,6 +45,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private EmissionsReportRepository erRepo;
+    
+    @Autowired
+    private ReportAttachmentRepository reportAttachmentsRepo;
 
     @Autowired
     ReportSummaryMapper reportSummaryMapper;
@@ -134,6 +139,7 @@ public class ReportServiceImpl implements ReportService {
         }
     }
     
+    
     /**
      * Create Report History records for specified reports
      * @param reportIds
@@ -141,7 +147,8 @@ public class ReportServiceImpl implements ReportService {
      * @param comments
      */
     public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments) {
-    	createReportHistory(reportIds, reportAction, null, null);
+
+    	createReportHistory(reportIds, reportAction, comments, null);
     }
     
     /**
@@ -192,7 +199,8 @@ public class ReportServiceImpl implements ReportService {
      * @param id
      * @param deleted
      */
-    public void updateReportHistoryAttachment(Long id, boolean deleted) {
+    public void updateReportHistoryDeletedAttachment (Long id, boolean deleted) {
+
     	ReportHistory updateLog = reportHistoryRepo.findById(id).orElse(null);
     	
     	updateLog.setFileDeleted(true);

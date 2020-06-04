@@ -10,7 +10,9 @@ public class UserFeedbackDto implements Serializable {
     private String beneficialFunctionalityComments;
     private String difficultFunctionalityComments;
     private String enhancementComments;
-    private Long reportId;
+    private String facilityName;
+    private Short year;
+	private Long reportId;
     private Long intuitiveRating;
     private Long dataEntryScreens;
     private Long dataEntryBulkUpload;
@@ -18,6 +20,40 @@ public class UserFeedbackDto implements Serializable {
     private Long controlsAndControlPathAssignments;
     private Long qualityAssuranceChecks;
     private Long overallReportingTime;
+    private String userName;
+    private String userId;
+    private String userRole;
+    
+    public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserRole() {
+		return userRole;
+	}
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+	public String getFacilityName() {
+		return facilityName;
+	}
+	public void setFacilityName(String facilityName) {
+		this.facilityName = facilityName;
+	}
+	public Short getYear() {
+		return year;
+	}
+	public void setYear(Short year) {
+		this.year = year;
+	}
     
     public Long getId() {
 		return id;

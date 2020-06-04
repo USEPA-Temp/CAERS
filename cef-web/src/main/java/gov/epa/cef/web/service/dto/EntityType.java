@@ -10,5 +10,6 @@ public enum EntityType {
     RELEASE_POINT,
     REPORTING_PERIOD, 
     CONTROL,
-    CONTROL_PATH;
+    CONTROL_PATH,
+    REPORT_ATTACHMENT;
 }

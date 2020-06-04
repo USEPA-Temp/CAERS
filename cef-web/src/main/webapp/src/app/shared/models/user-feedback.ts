@@ -11,4 +11,9 @@ export class UserFeedback {
     controlsAndControlPathAssignments: number;
     qualityAssuranceChecks: number;
     overallReportingTime: number;
+    facilityName: string;
+    year: number;
+    userId: string;
+    userName: string;
+    userRole: string;
 }

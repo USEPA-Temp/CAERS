@@ -18,6 +18,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
   @Input() readOnlyMode: boolean;
   @Input() controlId: number;
   @Input() facilitySiteId: number;
+  @Input() year: number;
 
 
   constructor(private modalService: NgbModal,
@@ -35,6 +36,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
         const modalRef = this.modalService.open(ControlPollutantModalComponent, {size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.controlId = this.controlId;
         modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+        modalRef.componentInstance.year = this.year;
         modalRef.componentInstance.controlPollutants = this.tableData;
         modalRef.result.then((result) => {
         this.controlService.retrieve(this.controlId)
@@ -50,6 +52,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
   openEditModal(selectedPollutant){
     const modalRef = this.modalService.open(ControlPollutantModalComponent, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+    modalRef.componentInstance.year = this.year;
     modalRef.componentInstance.controlId = this.controlId;
     modalRef.componentInstance.selectedControlPollutant = selectedPollutant;
     modalRef.componentInstance.controlPollutants = this.tableData;

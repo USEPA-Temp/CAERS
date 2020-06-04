@@ -15,6 +15,16 @@ import java.util.Optional;
 public interface EmissionRepository extends CrudRepository<Emission, Long>, ProgramIdRetriever, ReportIdRetriever {
 	
 	/**
+   * Find all Emissions with the specified report id
+   * @param reportId
+   * @return
+   */
+	@Query("select e from Emission e join e.reportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r "
+			+ "where r.id = :reportId and ep.operatingStatusCode.code = 'OP'")	
+	List<Emission> findAllByReportId(@Param("reportId") Long reportId);
+
+	
+	/**
    * Find all Emissions with the specified process id
    * @param processId
    * @param reportId
