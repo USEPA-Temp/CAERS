@@ -64,10 +64,10 @@ public class EisXmlServiceImpl {
                     .withProperty(
                         new NameValuePair()
                             .withPropertyName(SubmissionTypePropertyName)
-                            .withPropertyValue(eisHeader.getSubmissionType().name()),
+                            .withPropertyValue(eisHeader.getSubmissionStatus().submissionType()),
                         new NameValuePair()
                             .withPropertyName(DataCategoryPropertyName)
-                            .withPropertyValue(eisHeader.getDataCategory().name()))
+                            .withPropertyValue(eisHeader.getSubmissionStatus().dataCategory()))
                     .withCreationDateTime(DateUtils.createGregorianCalendar()))
             .withPayload(
                 new DocumentPayloadType()

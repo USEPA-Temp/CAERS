@@ -1,7 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
-
 import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
@@ -11,11 +10,9 @@ import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +39,7 @@ public class ControlPathApi {
         this.securityService = securityService;
         this.controlPathService = controlPathService;
     }
-    
+
     /**
      * Create a control path
      * @param dto
@@ -50,14 +47,14 @@ public class ControlPathApi {
      */
     @PostMapping
     public ResponseEntity<ControlPathDto> createControlPath(@NotNull @RequestBody ControlPathDto dto) {
-    	
+
     	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
-    	
+
     	ControlPathDto result = controlPathService.create(dto);
-    	
+
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Retrieve Control Paths for a facility site
      * @param facilitySiteId
@@ -73,7 +70,7 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Retrieve a control path by id
      * @param controlPathId
@@ -104,7 +101,7 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-        
+
     /**
      * Delete a Control Path for given id
      * @param controlPathId
@@ -112,12 +109,12 @@ public class ControlPathApi {
      */
     @DeleteMapping(value = "/{controlPathId}")
     public void deleteControlPath(@NotNull @PathVariable Long controlPathId) {
-    	
+
     	this.securityService.facilityEnforcer().enforceEntity(controlPathId, ControlPathRepository.class);
-    	
+
     	controlPathService.delete(controlPathId);
     }
-    
+
     /**
      * Update a control path by id
      * @param controlPathId
@@ -127,11 +124,11 @@ public class ControlPathApi {
     @PutMapping(value = "/{controlPathId}")
     public ResponseEntity<ControlPathDto> updateControlPath(
     		@NotNull @PathVariable Long controlPathId, @NotNull @RequestBody ControlPathDto dto) {
-    	
+
     		this.securityService.facilityEnforcer().enforceEntity(controlPathId, ControlPathRepository.class);
-    	
+
     		ControlPathDto result = controlPathService.update(dto.withId(controlPathId));
-    		
+
     		return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -166,7 +163,7 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Retrieve Control Paths for an release point
      * @param pointId
@@ -175,14 +172,14 @@ public class ControlPathApi {
     @GetMapping(value = "/releasePoint/{pointId}")
     public ResponseEntity<List<ControlPathDto>> retrieveControlAssignmentsForReleasePoint(
         @NotNull @PathVariable Long pointId) {
-    	
+
         this.securityService.facilityEnforcer().enforceEntity(pointId, ReleasePointRepository.class);;
 
         List<ControlPathDto> result = controlPathService.retrieveForReleasePoint(pointId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Create a Control Path Assignment
      * @param controlPathAssignment
@@ -191,14 +188,14 @@ public class ControlPathApi {
     @PostMapping(value = "/controlAssignment/")
     public ResponseEntity<ControlAssignmentDto> createControlPathAssignment(
     		@NotNull @RequestBody ControlAssignmentDto dto) {
-    	
+
     	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
-    	
+
     	ControlAssignmentDto result = controlPathService.createAssignment(dto);
-    	
+
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Retrieve Control Path Assignments for a Control Path
      * @param facilitySiteId
@@ -214,7 +211,7 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Retrieve parent control path for child control path
      * @param controlPathId
@@ -229,7 +226,7 @@ public class ControlPathApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-     
+
     /**
      * Delete a Control Path Assignment for given id
      * @param controlPathId
@@ -237,12 +234,12 @@ public class ControlPathApi {
      */
     @DeleteMapping(value = "/controlAssignment/{controlPathAssignmentId}")
     public void deleteControlPathAssignment(@NotNull @PathVariable Long controlPathAssignmentId) {
-    	
+
     	this.securityService.facilityEnforcer().enforceEntity(controlPathAssignmentId, ControlAssignmentRepository.class);
-    	
+
     	controlPathService.deleteAssignment(controlPathAssignmentId);
     }
-    
+
     /**
      * Update a control path assignment by id
      * @param controlPathAssignmentId
@@ -252,11 +249,11 @@ public class ControlPathApi {
     @PutMapping(value = "/controlAssignment/{controlPathAssignmentId}")
     public ResponseEntity<ControlAssignmentDto> updateControlPathAssignment(
     		@NotNull @PathVariable Long controlPathAssignmentId, @NotNull @RequestBody ControlAssignmentDto dto) {
-    		
+
     		this.securityService.facilityEnforcer().enforceEntity(controlPathAssignmentId, ControlAssignmentRepository.class);
-    	
+
     		ControlAssignmentDto result = controlPathService.updateAssignment(dto.withId(controlPathAssignmentId));
-    		
+
     		return new ResponseEntity<>(result, HttpStatus.OK);
-    } 
+    }
 }

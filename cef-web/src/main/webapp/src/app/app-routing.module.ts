@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {FacilityDashboardComponent} from 'src/app/modules/dashboards/pages/facility-dashboard/facility-dashboard.component';
 import {FacilityDataReviewComponent} from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
 import {SubmissionReviewDashboardComponent} from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
+import {EisSubmissionComponent} from "src/app/modules/dashboards/pages/eis-submission/eis-submission.component";
 import {FacilityResolverService} from 'src/app/core/services/facility-resolver.service';
 import {RedirectComponent} from 'src/app/modules/dashboards/pages/redirect/redirect.component';
 import {ErrorComponent} from 'src/app/modules/shared/pages/error/error.component';
@@ -11,6 +12,8 @@ import {HelpPageComponent} from 'src/app/modules/dashboards/pages/help-page/help
 import {AdminPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-properties/admin-properties.component';
 import {AdminAnnouncementPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
 import { AdminAuthGuard } from 'src/app/core/guards/admin-auth.guard';
+import { ReviewerAuthGuard } from 'src/app/core/guards/reviewer-auth.guard';
+import {EisTransactionsComponent} from "src/app/modules/dashboards/pages/eis-transactions/eis-transactions.component";
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -65,11 +68,20 @@ const routes: Routes = [
   },
   {
     path: 'reviewer',
+    canActivateChild: [ReviewerAuthGuard],
     children: [
       {
         path: 'dashboard',
         component: SubmissionReviewDashboardComponent,
         data: { title: 'Submission Review Dashboard' },
+      }, {
+        path: 'eisSubmitData',
+        component: EisSubmissionComponent,
+        data: { title: 'Submit Data' },
+      }, {
+        path: 'eisTransactions',
+        component: EisTransactionsComponent,
+        data: { title: 'Review Transactions' },
       }, {
         path: '',
         redirectTo: 'dashboard',

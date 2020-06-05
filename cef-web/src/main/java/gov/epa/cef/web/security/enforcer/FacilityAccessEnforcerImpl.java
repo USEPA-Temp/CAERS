@@ -1,5 +1,6 @@
 package gov.epa.cef.web.security.enforcer;
 
+import com.google.common.base.Preconditions;
 import gov.epa.cef.web.exception.FacilityAccessException;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
@@ -8,8 +9,6 @@ import gov.epa.cef.web.repository.ProgramIdRetriever;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
-
-import com.google.common.base.Preconditions;
 
 public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
 
@@ -46,7 +45,7 @@ public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
     public <T extends ProgramIdRetriever> void enforceEntity(Long id, Class<T> repoClazz) {
 
     	Preconditions.checkArgument(id != null,"ID for %s repository can not be null.", repoClazz.getSimpleName());
-    	
+
         enforceEntities(Collections.singletonList(id), repoClazz);
     }
 
@@ -66,6 +65,12 @@ public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
     public void enforceProgramId(String id) {
 
         enforceProgramIds(Collections.singletonList(id));
+    }
+
+    @Override
+    public Collection<String> getAuthorizedProgramIds() {
+
+        return Collections.unmodifiableCollection(this.authorizedProgramIds);
     }
 
     @Override
