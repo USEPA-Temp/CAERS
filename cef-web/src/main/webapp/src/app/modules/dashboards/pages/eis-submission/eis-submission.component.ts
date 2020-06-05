@@ -115,7 +115,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
          this.availableYears = stats.availableYears;
 
-         let currYear = new Date().getFullYear();
+         let currYear = new Date().getFullYear() - 1;
          if (stats.availableYears.indexOf(currYear) < 0) {
             this.availableYears.push(currYear);
          }

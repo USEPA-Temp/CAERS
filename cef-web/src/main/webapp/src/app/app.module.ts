@@ -96,7 +96,7 @@ import { DataFilterPipe } from './shared/pipes/data-filter.pipe';
     SubmissionReviewModalComponent
   ],
   providers: [
-      //{provide: ErrorHandler, useClass: GlobalErrorHandlerService},
+      {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
       {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
   ],
