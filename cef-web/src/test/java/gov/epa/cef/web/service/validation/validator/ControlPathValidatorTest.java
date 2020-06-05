@@ -73,6 +73,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		c1.setIdentifier("control1");
 		c1.setControlMeasureCode(cmc);
 		c1.getAssignments().add(ca1);
+		ca1.setSequenceNumber(1);
+		ca2.setSequenceNumber(1);
 		ca1.setControl(c1);
 		ca2.setControl(c1);
 		testData.getAssignments().add(ca1);
