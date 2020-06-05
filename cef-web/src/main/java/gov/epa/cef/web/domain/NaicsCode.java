@@ -31,6 +31,12 @@ public class NaicsCode implements java.io.Serializable {
     @Column(name = "description", length = 200)
     private String description;
 
+    @Column(name = "last_inventory_year")
+    private Integer lastInventoryYear;
+
+    @Column(name = "map_to", length = 200)
+    private String mapTo;
+
     // Property accessors
 
     public Integer getCode() {
@@ -47,6 +53,22 @@ public class NaicsCode implements java.io.Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
+    }
+
+    public String getMapTo() {
+        return mapTo;
+    }
+
+    public void setMapTo(String mapTo) {
+        this.mapTo = mapTo;
     }
 
 }

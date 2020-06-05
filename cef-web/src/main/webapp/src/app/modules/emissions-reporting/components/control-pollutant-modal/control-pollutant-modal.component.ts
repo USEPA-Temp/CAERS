@@ -49,7 +49,7 @@ export class ControlPollutantModalComponent implements OnInit {
       this.selectedControlPollutant = new ControlPollutant();
     }
 
-    this.pollutantForm.get('pollutant').setValidators([Validators.required, legacyItemValidator(this.year, 'Pollutant')]);
+    this.pollutantForm.get('pollutant').setValidators([Validators.required, legacyItemValidator(this.year, 'Pollutant', 'pollutantName')]);
 
     this.lookupService.retrieveCurrentPollutants(this.year)
     .subscribe(result => {

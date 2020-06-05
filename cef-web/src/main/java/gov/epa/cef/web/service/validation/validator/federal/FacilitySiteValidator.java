@@ -176,7 +176,34 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         	context.addFederalError(ValidationField.FACILITY_NAICS.value(), "facilitysite.naics.required",
         			createValidationDetails(facilitySite));
         }
-        
+
+        for (FacilityNAICSXref naics : fsNAICSList) {
+
+            if (naics.getNaicsCode() != null && naics.getNaicsCode().getLastInventoryYear() != null
+                    && naics.getNaicsCode().getLastInventoryYear() < facilitySite.getEmissionsReport().getYear()) {
+
+                result = false;
+
+                if (Strings.emptyToNull(naics.getNaicsCode().getMapTo()) != null) {
+
+                    context.addFederalError(
+                            ValidationField.FACILITY_NAICS.value(),
+                            "facilitysite.naics.legacy.map", 
+                            createValidationDetails(facilitySite),
+                            naics.getNaicsCode().getCode().toString(),
+                            naics.getNaicsCode().getMapTo());
+                } else {
+
+                    context.addFederalError(
+                            ValidationField.FACILITY_NAICS.value(),
+                            "facilitysite.naics.legacy", 
+                            createValidationDetails(facilitySite),
+                            naics.getNaicsCode().getCode().toString());
+                }
+                
+            }
+        }
+
         // Facility NAICS must have one and only one primary assigned
         fsNAICSList = facilitySite.getFacilityNAICS().stream()
             .filter(fn -> fn.isPrimaryFlag() == true)
@@ -188,6 +215,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         			createValidationDetails(facilitySite));
         }
         
+
         // Facility must have an Emissions Inventory Contact
         List<FacilitySiteContact> contactList = facilitySite.getContacts().stream()
         .filter(fc -> fc.getType().getCode().equals("EI"))
