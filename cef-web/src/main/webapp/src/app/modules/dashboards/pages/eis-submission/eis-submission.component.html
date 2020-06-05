@@ -286,7 +286,7 @@
                       [maxLength]="dlgEditComment.maxlength"
                       [formControl]="txtComment"></textarea>
             <div class="form-text text-right text-muted" role="status" aria-live="polite">
-               <span>{{txtComment.value.length}} of {{dlgEditComment.maxlength}} chars used</span>
+               <span>{{txtComment.value ? txtComment.value.length : 0}} of {{dlgEditComment.maxlength}} chars used</span>
             </div>
          </div>
       </div>

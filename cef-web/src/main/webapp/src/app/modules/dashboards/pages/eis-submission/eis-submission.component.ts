@@ -38,7 +38,6 @@ interface DlgEditComment {
    modalRef: NgbModalRef;
    waiting: boolean;
    maxlength: number;
-   lengthMessage: string;
    report: EisDataReport;
 }
 
@@ -213,7 +212,6 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
          report: report,
          waiting: false,
-         lengthMessage: '',
          maxlength: commentMaxLength,
          modalRef: this.modalService.open(this.editCommentTemplate, {
             backdrop: 'static'
@@ -228,7 +226,6 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.dlgEditComment = {
          report: null,
          waiting: false,
-         lengthMessage: '',
          maxlength: commentMaxLength,
          modalRef: null
       };
