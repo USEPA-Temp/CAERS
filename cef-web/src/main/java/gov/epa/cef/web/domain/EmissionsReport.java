@@ -98,6 +98,11 @@ public class EmissionsReport extends BaseAuditEntity {
         for (FacilitySite facilitySite : originalEmissionsReport.facilitySites) {
             this.facilitySites.add(new FacilitySite(this, facilitySite));
         }
+
+        this.eisComments = originalEmissionsReport.eisComments;
+        this.eisLastSubmissionStatus = originalEmissionsReport.eisLastSubmissionStatus;
+        this.eisLastTransactionId = originalEmissionsReport.eisLastTransactionId;
+        this.eisPassed = originalEmissionsReport.eisPassed;
     }
 
     /***
