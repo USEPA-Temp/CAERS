@@ -52,6 +52,18 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             			"controlPath.assignment.notAssigned",
             			createValidationDetails(controlPath));
         	}
+        	
+        List<ControlAssignment> sequenceNullMap = controlPath.getAssignments().stream()
+                .filter(cpa -> (cpa.getSequenceNumber() == null))
+                .collect(Collectors.toList());
+         
+        for (ControlAssignment ca: sequenceNullMap) {
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+        			"controlPath.assignment.sequenceNumber.required",
+        			createValidationDetails(controlPath, ca));
+    	}
         
 	return result;
   }
@@ -59,6 +71,21 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	private ValidationDetailDto createValidationDetails(ControlPath source) {
 
 	    String description = MessageFormat.format("ControlPath: {0}", source.getPathId());
+	
+	    ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getPathId(), EntityType.CONTROL_PATH, description);
+	    return dto;
+	}
+	
+	private ValidationDetailDto createValidationDetails(ControlPath source, ControlAssignment assignment) {
+
+		String description;
+		
+		if (assignment.getControl() != null) {
+		    description = MessageFormat.format("Control Path: {0}, Control Path Assignment: {1}", source.getPathId(), assignment.getControl().getIdentifier());
+		}
+		else {
+		    description = MessageFormat.format("Control Path: {0}, Control Path Assignment: {1}", source.getPathId(), assignment.getControlPathChild().getPathId());
+		}
 	
 	    ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getPathId(), EntityType.CONTROL_PATH, description);
 	    return dto;

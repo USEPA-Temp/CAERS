@@ -30,6 +30,7 @@ public enum ValidationField {
     RP_COORDINATE("report.facilitySite.releasePoint.coordinate"),
     CONTROL_IDENTIFIER("report.facilitySite.control.controlIdentifier"),
     CONTROL_PATH_ASSIGNMENT("report.facilitySite.controlPath.assignment"),
+    CONTROL_PATH_ASSIGNMENT_SEQUENCE_NUMBER("report.facilitySite.controlPath.sequenceNumber"),
     CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT("report.facilitySite.controlPath.notAssigned"),
     CONTROL_PATH_RPA_WARNING("report.facilitySite.controlPath.releasePointApportionment"),
     CONTROL_PATH_WARNING("report.facilitySite.control.pathWarning"),
