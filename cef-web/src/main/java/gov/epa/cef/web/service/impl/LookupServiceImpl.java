@@ -255,6 +255,19 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    /**
+     * Retrieve non-legacy Pollutants
+     * @return
+     */
+    @Override
+    public List<PollutantDto> retrieveCurrentPollutants(Integer year) {
+
+        List<Pollutant> entities = pollutantRepo.findAllCurrent(year, Sort.by(Direction.ASC, "pollutantName"));
+
+        List<PollutantDto> result = lookupMapper.pollutantToDtoList(entities);
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveReportingPeriodCodes()
      */

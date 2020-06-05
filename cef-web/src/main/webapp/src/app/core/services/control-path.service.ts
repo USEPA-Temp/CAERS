@@ -64,6 +64,11 @@ export class ControlPathService {
     return this.http.get<ControlAssignment[]>(url);
   }
 
+  retrieveParentAssignmentsForControlPathChild(controlPathId: number): Observable<ControlAssignment[]> {
+    const url = `${this.baseUrl}/paretControlAssignment/${controlPathId}`;
+    return this.http.get<ControlAssignment[]>(url);
+  }
+
   createAssignmentForControlPath(controlAssignment: ControlAssignment): Observable<ControlAssignment> {
     const url = `${this.baseUrl}/controlAssignment/`;
     return this.http.post<ControlAssignment>(url, controlAssignment);

@@ -3,12 +3,12 @@
 <head></head>
 <body>
 	<p>The <span th:text="${reportingYear}" /> emissions report for <span th:text="${facilityName}" /> has been rejected by the SLT agency. </p>
-	<p th:if="${!#strings.isEmpty(comments)}">
+	<div th:if="${!#strings.isEmpty(comments) || !#strings.isEmpty(attachment)}">
 		<strong>Additional Comments:</strong><br/>
-		<span th:text="${comments}"></span>
-	</p>
-	<p th:if="${!#strings.isEmpty(attachment)}">
-		<strong>Please review the document <span th:text="${attachment}"/> attached in the <span th:text="${reportingYear}" /> Emissions Report - Report History table for additional information.</strong><br/>
-	</p>
+		<p th:text="${comments}" style="padding-top: 0; margin-top: 0"></p>
+		<p th:if="${!#strings.isEmpty(attachment)}" style="padding-top: 0; margin-top: 0">
+			Please review the document <strong><span th:text="${attachment}"/></strong> attached in the <span th:text="${reportingYear}" /> Emissions Report - Report History table for additional information.<br/>
+		</p>
+	</div>
 </body>
 </html>

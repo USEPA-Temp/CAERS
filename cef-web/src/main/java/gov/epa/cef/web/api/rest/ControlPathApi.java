@@ -213,6 +213,21 @@ public class ControlPathApi {
     }
 
     /**
+     * Retrieve parent control path for child control path
+     * @param controlPathId
+     * @return
+     */
+    @GetMapping(value = "/paretControlAssignment/{controlPathId}")
+    public ResponseEntity<List<ControlAssignmentDto>> retrieveParentAssignmentsForControlPathChild(@NotNull @PathVariable Long controlPathId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(controlPathId, ControlPathRepository.class);
+
+        List<ControlAssignmentDto> result = controlPathService.retrieveParentPathById(controlPathId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
      * Delete a Control Path Assignment for given id
      * @param controlPathId
      * @return

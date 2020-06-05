@@ -52,6 +52,11 @@ export class LookupService {
     return this.http.get<Pollutant[]>(url);
   }
 
+  retrieveCurrentPollutants(year: number): Observable<Pollutant[]> {
+    const url = `${this.baseUrl}/pollutant/${year}`;
+    return this.http.get<Pollutant[]>(url);
+  }
+
   retrieveReportingPeriod(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/reportingPeriod`;
     return this.http.get<BaseCodeLookup[]>(url);

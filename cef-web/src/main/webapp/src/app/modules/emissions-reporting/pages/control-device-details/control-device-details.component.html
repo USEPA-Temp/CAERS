@@ -68,7 +68,8 @@
                     <strong>Control Pollutants</strong>
                 </div>
                 <div class="card-body">
-                    <app-control-pollutant-table [facilitySiteId]="facilitySite.id" [controlId]="control.id" [tableData]="control.pollutants" [readOnlyMode]="readOnlyMode"></app-control-pollutant-table>
+                    <app-control-pollutant-table [facilitySiteId]="facilitySite.id" [year]="facilitySite.emissionsReport.year"
+                            [controlId]="control.id" [tableData]="control.pollutants" [readOnlyMode]="readOnlyMode"></app-control-pollutant-table>
                 </div>
             </div>
             

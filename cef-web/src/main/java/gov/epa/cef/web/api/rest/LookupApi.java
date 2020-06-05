@@ -103,6 +103,18 @@ public class LookupApi {
         List<PollutantDto> result = lookupService.retrievePollutants();
         return new ResponseEntity<List<PollutantDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Pollutants for a specific year
+     * @return
+     */
+    @GetMapping(value = "/pollutant/{year}")
+    @ResponseBody
+    public ResponseEntity<List<PollutantDto>> retrieveCurrentPollutants(@NotNull @PathVariable Integer year) {
+
+        List<PollutantDto> result = lookupService.retrieveCurrentPollutants(year);
+        return new ResponseEntity<List<PollutantDto>>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve Reporting Period codes

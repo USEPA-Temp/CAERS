@@ -39,6 +39,7 @@ import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.d
 import { FileAttachmentModalComponent } from './components/file-attachment-modal/file-attachment-modal.component';
 import { ReportAttachmentTableComponent } from './components/report-attachment-table/report-attachment-table.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { LegacyItemValidatorDirective } from './directives/legacy-item-validator.directive';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
     BulkUploadComponent,
     StripPeriodEndingPipe,
     LegacyUomValidatorDirective,
-    AdminNavComponent
+    AdminNavComponent,
+    LegacyItemValidatorDirective
 ],
     exports: [
         FacilityInfoComponent,

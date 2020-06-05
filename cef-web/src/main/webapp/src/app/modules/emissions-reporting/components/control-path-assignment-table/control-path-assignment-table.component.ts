@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ControlPathAssignmentModalComponent } from 'src/app/modules/emissions-reporting/components/control-path-assignment-modal/control-path-assignment-modal.component';
-import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
@@ -32,10 +31,10 @@ export class ControlPathAssignmentTableComponent extends BaseSortableTable imple
   }
 
   ngOnInit() {
-      this.route.paramMap
-      .subscribe(map => {
-        this.baseUrlForControlDevice = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_DEVICE}`;
-        this.baseUrlForControlPath = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_PATH}`;
+    this.route.paramMap
+    .subscribe(map => {
+      this.baseUrlForControlDevice = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_DEVICE}`;
+      this.baseUrlForControlPath = `/facility/${map.get('facilityId')}/report/${map.get('reportId')}/${BaseReportUrl.CONTROL_PATH}`;
     });
   }
 
@@ -45,12 +44,17 @@ export class ControlPathAssignmentTableComponent extends BaseSortableTable imple
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
     modalRef.result.then((result) => {
       this.controlPathService.retrieveAssignmentsForControlPath(this.controlPath.id)
-        .subscribe(pathAssignmentsResponse => {
+      .subscribe(pathAssignmentsResponse => {
+        this.controlPathService.retrieve(this.controlPath.id)
+        .subscribe(controlPath => {
           if (result !== 'dontUpdate') {
             this.sharedService.updateReportStatusAndEmit(this.route);
           }
           this.tableData = pathAssignmentsResponse;
+          this.controlPath = controlPath;
+          this.sharedService.updateReportStatusAndEmit(this.route);
         });
+      });
     });
   }
 
@@ -74,7 +78,12 @@ export class ControlPathAssignmentTableComponent extends BaseSortableTable imple
       this.sharedService.updateReportStatusAndEmit(this.route);
       this.controlPathService.retrieveAssignmentsForControlPath(this.controlPath.id)
         .subscribe(pathAssignmentsResponse => {
-          this.tableData = pathAssignmentsResponse;
+          this.controlPathService.retrieve(this.controlPath.id)
+          .subscribe(controlPath => {
+            this.tableData = pathAssignmentsResponse;
+            this.controlPath = controlPath;
+            this.sharedService.updateReportStatusAndEmit(this.route);
+          });
         });
     });
   }
@@ -90,10 +99,15 @@ export class ControlPathAssignmentTableComponent extends BaseSortableTable imple
       modalRef.result.then((result) => {
         this.controlPathService.retrieveAssignmentsForControlPath(this.controlPath.id)
           .subscribe(pathAssignmentsResponse => {
-            if (result !== 'dontUpdate') {
+            this.controlPathService.retrieve(this.controlPath.id)
+            .subscribe(controlPath => {
+              if (result !== 'dontUpdate') {
+                this.sharedService.updateReportStatusAndEmit(this.route);
+              }
+              this.tableData = pathAssignmentsResponse;
+              this.controlPath = controlPath;
               this.sharedService.updateReportStatusAndEmit(this.route);
-            }
-            this.tableData = pathAssignmentsResponse;
+            });
           });
       });
   }
