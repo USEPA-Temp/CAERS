@@ -62,6 +62,13 @@ public interface ControlPathService {
      * @return
      */
     ControlPathDto update(ControlPathDto dto);
+    
+    /**
+     * Retrieve parent Control Paths for a child Control Path
+     * @param id
+     * @return
+     */
+	List<ControlAssignmentDto> retrieveParentPathById(Long id);
 
     /**
      * Delete a Control Path for a given id
