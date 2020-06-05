@@ -89,6 +89,32 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		
 	}
 	
+	@Test
+	public void duplicateControlPathOnPathFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		ControlPath cp1 = new ControlPath();
+		cp1.setId(1L);
+		ControlAssignment ca1 = new ControlAssignment();
+		ControlAssignment ca2 = new ControlAssignment();
+		ca1.setControlPath(testData);
+		ca2.setControlPath(testData);
+		ca1.setControlPathChild(cp1);
+		ca2.setControlPathChild(cp1);
+		testData.getAssignments().add(ca1);
+		testData.getAssignments().add(ca2);
+		ca1.setSequenceNumber(1);
+		ca2.setSequenceNumber(1);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);		
+		
+	}
+	
     @Test
     public void releasePointApportionmentAssignmentFailTest() {
 
@@ -141,6 +167,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 	private ControlPath createBaseControlPath() {
 		
 		ControlPath result = new ControlPath();
+		result.setId(1L);
 		ReleasePointAppt rpa = new ReleasePointAppt();
 		ControlMeasureCode cmc = new ControlMeasureCode();
 		cmc.setCode("test code");
