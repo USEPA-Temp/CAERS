@@ -14,7 +14,7 @@ import {Observable} from "rxjs";
 })
 export class EisDataService {
 
-   private baseUrl = 'api/eis/emissionsReports';  // URL to web api
+   private baseUrl = 'api/eis/emissionsReport';  // URL to web api
 
    constructor(private http: HttpClient) {
    }

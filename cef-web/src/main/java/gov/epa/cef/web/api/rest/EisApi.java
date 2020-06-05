@@ -49,7 +49,7 @@ public class EisApi {
         this.eisTransmissionService = eisTransmissionService;
     }
 
-    @GetMapping(value = "/emissionsReports", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/emissionsReport", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EisDataListDto> retrieveEisDataList(@NotNull @RequestParam(value = "year") Integer year,
                                                               @RequestParam(value = "status", required = false) EisSubmissionStatus status) {
 
@@ -65,7 +65,7 @@ public class EisApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/emissionsReports/{id}/comment",
+    @PutMapping(value = "/emissionsReport/{id}/comment",
         consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EisDataReportDto> putEisComment(@NotNull @PathVariable("id") Long reportId,
                                                           @NotNull @RequestBody SimpleStringValue comment) {
@@ -78,7 +78,7 @@ public class EisApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/emissionsReports/stats", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/emissionsReport/stats", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EisDataStatsDto> retrieveEisDataStats() {
 
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
@@ -88,7 +88,7 @@ public class EisApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/emissionsReports/{reportId}", produces = MediaType.APPLICATION_XML_VALUE)
+    @GetMapping(value = "/emissionsReport/{reportId}", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<StreamingResponseBody> retrieveEisXml(
         @NotNull @PathVariable("reportId") Long reportId) {
 
