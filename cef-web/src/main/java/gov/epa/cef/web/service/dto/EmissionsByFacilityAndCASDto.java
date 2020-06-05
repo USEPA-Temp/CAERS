@@ -16,6 +16,7 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     private String message;
     private String code;
     private String frsFacilityId;
+    private String trifid;
     private String facilityName;
     private Short year;
     private String reportStatus;
@@ -47,7 +48,13 @@ public class EmissionsByFacilityAndCASDto implements Serializable {
     public void setFrsFacilityId(String frsFacilityId) {
         this.frsFacilityId = frsFacilityId;
     }
-    public String getFacilityName() {
+    public String getTrifid() {
+		return trifid;
+	}
+	public void setTrifid(String trifid) {
+		this.trifid = trifid;
+	}
+	public String getFacilityName() {
         return facilityName;
     }
     public void setFacilityName(String facilityName) {
