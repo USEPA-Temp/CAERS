@@ -4,7 +4,7 @@ public class EisDataCriteria {
 
     private String agencyCode;
 
-    private int reportingYear;
+    private short reportingYear;
 
     private EisSubmissionStatus submissionStatus;
 
@@ -18,14 +18,14 @@ public class EisDataCriteria {
         this.agencyCode = agencyCode;
     }
 
-    public int getReportingYear() {
+    public short getReportingYear() {
 
         return reportingYear;
     }
 
     public void setReportingYear(int reportingYear) {
 
-        this.reportingYear = reportingYear;
+        this.reportingYear = new Integer(reportingYear).shortValue();
     }
 
     public EisSubmissionStatus getSubmissionStatus() {

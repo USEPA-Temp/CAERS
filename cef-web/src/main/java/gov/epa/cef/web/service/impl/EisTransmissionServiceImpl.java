@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.dto.EisDataCriteria;
 import gov.epa.cef.web.service.dto.EisDataListDto;
@@ -47,5 +48,15 @@ public class EisTransmissionServiceImpl {
             .withReports(reports.stream()
                 .map(new EisDataReportDto.FromEntity())
                 .collect(Collectors.toList()));
+    }
+
+    public EisDataReportDto updateReportComment(long reportId, String comment) {
+
+        EmissionsReport report = this.reportRepository.findById(reportId)
+            .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
+
+        report.setEisComments(comment);
+
+        return new EisDataReportDto.FromEntity().apply(this.reportRepository.save(report));
     }
 }

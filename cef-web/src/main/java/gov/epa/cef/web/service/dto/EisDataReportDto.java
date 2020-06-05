@@ -13,6 +13,8 @@ public class EisDataReportDto {
 
     private String eisProgramId;
 
+    private long emissionsReportId;
+
     private String facilityName;
 
     private EisSubmissionStatus lastSubmissionStatus;
@@ -51,6 +53,16 @@ public class EisDataReportDto {
     public void setEisProgramId(String eisProgramId) {
 
         this.eisProgramId = eisProgramId;
+    }
+
+    public long getEmissionsReportId() {
+
+        return emissionsReportId;
+    }
+
+    public void setEmissionsReportId(long emissionsReportId) {
+
+        this.emissionsReportId = emissionsReportId;
     }
 
     public String getFacilityName() {
@@ -121,6 +133,12 @@ public class EisDataReportDto {
         return this;
     }
 
+    public EisDataReportDto withEmissionsReportId(final long emissionsReportId) {
+
+        setEmissionsReportId(emissionsReportId);
+        return this;
+    }
+
     public EisDataReportDto withFacilityName(final String facilityName) {
 
         setFacilityName(facilityName);
@@ -159,6 +177,7 @@ public class EisDataReportDto {
             FacilitySite facilitySite = report.getFacilitySites().get(0);
 
             return new EisDataReportDto()
+                .withEmissionsReportId(report.getId())
                 .withFacilityName(facilitySite.getName())
                 .withAgencyFacilityId(facilitySite.getAltSiteIdentifier())
                 .withEisProgramId(report.getEisProgramId())

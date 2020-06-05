@@ -1,7 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {SortEvent} from "src/app/shared/directives/sortable.directive";
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {EisDataService} from "src/app/core/services/eis-data.service";
-import {EisSubmissionStatus} from "src/app/shared/models/eis-data-stats";
+import {EisData, EisDataReport, EisSubmissionStatus} from "src/app/shared/models/eis-data";
+import {BaseSortableTable} from "src/app/shared/components/sortable-table/base-sortable-table";
+import {FormControl} from "@angular/forms";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap/modal/modal-ref";
 
 interface EisDataStats {
    notStarted: number;
@@ -24,14 +27,32 @@ enum DataCategoryType {
    POINT_EMISSIONS = "Point Emissions"
 }
 
+interface DlgEditComment {
+   modalRef: NgbModalRef;
+   waiting: boolean;
+   report: EisDataReport;
+}
+
 @Component({
    selector: 'app-eis-submission',
    templateUrl: './eis-submission.component.html',
    styleUrls: ['./eis-submission.component.scss']
 })
-export class EisSubmissionComponent implements OnInit {
+export class EisSubmissionComponent extends BaseSortableTable implements OnInit {
+
+   @ViewChild('EditCommentModal', {static: true})
+   editCommentTemplate: TemplateRef<any>;
+
+   cboFilterStatus = new FormControl();
+   cboFilterYear = new FormControl();
+
+   txtComment = new FormControl();
+
+   dlgEditComment: DlgEditComment;
 
    stats: EisDataStats;
+
+   tableData: EisDataReport[];
 
    availableYears: number[];
    availableStatuses: EisSubmissionStatus[];
@@ -39,13 +60,18 @@ export class EisSubmissionComponent implements OnInit {
    dataCategories = DataCategoryType;
    submissionTypes = SubmissionType;
 
-   constructor(private eisDataService: EisDataService) {
+   constructor(private modalService: NgbModal,
+               private eisDataService: EisDataService) {
+
+      super();
    }
 
    ngOnInit() {
 
       this.availableYears = [];
       this.availableStatuses = [];
+
+      this.tableData = [];
 
       this.stats = {
          notStarted: 0,
@@ -56,6 +82,13 @@ export class EisSubmissionComponent implements OnInit {
          complete: 0
       };
 
+      this.cboFilterYear.valueChanges.subscribe(() => {
+         this.retrieveData()
+      });
+      this.cboFilterStatus.valueChanges.subscribe(() => {
+         this.retrieveData()
+      });
+
       this.retrieveDataStats();
    }
 
@@ -64,7 +97,11 @@ export class EisSubmissionComponent implements OnInit {
       this.eisDataService.retrieveStats().subscribe(stats => {
 
          this.availableYears =
-            stats.availableYears.sort((a, b) => { return a < b ? b : a; })
+            stats.availableYears.sort((a, b) => {
+               return a < b ? b : a;
+            });
+
+         this.availableYears.push(2018);
 
          stats.statuses.forEach(stat => {
 
@@ -92,32 +129,98 @@ export class EisSubmissionComponent implements OnInit {
             }
          });
 
+         if (this.availableYears.length === 0) {
+
+            this.availableYears.push(new Date().getFullYear());
+         }
+
          this.availableStatuses.sort();
          this.availableStatuses.unshift(EisSubmissionStatus.All);
-      })
+
+         this.cboFilterYear.setValue(this.availableYears[0],
+            {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
+
+         this.cboFilterStatus.setValue(this.availableStatuses[0],
+            {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
+
+         this.retrieveData();
+      });
    }
 
-   onSort($event: SortEvent) {
+   retrieveData() {
 
+      this.eisDataService.searchData({
+         year: this.cboFilterYear.value,
+         status: this.cboFilterStatus.value
+
+      }).subscribe(resp => {
+
+         this.tableData = resp.reports;
+      });
    }
 
    onFilterQaFacility() {
 
+      this.cboFilterStatus.setValue(EisSubmissionStatus.QaFacility);
    }
 
    onFilterNotStarted() {
 
+      this.cboFilterStatus.setValue(EisSubmissionStatus.All);
    }
 
    onFilterProdEmissions() {
 
+      this.cboFilterStatus.setValue(EisSubmissionStatus.ProdEmissions);
    }
 
    onFilterQaEmissions() {
 
+      this.cboFilterStatus.setValue(EisSubmissionStatus.QaEmissions);
    }
 
    onFilterProdFacility() {
 
+      this.cboFilterStatus.setValue(EisSubmissionStatus.ProdFacility);
+   }
+
+   onEditCommentClick(report: EisDataReport) {
+
+      this.txtComment.setValue(report.comments);
+      this.txtComment.enable();
+
+      this.dlgEditComment = {
+
+         report: report,
+         waiting: false,
+         modalRef: this.modalService.open(this.editCommentTemplate, {
+            backdrop: 'static'
+         })
+      };
+   }
+
+   onCancelCommentClick() {
+
+      this.dlgEditComment.modalRef.dismiss();
+
+      this.dlgEditComment = {
+         report: null,
+         waiting: false,
+         modalRef: null
+      };
+   }
+
+   onUpdateCommentClick() {
+
+      this.dlgEditComment.waiting = true;
+      this.txtComment.disable();
+
+      this.eisDataService.updateComment(this.dlgEditComment.report.emissionsReportId, this.txtComment.value)
+         .subscribe(eisDataReport => {
+
+            this.dlgEditComment.report.comments = eisDataReport.comments;
+
+            this.onCancelCommentClick();
+         });
    }
 }
