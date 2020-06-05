@@ -39,9 +39,8 @@ import { ReviewerNavComponent } from './modules/dashboards/components/reviewer-n
 import {AdminNavComponent} from "./modules/shared/components/admin-nav/admin-nav.component";
 import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submission/eis-submission.component';
 import { EisTransactionsComponent } from './modules/dashboards/pages/eis-transactions/eis-transactions.component';
-import { KeysPipe } from './shared/pipes/keys.pipe';
-import { MembersPipe } from './shared/pipes/members.pipe';
 import { SortByPipe } from './shared/pipes/sort-by.pipe';
+import { DataFilterPipe } from './shared/pipes/data-filter.pipe';
 
 
 @NgModule({
@@ -70,9 +69,8 @@ import { SortByPipe } from './shared/pipes/sort-by.pipe';
     ReviewerNavComponent,
     EisSubmissionComponent,
     EisTransactionsComponent,
-    KeysPipe,
-    MembersPipe,
-    SortByPipe
+    SortByPipe,
+    DataFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -98,7 +96,7 @@ import { SortByPipe } from './shared/pipes/sort-by.pipe';
     SubmissionReviewModalComponent
   ],
   providers: [
-      {provide: ErrorHandler, useClass: GlobalErrorHandlerService},
+      //{provide: ErrorHandler, useClass: GlobalErrorHandlerService},
       {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
   ],

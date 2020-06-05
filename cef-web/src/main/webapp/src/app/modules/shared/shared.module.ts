@@ -15,7 +15,7 @@ import {
    faInfoCircle,
    faCheck,
    faTimesCircle,
-   faFilter
+   faFilter, faTimes, faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import { CollapseIconComponent } from 'src/app/modules/shared/components/collapse-icon/collapse-icon.component';
 import { FacilityWidgetComponent } from 'src/app/modules/shared/components/facility-widget/facility-widget.component';
@@ -105,8 +105,10 @@ export class SharedModule {
     library.add(faEdit);
     library.add(faCircle);
     library.add(faInfoCircle);
+    library.add(faSearch);
     library.add(faCheck);
     library.add(faTimesCircle);
+    library.add(faTimes);
     library.add(faFilter);
   }
 }

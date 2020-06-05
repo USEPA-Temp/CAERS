@@ -1,38 +1,33 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {orderBy} from 'lodash';
+import {orderBy, isEmpty} from 'lodash';
 
 @Pipe({
    name: 'sortBy'
 })
 export class SortByPipe implements PipeTransform {
 
-   transform(value: any[], column: string = '', order = ''): any[] {
+   transform(list: any[], column: string = '', order : string = ''): any[] {
 
       // no array
-      if (!value) {
+      if (isEmpty(list)) {
 
-         return value;
+         return list;
       }
 
-      // array with only one item
-      if (value.length <= 1) {
-
-         return value;
-      }
-
-      // sort 1d array
-      if (!column || column === '') {
+      // sort array of discrete
+      if (isEmpty(column)) {
          if (order === 'desc') {
 
-            return value.sort().reverse();
+            return list.sort().reverse();
 
          } else {
 
-            return value.sort()
+            return list.sort()
          }
       }
 
-      return orderBy(value, [column], [order]);
+      // sort array of objects
+      return orderBy(list, [column], [order]);
    }
 
 }
