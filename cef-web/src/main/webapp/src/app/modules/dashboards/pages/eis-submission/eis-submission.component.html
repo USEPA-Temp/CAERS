@@ -127,12 +127,16 @@
                         </td>
                         <td>
                            <div class="d-flex flex-row justify-content-between">
-                              <span [textContent]="report.comments"></span>
-                              <button type="button" class="btn btn-link btn-sm"
-                                      title="Edit comments"
-                                      (click)="onEditCommentClick(report)">
-                                 <fa-icon icon="edit" prefix="fas"></fa-icon>
-                              </button>
+                              <div>
+                                 <span [textContent]="report.comments"></span>
+                              </div>
+                              <div>
+                                 <button type="button" class="btn btn-link btn-sm"
+                                         title="Edit comments"
+                                         (click)="onEditCommentClick(report)">
+                                    <fa-icon icon="edit" prefix="fas"></fa-icon>
+                                 </button>
+                              </div>
                            </div>
                         </td>
                      </tr>

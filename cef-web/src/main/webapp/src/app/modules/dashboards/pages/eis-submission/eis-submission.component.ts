@@ -41,7 +41,7 @@ interface DlgEditComment {
    report: EisDataReport;
 }
 
-const commentMaxLength : number = 2000;
+const commentMaxLength: number = 2000;
 
 @Component({
    selector: 'app-eis-submission',
@@ -103,6 +103,16 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       });
       this.cboFilterStatus.valueChanges.subscribe(() => {
          this.retrieveData()
+      });
+
+      this.txtComment.valueChanges.subscribe(() => {
+
+         let comment = this.txtComment.value;
+         if (comment && comment.length > this.dlgEditComment.maxlength) {
+            this.txtComment.setValue(comment.substring(0, this.dlgEditComment.maxlength),
+               {emitEvent: false, emitViewToModelChange: false, emitModelToViewChange: true});
+         }
+
       });
 
       this.retrieveDataStats();
@@ -205,9 +215,6 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
    onEditCommentClick(report: EisDataReport) {
 
-      this.txtComment.setValue(report.comments);
-      this.txtComment.enable();
-
       this.dlgEditComment = {
 
          report: report,
@@ -217,6 +224,9 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
             backdrop: 'static'
          })
       };
+
+      this.txtComment.setValue(report.comments);
+      this.txtComment.enable();
    }
 
    onCancelCommentClick() {
@@ -237,8 +247,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.txtComment.disable();
 
       let comment = this.txtComment.value;
-      if (comment && comment.lenth > commentMaxLength) {
-         comment = comment.substring(0, commentMaxLength);
+      if (comment && comment.length > this.dlgEditComment.maxlength) {
+         comment = comment.substring(0, this.dlgEditComment.maxlength);
       }
 
       this.eisDataService.updateComment(this.dlgEditComment.report.emissionsReportId, comment)
