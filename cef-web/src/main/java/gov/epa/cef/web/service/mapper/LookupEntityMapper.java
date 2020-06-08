@@ -54,6 +54,8 @@ public abstract class LookupEntityMapper {
 
     public abstract CodeLookupDto naicsCodeToDto(NaicsCode code);
 
+    public abstract List<CodeLookupDto> naicsCodeToDtoList(List<NaicsCode> source);
+
     public abstract CodeLookupDto reportingPeriodCodeToDto(ReportingPeriodCode source);
 
     public abstract EmissionFormulaVariableCodeDto emissionFactorVariableCodeToDto(EmissionFormulaVariableCode source);
@@ -61,6 +63,10 @@ public abstract class LookupEntityMapper {
     public abstract CodeLookupDto emissionsOperatingTypeCodeToDto(EmissionsOperatingTypeCode source);
 
     public abstract CalculationMethodCodeDto calculationMethodCodeToDto(CalculationMethodCode source);
+
+    public abstract CodeLookupDto controlMeasureCodeToDto(ControlMeasureCode source);
+
+    public abstract List<CodeLookupDto> controlMeasureCodeToDtoList(List<ControlMeasureCode> source);
 
     public abstract FacilityCategoryCodeDto facilityCategoryCodeToDto(FacilityCategoryCode code);
 

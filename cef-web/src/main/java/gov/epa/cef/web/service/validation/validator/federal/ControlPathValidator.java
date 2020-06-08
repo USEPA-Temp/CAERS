@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
@@ -15,7 +14,6 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
-import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -50,7 +48,23 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 		  			cdList.get(0).getControl().getControlMeasureCode().getDescription());
 			}
 		}
-	
+		
+        Map<Object, List<ControlAssignment>> cpDuplicateMap = controlPath.getAssignments().stream()
+        		.filter(cpa -> (cpa.getControlPathChild() != null))
+                .collect(Collectors.groupingBy(ca -> ca.getControlPath().getAssignments()));
+        
+        for (List<ControlAssignment> cpList: cpDuplicateMap.values()) {
+            if (cpList.size() > 1) {
+		
+                 result = false;
+                 context.addFederalError(
+                   ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+                   "controlPath.assignment.controlPath.duplicate",
+                   createValidationDetails(controlPath),
+                   cpList.get(0).getControlPathChild().getPathId());
+                    
+            }
+        }
 	
 		if(controlPath.getReleasePointAppts().isEmpty()){
         	result = false;

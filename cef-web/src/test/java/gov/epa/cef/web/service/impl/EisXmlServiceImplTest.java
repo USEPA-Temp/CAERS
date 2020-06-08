@@ -2,9 +2,8 @@ package gov.epa.cef.web.service.impl;
 
 import com.google.common.io.Resources;
 import gov.epa.cef.web.config.TestCategories;
-import gov.epa.cef.web.service.dto.EisDataCategory;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
-import gov.epa.cef.web.service.dto.EisSubmissionType;
+import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.header._2.DocumentHeaderType;
 import net.exchangenetwork.schema.header._2.DocumentPayloadType;
@@ -89,8 +88,7 @@ public class EisXmlServiceImplTest {
         EisHeaderDto eisHeader = new EisHeaderDto()
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
-            .withDataCategory(EisDataCategory.PointEmission)
-            .withSubmissionType(EisSubmissionType.Production)
+            .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
             .withEmissionReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType document = this.eisXmlService.generateEisDocument(eisHeader);
@@ -115,8 +113,7 @@ public class EisXmlServiceImplTest {
         EisHeaderDto eisHeader = new EisHeaderDto()
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
-            .withDataCategory(EisDataCategory.PointEmission)
-            .withSubmissionType(EisSubmissionType.Production)
+            .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
             .withEmissionReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType momento;
@@ -136,8 +133,8 @@ public class EisXmlServiceImplTest {
             .collect(Collectors.toMap(
                 NameValuePair::getPropertyName, np -> np.getPropertyValue().toString()));
 
-        assertEquals(eisHeader.getDataCategory().name(), properties.get("DataCategory"));
-        assertEquals(eisHeader.getSubmissionType().name(), properties.get("SubmissionType"));
+        assertEquals(eisHeader.getSubmissionStatus().dataCategory(), properties.get("DataCategory"));
+        assertEquals(eisHeader.getSubmissionStatus().submissionType(), properties.get("SubmissionType"));
 
         List<DocumentPayloadType> payloads = momento.getPayload();
         assertEquals(1, payloads.size());

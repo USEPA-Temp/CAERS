@@ -99,7 +99,7 @@
           <div class="row pb-2">
             <label for="phone" class="col-sm-4 col-lg-2 col-form-label"><strong>Phone Number:</strong></label>
               <div class="col-sm-8 col-lg-4">
-                <input type="text" class="form-control" id="phone" formControlName="phone" [value]="contactForm.value.contact?.phone" maxlength="15">
+                <input type="text" class="form-control" id="phone" formControlName="phone" [value]="contactForm.value.contact?.phone" maxlength="10">
                 <app-validation-message [control]="contactForm.controls.phone"></app-validation-message>
               </div>
               <label for="phoneExt" class="col-sm-4 col-lg-2 col-form-label"><strong>Ext.:</strong></label>

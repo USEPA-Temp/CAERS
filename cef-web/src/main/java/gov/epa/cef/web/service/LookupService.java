@@ -216,6 +216,13 @@ public interface LookupService {
     List<CodeLookupDto> retrieveControlMeasureCodes();
     
     /**
+     * Retrieve non-legacy Control Measure codes
+     * @param year
+     * @return
+     */
+    List<CodeLookupDto> retrieveCurrentControlMeasureCodes(Integer year);
+    
+    /**
     * Retrieve Control Measure code database object by code
     * @param code
     * @return
@@ -240,6 +247,13 @@ public interface LookupService {
      * @return
      */
     List<CodeLookupDto> retrieveNaicsCode();
+
+    /**
+     * Retrieve non-legacy Facility NAICS codes
+     * @param year
+     * @return
+     */
+    List<CodeLookupDto> retrieveCurrentNaicsCodes(Integer year);
     
     /**
      * Retrieve Aircraft Engine Type Codes
