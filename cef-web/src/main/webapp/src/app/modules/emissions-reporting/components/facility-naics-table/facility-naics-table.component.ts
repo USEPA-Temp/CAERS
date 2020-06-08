@@ -17,7 +17,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 export class FacilityNaicsTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: FacilityNaicsCode[];
   @Input() readOnlyMode: boolean;
-  facilitySiteId: number;
+  facilitySite: FacilitySite;
   baseUrl: string;
 
   constructor(
@@ -36,7 +36,7 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
 
     this.route.data
       .subscribe((data: { facilitySite: FacilitySite }) => {
-        this.facilitySiteId = data.facilitySite.id;
+        this.facilitySite = data.facilitySite;
       });
 
     this.sortTable();
@@ -73,11 +73,12 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
 
   openFacilityNaicsModal() {
     const modalRef = this.modalService.open(FacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});
-    modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
+    modalRef.componentInstance.facilitySiteId = this.facilitySite.id;
     modalRef.componentInstance.facilityNaics = this.tableData;
+    modalRef.componentInstance.year = this.facilitySite.emissionsReport.year;
 
     modalRef.result.then(() => {
-      this.facilityService.retrieve(this.facilitySiteId)
+      this.facilityService.retrieve(this.facilitySite.id)
         .subscribe(facilityResponse => {
 
           this.sharedService.updateReportStatusAndEmit(this.route);

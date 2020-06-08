@@ -7,6 +7,8 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { ControlService } from 'src/app/core/services/control.service';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
+import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-edit-control-device-info-panel',
@@ -16,7 +18,8 @@ import { ActivatedRoute } from '@angular/router';
 
 export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
   @Input() control: Control;
-  controlIdentifiers: String[]=[];
+  @Input() year: number;
+  controlIdentifiers: string[] = [];
   facilityOpCode: BaseCodeLookup;
 
   controlDeviceForm = this.fb.group({
@@ -32,7 +35,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
       Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
     ]],
     operatingStatusCode: [null, Validators.required],
-    controlMeasureCode: [null, Validators.required],
+    controlMeasureCode: [null, [Validators.required]],
     description: ['', [
       Validators.required,
       Validators.maxLength(200)
@@ -44,7 +47,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
   ]});
 
   operatingStatusValues: BaseCodeLookup[];
-  controlMeasureCode: BaseCodeLookup[];
+  controlMeasureCode: InventoryYearCodeLookup[];
 
   constructor(private fb: FormBuilder,
               private lookupService: LookupService,
@@ -60,7 +63,9 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         this.operatingStatusValues = result;
       });
 
-    this.lookupService.retrieveControlMeasureCodes()
+    this.controlDeviceForm.get('controlMeasureCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Control Measure Code', 'description')]);
+
+    this.lookupService.retrieveCurrentControlMeasureCodes(this.year)
       .subscribe(result => {
         this.controlMeasureCode = result;
       });
