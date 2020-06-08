@@ -115,6 +115,18 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         			"controlPath.assignment.sequenceNumber.required",
         			createValidationDetails(controlPath, ca));
     	}
+                
+        List<ControlAssignment> caPathAndControlNullMap = controlPath.getAssignments().stream()
+                .filter(cpa -> (cpa.getControl() == null && cpa.getControlPathChild() == null))
+                .collect(Collectors.toList());
+        
+        for (ControlAssignment ca: caPathAndControlNullMap) {
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+        			"controlPath.assignment.pathOrControl.required",
+        			createValidationDetails(controlPath));
+        }
         
 	return result;
   }
