@@ -65,6 +65,21 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
                     
             }
         }
+        
+		List<ControlAssignment> percentApptRange = controlPath.getAssignments().stream()
+				.filter(appt -> (appt.getPercentApportionment() != null))
+				.collect(Collectors.toList());
+
+		for (ControlAssignment ca: percentApptRange) {
+			if (ca.getPercentApportionment() < 0.1 || ca.getPercentApportionment() > 100) {
+				result = false;
+					context.addFederalError(
+		  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+		  			"controlPath.assignment.percentApportionment.range",
+		  			createValidationDetails(controlPath),
+		  			ca.getControlPath().getPathId());
+			}
+		}
 	
 		if(controlPath.getReleasePointAppts().isEmpty()){
         	result = false;
