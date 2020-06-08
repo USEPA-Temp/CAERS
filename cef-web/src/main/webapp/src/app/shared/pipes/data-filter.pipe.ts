@@ -27,7 +27,7 @@ export class DataFilterPipe implements PipeTransform {
 
                   let str = item[keys[i]];
 
-                  if (str && str.indexOf(value) > -1) {
+                  if (str && str.toLowerCase().indexOf(value.toLowerCase()) > -1) {
 
                      match = true;
                      break;
