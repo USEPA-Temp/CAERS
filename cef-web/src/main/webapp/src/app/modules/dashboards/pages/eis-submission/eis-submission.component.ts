@@ -66,6 +66,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
    tableData: EisDataReport[];
 
+   selectedReports: number[];
+
    availableYears: number[];
 
    availableStatuses: {
@@ -88,6 +90,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.availableStatuses = [];
 
       this.tableData = [];
+      this.selectedReports = [];
 
       this.stats = {
          notStarted: 0,
@@ -229,6 +232,11 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.txtComment.enable();
    }
 
+   onSubmitClick() {
+
+
+   }
+
    onCancelCommentClick() {
 
       this.dlgEditComment.modalRef.dismiss();
@@ -263,6 +271,25 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    onClearFilterClick() {
 
       this.txtFilter.setValue(null);
+   }
+
+   onSelectChange($event : any, report: EisDataReport) {
+
+      if ($event.target.checked) {
+
+         if (this.selectedReports.indexOf(report.emissionsReportId) < 0) {
+
+            this.selectedReports.push(report.emissionsReportId);
+         }
+
+      } else {
+
+         let idx = this.selectedReports.indexOf(report.emissionsReportId);
+         if (idx > -1) {
+
+            this.selectedReports.splice(idx, 1);
+         }
+      }
    }
 }
 

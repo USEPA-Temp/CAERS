@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,5 +108,22 @@ public class EisApi {
             this.eisXmlService.writeEisXmlTo(eisHeader, outputStream);
 
         }, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/transaction",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EisDataListDto> createTransaction(@NotNull @RequestBody EisHeaderDto eisHeader) {
+
+        this.securityService.facilityEnforcer()
+            .enforceEntities(eisHeader.getEmissionReports(), EmissionsReportRepository.class);
+
+        ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
+
+        this.eisTransmissionService.submitReports(eisHeader);
+
+        EisDataListDto result = this.eisTransmissionService.retrieveDataList(eisHeader.getEmissionReports());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -101,7 +101,9 @@
                      </tr>
                      <tr *ngFor="let report of (tableData | dataFilter:txtFilter.value:'facilityName,agencyFacilityId,eisProgramId,lastTransactionId')">
                         <td class="text-center">
-                           <input type="checkbox" class="form-check-inline" disabled/>
+                           <input type="checkbox"
+                                  class="form-check-inline"
+                                  (change)="onSelectChange($event, report)"/>
                         </td>
                         <td>
                            <span [textContent]="report.facilityName"></span>
@@ -170,8 +172,8 @@
                              [value]="item.key">{{item.value}}</option>
                   </select>
 
-                  <button type="button" class="btn btn-success disabled"
-                          style="pointer-events: none">
+                  <button type="button" class="btn btn-success"
+                          (click)="onSubmitClick()">
                      <span>Submit to EIS</span>
                   </button>
                </div>
@@ -192,6 +194,7 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.notStarted > 0 ? 'all' : 'none'"
+                     [title]="stats.notStarted + ' reports in not started status'"
                      (click)="onFilterNotStarted()">
 
                      <span class="badge badge-pill badge-danger text-larger mr-3"
@@ -207,6 +210,7 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.qaFacility > 0 ? 'all' : 'none'"
+                     [title]="stats.qaFacility + ' reports QA facility status'"
                      (click)="onFilterQaFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
@@ -222,6 +226,7 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.prodFacility > 0 ? 'all' : 'none'"
+                     [title]="stats.prodFacility + ' reports Prod facility status'"
                      (click)="onFilterProdFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
@@ -237,6 +242,7 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.qaEmissions > 0 ? 'all' : 'none'"
+                     [title]="stats.qaEmissions + ' reports QA Emissions status'"
                      (click)="onFilterQaEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
@@ -252,6 +258,7 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.prodEmissions > 0 ? 'all' : 'none'"
+                     [title]="stats.prodEmissions + ' reports Prod Emissions status'"
                      (click)="onFilterProdEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
