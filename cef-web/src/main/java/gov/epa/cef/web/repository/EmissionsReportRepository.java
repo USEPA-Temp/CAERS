@@ -66,16 +66,16 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
     Optional<EmissionsReport> findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(@NotBlank String eisProgramId, @NotNull Short year);
 
 
-    @Query("select r from EmissionsReport r where r.agencyCode = :#{#crit.agencyCode} and r.year = :#{#crit.reportingYear} and r.cromerrDocumentId is not null")
+    @Query("select r from EmissionsReport r where r.agencyCode = :#{#crit.agencyCode} and r.year = :#{#crit.reportingYear} and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED")
     Collection<EmissionsReport> findEisDataByYearAndNotComplete(@Param("crit") EisDataCriteria criteria);
 
     @Query("select r from EmissionsReport r where r.agencyCode = :#{#crit.agencyCode} and r.year = :#{#crit.reportingYear} and r.eisLastSubmissionStatus = :#{#crit.submissionStatus}")
     Collection<EmissionsReport> findEisDataByYearAndStatus(@Param("crit") EisDataCriteria criteria);
 
-    @Query("select r.eisLastSubmissionStatus as status, count(r.id) as count from EmissionsReport r where r.agencyCode = :agencyCode and r.cromerrDocumentId is not null group by r.eisLastSubmissionStatus")
+    @Query("select r.eisLastSubmissionStatus as status, count(r.id) as count from EmissionsReport r where r.agencyCode = :agencyCode and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED group by r.eisLastSubmissionStatus")
     Collection<EisDataStatsDto.EisDataStatusStat> findEisDataStatuses(@Param("agencyCode") String agencyCode);
 
-    @Query("select distinct r.year from EmissionsReport r where r.agencyCode = :agencyCode and r.cromerrDocumentId is not null")
+    @Query("select distinct r.year from EmissionsReport r where r.agencyCode = :agencyCode and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED")
     Collection<Integer> findEisDataYears(@Param("agencyCode") String agencyCode);
 
     /**
