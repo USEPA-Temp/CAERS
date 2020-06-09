@@ -1,14 +1,18 @@
 package gov.epa.cef.web.service.validation.validator;
 
-import static org.junit.Assert.assertFalse; 
+import static org.junit.Assert.assertFalse;  
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
@@ -19,6 +23,7 @@ import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ControlPathValidator;
@@ -28,6 +33,20 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 	
 	@InjectMocks
 	private ControlPathValidator validator;
+	
+	@Mock
+	private ControlAssignmentRepository assignmentRepo;
+	
+    @Before
+    public void init(){
+    	ControlAssignment ca = new ControlAssignment();
+    	ca.setPercentApportionment(100.0);
+    	List<ControlAssignment> caList = new  ArrayList<ControlAssignment>();
+    	caList.add(ca);
+
+        when(assignmentRepo.findBySequenceNumber(1)).thenReturn(caList);
+
+    }
 	
 	@Test
 	public void simpleValidatePassTest() {
@@ -148,6 +167,16 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void apportionmentTotalPassTest() {
+
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
     public void sequenceNumberNullFailTest() {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
@@ -216,7 +245,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ControlAssignment ca = new ControlAssignment();
 		ca.setControl(c);
 		ca.setSequenceNumber(1);
-		ca.setPercentApportionment(50.0);
+		ca.setPercentApportionment(100.0);
 		ca.setId(1234L);
 		ca.setControlPath(result);
 		result.setPathId("test control path");
