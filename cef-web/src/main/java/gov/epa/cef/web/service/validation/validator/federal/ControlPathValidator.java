@@ -51,7 +51,7 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 		
         Map<Object, List<ControlAssignment>> cpDuplicateMap = controlPath.getAssignments().stream()
         		.filter(cpa -> (cpa.getControlPathChild() != null))
-                .collect(Collectors.groupingBy(ca -> ca.getControlPath().getAssignments()));
+        		.collect(Collectors.groupingBy(ca -> ca.getControlPathChild().getId()));
         
         for (List<ControlAssignment> cpList: cpDuplicateMap.values()) {
             if (cpList.size() > 1) {
