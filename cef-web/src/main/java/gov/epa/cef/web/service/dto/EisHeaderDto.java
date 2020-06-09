@@ -10,11 +10,9 @@ public class EisHeaderDto {
 
     private String authorName;
 
-    private EisDataCategory dataCategory;
-
     private String organizationName;
 
-    private EisSubmissionType submissionType;
+    private EisSubmissionStatus submissionStatus;
 
     public EisHeaderDto() {
 
@@ -29,16 +27,6 @@ public class EisHeaderDto {
     public void setAuthorName(String authorName) {
 
         this.authorName = authorName;
-    }
-
-    public EisDataCategory getDataCategory() {
-
-        return dataCategory;
-    }
-
-    public void setDataCategory(EisDataCategory dataCategory) {
-
-        this.dataCategory = dataCategory;
     }
 
     public Set<Long> getEmissionReports() {
@@ -64,25 +52,19 @@ public class EisHeaderDto {
         this.organizationName = organizationName;
     }
 
-    public EisSubmissionType getSubmissionType() {
+    public EisSubmissionStatus getSubmissionStatus() {
 
-        return submissionType;
+        return submissionStatus;
     }
 
-    public void setSubmissionType(EisSubmissionType submissionType) {
+    public void setSubmissionStatus(EisSubmissionStatus submissionStatus) {
 
-        this.submissionType = submissionType;
+        this.submissionStatus = submissionStatus;
     }
 
     public EisHeaderDto withAuthorName(final String authorName) {
 
         setAuthorName(authorName);
-        return this;
-    }
-
-    public EisHeaderDto withDataCategory(final EisDataCategory dataCategory) {
-
-        setDataCategory(dataCategory);
         return this;
     }
 
@@ -98,9 +80,9 @@ public class EisHeaderDto {
         return this;
     }
 
-    public EisHeaderDto withSubmissionType(final EisSubmissionType submissionType) {
+    public EisHeaderDto withSubmissionStatus(final EisSubmissionStatus submissionStatus) {
 
-        setSubmissionType(submissionType);
+        setSubmissionStatus(submissionStatus);
         return this;
     }
 }

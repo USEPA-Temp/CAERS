@@ -10,6 +10,7 @@ describe('FacilityListItemComponent', () => {
   const facility = {
     cdxFacilityId: 123,
     epaRegistryId: '123',
+    stateFacilityId: '456',
     programId: '123',
     facilityName: 'test-facility',
     address: '123 elm st',

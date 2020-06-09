@@ -93,12 +93,12 @@ public interface EmissionsReportService {
     void delete(Long id);
 
 	List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds, String comments);
-	
+
 	List<EmissionsReportDto> rejectEmissionsReports(ReviewDTO reviewDTO);
 
     /**
      * Update an existing Emissions Report from a DTO
      */
-    public EmissionsReportDto update(EmissionsReportDto dto);
+    EmissionsReportDto updateSubmitted(long reportId, boolean submitted);
 
 }

@@ -15,9 +15,7 @@ export abstract class BaseSortableTable {
     });
 
     // sorting data
-    if (direction === '') {
-      this.tableData = this.tableData;
-    } else {
+    if (direction !== '') {
       this.tableData = [...this.tableData].sort((a, b) => {
         let aVal = a;
         let bVal = b;

@@ -23,6 +23,9 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
     @Column(name = "frs_facility_id")
     private String frsFacilityId;
     
+    @Column(name = "trifid")
+    private String trifid;
+    
     @Column(name = "facility_name")
     private String facilityName;
     
@@ -61,7 +64,15 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
         this.frsFacilityId = frsFacilityId;
     }
 
-    public String getFacilityName() {
+    public String getTrifid() {
+		return trifid;
+	}
+
+	public void setTrifid(String trifid) {
+		this.trifid = trifid;
+	}
+
+	public String getFacilityName() {
         return facilityName;
     }
 

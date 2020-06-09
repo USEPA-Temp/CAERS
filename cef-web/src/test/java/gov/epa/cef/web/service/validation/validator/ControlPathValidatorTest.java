@@ -42,17 +42,9 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 	
 	@Test
 	public void duplicateIdentifiersPassTest() {
-		
+
 		CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
-		ControlAssignment ca1 = new ControlAssignment();
-		Control c1 = new Control();
-		ca1.setSequenceNumber(1);
-		ControlMeasureCode cmc = new ControlMeasureCode();
-		cmc.setDescription("test");
-		c1.setControlMeasureCode(cmc);
-		c1.getAssignments().add(ca1);
-		testData.getAssignments().add(ca1);
 
 		assertTrue(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -75,6 +67,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		c1.getAssignments().add(ca1);
 		ca1.setSequenceNumber(1);
 		ca2.setSequenceNumber(1);
+		ca1.setPercentApportionment(50.0);
+		ca2.setPercentApportionment(50.0);
 		ca1.setControl(c1);
 		ca2.setControl(c1);
 		testData.getAssignments().add(ca1);
@@ -106,6 +100,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		testData.getAssignments().add(ca2);
 		ca1.setSequenceNumber(1);
 		ca2.setSequenceNumber(1);
+		ca1.setPercentApportionment(50.0);
+		ca2.setPercentApportionment(50.0);
 		
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -164,6 +160,42 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);
     }
     
+    @Test
+    public void controlAndControlPathNullFailTest() {
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		testData.getAssignments().get(0).setControl(null);
+		testData.getAssignments().get(0).setControlPathChild(null);
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);
+    }
+    
+    @Test
+    public void percentApportionmentRangeFailTest() {
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		testData.getAssignments().get(0).setPercentApportionment(-0.1);
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);
+        
+        cefContext = createContext();
+		testData.getAssignments().get(0).setPercentApportionment(101.0);
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);
+    }
+    
 	private ControlPath createBaseControlPath() {
 		
 		ControlPath result = new ControlPath();
@@ -172,6 +204,10 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ControlMeasureCode cmc = new ControlMeasureCode();
 		cmc.setCode("test code");
 		cmc.setDescription("test code description");
+		ControlPath childPath = new ControlPath();
+		childPath.setId(1L);
+		childPath.setDescription("test description");
+		childPath.setPathId("test path id");
 		Control c = new Control();
 		c.setDescription("test control");
 		c.setId(1234L);
@@ -180,7 +216,9 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ControlAssignment ca = new ControlAssignment();
 		ca.setControl(c);
 		ca.setSequenceNumber(1);
+		ca.setPercentApportionment(50.0);
 		ca.setId(1234L);
+		ca.setControlPath(result);
 		result.setPathId("test control path");
 		result.setDescription("test description");
 		result.getReleasePointAppts().add(rpa);

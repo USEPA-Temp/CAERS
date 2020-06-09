@@ -83,4 +83,16 @@ public interface EmissionService {
      */
     public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId);
 
+    /**
+     * Find Emission by TRI Facility ID and CAS Number.
+     * This method is the second version of the interface to TRIMEweb so that TRI users can
+     * see what emissions have been reported to the Common Emissions Form for the current
+     * facility and chemical that they are working on. This version takes a TRIFID and looks 
+     * up the EIS ID in CAERS and then finds any existing emissions.
+     *
+     * @param frsFacilityId
+     * @param pollutantCasId
+     * @return
+     */
+    public EmissionsByFacilityAndCASDto findEmissionsByTrifidAndCAS(String trifid, String pollutantCasId);
 }

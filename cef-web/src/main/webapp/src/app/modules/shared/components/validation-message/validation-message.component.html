@@ -70,7 +70,13 @@
       The Unit of Measure {{control.errors.legacyUom.value}} is no longer a valid UoM. Please select a different UoM.
   </div>
 
-  <div *ngIf="control.errors?.legacyItem">
-      The selected {{control.errors.legacyItem.type}} is no longer valid. Please select a different {{control.errors.legacyItem.type}}.
+  <div *ngIf="control.errors?.legacyItem && control.errors?.legacyItem.value.mapTo">
+      The {{control.errors.legacyItem.type}} {{control.errors.legacyItem.value[control.errors.legacyItem.displayField]}} is no longer valid. 
+      Try using {{control.errors.legacyItem.value.mapTo}} instead.
+  </div>
+
+  <div *ngIf="control.errors?.legacyItem && !control.errors?.legacyItem.value.mapTo">
+      The {{control.errors.legacyItem.type}} {{control.errors.legacyItem.value[control.errors.legacyItem.displayField]}} is no longer valid. 
+      Please select a different {{control.errors.legacyItem.type}}.
   </div>
 </div>

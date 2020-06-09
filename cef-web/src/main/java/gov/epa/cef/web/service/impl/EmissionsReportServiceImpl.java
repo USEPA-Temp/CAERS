@@ -1,7 +1,7 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.api.rest.EmissionsReportApi.ReviewDTO;
-import gov.epa.cef.web.client.soap.DocumentDataSource; 
+import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
@@ -50,7 +50,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +66,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
-    
+
     @Autowired
     private ReportAttachmentRepository reportAttachmentsRepo;
 
@@ -365,22 +364,22 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     @Override
     public List<EmissionsReportDto>rejectEmissionsReports(ReviewDTO reviewDTO) {
     	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reviewDTO.getReportIds());
-		
+
     	if(reviewDTO.getAttachmentId() != null) {
     		ReportAttachment attachment = this.reportAttachmentsRepo.findById(reviewDTO.getAttachmentId())
     			.orElseThrow(() -> new NotExistException("Report Attachment", reviewDTO.getAttachmentId()));
-    		
+
     		this.erRepo.findAllById(reviewDTO.getReportIds())
             .forEach(report -> {
-            	
+
     			if (attachment.getEmissionsReport().getId() == report.getId()) {
     				reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), attachment);
-    				
+
     			} else {
     				ReportAttachment copyAttachment = new ReportAttachment(attachment);
     	    		copyAttachment.clearId();
     	    		copyAttachment.setEmissionsReport(report);
-    	    		
+
     	    		ReportAttachment result = reportAttachmentsRepo.save(copyAttachment);
     	    		reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), result);
     			}
@@ -389,7 +388,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	} else {
     		reportService.createReportHistory(reviewDTO.getReportIds(), ReportAction.REJECTED, reviewDTO.getComments());
     	}
-    	
+
     	StreamSupport.stream(this.erRepo.findAllById(reviewDTO.getReportIds()).spliterator(), false)
 	      .forEach(report -> {
 
@@ -454,16 +453,15 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         }
         return false;
     }
-    
-    public EmissionsReportDto update(EmissionsReportDto dto){
-    	EmissionsReport emissionsReport = erRepo.findById(dto.getId()).orElse(null);
-    	emissionsReportMapper.updateFromDto(dto, emissionsReport);
-    	emissionsReport.setHasSubmitted(true);
-    	
-    	EmissionsReportDto result = emissionsReportMapper.toDto(erRepo.save(emissionsReport));
 
-        return result;
+    @Override
+    public EmissionsReportDto updateSubmitted(long reportId, boolean submitted){
+
+    	EmissionsReport emissionsReport = this.erRepo.findById(reportId)
+            .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
+
+    	emissionsReport.setHasSubmitted(submitted);
+
+    	return this.emissionsReportMapper.toDto(this.erRepo.save(emissionsReport));
     }
-
-
 }

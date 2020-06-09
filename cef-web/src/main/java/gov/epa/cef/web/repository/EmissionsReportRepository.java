@@ -2,6 +2,8 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.service.dto.EisDataCriteria;
+import gov.epa.cef.web.service.dto.EisDataStatsDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
@@ -11,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +64,19 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @return
      */
     Optional<EmissionsReport> findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(@NotBlank String eisProgramId, @NotNull Short year);
+
+
+    @Query("select r from EmissionsReport r where r.agencyCode = :#{#crit.agencyCode} and r.year = :#{#crit.reportingYear} and r.cromerrDocumentId is not null")
+    Collection<EmissionsReport> findEisDataByYearAndNotComplete(@Param("crit") EisDataCriteria criteria);
+
+    @Query("select r from EmissionsReport r where r.agencyCode = :#{#crit.agencyCode} and r.year = :#{#crit.reportingYear} and r.eisLastSubmissionStatus = :#{#crit.submissionStatus}")
+    Collection<EmissionsReport> findEisDataByYearAndStatus(@Param("crit") EisDataCriteria criteria);
+
+    @Query("select r.eisLastSubmissionStatus as status, count(r.id) as count from EmissionsReport r where r.agencyCode = :agencyCode and r.cromerrDocumentId is not null group by r.eisLastSubmissionStatus")
+    Collection<EisDataStatsDto.EisDataStatusStat> findEisDataStatuses(@Param("agencyCode") String agencyCode);
+
+    @Query("select distinct r.year from EmissionsReport r where r.agencyCode = :agencyCode and r.cromerrDocumentId is not null")
+    Collection<Integer> findEisDataYears(@Param("agencyCode") String agencyCode);
 
     /**
      *

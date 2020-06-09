@@ -27,7 +27,7 @@ public class AppConfig {
     @Bean(initMethod = "migrate")
     Flyway flyway() {
         return Flyway.configure()
-            .locations("classpath:db/migrations", "classpath:gov/epa/cef/infrastructure/persistence/migrations")
+            .locations("classpath:db/migrations")
             .table("schema_version_cef")
             .baselineOnMigrate(true)
             .baselineVersion("0.0.1")

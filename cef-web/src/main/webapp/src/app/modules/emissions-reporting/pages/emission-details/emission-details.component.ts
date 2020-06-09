@@ -127,7 +127,7 @@ export class EmissionDetailsComponent implements OnInit {
 
       const year = data.facilitySite.emissionsReport.year;
 
-      this.emissionForm.get('pollutant').setValidators([Validators.required, legacyItemValidator(year, 'Pollutant')]);
+      this.emissionForm.get('pollutant').setValidators([Validators.required, legacyItemValidator(year, 'Pollutant', 'pollutantName')]);
 
       this.lookupService.retrieveCurrentPollutants(year)
       .subscribe(result => {
