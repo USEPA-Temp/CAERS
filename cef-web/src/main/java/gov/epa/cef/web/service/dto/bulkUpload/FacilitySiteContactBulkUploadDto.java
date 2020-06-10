@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -31,8 +32,11 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
     @NotBlank(message = "Email is required.")
     @Size(max = 255, message = "Email can not exceed {max} chars; found '${validatedValue}'.")
 	private String email;
-
-    @Size(max = 15, message = "Phone can not exceed {max} chars; found '${validatedValue}'.")
+    
+    @NotBlank(message = "Phone number is required.")
+    @Pattern(regexp = PhonePattern,
+    message = "Phone number is not in expected numeric format: '[0-9]{10}' digits; found '${validatedValue}.")
+    @Size(max = 10, message = "Phone can not exceed {max} chars; found '${validatedValue}'.")
 	private String phone;
 
     @Size(max = 5, message = "Phone Ext can not exceed {max} chars; found '${validatedValue}'.")
