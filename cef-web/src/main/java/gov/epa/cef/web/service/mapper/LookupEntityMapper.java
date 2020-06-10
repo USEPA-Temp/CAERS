@@ -86,6 +86,8 @@ public abstract class LookupEntityMapper {
 
     public abstract AircraftEngineTypeCodeDto aircraftEngCodeToDto(AircraftEngineTypeCode source);
 
+    public abstract List<AircraftEngineTypeCodeDto> aircraftEngCodeToDtoList(List<AircraftEngineTypeCode> source);
+
     public abstract PointSourceSccCodeDto pointSourceSccCodeToDto(PointSourceSccCode source);
 
     public abstract EisLatLongToleranceLookupDto EisLatLongToleranceLookupToDto(EisLatLongToleranceLookup source);

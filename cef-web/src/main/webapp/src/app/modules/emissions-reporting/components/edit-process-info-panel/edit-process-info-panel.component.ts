@@ -62,6 +62,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
   }, { validators: [
     this.checkPointSourceSccCode(),
     this.checkProcessIdentifier(),
+    this.legacyAetcValidator(),
     this.checkMatchSccAircraft(),
     this.checkSccAndAircraftDuplicate(),
     this.facilitySiteStatusCheck()]
@@ -201,7 +202,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
   // get AETC list
   getAircraftEngineCodes() {
     let codeInList = false;
-    this.lookupService.retrieveAircraftEngineCodes(this.processForm.get('sccCode').value)
+    this.lookupService.retrieveCurrentAircraftEngineCodes(this.processForm.get('sccCode').value, this.emissionsReportYear)
     .subscribe(result => {
       this.aircraftEngineTypeValue = result;
 
@@ -285,6 +286,21 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       return null;
     };
   }
+
+  legacyAetcValidator(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      // show legacy AETC error message if the process should have an AETC, if there was already an existing one,
+      // and if the user hasn't selected a new code
+      if (this.processHasAETC && this.process && this.process.aircraftEngineTypeCode
+          && this.process.aircraftEngineTypeCode.lastInventoryYear
+          && this.process.aircraftEngineTypeCode.lastInventoryYear < this.emissionsReportYear
+          && (control.get('aircraftEngineTypeCode') === null || control.get('aircraftEngineTypeCode').value === null)) {
+        return {legacyAetc: {value: `${this.process.aircraftEngineTypeCode.faaAircraftType} - ${this.process.aircraftEngineTypeCode.engine}`} };
+      }
+      return null;
+    };
+  }
+
 
   checkMatchSccAircraft(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
