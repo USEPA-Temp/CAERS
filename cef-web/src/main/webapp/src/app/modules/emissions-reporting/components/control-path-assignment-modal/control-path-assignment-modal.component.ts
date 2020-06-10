@@ -151,8 +151,9 @@ export class ControlPathAssignmentModalComponent implements OnInit {
 
     // if control is chosen, check all control assignments with selected control
     if (this.controlPathAssignmentForm.get('control').value !== null) {
-        controlList = this.controlAssignmentList.filter(val => val.control !== null
-        && (val.control.id === this.controlPathAssignmentForm.get('control').value.id)).map((item) => item.id);
+        // get unique control assignments from the list
+        controlList = [...new Set(this.controlAssignmentList.filter(val => val.control !== null
+        && (val.control.id === this.controlPathAssignmentForm.get('control').value.id)).map(item => item.id))];
 
         if (this.edit && controlList && (this.selectedControlPathAssignment.control
         && this.selectedControlPathAssignment.control.id === this.controlPathAssignmentForm.get('control').value.id)) {
