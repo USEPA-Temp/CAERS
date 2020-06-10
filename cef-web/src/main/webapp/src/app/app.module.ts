@@ -41,6 +41,7 @@ import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submissio
 import { EisTransactionsComponent } from './modules/dashboards/pages/eis-transactions/eis-transactions.component';
 import { SortByPipe } from './shared/pipes/sort-by.pipe';
 import { DataFilterPipe } from './shared/pipes/data-filter.pipe';
+import { RecalculateEmissionTonsModalComponent } from './modules/dashboards/components/recalculate-emission-tons-modal/recalculate-emission-tons-modal.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { DataFilterPipe } from './shared/pipes/data-filter.pipe';
     EisSubmissionComponent,
     EisTransactionsComponent,
     SortByPipe,
-    DataFilterPipe
+    DataFilterPipe,
+    RecalculateEmissionTonsModalComponent
   ],
   imports: [
     BrowserModule,
@@ -93,7 +95,8 @@ import { DataFilterPipe } from './shared/pipes/data-filter.pipe';
     RejectSubmissionModalComponent,
     TimeoutModalComponent,
     ConfirmationDialogComponent,
-    SubmissionReviewModalComponent
+    SubmissionReviewModalComponent,
+    RecalculateEmissionTonsModalComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},

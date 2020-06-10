@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.epa.cef.web.domain.AdminProperty;
 import gov.epa.cef.web.provider.system.PropertyProvider;
 import gov.epa.cef.web.security.AppRole;
+import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.NotificationService;
+import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.PropertyDto;
 import gov.epa.cef.web.service.mapper.AppPropertyMapper;
 
@@ -31,6 +33,9 @@ public class AdminPropertyApi {
 
     @Autowired
     private PropertyProvider propertyProvider;
+
+    @Autowired
+    private EmissionService emissionService;
 
     @Autowired
     private NotificationService notificationService;
@@ -92,6 +97,13 @@ public class AdminPropertyApi {
     public void sendTestAdminEmail() {
 
         this.notificationService.sendAdminNotification(NotificationService.AdminEmailType.AdminTest, null);
+    }
+
+    @PostMapping(value = "/emission/recalculate/{reportId}")
+    public ResponseEntity<List<EmissionDto>> recalculateEmissionTotalTons(@NotNull @PathVariable Long reportId) {
+
+        List<EmissionDto> result = emissionService.recalculateEmissionTons(reportId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

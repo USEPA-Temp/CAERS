@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -275,6 +276,27 @@ public class EmissionServiceImpl implements EmissionService {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    /**
+     * Recalculate the total emissions in tons for all emissions in a report without changing any other values
+     * @param reportId
+     * @return
+     */
+    public List<EmissionDto> recalculateEmissionTons(Long reportId) {
+
+        List<Emission> emissions = this.emissionRepo.findAllByReportId(reportId);
+        List<Emission> result = new ArrayList<>();
+
+        emissions.forEach(e -> {
+            BigDecimal calculatedValue = calculateEmissionTons(e);
+            if (!Objects.equals(calculatedValue, e.getCalculatedEmissionsTons())) {
+                e.setCalculatedEmissionsTons(calculatedValue);
+                result.add(this.emissionRepo.save(e));
+            }
+        });
+
+        return emissionMapper.toDtoList(result);
     }
 
     /**

@@ -53,6 +53,13 @@ public interface EmissionService {
     public List<EmissionBulkEntryHolderDto> bulkUpdate(Long facilitySiteId, List<EmissionDto> dtos);
 
     /**
+     * Recalculate the total emissions in tons for all emissions in a report without changing any other values
+     * @param reportId
+     * @return
+     */
+    public List<EmissionDto> recalculateEmissionTons(Long reportId);
+
+    /**
      * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula
      * This method should be used when the Reporting Period in the database should be used for calculations 
      * and you have an EmissionDto, probably with values that differ from the ones in the database.
