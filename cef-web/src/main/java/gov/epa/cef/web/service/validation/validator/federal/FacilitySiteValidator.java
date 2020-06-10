@@ -102,10 +102,32 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                     facilitySite.getCountyCode().getName(),
                     facilitySite.getStateCode().getUspsCode());
         }
-
+        
+        // Phone number must be entered as 10 digits
+        String regex = "^[0-9]{10}";
+        Pattern pattern = Pattern.compile(regex);
+    	for(FacilitySiteContact fc: facilitySite.getContacts()){
+        	if(!StringUtils.isEmpty(fc.getPhone())){
+            	Matcher matcher = pattern.matcher(fc.getPhone());
+            	if(!matcher.matches()){
+                	result = false;
+                	context.addFederalError(
+                			ValidationField.FACILITY_CONTACT_PHONE.value(),
+                			"facilitySite.contacts.phoneNumber.requiredFormat",
+                			createContactValidationDetails(facilitySite));
+            	}
+        	} else {
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.FACILITY_CONTACT_PHONE.value(),
+            			"facilitySite.contacts.phoneNumber.requiredFormat",
+            			createContactValidationDetails(facilitySite));
+        	}
+    	}
+    	
         // Postal codes must be entered as 5 digits (XXXXX) or 9 digits (XXXXX-XXXX).
-    	String regex = "^[0-9]{5}(?:-[0-9]{4})?$";
-    	Pattern pattern = Pattern.compile(regex);
+    	regex = "^[0-9]{5}(?:-[0-9]{4})?$";
+    	pattern = Pattern.compile(regex);
     	for(FacilitySiteContact fc: facilitySite.getContacts()){
         	if(!StringUtils.isEmpty(fc.getPostalCode())){
             	Matcher matcher = pattern.matcher(fc.getPostalCode());
