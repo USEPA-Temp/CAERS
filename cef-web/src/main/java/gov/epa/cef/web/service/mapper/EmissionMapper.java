@@ -19,6 +19,8 @@ public interface EmissionMapper {
 
     EmissionDto toDto(Emission source);
 
+    List<EmissionDto> toDtoList(List<Emission> source);
+
     @Mapping(source="reportingPeriodId", target="reportingPeriod.id")
     Emission fromDto(EmissionDto source);
 

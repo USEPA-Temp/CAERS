@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { RecalculateEmissionTonsModalComponent } from 'src/app/modules/dashboards/components/recalculate-emission-tons-modal/recalculate-emission-tons-modal.component';
 
 @Component({
   selector: 'app-admin-properties',
@@ -57,6 +58,24 @@ export class AdminPropertiesComponent implements OnInit {
     this.propertyService.sendTestEmail()
     .subscribe(() => {
       this.toastr.success('', 'Test email sent');
+    });
+  }
+
+  openRecalculateEmissionTonsModal() {
+
+    const modalRef = this.modalService.open(RecalculateEmissionTonsModalComponent);
+    modalRef.result.then((reportId: number) => {
+      if (reportId) {
+        this.recalculateEmissionTons(reportId);
+      }
+    });
+  }
+
+  recalculateEmissionTons(reportId: number) {
+    this.propertyService.recalculateEmissionTotalTons(reportId)
+    .subscribe(result => {
+      console.log(result);
+      this.toastr.success('', result.length + ' emissions had their emission total in tons updated.');
     });
   }
 
