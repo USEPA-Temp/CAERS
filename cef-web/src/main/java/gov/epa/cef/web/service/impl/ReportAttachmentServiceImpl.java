@@ -7,6 +7,7 @@ import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.exception.ReportAttachmentValidationException;
+import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.ReportAttachmentService;
@@ -53,6 +54,9 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
 
     @Autowired
     private ReportHistoryMapper reportHistoryMapper;
+    
+    @Autowired
+    private EmissionsReportStatusServiceImpl reportStatusService;
     
     @Autowired
     private ReportAttachmentMapper reportAttachmentMapper;
@@ -166,7 +170,8 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
     	
     	reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT_DELETED, comment);
     	ReportHistory history = reportHistoryRepo.findByAttachmentId(attachment.getId());
-    	
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(attachment.getId()), ReportAttachmentRepository.class);
+
     	reportService.updateReportHistoryDeletedAttachment(history.getId(), true);
         reportAttachmentsRepo.deleteById(id);
     }
