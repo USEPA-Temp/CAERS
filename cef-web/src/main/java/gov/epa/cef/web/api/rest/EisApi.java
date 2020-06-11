@@ -1,5 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
+import com.google.common.base.Preconditions;
 import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.SecurityService;
@@ -16,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +35,9 @@ import java.util.Collections;
 @RequestMapping("/api/eis")
 public class EisApi {
 
-    private final EisXmlServiceImpl eisXmlService;
-
     private final EisTransmissionServiceImpl eisTransmissionService;
+
+    private final EisXmlServiceImpl eisXmlService;
 
     private final SecurityService securityService;
 
@@ -49,7 +52,47 @@ public class EisApi {
         this.eisTransmissionService = eisTransmissionService;
     }
 
-    @GetMapping(value = "/emissionsReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Validated(EisHeaderDto.EisApiGroup.class)
+    @PostMapping(value = "/transaction",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EisDataListDto> createTransaction(@NotNull @RequestBody EisHeaderDto eisHeader) {
+
+        Preconditions.checkArgument(eisHeader.getSubmissionStatus() != null,
+            "SubmissionStatus can not be null.");
+
+        Preconditions.checkArgument(eisHeader.getEmissionsReports().size() > 0,
+            "EmissionsReportIds must contain at lease one ID.");
+
+        this.securityService.facilityEnforcer()
+            .enforceEntities(eisHeader.getEmissionsReports(), EmissionsReportRepository.class);
+
+        ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
+
+        eisHeader.withAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()))
+            .withOrganizationName(appUser.getOrganization());
+
+        EisDataListDto result = this.eisTransmissionService.submitReports(eisHeader);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/emissionsReport/{id}/comment",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EisDataReportDto> putEisComment(@NotNull @PathVariable("id") Long reportId,
+                                                          @NotNull @RequestBody SimpleStringValue comment) {
+
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
+        EisDataReportDto result =
+            this.eisTransmissionService.updateReportComment(reportId, comment.getValue());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/emissionsReport",
+        produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EisDataListDto> retrieveEisDataList(@NotNull @RequestParam(value = "year") Integer year,
                                                               @RequestParam(value = "status", required = false) EisSubmissionStatus status) {
 
@@ -65,20 +108,8 @@ public class EisApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/emissionsReport/{id}/comment",
-        consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EisDataReportDto> putEisComment(@NotNull @PathVariable("id") Long reportId,
-                                                          @NotNull @RequestBody SimpleStringValue comment) {
-
-        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
-
-        EisDataReportDto result =
-            this.eisTransmissionService.updateReportComment(reportId, comment.getValue());
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/emissionsReport/stats", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/emissionsReport/stats",
+        produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EisDataStatsDto> retrieveEisDataStats() {
 
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
@@ -88,7 +119,8 @@ public class EisApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/emissionsReport/{reportId}", produces = MediaType.APPLICATION_XML_VALUE)
+    @GetMapping(value = "/emissionsReport/{reportId}",
+        produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<StreamingResponseBody> retrieveEisXml(
         @NotNull @PathVariable("reportId") Long reportId) {
 
@@ -100,7 +132,7 @@ public class EisApi {
             .withAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()))
             .withOrganizationName(appUser.getOrganization())
             .withSubmissionStatus(EisSubmissionStatus.ProdFacility)
-            .withEmissionReports(Collections.singletonList(reportId));
+            .withEmissionsReports(Collections.singletonList(reportId));
 
         return new ResponseEntity<>(outputStream -> {
 

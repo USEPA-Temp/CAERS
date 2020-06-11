@@ -1,7 +1,7 @@
 
 export interface EisDataStats {
 
-   availableYears: number[];
+   availableYears: Set<number>;
    statuses: EisDataStat[];
 }
 
@@ -37,6 +37,12 @@ export interface EisDataReport {
    lastTransactionId: string;
    passed: boolean;
    reportingYear: number;
+}
+
+export interface EisReportStatusUpdate {
+
+   submissionStatus: EisSubmissionStatus;
+   emissionsReportIds: Set<number>;
 }
 
 export interface EisDataStat {

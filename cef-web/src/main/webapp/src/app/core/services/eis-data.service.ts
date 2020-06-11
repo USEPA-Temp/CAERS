@@ -4,6 +4,7 @@ import {
    EisData,
    EisDataReport,
    EisDataStats,
+   EisReportStatusUpdate,
    EisSearchCriteria,
    EisSubmissionStatus
 } from "src/app/shared/models/eis-data";
@@ -14,38 +15,56 @@ import {Observable} from "rxjs";
 })
 export class EisDataService {
 
-   private baseUrl = 'api/eis/emissionsReport';  // URL to web api
+   private baseUrl = 'api/eis';  // URL to web api
 
    constructor(private http: HttpClient) {
    }
 
    retrieveStats(): Observable<EisDataStats> {
 
-      return this.http.get<EisDataStats>(`${this.baseUrl}/stats`);
+      return this.http.get<EisDataStats>(`${this.baseUrl}/emissionsReport/stats`);
    }
 
    searchData(criteria: EisSearchCriteria): Observable<EisData> {
 
-      let status = "";
-      if (criteria.status && criteria.status !== EisSubmissionStatus.All) {
-
-         for (const key in EisSubmissionStatus) {
-            if (criteria.status === EisSubmissionStatus[key]) {
-               status = key;
-               break;
-            }
-         }
-      }
+      let status = this.convertStatusToEnum(criteria.status);
 
       let params = new HttpParams()
          .append("year", criteria.year.toString())
          .append("status", status);
 
-      return this.http.get<EisData>(this.baseUrl, {params: params});
+      return this.http.get<EisData>(`${this.baseUrl}/emissionsReport`, {params: params});
+   }
+
+   submitReports(statusUpdate: EisReportStatusUpdate) : Observable<EisData>{
+
+      return this.http.post<EisData>(`${this.baseUrl}/transaction`, {
+
+         submissionStatus: this.convertStatusToEnum(statusUpdate.submissionStatus),
+         emissionsReports: Array.from(statusUpdate.emissionsReportIds.values())
+      });
    }
 
    updateComment(id: number, comment: string) : Observable<EisDataReport> {
 
-      return this.http.put<EisDataReport>(`${this.baseUrl}/${id}/comment`, {value: comment});
+      return this.http.put<EisDataReport>(`${this.baseUrl}/emissionsReport/${id}/comment`, {
+         value: comment
+      });
+   }
+
+   private convertStatusToEnum(status: EisSubmissionStatus) {
+
+      let result = "";
+      if (status && status !== EisSubmissionStatus.All) {
+
+         for (const key in EisSubmissionStatus) {
+            if (status === EisSubmissionStatus[key]) {
+               result = key;
+               break;
+            }
+         }
+      }
+
+      return result;
    }
 }

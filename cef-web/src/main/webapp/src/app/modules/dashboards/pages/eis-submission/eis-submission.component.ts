@@ -15,13 +15,6 @@ interface EisDataStats {
    complete: number;
 }
 
-interface Sortable {
-
-   key: string;
-   value: any;
-}
-
-
 enum SubmissionType {
 
    QA = "QA",
@@ -41,7 +34,9 @@ interface DlgEditComment {
    report: EisDataReport;
 }
 
-const commentMaxLength: number = 2000;
+const CommentMaxLength: number = 2000;
+
+const CurrentYear = new Date().getFullYear() - 1;
 
 @Component({
    selector: 'app-eis-submission',
@@ -60,18 +55,20 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
    txtComment = new FormControl();
 
+   cboSubmitCategory = new FormControl();
+   cboSubmitType = new FormControl();
+
    dlgEditComment: DlgEditComment;
 
    stats: EisDataStats;
 
    tableData: EisDataReport[];
 
+   selectedReports: Set<number>;
+
    availableYears: number[];
 
-   availableStatuses: {
-      key: string;
-      value: EisSubmissionStatus;
-   }[];
+   availableStatuses: EisSubmissionStatus[];
 
    dataCategories = DataCategoryType;
    submissionTypes = SubmissionType;
@@ -88,6 +85,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.availableStatuses = [];
 
       this.tableData = [];
+      this.selectedReports = new Set<number>();
 
       this.stats = {
          notStarted: 0,
@@ -101,6 +99,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.cboFilterYear.valueChanges.subscribe(() => {
          this.retrieveData()
       });
+
       this.cboFilterStatus.valueChanges.subscribe(() => {
          this.retrieveData()
       });
@@ -115,62 +114,80 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
       });
 
-      this.retrieveDataStats();
-   }
+      this.availableYears.push(CurrentYear);
+      this.cboFilterYear.setValue(CurrentYear,
+         {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
 
-   retrieveDataStats() {
+      this.availableStatuses.push(EisSubmissionStatus.All);
 
-      this.eisDataService.retrieveStats().subscribe(stats => {
+      this.cboFilterStatus.setValue(EisSubmissionStatus.All,
+         {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
 
-         this.availableYears = stats.availableYears;
-
-         let currYear = new Date().getFullYear() - 1;
-         if (stats.availableYears.indexOf(currYear) < 0) {
-            this.availableYears.push(currYear);
-         }
-
-         stats.statuses.forEach(stat => {
-
-            switch (stat.status) {
-
-               case null:
-                  this.stats.notStarted = stat.count;
-                  break;
-               case EisSubmissionStatus.QaEmissions:
-                  this.stats.qaEmissions = stat.count;
-                  break;
-               case EisSubmissionStatus.QaFacility:
-                  this.stats.qaFacility = stat.count;
-                  break;
-               case EisSubmissionStatus.ProdEmissions:
-                  this.stats.prodEmissions = stat.count;
-                  break;
-               case EisSubmissionStatus.ProdFacility:
-                  this.stats.prodFacility = stat.count;
-                  break;
-            }
-
-            if (stat.status) {
-               this.availableStatuses.push({
-                  key: EisSubmissionStatus[stat.status],
-                  value: stat.status
-               });
-            }
-         });
-
-
-         this.availableStatuses.unshift({
-            key: "Aaaaaaaaaaaaaaaall",
-            value: EisSubmissionStatus.All
-         });
-
-         this.cboFilterYear.setValue(currYear,
-            {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
-
-         this.cboFilterStatus.setValue(EisSubmissionStatus.All,
-            {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
+      this.retrieveDataStats(() => {
 
          this.retrieveData();
+      });
+   }
+
+   retrieveDataStats(onComplete?: () => void) {
+
+      this.eisDataService.retrieveStats().subscribe({
+         next: (stats) => {
+
+            stats.availableYears.forEach(year => {
+               if (this.availableYears.indexOf(year) < 0) {
+
+                  this.availableYears.push(year)
+               }
+            });
+
+            stats.statuses.forEach(stat => {
+
+               let status: EisSubmissionStatus = EisSubmissionStatus[stat.status] as EisSubmissionStatus;
+
+               switch (status) {
+
+                  case null:
+                     this.stats.notStarted = stat.count;
+                     break;
+                  case EisSubmissionStatus.QaEmissions:
+                     this.stats.qaEmissions = stat.count;
+                     break;
+                  case EisSubmissionStatus.QaFacility:
+                     this.stats.qaFacility = stat.count;
+                     break;
+                  case EisSubmissionStatus.ProdEmissions:
+                     this.stats.prodEmissions = stat.count;
+                     break;
+                  case EisSubmissionStatus.ProdFacility:
+                     this.stats.prodFacility = stat.count;
+                     break;
+               }
+
+               if (status) {
+
+                  let idx = this.availableStatuses.indexOf(status);
+
+                  if (stat.count) {
+                     if (idx < 0) {
+                        this.availableStatuses.push(status);
+                     }
+                  } else {
+                     if (idx > -1) {
+                        this.availableStatuses.splice(idx, 1);
+                     }
+                  }
+               }
+            });
+
+            return stats;
+         },
+         complete: () => {
+
+            if (onComplete) {
+               onComplete();
+            }
+         }
       });
    }
 
@@ -182,7 +199,15 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
       }).subscribe(resp => {
 
-         this.tableData = resp.reports;
+         this.tableData = resp.reports.map(report => {
+
+            if (report.lastSubmissionStatus) {
+
+               report.lastSubmissionStatus = EisSubmissionStatus[report.lastSubmissionStatus];
+            }
+
+            return report;
+         });
 
          this.onSort({column: "facilityName", direction: "asc"});
       });
@@ -219,7 +244,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
          report: report,
          waiting: false,
-         maxlength: commentMaxLength,
+         maxlength: CommentMaxLength,
          modalRef: this.modalService.open(this.editCommentTemplate, {
             backdrop: 'static'
          })
@@ -229,6 +254,30 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.txtComment.enable();
    }
 
+   onSubmitClick() {
+
+      if (this.selectedReports.size) {
+
+         let submissionStatus: EisSubmissionStatus = this.convertTypeAndCategory();
+
+         if (submissionStatus) {
+
+            this.eisDataService.submitReports({
+               submissionStatus: submissionStatus,
+               emissionsReportIds: this.selectedReports
+
+            }).subscribe(data => {
+
+               // grab new stats
+               this.retrieveDataStats(() => {
+
+                  this.retrieveData();
+               });
+            });
+         }
+      }
+   }
+
    onCancelCommentClick() {
 
       this.dlgEditComment.modalRef.dismiss();
@@ -236,7 +285,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.dlgEditComment = {
          report: null,
          waiting: false,
-         maxlength: commentMaxLength,
+         maxlength: CommentMaxLength,
          modalRef: null
       };
    }
@@ -263,6 +312,51 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    onClearFilterClick() {
 
       this.txtFilter.setValue(null);
+   }
+
+   onSelectChange($event: any, report: EisDataReport) {
+
+      if ($event.target.checked) {
+
+         this.selectedReports.add(report.emissionsReportId);
+
+      } else {
+
+         this.selectedReports.delete(report.emissionsReportId);
+      }
+   }
+
+   private convertTypeAndCategory(): EisSubmissionStatus {
+
+      let result: EisSubmissionStatus = null;
+
+      let type = this.cboSubmitType.value;
+      let category = this.cboSubmitCategory.value;
+
+      if (category === DataCategoryType.FACILITY_INVENTORY) {
+
+         if (type === SubmissionType.QA) {
+
+            result = EisSubmissionStatus.QaFacility;
+
+         } else if (type === SubmissionType.PRODUCTION) {
+
+            result = EisSubmissionStatus.ProdFacility;
+         }
+
+      } else if (category === DataCategoryType.POINT_EMISSIONS) {
+
+         if (type === SubmissionType.QA) {
+
+            result = EisSubmissionStatus.QaEmissions;
+
+         } else if (type === SubmissionType.PRODUCTION) {
+
+            result = EisSubmissionStatus.ProdEmissions;
+         }
+      }
+
+      return result;
    }
 }
 

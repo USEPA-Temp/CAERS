@@ -89,7 +89,7 @@ public class EisXmlServiceImplTest {
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
-            .withEmissionReports(Arrays.asList(1L, 2L, 3L));
+            .withEmissionsReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType document = this.eisXmlService.generateEisDocument(eisHeader);
 
@@ -114,7 +114,7 @@ public class EisXmlServiceImplTest {
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
-            .withEmissionReports(Arrays.asList(1L, 2L, 3L));
+            .withEmissionsReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType momento;
 

@@ -75,7 +75,7 @@
         <cxf.version>3.3.1</cxf.version>
         <cdx.shared.version>1.0.4</cdx.shared.version>
         <fluent-validator.version>1.0.9</fluent-validator.version>
-        <guava.version>28.1-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <powermock.version>2.0.2</powermock.version>
         <postgresql-embedded.version>2.10</postgresql-embedded.version>
         <swagger-annotations.version>2.0.9</swagger-annotations.version>
