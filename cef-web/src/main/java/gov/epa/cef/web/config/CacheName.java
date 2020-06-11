@@ -37,6 +37,8 @@ public class CacheName {
     public static final String ReportProgramIds = "ReportProgramIds";
 
     public static final String ReportingPeriodEmissionsReportIds = "ReportingPeriodEmissionsReportIds";
+    
+    public static final String ReportAttachmentReportIds = "ReportAttachmentReportIds";
 
     public static final String ReportingPeriodProgramIds = "ReportingPeriodProgramIds";
 
