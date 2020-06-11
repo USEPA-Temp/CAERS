@@ -12,6 +12,7 @@ public class PollutantDto implements Serializable {
     private String pollutantSrsId;
     private String pollutantType;
     private String pollutantStandardUomCode;
+    private Integer lastInventoryYear;
     
     public String getPollutantCode() {
         return pollutantCode;
@@ -48,6 +49,12 @@ public class PollutantDto implements Serializable {
     }
     public void setPollutantStandardUomCode(String pollutantStandardUomCode) {
         this.pollutantStandardUomCode = pollutantStandardUomCode;
+    }
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
     }
     public static long getSerialversionuid() {
         return serialVersionUID;

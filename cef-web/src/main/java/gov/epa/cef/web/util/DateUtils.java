@@ -47,4 +47,14 @@ public class DateUtils {
         return year;
     }
 
+    public static Integer getCurrentReportingYear() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+
+        //note: current reporting year is always the previous calendar year - like taxes.
+        //e.g. in 2020, facilities will be creating a 2019 report.
+        calendar.add(Calendar.YEAR, -1);
+        return calendar.get(Calendar.YEAR);
+    }
+
 }

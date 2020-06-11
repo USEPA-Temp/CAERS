@@ -34,7 +34,7 @@ export class EditFacilityContactComponent implements OnInit {
     type: [null, Validators.required],
     phone: ['', [
       Validators.required,
-      Validators.maxLength(15),
+      Validators.maxLength(10),
       Validators.pattern('^[0-9]{10,15}$')]],
     phoneExt: ['', [
       Validators.maxLength(5),

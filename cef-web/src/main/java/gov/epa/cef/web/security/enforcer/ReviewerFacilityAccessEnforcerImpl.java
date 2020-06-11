@@ -17,6 +17,12 @@ public class ReviewerFacilityAccessEnforcerImpl implements FacilityAccessEnforce
     }
 
     @Override
+    public Collection<String> getAuthorizedProgramIds() {
+
+        return null;
+    }
+
+    @Override
     public void enforceFacilitySite(Long id) {
         //Reviewer should be able to access everything
     }

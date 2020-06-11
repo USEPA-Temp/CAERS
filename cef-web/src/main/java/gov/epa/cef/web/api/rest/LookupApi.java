@@ -103,6 +103,18 @@ public class LookupApi {
         List<PollutantDto> result = lookupService.retrievePollutants();
         return new ResponseEntity<List<PollutantDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Pollutants for a specific year
+     * @return
+     */
+    @GetMapping(value = "/pollutant/{year}")
+    @ResponseBody
+    public ResponseEntity<List<PollutantDto>> retrieveCurrentPollutants(@NotNull @PathVariable Integer year) {
+
+        List<PollutantDto> result = lookupService.retrieveCurrentPollutants(year);
+        return new ResponseEntity<List<PollutantDto>>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve Reporting Period codes
@@ -225,7 +237,20 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveControlMeasureCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
-    
+
+    /**
+     * Retrieve Control Measure codes valid for a specific year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/controlMeasure/{year}")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveCurrentControlMeasureCodes(@NotNull @PathVariable Integer year) {
+
+        List<CodeLookupDto> result = lookupService.retrieveCurrentControlMeasureCodes(year);
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+
     /**
      * Retrieve Tribal Codes
      * @return
@@ -237,7 +262,7 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveTribalCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Retrieve Facility NAICS Codes
      * @return
@@ -249,7 +274,20 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveNaicsCode();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
-    
+
+    /**
+     * Retrieve Facility NAICS codes valid for a specific year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/naicsCode/{year}")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveCurrentNaicsCodes(@NotNull @PathVariable Integer year) {
+
+        List<CodeLookupDto> result = lookupService.retrieveCurrentNaicsCodes(year);
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+
     /**
      * Retrieve Aircraft Engine Type codes
      * @return

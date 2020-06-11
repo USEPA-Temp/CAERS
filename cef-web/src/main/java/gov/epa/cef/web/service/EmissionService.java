@@ -53,6 +53,13 @@ public interface EmissionService {
     public List<EmissionBulkEntryHolderDto> bulkUpdate(Long facilitySiteId, List<EmissionDto> dtos);
 
     /**
+     * Recalculate the total emissions in tons for all emissions in a report without changing any other values
+     * @param reportId
+     * @return
+     */
+    public List<EmissionDto> recalculateEmissionTons(Long reportId);
+
+    /**
      * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula
      * This method should be used when the Reporting Period in the database should be used for calculations 
      * and you have an EmissionDto, probably with values that differ from the ones in the database.
@@ -83,4 +90,16 @@ public interface EmissionService {
      */
     public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId);
 
+    /**
+     * Find Emission by TRI Facility ID and CAS Number.
+     * This method is the second version of the interface to TRIMEweb so that TRI users can
+     * see what emissions have been reported to the Common Emissions Form for the current
+     * facility and chemical that they are working on. This version takes a TRIFID and looks 
+     * up the EIS ID in CAERS and then finds any existing emissions.
+     *
+     * @param frsFacilityId
+     * @param pollutantCasId
+     * @return
+     */
+    public EmissionsByFacilityAndCASDto findEmissionsByTrifidAndCAS(String trifid, String pollutantCasId);
 }

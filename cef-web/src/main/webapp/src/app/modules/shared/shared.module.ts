@@ -4,7 +4,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCaretRight, faEdit, faCaretDown, faAngleLeft, faTrashAlt, faPlus, faCircle, faInfoCircle, faCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+   faCaretRight,
+   faEdit,
+   faCaretDown,
+   faAngleLeft,
+   faTrashAlt,
+   faPlus,
+   faCircle,
+   faInfoCircle,
+   faCheck,
+   faTimesCircle,
+   faFilter, faTimes, faSearch
+} from '@fortawesome/free-solid-svg-icons';
 import { CollapseIconComponent } from 'src/app/modules/shared/components/collapse-icon/collapse-icon.component';
 import { FacilityWidgetComponent } from 'src/app/modules/shared/components/facility-widget/facility-widget.component';
 import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/sidebar.component';
@@ -27,6 +39,7 @@ import { LegacyUomValidatorDirective } from './directives/legacy-uom-validator.d
 import { FileAttachmentModalComponent } from './components/file-attachment-modal/file-attachment-modal.component';
 import { ReportAttachmentTableComponent } from './components/report-attachment-table/report-attachment-table.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { LegacyItemValidatorDirective } from './directives/legacy-item-validator.directive';
 
 @NgModule({
   declarations: [
@@ -50,7 +63,8 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
     BulkUploadComponent,
     StripPeriodEndingPipe,
     LegacyUomValidatorDirective,
-    AdminNavComponent
+    AdminNavComponent,
+    LegacyItemValidatorDirective
 ],
     exports: [
         FacilityInfoComponent,
@@ -93,7 +107,10 @@ export class SharedModule {
     library.add(faEdit);
     library.add(faCircle);
     library.add(faInfoCircle);
+    library.add(faSearch);
     library.add(faCheck);
     library.add(faTimesCircle);
+    library.add(faTimes);
+    library.add(faFilter);
   }
 }

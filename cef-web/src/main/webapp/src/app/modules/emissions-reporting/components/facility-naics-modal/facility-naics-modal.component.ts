@@ -8,6 +8,7 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-facility-naics-modal',
@@ -17,6 +18,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 export class FacilityNaicsModalComponent extends BaseSortableTable implements OnInit {
   @Input() facilitySiteId: number;
   @Input() facilityNaics: FacilityNaicsCode[];
+  @Input() year: number;
   updateFacilityNaics: FacilityNaicsCode;
   primaryFlag = false;
   check = true;
@@ -38,7 +40,9 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
   ngOnInit() {
 
-    this.lookupService.retrieveNaicsCode()
+    this.naicsForm.get('selectedNaics').setValidators([Validators.required, legacyItemValidator(this.year, 'NAICS Code', 'code')]);
+
+    this.lookupService.retrieveCurrentNaicsCodes(this.year)
     .subscribe(result => {
       this.facilityNaicsCode = result;
     });

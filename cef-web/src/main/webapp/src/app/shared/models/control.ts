@@ -1,6 +1,7 @@
 import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 import { ControlPollutant } from 'src/app/shared/models/control-pollutant';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 
 export class Control {
   id: number;
@@ -13,5 +14,5 @@ export class Control {
   assignments: ControlAssignment[];
   pollutants: ControlPollutant[];
   comments: string;
-  controlMeasureCode: BaseCodeLookup;
+  controlMeasureCode: InventoryYearCodeLookup;
 }

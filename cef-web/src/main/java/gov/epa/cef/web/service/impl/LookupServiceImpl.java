@@ -255,6 +255,19 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    /**
+     * Retrieve non-legacy Pollutants
+     * @return
+     */
+    @Override
+    public List<PollutantDto> retrieveCurrentPollutants(Integer year) {
+
+        List<Pollutant> entities = pollutantRepo.findAllCurrent(year, Sort.by(Direction.ASC, "pollutantName"));
+
+        List<PollutantDto> result = lookupMapper.pollutantToDtoList(entities);
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveReportingPeriodCodes()
      */
@@ -426,11 +439,25 @@ public class LookupServiceImpl implements LookupService {
         Iterable<ControlMeasureCode> entities = controlMeasureCodeRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
-            result.add(lookupMapper.toDto(entity));
+            result.add(lookupMapper.controlMeasureCodeToDto(entity));
         });
         return result;
     }
-    
+
+    /**
+     * Retrieve non-legacy Control Measure codes
+     * @param year
+     * @return
+     */
+    @Override
+    public List<CodeLookupDto> retrieveCurrentControlMeasureCodes(Integer year) {
+
+        List<ControlMeasureCode> entities = controlMeasureCodeRepo.findAllCurrent(year, Sort.by(Direction.ASC, DESCRIPTION));
+
+        List<CodeLookupDto> result = lookupMapper.controlMeasureCodeToDtoList(entities);
+        return result;
+    }
+
     public ControlMeasureCode retrieveControlMeasureCodeEntityByCode(String code) {
     	ControlMeasureCode result = controlMeasureCodeRepo
             .findById(code)
@@ -471,7 +498,23 @@ public class LookupServiceImpl implements LookupService {
         });
         return result;
     }
-    
+
+    /**
+     * Retrieve non-legacy Facility NAICS codes
+     * @param year
+     * @return
+     */
+    @Override
+    public List<CodeLookupDto> retrieveCurrentNaicsCodes(Integer year) {
+
+        List<NaicsCode> entities = naicsCodeRepo.findAllCurrent(year, Sort.by(Direction.ASC, "code")).stream()
+                .filter(entity ->  entity.getCode().toString().length() == 6)
+                .collect(Collectors.toList());
+
+        List<CodeLookupDto> result = lookupMapper.naicsCodeToDtoList(entities);
+        return result;
+    }
+
     @Override
     public List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes(String scc) {
 

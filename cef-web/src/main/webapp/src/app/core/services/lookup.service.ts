@@ -12,6 +12,7 @@ import { PointSourceSccCode } from 'src/app/shared/models/point-source-scc-code'
 import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
+import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,11 @@ export class LookupService {
 
   retrievePollutant(): Observable<Pollutant[]> {
     const url = `${this.baseUrl}/pollutant`;
+    return this.http.get<Pollutant[]>(url);
+  }
+
+  retrieveCurrentPollutants(year: number): Observable<Pollutant[]> {
+    const url = `${this.baseUrl}/pollutant/${year}`;
     return this.http.get<Pollutant[]>(url);
   }
 
@@ -102,6 +108,11 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
+  retrieveCurrentControlMeasureCodes(year: number): Observable<InventoryYearCodeLookup[]> {
+    const url = `${this.baseUrl}/controlMeasure/${year}`;
+    return this.http.get<InventoryYearCodeLookup[]>(url);
+  }
+
   retrieveTribalCode(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/tribalCode`;
     return this.http.get<BaseCodeLookup[]>(url);
@@ -109,6 +120,11 @@ export class LookupService {
 
   retrieveNaicsCode(): Observable<FacilityNaicsCode[]> {
     const url = `${this.baseUrl}/naicsCode`;
+    return this.http.get<FacilityNaicsCode[]>(url);
+  }
+
+  retrieveCurrentNaicsCodes(year: number): Observable<FacilityNaicsCode[]> {
+    const url = `${this.baseUrl}/naicsCode/${year}`;
     return this.http.get<FacilityNaicsCode[]>(url);
   }
 

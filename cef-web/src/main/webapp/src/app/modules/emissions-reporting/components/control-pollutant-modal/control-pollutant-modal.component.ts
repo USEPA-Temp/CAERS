@@ -8,6 +8,7 @@ import { ControlService } from 'src/app/core/services/control.service';
 import { Validators, FormBuilder, ValidatorFn, FormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-control-pollutant-modal',
@@ -21,11 +22,12 @@ export class ControlPollutantModalComponent implements OnInit {
   selectedControlPollutant: ControlPollutant;
   controlId: number;
   facilitySiteId: number;
+  year: number;
   edit: boolean;
   duplicateCheck = true;
 
   pollutantForm = this.fb.group({
-      pollutant: [null , Validators.required],
+      pollutant: [null , [Validators.required]],
       percentReduction: ['', [
         Validators.required,
         Validators.max(99.9),
@@ -46,7 +48,10 @@ export class ControlPollutantModalComponent implements OnInit {
     } else {
       this.selectedControlPollutant = new ControlPollutant();
     }
-    this.lookupService.retrievePollutant()
+
+    this.pollutantForm.get('pollutant').setValidators([Validators.required, legacyItemValidator(this.year, 'Pollutant', 'pollutantName')]);
+
+    this.lookupService.retrieveCurrentPollutants(this.year)
     .subscribe(result => {
       this.pollutantValues = result;
     });

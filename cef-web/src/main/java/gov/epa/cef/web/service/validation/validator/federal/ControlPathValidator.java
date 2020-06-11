@@ -24,11 +24,62 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 public class ControlPathValidator extends BaseValidator<ControlPath> {
 	
 	@Override
-  public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
+	public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
 		
 	boolean result = true;
 	CefValidatorContext context = getCefValidatorContext(validatorContext);
 	
+		List<ControlAssignment> controlAssignmentList = new ArrayList<ControlAssignment>();
+		controlAssignmentList = controlAssignmentListBuilder(controlPath.getAssignments());
+		
+		Map<Object, List<ControlAssignment>> cdMap = controlAssignmentList.stream()
+				.filter(cd -> (cd.getControl() != null))
+				.collect(Collectors.groupingBy(cd -> cd.getControl().getId()));
+		
+		for (List<ControlAssignment> cdList: cdMap.values()) {
+			if (cdList.size() > 1) {
+				
+				result = false;
+					context.addFederalError(
+		  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+		  			"controlPath.assignment.controlDevice.duplicate",
+		  			createValidationDetails(controlPath),
+		  			cdList.get(0).getControl().getIdentifier(),
+		  			cdList.get(0).getControl().getControlMeasureCode().getDescription());
+			}
+		}
+		
+        Map<Object, List<ControlAssignment>> cpDuplicateMap = controlPath.getAssignments().stream()
+        		.filter(cpa -> (cpa.getControlPathChild() != null))
+        		.collect(Collectors.groupingBy(ca -> ca.getControlPathChild().getId()));
+        
+        for (List<ControlAssignment> cpList: cpDuplicateMap.values()) {
+            if (cpList.size() > 1) {
+		
+                 result = false;
+                 context.addFederalError(
+                   ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+                   "controlPath.assignment.controlPath.duplicate",
+                   createValidationDetails(controlPath),
+                   cpList.get(0).getControlPathChild().getPathId());
+                    
+            }
+        }
+        
+		List<ControlAssignment> percentApptRange = controlPath.getAssignments().stream()
+				.filter(appt -> (appt.getPercentApportionment() != null))
+				.collect(Collectors.toList());
+
+		for (ControlAssignment ca: percentApptRange) {
+			if (ca.getPercentApportionment() < 0.1 || ca.getPercentApportionment() > 100) {
+				result = false;
+					context.addFederalError(
+		  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+		  			"controlPath.assignment.percentApportionment.range",
+		  			createValidationDetails(controlPath),
+		  			ca.getControlPath().getPathId());
+			}
+		}
 	
 		if(controlPath.getReleasePointAppts().isEmpty()){
         	result = false;
@@ -52,6 +103,30 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             			"controlPath.assignment.notAssigned",
             			createValidationDetails(controlPath));
         	}
+        	
+        List<ControlAssignment> sequenceNullMap = controlPath.getAssignments().stream()
+                .filter(cpa -> (cpa.getSequenceNumber() == null))
+                .collect(Collectors.toList());
+         
+        for (ControlAssignment ca: sequenceNullMap) {
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+        			"controlPath.assignment.sequenceNumber.required",
+        			createValidationDetails(controlPath, ca));
+    	}
+                
+        List<ControlAssignment> caPathAndControlNullMap = controlPath.getAssignments().stream()
+                .filter(cpa -> (cpa.getControl() == null && cpa.getControlPathChild() == null))
+                .collect(Collectors.toList());
+        
+        for (ControlAssignment ca: caPathAndControlNullMap) {
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+        			"controlPath.assignment.pathOrControl.required",
+        			createValidationDetails(controlPath));
+        }
         
 	return result;
   }
@@ -59,6 +134,21 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	private ValidationDetailDto createValidationDetails(ControlPath source) {
 
 	    String description = MessageFormat.format("ControlPath: {0}", source.getPathId());
+	
+	    ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getPathId(), EntityType.CONTROL_PATH, description);
+	    return dto;
+	}
+	
+	private ValidationDetailDto createValidationDetails(ControlPath source, ControlAssignment assignment) {
+
+		String description;
+		
+		if (assignment.getControl() != null) {
+		    description = MessageFormat.format("Control Path: {0}, Control Path Assignment: {1}", source.getPathId(), assignment.getControl().getIdentifier());
+		}
+		else {
+		    description = MessageFormat.format("Control Path: {0}, Control Path Assignment: {1}", source.getPathId(), assignment.getControlPathChild().getPathId());
+		}
 	
 	    ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getPathId(), EntityType.CONTROL_PATH, description);
 	    return dto;
@@ -76,5 +166,18 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
     	}
     	return controls;
     }
+    
+    private List<ControlAssignment> controlAssignmentListBuilder(List<ControlAssignment> controlAssignments){
+    	List<ControlAssignment> controlAssignmentList = new ArrayList<ControlAssignment>(); 
+    	for(ControlAssignment ca: controlAssignments){
+    		if(ca.getControl() != null){
+    			controlAssignmentList.add(ca);
+    		}
+    		if(ca.getControlPathChild() != null){
+    			controlAssignmentList.addAll(controlAssignmentListBuilder(ca.getControlPathChild().getAssignments()));
+    		}
+    	}
+    	return controlAssignmentList;
+	}
     
 }

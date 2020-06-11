@@ -20,11 +20,11 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   edit: boolean;
   controlPaths: ControlPath[];
   controls: Control[];
-  controlSelected: string;
-  controlPathChildSelected: string;
+  pathAssignmentList: ControlAssignment[] = [];
+  controlAssignmentList: ControlAssignment[] = [];
 
   controlPathAssignmentForm = this.fb.group({
-    percentApportionment: ['', [Validators.required, Validators.max(100), Validators.pattern('[0-9]*')]],
+    percentApportionment: ['', [Validators.required, Validators.min(0.1), Validators.max(100), Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')]],
     control: [''],
     controlPathChild: [''],
     sequenceNumber: ['', [Validators.required, Validators.pattern('[0-9]*')]]
@@ -56,6 +56,30 @@ export class ControlPathAssignmentModalComponent implements OnInit {
       } else {
         this.selectedControlPathAssignment = new ControlAssignment();
       }
+
+      this.controlPathAssignmentForm.get('control').valueChanges
+      .subscribe(() => {
+          this.checkSelectedPathAssignment();
+      });
+
+      this.controlPathAssignmentForm.get('controlPathChild').valueChanges
+      .subscribe(() => {
+          this.checkSelectedPathAssignment();
+      });
+
+      // gets all parent and child assignments associated with current control path
+      this.controlPathService.retrieveParentAssignmentsForControlPathChild(this.controlPath.id)
+      .subscribe(controlPaths => {
+        if (controlPaths.length > 0) {
+          this.getParentAssignmentList(controlPaths);
+          this.controlPath.assignments.forEach(element => {
+          this.pathAssignmentList.push(element);
+        });
+        } else {
+          this.getParentAssignmentList(this.controlPath.assignments);
+        }
+      });
+
   }
 
   onClose() {
@@ -67,6 +91,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   }
 
   onSubmit() {
+    this.checkSelectedPathAssignment();
     if (!this.isValid()) {
         this.controlPathAssignmentForm.markAllAsTouched();
         this.controlPathAssignmentForm.controls.control.markAsDirty();
@@ -119,6 +144,83 @@ export class ControlPathAssignmentModalComponent implements OnInit {
       }
     }
   }
+
+  checkSelectedPathAssignment() {
+    let controlList = [];
+    let pathList = [];
+
+    // if control is chosen, check all control assignments with selected control
+    if (this.controlPathAssignmentForm.get('control').value !== null) {
+        // get unique control assignments from the list
+        controlList = [...new Set(this.controlAssignmentList.filter(val => val.control !== null
+        && (val.control.id === this.controlPathAssignmentForm.get('control').value.id)).map(item => item.id))];
+
+        if (this.edit && controlList && (this.selectedControlPathAssignment.control
+        && this.selectedControlPathAssignment.control.id === this.controlPathAssignmentForm.get('control').value.id)) {
+          if (this.controlPathAssignmentForm.get('control').value.assignments.controlPathChild !== null && controlList.length > 1) {
+            this.controlPathAssignmentForm.get('control').markAsTouched();
+            this.controlPathAssignmentForm.get('control').setErrors({ duplicateControl: true });
+          }
+      } else if (controlList.length > 0) {
+        this.controlPathAssignmentForm.get('control').markAsTouched();
+        this.controlPathAssignmentForm.get('control').setErrors({ duplicateControl: true });
+      }
+    }
+
+    // if control path is chosen, check all paths with selected control path child
+    if (this.controlPathAssignmentForm.get('controlPathChild').value !== null) {
+      pathList = (JSON.parse(JSON.stringify(this.pathAssignmentList))).filter(val => val.controlPathChild !== null);
+
+      if (this.edit && this.selectedControlPathAssignment.controlPathChild
+        && this.selectedControlPathAssignment.controlPathChild.id === this.controlPathAssignmentForm.get('controlPathChild').value.id) {
+        if (pathList.filter(val => val.controlPathChild.id === this.controlPathAssignmentForm.get('controlPathChild').value.id).length > 1) {
+          this.controlPathAssignmentForm.get('controlPathChild').markAsTouched();
+          this.controlPathAssignmentForm.get('controlPathChild').setErrors({duplicateChildPath: true});
+        }
+      } else {
+        if (pathList.filter(val => val.controlPathChild.id === this.controlPathAssignmentForm.get('controlPathChild').value.id).length > 0
+          || pathList.filter(val => val.controlPath.id === this.controlPathAssignmentForm.get('controlPathChild').value.id).length > 0) {
+          this.controlPathAssignmentForm.get('controlPathChild').markAsTouched();
+          this.controlPathAssignmentForm.get('controlPathChild').setErrors({duplicateChildPath: true});
+        }
+      }
+    }
+  }
+
+  getChildAssignmentList(assignmentList) {
+    for (const val of assignmentList) {
+      if (val.control != null) {
+        this.controlAssignmentList.push(val);
+      }
+      if (val.controlPathChild) {
+        this.getChildAssignmentList(val.controlPathChild.assignments);
+      }
+    }
+  }
+
+  getParentAssignmentList(assignmentList) {
+    const tempList = [];
+    for (const ca of assignmentList) {
+      if (ca.control != null) {
+        this.controlAssignmentList.push(ca);
+      }
+      this.pathAssignmentList.push(ca);
+      // get control assignments for given control path id
+      this.controlPathService.retrieveParentAssignmentsForControlPathChild(ca.controlPath.id)
+      .subscribe(parentAssignments => {
+        if (parentAssignments.length > 0) {
+          this.getParentAssignmentList(parentAssignments);
+        } else if (parentAssignments.length === 0) {
+          this.controlPathService.retrieveAssignmentsForControlPath(ca.controlPath.id)
+          .subscribe(controlPathAssignments => {
+            controlPathAssignments.forEach(val => 
+              this.controlAssignmentList.push(val));
+          });
+          tempList.push(ca);
+          this.getChildAssignmentList(tempList);
+        }
+      });
+    }}
 
   customValidationFunction(formGroup): any {
     const controlField = formGroup.controls.control.value;

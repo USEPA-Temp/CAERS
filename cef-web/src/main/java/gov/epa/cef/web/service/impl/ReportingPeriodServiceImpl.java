@@ -14,9 +14,15 @@ import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
 import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
+import gov.epa.cef.web.util.CalculationUtils;
+import gov.epa.cef.web.util.MassUomConversion;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +30,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ReportingPeriodServiceImpl implements ReportingPeriodService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ReportingPeriodRepository repo;
@@ -119,6 +127,8 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
             } else {
                 result.getNotUpdatedEmissions().add(emission.getPollutant().getPollutantName());
             }
+
+            emission.setCalculatedEmissionsTons(calculateEmissionTons(emission));
         });
 
         ReportingPeriodDto resultDto = mapper.toDto(repo.save(period));
@@ -201,6 +211,18 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
         repo.saveAll(periods);
 
         return emissionService.bulkUpdate(facilitySiteId, Collections.emptyList());
+    }
+
+    private BigDecimal calculateEmissionTons(Emission emission) {
+        try {
+            BigDecimal calculatedEmissionsTons = CalculationUtils.convertMassUnits(emission.getTotalEmissions(), 
+                    MassUomConversion.valueOf(emission.getEmissionsUomCode().getCode()), 
+                    MassUomConversion.TON);
+            return calculatedEmissionsTons;
+        } catch (IllegalArgumentException ex) {
+            logger.debug("Could not perform emission conversion. {}", ex.getLocalizedMessage());
+            return null;
+        }
     }
 
 }

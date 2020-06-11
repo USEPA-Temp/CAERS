@@ -5,4 +5,6 @@ export class FacilityNaicsCode {
   code: string;
   description: string;
   primaryFlag: boolean;
+  lastInventoryYear: number;
+  mapTo: string;
 }

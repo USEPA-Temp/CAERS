@@ -1,5 +1,23 @@
 package gov.epa.cef.web.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import gov.epa.cef.web.domain.EisTriXref;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
@@ -8,6 +26,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.repository.EisTriXrefRepository;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -23,22 +42,6 @@ import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EmissionServiceImpl implements EmissionService {
@@ -71,11 +74,14 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Autowired
     private EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
+    
+    @Autowired
+    private EisTriXrefRepository eisTriXrefRepo;
 
     private static final String POINT_EMISSION_RELEASE_POINT = "stack";
     private static final int TWO_DECIMAL_POINTS = 2;
 
-    private enum RETURN_CODE {NO_EMISSIONS_REPORT, NO_EMISSIONS_REPORTED_FOR_CAS, EMISSIONS_FOUND}
+    private enum RETURN_CODE {NO_EMISSIONS_REPORT, NO_EMISSIONS_REPORTED_FOR_CAS, EMISSIONS_FOUND, MULTIPLE_FACILITIES, NO_EIS_FACILITIES}
 
     /**
      * Create a new emission from a DTO object
@@ -273,6 +279,27 @@ public class EmissionServiceImpl implements EmissionService {
     }
 
     /**
+     * Recalculate the total emissions in tons for all emissions in a report without changing any other values
+     * @param reportId
+     * @return
+     */
+    public List<EmissionDto> recalculateEmissionTons(Long reportId) {
+
+        List<Emission> emissions = this.emissionRepo.findAllByReportId(reportId);
+        List<Emission> result = new ArrayList<>();
+
+        emissions.forEach(e -> {
+            BigDecimal calculatedValue = calculateEmissionTons(e);
+            if (!Objects.equals(calculatedValue, e.getCalculatedEmissionsTons())) {
+                e.setCalculatedEmissionsTons(calculatedValue);
+                result.add(this.emissionRepo.save(e));
+            }
+        });
+
+        return emissionMapper.toDtoList(result);
+    }
+
+    /**
      * Calculate total emissions for an emission. Also calculates emission factor if it uses a formula
      * This method should be used when the Reporting Period in the database should be used for calculations 
      * and you have an EmissionDto, probably with values that differ from the ones in the database.
@@ -444,6 +471,108 @@ public class EmissionServiceImpl implements EmissionService {
 
         logger.debug("findEmissionsByFacilityAndCAS - Exiting");
         return emissionsByFacilityDto;
+    }
+    
+    /**
+     * Find Emission by TRI Facility ID and CAS Number.
+     * This method is the second version of the interface to TRIMEweb so that TRI users can
+     * see what emissions have been reported to the Common Emissions Form for the current
+     * facility and chemical that they are working on. This version takes a TRIFID and looks 
+     * up the EIS ID in CAERS and then finds any existing emissions.
+     *
+     * @param frsFacilityId
+     * @param pollutantCasId
+     * @return
+     */
+    public EmissionsByFacilityAndCASDto findEmissionsByTrifidAndCAS(String trifid, String pollutantCasId) {
+        logger.debug("findEmissionsByTrifidAndCAS - Entering");
+
+        EmissionsByFacilityAndCASDto emissionsByFacilityDto = new EmissionsByFacilityAndCASDto();
+        Short latestReportYear = null;
+
+        //Get The Corresponding EIS for the TRIFID that was provided
+        List<EisTriXref> xrefs = eisTriXrefRepo.findByTrifid(trifid);
+        
+
+        if (xrefs.isEmpty()) {
+            logger.debug("findEmissionsByTrifidAndCAS - No corresponding EIS ID found for TRIFID - returning empty");
+            String noEISFacilityMessage = "No corresponding EIS ID found for TRIFID = ".concat(trifid);
+            emissionsByFacilityDto.setMessage(noEISFacilityMessage);
+            emissionsByFacilityDto.setCode(RETURN_CODE.NO_EIS_FACILITIES.toString());
+            return emissionsByFacilityDto;	
+        }
+        
+        //we should only ever get one eis ID back. If we get multiple back the we don't know which one to lookup. 
+        //Respond to the calling service with the appropriate message.
+        else if (xrefs.size() > 1) {
+            logger.debug("findEmissionsByTrifidAndCAS - Found multiple EIS IDs for the given TRIFID - "
+            		+ "returning empty data to calling service");
+            String multipleFacilitiesMessage = "Found multiple EIS IDs for the provided TRIFID = ".concat(trifid).
+            		concat(". Unable to retrieve data.");
+            emissionsByFacilityDto.setMessage(multipleFacilitiesMessage);
+            emissionsByFacilityDto.setCode(RETURN_CODE.MULTIPLE_FACILITIES.toString());
+            return emissionsByFacilityDto;
+        }
+        
+        //First find the most recent report for the the given facility so we can check THAT report for emissions
+        String eisProgramId = xrefs.get(0).getEisId();
+        List<EmissionsReport> emissionsReports = emissionsReportRepo.findByEisProgramId(eisProgramId, Sort.by(Sort.Direction.DESC, "year"));
+        if (!emissionsReports.isEmpty()) {
+            latestReportYear = emissionsReports.get(0).getYear();
+        } else {
+            logger.debug("findEmissionsByTrifidAndCAS - No Emissions Reports for the given facility - returning empty");
+            String noReportsMessage = "No available reports found for TRIFID ID = ".concat(trifid);
+            emissionsByFacilityDto.setMessage(noReportsMessage);
+            emissionsByFacilityDto.setCode(RETURN_CODE.NO_EMISSIONS_REPORT.toString());
+            return emissionsByFacilityDto;
+        }
+
+        List<EmissionsByFacilityAndCAS> emissionsByFacilityAndCAS =
+                emissionsByFacilityAndCASRepo.findByTrifidAndPollutantCasIdAndYear(trifid, pollutantCasId, latestReportYear);
+
+        //if there are any emissions that match the facility and CAS Id for the most recent year,
+        //then loop through them and add them to the point / nonPoint totals
+        if (emissionsByFacilityAndCAS.isEmpty()) {
+            logger.debug("findEmissionsByTrifidAndCAS - No emissions for the given CAS number were reported on the most recent report for the facility");
+            String noEmissionsMessage = "There were no emissions reported for the CAS number ".concat(pollutantCasId).
+                    concat(" on the most recent emissions report for TRIFID = ").concat(trifid);
+            emissionsByFacilityDto.setMessage(noEmissionsMessage);
+            emissionsByFacilityDto.setCode(RETURN_CODE.NO_EMISSIONS_REPORTED_FOR_CAS.toString());
+            return emissionsByFacilityDto;
+        } else {
+            logger.debug("findEmissionsByTrifidAndCAS - found {} emission records", emissionsByFacilityAndCAS.size());
+            //populate the common parts of the DTO object by mapping the first result.
+            //since we're matching on facility and CAS, all of these fields should be the same for each instance of the list
+            emissionsByFacilityDto = emissionsByFacilityAndCASMapper.toDto(emissionsByFacilityAndCAS.get(0));
+            
+            //query the report history table to find the most recent SUBMITTED date for the report we're returning data for
+            emissionsByFacilityDto.setCertificationDate(historyRepo.retrieveMaxSubmissionDateByReportId(emissionsByFacilityDto.getReportId()).orElse(null));
+            
+            BigDecimal stackEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
+            BigDecimal fugitiveEmissions = new BigDecimal(0).setScale(TWO_DECIMAL_POINTS, RoundingMode.HALF_UP);
+
+            for (EmissionsByFacilityAndCAS currentEmissions :emissionsByFacilityAndCAS) {
+                //if the release point type is fugitive - add it to the "fugitive" emissions. Otherwise add the amount
+                //to the stack release emissions
+                if (StringUtils.equalsIgnoreCase(POINT_EMISSION_RELEASE_POINT, currentEmissions.getReleasePointType())) {
+                    stackEmissions = stackEmissions.add(currentEmissions.getApportionedEmissions());
+                } else {
+                    fugitiveEmissions = fugitiveEmissions.add(currentEmissions.getApportionedEmissions());
+                }
+            }
+
+            //Round both of the values to the nearest hundredth
+            emissionsByFacilityDto.setStackEmissions(stackEmissions);
+            emissionsByFacilityDto.setFugitiveEmissions(fugitiveEmissions);
+            String totalEmissionsMessage = "Found %s stack emissions and %s fugitive emissions for CAS number = %s on"
+                    + " the most recent emissions report for TRIFID = %s";
+            totalEmissionsMessage = String.format(totalEmissionsMessage, stackEmissions.toPlainString(), fugitiveEmissions.toPlainString(), pollutantCasId, trifid);
+            emissionsByFacilityDto.setMessage(totalEmissionsMessage);
+            emissionsByFacilityDto.setCode(RETURN_CODE.EMISSIONS_FOUND.toString());
+        }
+
+        logger.debug("findEmissionsByTrifidAndCAS - Exiting");
+        return emissionsByFacilityDto;    	
     }
     
     private BigDecimal calculateEmissionTons(Emission emission) {

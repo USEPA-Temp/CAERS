@@ -39,6 +39,9 @@ public class Pollutant implements Serializable {
     @Column(name = "pollutant_standard_uom_code", length = 12)
     private String pollutantStandardUomCode;
 
+    @Column(name = "last_inventory_year")
+    private Integer lastInventoryYear;
+
     public String getPollutantCode() {
         return pollutantCode;
     }
@@ -85,5 +88,13 @@ public class Pollutant implements Serializable {
 
     public void setPollutantStandardUomCode(String pollutantStandardUomCode) {
         this.pollutantStandardUomCode = pollutantStandardUomCode;
+    }
+
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
     }
 }
