@@ -283,7 +283,7 @@ export class FileAttachmentModalComponent implements OnInit {
     if (file.item(0)) {
       this.selectedFile = file.item(0);
       const fileReader = new FileReader();
-      this.disableButton = false;
+      this.disableButton = true;
 
       fileReader.readAsText(this.selectedFile, 'UTF-8');
 
@@ -294,11 +294,12 @@ export class FileAttachmentModalComponent implements OnInit {
 
         if (fileNameLength || fileSize || fileType) {
 
-          this.disableButton = true;
           this.bsflags.showUserErrors = true;
           this.uploadFailed = true;
 
           this.selectedFile = null;
+        } else {
+          this.disableButton = false;
         }
       };
 
