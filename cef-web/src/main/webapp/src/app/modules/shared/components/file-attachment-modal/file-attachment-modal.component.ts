@@ -282,7 +282,6 @@ export class FileAttachmentModalComponent implements OnInit {
 
     if (file.item(0)) {
       this.selectedFile = file.item(0);
-      const fileReader = new FileReader();
       this.disableButton = true;
 
       let fileSize = this.checkFileSize(this.selectedFile);
@@ -298,10 +297,6 @@ export class FileAttachmentModalComponent implements OnInit {
       } else {
         this.disableButton = false;
       }
-
-      fileReader.onerror = (error) => {
-          console.log(error);
-      };
     }
 
   }
