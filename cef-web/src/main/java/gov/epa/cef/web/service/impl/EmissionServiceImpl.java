@@ -252,15 +252,17 @@ public class EmissionServiceImpl implements EmissionService {
                     eDto.setCalculationFailureMessage(calculationFailureMessage);
 
                     // find previous reporting period
-                    List<Emission> oldEntities = emissionRepo.retrieveMatchingForYear(eDto.getPollutant().getPollutantCode(),
-                            rpDto.getReportingPeriodTypeCode().getCode(),
-                            rpDto.getEmissionsProcessIdentifier(),
-                            rpDto.getUnitIdentifier(), 
-                            lastReport.getEisProgramId(), 
-                            lastReport.getYear());
-                    if (!oldEntities.isEmpty()) {
-                        eDto.setPreviousTotalEmissions(oldEntities.get(0).getTotalEmissions());
-                        eDto.setPreviousEmissionsUomCode(oldEntities.get(0).getEmissionsUomCode().getCode());
+                    if (lastReport != null) {
+                        List<Emission> oldEntities = emissionRepo.retrieveMatchingForYear(eDto.getPollutant().getPollutantCode(),
+                                rpDto.getReportingPeriodTypeCode().getCode(),
+                                rpDto.getEmissionsProcessIdentifier(),
+                                rpDto.getUnitIdentifier(), 
+                                lastReport.getEisProgramId(), 
+                                lastReport.getYear());
+                        if (!oldEntities.isEmpty()) {
+                            eDto.setPreviousTotalEmissions(oldEntities.get(0).getTotalEmissions());
+                            eDto.setPreviousEmissionsUomCode(oldEntities.get(0).getEmissionsUomCode().getCode());
+                        }
                     }
 
                     return eDto;
