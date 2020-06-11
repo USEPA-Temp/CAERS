@@ -32,8 +32,8 @@
                           class="mr-3 form-control form-control-sm"
                           style="width: 150px"
                           [formControl]="cboFilterStatus">
-                     <option *ngFor="let item of (availableStatuses | sortBy:'key')"
-                             [value]="item.value">{{ item.value }}</option>
+                     <option *ngFor="let item of (availableStatuses | sortBy:'':'asc')"
+                             [value]="item">{{ item }}</option>
                   </select>
 
                   <label for="id-filter-text" class="col-form-label mr-2">
@@ -102,7 +102,7 @@
                      <tr *ngFor="let report of (tableData | dataFilter:txtFilter.value:'facilityName,agencyFacilityId,eisProgramId,lastTransactionId')">
                         <td class="text-center">
                            <input type="checkbox"
-                                  class="form-check-inline"
+                                  class="form-check-inline mr-0"
                                   (change)="onSelectChange($event, report)"/>
                         </td>
                         <td>
@@ -124,7 +124,8 @@
                            <span [textContent]="report.lastSubmissionStatus"></span>
                         </td>
                         <td class="text-center">
-                           <input type="checkbox" class="form-check-inline" disabled
+                           <input type="checkbox"
+                                  class="form-check-inline mr-0" disabled
                                   [value]="report.passed"/>
                         </td>
                         <td>
@@ -157,9 +158,10 @@
                   </label>
                   <select id="id-submit-type"
                           class="mr-3 form-control form-control-sm"
-                          style="width: 150px">
+                          style="width: 150px"
+                          [formControl]="cboSubmitType">
                      <option *ngFor="let item of (submissionTypes | keyvalue | sortBy: 'key')"
-                             [value]="item.key">{{item.value}}</option>
+                             [value]="item.value">{{item.value}}</option>
                   </select>
 
                   <label for="id-submit-category" class="col-form-label mr-2">
@@ -167,9 +169,10 @@
                   </label>
                   <select id="id-submit-category"
                           class="mr-3 form-control form-control-sm"
-                          style="width: 150px">
+                          style="width: 150px"
+                          [formControl]="cboSubmitCategory">
                      <option *ngFor="let item of (dataCategories | keyvalue | sortBy: 'key')"
-                             [value]="item.key">{{item.value}}</option>
+                             [value]="item.value">{{item.value}}</option>
                   </select>
 
                   <button type="button" class="btn btn-success"
@@ -297,7 +300,8 @@
                       [maxLength]="dlgEditComment.maxlength"
                       [formControl]="txtComment"></textarea>
             <div class="form-text text-right text-muted" role="status" aria-live="polite">
-               <span>{{txtComment.value ? txtComment.value.length : 0}} of {{dlgEditComment.maxlength}} chars used</span>
+               <span>{{txtComment.value ? txtComment.value.length : 0}} of {{dlgEditComment.maxlength}}
+                  chars used</span>
             </div>
          </div>
       </div>

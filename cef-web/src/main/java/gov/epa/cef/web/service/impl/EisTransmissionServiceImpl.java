@@ -76,7 +76,7 @@ public class EisTransmissionServiceImpl {
 
         String transactionId = transferXml(this.xmlService.generateEisDocument(eisHeader));
 
-        Streams.stream(this.reportRepository.findAllById(eisHeader.getEmissionReports()))
+        Streams.stream(this.reportRepository.findAllById(eisHeader.getEmissionsReports()))
             .peek(report -> {
 
                 report.setEisLastTransactionId(transactionId);
