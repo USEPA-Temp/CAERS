@@ -282,34 +282,26 @@ export class FileAttachmentModalComponent implements OnInit {
 
     if (file.item(0)) {
       this.selectedFile = file.item(0);
-      const fileReader = new FileReader();
-      this.disableButton = false;
+      this.disableButton = true;
 
-      fileReader.readAsText(this.selectedFile, 'UTF-8');
+      let fileSize = this.checkFileSize(this.selectedFile);
+      let fileNameLength = this.checkFileNameLength(this.selectedFile.name);
+      let fileType = this.checkFileFormat(this.selectedFile);
 
-      fileReader.onload = () => {
-        let fileSize = this.checkFileSize(this.selectedFile);
-        let fileNameLength = this.checkFileNameLenght(this.selectedFile.name);
-        let fileType = this.checkFileFormat(this.selectedFile);
+      if (fileNameLength || fileSize || fileType) {
 
-        if (fileNameLength || fileSize || fileType) {
+        this.bsflags.showUserErrors = true;
+        this.uploadFailed = true;
 
-          this.disableButton = true;
-          this.bsflags.showUserErrors = true;
-          this.uploadFailed = true;
-
-          this.selectedFile = null;
-        }
-      };
-
-      fileReader.onerror = (error) => {
-          console.log(error);
-      };
+        this.selectedFile = null;
+      } else {
+        this.disableButton = false;
+      }
     }
 
   }
 
-  checkFileNameLenght(fileName: string) {
+  checkFileNameLength(fileName: string) {
     let nameLength = fileName.length;
     const maxLength = 255;
 
