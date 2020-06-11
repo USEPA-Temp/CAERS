@@ -133,6 +133,11 @@ export class LookupService {
     return this.http.get<AircraftEngineTypeCode[]>(url);
   }
 
+  retrieveCurrentAircraftEngineCodes(scc: string, year: number): Observable<AircraftEngineTypeCode[]> {
+    const url = `${this.baseUrl}/aircraftEngineCode/${scc}/${year}`;
+    return this.http.get<AircraftEngineTypeCode[]>(url);
+  }
+
   retrievePointSourceSccCode(code: string): Observable<PointSourceSccCode> {
     const url = `${this.baseUrl}/pointSourceSccCode/${code}`;
     return this.http.get<PointSourceSccCode>(url);

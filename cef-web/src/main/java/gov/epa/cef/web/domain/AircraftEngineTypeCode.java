@@ -46,6 +46,9 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
     @Column(name = "scc", length = 10)
     private String scc;
 
+    @Column(name = "last_inventory_year")
+    private Integer lastInventoryYear;
+
     // Property accessors
     public String getCode() {
         return this.code;
@@ -101,6 +104,14 @@ public class AircraftEngineTypeCode implements java.io.Serializable {
 
     public void setScc(String scc) {
         this.scc = scc;
+    }
+
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
     }
 
 }

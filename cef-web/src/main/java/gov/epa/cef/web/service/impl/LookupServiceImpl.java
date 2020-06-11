@@ -527,6 +527,15 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
+    @Override
+    public List<AircraftEngineTypeCodeDto> retrieveCurrentAircraftEngineCodes(String scc, Integer year) {
+
+        List<AircraftEngineTypeCode> entities = aircraftEngCodeRepo.findCurrentByScc(year, scc, Sort.by(Direction.ASC, "faaAircraftType"));
+
+        List<AircraftEngineTypeCodeDto> result = lookupMapper.aircraftEngCodeToDtoList(entities);
+        return result;
+    }
+    
     public PointSourceSccCodeDto retrievePointSourceSccCode(String code) {
 
     	PointSourceSccCode entity = pointSourceSccCodeRepo.findById(code).orElse(null);

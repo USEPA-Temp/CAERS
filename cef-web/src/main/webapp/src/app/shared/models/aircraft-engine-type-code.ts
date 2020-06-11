@@ -7,4 +7,5 @@ export class AircraftEngineTypeCode {
     engine: string;
     edmsUid: string;
     scc: string;
+    lastInventoryYear: number;
 }

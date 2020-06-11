@@ -262,6 +262,14 @@ public interface LookupService {
     List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes(String scc);
     
     /**
+     * Retrieve non-legacy Aircraft Engine Type Codes
+     * @param scc
+     * @param year
+     * @return
+     */
+    List<AircraftEngineTypeCodeDto> retrieveCurrentAircraftEngineCodes(String scc, Integer year);
+    
+    /**
     * Retrieve Point Source SCC code database object by code
     * @param code
     * @return

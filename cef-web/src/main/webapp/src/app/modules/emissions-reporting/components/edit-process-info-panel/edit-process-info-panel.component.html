@@ -121,6 +121,10 @@
             <div class="validation-message" *ngIf="processForm.get('aircraftEngineTypeCode').errors?.invalidAircraftSCC">
                 The Aircraft Engine Code must match the SCC Code of the process to which it is assigned.
             </div>
+            <div class="validation-message" *ngIf="processForm.errors?.legacyAetc">
+                The Aircraft Engine Type Code {{processForm.errors.legacyAetc.value}} is no longer valid. 
+                Please select a different Aircraft Engine Type Code.
+            </div>
         </div>
     </div>
 

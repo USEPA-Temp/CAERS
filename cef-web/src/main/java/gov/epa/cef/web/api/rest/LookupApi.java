@@ -299,7 +299,21 @@ public class LookupApi {
         List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes(scc);
         return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
     }
-    
+
+    /**
+     * Retrieve Aircraft Engine Type codes valid for a specific year
+     * @param scc
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/aircraftEngineCode/{scc}/{year}")
+    @ResponseBody
+    public ResponseEntity<List<AircraftEngineTypeCodeDto>> retrieveAircraftEngineCodes(@NotNull @PathVariable String scc, @NotNull @PathVariable Integer year) {
+
+        List<AircraftEngineTypeCodeDto> result = lookupService.retrieveCurrentAircraftEngineCodes(scc, year);
+        return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
+    }
+
     /**
      * Retrieve Point Source SCC code
      * @param code
