@@ -44,6 +44,7 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source=".", target="processIdentification")
     @Mapping(source="reportingPeriods", target="reportingPeriod")
     @Mapping(source="releasePointAppts", target="releasePointApportionment")
+    @Mapping(source="emissionsUnit.facilitySite.emissionsReport.year", target="lastEmissionsYear")
     ProcessDataType processFromEmissionsProcess(EmissionsProcess source);
 
     @Mapping(source="percent", target="averagePercentEmissions")
