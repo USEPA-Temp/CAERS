@@ -224,7 +224,7 @@ public class EmissionsReportApi {
         this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
         EmissionsReportDto result =
-            emissionsReportService.updateSubmitted(reportId, Boolean.TRUE.equals(dto.getHasSubmitted()));
+            emissionsReportService.updateSubmitted(reportId, true);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
