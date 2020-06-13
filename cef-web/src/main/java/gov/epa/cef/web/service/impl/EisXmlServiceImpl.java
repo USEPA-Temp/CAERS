@@ -46,7 +46,7 @@ public class EisXmlServiceImpl {
 
         eisHeader.getEmissionsReports().forEach(reportId -> {
 
-            CERSDataType reportCersData = this.cersXmlService.generateCersData(reportId);
+            CERSDataType reportCersData = this.cersXmlService.generateCersData(reportId, eisHeader.getSubmissionStatus());
             cersData.getFacilitySite().addAll(reportCersData.getFacilitySite());
         });
 
