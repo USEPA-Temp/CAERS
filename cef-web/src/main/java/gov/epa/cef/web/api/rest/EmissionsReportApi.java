@@ -217,7 +217,7 @@ public class EmissionsReportApi {
      */
     @PutMapping(value = "/{reportId}")
     public ResponseEntity<EmissionsReportDto> updateEmissionsReportHasSubmitted(
-        @NotNull @PathVariable Long reportId, @NotNull @RequestBody EmissionsReportDto dto) {
+        @NotNull @PathVariable Long reportId) {
 
         // TODO should update path to /{reportId}/submitted to be concise/clear
 
