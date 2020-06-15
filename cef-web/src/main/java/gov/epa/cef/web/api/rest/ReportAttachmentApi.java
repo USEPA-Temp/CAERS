@@ -38,6 +38,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 
 @RestController
@@ -122,7 +124,13 @@ public class ReportAttachmentApi {
             		securityService.getCurrentApplicationUser().getFirstName(),
             		securityService.getCurrentApplicationUser().getLastName());
             
-            reportAttachment.setFileName(file.getOriginalFilename());
+            Path path = Paths.get(file.getOriginalFilename());
+            if (path.getFileName() != null) {
+            	// set file name for IE and Edge
+            	reportAttachment.setFileName(path.getFileName().toString());
+            } else {
+            	reportAttachment.setFileName(file.getOriginalFilename());
+            }
             reportAttachment.setFileType(file.getContentType());
             reportAttachment.setReportId(reportAttachment.getReportId());
             reportAttachment.setAttachment(tempFile);

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, RequiredValidator } from '@angular/forms';
 import bsCustomFileInput from 'bs-custom-file-input';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { EMPTY } from 'rxjs';
@@ -96,11 +96,6 @@ export class FileAttachmentModalComponent implements OnInit {
 
     this.userService.getCurrentUser().subscribe( user => {
       this.userRole = user.role;
-
-      if (this.userRole !== 'Reviewer') {
-        this.attachmentForm.controls.attachment.setValidators([Validators.required]);
-        this.attachmentForm.controls.attachment.updateValueAndValidity();
-      }
     });
 
   }
@@ -114,6 +109,10 @@ export class FileAttachmentModalComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.selectedFile === null && this.userRole !== 'Reviewer') {
+      this.attachmentForm.get('attachment').setErrors({required: true});
+      this.attachmentForm.get('attachment').markAsTouched();
+    }
 
     if (!this.selectedFile && this.userRole === 'Reviewer' && this.isValid()) {
 
@@ -277,6 +276,9 @@ export class FileAttachmentModalComponent implements OnInit {
 
     this.selectedFile = file.length ? file.item(0) : null;
     if (this.selectedFile === null && this.userRole === 'Reviewer') {
+      this.disableButton = false;
+    } else {
+      this.attachmentForm.controls.attachment.setErrors(null);
       this.disableButton = false;
     }
 
