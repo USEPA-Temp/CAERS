@@ -275,11 +275,10 @@ export class FileAttachmentModalComponent implements OnInit {
     this.uploadSystemErrors = [];
 
     this.selectedFile = file.length ? file.item(0) : null;
-    if (this.selectedFile === null && this.userRole === 'Reviewer') {
-      this.disableButton = false;
-    } else {
+
+    this.disableButton = false;
+    if (this.selectedFile !== null && this.userRole !== 'Reviewer') {
       this.attachmentForm.controls.attachment.setErrors(null);
-      this.disableButton = false;
     }
 
     if (file.item(0)) {
