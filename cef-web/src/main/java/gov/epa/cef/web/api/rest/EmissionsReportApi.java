@@ -215,7 +215,7 @@ public class EmissionsReportApi {
      * @param dto
      * @return
      */
-    @PutMapping(value = "/{reportId}")
+    @PutMapping(value = "/{reportId}/feedbackSubmitted")
     public ResponseEntity<EmissionsReportDto> updateEmissionsReportHasSubmitted(
         @NotNull @PathVariable Long reportId) {
 
