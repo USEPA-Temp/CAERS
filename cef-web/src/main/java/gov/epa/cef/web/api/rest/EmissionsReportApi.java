@@ -215,16 +215,16 @@ public class EmissionsReportApi {
      * @param dto
      * @return
      */
-    @PutMapping(value = "/{reportId}")
+    @PutMapping(value = "/{reportId}/feedbackSubmitted")
     public ResponseEntity<EmissionsReportDto> updateEmissionsReportHasSubmitted(
-        @NotNull @PathVariable Long reportId, @NotNull @RequestBody EmissionsReportDto dto) {
+        @NotNull @PathVariable Long reportId) {
 
         // TODO should update path to /{reportId}/submitted to be concise/clear
 
         this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
         EmissionsReportDto result =
-            emissionsReportService.updateSubmitted(reportId, Boolean.TRUE.equals(dto.getHasSubmitted()));
+            emissionsReportService.updateSubmitted(reportId, true);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

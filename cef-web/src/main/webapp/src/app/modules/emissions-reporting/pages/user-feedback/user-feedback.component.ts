@@ -88,7 +88,7 @@ export class UserFeedbackComponent implements OnInit {
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
       this.toastr.success('', "Your feedback has successfully been submitted, thank you.");
       this.sharedService.emitHideBoolChange(false);
-          this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId, this.report).subscribe((result) => {
+          this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId).subscribe((result) => {
               this.sharedService.emitHideBoolChange(false);
               this.router.navigateByUrl(this.baseUrl);
       });
@@ -96,7 +96,7 @@ export class UserFeedbackComponent implements OnInit {
   }
 
   onNoThanks() {
-        this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId, this.report).subscribe((result) => {
+        this.emissionsReportingService.updateHasSubmittedFeedback(this.reportId).subscribe((result) => {
           this.sharedService.emitHideBoolChange(false);
           this.router.navigateByUrl(this.baseUrl);
         });
