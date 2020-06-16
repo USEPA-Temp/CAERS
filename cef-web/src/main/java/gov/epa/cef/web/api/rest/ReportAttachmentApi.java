@@ -125,12 +125,7 @@ public class ReportAttachmentApi {
             		securityService.getCurrentApplicationUser().getLastName());
             
             Path path = Paths.get(file.getOriginalFilename());
-            if (path.getFileName() != null) {
-            	// set file name for IE and Edge
-            	reportAttachment.setFileName(path.getFileName().toString());
-            } else {
-            	reportAttachment.setFileName(file.getOriginalFilename());
-            }
+        	reportAttachment.setFileName(path.getFileName().toString());
             reportAttachment.setFileType(file.getContentType());
             reportAttachment.setReportId(reportAttachment.getReportId());
             reportAttachment.setAttachment(tempFile);
