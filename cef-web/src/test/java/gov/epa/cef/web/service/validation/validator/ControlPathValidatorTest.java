@@ -37,21 +37,6 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 	@Mock
 	private ControlAssignmentRepository assignmentRepo;
 	
-    @Before
-    public void init(){
-    	ControlAssignment ca1 = new ControlAssignment();
-    	ca1.setPercentApportionment(100.0);
-    	List<ControlAssignment> caList1 = new  ArrayList<ControlAssignment>();
-    	caList1.add(ca1);
-    	ControlAssignment ca2 = new ControlAssignment();
-    	ca2.setPercentApportionment(99.0);
-    	List<ControlAssignment> caList2 = new  ArrayList<ControlAssignment>();
-    	caList2.add(ca2);
-    	
-        when(assignmentRepo.findBySequenceNumber(1)).thenReturn(caList1);
-        when(assignmentRepo.findBySequenceNumber(2)).thenReturn(caList2);
-    }
-	
 	@Test
 	public void simpleValidatePassTest() {
 		
@@ -99,10 +84,10 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		
 		
 		assertFalse(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
 		
 		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);		
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 2);		
 		
 	}
 	
@@ -127,10 +112,10 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ca2.setPercentApportionment(50.0);
 		
 		assertFalse(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
 		
 		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);		
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 2);		
 		
 	}
 	
@@ -186,8 +171,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
 		
-		testData.getAssignments().get(0).setSequenceNumber(2);
-        
+		testData.getAssignments().get(0).setPercentApportionment(99.0);
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
@@ -229,19 +213,19 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		testData.getAssignments().get(0).setPercentApportionment(-0.1);
 		
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 2);
         
         cefContext = createContext();
 		testData.getAssignments().get(0).setPercentApportionment(101.0);
 		
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
         
         errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 2);
     }
     
 	private ControlPath createBaseControlPath() {
