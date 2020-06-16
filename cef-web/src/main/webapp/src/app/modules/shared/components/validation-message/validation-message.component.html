@@ -42,8 +42,8 @@
       Value must be in decimal degrees up to the sixth decimal place.
     </div>
     
-    <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{10,15}$'">
-      Enter area code and phone number without spaces or dashes.
+    <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{10}$'">
+      Enter area code and phone number without spaces or dashes with a maximum of 10 digits.
     </div>
 
     <div *ngIf="control.errors?.pattern.requiredPattern === '^\\d{5}(-\\d{4})?$'">
