@@ -253,7 +253,7 @@ public class CersXmlServiceImplTest {
 
         CersXmlService cersXmlService = new CersXmlServiceImpl(userService, reportRepo, cersMapper);
 
-        return cersXmlService.generateCersData(1l);
+        return cersXmlService.generateCersData(1l, null);
     }
 
     private EmissionsReport createEmissionsReport(String filename) throws IOException {

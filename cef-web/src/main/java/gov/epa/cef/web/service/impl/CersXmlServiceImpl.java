@@ -14,6 +14,7 @@ import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.UserService;
+import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapper;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
@@ -23,6 +24,8 @@ import net.exchangenetwork.schema.cer._1._2.EmissionsUnitDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 import net.exchangenetwork.schema.cer._1._2.ObjectFactory;
 import net.exchangenetwork.schema.cer._1._2.ProcessDataType;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,7 @@ import javax.xml.bind.Marshaller;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CersXmlServiceImpl implements CersXmlService {
@@ -60,10 +64,40 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @see gov.epa.cef.web.service.impl.CersXmlService#generateCersData(java.lang.Long)
      */
     @Override
-    public CERSDataType generateCersData(Long reportId) {
+    public CERSDataType generateCersData(Long reportId, EisSubmissionStatus submissionStatus) {
 
         EmissionsReport source = reportRepo.findById(reportId)
             .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
+
+        if (submissionStatus != null) {
+            if ("PointEmission".contentEquals(submissionStatus.dataCategory())) {
+                source.getFacilitySites().forEach(fs -> {
+
+                    // remove extra data
+                    fs.getReleasePoints().clear();
+                    fs.getControlPaths().clear();
+                    fs.getControls().clear();
+                    // remove non-operating units and units without processes
+                    fs.setEmissionsUnits(fs.getEmissionsUnits().stream()
+                        .peek(eu -> {
+                           
+                            // remove non-operating processes and processes without emissions
+                            eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
+                               .peek(ep -> {
+
+                                   // remove extra data and remove periods without emissions
+                                   ep.getReleasePointAppts().clear();
+                                   ep.setReportingPeriods(ep.getReportingPeriods().stream()
+                                           .filter(rp -> !rp.getEmissions().isEmpty())
+                                           .collect(Collectors.toList()));
+
+                               }).filter(ep -> "OP".equals(ep.getOperatingStatusCode().getCode()) && !ep.getReportingPeriods().isEmpty())
+                               .collect(Collectors.toList()));
+                        }).filter(eu -> "OP".equals(eu.getOperatingStatusCode().getCode()) && !eu.getEmissionsProcesses().isEmpty())
+                        .collect(Collectors.toList()));
+                });
+            }
+        }
 
         CERSDataType cers = cersMapper.fromEmissionsReport(source);
         // TODO: find out if programSystemCode should always be the same at the facilitySite and report level
@@ -72,7 +106,9 @@ public class CersXmlServiceImpl implements CersXmlService {
             cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
         }
 
-        addProcessControls(source, cers);
+        if (submissionStatus == null || !"PointEmission".contentEquals(submissionStatus.dataCategory())) {
+            addProcessControls(source, cers);
+        }
 
         cers.setUserIdentifier(userService.getCurrentUser().getEmail());
 
@@ -84,9 +120,9 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @see gov.epa.cef.web.service.impl.CersXmlService#retrieveCersXml(java.lang.Long)
      */
     @Override
-    public void writeCersXmlTo(long reportId, OutputStream outputStream) {
-
-        CERSDataType cers = generateCersData(reportId);
+    public void writeCersXmlTo(long reportId, OutputStream outputStream, EisSubmissionStatus submissionStatus) {
+    	
+    	CERSDataType cers = generateCersData(reportId, submissionStatus);
 
         try {
             ObjectFactory objectFactory = new ObjectFactory();

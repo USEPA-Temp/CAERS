@@ -25,6 +25,7 @@ import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserFeedbackService;
+import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
@@ -179,7 +180,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 sigDoc.setFormat(SignatureDocumentFormatType.XML);
                 tmp = File.createTempFile("Attachment", ".xml");
                 try (OutputStream outputStream = new FileOutputStream(tmp)) {
-                    cersXmlService.writeCersXmlTo(emissionsReportId, outputStream);
+                    cersXmlService.writeCersXmlTo(emissionsReportId, outputStream, EisSubmissionStatus.QaFacility);
                 }
                 sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
                 cromerrDocumentId =
