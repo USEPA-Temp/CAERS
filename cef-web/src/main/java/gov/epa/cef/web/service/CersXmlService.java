@@ -18,7 +18,9 @@ public interface CersXmlService {
     /**
      * Generate XML from the CERS XML classes for the specified emissions report
      * @param reportId
+     * @param oututStream
+     * @param submissionType
      * @return
      */
-    void writeCersXmlTo(long reportId, OutputStream outputStream);
+    void writeCersXmlTo(long reportId, OutputStream outputStream, EisSubmissionStatus submissionStatus);
 }

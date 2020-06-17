@@ -24,6 +24,8 @@ import net.exchangenetwork.schema.cer._1._2.EmissionsUnitDataType;
 import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 import net.exchangenetwork.schema.cer._1._2.ObjectFactory;
 import net.exchangenetwork.schema.cer._1._2.ProcessDataType;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,9 +120,9 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @see gov.epa.cef.web.service.impl.CersXmlService#retrieveCersXml(java.lang.Long)
      */
     @Override
-    public void writeCersXmlTo(long reportId, OutputStream outputStream) {
-
-        CERSDataType cers = generateCersData(reportId, null);
+    public void writeCersXmlTo(long reportId, OutputStream outputStream, EisSubmissionStatus submissionStatus) {
+    	
+    	CERSDataType cers = generateCersData(reportId, submissionStatus);
 
         try {
             ObjectFactory objectFactory = new ObjectFactory();
