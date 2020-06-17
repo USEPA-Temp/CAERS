@@ -112,22 +112,28 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         List<ControlAssignment> sequenceMap = controlPath.getAssignments().stream()
                 .filter(cpa -> (cpa.getSequenceNumber() != null))
                 .collect(Collectors.toList());
+        List<Integer> uniqueSequenceList = new ArrayList<Integer>();
         
         for (ControlAssignment ca: sequenceMap) {
-        	if(ca.getSequenceNumber() != null) {
-	        	List<ControlAssignment> sequenceList = assignmentRepo.findBySequenceNumber(ca.getSequenceNumber());
-	        	Double totalApportionment = 0.0;
-	        	for(ControlAssignment assignment: sequenceList) {
-	        		totalApportionment = assignment.getPercentApportionment() + totalApportionment;
-	        	}
-	        	if (totalApportionment != 100) {
-	            	result = false;
-	            	context.addFederalError(
-	            			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
-	            			"controlPath.assignment.sequenceNumber.totalApportionment",
-	            			createValidationDetails(controlPath, ca),ca.getSequenceNumber());        	
-	            }
+        	if(!uniqueSequenceList.contains(ca.getSequenceNumber())){
+        		uniqueSequenceList.add(ca.getSequenceNumber());
         	}
+        }
+        
+        for (Integer sequenceNumber: uniqueSequenceList) {
+        	Double totalApportionment = 0.0;
+	        for (ControlAssignment ca: sequenceMap) {
+	        	if(ca.getSequenceNumber() != null && ca.getSequenceNumber().equals(sequenceNumber)) {
+		        	totalApportionment = ca.getPercentApportionment() + totalApportionment;
+	        	}
+	        }
+        	if (totalApportionment != 100) {
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+            			"controlPath.assignment.sequenceNumber.totalApportionment",
+            			createValidationDetails(controlPath),sequenceNumber);        	
+            }
         }
         	
         List<ControlAssignment> sequenceNullMap = controlPath.getAssignments().stream()
