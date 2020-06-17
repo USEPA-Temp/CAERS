@@ -64,6 +64,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		
 		CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
+		testData.getAssignments().get(0).setPercentApportionment(40.0);
 		ControlAssignment ca1 = new ControlAssignment();
 		ControlAssignment ca2 = new ControlAssignment();
 		Control c1 = new Control();
@@ -75,8 +76,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		c1.getAssignments().add(ca1);
 		ca1.setSequenceNumber(1);
 		ca2.setSequenceNumber(1);
-		ca1.setPercentApportionment(50.0);
-		ca2.setPercentApportionment(50.0);
+		ca1.setPercentApportionment(30.0);
+		ca2.setPercentApportionment(30.0);
 		ca1.setControl(c1);
 		ca2.setControl(c1);
 		testData.getAssignments().add(ca1);
@@ -84,10 +85,10 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		
 		
 		assertFalse(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 		
 		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 2);		
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);		
 		
 	}
 	
@@ -96,6 +97,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		
 		CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
+		testData.getAssignments().get(0).setPercentApportionment(40.0);
 		ControlPath cp1 = new ControlPath();
 		cp1.setId(1L);
 		ControlAssignment ca1 = new ControlAssignment();
@@ -108,14 +110,14 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		testData.getAssignments().add(ca2);
 		ca1.setSequenceNumber(1);
 		ca2.setSequenceNumber(1);
-		ca1.setPercentApportionment(50.0);
-		ca2.setPercentApportionment(50.0);
+		ca1.setPercentApportionment(30.0);
+		ca2.setPercentApportionment(30.0);
 		
 		assertFalse(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 		
 		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 2);		
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 1);		
 		
 	}
 	

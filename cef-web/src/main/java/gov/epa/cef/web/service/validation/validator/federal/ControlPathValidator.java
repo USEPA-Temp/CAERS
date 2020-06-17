@@ -112,18 +112,18 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         List<ControlAssignment> sequenceMap = controlPath.getAssignments().stream()
                 .filter(cpa -> (cpa.getSequenceNumber() != null))
                 .collect(Collectors.toList());
-        List<String> uniqueSequenceList = new ArrayList<String>();
+        List<Integer> uniqueSequenceList = new ArrayList<Integer>();
         
         for (ControlAssignment ca: sequenceMap) {
-        	if(!uniqueSequenceList.contains(ca.getSequenceNumber().toString())){
-        		uniqueSequenceList.add(ca.getSequenceNumber().toString());
+        	if(!uniqueSequenceList.contains(ca.getSequenceNumber())){
+        		uniqueSequenceList.add(ca.getSequenceNumber());
         	}
         }
         
-        for (String sequenceNumber: uniqueSequenceList) {
+        for (Integer sequenceNumber: uniqueSequenceList) {
         	Double totalApportionment = 0.0;
 	        for (ControlAssignment ca: sequenceMap) {
-	        	if(ca.getSequenceNumber() != null && ca.getSequenceNumber().toString().equals(sequenceNumber)) {
+	        	if(ca.getSequenceNumber() != null && ca.getSequenceNumber().equals(sequenceNumber)) {
 		        	totalApportionment = ca.getPercentApportionment() + totalApportionment;
 	        	}
 	        }
