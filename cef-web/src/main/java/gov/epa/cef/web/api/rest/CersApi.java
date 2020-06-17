@@ -46,7 +46,7 @@ public class CersApi {
     @GetMapping(value = "/emissionsReport/{reportId}/xml/{submissionType}", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<StreamingResponseBody> retrieveReportXml(
             @NotNull @PathVariable("reportId") Long reportId,
-            @PathVariable("submissionType") String submissionType) {
+            @NotNull @PathVariable("submissionType") String submissionType) {
 
         this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
