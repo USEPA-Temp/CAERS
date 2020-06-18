@@ -111,7 +111,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             });
     }
 
-    onStatusSelected(value: string) {
+    onStatusSelected(value) {
         this.selectedReportStatus = value;
 
         if (value === 'SUBMITTED') {
