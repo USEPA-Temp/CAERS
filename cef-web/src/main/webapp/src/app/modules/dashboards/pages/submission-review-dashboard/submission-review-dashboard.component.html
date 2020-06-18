@@ -33,18 +33,20 @@
             </div>
 
             <app-submission-review-list [hideSelectColumn]="hideButtons"
-                                        [tableData]="submissions"></app-submission-review-list>
+                                        [tableData]="submissions" [reportStatus]="mySelect.value"></app-submission-review-list>
 
             <div class="validation-message p-3" *ngIf="invalidSelection">
                <span>At least one submission must be selected.</span>
             </div>
 
-            <div class="card-footer text-right" *ngIf="!hideButtons">
+            <div class="card-footer text-right">
                <button class="btn btn-primary btn-md mr-3"
-                       (click)="onReject(yearSelect.value)">
+                     *ngIf="mySelect.value !== 'IN_PROGRESS'"
+                     (click)="onReject(yearSelect.value)">
                   <span>Reject and Return to Facility</span>
                </button>
                <button class="btn btn-success btn-md"
+                        *ngIf="!hideButtons"
                        (click)="onApprove(yearSelect.value)">
                   <span>Accept and Submit to EIS</span>
                </button>

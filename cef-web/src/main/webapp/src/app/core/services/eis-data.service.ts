@@ -20,9 +20,11 @@ export class EisDataService {
    constructor(private http: HttpClient) {
    }
 
-   retrieveStats(): Observable<EisDataStats> {
+   retrieveStats(year: number): Observable<EisDataStats> {
+      let params = new HttpParams()
+         .append("year", year.toString());
 
-      return this.http.get<EisDataStats>(`${this.baseUrl}/emissionsReport/stats`);
+      return this.http.get<EisDataStats>(`${this.baseUrl}/emissionsReport/stats`, {params: params});
    }
 
    searchData(criteria: EisSearchCriteria): Observable<EisData> {
@@ -50,6 +52,10 @@ export class EisDataService {
       return this.http.put<EisDataReport>(`${this.baseUrl}/emissionsReport/${id}/comment`, {
          value: comment
       });
+   }
+
+   updateEisPassedStatus(id: number, passed: boolean): Observable<EisDataReport> {
+      return this.http.put<EisDataReport>(`${this.baseUrl}/emissionsReport/${id}/passed`, {value: passed});
    }
 
    private convertStatusToEnum(status: EisSubmissionStatus) {

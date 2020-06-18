@@ -17,6 +17,7 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
 
   @Input() tableData: SubmissionUnderReview[];
   @Input() hideSelectColumn: boolean;
+  @Input() reportStatus: string;
 
   constructor(public userContext: UserContextService, 
               private modalService: NgbModal,
