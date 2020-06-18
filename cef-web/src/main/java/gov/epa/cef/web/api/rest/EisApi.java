@@ -76,6 +76,20 @@ public class EisApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    @PutMapping(value = "/emissionsReport/{id}/passed",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EisDataReportDto> putEisPassedStatus(@NotNull @PathVariable("id") Long reportId,
+                                                          @NotNull @RequestBody SimpleStringValue passed) {
+
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
+        EisDataReportDto result =
+            this.eisTransmissionService.updateReportEisPassedStatus(reportId, passed.getValue());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     @PutMapping(value = "/emissionsReport/{id}/comment",
         consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -110,11 +124,11 @@ public class EisApi {
 
     @GetMapping(value = "/emissionsReport/stats",
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EisDataStatsDto> retrieveEisDataStats() {
+    public ResponseEntity<EisDataStatsDto> retrieveEisDataStats(@NotNull @RequestParam(value = "year") Short year) {
 
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
-        EisDataStatsDto result = this.eisTransmissionService.retrieveStatInfo(appUser.getClientId());
+        EisDataStatsDto result = this.eisTransmissionService.retrieveStatInfo(appUser.getClientId(), year);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

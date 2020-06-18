@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
 import {SharedService} from "src/app/core/services/shared.service";
 import { FileAttachmentModalComponent } from 'src/app/modules/shared/components/file-attachment-modal/file-attachment-modal.component';
+import { ReportStatus } from 'src/app/shared/enums/report-status';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -24,6 +25,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     invalidSelection = false;
     currentYear: number;
     selectedYear: string;
+    selectedReportStatus = ReportStatus.SUBMITTED;
 
     constructor(
         private emissionReportService: EmissionsReportingService,
@@ -82,10 +84,10 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 this.emissionReportService.rejectReports(selectedSubmissions, resp.comments, resp.id)
                 .subscribe(() => {
                     if (year === 'ALL_YEARS') {
-                        this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
+                        this.retrieveFacilitiesReportsByReportStatus(this.selectedReportStatus);
                     }
                     if (year === 'CURRENT_REPORTING_YEAR') {
-                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, 'SUBMITTED');
+                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, this.selectedReportStatus);
                     }
                     this.emitAllSubmissions();
                 });
@@ -110,6 +112,8 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     }
 
     onStatusSelected(value: string) {
+        this.selectedReportStatus = value;
+
         if (value === 'SUBMITTED') {
             this.hideButtons = false;
         } else {

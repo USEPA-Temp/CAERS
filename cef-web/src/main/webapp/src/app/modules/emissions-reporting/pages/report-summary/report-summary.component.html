@@ -54,7 +54,7 @@
                     </button>
                 </div>
             </div>
-            <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED' || facilitySite.emissionsReport.status==='APPROVED')">
+            <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED')">
                 <div class="float-right pr-3">
                     <button *ngIf="userRole==='NEI Certifier' || userRole==='Preparer'"
                             class="btn btn-success btn-md my-3 ml-1" 

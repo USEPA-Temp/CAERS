@@ -11,7 +11,8 @@ export enum EisSubmissionStatus {
    QaEmissions = "QA Emissions",
    QaFacility = "QA Facility",
    ProdEmissions = "Prod Emissions",
-   ProdFacility = "Prod Facility"
+   ProdFacility = "Prod Facility",
+   Complete = "Complete"
 }
 
 export interface EisSearchCriteria {

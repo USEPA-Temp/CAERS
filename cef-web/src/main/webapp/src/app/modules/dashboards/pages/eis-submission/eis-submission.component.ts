@@ -1,10 +1,10 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {EisDataService} from "src/app/core/services/eis-data.service";
-import {EisDataReport, EisSubmissionStatus} from "src/app/shared/models/eis-data";
-import {BaseSortableTable} from "src/app/shared/components/sortable-table/base-sortable-table";
-import {FormControl} from "@angular/forms";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap/modal/modal-ref";
+import {EisDataService} from 'src/app/core/services/eis-data.service';
+import {EisDataReport, EisSubmissionStatus} from 'src/app/shared/models/eis-data';
+import {BaseSortableTable} from 'src/app/shared/components/sortable-table/base-sortable-table';
+import {FormControl} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 interface EisDataStats {
    notStarted: number;
@@ -17,14 +17,14 @@ interface EisDataStats {
 
 enum SubmissionType {
 
-   QA = "QA",
-   PRODUCTION = "Production"
+   QA = 'QA',
+   PRODUCTION = 'Production'
 }
 
 enum DataCategoryType {
 
-   FACILITY_INVENTORY = "Facility Inventory",
-   POINT_EMISSIONS = "Point Emissions"
+   FACILITY_INVENTORY = 'Facility Inventory',
+   POINT_EMISSIONS = 'Point Emissions'
 }
 
 interface DlgEditComment {
@@ -55,6 +55,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
    txtComment = new FormControl();
 
+   passedCheck = new FormControl();
+
    cboSubmitCategory = new FormControl();
    cboSubmitType = new FormControl();
 
@@ -73,10 +75,14 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    dataCategories = DataCategoryType;
    submissionTypes = SubmissionType;
 
+   currentYear: number;
+   invalidSelection = false;
+
    constructor(private modalService: NgbModal,
                private eisDataService: EisDataService) {
 
       super();
+      this.currentYear = new Date().getFullYear() - 1;
    }
 
    ngOnInit() {
@@ -97,11 +103,11 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       };
 
       this.cboFilterYear.valueChanges.subscribe(() => {
-         this.retrieveData()
+         this.retrieveData();
       });
 
       this.cboFilterStatus.valueChanges.subscribe(() => {
-         this.retrieveData()
+         this.retrieveData();
       });
 
       this.txtComment.valueChanges.subscribe(() => {
@@ -130,16 +136,25 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    retrieveDataStats(onComplete?: () => void) {
+      this.availableStatuses = [];
+      this.availableStatuses.push(EisSubmissionStatus.All);
 
-      this.eisDataService.retrieveStats().subscribe({
+      this.eisDataService.retrieveStats(this.currentYear).subscribe({
          next: (stats) => {
 
             stats.availableYears.forEach(year => {
                if (this.availableYears.indexOf(year) < 0) {
 
-                  this.availableYears.push(year)
+                  this.availableYears.push(year);
                }
             });
+
+            this.stats.notStarted = 0;
+            this.stats.qaEmissions = 0;
+            this.stats.qaFacility = 0;
+            this.stats.prodEmissions = 0;
+            this.stats.prodFacility = 0;
+            this.stats.complete = 0;
 
             stats.statuses.forEach(stat => {
 
@@ -147,7 +162,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
                switch (status) {
 
-                  case null:
+                  case undefined:
                      this.stats.notStarted = stat.count;
                      break;
                   case EisSubmissionStatus.QaEmissions:
@@ -161,6 +176,9 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
                      break;
                   case EisSubmissionStatus.ProdFacility:
                      this.stats.prodFacility = stat.count;
+                     break;
+                  case EisSubmissionStatus.Complete:
+                     this.stats.complete = stat.count;
                      break;
                }
 
@@ -200,16 +218,20 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       }).subscribe(resp => {
 
          this.tableData = resp.reports.map(report => {
+            if (report.lastSubmissionStatus && report.lastSubmissionStatus.toString() === 'ProdEmissions' && report.passed === true) {
 
-            if (report.lastSubmissionStatus) {
+               report.lastSubmissionStatus = EisSubmissionStatus.ProdEmissions;
+
+            } else if (report.lastSubmissionStatus) {
 
                report.lastSubmissionStatus = EisSubmissionStatus[report.lastSubmissionStatus];
+
             }
 
             return report;
          });
 
-         this.onSort({column: "facilityName", direction: "asc"});
+         this.onSort({column: 'facilityName', direction: 'asc'});
       });
    }
 
@@ -238,6 +260,11 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.cboFilterStatus.setValue(EisSubmissionStatus.ProdFacility);
    }
 
+   onFilterComplete() {
+
+      this.cboFilterStatus.setValue(EisSubmissionStatus.Complete);
+   }
+
    onEditCommentClick(report: EisDataReport) {
 
       this.dlgEditComment = {
@@ -256,11 +283,16 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
    onSubmitClick() {
 
+      if (this.selectedReports.size < 1 || this.convertTypeAndCategory() === null) {
+         this.invalidSelection = true;
+      }
+
       if (this.selectedReports.size) {
 
          let submissionStatus: EisSubmissionStatus = this.convertTypeAndCategory();
 
          if (submissionStatus) {
+            this.invalidSelection = false;
 
             this.eisDataService.submitReports({
                submissionStatus: submissionStatus,
@@ -276,6 +308,10 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
             });
          }
       }
+
+      this.selectedReports.clear();
+      this.cboSubmitType.setValue(null);
+      this.cboSubmitCategory.setValue(null);
    }
 
    onCancelCommentClick() {
@@ -306,6 +342,19 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
             this.dlgEditComment.report.comments = eisDataReport.comments;
 
             this.onCancelCommentClick();
+         });
+   }
+
+   onPassedCheck(report: EisDataReport) {
+      this.passedCheck.setValue(!report.passed);
+      this.eisDataService.updateEisPassedStatus(report.emissionsReportId, this.passedCheck.value)
+         .subscribe(eisDataReport => {
+
+            // grab new stats
+            this.retrieveDataStats(() => {
+
+               this.retrieveData();
+            });
          });
    }
 

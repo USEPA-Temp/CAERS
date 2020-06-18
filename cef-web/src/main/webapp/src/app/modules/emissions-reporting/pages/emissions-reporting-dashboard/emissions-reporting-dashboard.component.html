@@ -37,7 +37,7 @@
 						class="text-dark font-weight-bold pipe-item"
 						[attr.aria-label]="'reopen'+ report.year +'report'"
 						(click)="reopenReport(report)"
-						*ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">Reopen Report</a>
+						*ngIf="isOneOf(report.status, ['SUBMITTED'])">Reopen Report</a>
 
 					<a href="#" class="text-dark font-weight-bold pipe-item"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Certify</a>
