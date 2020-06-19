@@ -67,6 +67,10 @@ public abstract class LookupEntityMapper {
     public abstract CodeLookupDto controlMeasureCodeToDto(ControlMeasureCode source);
 
     public abstract List<CodeLookupDto> controlMeasureCodeToDtoList(List<ControlMeasureCode> source);
+    
+    public abstract CodeLookupDto releasePointTypCodeToDto(ReleasePointTypeCode source);
+    
+    public abstract List<CodeLookupDto> releasePointTypCodeToDtoList(List<ReleasePointTypeCode> source);
 
     public abstract FacilityCategoryCodeDto facilityCategoryCodeToDto(FacilityCategoryCode code);
 

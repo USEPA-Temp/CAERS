@@ -29,6 +29,7 @@ public enum ValidationField {
     RP_STACK("report.facilitySite.releasePoint.stack"),
     RP_STACK_WARNING("report.facilitySite.releasePoint.stackWarning"),
     RP_COORDINATE("report.facilitySite.releasePoint.coordinate"),
+    RP_TYPE_CODE("report.facilitySite.releasePoint.releasePointTypeCode"),
     CONTROL_IDENTIFIER("report.facilitySite.control.controlIdentifier"),
     CONTROL_PATH_ASSIGNMENT("report.facilitySite.controlPath.assignment"),
     CONTROL_PATH_ASSIGNMENT_SEQUENCE_NUMBER("report.facilitySite.controlPath.sequenceNumber"),

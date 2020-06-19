@@ -1,4 +1,5 @@
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { InventoryYearCodeLookup } from './inventory-year-code-lookup';
 
 export class ReleasePoint {
   id: number;
@@ -6,7 +7,7 @@ export class ReleasePoint {
   operatingStatusCode: BaseCodeLookup;
   facilitySiteId: number;
   releasePointIdentifier: string;
-  typeCode: BaseCodeLookup;
+  typeCode: InventoryYearCodeLookup;
   stackHeight: number;
   stackHeightUomCode: BaseCodeLookup;
   stackDiameter: number;

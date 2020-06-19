@@ -11,6 +11,8 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
 import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tolerance-lookup';
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
+import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-edit-release-point-panel',
@@ -26,6 +28,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   readonly numberPattern168 = '^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$';
 
   @Input() releasePoint: ReleasePoint;
+  @Input() year: number;
   releasePointIdentifiers: string[] = [];
   readonly fugitiveType = 'Fugitive';
   facilitySite: FacilitySite;
@@ -144,7 +147,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     ]
   });
 
-  releasePointTypeCode: BaseCodeLookup[];
+  releasePointTypeCode: InventoryYearCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
   flowUomValues: UnitMeasureCode[];
@@ -158,7 +161,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     private releasePointService: ReleasePointService) { }
 
   ngOnInit() {
-    this.lookupService.retrieveReleaseTypeCode()
+    this.releasePointForm.get('typeCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
+
+    this.lookupService.retrieveCurrentReleaseTypeCodes(this.year)
     .subscribe(result => {
       this.releasePointTypeCode = result;
     });
@@ -631,7 +636,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   // QA Check - identifier must be unique
   releasePointIdentifierCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if (this.releasePointIdentifiers) {
+      if (this.releasePointIdentifiers && control.get('releasePointIdentifier').value !== null) {
         if (control.get('releasePointIdentifier').value.trim() === '') {
           control.get('releasePointIdentifier').setErrors({required: true});
         } else if (this.releasePointIdentifiers.includes(control.get('releasePointIdentifier').value.trim())) {

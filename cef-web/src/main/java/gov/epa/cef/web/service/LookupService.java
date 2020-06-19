@@ -197,6 +197,13 @@ public interface LookupService {
     ReleasePointTypeCode retrieveReleasePointTypeCodeEntityByCode(String code);
     
     /**
+     * Retrieve non-legacy Release Point Type codes
+     * @param year
+     * @return
+     */
+    List<CodeLookupDto> retrieveCurrentReleasePointTypeCodes(Integer year);
+    
+    /**
      * Retrieve the list of Program System Type Codes
      * @return
      */
