@@ -498,6 +498,18 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 	        }
         }
         
+        if (releasePoint.getTypeCode() != null && releasePoint.getTypeCode().getLastInventoryYear() != null
+            && releasePoint.getTypeCode().getLastInventoryYear() < releasePoint.getFacilitySite().getEmissionsReport().getYear()) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.RP_TYPE_CODE.value(),
+                    "releasePoint.releasePointTypeCode.legacy", 
+                    createValidationDetails(releasePoint),
+                    releasePoint.getTypeCode().getDescription());
+
+        }
+        
         return result;
     }
     

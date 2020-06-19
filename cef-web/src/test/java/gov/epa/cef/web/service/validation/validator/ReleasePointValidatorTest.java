@@ -21,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReleasePoint;
@@ -786,8 +787,26 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_YEAR.value()) && errorMap.get(ValidationField.RP_STATUS_YEAR.value()).size() == 1);
     }
     
+    @Test
+    public void releasePointTypeCodeLegacyFailTest() {
+	      
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        testData.getTypeCode().setCode("99");
+        testData.getTypeCode().setLastInventoryYear(2002);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_TYPE_CODE.value()) && errorMap.get(ValidationField.RP_TYPE_CODE.value()).size() == 1);
+    }
+    
     
     private ReleasePoint createBaseReleasePoint() {
+    	
+    	EmissionsReport er = new EmissionsReport();
+    	er.setYear((short)2019);
     	
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("TS");
@@ -798,6 +817,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         facility.setLatitude(new BigDecimal(33.949000));
         facility.setLongitude(new BigDecimal(-84.388000));
         facility.setOperatingStatusCode(opStatCode);
+        facility.setEmissionsReport(er);
+        er.getFacilitySites().add(facility);
         
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("2");

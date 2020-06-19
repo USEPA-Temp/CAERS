@@ -98,6 +98,11 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
+  retrieveCurrentReleaseTypeCodes(year: number): Observable<InventoryYearCodeLookup[]> {
+    const url = `${this.baseUrl}/releasePointType/${year}`;
+    return this.http.get<InventoryYearCodeLookup[]>(url);
+  }
+
   retrieveProgramSystemTypeCode(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/programSystemType`;
     return this.http.get<BaseCodeLookup[]>(url);

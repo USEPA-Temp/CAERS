@@ -362,4 +362,17 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveFacilitySourceTypeCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Release Point Type codes valid for a specific year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/releasePointType/{year}")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveCurrentReleasePointTypeCodes(@NotNull @PathVariable Integer year) {
+
+        List<CodeLookupDto> result = lookupService.retrieveCurrentReleasePointTypeCodes(year);
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 }

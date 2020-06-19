@@ -413,6 +413,20 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
+    /**
+     * Retrieve non-legacy Release Point Type codes
+     * @param year
+     * @return
+     */
+    @Override
+    public List<CodeLookupDto> retrieveCurrentReleasePointTypeCodes(Integer year) {
+
+        List<ReleasePointTypeCode> entities = releasePtTypeRepository.findAllCurrent(year, Sort.by(Direction.ASC, DESCRIPTION));
+
+        List<CodeLookupDto> result = lookupMapper.releasePointTypCodeToDtoList(entities);
+        return result;
+    }
+    
     @Override
     public List<CodeLookupDto> retrieveProgramSystemTypeCodes() {
 
