@@ -109,9 +109,9 @@ public class EisTransmissionServiceImpl {
 
         report.setEisPassed(Boolean.valueOf(passed));
         
-        if (report.getEisLastSubmissionStatus().equals(EisSubmissionStatus.ProdEmissions) && Boolean.valueOf(passed) == true) {
+        if (report.getEisLastSubmissionStatus() != null && report.getEisLastSubmissionStatus().equals(EisSubmissionStatus.ProdEmissions) && Boolean.valueOf(passed) == true) {
         	report.setEisLastSubmissionStatus(EisSubmissionStatus.Complete);
-        } else if (report.getEisLastSubmissionStatus().equals(EisSubmissionStatus.Complete) && Boolean.valueOf(passed) == false) {
+        } else if (report.getEisLastSubmissionStatus() != null && report.getEisLastSubmissionStatus().equals(EisSubmissionStatus.Complete) && Boolean.valueOf(passed) == false) {
         	report.setEisLastSubmissionStatus(EisSubmissionStatus.ProdEmissions);
         }
 
