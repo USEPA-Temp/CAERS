@@ -55,8 +55,6 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
    txtComment = new FormControl();
 
-   passedCheck = new FormControl();
-
    cboSubmitCategory = new FormControl();
    cboSubmitType = new FormControl();
 
@@ -346,8 +344,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    onPassedCheck(report: EisDataReport) {
-      this.passedCheck.setValue(!report.passed);
-      this.eisDataService.updateEisPassedStatus(report.emissionsReportId, this.passedCheck.value)
+      this.eisDataService.updateEisPassedStatus(report.emissionsReportId, !report.passed)
          .subscribe(eisDataReport => {
 
             // grab new stats
