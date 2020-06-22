@@ -176,6 +176,19 @@ public class LookupApi {
         List<FipsCountyDto> result = lookupService.retrieveCountyCodes();
         return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Fips Counties valid for a specific year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/county/{year}")
+    @ResponseBody
+    public ResponseEntity<List<FipsCountyDto>> retrieveCurrentCounties(@NotNull @PathVariable Integer year) {
+
+        List<FipsCountyDto> result = lookupService.retrieveCurrentCounties(year);
+        return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve Fips Counties by state
@@ -187,6 +200,19 @@ public class LookupApi {
     public ResponseEntity<List<FipsCountyDto>> retrieveCountiesForState(@PathVariable String stateCode) {
 
         List<FipsCountyDto> result = lookupService.retrieveCountyCodesByState(stateCode);
+        return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Fips Counties valid for a specific year by state
+     * @param stateCode
+     * @return
+     */
+    @GetMapping(value = "/county/state/{stateCode}/{year}")
+    @ResponseBody
+    public ResponseEntity<List<FipsCountyDto>> retrieveCurrentCountiesForState(@PathVariable String stateCode, @NotNull @PathVariable Integer year) {
+
+        List<FipsCountyDto> result = lookupService.retrieveCurrentCountyCodesByState(stateCode, year);
         return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
     }
 

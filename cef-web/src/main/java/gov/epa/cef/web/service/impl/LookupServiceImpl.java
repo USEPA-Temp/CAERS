@@ -255,7 +255,7 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
-    /**
+    /*
      * Retrieve non-legacy Pollutants
      * @return
      */
@@ -305,7 +305,7 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
-    /**
+    /*
      * Retrieve non-legacy UoM codes
      * @return
      */
@@ -362,9 +362,31 @@ public class LookupServiceImpl implements LookupService {
         return lookupMapper.fipsCountyToDtoList(entities);
     }
 
+    /*
+     * Retrieve non-legacy county codes
+     * @return
+     */
+    public List<FipsCountyDto> retrieveCurrentCounties(Integer year) {
+
+        List<FipsCounty> entities = countyRepo.findAllCurrent(year, Sort.by(Direction.ASC, "code"));
+
+        return lookupMapper.fipsCountyToDtoList(entities);
+    }
+
     public List<FipsCountyDto> retrieveCountyCodesByState(String stateCode) {
 
         List<FipsCounty> entities = countyRepo.findByFipsStateCodeCode(stateCode, Sort.by(Direction.ASC, "code"));
+
+        return lookupMapper.fipsCountyToDtoList(entities);
+    }
+    
+    /*
+     * Retrieve non-legacy county codes by State
+     * @return
+     */
+    public List<FipsCountyDto> retrieveCurrentCountyCodesByState(String stateCode, Integer year) {
+
+        List<FipsCounty> entities = countyRepo.findCurrentByFipsStateCodeCode(stateCode, year, Sort.by(Direction.ASC, "code"));
 
         return lookupMapper.fipsCountyToDtoList(entities);
     }

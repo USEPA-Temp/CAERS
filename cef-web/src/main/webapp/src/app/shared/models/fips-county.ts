@@ -6,4 +6,5 @@ export class FipsCounty {
   countyCode: string;
   fipsStateCode: FipsStateCode;
   name: string;
+  lastInventoryYear: number;
 }
