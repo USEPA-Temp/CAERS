@@ -78,8 +78,18 @@ export class LookupService {
     return this.http.get<FipsCounty[]>(url);
   }
 
+  retrieveCurrentFipsCounties(year: number): Observable<FipsCounty[]> {
+    const url = `${this.baseUrl}/county/${year}`;
+    return this.http.get<FipsCounty[]>(url);
+  }
+
   retrieveFipsCountiesForState(stateCode: string): Observable<FipsCounty[]> {
     const url = `${this.baseUrl}/county/state/${stateCode}`;
+    return this.http.get<FipsCounty[]>(url);
+  }
+
+  retrieveCurrentFipsCountiesForState(stateCode: string, year: number): Observable<FipsCounty[]> {
+    const url = `${this.baseUrl}/county/state/${stateCode}/${year}`;
     return this.http.get<FipsCounty[]>(url);
   }
 

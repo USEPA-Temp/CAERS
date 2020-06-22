@@ -103,6 +103,17 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                     facilitySite.getStateCode().getUspsCode());
         }
         
+        if (facilitySite.getCountyCode() != null && facilitySite.getCountyCode().getLastInventoryYear() != null
+            && facilitySite.getCountyCode().getLastInventoryYear() < facilitySite.getEmissionsReport().getYear()) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.FACILITY_COUNTY.value(), "facilitysite.county.legacy", 
+                    createValidationDetails(facilitySite),
+                    facilitySite.getCountyCode().getName());
+
+        }
+        
         // Phone number must be entered as 10 digits
         String regex = "^[0-9]{10}";
         Pattern pattern = Pattern.compile(regex);
@@ -264,12 +275,23 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                 result = false;
                 context.addFederalError(
                         ValidationField.FACILITY_CONTACT_COUNTY.value(), "facilitySite.contacts.county.invalidState",
-                        createValidationDetails(facilitySite),
+                        createContactValidationDetails(facilitySite),
                         contact.getCountyCode().getName(),
                         contact.getStateCode().getUspsCode());
             }
-        }
+        	
+        	if (contact.getCountyCode() != null && contact.getCountyCode().getLastInventoryYear() != null
+                && contact.getCountyCode().getLastInventoryYear() < contact.getFacilitySite().getEmissionsReport().getYear()) {
 
+                result = false;
+                context.addFederalError(
+                        ValidationField.FACILITY_CONTACT_COUNTY.value(), "facilitysite.contacts.county.legacy", 
+                        createContactValidationDetails(facilitySite),
+                        contact.getCountyCode().getName());
+
+            }
+        }
+        
         if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
         	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
         			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode())
