@@ -53,6 +53,7 @@ import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
+import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.bulkUpload.BlankToNullModule;
@@ -711,6 +712,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         emissionsReport.setFrsFacilityId(bulkEmissionsReport.getFrsFacilityId());
         emissionsReport.setYear(bulkEmissionsReport.getYear());
         emissionsReport.setStatus(ReportStatus.valueOf(bulkEmissionsReport.getStatus()));
+        emissionsReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
 
         if (bulkEmissionsReport.getValidationStatus() != null) {
             emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));

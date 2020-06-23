@@ -20,7 +20,7 @@ export class EisDataService {
    constructor(private http: HttpClient) {
    }
 
-   retrieveStats(year: number): Observable<EisDataStats> {
+   retrieveStatsByYear(year: number): Observable<EisDataStats> {
       let params = new HttpParams()
          .append("year", year.toString());
 

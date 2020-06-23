@@ -48,9 +48,9 @@ public class EisTransmissionServiceImpl {
         return result;
     }
 
-    public EisDataStatsDto retrieveStatInfo(String agencyCode, Short year) {
+	public EisDataStatsDto retrieveStatInfoByYear(String agencyCode, Short year) {
 
-        Collection<EisDataStatsDto.EisDataStatusStat> stats = this.reportRepository.findEisDataStatuses(agencyCode, year);
+        Collection<EisDataStatsDto.EisDataStatusStat> stats = this.reportRepository.findEisDataStatusesByYear(agencyCode, year);
 
         Collection<Integer> years = this.reportRepository.findEisDataYears(agencyCode);
 
