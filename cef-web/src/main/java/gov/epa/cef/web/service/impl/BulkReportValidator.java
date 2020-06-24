@@ -124,7 +124,7 @@ public class BulkReportValidator {
     		if(added){
     			System.out.println("adding child path "+cp+" to assignmentTree");
     		} else {
-    			String msg = String.format("Control Path '%s' cannot be a child path of Control Path '%s'.",
+    			String msg = String.format("Control Paths '%s' and '%s' form a control path loop. A control path must be associated only once with another control path.",
                         cp, parentPath);        		
     			violations.add(new WorksheetError("Control Assignments", 1, msg));
     			return true;
