@@ -151,7 +151,6 @@ public class BulkReportValidator {
     	assignmentTree.forEach(assignment ->{
     		System.out.println("Assignment Tree at end: "+assignment);
     	});
-    	System.out.println("-------------end of check loop-------");
     	return false;
     }
 
