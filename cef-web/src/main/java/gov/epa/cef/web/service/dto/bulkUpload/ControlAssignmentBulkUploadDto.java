@@ -9,12 +9,12 @@ public class ControlAssignmentBulkUploadDto extends BaseWorksheetDto implements 
 
     private static final long serialVersionUID = 1L;
 
-    private Long controlId;
+    private String controlId;
 
-    private Long controlPathChildId;
+    private String controlPathChildId;
 
     @NotNull(message = "Control Path ID is required.")
-    private Long controlPathId;
+    private String controlPathId;
 
     @NotNull(message = "Control Assignment ID is required.")
     private Long id;
@@ -34,32 +34,32 @@ public class ControlAssignmentBulkUploadDto extends BaseWorksheetDto implements 
         super(WorksheetName.ControlAssignment);
     }
 
-    public Long getControlId() {
+    public String getControlId() {
 
         return controlId;
     }
 
-    public void setControlId(Long controlId) {
+    public void setControlId(String controlId) {
 
         this.controlId = controlId;
     }
 
-    public Long getControlPathChildId() {
+    public String getControlPathChildId() {
 
         return controlPathChildId;
     }
 
-    public void setControlPathChildId(Long controlPathChildId) {
+    public void setControlPathChildId(String controlPathChildId) {
 
         this.controlPathChildId = controlPathChildId;
     }
 
-    public Long getControlPathId() {
+    public String getControlPathId() {
 
         return controlPathId;
     }
 
-    public void setControlPathId(Long controlPathId) {
+    public void setControlPathId(String controlPathId) {
 
         this.controlPathId = controlPathId;
     }
