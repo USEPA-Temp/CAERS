@@ -93,15 +93,8 @@ public class BulkReportValidator {
             if(!parentPaths.get(0).isEmpty()){
             	List<String> childPaths = buildChildPaths(parentPaths.get(0), caList);
             	assignmentTree.add(parentPaths.get(0));
-            	childPaths.forEach(cp ->{
-            		System.out.println("cp before fn start: "+cp);
-            	});
             	checkForLoops(parentPaths.get(0), childPaths, assignmentTree, caList, violations);
             }
-
-        	assignmentTree.forEach(assignment ->{
-        		System.out.println("Assignment Tree outside of function : "+assignment);
-        	});
         }
     }
     
@@ -127,12 +120,10 @@ public class BulkReportValidator {
     
     static boolean checkForLoops(String parentPath, List<String> childPaths, Set<String> assignmentTree, List<String> assignments, List<WorksheetError> violations){
     	for(String cp: childPaths){
-    		System.out.println("attempting to add cp: "+cp);
     		boolean added = assignmentTree.add(cp);
     		if(added){
     			System.out.println("adding child path "+cp+" to assignmentTree");
     		} else {
-    			System.out.println("error found with "+parentPath+" -> "+cp);
     			String msg = String.format("Control Path '%s' cannot be a child path of Control Path '%s'.",
                         cp, parentPath);        		
     			violations.add(new WorksheetError("Control Assignments", 1, msg));
@@ -141,16 +132,9 @@ public class BulkReportValidator {
     	}
     	for(String cp: childPaths){
     		String nextParentPath = cp;
-    		System.out.println("new parent path "+cp);
     		List<String> nextChildPaths = buildChildPaths(nextParentPath, assignments);
-    		for(String cp1: nextChildPaths){
-    			System.out.println("next child paths in fn: "+cp1);
-    		}
     		checkForLoops(nextParentPath, nextChildPaths, assignmentTree, assignments, violations);
     	}
-    	assignmentTree.forEach(assignment ->{
-    		System.out.println("Assignment Tree at end: "+assignment);
-    	});
     	return false;
     }
 
