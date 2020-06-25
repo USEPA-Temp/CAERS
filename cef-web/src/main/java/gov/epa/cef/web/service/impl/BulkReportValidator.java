@@ -120,8 +120,7 @@ public class BulkReportValidator {
 
     	for(String cp: childPaths){
     		boolean added = assignmentTree.add(cp);
-    		if(added){
-    		} else {
+    		if(!added){
     			String childPathDesc = "";
     			String parentPathDesc = "";
     			for(ControlPathBulkUploadDto controlPath: controlPaths){
