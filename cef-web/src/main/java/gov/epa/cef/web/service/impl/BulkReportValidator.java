@@ -1,25 +1,23 @@
 package gov.epa.cef.web.service.impl;
 
-import com.google.common.base.MoreObjects; 
+import com.google.common.base.MoreObjects;  
 import com.google.common.base.Strings;
 
-import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.exception.BulkReportValidationException;
 import gov.epa.cef.web.service.dto.bulkUpload.BaseWorksheetDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Validator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -27,7 +25,7 @@ import java.util.function.Consumer;
 public class BulkReportValidator {
 
     private final Validator validator;
-
+    
     @Autowired
     BulkReportValidator(Validator validator) {
 
@@ -66,11 +64,11 @@ public class BulkReportValidator {
     }
     
     static class ControlAssignmentLoopValidator implements Consumer<List <ControlAssignmentBulkUploadDto>> {
-    	
+
     	private final EmissionsReportBulkUploadDto report;
     	
     	private final List<WorksheetError> violations;
-    	
+    	    	
         public ControlAssignmentLoopValidator(EmissionsReportBulkUploadDto report, List<WorksheetError> violations) {
 
             this.violations = violations;
@@ -79,7 +77,7 @@ public class BulkReportValidator {
         
         @Override
         public void accept(List<ControlAssignmentBulkUploadDto> controlAssignments) {
-        	
+        
         	List<String> parentPaths = buildParentPaths(controlAssignments);
         	List<String> caList = new ArrayList<String>();
             Set<String> assignmentTree = new HashSet<String>(); 
@@ -90,10 +88,10 @@ public class BulkReportValidator {
         		}
         	});
 
-            if(!parentPaths.get(0).isEmpty()){
+            if(!parentPaths.isEmpty() && !parentPaths.get(0).isEmpty()){
             	List<String> childPaths = buildChildPaths(parentPaths.get(0), caList);
             	assignmentTree.add(parentPaths.get(0));
-            	checkForLoops(parentPaths.get(0), childPaths, assignmentTree, caList, violations);
+            	checkForLoops(parentPaths.get(0), childPaths, assignmentTree, caList, violations, report.getControlPaths());
             }
         }
     }
@@ -101,8 +99,8 @@ public class BulkReportValidator {
     static List <String> buildParentPaths(List<ControlAssignmentBulkUploadDto> assignments){
     	List<String> parentPaths = new ArrayList<String>();
     	assignments.forEach(ca ->{
-    		if(!parentPaths.contains(ca.getControlPathId())){
-    			parentPaths.add(ca.getControlPathId());
+    		if(!parentPaths.contains(ca.getControlPathId().toString())){
+    			parentPaths.add(ca.getControlPathId().toString());
     		}
     	});
     	return parentPaths;
@@ -118,14 +116,23 @@ public class BulkReportValidator {
     	return childPaths;
     }
     
-    static boolean checkForLoops(String parentPath, List<String> childPaths, Set<String> assignmentTree, List<String> assignments, List<WorksheetError> violations){
+    static boolean checkForLoops(String parentPath, List<String> childPaths, Set<String> assignmentTree, List<String> assignments, List<WorksheetError> violations, List<ControlPathBulkUploadDto> controlPaths){
+
     	for(String cp: childPaths){
     		boolean added = assignmentTree.add(cp);
-    		if(added){
-    			System.out.println("adding child path "+cp+" to assignmentTree");
-    		} else {
-    			String msg = String.format("Control Path '%s' cannot be a child path of Control Path '%s'.",
-                        cp, parentPath);        		
+    		if(!added){
+    			String childPathDesc = "";
+    			String parentPathDesc = "";
+    			for(ControlPathBulkUploadDto controlPath: controlPaths){
+    				if(controlPath.getId().toString().contentEquals(cp)){
+    					childPathDesc = controlPath.getPathId();
+    				}
+    				if(controlPath.getId().toString().contentEquals(parentPath)){
+    					parentPathDesc = controlPath.getPathId();
+    				}
+    			}
+    			String msg = String.format("Control Paths '%s' and '%s' form a control path loop. A control path must be associated only once with another control path.",
+                        childPathDesc, parentPathDesc);        		
     			violations.add(new WorksheetError("Control Assignments", 1, msg));
     			return true;
     		}
@@ -133,7 +140,7 @@ public class BulkReportValidator {
     	for(String cp: childPaths){
     		String nextParentPath = cp;
     		List<String> nextChildPaths = buildChildPaths(nextParentPath, assignments);
-    		checkForLoops(nextParentPath, nextChildPaths, assignmentTree, assignments, violations);
+    		checkForLoops(nextParentPath, nextChildPaths, assignmentTree, assignments, violations, controlPaths);
     	}
     	return false;
     }
