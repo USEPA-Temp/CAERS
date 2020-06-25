@@ -234,6 +234,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         testData.setEmissionsNumeratorUom(new UnitMeasureCode());
         testData.setEmissionsUomCode(new UnitMeasureCode());
         testData.setEmissionsCalcMethodCode(new CalculationMethodCode());
+        testData.getEmissionsCalcMethodCode().setControlIndicator(false);
         testData.getEmissionsCalcMethodCode().setTotalDirectEntry(false);
         testData.setCalculationComment("manually entered/calculated total emissions");
         
@@ -685,6 +686,26 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CALC_DESC.value()) && errorMap.get(ValidationField.EMISSION_CALC_DESC.value()).size() == 1);
    }
+   
+   /**
+    * There should be one error when calculation method includes control efficiency and overall control percent is > 0
+    */
+   @Test
+   public void calcMethodWithControlEfficiencyAndControlPercent_FailTest() {
+
+       CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(false);
+       testData.setOverallControlPercent(new BigDecimal(0.5));
+       testData.getEmissionsCalcMethodCode().setCode("33");
+       testData.getEmissionsCalcMethodCode().setDescription("Other Emission Factor (pre-control) plus Control Efficiency");
+       testData.getEmissionsCalcMethodCode().setControlIndicator(true);
+
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
+   }
 
 
     private Emission createBaseEmission(boolean totalDirectEntry) {
@@ -693,6 +714,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         
         CalculationMethodCode calcMethod = new CalculationMethodCode();
         calcMethod.setCode("2");
+        calcMethod.setDescription("Engineering Judgment");
         calcMethod.setControlIndicator(false);
         calcMethod.setEpaEmissionFactor(false);
         calcMethod.setTotalDirectEntry(totalDirectEntry);
