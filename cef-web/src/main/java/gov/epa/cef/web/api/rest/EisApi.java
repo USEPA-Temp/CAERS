@@ -124,11 +124,11 @@ public class EisApi {
 
     @GetMapping(value = "/emissionsReport/stats",
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EisDataStatsDto> retrieveEisDataStats(@NotNull @RequestParam(value = "year") Short year) {
+	public ResponseEntity<EisDataStatsDto> retrieveEisStatsByYear(@NotNull @RequestParam(value = "year") Short year) {
 
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
-        EisDataStatsDto result = this.eisTransmissionService.retrieveStatInfo(appUser.getClientId(), year);
+        EisDataStatsDto result = this.eisTransmissionService.retrieveStatInfoByYear(appUser.getClientId(), year);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
