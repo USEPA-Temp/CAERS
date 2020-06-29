@@ -146,8 +146,8 @@ export class EmissionsReportingService {
     }
 
     /** Sets hasSubmitted flag on specified emissions report to true */
-    updateHasSubmittedFeedback(reportId: string, report: EmissionsReport): Observable<{}> {
-        const url = `${this.baseUrl}/${reportId}`;
-        return this.http.put(url, report);
+    updateHasSubmittedFeedback(reportId: string): Observable<{}> {
+        const url = `${this.baseUrl}/${reportId}/feedbackSubmitted`;
+        return this.http.put(url, null);
     }
 }

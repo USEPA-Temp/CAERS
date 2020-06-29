@@ -10,6 +10,7 @@ import { ReportAttachmentService } from 'src/app/core/services/report-attachment
 import { ReportService } from 'src/app/core/services/report.service';
 import { ReportHistory } from 'src/app/shared/models/report-history';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-report-attachment-table',
@@ -29,7 +30,8 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
                 private reportAttachmentService: ReportAttachmentService,
                 private fileDownloadService: FileDownloadService,
                 private sharedService: SharedService,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private route: ActivatedRoute) {
         super();
      }
 
@@ -88,7 +90,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
     deleteAttachment(id: number) {
         this.sharedService.emitReportIdChange(this.facilitySite.emissionsReport.id);
         this.reportAttachmentService.deleteAttachment(id).subscribe(() => {
-
+            this.sharedService.updateReportStatusAndEmit(this.route);
             this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
             .subscribe(report => {
                 this.tableData = report.filter(data => 

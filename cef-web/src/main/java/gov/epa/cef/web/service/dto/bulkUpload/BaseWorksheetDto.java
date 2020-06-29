@@ -14,6 +14,8 @@ public class BaseWorksheetDto {
     static final String LatitudePattern = "^[+-]?\\d{0,2}(\\.\\d{1,6})?$";
 
     static final String LongitudePattern = "^[+-]?\\d{0,3}(\\.\\d{1,6})?$";
+    
+    static final String PhonePattern = "^[0-9]{10}$";
 
     static final String PercentPattern = "^\\d{0,3}(\\.\\d)?$";
 

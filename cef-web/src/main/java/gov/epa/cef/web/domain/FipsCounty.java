@@ -40,6 +40,9 @@ public class FipsCounty implements java.io.Serializable {
 
     @Column(name = "name", length = 43)
     private String name;
+    
+    @Column(name = "last_inventory_year")
+    private Integer lastInventoryYear;
 
     // Property accessors
     public String getCode() {
@@ -72,6 +75,14 @@ public class FipsCounty implements java.io.Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
     }
 
 }

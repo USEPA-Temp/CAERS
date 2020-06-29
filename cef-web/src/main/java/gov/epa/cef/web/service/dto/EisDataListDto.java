@@ -3,17 +3,32 @@ package gov.epa.cef.web.service.dto;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class EisDataListDto {
+public class EisDataListDto implements Consumer<EisDataReportDto> {
 
     private final EisDataCriteria criteria;
 
     private final List<EisDataReportDto> reports;
 
+    public EisDataListDto() {
+
+        this(null);
+    }
+
     public EisDataListDto(EisDataCriteria criteria) {
 
         this.criteria = criteria;
         this.reports = new ArrayList<>();
+    }
+
+    @Override
+    public void accept(EisDataReportDto eisDataReportDto) {
+
+        if (eisDataReportDto != null) {
+
+            this.reports.add(eisDataReportDto);
+        }
     }
 
     public EisDataCriteria getCriteria() {

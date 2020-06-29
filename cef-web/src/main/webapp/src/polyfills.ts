@@ -22,6 +22,8 @@
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
 import 'core-js/es7/array'; // added to fix .includes error when creating a new control in Internet Explorer
 
+import 'core-js/es7/object'; // added for IE11 Object.entries support
+
 /**
  * Web Animations `@angular/platform-browser/animations`
  * Only required if AnimationBuilder is used within the application and using IE/Edge or Safari.

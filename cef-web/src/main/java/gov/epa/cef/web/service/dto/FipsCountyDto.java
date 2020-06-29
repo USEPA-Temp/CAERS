@@ -10,6 +10,7 @@ public class FipsCountyDto implements Serializable {
     private String countyCode;
     private FipsStateCodeDto fipsStateCode;
     private String name;
+    private Integer lastInventoryYear;
 
     public String getCode() {
         return code;
@@ -42,6 +43,13 @@ public class FipsCountyDto implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
 
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
+    }
 
 }

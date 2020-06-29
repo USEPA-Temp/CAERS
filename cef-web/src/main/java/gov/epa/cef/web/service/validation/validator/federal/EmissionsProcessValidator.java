@@ -171,7 +171,19 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
           				createValidationDetails(emissionsProcess));
         		}
         	}
-                       
+
+          if (emissionsProcess.getAircraftEngineTypeCode() != null && emissionsProcess.getAircraftEngineTypeCode().getLastInventoryYear() != null
+                  && emissionsProcess.getAircraftEngineTypeCode().getLastInventoryYear() < getReportYear(emissionsProcess)) {
+
+              result = false;
+              context.addFederalError(
+                      ValidationField.PROCESS_AIRCRAFT_CODE.value(),
+                      "emissionsProcess.aircraftCode.legacy", 
+                      createValidationDetails(emissionsProcess),
+                      emissionsProcess.getAircraftEngineTypeCode().getFaaAircraftType(),
+                      emissionsProcess.getAircraftEngineTypeCode().getEngine());
+          }
+
     	  Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
           // Might need to add a rounding tolerance.
           if (100 != totalReleasePointPercent) {
@@ -302,6 +314,10 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
             return process.getEmissionsUnit().getUnitIdentifier();
         }
         return null;
+    }
+
+    private int getReportYear(EmissionsProcess process) {
+        return process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().intValue();
     }
 
     private ValidationDetailDto createValidationDetails(EmissionsProcess source) {

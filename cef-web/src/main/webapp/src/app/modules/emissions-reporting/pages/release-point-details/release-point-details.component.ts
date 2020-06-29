@@ -22,6 +22,7 @@ export class ReleasePointDetailsComponent implements OnInit {
   processes: Process[];
   controlPaths: ControlPath[];
   parentComponentType = 'releasePointAppt';
+  facilitySite: FacilitySite;
 
   fugitive = false;
   readOnlyMode = true;
@@ -69,6 +70,7 @@ export class ReleasePointDetailsComponent implements OnInit {
           this.readOnlyMode = false;
         }
       });
+      this.facilitySite = data.facilitySite;
       this.sharedService.emitChange(data.facilitySite);
     });
 

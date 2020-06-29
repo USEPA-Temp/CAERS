@@ -13,6 +13,7 @@ import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -35,7 +36,7 @@ export class EditFacilityContactComponent implements OnInit {
     phone: ['', [
       Validators.required,
       Validators.maxLength(10),
-      Validators.pattern('^[0-9]{10,15}$')]],
+      Validators.pattern('^[0-9]{10}$')]],
     phoneExt: ['', [
       Validators.maxLength(5),
       numberValidator()]],
@@ -88,7 +89,7 @@ export class EditFacilityContactComponent implements OnInit {
         if (this.contactForm.value.countyCode && value.code && this.contactForm.value.countyCode.fipsStateCode.code !== value.code) {
           this.contactForm.get('countyCode').setValue(null);
         }
-        this.lookupService.retrieveFipsCountiesForState(value.code)
+        this.lookupService.retrieveCurrentFipsCountiesForState(value.code, this.facilitySite.emissionsReport.year)
         .subscribe(result => {
           this.counties = result;
         });
@@ -137,6 +138,8 @@ export class EditFacilityContactComponent implements OnInit {
 
       this.facilityUrl = `/facility/${params.get('facilityId')}/report/${params.get('reportId')}/${BaseReportUrl.FACILITY_INFO}`;
     });
+
+    this.contactForm.get('countyCode').setValidators([Validators.required, legacyItemValidator(this.facilitySite.emissionsReport.year, 'County', 'name')]);
   }
 
   setMailAddress() {

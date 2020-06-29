@@ -13,6 +13,7 @@ public class AircraftEngineTypeCodeDto implements Serializable {
 	private String engine;
 	private String edmsUid;
 	private String scc;
+	private Integer lastInventoryYear;
 
 	public String getCode() {
 		return code;
@@ -69,5 +70,13 @@ public class AircraftEngineTypeCodeDto implements Serializable {
 	public void setScc(String scc) {
 		this.scc = scc;
 	}
+
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
+    }
 
 }

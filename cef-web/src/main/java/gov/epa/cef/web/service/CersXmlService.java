@@ -4,6 +4,8 @@ import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 
 import java.io.OutputStream;
 
+import gov.epa.cef.web.service.dto.EisSubmissionStatus;
+
 public interface CersXmlService {
 
     /**
@@ -11,12 +13,14 @@ public interface CersXmlService {
      * @param reportId
      * @return
      */
-    CERSDataType generateCersData(Long reportId);
+    CERSDataType generateCersData(Long reportId, EisSubmissionStatus submissionStatus);
 
     /**
      * Generate XML from the CERS XML classes for the specified emissions report
      * @param reportId
+     * @param oututStream
+     * @param submissionType
      * @return
      */
-    void writeCersXmlTo(long reportId, OutputStream outputStream);
+    void writeCersXmlTo(long reportId, OutputStream outputStream, EisSubmissionStatus submissionStatus);
 }

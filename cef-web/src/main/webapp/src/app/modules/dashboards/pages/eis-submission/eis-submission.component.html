@@ -32,8 +32,8 @@
                           class="mr-3 form-control form-control-sm"
                           style="width: 150px"
                           [formControl]="cboFilterStatus">
-                     <option *ngFor="let item of (availableStatuses | sortBy:'key')"
-                             [value]="item.value">{{ item.value }}</option>
+                     <option *ngFor="let item of (availableStatuses | sortBy:'':'asc')"
+                             [value]="item">{{ item }}</option>
                   </select>
 
                   <label for="id-filter-text" class="col-form-label mr-2">
@@ -101,7 +101,10 @@
                      </tr>
                      <tr *ngFor="let report of (tableData | dataFilter:txtFilter.value:'facilityName,agencyFacilityId,eisProgramId,lastTransactionId')">
                         <td class="text-center">
-                           <input type="checkbox" class="form-check-inline" disabled/>
+                           <input type="checkbox"
+                                  [attr.aria-label]="report.facilityName"
+                                  class="form-check-inline mr-0"
+                                  (change)="onSelectChange($event, report)"/>
                         </td>
                         <td>
                            <span [textContent]="report.facilityName"></span>
@@ -122,7 +125,11 @@
                            <span [textContent]="report.lastSubmissionStatus"></span>
                         </td>
                         <td class="text-center">
-                           <input type="checkbox" class="form-check-inline" disabled
+                           <input type="checkbox"
+                                  class="form-check-inline mr-0"
+                                  [attr.aria-label]="report.facilityName + 'last submission status' + report.lastSubmissionStatus + 'passed indicator'"
+                                  (click)="onPassedCheck(report)"
+                                  [checked]="report.passed"
                                   [value]="report.passed"/>
                         </td>
                         <td>
@@ -143,7 +150,9 @@
                      </tbody>
                   </table>
                </div>
-
+               <div class="validation-message" *ngIf="invalidSelection">
+                  <span>A submission, Submission Type, and Data Category must be selected.</span>
+               </div>
             </div>
 
             <div class="card-footer">
@@ -155,9 +164,10 @@
                   </label>
                   <select id="id-submit-type"
                           class="mr-3 form-control form-control-sm"
-                          style="width: 150px">
+                          style="width: 150px"
+                          [formControl]="cboSubmitType">
                      <option *ngFor="let item of (submissionTypes | keyvalue | sortBy: 'key')"
-                             [value]="item.key">{{item.value}}</option>
+                             [value]="item.value">{{item.value}}</option>
                   </select>
 
                   <label for="id-submit-category" class="col-form-label mr-2">
@@ -165,13 +175,14 @@
                   </label>
                   <select id="id-submit-category"
                           class="mr-3 form-control form-control-sm"
-                          style="width: 150px">
+                          style="width: 150px"
+                          [formControl]="cboSubmitCategory">
                      <option *ngFor="let item of (dataCategories | keyvalue | sortBy: 'key')"
-                             [value]="item.key">{{item.value}}</option>
+                             [value]="item.value">{{item.value}}</option>
                   </select>
 
-                  <button type="button" class="btn btn-success disabled"
-                          style="pointer-events: none">
+                  <button type="button" class="btn btn-success"
+                          (click)="onSubmitClick()">
                      <span>Submit to EIS</span>
                   </button>
                </div>
@@ -187,14 +198,18 @@
             </div>
 
             <div class="card-body">
-
+               <strong>{{currentYear}} Status Report</strong>
+               <br>
+               <br>
                <div class="mb-3 align-middle">
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.notStarted > 0 ? 'all' : 'none'"
+                     [title]="stats.notStarted + ' reports in not started status'"
                      (click)="onFilterNotStarted()">
 
                      <span class="badge badge-pill badge-danger text-larger mr-3"
+                           style="background-color: #ff1a1a; font-size: 100%;"
                            [textContent]="stats.notStarted"></span>
                      <strong class="mr-2">Not Started</strong>
                      <fa-icon icon="filter"
@@ -207,9 +222,11 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.qaFacility > 0 ? 'all' : 'none'"
+                     [title]="stats.qaFacility + ' reports QA facility status'"
                      (click)="onFilterQaFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
+                           style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.qaFacility"></span>
                      <strong class="mr-2">QA Facility</strong>
                      <fa-icon icon="filter"
@@ -222,9 +239,11 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.prodFacility > 0 ? 'all' : 'none'"
+                     [title]="stats.prodFacility + ' reports Prod facility status'"
                      (click)="onFilterProdFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
+                           style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.prodFacility"></span>
                      <strong class="mr-2">Prod Facility</strong>
                      <fa-icon icon="filter"
@@ -237,9 +256,11 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.qaEmissions > 0 ? 'all' : 'none'"
+                     [title]="stats.qaEmissions + ' reports QA Emissions status'"
                      (click)="onFilterQaEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
+                           style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.qaEmissions"></span>
                      <strong class="mr-2">QA Emissions</strong>
                      <fa-icon icon="filter"
@@ -252,9 +273,11 @@
                   <a href="javascript:void(0);"
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.prodEmissions > 0 ? 'all' : 'none'"
+                     [title]="stats.prodEmissions + ' reports Prod Emissions status'"
                      (click)="onFilterProdEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
+                           style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.prodEmissions"></span>
                      <strong class="mr-2">Prod Emissions</strong>
                      <fa-icon icon="filter"
@@ -264,9 +287,20 @@
                </div>
 
                <div class="my-3 align-middle">
-                  <span class="badge badge-pill badge-success text-larger"
-                        [textContent]="stats.complete"></span>
-                  <strong class="ml-3">Complete</strong>
+                  <a href="javascript:void(0);"
+                     class="text-nowrap text-decoration-none text-body"
+                     [style.pointer-events]="stats.complete > 0 ? 'all' : 'none'"
+                     [title]="stats.complete + ' reports Complete status'"
+                     (click)="onFilterComplete()">
+
+                     <span class="badge badge-pill badge-success text-larger mr-3"
+                           style="background-color: #209c98; font-size: 100%;"
+                           [textContent]="stats.complete"></span>
+                     <strong class="mr-2">Complete</strong>
+                     <fa-icon icon="filter"
+                              title="Show Complete"
+                              *ngIf="stats.complete > 0"></fa-icon>
+                  </a>
                </div>
             </div>
 
@@ -278,8 +312,8 @@
 </div>
 
 <ng-template #EditCommentModal>
-   <div class="modal-header bg-info text-white">
-      <div class="modal-title h4"><strong>Edit Comments</strong></div>
+   <div class="modal-header">
+      <h4 class="modal-title"><strong>Edit Comments</strong></h4>
    </div>
    <div class="modal-body">
       <div class="form">
@@ -290,20 +324,21 @@
                       [maxLength]="dlgEditComment.maxlength"
                       [formControl]="txtComment"></textarea>
             <div class="form-text text-right text-muted" role="status" aria-live="polite">
-               <span>{{txtComment.value ? txtComment.value.length : 0}} of {{dlgEditComment.maxlength}} chars used</span>
+               <span>{{txtComment.value ? txtComment.value.length : 0}} of {{dlgEditComment.maxlength}}
+                  chars used</span>
             </div>
          </div>
       </div>
       <div class="mb-2"></div>
    </div>
    <div class="modal-footer">
-      <button class="btn btn-secondary"
+      <button class="btn btn-primary"
               [disabled]="dlgEditComment.waiting"
               (click)="onCancelCommentClick()">
          <span>Cancel</span>
       </button>
 
-      <button class="btn btn-primary"
+      <button class="btn btn-success"
               [disabled]="dlgEditComment.waiting"
               (click)="onUpdateCommentClick()">
          <span>OK</span>

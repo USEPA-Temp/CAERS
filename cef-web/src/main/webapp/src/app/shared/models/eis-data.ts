@@ -1,7 +1,7 @@
 
 export interface EisDataStats {
 
-   availableYears: number[];
+   availableYears: Set<number>;
    statuses: EisDataStat[];
 }
 
@@ -11,7 +11,8 @@ export enum EisSubmissionStatus {
    QaEmissions = "QA Emissions",
    QaFacility = "QA Facility",
    ProdEmissions = "Prod Emissions",
-   ProdFacility = "Prod Facility"
+   ProdFacility = "Prod Facility",
+   Complete = "Complete"
 }
 
 export interface EisSearchCriteria {
@@ -37,6 +38,12 @@ export interface EisDataReport {
    lastTransactionId: string;
    passed: boolean;
    reportingYear: number;
+}
+
+export interface EisReportStatusUpdate {
+
+   submissionStatus: EisSubmissionStatus;
+   emissionsReportIds: Set<number>;
 }
 
 export interface EisDataStat {

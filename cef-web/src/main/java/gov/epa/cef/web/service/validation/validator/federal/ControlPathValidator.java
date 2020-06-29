@@ -1,12 +1,13 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
-import java.text.MessageFormat;
+import java.text.MessageFormat; 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
@@ -14,6 +15,7 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -22,6 +24,9 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 @Component
 public class ControlPathValidator extends BaseValidator<ControlPath> {
+	
+	@Autowired
+	private ControlAssignmentRepository assignmentRepo;
 	
 	@Override
 	public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
@@ -103,6 +108,33 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             			"controlPath.assignment.notAssigned",
             			createValidationDetails(controlPath));
         	}
+        	
+        List<ControlAssignment> sequenceMap = controlPath.getAssignments().stream()
+                .filter(cpa -> (cpa.getSequenceNumber() != null))
+                .collect(Collectors.toList());
+        List<Integer> uniqueSequenceList = new ArrayList<Integer>();
+        
+        for (ControlAssignment ca: sequenceMap) {
+        	if(!uniqueSequenceList.contains(ca.getSequenceNumber())){
+        		uniqueSequenceList.add(ca.getSequenceNumber());
+        	}
+        }
+        
+        for (Integer sequenceNumber: uniqueSequenceList) {
+        	Double totalApportionment = 0.0;
+	        for (ControlAssignment ca: sequenceMap) {
+	        	if(ca.getSequenceNumber() != null && ca.getSequenceNumber().equals(sequenceNumber)) {
+		        	totalApportionment = ca.getPercentApportionment() + totalApportionment;
+	        	}
+	        }
+        	if (totalApportionment != 100) {
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+            			"controlPath.assignment.sequenceNumber.totalApportionment",
+            			createValidationDetails(controlPath),sequenceNumber);        	
+            }
+        }
         	
         List<ControlAssignment> sequenceNullMap = controlPath.getAssignments().stream()
                 .filter(cpa -> (cpa.getSequenceNumber() == null))

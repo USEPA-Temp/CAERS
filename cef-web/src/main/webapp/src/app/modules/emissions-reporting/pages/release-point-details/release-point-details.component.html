@@ -105,7 +105,7 @@
                     </div>
 
                     <div *ngIf="editInfo">
-                        <app-edit-release-point-panel [releasePoint]="releasePoint"></app-edit-release-point-panel>
+                        <app-edit-release-point-panel [releasePoint]="releasePoint" [year]="facilitySite.emissionsReport.year"></app-edit-release-point-panel>
                         <div class="float-right pb-3 pr-3" *ngIf="releasePointComponent">
                             <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
                             <button type="submit" class="btn btn-success" (click)="updateReleasePoint()">Save</button>

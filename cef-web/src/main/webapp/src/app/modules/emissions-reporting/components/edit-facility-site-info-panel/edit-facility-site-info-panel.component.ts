@@ -9,6 +9,7 @@ import { numberValidator } from 'src/app/modules/shared/directives/number-valida
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { ToastrService } from 'ngx-toastr';
+import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 @Component({
   selector: 'app-edit-facility-site-info-panel',
@@ -77,6 +78,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     private toastr: ToastrService) { }
 
   ngOnInit() {
+    this.facilitySiteForm.get('countyCode').setValidators([Validators.required, legacyItemValidator(this.facilitySite.emissionsReport.year, 'County', 'name')]);
 
     this.facilitySiteForm.get('stateCode').valueChanges
     .subscribe(value => {
@@ -85,7 +87,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
             && this.facilitySiteForm.value.countyCode.fipsStateCode.code !== value.code) {
           this.facilitySiteForm.get('countyCode').setValue(null);
         }
-        this.lookupService.retrieveFipsCountiesForState(value.code)
+        this.lookupService.retrieveCurrentFipsCountiesForState(value.code, this.facilitySite.emissionsReport.year)
         .subscribe(result => {
           this.counties = result;
         });

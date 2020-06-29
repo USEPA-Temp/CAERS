@@ -36,5 +36,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
             logger.logError(message, stackTrace);
             router.navigateByUrl('/error');
         }
+
+        console.error(error);
     }
 }

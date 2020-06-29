@@ -78,8 +78,18 @@ export class LookupService {
     return this.http.get<FipsCounty[]>(url);
   }
 
+  retrieveCurrentFipsCounties(year: number): Observable<FipsCounty[]> {
+    const url = `${this.baseUrl}/county/${year}`;
+    return this.http.get<FipsCounty[]>(url);
+  }
+
   retrieveFipsCountiesForState(stateCode: string): Observable<FipsCounty[]> {
     const url = `${this.baseUrl}/county/state/${stateCode}`;
+    return this.http.get<FipsCounty[]>(url);
+  }
+
+  retrieveCurrentFipsCountiesForState(stateCode: string, year: number): Observable<FipsCounty[]> {
+    const url = `${this.baseUrl}/county/state/${stateCode}/${year}`;
     return this.http.get<FipsCounty[]>(url);
   }
 
@@ -96,6 +106,11 @@ export class LookupService {
   retrieveReleaseTypeCode(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/releaseType`;
     return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveCurrentReleaseTypeCodes(year: number): Observable<InventoryYearCodeLookup[]> {
+    const url = `${this.baseUrl}/releasePointType/${year}`;
+    return this.http.get<InventoryYearCodeLookup[]>(url);
   }
 
   retrieveProgramSystemTypeCode(): Observable<BaseCodeLookup[]> {
@@ -130,6 +145,11 @@ export class LookupService {
 
   retrieveAircraftEngineCodes(scc: string): Observable<AircraftEngineTypeCode[]> {
     const url = `${this.baseUrl}/aircraftEngineCode/${scc}`;
+    return this.http.get<AircraftEngineTypeCode[]>(url);
+  }
+
+  retrieveCurrentAircraftEngineCodes(scc: string, year: number): Observable<AircraftEngineTypeCode[]> {
+    const url = `${this.baseUrl}/aircraftEngineCode/${scc}/${year}`;
     return this.http.get<AircraftEngineTypeCode[]>(url);
   }
 

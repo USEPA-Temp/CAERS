@@ -155,6 +155,13 @@ public interface LookupService {
      * @return
      */
     List<FipsCountyDto> retrieveCountyCodes();
+    
+    /**
+     * Retrieve non-legacy County codes
+     * @param year
+     * @return
+     */
+    List<FipsCountyDto> retrieveCurrentCounties(Integer year);
 
     /**
      * Retrieve County codes for a state
@@ -162,6 +169,15 @@ public interface LookupService {
      * @return
      */
     List<FipsCountyDto> retrieveCountyCodesByState(String stateCode);
+    
+    /**
+     * Retrieve non-legacy County codes for a state
+     * @param stateCode
+     * @param year
+     * @return
+     */
+    List<FipsCountyDto> retrieveCurrentCountyCodesByState(String stateCode, Integer year);
+
 
     /**
      * Retrieve County code database object by code
@@ -195,6 +211,13 @@ public interface LookupService {
      * @return
      */
     ReleasePointTypeCode retrieveReleasePointTypeCodeEntityByCode(String code);
+    
+    /**
+     * Retrieve non-legacy Release Point Type codes
+     * @param year
+     * @return
+     */
+    List<CodeLookupDto> retrieveCurrentReleasePointTypeCodes(Integer year);
     
     /**
      * Retrieve the list of Program System Type Codes
@@ -260,6 +283,14 @@ public interface LookupService {
      * @return
      */
     List<AircraftEngineTypeCodeDto> retrieveAircraftEngineCodes(String scc);
+    
+    /**
+     * Retrieve non-legacy Aircraft Engine Type Codes
+     * @param scc
+     * @param year
+     * @return
+     */
+    List<AircraftEngineTypeCodeDto> retrieveCurrentAircraftEngineCodes(String scc, Integer year);
     
     /**
     * Retrieve Point Source SCC code database object by code

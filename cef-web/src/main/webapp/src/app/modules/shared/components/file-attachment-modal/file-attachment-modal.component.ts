@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, RequiredValidator } from '@angular/forms';
 import bsCustomFileInput from 'bs-custom-file-input';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { EMPTY } from 'rxjs';
@@ -96,11 +96,6 @@ export class FileAttachmentModalComponent implements OnInit {
 
     this.userService.getCurrentUser().subscribe( user => {
       this.userRole = user.role;
-
-      if (this.userRole !== 'Reviewer') {
-        this.attachmentForm.controls.attachment.setValidators([Validators.required]);
-        this.attachmentForm.controls.attachment.updateValueAndValidity();
-      }
     });
 
   }
@@ -114,6 +109,10 @@ export class FileAttachmentModalComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.selectedFile === null && this.userRole !== 'Reviewer') {
+      this.attachmentForm.get('attachment').setErrors({required: true});
+      this.attachmentForm.get('attachment').markAsTouched();
+    }
 
     if (!this.selectedFile && this.userRole === 'Reviewer' && this.isValid()) {
 
@@ -276,40 +275,34 @@ export class FileAttachmentModalComponent implements OnInit {
     this.uploadSystemErrors = [];
 
     this.selectedFile = file.length ? file.item(0) : null;
-    if (this.selectedFile === null && this.userRole === 'Reviewer') {
-      this.disableButton = false;
+
+    this.disableButton = false;
+    if (this.selectedFile !== null && this.userRole !== 'Reviewer') {
+      this.attachmentForm.controls.attachment.setErrors(null);
     }
 
     if (file.item(0)) {
       this.selectedFile = file.item(0);
-      const fileReader = new FileReader();
-      this.disableButton = false;
+      this.disableButton = true;
 
-      fileReader.readAsText(this.selectedFile, 'UTF-8');
+      let fileSize = this.checkFileSize(this.selectedFile);
+      let fileNameLength = this.checkFileNameLength(this.selectedFile.name);
+      let fileType = this.checkFileFormat(this.selectedFile);
 
-      fileReader.onload = () => {
-        let fileSize = this.checkFileSize(this.selectedFile);
-        let fileNameLength = this.checkFileNameLenght(this.selectedFile.name);
-        let fileType = this.checkFileFormat(this.selectedFile);
+      if (fileNameLength || fileSize || fileType) {
 
-        if (fileNameLength || fileSize || fileType) {
+        this.bsflags.showUserErrors = true;
+        this.uploadFailed = true;
 
-          this.disableButton = true;
-          this.bsflags.showUserErrors = true;
-          this.uploadFailed = true;
-
-          this.selectedFile = null;
-        }
-      };
-
-      fileReader.onerror = (error) => {
-          console.log(error);
-      };
+        this.selectedFile = null;
+      } else {
+        this.disableButton = false;
+      }
     }
 
   }
 
-  checkFileNameLenght(fileName: string) {
+  checkFileNameLength(fileName: string) {
     let nameLength = fileName.length;
     const maxLength = 255;
 

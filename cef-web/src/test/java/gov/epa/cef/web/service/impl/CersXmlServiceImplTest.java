@@ -187,48 +187,6 @@ public class CersXmlServiceImplTest {
         }
     }
 
-    @Test
-    public void removePercentControlApproachAndCaptureEfficiency() throws Exception {
-
-        CERSDataType cersData =
-            createCersDataType("json/cersXmlServiceImpl/cef-905-withcontrolapproach.json", "110007356994");
-
-        // make sure we tested something
-        List<ControlApproachDataType> found = new ArrayList<>();
-
-        cersData.getFacilitySite().forEach(facilitySiteDataType -> {
-
-            facilitySiteDataType.getEmissionsUnit().forEach(emissionsUnitDataType -> {
-
-                emissionsUnitDataType.getUnitEmissionsProcess().forEach(processDataType -> {
-
-                    ControlApproachDataType ca = processDataType.getProcessControlApproach();
-                    if (ca != null) {
-
-                        found.add(ca);
-                        assertNull(ca.getPercentControlApproachCaptureEfficiency());
-                        assertNull(ca.getPercentControlApproachEffectiveness());
-                    }
-                });
-            });
-        });
-
-        assertEquals(1, found.size());
-
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(CERSDataType.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            jaxbMarshaller.marshal(new ObjectFactory().createCERS(cersData), outputStream);
-
-            String xml = outputStream.toString(StandardCharsets.UTF_8.name());
-            logger.debug("XML {}", xml);
-        }
-    }
-
-
     private CERSDataType createCersDataType(String filename, String frsId) throws IOException {
 
         EmissionsReport emissionsReport = createEmissionsReport(filename);
@@ -253,7 +211,7 @@ public class CersXmlServiceImplTest {
 
         CersXmlService cersXmlService = new CersXmlServiceImpl(userService, reportRepo, cersMapper);
 
-        return cersXmlService.generateCersData(1l);
+        return cersXmlService.generateCersData(1l, null);
     }
 
     private EmissionsReport createEmissionsReport(String filename) throws IOException {

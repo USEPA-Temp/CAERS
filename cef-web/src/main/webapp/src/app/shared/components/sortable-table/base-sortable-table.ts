@@ -8,11 +8,14 @@ export abstract class BaseSortableTable {
   onSort({column, direction}: SortEvent) {
 
     // resetting other headers
-    this.headers.forEach(header => {
-      if (header.sortable !== column) {
-        header.direction = '';
-      }
-    });
+    if (this.headers) {
+
+      this.headers.forEach(header => {
+        if (header.sortable !== column) {
+          header.direction = '';
+        }
+      });
+    }
 
     // sorting data
     if (direction !== '') {

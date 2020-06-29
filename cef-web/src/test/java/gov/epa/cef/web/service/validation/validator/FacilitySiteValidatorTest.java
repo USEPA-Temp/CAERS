@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,6 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.EmissionsUnit;
-import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
@@ -62,6 +60,30 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.FACILITY_EIS_ID.value()) && errorMap.get(ValidationField.FACILITY_EIS_ID.value()).size() == 1);
+    }
+    
+    @Test
+    public void facilityContactPhonePassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void facilityContactPhoneFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).setPhone("1234");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT_PHONE.value()) && errorMap.get(ValidationField.FACILITY_CONTACT_PHONE.value()).size() == 1);
     }
     
     @Test
@@ -248,12 +270,42 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void facilityCountyLegacyFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getStateCode().setCode("99");
+        testData.getStateCode().setUspsCode("AK");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_COUNTY.value()).size() == 1);
+    }
+    
+    @Test
     public void facilityContactCountyInvalidStateTest() {
 
         CefValidatorContext cefContext = createContext();
         FacilitySite testData = createBaseFacilitySite();
         testData.getContacts().get(0).getStateCode().setCode("37");
         testData.getContacts().get(0).getStateCode().setUspsCode("NC");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_CONTACT_COUNTY.value()) && errorMap.get(ValidationField.FACILITY_CONTACT_COUNTY.value()).size() == 1);
+    }
+    
+    @Test
+    public void facilityContactCountyLegacyFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        testData.getContacts().get(0).getStateCode().setCode("99");
+        testData.getContacts().get(0).getStateCode().setUspsCode("AK");
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);

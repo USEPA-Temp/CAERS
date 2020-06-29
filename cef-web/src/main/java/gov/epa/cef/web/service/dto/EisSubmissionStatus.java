@@ -5,7 +5,8 @@ public enum EisSubmissionStatus {
     QaEmissions("QA", "PointEmission"),
     QaFacility("QA", "FacilityInventory"),
     ProdEmissions("Production", "PointEmission"),
-    ProdFacility("Production", "FacilityInventory");
+    ProdFacility("Production", "FacilityInventory"),
+    Complete("Complete", "Complete");
 
     private final String submissionType;
 

@@ -75,9 +75,9 @@ public class EisXmlServiceImplTest {
         List<CERSDataType> cersData = generateMockData();
 
         CersXmlServiceImpl cersXmlService = mock(CersXmlServiceImpl.class);
-        when(cersXmlService.generateCersData(1L)).thenReturn(cersData.get(0));
-        when(cersXmlService.generateCersData(2L)).thenReturn(cersData.get(1));
-        when(cersXmlService.generateCersData(3L)).thenReturn(cersData.get(2));
+        when(cersXmlService.generateCersData(1L, EisSubmissionStatus.ProdEmissions)).thenReturn(cersData.get(0));
+        when(cersXmlService.generateCersData(2L, EisSubmissionStatus.ProdEmissions)).thenReturn(cersData.get(1));
+        when(cersXmlService.generateCersData(3L, EisSubmissionStatus.ProdEmissions)).thenReturn(cersData.get(2));
 
         this.eisXmlService = new EisXmlServiceImpl(cersXmlService);
     }
@@ -89,7 +89,7 @@ public class EisXmlServiceImplTest {
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
-            .withEmissionReports(Arrays.asList(1L, 2L, 3L));
+            .withEmissionsReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType document = this.eisXmlService.generateEisDocument(eisHeader);
 
@@ -114,7 +114,7 @@ public class EisXmlServiceImplTest {
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
-            .withEmissionReports(Arrays.asList(1L, 2L, 3L));
+            .withEmissionsReports(Arrays.asList(1L, 2L, 3L));
 
         ExchangeNetworkDocumentType momento;
 

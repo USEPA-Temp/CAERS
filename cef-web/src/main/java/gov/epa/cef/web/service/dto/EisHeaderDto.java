@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class EisHeaderDto {
 
-    private final Set<Long> emissionReports;
+    private final Set<Long> emissionsReports;
 
     private String authorName;
 
@@ -16,7 +16,7 @@ public class EisHeaderDto {
 
     public EisHeaderDto() {
 
-        this.emissionReports = new HashSet<>();
+        this.emissionsReports = new HashSet<>();
     }
 
     public String getAuthorName() {
@@ -29,16 +29,16 @@ public class EisHeaderDto {
         this.authorName = authorName;
     }
 
-    public Set<Long> getEmissionReports() {
+    public Set<Long> getEmissionsReports() {
 
-        return emissionReports;
+        return emissionsReports;
     }
 
-    public void setEmissionReports(Collection<Long> emissionReports) {
+    public void setEmissionsReports(Collection<Long> emissionsReports) {
 
-        this.emissionReports.clear();
-        if (emissionReports != null) {
-            this.emissionReports.addAll(emissionReports);
+        this.emissionsReports.clear();
+        if (emissionsReports != null) {
+            this.emissionsReports.addAll(emissionsReports);
         }
     }
 
@@ -68,9 +68,9 @@ public class EisHeaderDto {
         return this;
     }
 
-    public EisHeaderDto withEmissionReports(Collection<Long> ids) {
+    public EisHeaderDto withEmissionsReports(Collection<Long> ids) {
 
-        setEmissionReports(ids);
+        setEmissionsReports(ids);
         return this;
     }
 
@@ -84,5 +84,9 @@ public class EisHeaderDto {
 
         setSubmissionStatus(submissionStatus);
         return this;
+    }
+
+    public interface EisApiGroup { /* marker */
+
     }
 }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -17,5 +18,16 @@ import javax.persistence.Table;
 public class ReleasePointTypeCode extends BaseLookupEntity {
 
     private static final long serialVersionUID = 1L;
+    
+    @Column(name = "last_inventory_year")
+    private Integer lastInventoryYear;
+    
+    public Integer getLastInventoryYear() {
+        return lastInventoryYear;
+    }
+
+    public void setLastInventoryYear(Integer lastInventoryYear) {
+        this.lastInventoryYear = lastInventoryYear;
+    }
 
 }

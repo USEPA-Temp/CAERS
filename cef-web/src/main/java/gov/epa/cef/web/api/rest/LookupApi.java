@@ -176,6 +176,19 @@ public class LookupApi {
         List<FipsCountyDto> result = lookupService.retrieveCountyCodes();
         return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Fips Counties valid for a specific year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/county/{year}")
+    @ResponseBody
+    public ResponseEntity<List<FipsCountyDto>> retrieveCurrentCounties(@NotNull @PathVariable Integer year) {
+
+        List<FipsCountyDto> result = lookupService.retrieveCurrentCounties(year);
+        return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve Fips Counties by state
@@ -187,6 +200,19 @@ public class LookupApi {
     public ResponseEntity<List<FipsCountyDto>> retrieveCountiesForState(@PathVariable String stateCode) {
 
         List<FipsCountyDto> result = lookupService.retrieveCountyCodesByState(stateCode);
+        return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Fips Counties valid for a specific year by state
+     * @param stateCode
+     * @return
+     */
+    @GetMapping(value = "/county/state/{stateCode}/{year}")
+    @ResponseBody
+    public ResponseEntity<List<FipsCountyDto>> retrieveCurrentCountiesForState(@PathVariable String stateCode, @NotNull @PathVariable Integer year) {
+
+        List<FipsCountyDto> result = lookupService.retrieveCurrentCountyCodesByState(stateCode, year);
         return new ResponseEntity<List<FipsCountyDto>>(result, HttpStatus.OK);
     }
 
@@ -299,7 +325,21 @@ public class LookupApi {
         List<AircraftEngineTypeCodeDto> result = lookupService.retrieveAircraftEngineCodes(scc);
         return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
     }
-    
+
+    /**
+     * Retrieve Aircraft Engine Type codes valid for a specific year
+     * @param scc
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/aircraftEngineCode/{scc}/{year}")
+    @ResponseBody
+    public ResponseEntity<List<AircraftEngineTypeCodeDto>> retrieveAircraftEngineCodes(@NotNull @PathVariable String scc, @NotNull @PathVariable Integer year) {
+
+        List<AircraftEngineTypeCodeDto> result = lookupService.retrieveCurrentAircraftEngineCodes(scc, year);
+        return new ResponseEntity<List<AircraftEngineTypeCodeDto>>(result, HttpStatus.OK);
+    }
+
     /**
      * Retrieve Point Source SCC code
      * @param code
@@ -346,6 +386,19 @@ public class LookupApi {
     public ResponseEntity<List<CodeLookupDto>> retrieveFacilitySourceTypeCodes() {
 
         List<CodeLookupDto> result = lookupService.retrieveFacilitySourceTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Release Point Type codes valid for a specific year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/releasePointType/{year}")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveCurrentReleasePointTypeCodes(@NotNull @PathVariable Integer year) {
+
+        List<CodeLookupDto> result = lookupService.retrieveCurrentReleasePointTypeCodes(year);
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
 }

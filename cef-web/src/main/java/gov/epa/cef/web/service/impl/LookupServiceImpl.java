@@ -255,7 +255,7 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
-    /**
+    /*
      * Retrieve non-legacy Pollutants
      * @return
      */
@@ -305,7 +305,7 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
-    /**
+    /*
      * Retrieve non-legacy UoM codes
      * @return
      */
@@ -362,9 +362,31 @@ public class LookupServiceImpl implements LookupService {
         return lookupMapper.fipsCountyToDtoList(entities);
     }
 
+    /*
+     * Retrieve non-legacy county codes
+     * @return
+     */
+    public List<FipsCountyDto> retrieveCurrentCounties(Integer year) {
+
+        List<FipsCounty> entities = countyRepo.findAllCurrent(year, Sort.by(Direction.ASC, "code"));
+
+        return lookupMapper.fipsCountyToDtoList(entities);
+    }
+
     public List<FipsCountyDto> retrieveCountyCodesByState(String stateCode) {
 
         List<FipsCounty> entities = countyRepo.findByFipsStateCodeCode(stateCode, Sort.by(Direction.ASC, "code"));
+
+        return lookupMapper.fipsCountyToDtoList(entities);
+    }
+    
+    /*
+     * Retrieve non-legacy county codes by State
+     * @return
+     */
+    public List<FipsCountyDto> retrieveCurrentCountyCodesByState(String stateCode, Integer year) {
+
+        List<FipsCounty> entities = countyRepo.findCurrentByFipsStateCodeCode(stateCode, year, Sort.by(Direction.ASC, "code"));
 
         return lookupMapper.fipsCountyToDtoList(entities);
     }
@@ -410,6 +432,20 @@ public class LookupServiceImpl implements LookupService {
     	ReleasePointTypeCode result= releasePtTypeRepository
             .findById(code)
             .orElse(null);
+        return result;
+    }
+    
+    /**
+     * Retrieve non-legacy Release Point Type codes
+     * @param year
+     * @return
+     */
+    @Override
+    public List<CodeLookupDto> retrieveCurrentReleasePointTypeCodes(Integer year) {
+
+        List<ReleasePointTypeCode> entities = releasePtTypeRepository.findAllCurrent(year, Sort.by(Direction.ASC, DESCRIPTION));
+
+        List<CodeLookupDto> result = lookupMapper.releasePointTypCodeToDtoList(entities);
         return result;
     }
     
@@ -524,6 +560,15 @@ public class LookupServiceImpl implements LookupService {
         entities.forEach(entity -> {
             result.add(lookupMapper.aircraftEngCodeToDto(entity));
         });
+        return result;
+    }
+    
+    @Override
+    public List<AircraftEngineTypeCodeDto> retrieveCurrentAircraftEngineCodes(String scc, Integer year) {
+
+        List<AircraftEngineTypeCode> entities = aircraftEngCodeRepo.findCurrentByScc(year, scc, Sort.by(Direction.ASC, "faaAircraftType"));
+
+        List<AircraftEngineTypeCodeDto> result = lookupMapper.aircraftEngCodeToDtoList(entities);
         return result;
     }
     
