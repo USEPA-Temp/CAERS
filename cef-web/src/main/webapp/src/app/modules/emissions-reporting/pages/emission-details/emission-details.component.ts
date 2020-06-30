@@ -80,7 +80,8 @@ export class EmissionDetailsComponent implements OnInit {
     this.emissionFactorGreaterThanZeroValidator(),
     this.pollutantEmissionsUoMValidator(),
     this.checkPercentSulfurRange(),
-    this.checkPercentAshRange()
+    this.checkPercentAshRange(),
+    this.overallControlPercentValidator()
     ]
   });
 
@@ -224,8 +225,6 @@ export class EmissionDetailsComponent implements OnInit {
         this.setupVariableForm([]);
         this.epaEmissionFactor = false;
       }
-
-      this.checkOverallControlPercent();
 
     }
   }
@@ -397,11 +396,9 @@ export class EmissionDetailsComponent implements OnInit {
     this.failedRpCalcDesc = null;
     this.failedDenomDesc = null;
 
-    this.checkOverallControlPercent();
   }
 
   onSubmit() {
-    this.checkOverallControlPercent();
     if (this.emissionForm.value.formulaIndicator && this.getTotalManualEntry().value) {
       this.emissionForm.get('emissionsFactor').disable();
     }
@@ -559,7 +556,6 @@ export class EmissionDetailsComponent implements OnInit {
       if (this.emissionForm.enabled) {
         this.needsCalculation = true;
       }
-      this.checkOverallControlPercent();
     });
 
     this.emissionForm.get('totalManualEntry').valueChanges
@@ -636,15 +632,6 @@ export class EmissionDetailsComponent implements OnInit {
       }
       this.getFormulaVariableForm().addControl(v.code, new FormControl(null, Validators.required));
     });
-  }
-
-  checkOverallControlPercent() {
-
-    if (this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator
-      && (this.emissionForm.get('overallControlPercent').value !== 0 && this.emissionForm.get('overallControlPercent').value !== '' && this.emissionForm.get('overallControlPercent').value !== null)) {
-        this.emissionForm.get('overallControlPercent').markAsTouched();
-        this.emissionForm.get('overallControlPercent').setErrors({ overallControlPercentInvalid: true });
-    }
   }
 
   private generateFormulaVariableDtos(): EmissionFormulaVariable[] {
@@ -724,6 +711,18 @@ export class EmissionDetailsComponent implements OnInit {
         }
         return null;
       }
+    };
+  }
+
+  overallControlPercentValidator(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const overallControl = control.get('overallControlPercent');
+      const calcMethod = control.get('emissionsCalcMethodCode');
+      if (calcMethod.value.controlIndicator
+      && (overallControl.value && overallControl.value !== 0)) {
+        return {overallControlPercentInvalid: true};
+      }
+      return null;
     };
   }
 
