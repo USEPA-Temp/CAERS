@@ -267,6 +267,9 @@
                         <div class="col-sm-3">
                             <input type="number" class="form-control" id="overallControlPercentInput" formControlName="overallControlPercent">
                             <app-validation-message [control]="emissionForm.get('overallControlPercent')"></app-validation-message>
+                            <div class="validation-message"  *ngIf="emissionForm.getError('overallControlPercentInvalid')">
+                                The Calculation Method selected includes control efficiency. The Overall Control % field cannot be used if the when the emission factor already includes a control efficiency.
+                            </div>
                         </div>
                     </div>
 

@@ -80,7 +80,8 @@ export class EmissionDetailsComponent implements OnInit {
     this.emissionFactorGreaterThanZeroValidator(),
     this.pollutantEmissionsUoMValidator(),
     this.checkPercentSulfurRange(),
-    this.checkPercentAshRange()
+    this.checkPercentAshRange(),
+    this.overallControlPercentValidator()
     ]
   });
 
@@ -265,7 +266,7 @@ export class EmissionDetailsComponent implements OnInit {
     }
 
     // set validators of emissionsFactorText to null if the "i prefer to calculate the total emissions" check box is selected
-    if(this.emissionForm.get('totalManualEntry').value) {
+    if (this.emissionForm.get('totalManualEntry').value) {
         this.emissionForm.get('emissionsFactorText').setValidators(null);
         this.emissionForm.controls.emissionsFactorText.updateValueAndValidity();
     }
@@ -394,6 +395,7 @@ export class EmissionDetailsComponent implements OnInit {
     this.efDenominatorMismatch = false;
     this.failedRpCalcDesc = null;
     this.failedDenomDesc = null;
+
   }
 
   onSubmit() {
@@ -709,6 +711,18 @@ export class EmissionDetailsComponent implements OnInit {
         }
         return null;
       }
+    };
+  }
+
+  overallControlPercentValidator(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const overallControl = control.get('overallControlPercent');
+      const calcMethod = control.get('emissionsCalcMethodCode');
+      if (calcMethod.value.controlIndicator
+      && (overallControl.value && overallControl.value !== 0)) {
+        return {overallControlPercentInvalid: true};
+      }
+      return null;
     };
   }
 
