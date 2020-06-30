@@ -265,8 +265,11 @@
                             <label for="overallControlPercentInput" class="ml-1 col-form-label"><strong>Overall Control %:</strong></label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" id="overallControlPercentInput" formControlName="overallControlPercent" [readOnly]="getCalcMethodCodeValue()?.controlIndicator">
+                            <input type="number" class="form-control" id="overallControlPercentInput" formControlName="overallControlPercent">
                             <app-validation-message [control]="emissionForm.get('overallControlPercent')"></app-validation-message>
+                            <div class="validation-message"  *ngIf="emissionForm.get('overallControlPercent').errors?.overallControlPercentInvalid">
+                                The Calculation Method selected includes control efficiency. The Overall Control % field cannot be used if the when the emission factor already includes a control efficiency.
+                            </div>
                         </div>
                     </div>
 
@@ -278,7 +281,7 @@
                         <div class="col-sm-3">
                             <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry">
                             <app-validation-message [control]="emissionForm.controls.totalEmissions"></app-validation-message>
-                            <div class="validation-message">
+                            <div class="validation-message" *ngIf="emissionForm.errors && (emissionForm.dirty || emissionForm.touched)">
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
                                     The Total Emissions must be recalculated.
                                 </div>

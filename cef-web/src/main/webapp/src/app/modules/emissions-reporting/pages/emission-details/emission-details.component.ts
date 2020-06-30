@@ -389,6 +389,7 @@ export class EmissionDetailsComponent implements OnInit {
     this.setupForm();
 
     // reset carryover variables
+    this.needsCalculation = false;
     this.efNumeratorMismatch = false;
     this.failedNumDesc = null;
     this.failedTotalDesc = null;
@@ -400,6 +401,7 @@ export class EmissionDetailsComponent implements OnInit {
   }
 
   onSubmit() {
+    this.checkOverallControlPercent();
     if (this.emissionForm.value.formulaIndicator && this.getTotalManualEntry().value) {
       this.emissionForm.get('emissionsFactor').disable();
     }
@@ -557,6 +559,7 @@ export class EmissionDetailsComponent implements OnInit {
       if (this.emissionForm.enabled) {
         this.needsCalculation = true;
       }
+      this.checkOverallControlPercent();
     });
 
     this.emissionForm.get('totalManualEntry').valueChanges
@@ -637,17 +640,11 @@ export class EmissionDetailsComponent implements OnInit {
 
   checkOverallControlPercent() {
 
-    if ((this.emission && this.emission.emissionsCalcMethodCode.controlIndicator) || this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator) {
-      if ((this.emission && this.emission.overallControlPercent > 0) || this.emissionForm.get('overallControlPercent').value > 0) {
-        this.emissionForm.get('overallControlPercent').setValue(0);
-        this.needsCalculation = true;
-      } else {
-        this.needsCalculation = false;
-      }
-    } else if (this.emission && (this.emission.emissionsCalcMethodCode.controlIndicator === this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator)
-      && (this.emission.overallControlPercent === this.emissionForm.get('overallControlPercent').value)) {
-        this.needsCalculation = false;
-      }
+    if (this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator
+      && (this.emissionForm.get('overallControlPercent').value !== 0 && this.emissionForm.get('overallControlPercent').value !== '' && this.emissionForm.get('overallControlPercent').value !== null)) {
+        this.emissionForm.get('overallControlPercent').markAsTouched();
+        this.emissionForm.get('overallControlPercent').setErrors({ overallControlPercentInvalid: true });
+    }
   }
 
   private generateFormulaVariableDtos(): EmissionFormulaVariable[] {
