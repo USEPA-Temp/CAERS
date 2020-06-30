@@ -8,9 +8,12 @@ export class ReportDownloadService {
   constructor() { }
 
     downloadFile(data: any, filename= 'data') {
-        const csvData = this.ConvertToCSV(data, ['facilitySiteId', 'reportYear', 'emissionsUnitId', 'emissionUnitDescription', 'processId',
-        'processDescription', 'pollutantName', 'emissionsUomCode', 'totalEmissions', 'overallControlPercent', 'emissionsFactor', 'emissionsCalcMethod', 'reportingPeriodType',
-        'throughputUom','throughputValue','emissionsNumeratorUom', 'emissionsDenominatorUom', 'emissionsFactorText', 'emissionsComment', 'lastModifiedBy', 'lastModifiedDate']);
+        const csvData = this.ConvertToCSV(data, ['facilitySiteId', 'reportYear', 'emissionsUnitId', 'emissionUnitDescription',
+        'processId', 'processDescription', 'reportingPeriodType', 'throughputValue', 'throughputUom', 'pollutantName',
+        'totalEmissions', 'emissionsUomCode', 'overallControlPercent', 'emissionsCalcMethod', 'emissionsFactor',
+        'emissionsNumeratorUom', 'emissionsDenominatorUom', 'emissionsFactorText', 'emissionsComment',
+        'lastModifiedBy', 'lastModifiedDate']);
+
         const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
         const dwldLink = document.createElement('a');
         let url;
@@ -34,7 +37,7 @@ export class ReportDownloadService {
     }
 
     ConvertToCSV(objArray: string, headerList: string[]) {
-         const array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+         const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
          let str = '';
          let row = 'S.No,';
 
