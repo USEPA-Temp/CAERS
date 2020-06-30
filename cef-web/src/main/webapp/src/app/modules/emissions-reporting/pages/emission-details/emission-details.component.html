@@ -265,7 +265,7 @@
                             <label for="overallControlPercentInput" class="ml-1 col-form-label"><strong>Overall Control %:</strong></label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="number" class="form-control" id="overallControlPercentInput" formControlName="overallControlPercent">
+                            <input type="number" class="form-control" id="overallControlPercentInput" formControlName="overallControlPercent" [readOnly]="getCalcMethodCodeValue()?.controlIndicator">
                             <app-validation-message [control]="emissionForm.get('overallControlPercent')"></app-validation-message>
                         </div>
                     </div>
@@ -278,7 +278,7 @@
                         <div class="col-sm-3">
                             <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry">
                             <app-validation-message [control]="emissionForm.controls.totalEmissions"></app-validation-message>
-                            <div class="validation-message" *ngIf="emissionForm.errors && (emissionForm.dirty || emissionForm.touched)">
+                            <div class="validation-message">
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
                                     The Total Emissions must be recalculated.
                                 </div>

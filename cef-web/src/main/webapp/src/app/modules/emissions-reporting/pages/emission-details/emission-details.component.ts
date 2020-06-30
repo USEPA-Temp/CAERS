@@ -225,6 +225,8 @@ export class EmissionDetailsComponent implements OnInit {
         this.epaEmissionFactor = false;
       }
 
+      this.checkOverallControlPercent();
+
     }
   }
 
@@ -265,7 +267,7 @@ export class EmissionDetailsComponent implements OnInit {
     }
 
     // set validators of emissionsFactorText to null if the "i prefer to calculate the total emissions" check box is selected
-    if(this.emissionForm.get('totalManualEntry').value) {
+    if (this.emissionForm.get('totalManualEntry').value) {
         this.emissionForm.get('emissionsFactorText').setValidators(null);
         this.emissionForm.controls.emissionsFactorText.updateValueAndValidity();
     }
@@ -387,13 +389,14 @@ export class EmissionDetailsComponent implements OnInit {
     this.setupForm();
 
     // reset carryover variables
-    this.needsCalculation = false;
     this.efNumeratorMismatch = false;
     this.failedNumDesc = null;
     this.failedTotalDesc = null;
     this.efDenominatorMismatch = false;
     this.failedRpCalcDesc = null;
     this.failedDenomDesc = null;
+
+    this.checkOverallControlPercent();
   }
 
   onSubmit() {
@@ -630,6 +633,21 @@ export class EmissionDetailsComponent implements OnInit {
       }
       this.getFormulaVariableForm().addControl(v.code, new FormControl(null, Validators.required));
     });
+  }
+
+  checkOverallControlPercent() {
+
+    if ((this.emission && this.emission.emissionsCalcMethodCode.controlIndicator) || this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator) {
+      if ((this.emission && this.emission.overallControlPercent > 0) || this.emissionForm.get('overallControlPercent').value > 0) {
+        this.emissionForm.get('overallControlPercent').setValue(0);
+        this.needsCalculation = true;
+      } else {
+        this.needsCalculation = false;
+      }
+    } else if (this.emission && (this.emission.emissionsCalcMethodCode.controlIndicator === this.emissionForm.get('emissionsCalcMethodCode').value.controlIndicator)
+      && (this.emission.overallControlPercent === this.emissionForm.get('overallControlPercent').value)) {
+        this.needsCalculation = false;
+      }
   }
 
   private generateFormulaVariableDtos(): EmissionFormulaVariable[] {
