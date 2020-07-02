@@ -8,6 +8,8 @@ public class EisHeaderDto {
 
     private final Set<Long> emissionsReports;
 
+    private String agencyCode;
+
     private String authorName;
 
     private String organizationName;
@@ -17,6 +19,14 @@ public class EisHeaderDto {
     public EisHeaderDto() {
 
         this.emissionsReports = new HashSet<>();
+    }
+
+    public String getAgencyCode() {
+        return agencyCode;
+    }
+
+    public void setAgencyCode(String agencyCode) {
+        this.agencyCode = agencyCode;
     }
 
     public String getAuthorName() {
@@ -60,6 +70,12 @@ public class EisHeaderDto {
     public void setSubmissionStatus(EisSubmissionStatus submissionStatus) {
 
         this.submissionStatus = submissionStatus;
+    }
+
+    public EisHeaderDto withAgencyCode(final String agencyCode) {
+
+        setAgencyCode(agencyCode);
+        return this;
     }
 
     public EisHeaderDto withAuthorName(final String authorName) {
