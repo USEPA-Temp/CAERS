@@ -100,13 +100,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       };
 
       this.cboFilterYear.valueChanges.subscribe(() => {
-         this.filterMenu();
-
-         if (this.availableStatuses.indexOf(this.cboFilterStatus.value) < 0) {
-            this.cboFilterStatus.setValue(EisSubmissionStatus.All);
-         } else {
-            this.retrieveData();
-         }
+         this.retrieveData;
+         this.cboFilterStatus.setValue(EisSubmissionStatus.All);
       });
 
       this.cboFilterStatus.valueChanges.subscribe(() => {
@@ -257,66 +252,38 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    onFilterQaFacility() {
-      if (this.cboFilterYear.value !== CurrentYear) {
-         this.cboFilterYear.setValue(CurrentYear);
-      }
-      setTimeout(() => {
-         this.cboFilterStatus.setValue(EisSubmissionStatus.QaFacility);
-      }, );
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.QaFacility);
    }
 
    onFilterAll() {
-      if (this.cboFilterYear.value !== CurrentYear) {
-         this.cboFilterYear.setValue(CurrentYear);
-      }
-      setTimeout(() => {
-         this.cboFilterStatus.setValue(EisSubmissionStatus.All);
-      }, );
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.All);
    }
 
    onFilterNotStarted() {
-      if (this.cboFilterYear.value !== CurrentYear) {
-         this.cboFilterYear.setValue(CurrentYear);
-      }
-      setTimeout(() => {
-         this.cboFilterStatus.setValue(EisSubmissionStatus.NotStarted);
-      }, );
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.NotStarted);
    }
 
    onFilterProdEmissions() {
-      if (this.cboFilterYear.value !== CurrentYear) {
-         this.cboFilterYear.setValue(CurrentYear);
-      }
-      setTimeout(() => {
-         this.cboFilterStatus.setValue(EisSubmissionStatus.ProdEmissions);
-      }, );
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.ProdEmissions);
    }
 
    onFilterQaEmissions() {
-      if (this.cboFilterYear.value !== CurrentYear){
-         this.cboFilterYear.setValue(CurrentYear);
-      }
-      setTimeout(() => {
-         this.cboFilterStatus.setValue(EisSubmissionStatus.QaEmissions);
-      }, );
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.QaEmissions);
    }
 
    onFilterProdFacility() {
-      if (this.cboFilterYear.value !== CurrentYear){
-         this.cboFilterYear.setValue(CurrentYear);
-      }
-      setTimeout(() => {
-         this.cboFilterStatus.setValue(EisSubmissionStatus.ProdFacility);
-      }, );
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.ProdFacility);
    }
 
    onFilterComplete() {
-      if (this.cboFilterYear.value !== CurrentYear){
-         this.cboFilterYear.setValue(CurrentYear);
-      }
-      setTimeout(() => {
-         this.cboFilterStatus.setValue(EisSubmissionStatus.Complete);
-      }, );
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.Complete);
    }
 
    onEditCommentClick(report: EisDataReport) {
