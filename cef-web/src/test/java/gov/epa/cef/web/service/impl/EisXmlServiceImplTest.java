@@ -114,11 +114,6 @@ public class EisXmlServiceImplTest {
         assertNotNull(cersData);
         assertEquals(3, cersData.getElementsByTagName("FacilitySite").getLength());
 
-//        for (int i = 0; i < 3; ++i) {
-//
-//            assertEquals(String.format("FacilitySite-%d", i + 1),
-//                cersData.getFacilitySite().get(i).getFacilitySiteName());
-//        }
     }
 
     @Test

@@ -168,6 +168,5 @@ public class EisTransmissionServiceImpl {
         }
 
         return transaction.getTransactionId();
-//        return "{TBD CEF-929}".concat(UUID.randomUUID().toString());
     }
 }

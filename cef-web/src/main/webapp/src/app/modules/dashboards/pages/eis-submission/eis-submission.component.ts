@@ -332,7 +332,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
             }, error => {
 
                console.log(error);
-               this.toastr.success('', 'An error occurred while trying to transmit reports to EIS and the reports were not transmitted successfully.');
+               this.toastr.error('', 'An error occurred while trying to transmit reports to EIS and the reports were not transmitted successfully.');
             });
          }
 
