@@ -254,37 +254,37 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    onFilterQaFacility() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.QaFacility);
    }
 
    onFilterAll() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.All);
    }
 
    onFilterNotStarted() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.NotStarted);
    }
 
    onFilterProdEmissions() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.ProdEmissions);
    }
 
    onFilterQaEmissions() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.QaEmissions);
    }
 
    onFilterProdFacility() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.ProdFacility);
    }
 
    onFilterComplete() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.Complete);
    }
 
