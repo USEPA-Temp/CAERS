@@ -100,7 +100,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       };
 
       this.cboFilterYear.valueChanges.subscribe(() => {
-         this.retrieveData;
+         this.retrieveData();
          this.cboFilterStatus.setValue(EisSubmissionStatus.All);
       });
 
