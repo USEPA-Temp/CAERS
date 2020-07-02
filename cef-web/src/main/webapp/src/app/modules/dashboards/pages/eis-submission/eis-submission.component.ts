@@ -5,6 +5,7 @@ import {BaseSortableTable} from 'src/app/shared/components/sortable-table/base-s
 import {FormControl} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { ToastrService } from 'ngx-toastr';
 
 interface EisDataStats {
    notStarted: number;
@@ -77,7 +78,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    invalidSelection = false;
 
    constructor(private modalService: NgbModal,
-               private eisDataService: EisDataService) {
+               private eisDataService: EisDataService,
+               private toastr: ToastrService) {
 
       super();
    }
@@ -321,11 +323,16 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
             }).subscribe(data => {
 
+               this.toastr.success('', data.reports.length + ' report(s) were successfully transmitted to EIS.');
                // grab new stats
                this.retrieveDataStats(() => {
 
                   this.retrieveData();
                });
+            }, error => {
+
+               console.log(error);
+               this.toastr.error('', 'An error occurred while trying to transmit reports to EIS and the reports were not transmitted successfully.');
             });
          }
 

@@ -1,9 +1,13 @@
 package gov.epa.cef.web.service.impl;
 
 import com.google.common.io.Resources;
+
+import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.config.TestCategories;
+import gov.epa.cef.web.config.slt.GAConfig;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
+import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.header._2.DocumentHeaderType;
 import net.exchangenetwork.schema.header._2.DocumentPayloadType;
@@ -12,6 +16,8 @@ import net.exchangenetwork.schema.header._2.NameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -79,13 +85,21 @@ public class EisXmlServiceImplTest {
         when(cersXmlService.generateCersData(2L, EisSubmissionStatus.ProdEmissions)).thenReturn(cersData.get(1));
         when(cersXmlService.generateCersData(3L, EisSubmissionStatus.ProdEmissions)).thenReturn(cersData.get(2));
 
-        this.eisXmlService = new EisXmlServiceImpl(cersXmlService);
+        SLTBaseConfig gaConfig = new GAConfig();
+        gaConfig.setSltEisProgramCode("GADNR");
+        gaConfig.setSltEisUser("test");
+
+        SLTConfigHelper sltConfigHelper = mock(SLTConfigHelper.class);
+        when(sltConfigHelper.getCurrentSLTConfig("GA")).thenReturn(gaConfig);
+
+        this.eisXmlService = new EisXmlServiceImpl(cersXmlService, sltConfigHelper);
     }
 
     @Test
     public void generateEisDataTest() throws Exception {
 
         EisHeaderDto eisHeader = new EisHeaderDto()
+            .withAgencyCode("GA")
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
@@ -96,21 +110,17 @@ public class EisXmlServiceImplTest {
         List<DocumentPayloadType> payloads = document.getPayload();
         assertEquals(1, payloads.size());
 
-        CERSDataType cersData = ((JAXBElement<CERSDataType>) payloads.get(0).getAny()).getValue();
+        Element cersData = ((Element) payloads.get(0).getAny());
         assertNotNull(cersData);
-        assertEquals(3, cersData.getFacilitySite().size());
+        assertEquals(3, cersData.getElementsByTagName("FacilitySite").getLength());
 
-        for (int i = 0; i < 3; ++i) {
-
-            assertEquals(String.format("FacilitySite-%d", i + 1),
-                cersData.getFacilitySite().get(i).getFacilitySiteName());
-        }
     }
 
     @Test
     public void writeEisXmlToTest() throws Exception {
 
         EisHeaderDto eisHeader = new EisHeaderDto()
+            .withAgencyCode("GA")
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
