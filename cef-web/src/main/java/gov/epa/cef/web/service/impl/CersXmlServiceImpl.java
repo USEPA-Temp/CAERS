@@ -70,7 +70,7 @@ public class CersXmlServiceImpl implements CersXmlService {
             .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
 
         if (submissionStatus != null) {
-            if ("PointEmission".contentEquals(submissionStatus.dataCategory())) {
+            if ("Point".contentEquals(submissionStatus.dataCategory())) {
                 source.getFacilitySites().forEach(fs -> {
 
                     // remove extra data
@@ -106,7 +106,7 @@ public class CersXmlServiceImpl implements CersXmlService {
             cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
         }
 
-        if (submissionStatus == null || !"PointEmission".contentEquals(submissionStatus.dataCategory())) {
+        if (submissionStatus == null || !"Point".contentEquals(submissionStatus.dataCategory())) {
             addProcessControls(source, cers);
         }
 

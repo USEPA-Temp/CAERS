@@ -3,9 +3,9 @@ package gov.epa.cef.web.service.dto;
 public enum EisSubmissionStatus {
 
 	NotStarted("Not Started", "NotStarted"),
-	QaEmissions("QA", "PointEmission"),
+	QaEmissions("QA", "Point"),
     QaFacility("QA", "FacilityInventory"),
-    ProdEmissions("Production", "PointEmission"),
+    ProdEmissions("Production", "Point"),
     ProdFacility("Production", "FacilityInventory"),
     Complete("Complete", "Complete");
 
