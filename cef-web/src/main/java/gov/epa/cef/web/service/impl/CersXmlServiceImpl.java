@@ -186,7 +186,7 @@ public class CersXmlServiceImpl implements CersXmlService {
         // find all controls for each RPA with a control path
         for (ReleasePointAppt rpa : process.getReleasePointAppts()) {
             if (rpa.getControlPath() != null) {
-                controls.addAll(findChildControls(rpa.getControlPath(), ca));
+                controls.addAll(findChildControls(rpa.getControlPath()));
             }
         }
 
@@ -210,6 +210,17 @@ public class CersXmlServiceImpl implements CersXmlService {
                 .map(ControlMeasureCode::getDescription)
                 .distinct()
                 .collect(Collectors.joining(", ")));
+
+        // find distinct control measure codes and add them as control measure data types
+        ca.getControlMeasure().addAll(controls.stream()
+                .map(Control::getControlMeasureCode)
+                .map(ControlMeasureCode::getCode)
+                .distinct()
+                .map(code -> {
+                    ControlMeasureDataType cm = new ControlMeasureDataType();
+                    cm.setControlMeasureCode(code);
+                    return cm;
+                }).collect(Collectors.toList()));
 
         // make a map of pollutants for easy use
         Map<String, List<ControlPollutant>> pollutantMap = controls.stream()
@@ -237,7 +248,7 @@ public class CersXmlServiceImpl implements CersXmlService {
      * @param ca
      * @return
      */
-    private List<Control> findChildControls(ControlPath path, ControlApproachDataType ca) {
+    private List<Control> findChildControls(ControlPath path) {
 
         List<Control> result = new ArrayList<>();
 
@@ -246,17 +257,17 @@ public class CersXmlServiceImpl implements CersXmlService {
             if (assignment.getControl() != null) {
                 result.add(assignment.getControl());
 
-                if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
-                    ControlMeasureDataType cm = new ControlMeasureDataType();
-                    cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getCode());
-                    cm.setControlMeasureSequence(assignment.getSequenceNumber().toString());
-                    ca.getControlMeasure().add(cm);
-                }
+//                if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
+//                    ControlMeasureDataType cm = new ControlMeasureDataType();
+//                    cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getCode());
+//                    cm.setControlMeasureSequence(assignment.getSequenceNumber().toString());
+//                    ca.getControlMeasure().add(cm);
+//                }
             }
 
             if (assignment.getControlPathChild() != null) {
                 // recursively find child controls
-                result.addAll(findChildControls(assignment.getControlPathChild(), ca));
+                result.addAll(findChildControls(assignment.getControlPathChild()));
             }
         }
 
