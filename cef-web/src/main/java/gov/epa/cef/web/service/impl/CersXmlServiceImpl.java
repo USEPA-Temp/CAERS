@@ -284,11 +284,14 @@ public class CersXmlServiceImpl implements CersXmlService {
 	private void addControlToCersProcess(ControlApproachDataType ca, EmissionsProcess sourceProcess, CERSDataType cers) {
 		for (FacilitySiteDataType cersFacilitySite: cers.getFacilitySite()) {
 			for (EmissionsUnitDataType cersUnit : cersFacilitySite.getEmissionsUnit()) {
-				for (ProcessDataType cersProcess : cersUnit.getUnitEmissionsProcess()) {
-					if (processesMatch(sourceProcess, cersProcess)) {
-						cersProcess.setProcessControlApproach(ca);
-					}
-				}
+			    // check to make sure the parent unit is the same
+			    if (sourceProcess.getEmissionsUnit().getUnitIdentifier().equals(cersUnit.getUnitIdentification().get(0).getIdentifier())) {
+    				for (ProcessDataType cersProcess : cersUnit.getUnitEmissionsProcess()) {
+    					if (processesMatch(sourceProcess, cersProcess)) {
+    						cersProcess.setProcessControlApproach(ca);
+    					}
+    				}
+			    }
 			}
 		}
 	}
