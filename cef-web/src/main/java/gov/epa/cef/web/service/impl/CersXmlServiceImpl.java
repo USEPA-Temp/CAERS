@@ -37,6 +37,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -197,12 +198,12 @@ public class CersXmlServiceImpl implements CersXmlService {
         // average percent capture
         ca.setPercentControlApproachCaptureEfficiency(BigDecimal.valueOf(controls.stream()
                 .filter(c -> c.getPercentCapture() != null)
-                .collect(Collectors.averagingDouble(Control::getPercentCapture))));
+                .collect(Collectors.averagingDouble(Control::getPercentCapture))).setScale(1, RoundingMode.HALF_UP));
 
         // average percent control
         ca.setPercentControlApproachEffectiveness(BigDecimal.valueOf(controls.stream()
                 .filter(c -> c.getPercentControl() != null)
-                .collect(Collectors.averagingDouble(Control::getPercentControl))));
+                .collect(Collectors.averagingDouble(Control::getPercentControl))).setScale(1, RoundingMode.HALF_UP));
 
         // make description a list of control measure code descriptions
         ca.setControlApproachDescription(controls.stream()
@@ -233,7 +234,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 
             ControlPollutantDataType cp = new ControlPollutantDataType();
             cp.setPercentControlMeasuresReductionEfficiency(new BigDecimal(entry.getValue().stream()
-                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction))));
+                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction))).setScale(1, RoundingMode.HALF_UP));
             cp.setPollutantCode(entry.getKey());
             ca.getControlPollutant().add(cp);
         }
@@ -284,11 +285,14 @@ public class CersXmlServiceImpl implements CersXmlService {
 	private void addControlToCersProcess(ControlApproachDataType ca, EmissionsProcess sourceProcess, CERSDataType cers) {
 		for (FacilitySiteDataType cersFacilitySite: cers.getFacilitySite()) {
 			for (EmissionsUnitDataType cersUnit : cersFacilitySite.getEmissionsUnit()) {
-				for (ProcessDataType cersProcess : cersUnit.getUnitEmissionsProcess()) {
-					if (processesMatch(sourceProcess, cersProcess)) {
-						cersProcess.setProcessControlApproach(ca);
-					}
-				}
+			    // check to make sure the parent unit is the same
+			    if (sourceProcess.getEmissionsUnit().getUnitIdentifier().equals(cersUnit.getUnitIdentification().get(0).getIdentifier())) {
+    				for (ProcessDataType cersProcess : cersUnit.getUnitEmissionsProcess()) {
+    					if (processesMatch(sourceProcess, cersProcess)) {
+    						cersProcess.setProcessControlApproach(ca);
+    					}
+    				}
+			    }
 			}
 		}
 	}
