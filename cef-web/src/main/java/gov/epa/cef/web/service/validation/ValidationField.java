@@ -15,6 +15,7 @@ public enum ValidationField {
     FACILITY_EMAIL_ADDRESS("report.facilitySite.contacts.emailAddress"),
     FACILITY_STATUS("report.facilitySite.status"),
     FACILITY_NAICS("report.facilitySite.naics"),
+    FACILITY_SOURCE_TYPE_CODE("report.facilitySite.sourceTypeCode"),
     FACILITY_EMISSION_REPORTED("report.facilitySite.reportedEmissions"),
     RP_IDENTIFIER("report.facilitySite.releasePoint.releasePointIdentifier"),
     RP_STATUS_CODE("report.facilitySite.releasePoint.statusTypeCode"),

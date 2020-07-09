@@ -318,4 +318,11 @@ public interface LookupService {
      */
     List<CodeLookupDto> retrieveFacilitySourceTypeCodes();
     
+    /**
+     * Retrieve non-legacy Facility Source Type codes
+     * @param year
+     * @return
+     */
+    List<CodeLookupDto> retrieveCurrentFacilitySourceTypeCodes(Integer year);
+    
 }

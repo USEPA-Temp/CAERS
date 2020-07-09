@@ -7,6 +7,7 @@ import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { Control } from 'src/app/shared/models/control';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
+import { InventoryYearCodeLookup } from './inventory-year-code-lookup';
 
 export class FacilitySite {
   id: number;
@@ -36,7 +37,7 @@ export class FacilitySite {
   statusYear: number;
   altSiteIdentifier: string;
   facilityCategoryCode: BaseCodeLookup;
-  facilitySourceTypeCode: BaseCodeLookup;
+  facilitySourceTypeCode: InventoryYearCodeLookup;
   description: string;
   comments: string;
 }

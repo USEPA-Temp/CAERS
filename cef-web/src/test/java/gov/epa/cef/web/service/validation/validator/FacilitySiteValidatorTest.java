@@ -608,6 +608,26 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.FACILITY_EMISSION_REPORTED.value()) && errorMap.get(ValidationField.FACILITY_EMISSION_REPORTED.value()).size() == 1);
     }
     
+    /**
+     * There should be errors when facility source type code has last inventory year < current report year
+     */
+    @Test
+    public void facilitySourceTypeCodeLegacyFailTest() {
+	      
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("128");
+        sourceType.setLastInventoryYear(1990);
+        testData.setFacilitySourceTypeCode(sourceType);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_SOURCE_TYPE_CODE.value()) && errorMap.get(ValidationField.FACILITY_SOURCE_TYPE_CODE.value()).size() == 1);
+    }
+    
     private FacilitySite createBaseFacilitySite() {
 
         FipsStateCode countyStateCode = new FipsStateCode();

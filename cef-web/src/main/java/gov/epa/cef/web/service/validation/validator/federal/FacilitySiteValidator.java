@@ -114,6 +114,18 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
         }
         
+        if (facilitySite.getFacilitySourceTypeCode() != null && facilitySite.getFacilitySourceTypeCode().getLastInventoryYear() != null
+        	&& facilitySite.getFacilitySourceTypeCode().getLastInventoryYear() < facilitySite.getEmissionsReport().getYear()) {
+        	
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.FACILITY_SOURCE_TYPE_CODE.value(),
+        			"facilitySite.sourceTypeCode.legacy", 
+        			createValidationDetails(facilitySite),
+        			facilitySite.getFacilitySourceTypeCode().getDescription());
+
+        }
+        
         // Phone number must be entered as 10 digits
         String regex = "^[0-9]{10}";
         Pattern pattern = Pattern.compile(regex);
