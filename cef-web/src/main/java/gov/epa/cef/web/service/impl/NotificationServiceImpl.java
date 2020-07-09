@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final String REPORT_REJECTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report Rejected";
     private final String REPORT_REJECTED_BY_SLT_BODY_TEMPLATE = "reportRejected";
 
-    private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report Accepted";
+    private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "{0} {1} has been Accepted";
     private final String REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE = "reportAccepted";
 
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
