@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-	<p>The <span th:text="${reportingYear}" /> emissions report for <span th:text="${facilityName}" /> has been rejected by the SLT agency. </p>
+	<p>The <span th:text="${reportingYear}" /> emissions report for <span th:text="${facilityName}" /> has been returned by GADNR or EPA for further edits. </p>
 	<div th:if="${!#strings.isEmpty(comments) || !#strings.isEmpty(attachment)}">
 		<strong>Additional Comments:</strong><br/>
 		<p th:text="${comments}" style="padding-top: 0; margin-top: 0"></p>
