@@ -596,6 +596,20 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
+    /**
+     * Retrieve non-legacy Facility Source Type codes
+     * @param year
+     * @return
+     */
+    @Override
+    public List<CodeLookupDto> retrieveCurrentFacilitySourceTypeCodes(Integer year) {
+
+        List<FacilitySourceTypeCode> entities = facilitySourceTypeCodeRepo.findAllCurrent(year, Sort.by(Direction.ASC, DESCRIPTION));
+
+        List<CodeLookupDto> result = lookupMapper.facilitySourceTypeCodeToDtoList(entities);
+        return result;
+    }
+    
     @Override
     public List<CodeLookupDto> retrieveFacilitySourceTypeCodes() {
 
