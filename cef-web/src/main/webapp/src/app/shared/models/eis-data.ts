@@ -8,6 +8,7 @@ export interface EisDataStats {
 export enum EisSubmissionStatus {
 
    All = "All",
+   NotStarted = "Not Started",
    QaEmissions = "QA Emissions",
    QaFacility = "QA Facility",
    ProdEmissions = "Prod Emissions",

@@ -5,6 +5,7 @@ import {BaseSortableTable} from 'src/app/shared/components/sortable-table/base-s
 import {FormControl} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { ToastrService } from 'ngx-toastr';
 
 interface EisDataStats {
    notStarted: number;
@@ -73,14 +74,14 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    dataCategories = DataCategoryType;
    submissionTypes = SubmissionType;
 
-   currentYear: number;
+   readonly currentYear = CurrentYear;
    invalidSelection = false;
 
    constructor(private modalService: NgbModal,
-               private eisDataService: EisDataService) {
+               private eisDataService: EisDataService,
+               private toastr: ToastrService) {
 
       super();
-      this.currentYear = new Date().getFullYear() - 1;
    }
 
    ngOnInit() {
@@ -102,6 +103,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
       this.cboFilterYear.valueChanges.subscribe(() => {
          this.retrieveData();
+         this.cboFilterStatus.setValue(EisSubmissionStatus.All);
       });
 
       this.cboFilterStatus.valueChanges.subscribe(() => {
@@ -127,6 +129,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.cboFilterStatus.setValue(EisSubmissionStatus.All,
          {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
 
+      this.cboFilterYear.setValue(CurrentYear);
+      this.filterMenu();
       this.retrieveDataStats(() => {
 
          this.retrieveData();
@@ -134,10 +138,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    retrieveDataStats(onComplete?: () => void) {
-      this.availableStatuses = [];
-      this.availableStatuses.push(EisSubmissionStatus.All);
 
-      this.eisDataService.retrieveStats(this.currentYear).subscribe({
+      this.eisDataService.retrieveStatsByYear(CurrentYear).subscribe({
          next: (stats) => {
 
             stats.availableYears.forEach(year => {
@@ -160,7 +162,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
                switch (status) {
 
-                  case undefined:
+                  case EisSubmissionStatus.NotStarted:
                      this.stats.notStarted = stat.count;
                      break;
                   case EisSubmissionStatus.QaEmissions:
@@ -179,6 +181,27 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
                      this.stats.complete = stat.count;
                      break;
                }
+            });
+
+         },
+         complete: () => {
+
+            if (onComplete) {
+               onComplete();
+            }
+         }
+      });
+   }
+
+   filterMenu(onComplete?: () => void) {
+      this.availableStatuses = [];
+      this.availableStatuses.push(EisSubmissionStatus.All);
+
+      this.eisDataService.retrieveStatsByYear(this.cboFilterYear.value).subscribe({
+         next: (stats) => {
+            stats.statuses.forEach(stat => {
+
+               let status: EisSubmissionStatus = EisSubmissionStatus[stat.status] as EisSubmissionStatus;
 
                if (status) {
 
@@ -208,7 +231,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    retrieveData() {
-
+      this.filterMenu();
       this.eisDataService.searchData({
          year: this.cboFilterYear.value,
          status: this.cboFilterStatus.value
@@ -216,11 +239,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       }).subscribe(resp => {
 
          this.tableData = resp.reports.map(report => {
-            if (report.lastSubmissionStatus && report.lastSubmissionStatus.toString() === 'ProdEmissions' && report.passed === true) {
 
-               report.lastSubmissionStatus = EisSubmissionStatus.ProdEmissions;
-
-            } else if (report.lastSubmissionStatus) {
+            if (report.lastSubmissionStatus) {
 
                report.lastSubmissionStatus = EisSubmissionStatus[report.lastSubmissionStatus];
 
@@ -234,32 +254,37 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    onFilterQaFacility() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.QaFacility);
    }
 
-   onFilterNotStarted() {
-
+   onFilterAll() {
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.All);
    }
 
-   onFilterProdEmissions() {
+   onFilterNotStarted() {
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
+      this.cboFilterStatus.setValue(EisSubmissionStatus.NotStarted);
+   }
 
+   onFilterProdEmissions() {
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.ProdEmissions);
    }
 
    onFilterQaEmissions() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.QaEmissions);
    }
 
    onFilterProdFacility() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.ProdFacility);
    }
 
    onFilterComplete() {
-
+      this.cboFilterYear.setValue(CurrentYear, {emitEvent: false});
       this.cboFilterStatus.setValue(EisSubmissionStatus.Complete);
    }
 
@@ -285,7 +310,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
          this.invalidSelection = true;
       }
 
-      if (this.selectedReports.size) {
+      if (this.selectedReports.size > 0 && this.convertTypeAndCategory() !== null) {
 
          let submissionStatus: EisSubmissionStatus = this.convertTypeAndCategory();
 
@@ -298,18 +323,24 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
             }).subscribe(data => {
 
+               this.toastr.success('', data.reports.length + ' report(s) were successfully transmitted to EIS.');
                // grab new stats
                this.retrieveDataStats(() => {
 
                   this.retrieveData();
                });
+            }, error => {
+
+               console.log(error);
+               this.toastr.error('', 'An error occurred while trying to transmit reports to EIS and the reports were not transmitted successfully.');
             });
          }
+
+         this.selectedReports.clear();
+         this.cboSubmitType.setValue(null);
+         this.cboSubmitCategory.setValue(null);
       }
 
-      this.selectedReports.clear();
-      this.cboSubmitType.setValue(null);
-      this.cboSubmitCategory.setValue(null);
    }
 
    onCancelCommentClick() {

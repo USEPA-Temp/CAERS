@@ -359,6 +359,18 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        			createValidationDetails(emission));
 	        	
 	        }
+	        
+	        // if calculation method includes control efficiency (control indicator is true), then users cannot enter overall control percent
+	        if (emission.getEmissionsCalcMethodCode() != null && emission.getEmissionsCalcMethodCode().getControlIndicator() == true
+	        		&& emission.getOverallControlPercent() != null && (emission.getOverallControlPercent().compareTo(new BigDecimal(0)) != 0)) {
+	        	
+	        	valid = false;
+	        	context.addFederalError(
+	        			ValidationField.EMISSION_CONTROL_PERCENT.value(),
+	        			"emission.controlPercent.invalid", 
+	        			createValidationDetails(emission));
+	        	
+	        }
         }
         
         return valid;

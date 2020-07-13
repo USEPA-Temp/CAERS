@@ -224,6 +224,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.setHasSubmitted(false);
+                cloneReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
                 cloneReport.clearId();
 
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
@@ -270,6 +271,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setAgencyCode(reportDto.getStateCode());
+        newReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         newReport.setHasSubmitted(false);
 
         FacilitySite facilitySite = this.facilitySiteService.transform(reportDto.getFacilitySite());

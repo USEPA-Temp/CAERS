@@ -2,6 +2,7 @@ package gov.epa.cef.web.api.rest;
 
 import com.google.common.base.Preconditions;
 import gov.epa.cdx.shared.security.ApplicationUser;
+import gov.epa.cef.web.client.soap.NodeTransaction;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.EisDataCriteria;
@@ -69,7 +70,8 @@ public class EisApi {
 
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
-        eisHeader.withAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()))
+        eisHeader.withAgencyCode(appUser.getClientId())
+            .withAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()))
             .withOrganizationName(appUser.getOrganization());
 
         EisDataListDto result = this.eisTransmissionService.submitReports(eisHeader);
@@ -124,11 +126,11 @@ public class EisApi {
 
     @GetMapping(value = "/emissionsReport/stats",
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EisDataStatsDto> retrieveEisDataStats(@NotNull @RequestParam(value = "year") Short year) {
+	public ResponseEntity<EisDataStatsDto> retrieveEisStatsByYear(@NotNull @RequestParam(value = "year") Short year) {
 
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
-        EisDataStatsDto result = this.eisTransmissionService.retrieveStatInfo(appUser.getClientId(), year);
+        EisDataStatsDto result = this.eisTransmissionService.retrieveStatInfoByYear(appUser.getClientId(), year);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -143,6 +145,7 @@ public class EisApi {
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
         EisHeaderDto eisHeader = new EisHeaderDto()
+            .withAgencyCode(appUser.getClientId())
             .withAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()))
             .withOrganizationName(appUser.getOrganization())
             .withSubmissionStatus(EisSubmissionStatus.ProdFacility)

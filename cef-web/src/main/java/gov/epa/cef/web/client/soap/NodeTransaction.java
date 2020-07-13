@@ -35,4 +35,12 @@ public class NodeTransaction {
 
         return transactionId;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("NodeTransaction [statusCode=").append(statusCode).append(", statusDetail=").append(statusDetail)
+                .append(", transactionId=").append(transactionId).append("]");
+        return builder.toString();
+    }
 }

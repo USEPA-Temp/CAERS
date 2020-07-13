@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
+import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.EmissionsProcess;
@@ -36,7 +37,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,7 +75,7 @@ public class CersXmlServiceImpl implements CersXmlService {
             .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
 
         if (submissionStatus != null) {
-            if ("PointEmission".contentEquals(submissionStatus.dataCategory())) {
+            if ("Point".contentEquals(submissionStatus.dataCategory())) {
                 source.getFacilitySites().forEach(fs -> {
 
                     // remove extra data
@@ -106,7 +111,7 @@ public class CersXmlServiceImpl implements CersXmlService {
             cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
         }
 
-        if (submissionStatus == null || !"PointEmission".contentEquals(submissionStatus.dataCategory())) {
+        if (submissionStatus == null || !"Point".contentEquals(submissionStatus.dataCategory())) {
             addProcessControls(source, cers);
         }
 
@@ -155,19 +160,12 @@ public class CersXmlServiceImpl implements CersXmlService {
 			for (EmissionsUnit unit : facility.getEmissionsUnits()) {
 				for (EmissionsProcess process : unit.getEmissionsProcesses()) {
 
-					//instantiate the control approach
-					ControlApproachDataType ca = new ControlApproachDataType();
+				    ControlApproachDataType ca = createProcessControlApproach(process);
 
-					for (ReleasePointAppt rpa : process.getReleasePointAppts()) {
-						if (rpa.getControlPath() != null) {
-							populateControlApproach(rpa.getControlPath(), ca);
-						}
-					}
+				    if (ca != null && ca.getControlPollutant().size() > 0 && ca.getControlMeasure().size() > 0) {
 
-					if (ca.getControlPollutant().size() > 0 && ca.getControlMeasure().size() > 0) {
-
-						addControlToCersProcess(ca, process, cers);
-					}
+                          addControlToCersProcess(ca, process, cers);
+                      }
 				}
 			}
 		}
@@ -175,66 +173,106 @@ public class CersXmlServiceImpl implements CersXmlService {
 	}
 
 
-    /***
-     * Recursive method that loops through the control assignments for each control path and child control paths to increment the control approach capture efficiency,
-     * increment the control approach effectiveness, and add the control measures to the control approach
-     * @param path Control path whose assignments will be iterated
-     * @param ca Control Approach that will be updated
+    /**
+     * Create a Control Approach for a process by averaging all values for all paths the process uses
+     * @param process
+     * @return
      */
-    private void populateControlApproach(ControlPath path, ControlApproachDataType ca) {
-		for (ControlAssignment assignment : path.getAssignments()) {
-			if (assignment.getControl() != null) {
-				ca.setControlApproachComment(assignment.getControl().getComments());
-				ca.setControlApproachDescription(assignment.getControl().getDescription());
+    private ControlApproachDataType createProcessControlApproach(EmissionsProcess process) {
 
-				// CEF-905 Commenting out
-				// PercentControlApproachCaptureEfficiency and Capture Effectiveness are
-				// currently being generated greater than 100% by the code. We need to comment
-				// these out until we have firm guidance on how to proceed with calculating these
+        List<Control> controls = new ArrayList<>();
 
-//				//add to the capture efficiency and %effectiveness to the control approach
-//				if (assignment.getControl().getPercentCapture() != null) {
-//					if (ca.getPercentControlApproachCaptureEfficiency() == null) {
-//						ca.setPercentControlApproachCaptureEfficiency(
-//								new BigDecimal(assignment.getControl().getPercentCapture().toString()));
-//					} else {
-//						ca.setPercentControlApproachCaptureEfficiency(ca.getPercentControlApproachCaptureEfficiency().add(
-//								new BigDecimal(assignment.getControl().getPercentCapture().toString())));
-//					}
-//				}
-//
-//				if (assignment.getControl().getPercentControl() != null) {
-//					if (ca.getPercentControlApproachEffectiveness() == null) {
-//						ca.setPercentControlApproachEffectiveness(
-//								new BigDecimal(assignment.getControl().getPercentControl().toString()));
-//					} else {
-//						ca.setPercentControlApproachEffectiveness(ca.getPercentControlApproachEffectiveness().add(
-//								new BigDecimal(assignment.getControl().getPercentControl().toString())));
-//					}
-//				}
+        ControlApproachDataType ca = new ControlApproachDataType();
 
-				//add a new control measure to the control measure list
-				if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
-					ControlMeasureDataType cm = new ControlMeasureDataType();
-					cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getCode());
-					cm.setControlMeasureSequence(assignment.getSequenceNumber().toString());
-					ca.getControlMeasure().add(cm);
-				}
+        // find all controls for each RPA with a control path
+        for (ReleasePointAppt rpa : process.getReleasePointAppts()) {
+            if (rpa.getControlPath() != null) {
+                controls.addAll(findChildControls(rpa.getControlPath()));
+            }
+        }
 
-				for (ControlPollutant pollutant : assignment.getControl().getPollutants()) {
-					if (!isDuplicateControlPollutant(ca.getControlPollutant(), pollutant)) {
-						ControlPollutantDataType cp = new ControlPollutantDataType();
-						cp.setPercentControlMeasuresReductionEfficiency(new BigDecimal(pollutant.getPercentReduction().toString()));
-						cp.setPollutantCode(pollutant.getPollutant().getPollutantCode());
-						ca.getControlPollutant().add(cp);
-					}
-				}
-			} else if (assignment.getControlPathChild() != null) {
-				//recursive call to collect data from children control paths
-				populateControlApproach(assignment.getControlPathChild(), ca);
-			}
-		}
+        if (controls.isEmpty()) {
+            return null;
+        }
 
+        // average percent capture
+        ca.setPercentControlApproachCaptureEfficiency(BigDecimal.valueOf(controls.stream()
+                .filter(c -> c.getPercentCapture() != null)
+                .collect(Collectors.averagingDouble(Control::getPercentCapture))).setScale(1, RoundingMode.HALF_UP));
+
+        // average percent control
+        ca.setPercentControlApproachEffectiveness(BigDecimal.valueOf(controls.stream()
+                .filter(c -> c.getPercentControl() != null)
+                .collect(Collectors.averagingDouble(Control::getPercentControl))).setScale(1, RoundingMode.HALF_UP));
+
+        // make description a list of control measure code descriptions
+        ca.setControlApproachDescription(controls.stream()
+                .map(Control::getControlMeasureCode)
+                .map(ControlMeasureCode::getDescription)
+                .distinct()
+                .collect(Collectors.joining(", ")));
+
+        // find distinct control measure codes and add them as control measure data types
+        ca.getControlMeasure().addAll(controls.stream()
+                .map(Control::getControlMeasureCode)
+                .map(ControlMeasureCode::getCode)
+                .distinct()
+                .map(code -> {
+                    ControlMeasureDataType cm = new ControlMeasureDataType();
+                    cm.setControlMeasureCode(code);
+                    return cm;
+                }).collect(Collectors.toList()));
+
+        // make a map of pollutants for easy use
+        Map<String, List<ControlPollutant>> pollutantMap = controls.stream()
+                .filter(c -> !c.getPollutants().isEmpty())
+                .flatMap(c -> c.getPollutants().stream())
+                .collect(Collectors.groupingBy(cp -> cp.getPollutant().getPollutantCode()));
+
+        // create a control pollutant with the average % reduction of that pollutant across all controls
+        for (Entry<String, List<ControlPollutant>> entry : pollutantMap.entrySet()) {
+
+            ControlPollutantDataType cp = new ControlPollutantDataType();
+            cp.setPercentControlMeasuresReductionEfficiency(new BigDecimal(entry.getValue().stream()
+                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction))).setScale(1, RoundingMode.HALF_UP));
+            cp.setPollutantCode(entry.getKey());
+            ca.getControlPollutant().add(cp);
+        }
+
+        return ca;
+    }
+
+    /**
+     * Recursively find all controls associated with a control path by navigating down the tree of paths.
+     * This also stores the control measure data while it is in reference
+     * @param path
+     * @param ca
+     * @return
+     */
+    private List<Control> findChildControls(ControlPath path) {
+
+        List<Control> result = new ArrayList<>();
+
+        for (ControlAssignment assignment : path.getAssignments()) {
+
+            if (assignment.getControl() != null) {
+                result.add(assignment.getControl());
+
+//                if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
+//                    ControlMeasureDataType cm = new ControlMeasureDataType();
+//                    cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getCode());
+//                    cm.setControlMeasureSequence(assignment.getSequenceNumber().toString());
+//                    ca.getControlMeasure().add(cm);
+//                }
+            }
+
+            if (assignment.getControlPathChild() != null) {
+                // recursively find child controls
+                result.addAll(findChildControls(assignment.getControlPathChild()));
+            }
+        }
+
+        return result;
     }
 
 
@@ -247,11 +285,14 @@ public class CersXmlServiceImpl implements CersXmlService {
 	private void addControlToCersProcess(ControlApproachDataType ca, EmissionsProcess sourceProcess, CERSDataType cers) {
 		for (FacilitySiteDataType cersFacilitySite: cers.getFacilitySite()) {
 			for (EmissionsUnitDataType cersUnit : cersFacilitySite.getEmissionsUnit()) {
-				for (ProcessDataType cersProcess : cersUnit.getUnitEmissionsProcess()) {
-					if (processesMatch(sourceProcess, cersProcess)) {
-						cersProcess.setProcessControlApproach(ca);
-					}
-				}
+			    // check to make sure the parent unit is the same
+			    if (sourceProcess.getEmissionsUnit().getUnitIdentifier().equals(cersUnit.getUnitIdentification().get(0).getIdentifier())) {
+    				for (ProcessDataType cersProcess : cersUnit.getUnitEmissionsProcess()) {
+    					if (processesMatch(sourceProcess, cersProcess)) {
+    						cersProcess.setProcessControlApproach(ca);
+    					}
+    				}
+			    }
 			}
 		}
 	}
@@ -266,22 +307,6 @@ public class CersXmlServiceImpl implements CersXmlService {
 	private boolean isDuplicateControlMeasure(List<ControlMeasureDataType> controlMeasures, Control control) {
 		for (ControlMeasureDataType controlMeasure : controlMeasures) {
 			if (controlMeasure.getControlMeasureCode().equals(control.getControlMeasureCode().getDescription())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-	/***
-	 * Return true if the pollutant already exists in the controlPollutants list
-	 * @param controlPollutants
-	 * @param pollutant
-	 * @return
-	 */
-	private boolean isDuplicateControlPollutant(List<ControlPollutantDataType> controlPollutants, ControlPollutant pollutant) {
-		for (ControlPollutantDataType controlPollutant : controlPollutants) {
-			if (controlPollutant.getPollutantCode().contentEquals(pollutant.getPollutant().getPollutantCode())) {
 				return true;
 			}
 		}
