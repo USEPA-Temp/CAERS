@@ -293,6 +293,30 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
     
+    /**
+     * There should be no errors when emissions unit design capacity uom is a valid uom for eis.
+     * There should be one error when emissions unit design capacity uom is not a valid uom for eis.
+     */
+    @Test
+    public void designCapacityUomFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsUnit testData = createBaseEmissionsUnit();
+        testData.getUnitOfMeasureCode().setUnitDesignCapacity(true);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getUnitOfMeasureCode().setUnitDesignCapacity(false);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_UOM.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_UOM.value()).size() == 1);
+    }
+    
 
     private EmissionsUnit createBaseEmissionsUnit() {
 

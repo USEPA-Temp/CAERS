@@ -9,6 +9,8 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
     private Boolean efNumerator;
 
     private Boolean efDenominator;
+    
+    private Boolean unitDesignCapacity;
 
     private Boolean legacy;
 
@@ -34,6 +36,14 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
 
     public void setEfDenominator(Boolean efDenominator) {
         this.efDenominator = efDenominator;
+    }
+    
+    public Boolean getUnitDesignCapacity() {
+        return unitDesignCapacity;
+    }
+
+    public void setUnitDesignCapacity(Boolean unitDesignCapacity) {
+        this.unitDesignCapacity = unitDesignCapacity;
     }
 
     public Boolean getLegacy() {

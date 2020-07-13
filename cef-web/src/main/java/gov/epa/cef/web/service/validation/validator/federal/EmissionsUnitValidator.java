@@ -180,6 +180,16 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         	}
       	}
         
+        if (emissionsUnit.getUnitOfMeasureCode() != null && Boolean.FALSE.equals(emissionsUnit.getUnitOfMeasureCode().getUnitDesignCapacity())) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.EMISSIONS_UNIT_UOM.value(),
+                    "emissionsUnit.capacity.uom.invalid",
+                    createValidationDetails(emissionsUnit),
+                    emissionsUnit.getUnitOfMeasureCode().getCode());
+        }
+        
         return result;
     }
     

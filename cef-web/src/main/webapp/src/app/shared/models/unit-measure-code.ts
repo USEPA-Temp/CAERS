@@ -7,5 +7,6 @@ export class UnitMeasureCode implements BaseCodeLookup {
   unitType: string;
   efNumerator: boolean;
   efDenominator: boolean;
+  unitDesignCapacity: boolean;
   legacy: boolean;
 }
