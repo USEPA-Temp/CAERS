@@ -27,7 +27,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
     operatingStatusCode: [null, Validators.required],
-    unitOfMeasureCode: [null, legacyUomValidator()],
+    unitOfMeasureCode: [null],
     unitIdentifier: ['', [
       Validators.required,
       Validators.maxLength(20)
@@ -54,7 +54,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     this.emissionUnitIdentifierCheck(),
     this.facilitySiteStatusCheck(),
     this.capacityUomCheck(),
-    this.eisUomCheck()]
+    this.capacityLegacyUomCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -198,11 +198,11 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  eisUomCheck(): ValidatorFn {
+  capacityLegacyUomCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const designCapacityUom = control.get('unitOfMeasureCode').value;
 
-      if (designCapacityUom && !designCapacityUom.legacy && !designCapacityUom.unitDesignCapacity) {
+      if (designCapacityUom && (designCapacityUom.legacy || !designCapacityUom.unitDesignCapacity)) {
         return {eisUomInvalid: true};
       }
       return null;
