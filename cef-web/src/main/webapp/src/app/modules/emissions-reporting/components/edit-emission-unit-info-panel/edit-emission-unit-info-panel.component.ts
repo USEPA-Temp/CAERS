@@ -202,7 +202,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     return (control: FormGroup): ValidationErrors | null => {
       const designCapacityUom = control.get('unitOfMeasureCode').value;
 
-      if (designCapacityUom && !designCapacityUom.unitDesignCapacity) {
+      if (designCapacityUom && !designCapacityUom.legacy && !designCapacityUom.unitDesignCapacity) {
         return {eisUomInvalid: true};
       }
       return null;
