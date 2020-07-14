@@ -5,8 +5,10 @@ import com.google.common.collect.Streams;
 import gov.epa.cef.web.client.soap.NodeClient;
 import gov.epa.cef.web.client.soap.NodeTransaction;
 import gov.epa.cef.web.config.NetworkNodeName;
+import gov.epa.cef.web.domain.EisTransactionHistory;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.NotExistException;
+import gov.epa.cef.web.repository.EisTransactionHistoryRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.dto.EisDataCriteria;
 import gov.epa.cef.web.service.dto.EisDataListDto;
@@ -14,6 +16,8 @@ import gov.epa.cef.web.service.dto.EisDataReportDto;
 import gov.epa.cef.web.service.dto.EisDataStatsDto;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
+import gov.epa.cef.web.service.dto.EisTransactionHistoryDto;
+import gov.epa.cef.web.service.mapper.EisMapper;
 import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.schema.header._2.ExchangeNetworkDocumentType;
 
@@ -28,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -39,7 +44,11 @@ public class EisTransmissionServiceImpl {
 
     private final EmissionsReportRepository reportRepository;
 
+    private final EisTransactionHistoryRepository transactionHistoryRepo;
+
     private final EisXmlServiceImpl xmlService;
+
+    private final EisMapper mapper;
 
     private final NodeClient nodeClient;
 
@@ -48,10 +57,14 @@ public class EisTransmissionServiceImpl {
     @Autowired
     EisTransmissionServiceImpl(EisXmlServiceImpl xmlService,
                                EmissionsReportRepository reportRepository,
+                               EisTransactionHistoryRepository transactionHistoryRepo,
+                               EisMapper mapper,
                                NodeClient nodeClient) {
 
         this.xmlService = xmlService;
         this.reportRepository = reportRepository;
+        this.transactionHistoryRepo = transactionHistoryRepo;
+        this.mapper = mapper;
         this.nodeClient = nodeClient;
     }
 
@@ -89,11 +102,16 @@ public class EisTransmissionServiceImpl {
                 .collect(Collectors.toList()));
     }
 
+    public List<EisTransactionHistoryDto> retrieveTransactionHistory(String agencyCode) {
+
+        return mapper.historyToDtoList(this.transactionHistoryRepo.findByAgencyCode(agencyCode));
+    }
+
     public EisDataListDto submitReports(EisHeaderDto eisHeader) {
 
         EisDataListDto result = new EisDataListDto();
 
-        String transactionId = transferXml(this.xmlService.generateEisDocument(eisHeader));
+        String transactionId = transferXml(this.xmlService.generateEisDocument(eisHeader), eisHeader);
 
         Streams.stream(this.reportRepository.findAllById(eisHeader.getEmissionsReports()))
             .peek(report -> {
@@ -136,7 +154,7 @@ public class EisTransmissionServiceImpl {
         return new EisDataReportDto.FromEntity().apply(this.reportRepository.save(report));
     }
 
-    private String transferXml(ExchangeNetworkDocumentType xml) {
+    private String transferXml(ExchangeNetworkDocumentType xml, EisHeaderDto eisHeader) {
 
         NodeTransaction transaction;
 
@@ -164,6 +182,14 @@ public class EisTransmissionServiceImpl {
             transaction = this.nodeClient.submit(NetworkNodeName.eis, "submission" + xml.getId() + ".zip", tmpFile.getFile());
 
             logger.info(transaction.toString());
+
+            EisTransactionHistory history = new EisTransactionHistory();
+            history.setEisSubmissionStatus(eisHeader.getSubmissionStatus());
+            history.setSubmitterName(eisHeader.getAuthorName());
+            history.setTransactionId(transaction.getTransactionId());
+            history.setAgencyCode(eisHeader.getAgencyCode());
+
+            this.transactionHistoryRepo.save(history);
 
         }
 

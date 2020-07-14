@@ -1,6 +1,37 @@
 <div>
 
-   <app-reviewer-nav></app-reviewer-nav>
+  <app-reviewer-nav></app-reviewer-nav>
 
-   <p>Work in Progress</p>
+  <div class="card mb-3">
+    <div class="card-header text-center">
+      <strong>Process Information</strong>
+    </div>
+    <div class="card-body">
+      <div class="mh-100 overflow-auto" *ngIf="tableData">
+        <table class="table table-sm table-striped table-bordered">
+          <thead class="thead-cef-medium">
+            <tr>
+              <th scope="col" sortable="createdDate" (sort)="onSort($event)">Date</th>
+              <th scope="col" sortable="transactionId" (sort)="onSort($event)">Transaction ID</th>
+              <th scope="col" sortable="eisSubmissionStatus" (sort)="onSort($event)">Transaction Type</th>
+              <th scope="col" sortable="submitterName" (sort)="onSort($event)">User</th>
+              <th scope="col">Attach Report</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of tableData">
+              <td>
+                {{item.createdDate | date:'shortDate'}}
+              </td>
+              <td>{{item.transactionId}}</td>
+              <td>{{item.eisSubmissionStatus}}</td>
+              <td>{{item.submitterName}}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>
