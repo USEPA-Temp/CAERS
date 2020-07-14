@@ -11,6 +11,7 @@ import gov.epa.cef.web.service.dto.EisDataReportDto;
 import gov.epa.cef.web.service.dto.EisDataStatsDto;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
+import gov.epa.cef.web.service.dto.EisTransactionHistoryDto;
 import gov.epa.cef.web.service.dto.simple.SimpleStringValue;
 import gov.epa.cef.web.service.impl.EisTransmissionServiceImpl;
 import gov.epa.cef.web.service.impl.EisXmlServiceImpl;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/eis")
@@ -134,6 +136,17 @@ public class EisApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/emissionsReport/history",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<List<EisTransactionHistoryDto>> retrieveEisTransactionHistory() {
+
+            ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
+
+            List<EisTransactionHistoryDto> result = this.eisTransmissionService.retrieveTransactionHistory(appUser.getClientId());
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
     @GetMapping(value = "/emissionsReport/{reportId}",
         produces = MediaType.APPLICATION_XML_VALUE)

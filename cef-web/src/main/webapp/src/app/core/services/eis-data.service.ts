@@ -9,6 +9,7 @@ import {
    EisSubmissionStatus
 } from "src/app/shared/models/eis-data";
 import {Observable} from "rxjs";
+import { EisTranactionHistory } from 'src/app/shared/models/eis-tranaction-history';
 
 @Injectable({
    providedIn: 'root'
@@ -25,6 +26,11 @@ export class EisDataService {
          .append("year", year.toString());
 
       return this.http.get<EisDataStats>(`${this.baseUrl}/emissionsReport/stats`, {params: params});
+   }
+
+   retrieveTransactionHistory(): Observable<EisTranactionHistory[]> {
+
+      return this.http.get<EisTranactionHistory[]>(`${this.baseUrl}/emissionsReport/history`);
    }
 
    searchData(criteria: EisSearchCriteria): Observable<EisData> {
