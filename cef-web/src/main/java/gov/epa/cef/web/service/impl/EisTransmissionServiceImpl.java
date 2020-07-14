@@ -17,7 +17,7 @@ import gov.epa.cef.web.service.dto.EisDataStatsDto;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.service.dto.EisTransactionHistoryDto;
-import gov.epa.cef.web.service.mapper.EisMapper;
+import gov.epa.cef.web.service.mapper.EisTransactionMapper;
 import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.schema.header._2.ExchangeNetworkDocumentType;
 
@@ -48,7 +48,7 @@ public class EisTransmissionServiceImpl {
 
     private final EisXmlServiceImpl xmlService;
 
-    private final EisMapper mapper;
+    private final EisTransactionMapper mapper;
 
     private final NodeClient nodeClient;
 
@@ -58,7 +58,7 @@ public class EisTransmissionServiceImpl {
     EisTransmissionServiceImpl(EisXmlServiceImpl xmlService,
                                EmissionsReportRepository reportRepository,
                                EisTransactionHistoryRepository transactionHistoryRepo,
-                               EisMapper mapper,
+                               EisTransactionMapper mapper,
                                NodeClient nodeClient) {
 
         this.xmlService = xmlService;
@@ -111,7 +111,7 @@ public class EisTransmissionServiceImpl {
 
         EisDataListDto result = new EisDataListDto();
 
-        String transactionId = transferXml(this.xmlService.generateEisDocument(eisHeader), eisHeader);
+        String transactionId = transferXml(eisHeader);
 
         Streams.stream(this.reportRepository.findAllById(eisHeader.getEmissionsReports()))
             .peek(report -> {
@@ -154,9 +154,11 @@ public class EisTransmissionServiceImpl {
         return new EisDataReportDto.FromEntity().apply(this.reportRepository.save(report));
     }
 
-    private String transferXml(ExchangeNetworkDocumentType xml, EisHeaderDto eisHeader) {
+    private String transferXml(EisHeaderDto eisHeader) {
 
         NodeTransaction transaction;
+
+        ExchangeNetworkDocumentType xml = this.xmlService.generateEisDocument(eisHeader);
 
         try (TempFile tmpFile = TempFile.create("submission" + xml.getId(), ".zip")) {
 

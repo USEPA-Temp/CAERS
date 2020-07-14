@@ -8,7 +8,7 @@ import gov.epa.cef.web.domain.EisTransactionHistory;
 import gov.epa.cef.web.service.dto.EisTransactionHistoryDto;
 
 @Mapper(componentModel = "spring")
-public interface EisMapper {
+public interface EisTransactionMapper {
 
     EisTransactionHistoryDto historyToDto(EisTransactionHistory source);
 
