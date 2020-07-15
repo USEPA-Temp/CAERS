@@ -151,17 +151,6 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         			createValidationDetails(emissionsUnit));
         }
 
-        // Cannot report legacy UoM
-        if (emissionsUnit.getUnitOfMeasureCode() != null && Boolean.TRUE.equals(emissionsUnit.getUnitOfMeasureCode().getLegacy())) {
-
-            result = false;
-            context.addFederalError(
-                    ValidationField.EMISSIONS_UNIT_UOM.value(),
-                    "emissionsUnit.capacity.legacy",
-                    createValidationDetails(emissionsUnit),
-                    emissionsUnit.getUnitOfMeasureCode().getDescription());
-        }
-
         // Process identifier must be unique within unit
         Map<Object, List<EmissionsProcess>> epMap = emissionsUnit.getEmissionsProcesses().stream()
             .filter(ep -> ep.getEmissionsProcessIdentifier() != null)
@@ -180,14 +169,17 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         	}
       	}
         
-        if (emissionsUnit.getUnitOfMeasureCode() != null && Boolean.FALSE.equals(emissionsUnit.getUnitOfMeasureCode().getUnitDesignCapacity())) {
+        // Cannot report legacy UoM
+        if (emissionsUnit.getUnitOfMeasureCode() != null) {
+        	if (Boolean.TRUE.equals(emissionsUnit.getUnitOfMeasureCode().getLegacy()) || Boolean.FALSE.equals(emissionsUnit.getUnitOfMeasureCode().getUnitDesignCapacity())) {
 
-            result = false;
-            context.addFederalError(
-                    ValidationField.EMISSIONS_UNIT_UOM.value(),
-                    "emissionsUnit.capacity.uom.invalid",
-                    createValidationDetails(emissionsUnit),
-                    emissionsUnit.getUnitOfMeasureCode().getCode());
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.EMISSIONS_UNIT_UOM.value(),
+	                    "emissionsUnit.capacity.legacy",
+	                    createValidationDetails(emissionsUnit),
+	                    emissionsUnit.getUnitOfMeasureCode().getCode());
+        	}
         }
         
         return result;
