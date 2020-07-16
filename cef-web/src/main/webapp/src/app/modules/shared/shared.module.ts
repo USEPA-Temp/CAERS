@@ -15,7 +15,7 @@ import {
    faInfoCircle,
    faCheck,
    faTimesCircle,
-   faFilter, faTimes, faSearch
+   faFilter, faTimes, faSearch, faUpload
 } from '@fortawesome/free-solid-svg-icons';
 import { CollapseIconComponent } from 'src/app/modules/shared/components/collapse-icon/collapse-icon.component';
 import { FacilityWidgetComponent } from 'src/app/modules/shared/components/facility-widget/facility-widget.component';
@@ -40,6 +40,7 @@ import { FileAttachmentModalComponent } from './components/file-attachment-modal
 import { ReportAttachmentTableComponent } from './components/report-attachment-table/report-attachment-table.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { LegacyItemValidatorDirective } from './directives/legacy-item-validator.directive';
+import { EisTransactionAttachmentModalComponent } from './components/eis-transaction-attachment-modal/eis-transaction-attachment-modal.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { LegacyItemValidatorDirective } from './directives/legacy-item-validator
     StripPeriodEndingPipe,
     LegacyUomValidatorDirective,
     AdminNavComponent,
-    LegacyItemValidatorDirective
+    LegacyItemValidatorDirective,
+    EisTransactionAttachmentModalComponent
 ],
     exports: [
         FacilityInfoComponent,
@@ -93,7 +95,8 @@ import { LegacyItemValidatorDirective } from './directives/legacy-item-validator
   ],
   entryComponents: [
     BaseConfirmationModalComponent,
-    FileAttachmentModalComponent
+    FileAttachmentModalComponent,
+    EisTransactionAttachmentModalComponent
   ]
 })
 export class SharedModule {
@@ -112,5 +115,6 @@ export class SharedModule {
     library.add(faTimesCircle);
     library.add(faTimes);
     library.add(faFilter);
+    library.add(faUpload);
   }
 }
