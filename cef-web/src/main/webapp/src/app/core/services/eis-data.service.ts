@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpEvent} from "@angular/common/http";
 import {
    EisData,
    EisDataReport,
@@ -10,6 +10,7 @@ import {
 } from "src/app/shared/models/eis-data";
 import {Observable} from "rxjs";
 import { EisTranactionHistory } from 'src/app/shared/models/eis-tranaction-history';
+import { EisTransactionAttachment } from 'src/app/shared/models/eis-transaction-attachment';
 
 @Injectable({
    providedIn: 'root'
@@ -30,7 +31,7 @@ export class EisDataService {
 
    retrieveTransactionHistory(): Observable<EisTranactionHistory[]> {
 
-      return this.http.get<EisTranactionHistory[]>(`${this.baseUrl}/emissionsReport/history`);
+      return this.http.get<EisTranactionHistory[]>(`${this.baseUrl}/history`);
    }
 
    searchData(criteria: EisSearchCriteria): Observable<EisData> {
@@ -79,4 +80,36 @@ export class EisDataService {
 
       return result;
    }
+
+   downloadAttachment(attachmentId: number, ): Observable<any> {
+    const url = `${this.baseUrl}/history/attachment/${attachmentId}`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
+  /** POST upload report attachment */
+  uploadAttachment( metadata: EisTransactionAttachment,
+                    attachment: File): Observable<HttpEvent<EisTransactionAttachment>> {
+
+    const url = `${this.baseUrl}/history/attachment/uploadAttachment`;
+
+    const formData = new FormData();
+    formData.append('file', attachment);
+    formData.append('metadata', new Blob([JSON.stringify({
+      id: metadata.id,
+      transactionHistoryId: metadata.transactionHistoryId,
+    })], {
+      type: 'application/json'
+    }));
+
+    return this.http.post<EisTransactionAttachment>(url, formData, {
+      observe: 'events',
+      reportProgress: true
+    });
+  }
+
+  /** Delete specified eport attachment from the database */
+  deleteAttachment(attachmentId: number): Observable<{}> {
+    const url = `${this.baseUrl}/history/attachment/${attachmentId}`;
+    return this.http.delete(url);
+  }
 }

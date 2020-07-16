@@ -1,9 +1,12 @@
 package gov.epa.cef.web.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
@@ -27,6 +30,9 @@ public class EisTransactionHistory extends BaseAuditEntity {
 
     @Column(name = "submitter_name", nullable = false)
     private String submitterName;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "transactionHistory")
+    private EisTransactionAttachment attachment;
 
     public String getAgencyCode() {
         return agencyCode;
@@ -58,6 +64,14 @@ public class EisTransactionHistory extends BaseAuditEntity {
 
     public void setSubmitterName(String submitterName) {
         this.submitterName = submitterName;
+    }
+
+    public EisTransactionAttachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(EisTransactionAttachment attachment) {
+        this.attachment = attachment;
     }
 
 }
