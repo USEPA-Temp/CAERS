@@ -4,7 +4,7 @@ import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.AttachmentMIMEType;
 import gov.epa.cef.web.domain.EisTransactionAttachment;
 import gov.epa.cef.web.exception.ReportAttachmentValidationException;
-import gov.epa.cef.web.repository.EisTransmissionAttachmentRepository;
+import gov.epa.cef.web.repository.EisTransactionAttachmentRepository;
 import gov.epa.cef.web.service.dto.EisTransactionAttachmentDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.EisTransactionMapper;
@@ -34,7 +34,7 @@ public class EisAttachmentServiceImpl {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private EisTransmissionAttachmentRepository attachmentRepo;
+    private EisTransactionAttachmentRepository attachmentRepo;
 
     @Autowired
     private EisTransactionMapper attachmentMapper;

@@ -23,24 +23,31 @@
               <td>
                 {{item.createdDate | date:'short'}}
               </td>
-              <td>{{item.transactionId}}</td>
+              <td>
+                
+                <ng-container *ngIf="item.attachment && item.attachment.id">
+                  <a routerLink="." (click)="download(item.attachment)">{{item.transactionId}}</a>
+                </ng-container>
+                <ng-container *ngIf="!(item.attachment && item.attachment.id)">
+                  {{item.transactionId}}
+                </ng-container>
+              </td>
               <td>{{item.eisSubmissionStatus}}</td>
               <td>{{item.submitterName}}</td>
               <td>
                 <div class="d-flex flex-row justify-content-between">
                   <div>
                     <ng-container *ngIf="item.attachment && item.attachment.id">
-                      <a routerLink="."
-                        (click)="download(item.attachment)">{{ item.attachment.fileName }}</a>
+                      {{ item.attachment.fileName }}
                     </ng-container>
                   </div>
                   <div>
                     <ng-container *ngIf="item.attachment && item.attachment.id">
-                      <a routerLink="."
-                        (click)="openDeleteModal(item.attachment.id, item.attachment.fileName)"
-                        [attr.aria-label]="'delete attachment' + item.attachment.fileName">
+                      <button type="button" class="btn btn-link"
+                              (click)="openDeleteModal(item.attachment.id, item.attachment.fileName)"
+                              [attr.title]="'delete attachment' + item.attachment.fileName">
                         <fa-icon icon="trash-alt"></fa-icon>
-                      </a>
+                      </button>
                       <span title="You must delete the existing attachment to upload another">
                         <button type="button" class="btn btn-link" disabled>
                           <fa-icon icon="upload"></fa-icon>
@@ -48,10 +55,10 @@
                       </span>
                     </ng-container>
                     <ng-container *ngIf="!(item.attachment && item.attachment.id)">
-                      <a routerLink="." (click)="openAttachmentModal(item.id)"
-                        attr.aria-label="Attach Feedback Report">
+                      <button type="button" class="btn btn-link" (click)="openAttachmentModal(item.id)"
+                              title="Attach Feedback Report">
                         <fa-icon icon="upload"></fa-icon>
-                      </a>
+                      </button>
                     </ng-container>
                   </div>
                 </div>

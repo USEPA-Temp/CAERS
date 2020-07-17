@@ -6,6 +6,8 @@ import {FormControl} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { ToastrService } from 'ngx-toastr';
+import { EisTransactionAttachment } from 'src/app/shared/models/eis-transaction-attachment';
+import { FileDownloadService } from 'src/app/core/services/file-download.service';
 
 interface EisDataStats {
    notStarted: number;
@@ -79,6 +81,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
    constructor(private modalService: NgbModal,
                private eisDataService: EisDataService,
+               private fileDownloadService: FileDownloadService,
                private toastr: ToastrService) {
 
       super();
@@ -402,6 +405,14 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
          this.selectedReports.delete(report.emissionsReportId);
       }
    }
+
+   download(data: EisTransactionAttachment) {
+    this.eisDataService.downloadAttachment(data.id)
+    .subscribe(file => {
+        this.fileDownloadService.downloadFile(file, data.fileName);
+        error => console.error(error);
+    });
+  }
 
    private convertTypeAndCategory(): EisSubmissionStatus {
 

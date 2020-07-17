@@ -8,6 +8,7 @@ import gov.epa.cef.web.config.NetworkNodeName;
 import gov.epa.cef.web.domain.EisTransactionHistory;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.exception.NotExistException;
+import gov.epa.cef.web.repository.EisTransactionAttachmentRepository;
 import gov.epa.cef.web.repository.EisTransactionHistoryRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.dto.EisDataCriteria;
@@ -46,6 +47,8 @@ public class EisTransmissionServiceImpl {
 
     private final EisTransactionHistoryRepository transactionHistoryRepo;
 
+    private final EisTransactionAttachmentRepository attachmentRepo;
+
     private final EisXmlServiceImpl xmlService;
 
     private final EisTransactionMapper mapper;
@@ -58,12 +61,14 @@ public class EisTransmissionServiceImpl {
     EisTransmissionServiceImpl(EisXmlServiceImpl xmlService,
                                EmissionsReportRepository reportRepository,
                                EisTransactionHistoryRepository transactionHistoryRepo,
+                               EisTransactionAttachmentRepository attachmentRepo,
                                EisTransactionMapper mapper,
                                NodeClient nodeClient) {
 
         this.xmlService = xmlService;
         this.reportRepository = reportRepository;
         this.transactionHistoryRepo = transactionHistoryRepo;
+        this.attachmentRepo = attachmentRepo;
         this.mapper = mapper;
         this.nodeClient = nodeClient;
     }
@@ -99,6 +104,16 @@ public class EisTransmissionServiceImpl {
         return new EisDataListDto(criteria)
             .withReports(reports.stream()
                 .map(new EisDataReportDto.FromEntity())
+                .map(report -> {
+
+                    if (report.getLastTransactionId() != null) {
+                        report.setAttachment(this.attachmentRepo.findByTransactionHistoryTransactionId(report.getLastTransactionId())
+                            .map(attachment -> mapper.attachmentToDto(attachment))
+                            .orElse(null));
+                    }
+
+                    return report;
+                })
                 .collect(Collectors.toList()));
     }
 
