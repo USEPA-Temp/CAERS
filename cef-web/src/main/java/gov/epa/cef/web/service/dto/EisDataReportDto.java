@@ -9,6 +9,8 @@ public class EisDataReportDto {
 
     private String agencyFacilityId;
 
+    private EisTransactionAttachmentDto attachment;
+
     private String comments;
 
     private String eisProgramId;
@@ -33,6 +35,14 @@ public class EisDataReportDto {
     public void setAgencyFacilityId(String agencyFacilityId) {
 
         this.agencyFacilityId = agencyFacilityId;
+    }
+
+    public EisTransactionAttachmentDto getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(EisTransactionAttachmentDto attachment) {
+        this.attachment = attachment;
     }
 
     public String getComments() {

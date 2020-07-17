@@ -119,8 +119,13 @@
                            <span [textContent]="report.reportingYear"></span>
                         </td>
                         <td>
-                           <span [textContent]="report.lastTransactionId"></span>
-                        </td>
+                           <ng-container *ngIf="report.attachment">
+                              <a routerLink="."
+                                 (click)="download(report.attachment)">{{ report.lastTransactionId }}</a>
+                           </ng-container>
+                           <ng-container *ngIf="!report.attachment">
+                              <span [textContent]="report.lastTransactionId"></span>
+                           </ng-container>
                         <td>
                            <span [textContent]="report.lastSubmissionStatus"></span>
                         </td>

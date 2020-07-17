@@ -19,7 +19,7 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
 
   tableData: EisTranactionHistory[];
 
-  page: number;
+  page = 1;
   pageSize = 25;
 
   constructor(private eisDataService: EisDataService,
@@ -32,7 +32,21 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
 
   ngOnInit() {
 
-    this.refreshHistory();
+    this.eisDataService.retrieveTransactionHistory()
+    .subscribe(result => {
+      this.tableData = result.map(record => {
+
+        if (record.eisSubmissionStatus) {
+
+          record.eisSubmissionStatus = EisSubmissionStatus[record.eisSubmissionStatus];
+
+        }
+
+        return record;
+      });
+
+      this.onSort({column: 'createdDate', direction: 'desc'});
+    });
   }
 
   private refreshHistory() {
@@ -50,46 +64,47 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
         return record;
       });
 
-      this.page = 1;
-
-      this.onSort({column: 'createdDate', direction: 'asc'});
+      this.resortTable();
     });
   }
 
   download(data: EisTransactionAttachment) {
-        this.eisDataService.downloadAttachment(data.id)
-        .subscribe(file => {
-            this.fileDownloadService.downloadFile(file, data.fileName);
-            error => console.error(error);
-        });
-    }
+    this.eisDataService.downloadAttachment(data.id)
+    .subscribe(file => {
+        this.fileDownloadService.downloadFile(file, data.fileName);
+        error => {
+          console.error(error);
+          this.toastr.error('', 'An error occurred while trying to download this report.');
+        };
+    });
+  }
 
-    openAttachmentModal(id: number) {
-        const modalRef = this.modalService.open(EisTransactionAttachmentModalComponent, {size: 'lg', backdrop: 'static'});
-        modalRef.componentInstance.transactionHistoryId = id;
-        modalRef.componentInstance.title = `Attach Feedback Report`;
-        modalRef.componentInstance.message = `Search for feedback report file to be attached to this transaction.`;
-        modalRef.result.then(() => {
-            this.refreshHistory();
-        }, () => {
-            // needed for dismissing without errors
-        });
-    }
+  openAttachmentModal(id: number) {
+    const modalRef = this.modalService.open(EisTransactionAttachmentModalComponent, {size: 'lg', backdrop: 'static'});
+    modalRef.componentInstance.transactionHistoryId = id;
+    modalRef.componentInstance.title = `Attach Feedback Report`;
+    modalRef.componentInstance.message = `Search for feedback report file to be attached to this transaction.`;
+    modalRef.result.then(() => {
+      this.refreshHistory();
+    }, () => {
+        // needed for dismissing without errors
+    });
+  }
 
-    openDeleteModal(id: number, fileName: string) {
-        const modalMessage = `Are you sure you want to delete the attachment ${fileName} from this record?`;
-        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
-        modalRef.componentInstance.message = modalMessage;
-        modalRef.componentInstance.continue.subscribe(() => {
-            this.deleteAttachment(id);
-        });
-    }
+  openDeleteModal(id: number, fileName: string) {
+    const modalMessage = `Are you sure you want to delete the attachment ${fileName} from this record?`;
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.continue.subscribe(() => {
+      this.deleteAttachment(id);
+    });
+  }
 
-    deleteAttachment(id: number) {
-        this.eisDataService.deleteAttachment(id).subscribe(() => {
+  deleteAttachment(id: number) {
+    this.eisDataService.deleteAttachment(id).subscribe(() => {
 
-          this.refreshHistory();
-        });
-    }
+      this.refreshHistory();
+    });
+  }
 
 }

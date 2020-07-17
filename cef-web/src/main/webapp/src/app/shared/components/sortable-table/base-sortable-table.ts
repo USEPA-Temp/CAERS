@@ -1,9 +1,13 @@
-import { SortableHeaderDirective, compare, SortEvent } from 'src/app/shared/directives/sortable.directive';
+import { SortableHeaderDirective, compare, SortEvent, SortDirection } from 'src/app/shared/directives/sortable.directive';
 import { ViewChildren, QueryList } from '@angular/core';
 
 export abstract class BaseSortableTable {
   tableData: any[];
   @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;
+
+  private sortColumn: string;
+  private sortDirection: SortDirection;
+
 
   onSort({column, direction}: SortEvent) {
 
@@ -31,5 +35,13 @@ export abstract class BaseSortableTable {
         return direction === 'asc' ? res : -res;
       });
     }
+
+    this.sortColumn = column;
+    this.sortDirection = direction;
+  }
+
+  resortTable() {
+
+    this.onSort({column: this.sortColumn, direction: this.sortDirection});
   }
 }
