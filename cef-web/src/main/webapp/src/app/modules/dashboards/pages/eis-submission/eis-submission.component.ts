@@ -410,7 +410,10 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
     this.eisDataService.downloadAttachment(data.id)
     .subscribe(file => {
         this.fileDownloadService.downloadFile(file, data.fileName);
-        error => console.error(error);
+        error => {
+          console.error(error);
+          this.toastr.error('', 'An error occurred while trying to download this report.');
+        };
     });
   }
 

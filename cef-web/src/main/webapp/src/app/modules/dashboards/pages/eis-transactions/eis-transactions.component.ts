@@ -32,11 +32,6 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
 
   ngOnInit() {
 
-    this.refreshHistory();
-  }
-
-  private refreshHistory() {
-
     this.eisDataService.retrieveTransactionHistory()
     .subscribe(result => {
       this.tableData = result.map(record => {
@@ -54,11 +49,33 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
     });
   }
 
+  private refreshHistory() {
+
+    this.eisDataService.retrieveTransactionHistory()
+    .subscribe(result => {
+      this.tableData = result.map(record => {
+
+        if (record.eisSubmissionStatus) {
+
+          record.eisSubmissionStatus = EisSubmissionStatus[record.eisSubmissionStatus];
+
+        }
+
+        return record;
+      });
+
+      this.resortTable();
+    });
+  }
+
   download(data: EisTransactionAttachment) {
     this.eisDataService.downloadAttachment(data.id)
     .subscribe(file => {
         this.fileDownloadService.downloadFile(file, data.fileName);
-        error => console.error(error);
+        error => {
+          console.error(error);
+          this.toastr.error('', 'An error occurred while trying to download this report.');
+        };
     });
   }
 
