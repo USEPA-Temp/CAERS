@@ -288,6 +288,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 				programSystemCode = "GADNR";
 			case "DC":
 				programSystemCode = "DOEE";
+			default:
+				//do nothing
 		};
         
         facilitySite.setProgramSystemCode(
