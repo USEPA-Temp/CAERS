@@ -1,5 +1,6 @@
 package gov.epa.cef.web.config;
 
+import gov.epa.cef.web.config.slt.DCConfig;
 import gov.epa.cef.web.config.slt.GAConfig;
 import gov.epa.cef.web.provider.system.PropertyProvider;
 
@@ -20,6 +21,9 @@ public class CefConfig {
 
     @Autowired
     protected GAConfig gaConfig;
+    
+    @Autowired
+    protected DCConfig dcConfig;
 
     @Autowired
     protected PropertyProvider propertyProvider;
@@ -38,6 +42,11 @@ public class CefConfig {
 
     public GAConfig getGaConfig() {
         return gaConfig;
+    }
+    
+
+    public DCConfig getDcConfig() {
+        return dcConfig;
     }
 
     public String getDefaultEmailAddress() {
