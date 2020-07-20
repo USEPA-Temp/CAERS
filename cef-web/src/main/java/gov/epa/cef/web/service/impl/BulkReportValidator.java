@@ -100,7 +100,7 @@ public class BulkReportValidator {
     static List <String> buildParentPaths(List<ControlAssignmentBulkUploadDto> assignments){
     	List<String> parentPaths = new ArrayList<String>();
     	assignments.forEach(ca ->{
-    		if(!parentPaths.contains(ca.getControlPathId().toString())){
+    		if(ca.getControlPathId() != null && !parentPaths.contains(ca.getControlPathId().toString())){
     			parentPaths.add(ca.getControlPathId().toString());
     		}
     	});
