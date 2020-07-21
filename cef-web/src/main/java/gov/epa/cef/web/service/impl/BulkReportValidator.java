@@ -164,6 +164,12 @@ public class BulkReportValidator {
 
                 violations.add(new WorksheetError(controlAssignment.getSheetName(), controlAssignment.getRow(), msg));
             }
+            
+            if (controlAssignment.getControlPathId() != null && controlAssignment.getControlPathChildId() == null && controlAssignment.getControlId() == null) {
+            	String msg = String.format("Control Path Assignment must contain at least one Control Path or Control Device.");
+
+                violations.add(new WorksheetError(controlAssignment.getSheetName(), controlAssignment.getRow(), msg));
+            }
         }
     }
 
