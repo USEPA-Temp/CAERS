@@ -279,10 +279,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         facilitySite.setEisProgramId(reportDto.getEisProgramId());
 
         //TODO:
-        //For current mvp program system code will be hardcoded to GADNR for creating new facility sites
-        //need to raise issue with Julia and Kevin to determine how we will obtain program system code in future
+        //Hard coding this as a temporary workaround to test onboarding for DC. Long term we should consider changing the
+        //"agency code" on the report table to use the EIS Program System Code instead of state abbreviations. We can use
+        //the "Responsible Agency Code" returned by CDX to give us the program system code and look that up instead.
+        String programSystemCode = null;
+        switch (reportDto.getStateCode()) {
+			case "GA": 
+				programSystemCode = "GADNR";
+			case "DC":
+				programSystemCode = "DOEE";
+			default:
+				//do nothing
+		};
+        
         facilitySite.setProgramSystemCode(
-            this.lookupService.retrieveProgramSystemTypeCodeEntityByCode("GADNR"));
+        		this.lookupService.retrieveProgramSystemTypeCodeEntityByCode(programSystemCode));
 
         newReport.getFacilitySites().add(facilitySite);
 

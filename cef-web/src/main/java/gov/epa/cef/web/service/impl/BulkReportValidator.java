@@ -39,6 +39,7 @@ public class BulkReportValidator {
 
         Consumer<FacilitySiteBulkUploadDto> siteIdCheck = new FacilityIdValidator(report, violations);
         Consumer<List <ControlAssignmentBulkUploadDto>> loopCheck = new ControlAssignmentLoopValidator(report, violations);
+        Consumer<ControlAssignmentBulkUploadDto> controlAssignmentCheck = new ControlAssignmentValidator(violations);
 
         report.getFacilitySites().forEach(siteIdCheck.andThen(worksheetValidator));
         report.getEmissionsUnits().forEach(worksheetValidator);
@@ -52,7 +53,7 @@ public class BulkReportValidator {
         report.getControlPaths().forEach(worksheetValidator);
         report.getControls().forEach(worksheetValidator);
         loopCheck.accept(report.getControlAssignments());
-        report.getControlAssignments().forEach(worksheetValidator);
+        report.getControlAssignments().forEach(controlAssignmentCheck.andThen(worksheetValidator));
         report.getControlPollutants().forEach(worksheetValidator);
         report.getFacilityNAICS().forEach(worksheetValidator);
         report.getFacilityContacts().forEach(worksheetValidator);
@@ -99,7 +100,7 @@ public class BulkReportValidator {
     static List <String> buildParentPaths(List<ControlAssignmentBulkUploadDto> assignments){
     	List<String> parentPaths = new ArrayList<String>();
     	assignments.forEach(ca ->{
-    		if(!parentPaths.contains(ca.getControlPathId().toString())){
+    		if(ca.getControlPathId() != null && !parentPaths.contains(ca.getControlPathId().toString())){
     			parentPaths.add(ca.getControlPathId().toString());
     		}
     	});
@@ -143,6 +144,27 @@ public class BulkReportValidator {
     		checkForLoops(nextParentPath, nextChildPaths, assignmentTree, assignments, violations, controlPaths);
     	}
     	return false;
+    }
+    
+    static class ControlAssignmentValidator implements Consumer<ControlAssignmentBulkUploadDto> {
+
+        private final List<WorksheetError> violations;
+
+        public ControlAssignmentValidator(List<WorksheetError> violations) {
+
+            this.violations = violations;
+        }
+
+        @Override
+        public void accept(ControlAssignmentBulkUploadDto controlAssignment) {
+
+            if (controlAssignment.getControlId() != null && controlAssignment.getControlPathChildId() != null) {
+            	
+                String msg = String.format("A Control Path and a Control Device cannot both be assigned on the same Control Path Assignment row.");
+
+                violations.add(new WorksheetError(controlAssignment.getSheetName(), controlAssignment.getRow(), msg));
+            }
+        }
     }
 
     static class FacilityIdValidator implements Consumer<FacilitySiteBulkUploadDto> {

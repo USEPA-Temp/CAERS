@@ -1,3 +1,4 @@
+import { EisTransactionAttachment } from 'src/app/shared/models/eis-transaction-attachment';
 
 export interface EisDataStats {
 
@@ -32,6 +33,7 @@ export interface EisDataReport {
 
    emissionsReportId: number;
    agencyFacilityId: string;
+   attachment: EisTransactionAttachment;
    comments: string;
    eisProgramId: string;
    facilityName: string;

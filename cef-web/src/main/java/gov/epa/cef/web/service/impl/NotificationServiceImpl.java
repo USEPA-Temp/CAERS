@@ -32,10 +32,10 @@ public class NotificationServiceImpl implements NotificationService {
     private final String REPORT_SUBMITTED_TO_SLT_BODY = "A new emissions report has been submitted for the {0} facility "
             + "for reporting year {1} in the EPA Common Emissions Form.";
 
-    private final String REPORT_REJECTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report Rejected";
+    private final String REPORT_REJECTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report has been Returned";
     private final String REPORT_REJECTED_BY_SLT_BODY_TEMPLATE = "reportRejected";
 
-    private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report Accepted";
+    private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report has been Accepted";
     private final String REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE = "reportAccepted";
 
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";

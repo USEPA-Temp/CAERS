@@ -33,6 +33,9 @@ public class UnitMeasureCode extends BaseLookupEntity {
 
     @Column(name = "ef_denominator", nullable = false)
     private Boolean efDenominator;
+    
+    @Column(name = "unit_design_capacity", nullable = false)
+    private Boolean unitDesignCapacity;
 
     @Column(name = "legacy", nullable = false)
     private Boolean legacy;
@@ -67,6 +70,14 @@ public class UnitMeasureCode extends BaseLookupEntity {
 
     public void setEfDenominator(Boolean efDenominator) {
         this.efDenominator = efDenominator;
+    }
+    
+    public Boolean getUnitDesignCapacity() {
+        return unitDesignCapacity;
+    }
+
+    public void setUnitDesignCapacity(Boolean unitDesignCapacity) {
+        this.unitDesignCapacity = unitDesignCapacity;
     }
 
     public Boolean getLegacy() {

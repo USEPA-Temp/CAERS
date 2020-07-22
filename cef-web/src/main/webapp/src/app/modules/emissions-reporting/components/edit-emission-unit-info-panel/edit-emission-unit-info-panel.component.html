@@ -80,9 +80,12 @@
          <div class="col-sm-3">
             <select type="text" class="form-control" id="unitOfMeasureCodeSelect" formControlName="unitOfMeasureCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
-                <option *ngFor="let uom of uomValues" [ngValue]="uom">{{uom.code}}</option>
+                <option *ngFor="let uom of designCapacityUomValues" [ngValue]="uom">{{uom.code}}</option>
             </select>            
             <app-validation-message [control]="emissionUnitForm.get('unitOfMeasureCode')"></app-validation-message>
+            <div class="validation-message" *ngIf="emissionUnitForm.errors?.eisUomInvalid">
+                The Unit of Measure {{emissionUnitForm.controls?.unitOfMeasureCode?.value.code}} is no longer a valid UoM. Please select a different UoM.
+            </div>
         </div>
     </div>
 

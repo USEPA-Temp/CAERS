@@ -97,6 +97,8 @@ public abstract class LookupEntityMapper {
     public abstract EisLatLongToleranceLookupDto EisLatLongToleranceLookupToDto(EisLatLongToleranceLookup source);
 
     public abstract CodeLookupDto facilitySourceTypeCodeToDto(FacilitySourceTypeCode source);
+    
+    public abstract List<CodeLookupDto> facilitySourceTypeCodeToDtoList(List<FacilitySourceTypeCode> source);
 
     @Named("CalculationMethodCode")
     public CalculationMethodCode dtoToCalculationMethodCode(CodeLookupDto source) {

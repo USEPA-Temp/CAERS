@@ -378,7 +378,7 @@ public class LookupApi {
     }
     
     /**
-     * Retrieve Facility Category codes
+     * Retrieve Facility Source Type codes
      * @return
      */
     @GetMapping(value = "/facility/sourceType")
@@ -386,6 +386,18 @@ public class LookupApi {
     public ResponseEntity<List<CodeLookupDto>> retrieveFacilitySourceTypeCodes() {
 
         List<CodeLookupDto> result = lookupService.retrieveFacilitySourceTypeCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Facility Source Type codes
+     * @return
+     */
+    @GetMapping(value = "/facility/sourceType/{year}")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveCurrentFacilitySourceTypeCodes(@NotNull @PathVariable Integer year) {
+
+        List<CodeLookupDto> result = lookupService.retrieveCurrentFacilitySourceTypeCodes(year);
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
     

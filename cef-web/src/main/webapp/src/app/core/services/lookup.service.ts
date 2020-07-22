@@ -173,4 +173,9 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
+  retrieveCurrentFacilitySourceType(year: number): Observable<InventoryYearCodeLookup[]> {
+    const url = `${this.baseUrl}/facility/sourceType/${year}`;
+    return this.http.get<InventoryYearCodeLookup[]>(url);
+  }
+
 }

@@ -27,7 +27,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   emissionUnitForm = this.fb.group({
     unitTypeCode: [null, Validators.required],
     operatingStatusCode: [null, Validators.required],
-    unitOfMeasureCode: [null, legacyUomValidator()],
+    unitOfMeasureCode: [null],
     unitIdentifier: ['', [
       Validators.required,
       Validators.maxLength(20)
@@ -53,12 +53,14 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     this.unitTypeCheck(),
     this.emissionUnitIdentifierCheck(),
     this.facilitySiteStatusCheck(),
-    this.capacityUomCheck()]
+    this.capacityUomCheck(),
+    this.capacityLegacyUomCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
   unitTypeValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
+  designCapacityUomValues: UnitMeasureCode[];
 
   // Unit type codes that should have a design capacity
   typeCodeDesignCapacity = ['100', '120', '140', '160', '180'];
@@ -95,6 +97,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     this.lookupService.retrieveUom()
     .subscribe(result => {
       this.uomValues = result;
+      this.designCapacityUomValues = this.uomValues.filter(val => val.unitDesignCapacity);
     });
 
     this.lookupService.retrieveOperatingStatus()
@@ -190,6 +193,17 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
       if ((designCapacity && !designCapacityUom) || (!designCapacity && designCapacityUom)) {
         return {invalidUom: true};
+      }
+      return null;
+    };
+  }
+
+  capacityLegacyUomCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const designCapacityUom = control.get('unitOfMeasureCode').value;
+
+      if (designCapacityUom && (designCapacityUom.legacy || !designCapacityUom.unitDesignCapacity)) {
+        return {eisUomInvalid: true};
       }
       return null;
     };

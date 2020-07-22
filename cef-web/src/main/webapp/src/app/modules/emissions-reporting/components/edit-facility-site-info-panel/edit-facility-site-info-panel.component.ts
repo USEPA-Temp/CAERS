@@ -10,6 +10,7 @@ import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-co
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { ToastrService } from 'ngx-toastr';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
+import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 
 @Component({
   selector: 'app-edit-facility-site-info-panel',
@@ -68,7 +69,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   tribalCodeValues: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
   facilityCategoryCodeValues: FacilityCategoryCode[];
-  facilitySourceTypeValues: BaseCodeLookup[];
+  facilitySourceTypeValues: InventoryYearCodeLookup[];
   counties: FipsCounty[];
 
   constructor(
@@ -112,7 +113,9 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
       this.facilityCategoryCodeValues = result;
     });
 
-    this.lookupService.retrieveFacilitySourceType()
+    this.facilitySiteForm.get('facilitySourceTypeCode').setValidators([legacyItemValidator(this.facilitySite.emissionsReport.year, 'Facility Source Type Code', 'description')]);
+
+    this.lookupService.retrieveCurrentFacilitySourceType(this.facilitySite.emissionsReport.year)
     .subscribe(result => {
       this.facilitySourceTypeValues = result;
     });
