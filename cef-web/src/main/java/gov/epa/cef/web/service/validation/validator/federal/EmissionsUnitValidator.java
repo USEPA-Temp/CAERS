@@ -170,7 +170,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
       	}
         
         // Cannot report legacy UoM
-        if (emissionsUnit.getUnitOfMeasureCode() != null) {
+        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getUnitOfMeasureCode() != null) {
         	if (Boolean.TRUE.equals(emissionsUnit.getUnitOfMeasureCode().getLegacy()) || Boolean.FALSE.equals(emissionsUnit.getUnitOfMeasureCode().getUnitDesignCapacity())) {
 
 	            result = false;

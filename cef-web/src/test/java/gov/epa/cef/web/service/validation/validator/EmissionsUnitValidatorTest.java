@@ -295,6 +295,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     
     /**
      * There should be no errors when emissions unit design capacity uom is a valid uom for eis.
+     * There should be no error when emissions unit design capacity uom is not a valid uom for eis and the unit operating status is PS.
      * There should be one error when emissions unit design capacity uom is not a valid uom for eis.
      */
     @Test
@@ -308,6 +309,14 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
         
         cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("PS");
+        testData.getUnitOfMeasureCode().setUnitDesignCapacity(false);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("OP");
         testData.getUnitOfMeasureCode().setUnitDesignCapacity(false);
 
         assertFalse(this.validator.validate(cefContext, testData));
