@@ -170,7 +170,7 @@ public class EmissionServiceImpl implements EmissionService {
 
         List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId).stream()
                 .filter(rp -> !"PS".equals(rp.getEmissionsProcess().getOperatingStatusCode().getCode()))
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
 
         List<EmissionBulkEntryHolderDto> result = emissionMapper.periodToEmissionBulkEntryDtoList(entities);
 
