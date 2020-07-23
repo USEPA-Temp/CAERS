@@ -10,6 +10,7 @@ export class BulkEntryEmissionHolder {
   emissionsProcessId: number;
   emissionsProcessIdentifier: string;
   emissionsProcessDescription: string;
+  operatingStatusCode: BaseCodeLookup;
 
   reportingPeriodId: number;
   reportingPeriodTypeCode: BaseCodeLookup;

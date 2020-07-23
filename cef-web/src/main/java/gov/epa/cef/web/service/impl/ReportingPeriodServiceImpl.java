@@ -165,7 +165,9 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
      */
     public List<ReportingPeriodBulkEntryDto> retrieveBulkEntryReportingPeriodsForFacilitySite(Long facilitySiteId) {
 
-        List<ReportingPeriod> entities = repo.findByFacilitySiteId(facilitySiteId);
+        List<ReportingPeriod> entities = repo.findByFacilitySiteId(facilitySiteId).stream()
+                .filter(rp -> !"PS".equals(rp.getEmissionsProcess().getOperatingStatusCode().getCode()))
+                .collect(Collectors.toList());
 
         List<ReportingPeriodBulkEntryDto> result = mapper.toBulkEntryDtoList(entities);
 

@@ -4,6 +4,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -82,11 +83,15 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
         lbUom.setUnitType("MASS");
         lbUom.setCalculationVariable("[lb]");
 
+        OperatingStatusCode statusCode = new OperatingStatusCode();
+        statusCode.setCode("OP");
+
         reportingPeriod = new ReportingPeriod();
         reportingPeriod.setId(1L);
         reportingPeriod.setCalculationParameterValue(new BigDecimal(10));
         reportingPeriod.setCalculationParameterUom(lbUom);
         reportingPeriod.setEmissionsProcess(new EmissionsProcess());
+        reportingPeriod.getEmissionsProcess().setOperatingStatusCode(statusCode);
         reportingPeriod.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         reportingPeriod.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
         reportingPeriod.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEisProgramId("1");

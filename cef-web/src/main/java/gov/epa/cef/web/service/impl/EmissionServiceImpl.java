@@ -168,7 +168,9 @@ public class EmissionServiceImpl implements EmissionService {
      */
     public List<EmissionBulkEntryHolderDto> retrieveBulkEntryEmissionsForFacilitySite(Long facilitySiteId) {
 
-        List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId);
+        List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId).stream()
+                .filter(rp -> !"PS".equals(rp.getEmissionsProcess().getOperatingStatusCode().getCode()))
+                .collect(Collectors.toList());;
 
         List<EmissionBulkEntryHolderDto> result = emissionMapper.periodToEmissionBulkEntryDtoList(entities);
 
@@ -208,7 +210,9 @@ public class EmissionServiceImpl implements EmissionService {
      */
     public List<EmissionBulkEntryHolderDto> bulkUpdate(Long facilitySiteId, List<EmissionDto> dtos) {
 
-        List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId);
+        List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId).stream()
+                .filter(rp -> !"PS".equals(rp.getEmissionsProcess().getOperatingStatusCode().getCode()))
+                .collect(Collectors.toList());
 
         Map<Long, BigDecimal> updateMap = dtos.stream().collect(Collectors.toMap(EmissionDto::getId, EmissionDto::getTotalEmissions));
 
