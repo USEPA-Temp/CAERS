@@ -23,6 +23,9 @@
                     [attr.aria-label]="'emissions process' + item?.emissionsProcessIdentifier">
                 {{item.emissionsProcessIdentifier}}
               </a>
+              <span *ngIf="item.operatingStatusCode.code === 'TS'">
+                <fa-icon class="mt-2 ml-1" [icon]="['fas', 'power-off']" title="This process is Temporarily Shutdown and cannot be edited."></fa-icon>
+              </span>
             </td>
             <td>{{item.calculationMaterialCode?.description}}</td>
             <td>

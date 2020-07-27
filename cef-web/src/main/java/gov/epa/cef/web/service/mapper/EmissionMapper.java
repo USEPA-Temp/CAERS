@@ -48,6 +48,7 @@ public interface EmissionMapper {
     @Mapping(source="emissionsProcess.id", target="emissionsProcessId")
     @Mapping(source="emissionsProcess.emissionsProcessIdentifier", target="emissionsProcessIdentifier")
     @Mapping(source="emissionsProcess.description", target="emissionsProcessDescription")
+    @Mapping(source="emissionsProcess.operatingStatusCode", target="operatingStatusCode")
     @Mapping(source="id", target="reportingPeriodId")
     EmissionBulkEntryHolderDto periodToEmissionBulkEntryDto(ReportingPeriod source);
 

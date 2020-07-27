@@ -59,7 +59,8 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
 
     this.tableData.forEach(rp => {
       rp.emissions.forEach(e => {
-        if (e.totalManualEntry || e.emissionsCalcMethodCode.totalDirectEntry) {
+        if ((e.totalManualEntry || e.emissionsCalcMethodCode.totalDirectEntry)
+            && !(rp.operatingStatusCode.code === 'TS' || rp.operatingStatusCode.code === 'PS')) {
           if (!this.emissionForm.contains('' + e.id)) {
             this.emissionForm.setControl('' + e.id, new FormControl({
               value: e.totalEmissions,
