@@ -82,18 +82,27 @@ public class BulkReportValidator {
         	List<String> parentPaths = buildParentPaths(controlAssignments);
         	List<String> caList = new ArrayList<String>();
             Set<String> assignmentTree = new HashSet<String>(); 
+            List<String> childPathsList = new ArrayList<String>();
+            List<String> checkedParentPaths = new ArrayList<String>();
             
         	controlAssignments.forEach(ca ->{
         		if(ca.getControlPathChildId() != null){
             		caList.add(ca.getControlPathId()+"/"+ca.getControlPathChildId());
         		}
         	});
-
-            if(!parentPaths.isEmpty() && !parentPaths.get(0).isEmpty()){
-            	List<String> childPaths = buildChildPaths(parentPaths.get(0), caList);
-            	assignmentTree.add(parentPaths.get(0));
-            	checkForLoops(parentPaths.get(0), childPaths, assignmentTree, caList, violations, report.getControlPaths());
-            }
+        	
+        	if(!parentPaths.isEmpty()){
+        		for(String parent: parentPaths){
+        			childPathsList.clear();
+        			assignmentTree.clear();
+        			checkedParentPaths.clear();
+	        		if(parent != null){
+	        			assignmentTree.add(parent);
+	        			buildChildPaths(parent, caList, childPathsList, checkedParentPaths);
+	        		}
+	        		checkForLoops(parent, childPathsList, assignmentTree, caList, violations, report.getControlPaths());
+        		}
+        	}
         }
     }
     
@@ -107,14 +116,22 @@ public class BulkReportValidator {
     	return parentPaths;
     }
     
-    public static List <String> buildChildPaths(String parentPath, List<String> assignments){
+    
+    public static void buildChildPaths(String parentPath, List<String> assignments, List<String> childPathsList, List<String> checkedParentPaths){
     	List<String> childPaths = new ArrayList<String>();
     	for(String ca: assignments){
-    		if(ca.contains(parentPath+"/")){
+    		if(ca.contains(parentPath+"/") && !checkedParentPaths.contains(ca)){
     			childPaths.add(ca.substring(parentPath.length()+1));
+    			childPathsList.add(ca.substring(parentPath.length()+1));
+    			checkedParentPaths.add(ca);
     		}
     	}
-    	return childPaths;
+    	
+    	if(!childPaths.isEmpty()){
+    		for(String cp: childPaths){
+    			buildChildPaths(cp, assignments, childPathsList, checkedParentPaths);
+    		}
+    	}
     }
     
     static boolean checkForLoops(String parentPath, List<String> childPaths, Set<String> assignmentTree, List<String> assignments, List<WorksheetError> violations, List<ControlPathBulkUploadDto> controlPaths){
@@ -137,11 +154,6 @@ public class BulkReportValidator {
     			violations.add(new WorksheetError("Control Assignments", 1, msg));
     			return true;
     		}
-    	}
-    	for(String cp: childPaths){
-    		String nextParentPath = cp;
-    		List<String> nextChildPaths = buildChildPaths(nextParentPath, assignments);
-    		checkForLoops(nextParentPath, nextChildPaths, assignmentTree, assignments, violations, controlPaths);
     	}
     	return false;
     }
