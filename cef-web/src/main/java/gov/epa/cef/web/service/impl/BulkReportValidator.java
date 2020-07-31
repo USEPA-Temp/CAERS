@@ -85,17 +85,14 @@ public class BulkReportValidator {
             List<String> childPathsList = new ArrayList<String>();
             List<String> checkedParentPaths = new ArrayList<String>();
             
-            // adds all assignments "parent path/child paths" to caList
         	controlAssignments.forEach(ca ->{
         		if(ca.getControlPathChildId() != null){
             		caList.add(ca.getControlPathId()+"/"+ca.getControlPathChildId());
         		}
         	});
         	
-        	// for each parent get child path list and check for loops
         	if(!parentPaths.isEmpty()){
         		for(String parent: parentPaths){
-        			// clear temporary lists prior to checking parent
         			childPathsList.clear();
         			assignmentTree.clear();
         			checkedParentPaths.clear();
@@ -130,7 +127,6 @@ public class BulkReportValidator {
     		}
     	}
     	
-    	// get child path of children
     	if(!childPaths.isEmpty()){
     		for(String cp: childPaths){
     			buildChildPaths(cp, assignments, childPathsList, checkedParentPaths);
