@@ -68,6 +68,10 @@ export class EmissionsUnitTableComponent extends BaseSortableTable implements On
 
       // emit the facility data back to the sidebar to reflect the updated
       // list of emission units
+      this.route.data
+        .subscribe((data: { facilitySite: FacilitySite }) => {
+            this.sharedService.emitChange(data.facilitySite);
+        });
       this.sharedService.updateReportStatusAndEmit(this.route);
     }, error => {
       if (error.error && error.status === 422) {
