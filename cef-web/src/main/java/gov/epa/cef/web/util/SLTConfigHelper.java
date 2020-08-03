@@ -18,8 +18,10 @@ public class SLTConfigHelper {
         switch (slt) {
             case "GA":
                 currentConfig = cefConfig.getGaConfig();
+                break;
             case "DC":
                 currentConfig = cefConfig.getDcConfig();
+                break;
             default:
                 // do nothing
         }
