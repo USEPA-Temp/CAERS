@@ -286,8 +286,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         switch (reportDto.getStateCode()) {
 			case "GA": 
 				programSystemCode = "GADNR";
+				break;
 			case "DC":
 				programSystemCode = "DOEE";
+				break;
 			default:
 				//do nothing
 		};
