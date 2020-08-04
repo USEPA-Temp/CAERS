@@ -123,7 +123,7 @@ public class ControlPathServiceImpl implements ControlPathService {
 		
 		if (paths != null) {
 	        for (ControlPath path : paths) {
-	        	childPaths = getChildPaths(path);
+	        	childPaths.addAll(getChildPaths(path));
 	        }
         }
 		
