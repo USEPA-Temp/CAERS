@@ -56,29 +56,6 @@ public class ControlPath extends BaseAuditEntity {
     	this.description = originalControlPath.getDescription();
     	this.pathId = originalControlPath.getPathId();
 //    	this.assignments = new HashSet<ControlAssignment>();
-
-        for (ControlAssignment originalControlAssignment : originalControlPath.getAssignments()) {
-        	Control c = null;
-        	for(Control newControl : this.facilitySite.getControls()) {
-        		if (newControl.getId().equals(originalControlAssignment.getControl().getId())) {
-        			c = newControl;
-        			break;
-        		}
-        	}
-        	ControlPath cpc = null;
-        	//if the original control assignment has a child control path, then loop through the
-        	//control paths associated with the new facility, find the appropriate one, and
-        	//associate it to this control assignment - otherwise leave child path as null
-        	if (originalControlAssignment.getControlPathChild() != null) {
-            	for(ControlPath newControlPathChild : this.facilitySite.getControlPaths()) {
-            		if (newControlPathChild.getId().equals(originalControlAssignment.getControlPathChild().getId())) {
-            			cpc = newControlPathChild;
-            			break;
-            		}
-            	}
-        	}
-        	this.assignments.add(new ControlAssignment(this, c, cpc, originalControlAssignment));
-        }
     }
 
     public String getDescription() {
