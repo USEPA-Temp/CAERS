@@ -67,5 +67,5 @@ public interface ControlPathRepository extends CrudRepository<ControlPath, Long>
      * @param facilitySiteId
      * @return
      */
-    List<ControlPath> findByFacilitySiteIdOrderByDescription(Long facilitySiteId);
+    List<ControlPath> findByFacilitySiteIdOrderByPathId(Long facilitySiteId);
 }
