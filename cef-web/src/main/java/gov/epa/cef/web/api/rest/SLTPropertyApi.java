@@ -17,28 +17,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.domain.AdminProperty;
-import gov.epa.cef.web.provider.system.AdminPropertyProvider;
+import gov.epa.cef.web.config.slt.SLTAgencyCode;
+import gov.epa.cef.web.domain.SLTConfigProperty;
+import gov.epa.cef.web.provider.system.SLTPropertyProvider;
 import gov.epa.cef.web.security.AppRole;
-import gov.epa.cef.web.service.EmissionService;
-import gov.epa.cef.web.service.NotificationService;
-import gov.epa.cef.web.service.dto.EmissionDto;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.PropertyDto;
 import gov.epa.cef.web.service.mapper.AppPropertyMapper;
 
 @RestController
-@RequestMapping("/api/admin/property")
-@RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
-public class AdminPropertyApi {
+@RequestMapping("/api/slt/property")
+@RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+public class SLTPropertyApi {
 
     @Autowired
-    private AdminPropertyProvider propertyProvider;
-
+    private SLTPropertyProvider propertyProvider;
+    
     @Autowired
-    private EmissionService emissionService;
-
-    @Autowired
-    private NotificationService notificationService;
+    private SecurityService securityService;
 
     @Autowired
     private AppPropertyMapper mapper;
@@ -49,17 +45,23 @@ public class AdminPropertyApi {
      */
     @GetMapping(value = "/{name}")
     public ResponseEntity<PropertyDto> retrieveProperty(@NotNull @PathVariable String name) {
-        PropertyDto result = mapper.toDto(propertyProvider.retrieve(new PropertyDto().withName(name)));
+
+        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
+
+        PropertyDto result = mapper.sltToDto(propertyProvider.retrieve(new PropertyDto().withName(name), userAgency));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
-     * Retrieve all properties
+     * Retrieve all properties for the user's state
      * @return
      */
     @GetMapping
     public ResponseEntity<List<PropertyDto>> retrieveAllProperties() {
-        List<PropertyDto> result = mapper.toDtoList(propertyProvider.retrieveAll());
+
+        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
+
+        List<PropertyDto> result = mapper.sltToDtoList(propertyProvider.retrieveAllForAgency(userAgency));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -71,8 +73,9 @@ public class AdminPropertyApi {
     public ResponseEntity<PropertyDto> updateProperty(@NotNull @PathVariable String propName,
             @NotNull @RequestBody PropertyDto dto) {
 
-        AdminProperty result = this.propertyProvider.update(dto.withName(propName), dto.getValue());
-        return new ResponseEntity<>(mapper.toDto(result), HttpStatus.OK);
+        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
+        SLTConfigProperty result = this.propertyProvider.update(dto.withName(propName), userAgency, dto.getValue());
+        return new ResponseEntity<>(mapper.sltToDto(result), HttpStatus.OK);
     }
 
     /**
@@ -82,27 +85,13 @@ public class AdminPropertyApi {
     @PostMapping
     public ResponseEntity<List<PropertyDto>> updateProperties(@NotNull @RequestBody List<PropertyDto> dtos) {
 
+        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
+
         List<PropertyDto> result = dtos.stream().map(dto -> {
-            AdminProperty prop = this.propertyProvider.update(dto, dto.getValue());
-            return mapper.toDto(prop);
+            SLTConfigProperty prop = this.propertyProvider.update(dto, userAgency, dto.getValue());
+            return mapper.sltToDto(prop);
         }).collect(Collectors.toList());
-        
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 
-    /**
-     * Send a test email to the Admin email list
-     */
-    @PostMapping(value = "/sendTestEmail")
-    public void sendTestAdminEmail() {
-
-        this.notificationService.sendAdminNotification(NotificationService.AdminEmailType.AdminTest, null);
-    }
-
-    @PostMapping(value = "/emission/recalculate/{reportId}")
-    public ResponseEntity<List<EmissionDto>> recalculateEmissionTotalTons(@NotNull @PathVariable Long reportId) {
-
-        List<EmissionDto> result = emissionService.recalculateEmissionTons(reportId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

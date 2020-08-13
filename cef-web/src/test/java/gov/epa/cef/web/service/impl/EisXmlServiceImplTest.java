@@ -4,7 +4,7 @@ import com.google.common.io.Resources;
 
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.config.TestCategories;
-import gov.epa.cef.web.config.slt.GAConfig;
+import gov.epa.cef.web.config.mock.MockSLTConfig;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.util.SLTConfigHelper;
@@ -85,7 +85,7 @@ public class EisXmlServiceImplTest {
         when(cersXmlService.generateCersData(2L, EisSubmissionStatus.ProdEmissions)).thenReturn(cersData.get(1));
         when(cersXmlService.generateCersData(3L, EisSubmissionStatus.ProdEmissions)).thenReturn(cersData.get(2));
 
-        SLTBaseConfig gaConfig = new GAConfig();
+        MockSLTConfig gaConfig = new MockSLTConfig();
         gaConfig.setSltEisProgramCode("GADNR");
         gaConfig.setSltEisUser("test");
 

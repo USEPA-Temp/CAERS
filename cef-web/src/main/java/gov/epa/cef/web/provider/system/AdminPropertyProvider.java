@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class PropertyProvider {
+public class AdminPropertyProvider {
 
     @Autowired
     private AdminPropertyRepository propertyRepo;
