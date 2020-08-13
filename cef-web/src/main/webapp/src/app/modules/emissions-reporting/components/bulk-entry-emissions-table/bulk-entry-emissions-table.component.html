@@ -47,7 +47,7 @@
               <td>
                 <div class="row">
                   <div class="col-sm-12 col-lg-8">
-                  <input type="number" class="form-control" id="{{emission.id + 'Input'}}" formControlName="{{emission.id}}" [readOnly]="readOnlyMode"
+                  <input type="number" class="form-control" id="{{emission.id + 'Input'}}" formControlName="{{emission.id}}" [readOnly]="readOnlyMode" onclick="this.focus();"
                           [attr.aria-label]="'Total Emissions for ' + emission.pollutant?.pollutantName">
                     <app-validation-message [control]="emissionForm.get('' + emission.id)"></app-validation-message> 
                   </div>
