@@ -8,7 +8,7 @@ CREATE TABLE slt_config
   UNIQUE (name, agency_code)
 );
 
-insert into slt_config (name, agency_code, value) values ('slt-email', 'GA', 'edward.canoles@cgifederal.com');
+insert into slt_config (name, agency_code, value) values ('slt-email', 'GA', 'caer@cgifederal.com');
 insert into slt_config (name, agency_code, value) values ('slt-eis-user', 'GA', 'mlorefic');
 insert into slt_config (name, agency_code, value) values ('slt-eis-program-code', 'GA', 'GADNR');
 insert into slt_config (name, agency_code, value) values ('slt-email', 'DC', 'caer@cgifederal.com');
