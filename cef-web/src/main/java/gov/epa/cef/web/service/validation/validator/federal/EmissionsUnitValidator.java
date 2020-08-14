@@ -92,23 +92,6 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         			createValidationDetails(emissionsUnit));
         }
         
-        // Design capacity warning
-        if (emissionsUnit.getUnitTypeCode() != null && emissionsUnit.getDesignCapacity() == null) {
-        	List<String> typeCodeWarn = new ArrayList<String>(); 
-        	Collections.addAll(typeCodeWarn, "100", "120", "140", "160", "180");
-        	
-        	for (String code: typeCodeWarn) {
-          	if (code.contentEquals(emissionsUnit.getUnitTypeCode().getCode())) {
-          		
-          		result = false;
-          		context.addFederalWarning(
-          				ValidationField.EMISSIONS_UNIT_CAPACITY.value(), "emissionsUnit.capacity.check",
-          				createValidationDetails(emissionsUnit),
-          				emissionsUnit.getUnitTypeCode().getDescription());
-          	}
-          };
-        }
-        
         // Emissions Unit identifier must be unique within the facility.
         if (emissionsUnit != null && emissionsUnit.getFacilitySite() != null && emissionsUnit.getFacilitySite().getEmissionsUnits() != null) {
 	        Map<Object, List<EmissionsUnit>> euMap = emissionsUnit.getFacilitySite().getEmissionsUnits().stream()
@@ -129,26 +112,58 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        }
         }
         
-        // Design capacity range
-        if ((emissionsUnit.getDesignCapacity() != null)
-        	&& (emissionsUnit.getDesignCapacity().doubleValue() < 0.01 || emissionsUnit.getDesignCapacity().doubleValue() > 100000000)) {
-        	
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.EMISSIONS_UNIT_CAPACITY.value(),
-        			"emissionsUnit.capacity.range",
-        			createValidationDetails(emissionsUnit));
-        } 
-        
-        // Design capacity and UoM must be reported together.
-        if ((emissionsUnit.getDesignCapacity() != null && emissionsUnit.getUnitOfMeasureCode() == null)
-        	|| (emissionsUnit.getDesignCapacity() == null && emissionsUnit.getUnitOfMeasureCode() != null)) {
-        	
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.EMISSIONS_UNIT_CAPACITY.value(),
-        			"emissionsUnit.capacity.required",
-        			createValidationDetails(emissionsUnit));
+        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+            // Design capacity warning
+            if (emissionsUnit.getUnitTypeCode() != null && emissionsUnit.getDesignCapacity() == null) {
+                List<String> typeCodeWarn = new ArrayList<String>(); 
+                Collections.addAll(typeCodeWarn, "100", "120", "140", "160", "180");
+                
+                for (String code: typeCodeWarn) {
+                if (code.contentEquals(emissionsUnit.getUnitTypeCode().getCode())) {
+                    
+                    result = false;
+                    context.addFederalWarning(
+                            ValidationField.EMISSIONS_UNIT_CAPACITY.value(), "emissionsUnit.capacity.check",
+                            createValidationDetails(emissionsUnit),
+                            emissionsUnit.getUnitTypeCode().getDescription());
+                }
+              };
+            }
+            
+            // Design capacity range
+            if ((emissionsUnit.getDesignCapacity() != null)
+            	&& (emissionsUnit.getDesignCapacity().doubleValue() < 0.01 || emissionsUnit.getDesignCapacity().doubleValue() > 100000000)) {
+            	
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.EMISSIONS_UNIT_CAPACITY.value(),
+            			"emissionsUnit.capacity.range",
+            			createValidationDetails(emissionsUnit));
+            } 
+            
+            // Design capacity and UoM must be reported together.
+            if ((emissionsUnit.getDesignCapacity() != null && emissionsUnit.getUnitOfMeasureCode() == null)
+            	|| (emissionsUnit.getDesignCapacity() == null && emissionsUnit.getUnitOfMeasureCode() != null)) {
+            	
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.EMISSIONS_UNIT_CAPACITY.value(),
+            			"emissionsUnit.capacity.required",
+            			createValidationDetails(emissionsUnit));
+            }
+            
+            // Cannot report legacy UoM
+            if (emissionsUnit.getUnitOfMeasureCode() != null && 
+                    (Boolean.TRUE.equals(emissionsUnit.getUnitOfMeasureCode().getLegacy()) 
+                            || Boolean.FALSE.equals(emissionsUnit.getUnitOfMeasureCode().getUnitDesignCapacity()))) {
+    
+                result = false;
+                context.addFederalError(
+                        ValidationField.EMISSIONS_UNIT_UOM.value(),
+                        "emissionsUnit.capacity.legacy",
+                        createValidationDetails(emissionsUnit),
+                        emissionsUnit.getUnitOfMeasureCode().getCode());
+            }
         }
 
         // Process identifier must be unique within unit
@@ -168,20 +183,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        			epList.get(0).getEmissionsProcessIdentifier());
         	}
       	}
-        
-        // Cannot report legacy UoM
-        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getUnitOfMeasureCode() != null) {
-        	if (Boolean.TRUE.equals(emissionsUnit.getUnitOfMeasureCode().getLegacy()) || Boolean.FALSE.equals(emissionsUnit.getUnitOfMeasureCode().getUnitDesignCapacity())) {
 
-	            result = false;
-	            context.addFederalError(
-	                    ValidationField.EMISSIONS_UNIT_UOM.value(),
-	                    "emissionsUnit.capacity.legacy",
-	                    createValidationDetails(emissionsUnit),
-	                    emissionsUnit.getUnitOfMeasureCode().getCode());
-        	}
-        }
-        
         return result;
     }
     
