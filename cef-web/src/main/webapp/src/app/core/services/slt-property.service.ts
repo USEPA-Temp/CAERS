@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
+import { AppProperty } from 'src/app/shared/models/app-property';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AppProperty } from 'src/app/shared/models/app-property';
-import { Emission } from 'src/app/shared/models/emission';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AdminPropertyService {
+export class SltPropertyService {
 
-  private baseUrl = 'api/admin/property';  // URL to web api
+    private baseUrl = 'api/slt/property';  // URL to web api
 
   constructor(private http: HttpClient) { }
 
@@ -30,15 +29,5 @@ export class AdminPropertyService {
   bulkUpdate(props: AppProperty[]): Observable<AppProperty[]> {
     const url = `${this.baseUrl}`;
     return this.http.post<AppProperty[]>(url, props);
-  }
-
-  sendTestEmail(): Observable<{}> {
-    const url = `${this.baseUrl}/sendTestEmail`;
-    return this.http.post<any>(url, {});
-  }
-
-  recalculateEmissionTotalTons(reportId: number): Observable<Emission[]> {
-    const url = `${this.baseUrl}/emission/recalculate/${reportId}`;
-    return this.http.post<Emission[]>(url, {});
   }
 }

@@ -3,7 +3,7 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.exception.NotExistException;
-import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
@@ -53,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
     private TemplateEngine templateEngine;
 
     @Autowired
-    private PropertyProvider propertyProvider;
+    private AdminPropertyProvider propertyProvider;
     
     @Autowired
     private ReportAttachmentRepository reportAttachmentsRepo;
