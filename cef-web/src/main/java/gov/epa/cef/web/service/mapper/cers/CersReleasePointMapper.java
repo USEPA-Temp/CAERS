@@ -20,7 +20,7 @@ public interface CersReleasePointMapper {
 
 	@AfterMapping
     default void afterMapping(@MappingTarget ReleasePointDataType target, ReleasePoint source) {
-        if (source.getLatitude() == null && source.getLongitude() == null) {
+        if (source.getLatitude() == null || source.getLongitude() == null) {
             target.setReleasePointGeographicCoordinates(null);
         }
     }

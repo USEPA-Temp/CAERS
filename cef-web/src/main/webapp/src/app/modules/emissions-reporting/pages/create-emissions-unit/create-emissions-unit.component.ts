@@ -44,6 +44,11 @@ export class CreateEmissionsUnitComponent implements OnInit {
       .subscribe(result => {
         this.facilitySiteId = result.id;
       });
+
+      this.route.data
+      .subscribe(data => {
+        this.sharedService.emitChange(data.facilitySite);
+      });
   }
 
   isValid() {
