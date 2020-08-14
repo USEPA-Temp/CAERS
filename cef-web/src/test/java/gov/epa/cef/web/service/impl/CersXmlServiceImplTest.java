@@ -61,6 +61,7 @@ import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapper;
 import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapperImpl;
 import gov.epa.cef.web.service.mapper.cers.CersFacilitySiteMapper;
 import gov.epa.cef.web.service.mapper.cers.CersFacilitySiteMapperImpl;
+import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapper;
 import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapperImpl;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
@@ -207,9 +208,12 @@ public class CersXmlServiceImplTest {
         EmissionsReportRepository reportRepo = mock(EmissionsReportRepository.class);
         when(reportRepo.findById(any())).thenReturn(Optional.of(emissionsReport));
 
-        CersDataTypeMapper cersMapper = new CersDataTypeMapperImpl(createCersFacilitySiteMapper());
+        CersReleasePointMapper releasePointMapper = new CersReleasePointMapperImpl();
+        CersEmissionsUnitMapper emissionsUnitMapper = new CersEmissionsUnitMapperImpl(releasePointMapper);
+        CersFacilitySiteMapper facilitySiteMapper = new CersFacilitySiteMapperImpl(emissionsUnitMapper, releasePointMapper);
+        CersDataTypeMapper cersMapper = new CersDataTypeMapperImpl(facilitySiteMapper);
 
-        CersXmlService cersXmlService = new CersXmlServiceImpl(userService, reportRepo, cersMapper);
+        CersXmlService cersXmlService = new CersXmlServiceImpl(userService, reportRepo, cersMapper, emissionsUnitMapper, releasePointMapper);
 
         return cersXmlService.generateCersData(1l, null);
     }
@@ -236,13 +240,6 @@ public class CersXmlServiceImplTest {
         return this.bulkUploadService.toEmissionsReport().apply(dto);
     }
 
-    private CersFacilitySiteMapper createCersFacilitySiteMapper() {
-
-        CersReleasePointMapperImpl releasePointMapper = new CersReleasePointMapperImpl();
-
-        return new CersFacilitySiteMapperImpl(
-            new CersEmissionsUnitMapperImpl(releasePointMapper), releasePointMapper);
-    }
 
     /*
     I could not figure out a way to get around the mess below w/o refactoring
