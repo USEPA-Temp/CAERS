@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 
 import gov.epa.cef.web.domain.AdminProperty;
+import gov.epa.cef.web.domain.SLTConfigProperty;
 import gov.epa.cef.web.service.dto.PropertyDto;
 
 @Mapper(componentModel = "spring", uses = {})
@@ -15,4 +16,10 @@ public interface AppPropertyMapper {
     List<PropertyDto> toDtoList(List<AdminProperty> source);
 
     AdminProperty fromDto(PropertyDto source);
+
+    PropertyDto sltToDto(SLTConfigProperty source);
+
+    List<PropertyDto> sltToDtoList(List<SLTConfigProperty> source);
+
+    SLTConfigProperty sltFromDto(PropertyDto source);
 }

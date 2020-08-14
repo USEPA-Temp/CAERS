@@ -1,8 +1,6 @@
 package gov.epa.cef.web.config;
 
-import gov.epa.cef.web.config.slt.DCConfig;
-import gov.epa.cef.web.config.slt.GAConfig;
-import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -20,13 +18,7 @@ public class CefConfig {
     protected CdxConfig cdxConfig;
 
     @Autowired
-    protected GAConfig gaConfig;
-    
-    @Autowired
-    protected DCConfig dcConfig;
-
-    @Autowired
-    protected PropertyProvider propertyProvider;
+    protected AdminPropertyProvider propertyProvider;
 
     @Autowired
     protected Environment environment;
@@ -38,15 +30,6 @@ public class CefConfig {
 
     public CdxConfig getCdxConfig() {
         return cdxConfig;
-    }
-
-    public GAConfig getGaConfig() {
-        return gaConfig;
-    }
-    
-
-    public DCConfig getDcConfig() {
-        return dcConfig;
     }
 
     public String getDefaultEmailAddress() {

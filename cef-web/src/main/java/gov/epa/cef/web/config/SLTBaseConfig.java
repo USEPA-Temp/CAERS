@@ -1,32 +1,11 @@
 package gov.epa.cef.web.config;
 
-public abstract class SLTBaseConfig {
-    
-    private String sltEmail;
-    private String sltEisUser;
-    private String sltEisProgramCode;
+public interface SLTBaseConfig {
 
-    public String getSltEmail() {
-        return sltEmail;
-    }
+    public String getSltEmail();
 
-    public void setSltEmail(String sltEmail) {
-        this.sltEmail = sltEmail;
-    }
+    public String getSltEisUser();
 
-    public String getSltEisUser() {
-        return sltEisUser;
-    }
+    public String getSltEisProgramCode();
 
-    public void setSltEisUser(String sltEisUser) {
-        this.sltEisUser = sltEisUser;
-    }
-
-    public String getSltEisProgramCode() {
-        return sltEisProgramCode;
-    }
-
-    public void setSltEisProgramCode(String sltEisProgramCode) {
-        this.sltEisProgramCode = sltEisProgramCode;
-    }
 }

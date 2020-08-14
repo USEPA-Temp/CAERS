@@ -1,7 +1,6 @@
 package gov.epa.cef.web.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.QueryHint;
 
@@ -17,11 +16,8 @@ public interface AdminPropertyRepository extends CrudRepository<AdminProperty, S
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     List<AdminProperty> findAll();
 
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     List<AdminProperty> findAll(Sort sort);
 
-    Optional<AdminProperty> findById(String id);
-
-    <S extends AdminProperty> S save(S entity);
-
-    void deleteById(String id);
 }

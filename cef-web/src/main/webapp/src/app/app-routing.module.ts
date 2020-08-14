@@ -14,6 +14,7 @@ import {AdminAnnouncementPropertiesComponent} from 'src/app/modules/dashboards/p
 import { AdminAuthGuard } from 'src/app/core/guards/admin-auth.guard';
 import { ReviewerAuthGuard } from 'src/app/core/guards/reviewer-auth.guard';
 import {EisTransactionsComponent} from "src/app/modules/dashboards/pages/eis-transactions/eis-transactions.component";
+import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -82,6 +83,10 @@ const routes: Routes = [
         path: 'eisTransactions',
         component: EisTransactionsComponent,
         data: { title: 'Review Transactions' },
+      }, {
+        path: 'properties',
+        component: SltPropertiesComponent,
+        data: { title: 'Agency Administration' },
       }, {
         path: '',
         redirectTo: 'dashboard',
