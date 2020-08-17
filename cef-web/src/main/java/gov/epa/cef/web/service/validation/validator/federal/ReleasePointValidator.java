@@ -304,25 +304,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             	}
             }
             
-            // CHECKS FOR ALL RELEASE POINT TYPES
-            // If release point operation status is not operating, status year is required
-            if (!STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
-     	
-            	result = false;
-            	context.addFederalError(
-            			ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.required",
-            			createValidationDetails(releasePoint));
-            }
-            
-            // Status year must be between 1900 and 2050
-            if (releasePoint.getStatusYear() != null && (releasePoint.getStatusYear() < 1900 || releasePoint.getStatusYear() > 2050)) {
-            	
-            	result = false;
-            	context.addFederalError(
-            			ValidationField.RP_STATUS_YEAR.value(), "releasePoint.statusYear.range",
-            			createValidationDetails(releasePoint));
-            }
-            
             if ((releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowUomCode() == null) ||
               	(releasePoint.getExitGasFlowRate() == null && releasePoint.getExitGasFlowUomCode() != null)) {
              
@@ -505,6 +486,25 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     
             }
 
+        }
+
+        // CHECKS FOR ALL RELEASE POINT TYPES
+        // If release point operation status is not operating, status year is required
+        if (!STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
+    
+            result = false;
+            context.addFederalError(
+                    ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.required",
+                    createValidationDetails(releasePoint));
+        }
+
+        // Status year must be between 1900 and 2050
+        if (releasePoint.getStatusYear() != null && (releasePoint.getStatusYear() < 1900 || releasePoint.getStatusYear() > 2050)) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.RP_STATUS_YEAR.value(), "releasePoint.statusYear.range",
+                    createValidationDetails(releasePoint));
         }
 
         if (releasePoint != null && releasePoint.getFacilitySite() != null && releasePoint.getFacilitySite().getReleasePoints() != null) {
