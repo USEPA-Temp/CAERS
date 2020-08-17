@@ -65,7 +65,7 @@ public class CersXmlServiceImpl implements CersXmlService {
     private final CersReleasePointMapper rpMapper;
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
 	CersXmlServiceImpl(UserService userService,
@@ -170,8 +170,11 @@ public class CersXmlServiceImpl implements CersXmlService {
 
         cers.setUserIdentifier(userService.getCurrentUser().getEmail());
 
-        // detach entity from session so that the dirty entity won't get picked up by other database calls
-        entityManager.detach(source);
+        // check if this exists for unit tests
+        if (this.entityManager != null) {
+            // detach entity from session so that the dirty entity won't get picked up by other database calls
+            entityManager.detach(source);
+        }
 
         return cers;
     }
