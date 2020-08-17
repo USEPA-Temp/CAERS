@@ -172,7 +172,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         try {
             Optional<EmissionsReport> emissionsReportOptional=erRepo.findById(emissionsReportId);
             if(emissionsReportOptional.isPresent()) {
-                EmissionsReport emissionsReport=emissionsReportOptional.get();
                 URL signatureServiceUrl = new URL(cefConfig.getCdxConfig().getRegisterSignServiceEndpoint());
                 String signatureToken = signatureServiceClient.authenticate(signatureServiceUrl, cefConfig.getCdxConfig().getNaasUser(), cefConfig.getCdxConfig().getNaasPassword());
                 SignatureDocumentType sigDoc = new SignatureDocumentType();
@@ -180,11 +179,14 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 sigDoc.setFormat(SignatureDocumentFormatType.XML);
                 tmp = File.createTempFile("Attachment", ".xml");
                 try (OutputStream outputStream = new FileOutputStream(tmp)) {
-                    cersXmlService.writeCersXmlTo(emissionsReportId, outputStream, EisSubmissionStatus.QaFacility);
+                    // use null status to get full XML generation
+                    cersXmlService.writeCersXmlTo(emissionsReportId, outputStream, null);
                 }
                 sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
                 cromerrDocumentId =
                     signatureServiceClient.sign(signatureServiceUrl, signatureToken, activityId, sigDoc);
+                // get fresh copy of emissionsReport to make sure any modifications from creating the XML are cleared
+                EmissionsReport emissionsReport = erRepo.findById(emissionsReportId).get();
                 emissionsReport.setStatus(ReportStatus.SUBMITTED);
                 emissionsReport.setCromerrActivityId(activityId);
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
