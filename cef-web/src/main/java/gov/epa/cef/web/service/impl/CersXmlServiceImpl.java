@@ -314,7 +314,8 @@ public class CersXmlServiceImpl implements CersXmlService {
 
         for (ControlAssignment assignment : path.getAssignments()) {
 
-            if (assignment.getControl() != null) {
+            if (assignment.getControl() != null && !"PS".equals(assignment.getControl().getOperatingStatusCode().getCode())
+                    && !"TS".equals(assignment.getControl().getOperatingStatusCode().getCode())) {
                 result.add(assignment.getControl());
 
 //                if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
