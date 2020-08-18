@@ -28,6 +28,9 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	@Autowired
 	private ControlAssignmentRepository assignmentRepo;
 	
+	private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
+    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+	
 	@Override
 	public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
 		
@@ -97,17 +100,33 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
     	List<Control> controls = new ArrayList<Control>(); 
 		List<Control> controlsList = buildAssignedControlsList(controlPath.getAssignments(), controls);
 		
-        Map<Object, List<ControlAssignment>> caMap = controlPath.getAssignments().stream()
+		List<ControlAssignment> caList = controlPath.getAssignments().stream()
                 .filter(cpa -> (cpa.getControl() != null))
+                .collect(Collectors.toList());
+		
+        Map<Object, List<ControlAssignment>> caEmptyMap = caList.stream()
                 .collect(Collectors.groupingBy(cpa -> cpa));
         
-        	if ((caMap.size() == 0) && (controlsList.size() == 0)) {
-            	result = false;
-            	context.addFederalError(
-            			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
-            			"controlPath.assignment.notAssigned",
-            			createValidationDetails(controlPath));
-        	}
+    	if ((caEmptyMap.size() == 0) && (controlsList.size() == 0)) {
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
+        			"controlPath.assignment.notAssigned",
+        			createValidationDetails(controlPath));
+    	}
+    	
+    	Map<Object, List<ControlAssignment>> caShutDownMap = caList.stream()
+    			.filter(c -> (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(c.getControl().getOperatingStatusCode().getCode())
+    			|| STATUS_PERMANENTLY_SHUTDOWN.contentEquals(c.getControl().getOperatingStatusCode().getCode())))
+				.collect(Collectors.groupingBy(cpa -> cpa));
+    	
+    	if ((caShutDownMap.size() > 0)) {
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
+        			"controlPath.assignment.controlDevice.shutDown",
+        			createValidationDetails(controlPath));
+    	}
         	
         List<ControlAssignment> sequenceMap = controlPath.getAssignments().stream()
                 .filter(cpa -> (cpa.getSequenceNumber() != null))

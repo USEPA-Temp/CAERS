@@ -22,6 +22,7 @@ import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -69,11 +70,14 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ControlAssignment ca2 = new ControlAssignment();
 		Control c1 = new Control();
 		ControlMeasureCode cmc = new ControlMeasureCode();
+		OperatingStatusCode opStatusCode = new OperatingStatusCode();
+        opStatusCode.setCode("OP");
 		cmc.setDescription("test");
 		c1.setId(1L);
 		c1.setIdentifier("control1");
 		c1.setControlMeasureCode(cmc);
 		c1.getAssignments().add(ca1);
+		c1.setOperatingStatusCode(opStatusCode);
 		ca1.setSequenceNumber(1);
 		ca2.setSequenceNumber(1);
 		ca1.setPercentApportionment(30.0);
@@ -144,6 +148,28 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()).size() == 1);
+    }
+    
+    @Test
+    public void controlAndControlPathOpStatusFailTest() {
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		testData.getAssignments().get(0).getControl().getOperatingStatusCode().setCode("TS");
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.getAssignments().get(0).getControl().getOperatingStatusCode().setCode("PS");
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()).size() == 1);
     }
     
@@ -236,6 +262,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		result.setId(1L);
 		ReleasePointAppt rpa = new ReleasePointAppt();
 		ControlMeasureCode cmc = new ControlMeasureCode();
+		OperatingStatusCode opStatusCode = new OperatingStatusCode();
+        opStatusCode.setCode("OP");
 		cmc.setCode("test code");
 		cmc.setDescription("test code description");
 		ControlPath childPath = new ControlPath();
@@ -247,6 +275,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		c.setId(1234L);
 		c.setControlMeasureCode(cmc);
 		c.setIdentifier("test control");
+		c.setOperatingStatusCode(opStatusCode);
 		ControlAssignment ca = new ControlAssignment();
 		ca.setControl(c);
 		ca.setSequenceNumber(1);

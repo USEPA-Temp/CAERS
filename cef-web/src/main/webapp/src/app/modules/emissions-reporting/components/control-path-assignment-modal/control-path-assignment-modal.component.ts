@@ -7,6 +7,9 @@ import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+const statusPermShutdown = 'PS';
+const statusTempShutdown = 'TS';
+
 @Component({
   selector: 'app-control-path-assignment-modal',
   templateUrl: './control-path-assignment-modal.component.html',
@@ -175,6 +178,11 @@ export class ControlPathAssignmentModalComponent implements OnInit {
 
     // if control is chosen, check all control assignments with selected control
     if (this.controlPathAssignmentForm.get('control').value) {
+      if (this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === statusPermShutdown
+      || this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === statusTempShutdown) {
+        this.controlPathAssignmentForm.get('control').markAsTouched();
+        this.controlPathAssignmentForm.get('control').setErrors({ tempOrPermShutdownControl: true });
+      }
       controlList = this.assignmentList.filter(val => val.control && (val.control.id === this.controlPathAssignmentForm.get('control').value.id));
 
       if (this.edit && controlList && (this.selectedControlPathAssignment.control
