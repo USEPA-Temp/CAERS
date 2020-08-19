@@ -15,6 +15,7 @@ public class EmissionsReportDto implements Serializable {
     private String validationStatus;
     private Boolean hasSubmitted;
     private String eisLastSubmissionStatus;
+    private String fileName;
 
     public Long getId() {
         return id;
@@ -86,6 +87,14 @@ public class EmissionsReportDto implements Serializable {
 
 	public void setEisLastSubmissionStatus(String eisLastSubmissionStatus) {
 		this.eisLastSubmissionStatus = eisLastSubmissionStatus;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	public EmissionsReportDto withId(Long id) {
