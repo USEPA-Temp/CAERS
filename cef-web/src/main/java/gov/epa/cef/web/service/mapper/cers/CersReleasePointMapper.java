@@ -62,8 +62,9 @@ public interface CersReleasePointMapper {
     IdentificationDataType identificationFromReleasePoint(ReleasePoint source);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(source="operatingStatusCode", target="operatingStatusCode")
     @Mapping(source="facilitySite", target="facilitySite")
+    @Mapping(source="operatingStatusCode", target="operatingStatusCode")
+    @Mapping(source="statusYear", target="statusYear")
     @Mapping(source="releasePointIdentifier", target="releasePointIdentifier")
     ReleasePoint releasePointToPSReleasePoint(ReleasePoint source);
 
