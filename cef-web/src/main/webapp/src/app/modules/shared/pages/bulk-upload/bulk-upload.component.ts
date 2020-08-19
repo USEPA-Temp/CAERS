@@ -39,10 +39,6 @@ export class BulkUploadComponent implements OnInit {
       const fileReader = new FileReader();
       fileReader.readAsText(f, 'UTF-8');
 
-            /*
-  .pipe(map((res:Response) => (res.text())))
-  .subscribe(data => {console.log(data)});
-            */
       fileReader.onload = () => {
         try {
           const jfc = JSON.parse(fileReader.result.toString());
