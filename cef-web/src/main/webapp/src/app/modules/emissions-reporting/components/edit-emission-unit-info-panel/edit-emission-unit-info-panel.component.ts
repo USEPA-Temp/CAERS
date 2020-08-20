@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
@@ -9,7 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { ActivatedRoute } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
-import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
+
+const statusPermShutdown = 'PS';
 
 @Component({
   selector: 'app-edit-emission-unit-info-panel',
@@ -45,7 +46,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.maxLength(20)
     ]],
     description: ['', [
-      Validators.required,
+      this.requiredIfStatusNotPS(),
       Validators.maxLength(100)
     ]],
     comments: [null, Validators.maxLength(400)]
@@ -129,6 +130,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       this.emissionUnitForm.controls.statusYear.reset();
       this.toastr.warning('', 'If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated, unless they are already Permanently Shutdown.');
     }
+    this.emissionUnitForm.controls.statusYear.markAsTouched();
+    this.emissionUnitForm.controls.description.updateValueAndValidity();
   }
 
   // Design capacity should be entered if type code is 100, 120, 140, 160, or 180.
@@ -207,5 +210,18 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       }
       return null;
     };
+  }
+
+  requiredIfStatusNotPS() {
+    return (formControl => {
+      if (!formControl.parent) {
+        return null;
+      }
+      if (this.emissionUnitForm.get('operatingStatusCode').value
+        && !this.emissionUnitForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+        return Validators.required(formControl);
+      }
+      return null;
+    });
   }
 }
