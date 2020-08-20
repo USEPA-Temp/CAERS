@@ -241,7 +241,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     if (this.releasePointForm.get('operatingStatusCode').value
       && !this.releasePointForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
-      this.releasePointForm.get('typeCode').setValidators([this.releasePointForm.get('typeCode').validator, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
+      this.releasePointForm.get('typeCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
       this.releasePointForm.controls.typeCode.markAsTouched();
     } else {
       this.releasePointForm.get('typeCode').setValidators([Validators.required]);
