@@ -374,17 +374,24 @@ public class EmissionsReportApi {
      * @param jsonNode
      * @return
      */
-    @PostMapping(value = "/upload",
+    @PostMapping(value = "/upload/{fileName}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
-    public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @RequestBody JsonNode jsonNode) {
+    public ResponseEntity<EmissionsReportDto> uploadReport(@NotNull @PathVariable String fileName, @NotNull @RequestBody JsonNode jsonNode) {
 
-        EmissionsReportDto savedReport = this.uploadService.parseJsonNode(false)
-            .andThen(this.uploadService::saveBulkEmissionsReport)
-            .apply(jsonNode);
+        try {
+            EmissionsReportDto savedReport = this.uploadService.parseJsonNode(false)
+                .andThen(this.uploadService::saveBulkEmissionsReport)
+                .apply(jsonNode);
+            savedReport.setFileName(fileName);
+            return new ResponseEntity<>(savedReport, HttpStatus.OK);
+        } catch (Exception ex) {
+            String msg = String.format("'%s' failed to upload.  Error: %s",
+                fileName, ex.getMessage());
 
-        return new ResponseEntity<>(savedReport, HttpStatus.OK);
+            throw new BulkReportValidationException(Collections.singletonList(WorksheetError.createSystemError(msg)));
+        }
     }
 
     @PostMapping(value = "/validation",
