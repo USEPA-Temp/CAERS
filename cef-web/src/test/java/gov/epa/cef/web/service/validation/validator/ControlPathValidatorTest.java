@@ -2,13 +2,9 @@ package gov.epa.cef.web.service.validation.validator;
 
 import static org.junit.Assert.assertFalse;  
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -152,7 +148,20 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void controlAndControlPathOpStatusFailTest() {
+    public void controlPSStatusFailTest() {
+        CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+        testData.getAssignments().get(0).getControl().getOperatingStatusCode().setCode("PS");
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()).size() == 2);
+    }
+    
+    @Test
+    public void controlTSStatusWarnFailTest() {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
 		testData.getAssignments().get(0).getControl().getOperatingStatusCode().setCode("TS");
@@ -161,15 +170,6 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()).size() == 1);
-        
-        cefContext = createContext();
-        testData.getAssignments().get(0).getControl().getOperatingStatusCode().setCode("PS");
-		
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value()).size() == 1);
     }
     

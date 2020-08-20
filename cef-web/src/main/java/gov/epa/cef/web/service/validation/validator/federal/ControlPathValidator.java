@@ -107,7 +107,13 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         Map<Object, List<ControlAssignment>> caEmptyMap = caList.stream()
                 .collect(Collectors.groupingBy(cpa -> cpa));
         
-    	if ((caEmptyMap.size() == 0) && (controlsList.size() == 0)) {
+        List<ControlAssignment> caPSList = caList.stream()
+    			.filter(c -> STATUS_PERMANENTLY_SHUTDOWN.contentEquals(c.getControl().getOperatingStatusCode().getCode()))
+				.collect(Collectors.toList());
+        
+        // if no controls assigned or if only PS controls are assigned
+    	if ((caEmptyMap.size() == 0 && controlsList.size() == 0)
+    		|| (caList.size() > 0 && caList.size() == caPSList.size() && controlsList.size() > 0)) {
         	result = false;
         	context.addFederalError(
         			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
@@ -115,17 +121,30 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         			createValidationDetails(controlPath));
     	}
     	
-    	Map<Object, List<ControlAssignment>> caShutDownMap = caList.stream()
-    			.filter(c -> (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(c.getControl().getOperatingStatusCode().getCode())
-    			|| STATUS_PERMANENTLY_SHUTDOWN.contentEquals(c.getControl().getOperatingStatusCode().getCode())))
-				.collect(Collectors.groupingBy(cpa -> cpa));
+    	// if control assigned is PS status
+    	if ((caPSList.size() > 0)) {
+    		for (ControlAssignment ca: caPSList) {
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
+            			"controlPath.assignment.controlDevice.permShutdown",
+            			createValidationDetails(controlPath), ca.getControl().getIdentifier());
+    		}
+    	}
     	
-    	if ((caShutDownMap.size() > 0)) {
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
-        			"controlPath.assignment.controlDevice.shutDown",
-        			createValidationDetails(controlPath));
+    	List<ControlAssignment> caTSList = caList.stream()
+    			.filter(c -> STATUS_TEMPORARILY_SHUTDOWN.contentEquals(c.getControl().getOperatingStatusCode().getCode()))
+				.collect(Collectors.toList());
+    	
+    	// if control assigned is TS status
+    	if ((caTSList.size() > 0)) {
+    		for (ControlAssignment ca: caTSList) {
+            	result = false;
+            	context.addFederalWarning(
+            			ValidationField.CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT.value(),
+            			"controlPath.assignment.controlDevice.tempShutdown",
+            			createValidationDetails(controlPath), ca.getControl().getIdentifier());
+    		}
     	}
         	
         List<ControlAssignment> sequenceMap = controlPath.getAssignments().stream()

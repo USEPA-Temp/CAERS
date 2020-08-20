@@ -25,6 +25,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   controls: Control[];
   assignmentList: ControlAssignment[] = [];
   controlPathChildField: ControlPath;
+  tempShutdownControlWarning: string;
 
   controlPathAssignmentForm = this.fb.group({
     percentApportionment: ['', [Validators.required, Validators.min(0.1), Validators.max(100), Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')]],
@@ -178,12 +179,13 @@ export class ControlPathAssignmentModalComponent implements OnInit {
 
     // if control is chosen, check all control assignments with selected control
     if (this.controlPathAssignmentForm.get('control').value) {
-      if (this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === statusPermShutdown
-      || this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === statusTempShutdown) {
-        this.controlPathAssignmentForm.get('control').markAsTouched();
-        this.controlPathAssignmentForm.get('control').setErrors({ tempOrPermShutdownControl: true });
-      }
       controlList = this.assignmentList.filter(val => val.control && (val.control.id === this.controlPathAssignmentForm.get('control').value.id));
+
+      if (this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === statusTempShutdown) {
+        this.tempShutdownControlWarning = 'Warning: This Control Path is associated with the Temporarily Shutdown Control Device.';
+      } else {
+        this.tempShutdownControlWarning = null;
+      }
 
       if (this.edit && controlList && (this.selectedControlPathAssignment.control
       && this.selectedControlPathAssignment.control.id === this.controlPathAssignmentForm.get('control').value.id)) {
@@ -264,6 +266,9 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     }
     if (!controlField && !controlPathChildField) {
       return { controlAndPathNotSelected: true};
+    }
+    if (controlField && !controlPathChildField && controlField.operatingStatusCode.code === statusPermShutdown) {
+      return { permShutdownControl: true };
     }
     if ((controlField || controlPathChildField) && (sequenceNumber && percentApportionment)) {
       formGroup.status = 'VALID';
