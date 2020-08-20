@@ -134,8 +134,8 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to bulk upload an emissions report */
-    uploadReport(jsonFileData: string): Observable<EmissionsReport> {
-        const url = `${this.baseUrl}/upload`;
+    uploadReport(jsonFileData: string, fileName: string): Observable<EmissionsReport> {
+        const url = `${this.baseUrl}/upload/${encodeURI(fileName)}`;
         return this.http.post<EmissionsReport>(url, jsonFileData);
     }
 
