@@ -14,6 +14,8 @@ import { ReleasePointService } from 'src/app/core/services/release-point.service
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
+const statusPermShutdown = 'PS';
+
 @Component({
   selector: 'app-edit-release-point-panel',
   templateUrl: './edit-release-point-panel.component.html',
@@ -52,17 +54,17 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.required,
       Validators.maxLength(20)
     ]],
-    typeCode: [null, Validators.required],
-    description: ['', [
-      Validators.required,
-      Validators.maxLength(200),
-    ]],
     operatingStatusCode: [null, Validators.required],
     statusYear: ['', [
       Validators.required,
       Validators.min(1900),
       Validators.max(2050),
       numberValidator()
+    ]],
+    typeCode: [null],
+    description: ['', [
+      Validators.maxLength(200),
+      this.requiredIfStatusNotPS()
     ]],
     latitude: [null, [
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
@@ -113,24 +115,28 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     fugitiveLine2Latitude: [],
     fugitiveLine2Longitude: [],
     stackHeight: ['', [
-      Validators.required,
       Validators.min(1),
       Validators.max(1300),
-      Validators.pattern(this.numberPattern83)
+      Validators.pattern(this.numberPattern83),
+      this.requiredIfStatusNotPS()
     ]],
-    stackHeightUomCode: [null, [Validators.required]],
+    stackHeightUomCode: [null, [
+    this.requiredIfStatusNotPS()
+    ]],
     stackDiameter: ['', [
-      Validators.required,
       Validators.min(0.001),
       Validators.max(300),
-      Validators.pattern(this.numberPattern83)
+      Validators.pattern(this.numberPattern83),
+      this.requiredIfStatusNotPS()
     ]],
-    stackDiameterUomCode: [null, [Validators.required]],
+    stackDiameterUomCode: [null, [
+      this.requiredIfStatusNotPS()
+    ]],
     exitGasTemperature: ['', [
-      Validators.required,
       Validators.min(-30),
       Validators.max(4000),
-      Validators.pattern('^\-?[0-9]+$')
+      Validators.pattern('^\-?[0-9]+$'),
+      this.requiredIfStatusNotPS()
     ]]
   }, { validators: [
     this.exitFlowConsistencyCheck(),
@@ -162,7 +168,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     private releasePointService: ReleasePointService) { }
 
   ngOnInit() {
-    this.releasePointForm.get('typeCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
 
     this.lookupService.retrieveCurrentReleaseTypeCodes(this.year)
     .subscribe(result => {
@@ -212,6 +217,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     if (newValue) {
       this.releasePointForm.controls.statusYear.reset();
     }
+    this.releasePointForm.controls.statusYear.markAsTouched();
+    this.releasePointForm.controls.description.updateValueAndValidity();
+    this.setFormValidation();
   }
 
   isReleasePointFugitiveType() {
@@ -230,6 +238,15 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.setGasFlowRangeValidation();
     this.setGasVelocityRangeValidation();
     this.uomRequiredCheck();
+
+    if (this.releasePointForm.get('operatingStatusCode').value
+      && !this.releasePointForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+      this.releasePointForm.get('typeCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
+      this.releasePointForm.controls.typeCode.markAsTouched();
+    } else {
+      this.releasePointForm.get('typeCode').setValidators([Validators.required]);
+    }
+    this.releasePointForm.controls.typeCode.updateValueAndValidity();
 
     if (this.releaseType === this.fugitiveType) {
       this.releasePointForm.controls.stackHeight.disable();
@@ -455,12 +472,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const flowRate = control.get('exitGasFlowRate');
       const velocity = control.get('exitGasVelocity');
 
-      if (control.get('typeCode').value !== null && control.get('typeCode').value.description !== this.fugitiveType) {
-        if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
-          return { invalidVelocity: true };
+      if (control.get('operatingStatusCode').value && !control.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+        if (control.get('typeCode').value !== null && control.get('typeCode').value.description !== this.fugitiveType) {
+          if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
+            return { invalidVelocity: true };
+          }
         }
-        return null;
       }
+      return null;
     };
   }
 
@@ -665,4 +684,16 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
+  requiredIfStatusNotPS() {
+    return (formControl => {
+      if (!formControl.parent) {
+        return null;
+      }
+      if (this.releasePointForm.get('operatingStatusCode').value
+        && !this.releasePointForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+        return Validators.required(formControl);
+      }
+      return null;
+    });
+  }
 }
