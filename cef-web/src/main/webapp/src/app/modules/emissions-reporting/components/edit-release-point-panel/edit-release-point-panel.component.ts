@@ -168,7 +168,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     private releasePointService: ReleasePointService) { }
 
   ngOnInit() {
-    this.releasePointForm.get('typeCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
 
     this.lookupService.retrieveCurrentReleaseTypeCodes(this.year)
     .subscribe(result => {
@@ -239,6 +238,15 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.setGasFlowRangeValidation();
     this.setGasVelocityRangeValidation();
     this.uomRequiredCheck();
+
+    if (this.releasePointForm.get('operatingStatusCode').value
+      && !this.releasePointForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+      this.releasePointForm.get('typeCode').setValidators([this.releasePointForm.get('typeCode').validator, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
+      this.releasePointForm.controls.typeCode.markAsTouched();
+    } else {
+      this.releasePointForm.get('typeCode').setValidators([Validators.required]);
+    }
+    this.releasePointForm.controls.typeCode.updateValueAndValidity();
 
     if (this.releaseType === this.fugitiveType) {
       this.releasePointForm.controls.stackHeight.disable();
