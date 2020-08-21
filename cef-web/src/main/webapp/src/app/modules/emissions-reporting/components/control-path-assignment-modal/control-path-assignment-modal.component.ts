@@ -7,6 +7,9 @@ import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+const statusPermShutdown = 'PS';
+const statusTempShutdown = 'TS';
+
 @Component({
   selector: 'app-control-path-assignment-modal',
   templateUrl: './control-path-assignment-modal.component.html',
@@ -22,6 +25,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   controls: Control[];
   assignmentList: ControlAssignment[] = [];
   controlPathChildField: ControlPath;
+  tempShutdownControlWarning: string;
 
   controlPathAssignmentForm = this.fb.group({
     percentApportionment: ['', [Validators.required, Validators.min(0.1), Validators.max(100), Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')]],
@@ -177,6 +181,12 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     if (this.controlPathAssignmentForm.get('control').value) {
       controlList = this.assignmentList.filter(val => val.control && (val.control.id === this.controlPathAssignmentForm.get('control').value.id));
 
+      if (this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === statusTempShutdown) {
+        this.tempShutdownControlWarning = 'Warning: This Control Path is associated with the Temporarily Shutdown Control Device.';
+      } else {
+        this.tempShutdownControlWarning = null;
+      }
+
       if (this.edit && controlList && (this.selectedControlPathAssignment.control
       && this.selectedControlPathAssignment.control.id === this.controlPathAssignmentForm.get('control').value.id)) {
         if (this.controlPathAssignmentForm.get('control').value.assignments && this.controlPathAssignmentForm.get('control').value.assignments.controlPathChild !== null && controlList.length > 1) {
@@ -256,6 +266,9 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     }
     if (!controlField && !controlPathChildField) {
       return { controlAndPathNotSelected: true};
+    }
+    if (controlField && !controlPathChildField && controlField.operatingStatusCode.code === statusPermShutdown) {
+      return { permShutdownControl: true };
     }
     if ((controlField || controlPathChildField) && (sequenceNumber && percentApportionment)) {
       formGroup.status = 'VALID';
