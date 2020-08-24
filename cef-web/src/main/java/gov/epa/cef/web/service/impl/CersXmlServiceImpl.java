@@ -9,6 +9,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
@@ -17,6 +18,8 @@ import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapper;
+import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapper;
+import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapper;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlMeasureDataType;
@@ -32,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -55,14 +60,25 @@ public class CersXmlServiceImpl implements CersXmlService {
 
     private final CersDataTypeMapper cersMapper;
 
+    private final CersEmissionsUnitMapper euMapper;
+
+    private final CersReleasePointMapper rpMapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
 	CersXmlServiceImpl(UserService userService,
 					   EmissionsReportRepository reportRepo,
-					   CersDataTypeMapper cersMapper) {
+					   CersDataTypeMapper cersMapper,
+					   CersEmissionsUnitMapper euMapper,
+					   CersReleasePointMapper rpMapper) {
 
     	this.userService = userService;
     	this.reportRepo = reportRepo;
     	this.cersMapper = cersMapper;
+    	this.euMapper = euMapper;
+    	this.rpMapper = rpMapper;
 	}
 
 	/* (non-Javadoc)
@@ -101,6 +117,43 @@ public class CersXmlServiceImpl implements CersXmlService {
                         }).filter(eu -> "OP".equals(eu.getOperatingStatusCode().getCode()) && !eu.getEmissionsProcesses().isEmpty())
                         .collect(Collectors.toList()));
                 });
+            } else if ("FacilityInventory".contentEquals(submissionStatus.dataCategory())) {
+                source.getFacilitySites().forEach(fs -> {
+
+                    // remove extra information from PS units
+                    fs.setEmissionsUnits(fs.getEmissionsUnits().stream()
+                        .map(eu -> {
+
+                            if ("PS".equals(eu.getOperatingStatusCode().getCode())) {
+                                EmissionsUnit result = this.euMapper.emissionsUnitToPSEmissionsUnit(eu);
+                                return result;
+                            } else {
+                                // remove extra information from PS processes
+                                eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
+                                    .map(ep -> {
+
+                                        if ("PS".equals(ep.getOperatingStatusCode().getCode())) {
+                                            EmissionsProcess result = this.euMapper.processToPsEmissionsProcess(ep);
+                                            return result;
+                                        }
+                                        return ep;
+                                    }).collect(Collectors.toList()));
+                            }
+                            return eu;
+                        }).collect(Collectors.toList()));
+
+                    // remove extra information from PS release points
+                    fs.setReleasePoints(fs.getReleasePoints().stream()
+                        .map(rp -> {
+
+                            if ("PS".equals(rp.getOperatingStatusCode().getCode())) {
+                                ReleasePoint result = this.rpMapper.releasePointToPSReleasePoint(rp);
+                                return result;
+                            }
+                            return rp;
+                        }).collect(Collectors.toList()));
+
+                });
             }
         }
 
@@ -116,6 +169,12 @@ public class CersXmlServiceImpl implements CersXmlService {
         }
 
         cers.setUserIdentifier(userService.getCurrentUser().getEmail());
+
+        // check if this exists for unit tests
+        if (this.entityManager != null) {
+            // detach entity from session so that the dirty entity won't get picked up by other database calls
+            entityManager.detach(source);
+        }
 
         return cers;
     }
@@ -233,8 +292,8 @@ public class CersXmlServiceImpl implements CersXmlService {
         for (Entry<String, List<ControlPollutant>> entry : pollutantMap.entrySet()) {
 
             ControlPollutantDataType cp = new ControlPollutantDataType();
-            cp.setPercentControlMeasuresReductionEfficiency(new BigDecimal(entry.getValue().stream()
-                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction))).setScale(1, RoundingMode.HALF_UP));
+            cp.setPercentControlMeasuresReductionEfficiency(BigDecimal.valueOf((entry.getValue().stream()
+                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction)))).setScale(1, RoundingMode.HALF_UP));
             cp.setPollutantCode(entry.getKey());
             ca.getControlPollutant().add(cp);
         }
@@ -255,7 +314,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 
         for (ControlAssignment assignment : path.getAssignments()) {
 
-            if (assignment.getControl() != null) {
+            if (assignment.getControl() != null && "OP".equals(assignment.getControl().getOperatingStatusCode().getCode())) {
                 result.add(assignment.getControl());
 
 //                if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {

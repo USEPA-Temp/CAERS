@@ -108,7 +108,9 @@ public class ControlServiceImpl implements ControlService {
     	Control control = repo.findById(controlId).orElse(null);
     	List<EmissionsReportItemDto> emissionsReportItems = new ArrayList<EmissionsReportItemDto>();
     	if (control != null) {
-    		createReportItems(control, emissionsReportItems);
+    	    for (ControlAssignment assignment : control.getAssignments()) {
+    	        createReportItems(assignment.getControlPath(), emissionsReportItems);
+            }
     	}
     	return emissionsReportItems;
     }
@@ -147,50 +149,47 @@ public class ControlServiceImpl implements ControlService {
     }
     
     /***
-     * Create and populate the emissions report items for the control's path and parent paths.
-     * @param control
-     * @param controlComponentDto
+     * Create and populate the emissions report items for the control path and parent paths.
+     * @param path
+     * @param emissionsReportItems
      */
-	private void createReportItems(Control control, List<EmissionsReportItemDto> emissionsReportItems) {
-		for (ControlAssignment assignment : control.getAssignments()) {
-			ControlPath path = assignment.getControlPath();
-			List<ControlAssignment> parentAssignments = assignmentRepo.findByControlPathChildId(path.getId());
-			for (ControlAssignment parentAssignment : parentAssignments) {
-				if (parentAssignment.getControl() != null) {
-					createReportItems(parentAssignment.getControl(), emissionsReportItems);
-				}
+	private void createReportItems(ControlPath path, List<EmissionsReportItemDto> emissionsReportItems) {
+		List<ControlAssignment> parentAssignments = assignmentRepo.findByControlPathChildId(path.getId());
+		for (ControlAssignment parentAssignment : parentAssignments) {
+			if (parentAssignment.getControlPath() != null) {
+				createReportItems(parentAssignment.getControlPath(), emissionsReportItems);
+			}
+		}
+		
+		for (ReleasePointAppt rpa : path.getReleasePointAppts()) {
+			if (!isDuplicateItem(rpa.getEmissionsProcess().getId(), "process", emissionsReportItems)) {
+				EmissionsReportItemDto eri = new EmissionsReportItemDto();
+				eri.setDescription(rpa.getEmissionsProcess().getDescription());
+				eri.setId(rpa.getEmissionsProcess().getId());
+				eri.setIdentifier(rpa.getEmissionsProcess().getEmissionsProcessIdentifier());
+				eri.setType("process");
+				eri.setTypeDesc("Emissions Process");
+				emissionsReportItems.add(eri);
 			}
 			
-			for (ReleasePointAppt rpa : path.getReleasePointAppts()) {
-				if (!isDuplicateItem(rpa.getEmissionsProcess().getId(), "process", emissionsReportItems)) {
-					EmissionsReportItemDto eri = new EmissionsReportItemDto();
-					eri.setDescription(rpa.getEmissionsProcess().getDescription());
-					eri.setId(rpa.getEmissionsProcess().getId());
-					eri.setIdentifier(rpa.getEmissionsProcess().getEmissionsProcessIdentifier());
-					eri.setType("process");
-					eri.setTypeDesc("Emissions Process");
-					emissionsReportItems.add(eri);
-				}
-				
-				if (!isDuplicateItem(rpa.getReleasePoint().getId(), "release", emissionsReportItems)) {
-					EmissionsReportItemDto eri = new EmissionsReportItemDto();
-					eri.setDescription(rpa.getReleasePoint().getDescription());
-					eri.setId(rpa.getReleasePoint().getId());
-					eri.setIdentifier(rpa.getReleasePoint().getReleasePointIdentifier());
-					eri.setType("release");
-					eri.setTypeDesc("Release Point");
-					emissionsReportItems.add(eri);
-				}
-				
-				if (!isDuplicateItem(rpa.getEmissionsProcess().getEmissionsUnit().getId(), "emissionUnit", emissionsReportItems)) {
-					EmissionsReportItemDto eri = new EmissionsReportItemDto();
-					eri.setDescription(rpa.getEmissionsProcess().getEmissionsUnit().getDescription());
-					eri.setId(rpa.getEmissionsProcess().getEmissionsUnit().getId());
-					eri.setIdentifier(rpa.getEmissionsProcess().getEmissionsUnit().getUnitIdentifier());
-					eri.setType("emissionUnit");
-					eri.setTypeDesc("Emissions Unit");
-					emissionsReportItems.add(eri);
-				}
+			if (!isDuplicateItem(rpa.getReleasePoint().getId(), "release", emissionsReportItems)) {
+				EmissionsReportItemDto eri = new EmissionsReportItemDto();
+				eri.setDescription(rpa.getReleasePoint().getDescription());
+				eri.setId(rpa.getReleasePoint().getId());
+				eri.setIdentifier(rpa.getReleasePoint().getReleasePointIdentifier());
+				eri.setType("release");
+				eri.setTypeDesc("Release Point");
+				emissionsReportItems.add(eri);
+			}
+			
+			if (!isDuplicateItem(rpa.getEmissionsProcess().getEmissionsUnit().getId(), "emissionUnit", emissionsReportItems)) {
+				EmissionsReportItemDto eri = new EmissionsReportItemDto();
+				eri.setDescription(rpa.getEmissionsProcess().getEmissionsUnit().getDescription());
+				eri.setId(rpa.getEmissionsProcess().getEmissionsUnit().getId());
+				eri.setIdentifier(rpa.getEmissionsProcess().getEmissionsUnit().getUnitIdentifier());
+				eri.setType("emissionUnit");
+				eri.setTypeDesc("Emissions Unit");
+				emissionsReportItems.add(eri);
 			}
 		}
 		

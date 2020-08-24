@@ -64,12 +64,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.max(2050),
       numberValidator()
     ]],
-    latitude: ['', [
+    latitude: [null, [
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-90),
       Validators.max(90),
     ]],
-    longitude: ['', [
+    longitude: [null, [
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
       Validators.min(-180),
       Validators.max(180),
@@ -143,7 +143,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.facilitySiteStatusCheck(),
     this.exitGasFlowUomCheck(),
     this.exitGasVelocityUomCheck(),
-    this.releasePointIdentifierCheck()
+    this.releasePointIdentifierCheck(),
+    this.latLongRequiredCheck()
     ]
   });
 
@@ -364,6 +365,23 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.fugitiveHeightUomCode.updateValueAndValidity();
       }
     });
+  }
+
+  // sets lat and long to required if one of the optional fields has a value
+  latLongRequiredCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if (control.get('latitude').value && !control.get('longitude').value) {
+        control.get('longitude').markAsTouched();
+        control.get('longitude').setErrors({requiredCoordinate: true});
+      } else if (control.get('longitude').value && !control.get('latitude').value) {
+        control.get('latitude').markAsTouched();
+        control.get('latitude').setErrors({requiredCoordinate: true});
+      } else if (!control.get('latitude').value && !control.get('longitude').value) {
+        control.get('latitude').setErrors(null);
+        control.get('longitude').setErrors(null);
+      }
+      return null;
+    };
   }
 
   // QA Check - exit gas flow rate and uom must be submitted together

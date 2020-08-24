@@ -4,10 +4,13 @@ import gov.epa.cef.web.domain.ReleasePoint;
 import net.exchangenetwork.schema.cer._1._2.GeographicCoordinatesDataType;
 import net.exchangenetwork.schema.cer._1._2.IdentificationDataType;
 import net.exchangenetwork.schema.cer._1._2.ReleasePointDataType;
+
+import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +18,13 @@ import java.util.List;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = {})
 public interface CersReleasePointMapper {
 
+	@AfterMapping
+    default void afterMapping(@MappingTarget ReleasePointDataType target, ReleasePoint source) {
+        if (source.getLatitude() == null || source.getLongitude() == null) {
+            target.setReleasePointGeographicCoordinates(null);
+        }
+    }
+	
     @Mapping(source="typeCode.code", target="releasePointTypeCode")
     @Mapping(source="description", target="releasePointDescription")
     @Mapping(source="stackHeight", target="releasePointStackHeightMeasure")
@@ -50,6 +60,13 @@ public interface CersReleasePointMapper {
     @Mapping(source="releasePointIdentifier", target="identifier")
     @Mapping(source="facilitySite.programSystemCode.code", target="programSystemCode")
     IdentificationDataType identificationFromReleasePoint(ReleasePoint source);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(source="facilitySite", target="facilitySite")
+    @Mapping(source="operatingStatusCode", target="operatingStatusCode")
+    @Mapping(source="statusYear", target="statusYear")
+    @Mapping(source="releasePointIdentifier", target="releasePointIdentifier")
+    ReleasePoint releasePointToPSReleasePoint(ReleasePoint source);
 
     default List<IdentificationDataType> identificationListFromReleasePoint(ReleasePoint source) {
         if (source == null) {

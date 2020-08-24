@@ -33,11 +33,15 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
   ngOnInit() {
 
     this.tableData.forEach(rp => {
-      this.reportingPeriodForm.addControl('' + rp.reportingPeriodId, new FormControl(rp.calculationParameterValue, { validators: [
-        Validators.required,
-        Validators.min(0),
-        Validators.pattern('^[0-9]*\\.?[0-9]+$')
-      ], updateOn: 'blur'}));
+
+      const disabled = rp.operatingStatusCode.code === 'TS' || rp.operatingStatusCode.code === 'PS';
+      this.reportingPeriodForm.addControl('' + rp.reportingPeriodId, new FormControl(
+        {value: rp.calculationParameterValue, disabled},
+        { validators: [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern('^[0-9]*\\.?[0-9]+$')
+        ], updateOn: 'blur'}));
     });
 
     this.route.paramMap

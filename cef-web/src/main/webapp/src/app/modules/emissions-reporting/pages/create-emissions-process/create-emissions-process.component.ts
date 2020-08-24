@@ -46,6 +46,11 @@ export class CreateEmissionsProcessComponent implements OnInit {
           this.emissionsUnit = unit;
         });
     });
+
+    this.route.data
+      .subscribe(data => {
+        this.sharedService.emitChange(data.facilitySite);
+      });
   }
 
   isValid() {

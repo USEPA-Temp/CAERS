@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.config.CefConfig;
-import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.service.dto.PropertyDto;
 
 @RestController
@@ -18,7 +18,7 @@ import gov.epa.cef.web.service.dto.PropertyDto;
 public class PropertyApi {
 
     @Autowired
-    private PropertyProvider propertyProvider;
+    private AdminPropertyProvider propertyProvider;
     
     @Autowired
     private CefConfig cefConfig;

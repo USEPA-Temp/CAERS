@@ -65,7 +65,7 @@ public class ControlPathServiceImpl implements ControlPathService {
     
     @Override
     public List<ControlPathDto> retrieveForFacilitySite(Long facilitySiteId) {
-    	List<ControlPath> result = repo.findByFacilitySiteIdOrderByDescription(facilitySiteId);
+    	List<ControlPath> result = repo.findByFacilitySiteIdOrderByPathId(facilitySiteId);
         return mapper.toDtoList(result);    }
     
 	@Override
@@ -123,7 +123,7 @@ public class ControlPathServiceImpl implements ControlPathService {
 		
 		if (paths != null) {
 	        for (ControlPath path : paths) {
-	        	childPaths = getChildPaths(path);
+	        	childPaths.addAll(getChildPaths(path));
 	        }
         }
 		

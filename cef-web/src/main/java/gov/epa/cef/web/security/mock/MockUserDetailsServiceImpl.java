@@ -36,7 +36,11 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
 
     private static final Long ORGANIZATION_ID = 86819L;
 
-    private static final Long USER_ROLE_ID = 220632L;
+    //private static final Long USER_ROLE_ID = 220632L; //Preparer
+    //private static final Long USER_ROLE_ID = 220231L; //Certifier
+    //private static final Long USER_ROLE_ID = 225686L; //Reviewer GA
+    //private static final Long USER_ROLE_ID = 240879L; //Reviewer DC
+    private static final Long USER_ROLE_ID = 238459L; //Admin
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -69,7 +73,10 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
             try {
 
                 logger.info("Using hard coded user for authentication/authorization");
-                RoleType role = AppRole.RoleType.PREPARER;
+                //RoleType role = AppRole.RoleType.PREPARER;
+                //RoleType role = AppRole.RoleType.NEI_CERTIFIER;
+                //RoleType role = AppRole.RoleType.REVIEWER;
+                RoleType role = AppRole.RoleType.CAERS_ADMIN;
 
                 String userId = "thomas.fesperman";
                 List<GrantedAuthority> roles = this.securityService.createUserRoles(role, USER_ROLE_ID);

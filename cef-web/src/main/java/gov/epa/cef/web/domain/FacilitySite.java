@@ -181,6 +181,38 @@ public class FacilitySite extends BaseAuditEntity {
             this.controlPaths.add(new ControlPath(this, controlPath));
         }
         
+        for (ControlPath newControlPath: this.controlPaths){
+        	for (ControlPath originalControlPaths : originalFacilitySite.getControlPaths()) {
+        		for (ControlAssignment originalControlAssignment : originalControlPaths.getAssignments()) {
+        			Control c = null;
+    	        	ControlPath cpc = null;
+        		
+		        	for(Control newControl : this.controls) {
+		        		if (originalControlAssignment.getControl() != null && newControl.getId().equals(originalControlAssignment.getControl().getId())
+		        				&& originalControlAssignment.getControlPath().getPathId().equals(newControlPath.getPathId())) {
+		        			c = newControl;
+		        			break;
+		        		}
+		        	}
+		        	
+		        	//if the original control assignment has a child control path, then loop through the
+		        	//control paths associated with the new facility, find the appropriate one, and
+		        	//associate it to this control assignment - otherwise leave child path as null
+		        	if (originalControlAssignment.getControlPathChild() != null) {
+		            	for(ControlPath newControlPathChild : this.controlPaths) {
+		            		if (newControlPathChild.getPathId().equals(originalControlAssignment.getControlPathChild().getPathId())
+		            				&& newControlPath.getPathId().equals(originalControlAssignment.getControlPath().getPathId())) {
+		            			cpc = newControlPathChild;
+		            			break;
+		            		}
+		            	}
+		        	}
+		        	if(c != null || cpc != null){
+		        		newControlPath.getAssignments().add(new ControlAssignment(newControlPath, c, cpc, originalControlAssignment));
+		        	}
+        		}
+        	}
+        }
         for (EmissionsUnit emissionsUnit : originalFacilitySite.getEmissionsUnits()) {
         	this.emissionsUnits.add(new EmissionsUnit(this, emissionsUnit));
         }

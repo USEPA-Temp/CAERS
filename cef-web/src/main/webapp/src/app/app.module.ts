@@ -42,6 +42,7 @@ import { EisTransactionsComponent } from './modules/dashboards/pages/eis-transac
 import { SortByPipe } from './shared/pipes/sort-by.pipe';
 import { DataFilterPipe } from './shared/pipes/data-filter.pipe';
 import { RecalculateEmissionTonsModalComponent } from './modules/dashboards/components/recalculate-emission-tons-modal/recalculate-emission-tons-modal.component';
+import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import { RecalculateEmissionTonsModalComponent } from './modules/dashboards/comp
     EisTransactionsComponent,
     SortByPipe,
     DataFilterPipe,
-    RecalculateEmissionTonsModalComponent
+    RecalculateEmissionTonsModalComponent,
+    SltPropertiesComponent
   ],
   imports: [
     BrowserModule,

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import gov.epa.cef.web.config.CdxConfig;
 import gov.epa.cef.web.exception.VirusScanException;
 import gov.epa.cef.web.provider.system.IPropertyKey;
-import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.util.TempFile;
 import net.exchangenetwork.wsdl.virusscan._1.ScanFilePortType;
@@ -29,7 +29,7 @@ public class VirusScanClient extends AbstractClient {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final PropertyProvider propertyProvider;
+    private final AdminPropertyProvider propertyProvider;
 
     private final CdxConfig cdxConfig;
 
@@ -39,7 +39,7 @@ public class VirusScanClient extends AbstractClient {
 
     @Autowired
     VirusScanClient(NotificationService notificationService,
-                    PropertyProvider propertyProvider,
+                    AdminPropertyProvider propertyProvider,
                     CdxConfig cdxConfig,
                     VirusScanConfig virusScanConfig) {
 

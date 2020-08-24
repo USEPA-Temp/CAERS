@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import gov.epa.cef.web.config.AppPropertyName;
-import gov.epa.cef.web.provider.system.PropertyProvider;
+import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.SccService;
 
@@ -23,7 +23,7 @@ public class SccUpdateTask implements Runnable {
     private NotificationService notificationService;
 
     @Autowired
-    private PropertyProvider propertyProvider;
+    private AdminPropertyProvider propertyProvider;
 
     /**
      * Run task to retrieve SCC codes from the webservice that have been updated since this was

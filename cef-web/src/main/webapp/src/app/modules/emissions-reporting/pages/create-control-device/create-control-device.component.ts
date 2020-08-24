@@ -31,6 +31,7 @@ export class CreateControlDeviceComponent implements OnInit {
     this.route.data
       .subscribe(data => {
         this.facilitySite = data.facilitySite;
+        this.sharedService.emitChange(data.facilitySite);
       });
 
     this.route.paramMap

@@ -109,6 +109,14 @@
         </div> 
     </div>
 
+    <div class="row">
+        <div class="col-sm-6 col-md-10">
+            <div class="validation-message" *ngIf="releasePointForm.get('latitude').errors?.requiredCoordinate || releasePointForm.get('longitude').errors?.requiredCoordinate">
+                Latitude and Longitude must both, or neither, contain values in order to save.
+            </div>
+        </div>
+    </div>
+
     <div class="row pb-1">
         <div class="col-sm-3">
             <fa-icon class="mt-2" title="The velocity of an exit gas stream. If it is a stack release point then either Exit Gas Velocity Measure or Exit Gas Flow Rate is required. Must be between 0.001 ft/s and 1000 ft/s." [icon]="['fas', 'question-circle']"></fa-icon>

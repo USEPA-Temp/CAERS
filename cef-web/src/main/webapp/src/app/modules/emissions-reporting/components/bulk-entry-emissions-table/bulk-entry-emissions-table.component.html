@@ -24,6 +24,9 @@
             <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1">
               {{item.emissionsProcessIdentifier}}
               <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.emissionsProcessDescription"></fa-icon>
+              <span *ngIf="item.operatingStatusCode.code === 'TS'">
+                <fa-icon class="mt-2 ml-1" [icon]="['fas', 'power-off']" title="This process is Temporarily Shutdown and cannot be edited."></fa-icon>
+              </span>
             </td>
           </tr>
             <ng-container *ngFor="let emission of item.emissions">
@@ -44,7 +47,7 @@
               <td>
                 <div class="row">
                   <div class="col-sm-12 col-lg-8">
-                  <input type="number" class="form-control" id="{{emission.id + 'Input'}}" formControlName="{{emission.id}}" [readOnly]="readOnlyMode"
+                  <input type="number" class="form-control" id="{{emission.id + 'Input'}}" formControlName="{{emission.id}}" [readOnly]="readOnlyMode" onclick="this.focus();"
                           [attr.aria-label]="'Total Emissions for ' + emission.pollutant?.pollutantName">
                     <app-validation-message [control]="emissionForm.get('' + emission.id)"></app-validation-message> 
                   </div>

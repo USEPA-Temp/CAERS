@@ -17,7 +17,7 @@ export class AdminPropertyService {
     const url = `${this.baseUrl}/${name}`;
     return this.http.get<AppProperty>(url);
   }
-  
+
   retrieveAll(): Observable<AppProperty[]> {
     return this.http.get<AppProperty[]>(this.baseUrl);
   }
