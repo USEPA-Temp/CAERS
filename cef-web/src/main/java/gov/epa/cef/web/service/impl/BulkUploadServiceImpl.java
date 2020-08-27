@@ -79,6 +79,16 @@ import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 import gov.epa.cef.web.util.TempFile;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +96,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -94,6 +108,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -102,6 +117,9 @@ import java.util.stream.Collectors;
 public class BulkUploadServiceImpl implements BulkUploadService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    // TODO: make a property
+    private static final String EXCEL_FILE_PATH = "./src/main/resources/excel/CEF_BulkUpload_Template.xlsx";
 
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngineRepo;
@@ -255,6 +273,123 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         reportDto.setFacilityContacts(uploadMapper.facilitySiteContactToDtoList(facilityContacts));
 
         return reportDto;
+    }
+
+    public void generateExcel(Long reportId, OutputStream outputStream) {
+
+        logger.info("Begin generate excel");
+
+        EmissionsReportBulkUploadDto uploadDto = this.generateBulkUploadDto(reportId);
+
+        logger.info("Begin file manipulation");
+
+        try (FileInputStream is = new FileInputStream(new File(EXCEL_FILE_PATH));
+             TempFile tempFile = TempFile.from(is, UUID.randomUUID().toString());
+             XSSFWorkbook wb = XSSFWorkbookFactory.createWorkbook(tempFile.getFile(), false)) {
+
+            // locked cells will return null and cause null pointer exceptions without this
+            wb.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
+
+            XSSFFormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
+ 
+            XSSFSheet facilitySheet = wb.getSheetAt(0);
+//            facilitySheet.disableLocking();
+ 
+            if (facilitySheet != null) {
+                int rowCount = facilitySheet.getLastRowNum();
+//                logger.info("" + rowCount);
+
+                for (FacilitySiteBulkUploadDto fs : uploadDto.getFacilitySites()) {
+                    Row row = facilitySheet.getRow(rowCount);
+
+                    row.getCell(2).setCellValue(fs.getFrsFacilityId());
+                    row.getCell(3).setCellValue(fs.getAltSiteIdentifier());
+                    row.getCell(4).setCellValue(fs.getFacilityCategoryCode());
+//                    row.getCell(5).setCellValue(fs.getFacilitySourceTypeCode());
+                    if (fs.getFacilitySourceTypeCode() != null) {
+                        row.getCell(6).setCellFormula(generateLookupFormula(wb, "FacilitySourceTypeCode", fs.getFacilitySourceTypeCode(), false));
+                        formulaEvaluator.evaluateInCell(row.getCell(6));
+                    }
+                    row.getCell(7).setCellValue(fs.getName());
+                    row.getCell(8).setCellValue(fs.getDescription());
+//                    row.getCell(9).setCellValue(fs.getOperatingStatusCode());
+                    if (fs.getOperatingStatusCode() != null) {
+                        row.getCell(10).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", fs.getOperatingStatusCode(), true));
+                        formulaEvaluator.evaluateInCell(row.getCell(10));
+                    }
+                    row.getCell(11).setCellValue(fs.getStatusYear());
+//                    row.getCell(12).setCellValue(fs.getProgramSystemCode());
+                    if (fs.getProgramSystemCode() != null) {
+                        row.getCell(13).setCellFormula(generateLookupFormula(wb, "ProgramSystemCode", fs.getProgramSystemCode(), true));
+                        formulaEvaluator.evaluateInCell(row.getCell(13));
+                    }
+                    row.getCell(14).setCellValue(fs.getStreetAddress());
+                    row.getCell(15).setCellValue(fs.getCity());
+                    row.getCell(16).setCellValue(fs.getStateFipsCode());
+                    row.getCell(17).setCellValue(fs.getStateCode());
+                    row.getCell(18).setCellValue(fs.getCountyCode());
+                    row.getCell(19).setCellValue(String.format("%s (%s)", fs.getCounty(), fs.getStateCode()));
+//                    row.getCell(20).setCellValue(fs.getCountryCode());
+                    row.getCell(21).setCellValue(fs.getPostalCode());
+                    row.getCell(22).setCellValue(fs.getLatitude());
+                    row.getCell(23).setCellValue(fs.getLongitude());
+                    row.getCell(24).setCellValue(fs.getMailingStreetAddress());
+                    row.getCell(25).setCellValue(fs.getMailingCity());
+                    row.getCell(26).setCellValue(fs.getMailingStateCode());
+                    row.getCell(27).setCellValue(fs.getMailingPostalCode());
+//                    row.getCell(28).setCellValue(fs.getMailingCountryCode());
+                    row.getCell(29).setCellValue(fs.getEisProgramId());
+//                    row.getCell(30).setCellValue(fs.getTribalCode());
+                    if (fs.getTribalCode() != null) {
+                        row.getCell(31).setCellFormula(generateLookupFormula(wb, "TribalCode", fs.getTribalCode(), false));
+                        formulaEvaluator.evaluateInCell(row.getCell(31));
+                    }
+
+                    rowCount++;
+
+                }
+            }
+
+            XSSFSheet euSheet = wb.getSheetAt(4);
+
+            if (euSheet != null) {
+                int rowCount = 23;
+//                logger.info("" + rowCount);
+
+                for (EmissionsUnitBulkUploadDto eu : uploadDto.getEmissionsUnits()) {
+                    Row row = euSheet.getRow(rowCount);
+
+                    row.getCell(2).setCellValue(eu.getUnitIdentifier());
+
+                    rowCount++;
+     
+                }
+            }
+ 
+            wb.setForceFormulaRecalculation(true);
+            wb.write(outputStream);
+            wb.close();
+
+            logger.info("Finish generate excel");
+
+        } catch (IOException | EncryptedDocumentException | InvalidFormatException ex) {
+
+            throw new IllegalStateException(ex);
+        }
+
+    }
+
+    private String generateLookupFormula(Workbook workbook, String sheetName, String value, boolean text) {
+
+        int rowCount = workbook.getSheet(sheetName).getLastRowNum();
+        String result;
+        if (text) {
+            result = String.format("INDEX(%s!$A$2:$A$%d,MATCH(\"%s\",%s!$B$2:$B$%d,0))", sheetName, rowCount, value, sheetName, rowCount);
+        } else {
+            result = String.format("INDEX(%s!$A$2:$A$%d,MATCH(%s,%s!$B$2:$B$%d,0))", sheetName, rowCount, value, sheetName, rowCount);
+        }
+        //logger.info(result);
+        return result;
     }
 
     @Override

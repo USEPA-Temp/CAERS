@@ -50,7 +50,9 @@ public interface BulkUploadMapper {
     EmissionsReportBulkUploadDto emissionsReportToDto(EmissionsReport source);
 
     @Mapping(source="countyCode.countyCode", target="countyCode")
+    @Mapping(source="countyCode.name", target="county")
     @Mapping(source="stateCode.uspsCode", target="stateCode")
+    @Mapping(source="stateCode.code", target="stateFipsCode")
     @Mapping(source="mailingStateCode.uspsCode", target="mailingStateCode")
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
     @Mapping(source="facilitySourceTypeCode.code", target="facilitySourceTypeCode")

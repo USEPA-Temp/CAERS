@@ -29,6 +29,7 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotBlank;
@@ -257,6 +259,24 @@ public class EmissionsReportApi {
             uploadService.generateBulkUploadDto(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Generate an excel spreadsheet export for a report
+     *
+     * @param reportId
+     * @return
+     */
+    @GetMapping(value = "/export/{reportId}/excel")
+    public ResponseEntity<StreamingResponseBody> exportReportExcel(
+        @NotNull @PathVariable Long reportId) {
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + reportId + "_export.xlsx\"")
+                .body(outputStream -> {
+                    uploadService.generateExcel(reportId, outputStream);
+                });
     }
 
     /**
