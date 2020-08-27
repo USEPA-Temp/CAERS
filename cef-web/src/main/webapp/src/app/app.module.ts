@@ -43,6 +43,8 @@ import { SortByPipe } from './shared/pipes/sort-by.pipe';
 import { DataFilterPipe } from './shared/pipes/data-filter.pipe';
 import { RecalculateEmissionTonsModalComponent } from './modules/dashboards/components/recalculate-emission-tons-modal/recalculate-emission-tons-modal.component';
 import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
+import { AdminUserFeedbackComponent } from './modules/dashboards/pages/admin-user-feedback/admin-user-feedback.component';
+import { UserFeedbackReportModalComponent } from './modules/dashboards/components/user-feedback-report-modal/user-feedback-report-modal.component';
 
 
 @NgModule({
@@ -68,12 +70,14 @@ import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-pro
     HelpPageComponent,
     AdminPropertiesComponent,
     AdminAnnouncementPropertiesComponent,
+    AdminUserFeedbackComponent,
     ReviewerNavComponent,
     EisSubmissionComponent,
     EisTransactionsComponent,
     SortByPipe,
     DataFilterPipe,
     RecalculateEmissionTonsModalComponent,
+    UserFeedbackReportModalComponent,
     SltPropertiesComponent
   ],
   imports: [
@@ -98,7 +102,8 @@ import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-pro
     TimeoutModalComponent,
     ConfirmationDialogComponent,
     SubmissionReviewModalComponent,
-    RecalculateEmissionTonsModalComponent
+    RecalculateEmissionTonsModalComponent,
+    UserFeedbackReportModalComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: GlobalErrorHandlerService},

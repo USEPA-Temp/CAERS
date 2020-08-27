@@ -15,6 +15,7 @@ import { AdminAuthGuard } from 'src/app/core/guards/admin-auth.guard';
 import { ReviewerAuthGuard } from 'src/app/core/guards/reviewer-auth.guard';
 import {EisTransactionsComponent} from "src/app/modules/dashboards/pages/eis-transactions/eis-transactions.component";
 import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
+import { AdminUserFeedbackComponent } from './modules/dashboards/pages/admin-user-feedback/admin-user-feedback.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -60,6 +61,10 @@ const routes: Routes = [
         path: 'upload',
         component: BulkUploadComponent,
         data: { title: 'Bulk Upload' },
+      }, {
+        path: 'userFeedback',
+        component: AdminUserFeedbackComponent,
+        data: { title: 'Admin User Feedback' },
       }, {
         path: '',
         redirectTo: 'properties',
