@@ -9,7 +9,7 @@ import gov.epa.cef.web.repository.UserFeedbackRepository;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.UserFeedbackService;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
-import gov.epa.cef.web.service.dto.UserFeedbackStatsDto;
+import gov.epa.cef.web.service.dto.IUserFeedbackStatsDto;
 import gov.epa.cef.web.service.mapper.UserFeedbackMapper;
 
 import java.util.List;
@@ -56,9 +56,9 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 		return userFeedbackMapper.toDtoList(userFeedback);
 	}
 	
-	public UserFeedbackStatsDto.FeedbackStats retrieveStatsByYearAndAgency(Short year, String agency) {
+	public IUserFeedbackStatsDto retrieveStatsByYearAndAgency(Short year, String agency) {
 		
-		UserFeedbackStatsDto.FeedbackStats userFeedback = agency.contentEquals("ALL_AGENCIES")
+		IUserFeedbackStatsDto userFeedback = agency.contentEquals("ALL_AGENCIES")
 	            ? this.userFeedbackRepo.findAvgByYear(year) 
 	            : this.userFeedbackRepo.findAvgByYearAndAgency(year, agency);
 	            

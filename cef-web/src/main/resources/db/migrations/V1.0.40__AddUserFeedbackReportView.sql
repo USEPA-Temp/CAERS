@@ -5,6 +5,14 @@ alter table user_feedback
 	add year SMALLINT,
 	add user_name varchar(255);
 
+CREATE INDEX i_user_feedback_year
+    ON user_feedback USING btree
+    (year ASC NULLS LAST);
+    
+CREATE INDEX i_user_feedback_year_and_agency_code
+    ON user_feedback USING btree
+    (year ASC NULLS LAST, agency_code ASC NULLS LAST);
+
 /* create temp table with desired data */
 SELECT 
 	er.id as report_id, 

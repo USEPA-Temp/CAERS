@@ -1,9 +1,13 @@
 package gov.epa.cef.web.service.dto;
 
-public class UserFeedbackStatsDto {
+/**
+ * Created interface to use Spring Data projections to retrieve results from 
+ * SQL queries with aggregate functions.
+ * https://www.baeldung.com/jpa-queries-custom-result-with-aggregation-functions
+ */
 
-	public interface FeedbackStats {
-		
+public interface IUserFeedbackStatsDto {
+
 		Long getIntuitiveRateAvg();
 	    Long getDataEntryScreensAvg();
 	    Long getDataEntryBulkUploadAvg();
@@ -11,6 +15,5 @@ public class UserFeedbackStatsDto {
 	    Long getControlsAndControlPathAssignAvg();
 	    Long getQualityAssuranceChecksAvg();
 	    Long getOverallReportingTimeAvg();
-	}
-
+	    
 }

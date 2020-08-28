@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.service.UserFeedbackService;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
-import gov.epa.cef.web.service.dto.UserFeedbackStatsDto;
+import gov.epa.cef.web.service.dto.IUserFeedbackStatsDto;
 
 
 @RestController
@@ -63,10 +63,10 @@ public class UserFeedbackApi {
     @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     @GetMapping(value = "/stats/byYearAndAgency")
     @ResponseBody
-    public ResponseEntity<UserFeedbackStatsDto.FeedbackStats> retrieveStatsByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
+    public ResponseEntity<IUserFeedbackStatsDto> retrieveStatsByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
     	
-    	UserFeedbackStatsDto.FeedbackStats result = userFeedbackService.retrieveStatsByYearAndAgency(year, agency);
-        return new ResponseEntity<UserFeedbackStatsDto.FeedbackStats>(result, HttpStatus.OK);
+    	IUserFeedbackStatsDto result = userFeedbackService.retrieveStatsByYearAndAgency(year, agency);
+        return new ResponseEntity<IUserFeedbackStatsDto>(result, HttpStatus.OK);
     }
     
     /**

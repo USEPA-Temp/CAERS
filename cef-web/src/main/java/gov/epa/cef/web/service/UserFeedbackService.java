@@ -3,7 +3,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
-import gov.epa.cef.web.service.dto.UserFeedbackStatsDto;
+import gov.epa.cef.web.service.dto.IUserFeedbackStatsDto;
 
 public interface UserFeedbackService {
 	
@@ -26,7 +26,7 @@ public interface UserFeedbackService {
      * Retrieve stats for selected year and agency code
      * @return
      */
-    UserFeedbackStatsDto.FeedbackStats retrieveStatsByYearAndAgency(Short year, String agency);
+    IUserFeedbackStatsDto retrieveStatsByYearAndAgency(Short year, String agency);
     
     /**
      * Retrieve available years
