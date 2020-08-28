@@ -1,7 +1,8 @@
 package gov.epa.cef.web.api.rest;
 
-import java.util.List; 
+import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.service.UserFeedbackService;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
 import gov.epa.cef.web.service.dto.UserFeedbackStatsDto;
@@ -45,10 +47,11 @@ public class UserFeedbackApi {
      * Retrieve all feedback for selected year and agency code
      * @return
      */
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     @GetMapping(value = "/byYearAndAgency")
     @ResponseBody
     public ResponseEntity<List<UserFeedbackDto>> retrieveAllByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
-        
+
     	List<UserFeedbackDto> result =userFeedbackService.retrieveAllByYearAndAgency(year, agency);
         return new ResponseEntity<List<UserFeedbackDto>>(result, HttpStatus.OK);
     }
@@ -57,6 +60,7 @@ public class UserFeedbackApi {
      * Retrieve stats for selected year and agency code
      * @return
      */
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     @GetMapping(value = "/stats/byYearAndAgency")
     @ResponseBody
     public ResponseEntity<UserFeedbackStatsDto.FeedbackStats> retrieveStatsByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
@@ -69,12 +73,26 @@ public class UserFeedbackApi {
      * Retrieve available year and agency codes
      * @return
      */
-    @GetMapping(value = "/stats")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
+    @GetMapping(value = "/years")
     @ResponseBody
-    public ResponseEntity<UserFeedbackStatsDto> retrieveAvailableStats() {
+    public ResponseEntity<List<Short>> retrieveAvailableYears() {
     	
-    	UserFeedbackStatsDto result =userFeedbackService.retrieveAvailableStats();
-        return new ResponseEntity<UserFeedbackStatsDto>(result, HttpStatus.OK);
+    	List<Short> result =userFeedbackService.retrieveAvailableYears();
+        return new ResponseEntity<List<Short>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve available year and agency codes
+     * @return
+     */
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
+    @GetMapping(value = "/agencies")
+    @ResponseBody
+    public ResponseEntity<List<String>> retrieveAvailableAgencies() {
+    	
+    	List<String> result =userFeedbackService.retrieveAvailableAgencies();
+        return new ResponseEntity<List<String>>(result, HttpStatus.OK);
     }
     
 }

@@ -14,6 +14,7 @@
             <select id="cbo-filter-agency" class="mr-3 form-control form-control-sm" style="width: 150px"
               [formControl]="cboFilterAgency">
               <option *ngFor="let item of (availableAgencies | sortBy:'':'asc')" [value]="item">{{item}}</option>
+              <option value="ALL_AGENCIES">All Agencies</option>
             </select>
             <label for="cbo-filter-year" class="col-form-label col-form-label-sm mr-2">
               <strong>Reporting Year:</strong>
@@ -71,43 +72,50 @@
           <div class="card-body">
             <div class="mb-3 align-middle">
               <span class="badge badge-pill badge-warning text-larger mr-3"
-                style="background-color: #ffb90f; font-size: 100%;" [textContent]="intuitiveRateAvg">
+                style="background-color: #ffb90f; font-size: 100%;"
+                [textContent]="stats?.intuitiveRateAvg ? stats.intuitiveRateAvg : 'N/A'">
               </span>
               <strong class="mr-2">Intuitive System Navigation</strong>
             </div>
             <div class="mb-3 align-middle">
               <span class="badge badge-pill badge-warning text-larger mr-3"
-                style="background-color: #ffb90f; font-size: 100%;" [textContent]="dataEntryScreensAvg">
+                style="background-color: #ffb90f; font-size: 100%;" 
+                [textContent]="stats?.dataEntryScreensAvg ? stats.dataEntryScreensAvg : 'N/A'">
               </span>
               <strong class="mr-2">Application Data Entry</strong>
             </div>
             <div class="mb-3 align-middle">
               <span class="badge badge-pill badge-warning text-larger mr-3"
-                style="background-color: #ffb90f; font-size: 100%;" [textContent]="dataEntryBulkUploadAvg">
+                style="background-color: #ffb90f; font-size: 100%;" 
+                [textContent]="stats?.dataEntryBulkUploadAvg ? stats.dataEntryBulkUploadAvg : 'N/A'">
               </span>
               <strong class="mr-2">Bulk Upload Template Data Entry</strong>
             </div>
             <div class="mb-3 align-middle">
               <span class="badge badge-pill badge-warning text-larger mr-3"
-                style="background-color: #ffb90f; font-size: 100%;" [textContent]="calculationScreensAvg">
+                style="background-color: #ffb90f; font-size: 100%;" 
+                [textContent]="stats?.calculationScreensAvg ? stats.calculationScreensAvg : 'N/A'">
               </span>
               <strong class="mr-2">Emissions Calculations</strong>
             </div>
             <div class="mb-3 align-middle">
               <span class="badge badge-pill badge-warning text-larger mr-3"
-                style="background-color: #ffb90f; font-size: 100%;" [textContent]="controlsAndControlPathAssignAvg">
+                style="background-color: #ffb90f; font-size: 100%;" 
+                [textContent]="stats?.controlsAndControlPathAssignAvg ? stats.controlsAndControlPathAssignAvg : 'N/A'">
               </span>
               <strong class="mr-2">Controls Approach</strong>
             </div>
             <div class="mb-3 align-middle">
               <span class="badge badge-pill badge-warning text-larger mr-3"
-                style="background-color: #ffb90f; font-size: 100%;" [textContent]="qualityAssuranceChecksAvg">
+                style="background-color: #ffb90f; font-size: 100%;" 
+                [textContent]="stats?.qualityAssuranceChecksAvg ? stats.qualityAssuranceChecksAvg : 'N/A'">
               </span>
               <strong class="mr-2">QA Checks</strong>
             </div>
             <div class="mb-3 align-middle">
               <span class="badge badge-pill badge-warning text-larger mr-3"
-                style="background-color: #ffb90f; font-size: 100%;" [textContent]="overallReportingTimeAvg">
+                style="background-color: #ffb90f; font-size: 100%;" 
+                [textContent]="stats?.overallReportingTimeAvg ? stats.overallReportingTimeAvg : 'N/A'">
               </span>
               <strong class="mr-2">Overall Reporting Time</strong>
             </div>

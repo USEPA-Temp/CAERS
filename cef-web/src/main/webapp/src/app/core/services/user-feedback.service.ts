@@ -26,9 +26,14 @@ export class UserFeedbackService {
     return this.http.get<UserFeedback[]>(url, {params});
   }
 
-  retrieveAvailableStats(): Observable<UserFeedbackStats> {
-    const url = `${this.baseUrl}/stats`;
-    return this.http.get<UserFeedbackStats>(url);
+  retrieveAvailableAgencies(): Observable<string[]> {
+    const url = `${this.baseUrl}/agencies`;
+    return this.http.get<string[]>(url);
+  }
+
+  retrieveAvailableYears(): Observable<number[]> {
+    const url = `${this.baseUrl}/years`;
+    return this.http.get<number[]>(url);
   }
 
   retrieveStatsByYearAndAgency(year: number, agency: string): Observable<UserFeedbackStats> {

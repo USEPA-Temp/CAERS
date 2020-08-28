@@ -34,17 +34,31 @@ public interface UserFeedbackRepository extends CrudRepository<UserFeedback, Lon
      */
     List<UserFeedback> findByYearAndAgencyCode(Short year, String agencyCode, Sort sort);
     
+    /**
+     * Retrieve a List of User Feedback for a year and all agencies
+     * @param year
+     * @return userFeedback
+     */
+    List<UserFeedback> findAllByYear(Short year, Sort sort);
+    
     @Query("select distinct agencyCode FROM UserFeedback")
     List<String> findDistinctAgencies(Sort sort);
     
     @Query("select distinct year FROM UserFeedback")
     List<Short> findDistinctYears(Sort sort);
     
-    @Query("select AVG(intuitiveRating) as intuitiveRateAvg, AVG(dataEntryScreens) as dataEntryScreensAvg, "
-    		+ "AVG(dataEntryBulkUpload) as dataEntryBulkUploadAvg, AVG(calculationScreens) as calculationScreensAvg, "
-    		+ "AVG(controlsAndControlPathAssignments) as controlsAndControlPathAssignAvg, "
-    		+ "AVG(qualityAssuranceChecks) as qualityAssuranceChecksAvg, AVG(overallReportingTime) as overallReportingTimeAvg "
+    @Query("select ROUND(AVG(intuitiveRating),0) as intuitiveRateAvg, ROUND(AVG(dataEntryScreens),0) as dataEntryScreensAvg, "
+    		+ "ROUND(AVG(dataEntryBulkUpload),0) as dataEntryBulkUploadAvg, ROUND(AVG(calculationScreens),0) as calculationScreensAvg, "
+    		+ "ROUND(AVG(controlsAndControlPathAssignments),0) as controlsAndControlPathAssignAvg, "
+    		+ "ROUND(AVG(qualityAssuranceChecks),0) as qualityAssuranceChecksAvg, ROUND(AVG(overallReportingTime),0) as overallReportingTimeAvg "
     		+ "FROM UserFeedback WHERE year = :year AND agencyCode = :agencyCode")
     FeedbackStats findAvgByYearAndAgency(@Param("year") Short year, @Param("agencyCode") String agency);
+    
+    @Query("select ROUND(AVG(intuitiveRating),0) as intuitiveRateAvg, ROUND(AVG(dataEntryScreens),0) as dataEntryScreensAvg, "
+    		+ "ROUND(AVG(dataEntryBulkUpload),0) as dataEntryBulkUploadAvg, ROUND(AVG(calculationScreens),0) as calculationScreensAvg, "
+    		+ "ROUND(AVG(controlsAndControlPathAssignments),0) as controlsAndControlPathAssignAvg, "
+    		+ "ROUND(AVG(qualityAssuranceChecks),0) as qualityAssuranceChecksAvg, ROUND(AVG(overallReportingTime),0) as overallReportingTimeAvg "
+    		+ "FROM UserFeedback WHERE year = :year")
+    FeedbackStats findAvgByYear(@Param("year") Short year);
     
 }

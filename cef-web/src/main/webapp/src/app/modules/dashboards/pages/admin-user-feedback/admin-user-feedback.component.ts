@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserFeedbackReportModalComponent } from '../../components/user-feedback-report-modal/user-feedback-report-modal.component';
 import { UserFeedback } from 'src/app/shared/models/user-feedback';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { UserFeedbackStats } from 'src/app/shared/models/user-feedback-stats';
 
 @Component({
   selector: 'app-admin-user-feedback',
@@ -15,6 +16,7 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
 export class AdminUserFeedbackComponent extends BaseSortableTable implements OnInit {
 
   tableData: UserFeedback[];
+  stats: UserFeedbackStats;
   page = 1;
   pageSize = 25;
 
@@ -47,20 +49,14 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
       this.userAgency = user.agencyCode;
     });
 
-    this.availableYears = [];
-    this.availableAgencies = [];
-
     this.tableData = [];
 
-    this.availableYears.push(CurrentYear);
-    this.availableAgencies.push(this.userAgency);
-
     this.cboFilterYear.valueChanges.subscribe(() => {
-      this.retrieveData(this.cboFilterYear.value, this.cboFilterAgency.value);
+      this.retrieveData();
     });
 
     this.cboFilterAgency.valueChanges.subscribe(() => {
-      this.retrieveData(this.cboFilterYear.value, this.cboFilterAgency.value);
+      this.retrieveData();
     });
 
     this.cboFilterYear.setValue(CurrentYear,
@@ -70,35 +66,32 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
       {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
 
     this.retrieveOptions();
-    this.retrieveData(this.cboFilterYear.value, this.cboFilterAgency.value);
+    this.retrieveData();
   }
 
   retrieveOptions() {
-    this.userFeedbackService.retrieveAvailableStats()
-      .subscribe(userFB => {
-        this.availableAgencies = userFB.availableAgencies;
-        this.availableYears = userFB.availableYears;
+    this.userFeedbackService.retrieveAvailableYears()
+      .subscribe(years => {
+        this.availableYears = years;
+      });
+    this.userFeedbackService.retrieveAvailableAgencies()
+      .subscribe(agencies => {
+        this.availableAgencies = agencies;
       });
   }
 
-  retrieveData(year, agency) {
-    this.userFeedbackService.retrieveAllByYearAndAgency(year, agency)
+  retrieveData() {
+    this.userFeedbackService.retrieveAllByYearAndAgency(this.cboFilterYear.value, this.cboFilterAgency.value)
       .subscribe(userFB => {
         this.tableData = userFB;
-        this.retrieveStats(year, agency);
+        this.retrieveStats();
     });
   }
 
-  retrieveStats(year, agency) {
-    this.userFeedbackService.retrieveStatsByYearAndAgency(year, agency)
-      .subscribe(userFB => {
-        this.intuitiveRateAvg = +(userFB.intuitiveRateAvg !== null ? (userFB.intuitiveRateAvg) : 0);
-        this.dataEntryScreensAvg = +(userFB.dataEntryScreensAvg !== null ? (userFB.dataEntryScreensAvg) : 0);
-        this.dataEntryBulkUploadAvg = +(userFB.dataEntryBulkUploadAvg !== null ? (userFB.dataEntryBulkUploadAvg) : 0);
-        this.calculationScreensAvg = +(userFB.calculationScreensAvg !== null ? (userFB.calculationScreensAvg) : 0);
-        this.controlsAndControlPathAssignAvg = +(userFB.controlsAndControlPathAssignAvg !== null ? (userFB.controlsAndControlPathAssignAvg) : 0);
-        this.qualityAssuranceChecksAvg = +(userFB.qualityAssuranceChecksAvg !== null ? (userFB.qualityAssuranceChecksAvg) : 0);
-        this.overallReportingTimeAvg = +(userFB.overallReportingTimeAvg !== null ? (userFB.overallReportingTimeAvg) : 0);
+  retrieveStats() {
+    this.userFeedbackService.retrieveStatsByYearAndAgency(this.cboFilterYear.value, this.cboFilterAgency.value)
+      .subscribe(stats => {
+        this.stats = stats;
       });
   }
 

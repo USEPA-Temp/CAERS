@@ -29,9 +29,15 @@ public interface UserFeedbackService {
     UserFeedbackStatsDto.FeedbackStats retrieveStatsByYearAndAgency(Short year, String agency);
     
     /**
-     * Retrieve available year and agency codes
+     * Retrieve available years
      * @return
      */
-    UserFeedbackStatsDto retrieveAvailableStats();
+    List<Short> retrieveAvailableYears();
+    
+    /**
+     * Retrieve available agency codes
+     * @return
+     */
+    List<String> retrieveAvailableAgencies();
 		
 }

@@ -1,11 +1,9 @@
 export class UserFeedbackStats {
     intuitiveRateAvg: number;
-    dataEntryScreensAvg: string;
-    dataEntryBulkUploadAvg: string;
-    calculationScreensAvg: string;
-    controlsAndControlPathAssignAvg: string;
+    dataEntryScreensAvg: number;
+    dataEntryBulkUploadAvg: number;
+    calculationScreensAvg: number;
+    controlsAndControlPathAssignAvg: number;
     qualityAssuranceChecksAvg: number;
     overallReportingTimeAvg: number;
-    availableYears: number [];
-    availableAgencies: string [];
 }

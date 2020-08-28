@@ -49,22 +49,30 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 	
 	public List<UserFeedbackDto> retrieveAllByYearAndAgency(Short year, String agency) {
 		
-		List<UserFeedback> userFeedback= userFeedbackRepo.findByYearAndAgencyCode(year, agency, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "createdDate"));
+		List<UserFeedback> userFeedback = agency.contentEquals("ALL_AGENCIES")
+	            ? this.userFeedbackRepo.findAllByYear(year, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "createdDate"))
+	            : this.userFeedbackRepo.findByYearAndAgencyCode(year, agency, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "createdDate"));
+		
 		return userFeedbackMapper.toDtoList(userFeedback);
 	}
 	
 	public UserFeedbackStatsDto.FeedbackStats retrieveStatsByYearAndAgency(Short year, String agency) {
-
-		UserFeedbackStatsDto.FeedbackStats userFeedback= userFeedbackRepo.findAvgByYearAndAgency(year, agency);
-		return userFeedbackRepo.findAvgByYearAndAgency(year, agency);
+		
+		UserFeedbackStatsDto.FeedbackStats userFeedback = agency.contentEquals("ALL_AGENCIES")
+	            ? this.userFeedbackRepo.findAvgByYear(year) 
+	            : this.userFeedbackRepo.findAvgByYearAndAgency(year, agency);
+	            
+		return userFeedback;
 	}
 	
-	public UserFeedbackStatsDto retrieveAvailableStats() {
+	public List<String> retrieveAvailableAgencies() {
 		
-		UserFeedbackStatsDto userFeedback = new UserFeedbackStatsDto();
-		userFeedback.setAvailableAgencies(this.userFeedbackRepo.findDistinctAgencies(Sort.by(Sort.DEFAULT_DIRECTION.DESC, "agencyCode")));
-		userFeedback.setAvailableYears(this.userFeedbackRepo.findDistinctYears(Sort.by(Sort.DEFAULT_DIRECTION.DESC, "year")));
-        return userFeedback;
+		return this.userFeedbackRepo.findDistinctAgencies(Sort.by(Sort.DEFAULT_DIRECTION.DESC, "agencyCode"));
+	}
+	
+	public List<Short> retrieveAvailableYears() {
+		
+		return this.userFeedbackRepo.findDistinctYears(Sort.by(Sort.DEFAULT_DIRECTION.DESC, "year"));
 	}
 	
 	
