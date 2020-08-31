@@ -16,4 +16,7 @@ export class UserFeedback {
     userId: string;
     userName: string;
     userRole: string;
+    agencyCode: string;
+    createdDate: string;
+    lastModifiedBy: string;
 }

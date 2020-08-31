@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class UserFeedbackDto implements Serializable {
 	
@@ -23,6 +24,9 @@ public class UserFeedbackDto implements Serializable {
     private String userName;
     private String userId;
     private String userRole;
+    private String agencyCode; 
+    private Date createdDate;
+    private String lastModifiedBy;
     
     public String getUserName() {
 		return userName;
@@ -133,5 +137,23 @@ public class UserFeedbackDto implements Serializable {
         setReportId(reportId);
         return this;
     }
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public String getAgencyCode() {
+		return agencyCode;
+	}
+	public void setAgencyCode(String agencyCode) {
+		this.agencyCode = agencyCode;
+	}
+	public String getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+	public void setLastModifiedBy(String lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
        
 }
