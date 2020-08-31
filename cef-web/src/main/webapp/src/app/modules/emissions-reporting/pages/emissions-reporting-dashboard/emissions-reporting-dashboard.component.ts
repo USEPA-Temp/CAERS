@@ -13,6 +13,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
+import { FileDownloadService } from 'src/app/core/services/file-download.service';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -33,6 +34,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
     constructor(
         private reportService: EmissionsReportingService,
+        private fileDownloadService: FileDownloadService,
         private route: ActivatedRoute,
         private sharedService: SharedService,
         private modalService: NgbModal,
@@ -172,6 +174,23 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
             this.deleteReport(reportId);
+        });
+    }
+
+    downloadExcelTemplate(report: EmissionsReport) {
+
+        const modalWindow = this.modalService.open(BusyModalComponent, {
+            backdrop: 'static',
+            size: 'lg'
+        });
+
+        modalWindow.componentInstance.message = 'Please wait while we generate the Excel Template for this report.';
+
+        this.reportService.downloadExcelExport(report.id)
+        .subscribe(file => {
+            modalWindow.dismiss();
+            this.fileDownloadService.downloadFile(file, `${report.eisProgramId}-${this.facility.facilityName}-${report.year}.xlsx`);
+            error => console.error(error);
         });
     }
 
