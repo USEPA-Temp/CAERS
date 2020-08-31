@@ -57,7 +57,7 @@ export class UserFeedbackComponent implements OnInit {
       this.facilityId = params.get('facilityId');
       this.userService.getCurrentUser().subscribe((user) => {
         this.user = user;
-      });
+        });
       this.reportingService.getReport(this.reportId).subscribe((report) => {
         this.report = report;
       });
@@ -71,20 +71,20 @@ export class UserFeedbackComponent implements OnInit {
       this.facilitySite = data.facilitySite;
       this.sharedService.emitChange(data.facilitySite);
     });
-
     this.sharedService.emitHideBoolChange(true);
   }
 
   onSubmit()  {
     this.clicked = true;
     const saveUserFeedback = new UserFeedback();
-    saveUserFeedback.reportId = this.reportId;
-    saveUserFeedback.facilityName = this.facilitySite.name;
-    saveUserFeedback.agencyCode = this.user.agencyCode;
-    saveUserFeedback.year = this.report.year;
+
     saveUserFeedback.userName = this.user.firstName + ' ' + this.user.lastName;
     saveUserFeedback.userId = this.user.userRoleId.toString();
     saveUserFeedback.userRole = this.user.role;
+    saveUserFeedback.reportId = this.reportId;
+    saveUserFeedback.facilityName = this.facilitySite.name;
+    saveUserFeedback.year = this.report.year;
+    saveUserFeedback.agencyCode = this.report.agencyCode;
     Object.assign(saveUserFeedback, this.feedbackForm.value);
 
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
