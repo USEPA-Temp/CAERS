@@ -24,7 +24,6 @@ export class UserFeedbackComponent implements OnInit {
   baseUrl: string;
   report: EmissionsReport;
   user: User;
-  userAgency: string;
   clicked: boolean = false;
 
   feedbackForm = this.fb.group({
@@ -58,7 +57,6 @@ export class UserFeedbackComponent implements OnInit {
       this.facilityId = params.get('facilityId');
       this.userService.getCurrentUser().subscribe((user) => {
         this.user = user;
-        this.userAgency = user.agencyCode;
         });
       this.reportingService.getReport(this.reportId).subscribe((report) => {
         this.report = report;
@@ -86,8 +84,7 @@ export class UserFeedbackComponent implements OnInit {
     saveUserFeedback.reportId = this.reportId;
     saveUserFeedback.facilityName = this.facilitySite.name;
     saveUserFeedback.year = this.report.year;
-    saveUserFeedback.agencyCode = this.userAgency;
-    console.log(this.userAgency);
+    saveUserFeedback.agencyCode = this.report.agencyCode;
     Object.assign(saveUserFeedback, this.feedbackForm.value);
 
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {
