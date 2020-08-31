@@ -62,7 +62,7 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
     this.cboFilterYear.setValue(CurrentYear,
       {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
 
-    this.cboFilterAgency.setValue(this.userAgency,
+    this.cboFilterAgency.setValue('ALL_AGENCIES',
       {emitEvent: false, emitModelToViewChange: true, emitViewToModelChange: false});
 
     this.retrieveOptions();

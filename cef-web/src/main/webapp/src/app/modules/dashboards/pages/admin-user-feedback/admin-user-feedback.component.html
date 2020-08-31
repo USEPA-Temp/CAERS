@@ -13,8 +13,8 @@
             </label>
             <select id="cbo-filter-agency" class="mr-3 form-control form-control-sm" style="width: 150px"
               [formControl]="cboFilterAgency">
-              <option *ngFor="let item of (availableAgencies | sortBy:'':'asc')" [value]="item">{{item}}</option>
               <option value="ALL_AGENCIES">All Agencies</option>
+              <option *ngFor="let item of (availableAgencies | sortBy:'':'asc')" [value]="item">{{item}}</option>
             </select>
             <label for="cbo-filter-year" class="col-form-label col-form-label-sm mr-2">
               <strong>Reporting Year:</strong>
@@ -42,14 +42,10 @@
                   </td>
                 </tr>
                 <tr *ngFor="let item of tableData | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-                  <td *ngIf="item.facilityName"><a routerLink="." (click)="openFeedbackModal(item)">
+                  <td><a routerLink="." (click)="openFeedbackModal(item)">
                     {{item.facilityName}}
                   </a></td>
-                  <td *ngIf="!item.facilityName"><a routerLink="." (click)="openFeedbackModal(item)">
-                    Deleted Report
-                  </a></td>
-                  <td *ngIf="item.userName">{{item.userName}}</td>
-                  <td *ngIf="!item.userName">{{item.lastModifiedBy}}</td>
+                  <td>{{item.userName}}</td>
                   <td>{{item.year}}</td>
                   <td>{{item.createdDate | date: 'long'}}</td>
                 </tr>
