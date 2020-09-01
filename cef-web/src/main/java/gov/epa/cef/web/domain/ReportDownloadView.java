@@ -83,6 +83,9 @@ public class ReportDownloadView extends BaseEntity{
 
 	@Column(name = "last_modified_date")
 	private Date lastModifiedDate;
+	
+	@Column(name = "calculation_comment", length = 4000)
+    private String calculationComment;
 
 	public String getThroughputUom() {
 		return throughputUom;
@@ -256,5 +259,13 @@ public class ReportDownloadView extends BaseEntity{
 
 	public void setOverallControlPercent(BigDecimal overallControlPercent) {
 		this.overallControlPercent = overallControlPercent;
+	}
+
+	public String getCalculationComment() {
+		return calculationComment;
+	}
+
+	public void setCalculationComment(String calculationComment) {
+		this.calculationComment = calculationComment;
 	}
 }

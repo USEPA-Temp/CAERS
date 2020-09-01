@@ -3,25 +3,17 @@
  */
 function initCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted){
 
-    var fancyboxJS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.js";
-    var fancyboxCSS="/ContentFramework/v3/js/third-party/fancybox-v2/jquery.fancybox.css";
-    var jqueryValidate="/ContentFramework/Cromerr/js/jquery.validate.min.js";
-    var cromerrJS="/ContentFramework/Cromerr/js/serverWidget.js";
-    var jqueryJS="assets/js/jquery-1.6.4.min.js";
+    var blockUIJS = "assets/js/jquery.blockUI.js";
+    var cromerrJS="/Content/CromerrWidget/cromerrWidget.webpack.min.js";
+    var jqueryJS="assets/js/jquery-3.5.1.min.js";
 
-    if(checkIfScriptExists(baseServiceUrl+cromerrJS)){
+    if (checkIfScriptExists(baseServiceUrl+cromerrJS)) {
         initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted);
-    }else{
+    } else {
         var jqueryScript=loadScript(jqueryJS);
         jqueryScript.onload=function(){
-            var fancyboxScript=loadScript(baseServiceUrl+fancyboxJS);
-            fancyboxScript.onload=function(){
-                var cssLink = document.createElement("link");
-                cssLink.rel = 'stylesheet';
-                cssLink.type = 'text/css';
-                document.head.insertBefore(cssLink, this.firstChild);
-                cssLink.href=baseServiceUrl+fancyboxCSS;
-                loadScript(baseServiceUrl+jqueryValidate);
+            var blockUIScript=loadScript(blockUIJS);
+            blockUIScript.onload=function(){
                 var cromerrScript=loadScript(baseServiceUrl+cromerrJS);
                 cromerrScript.onload=function(){
                     initializeCromerrWidget(userRoleId, token, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, userFeedbackEnabled, feedbackSubmitted);
@@ -42,7 +34,7 @@ function loadScript(srciptUrl){
 
 function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsReportId, facilitySiteId, toastr, emitter, feedbackEnabled, feedbackSubmitted){
     $( document ).ready(function() {
-        $.cromerrWidget({
+        $cromerrWidget.initializeCromerrWidget({
             esignButtonId : "certifyAndSubmit",
             widgetParams : {
                 dataflow : "CAER",
@@ -53,7 +45,7 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
                 }
             },
             success : function(event) {
-                event.blockUI();
+                $.blockUI();
                 $.ajax({
                       url: "api/emissionsReport/submitToCromerr",
                       type: "get", //send it through get method
@@ -65,16 +57,16 @@ function initializeCromerrWidget(userId, userRoleId, baseServiceUrl, emissionsRe
                         //if feedback is enabled and the user hasn't already submitted feedback for this report go to feedback page after signing
                         if (feedbackEnabled && !feedbackSubmitted) {
                             toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
-                            event.unblockUI();
+                            $.unblockUI();
                             window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report/"+emissionsReportId+"/userfeedback";
                         } else {
                             toastr.success('', "The Emission Report has been successfully electronically signed and submitted to the agency for review.");
-                            event.unblockUI();
+                            $.unblockUI();
                             window.location.href="/cef-web/#/facility/"+facilitySiteId+"/report";
                         }
                       },
                       error: function(xhr) {
-                          event.unblockUI();
+                          $.unblockUI();
                           toastr.error('', "There was an error electronically signing your emission report. Please try again.");
                       }
                     });

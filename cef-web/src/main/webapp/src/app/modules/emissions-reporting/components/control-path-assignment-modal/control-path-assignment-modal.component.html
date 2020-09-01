@@ -40,6 +40,7 @@
                 </select>
                 <span class="validation-message" [hidden]="!controlPathAssignmentForm.hasError('controlAndPathSelected')" >You can only select a control OR a path, not both</span>
                 <span class="validation-message" [hidden]="!controlPathAssignmentForm.hasError('controlAndPathNotSelected') || !(controlPathAssignmentForm.controls.control.dirty || controlPathAssignmentForm.controls.controlPathChild.dirty)">You must select either a control or a path</span>
+                <span class="validation-message" [hidden]="!controlPathAssignmentForm.hasError('permShutdownControl')">This Control Path cannot be associated with a Permanently shutdown Control Device.</span>
                 <app-validation-message [control]="controlPathAssignmentForm.get('controlPathChild')"></app-validation-message>
                 <div class="validation-message" *ngIf="controlPathAssignmentForm.get('control').errors?.duplicateControl">
                     Control Device must be assigned only once within the Control Path, including child paths. 
@@ -50,6 +51,7 @@
                 <div class="validation-message" *ngIf="controlPathAssignmentForm.get('controlPathChild').errors?.duplicateChildPath">
                     Control Path must be assigned only once within the Control Path.
                 </div>
+                <div class="validation-warning" *ngIf="tempShutdownControlWarning?.length > 0">{{tempShutdownControlWarning}}</div>
             </div>
         <div class="row pb-1 mt-3">
             <div class="col-sm-5">

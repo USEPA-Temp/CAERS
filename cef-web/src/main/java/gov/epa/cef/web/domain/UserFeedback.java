@@ -18,6 +18,9 @@ public class UserFeedback extends BaseAuditEntity {
     @Column(name = "report_id")
     private Long reportId;
     
+    @Column(name = "facility_name")
+    private String facilityName;
+    
     @Column(name = "easy_and_intuitive")
     private Long intuitiveRating;
 
@@ -47,6 +50,15 @@ public class UserFeedback extends BaseAuditEntity {
 
     @Column(name = "quality_assurance_checks")
     private Long qualityAssuranceChecks;
+    
+    @Column(name = "agency_code", nullable = false, length = 3)
+    private String agencyCode; 
+    
+    @Column(name = "year")
+    private Short year;
+    
+    @Column(name = "user_name")
+    private String userName;
     
 	/***
      * Default constructor
@@ -139,6 +151,38 @@ public class UserFeedback extends BaseAuditEntity {
 
 	public void setQualityAssuranceChecks(Long qualityAssuranceChecks) {
 		this.qualityAssuranceChecks = qualityAssuranceChecks;
+	}
+
+	public String getAgencyCode() {
+		return agencyCode;
+	}
+
+	public void setAgencyCode(String agencyCode) {
+		this.agencyCode = agencyCode;
+	}
+
+	public Short getYear() {
+		return year;
+	}
+
+	public void setYear(Short year) {
+		this.year = year;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getFacilityName() {
+		return facilityName;
+	}
+
+	public void setFacilityName(String facilityName) {
+		this.facilityName = facilityName;
 	}
     
 }

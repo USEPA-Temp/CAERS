@@ -11,6 +11,14 @@
           <a class="nav-link" routerLink="reviewer">Submission Review</a>
         </li>
         <li class="nav-item" ngbDropdown>
+          <a class="nav-link" ngbDropdownToggle id="statAndReportsDropdown" role="button">
+            Statistics and Reports
+          </a>
+          <div ngbDropdownMenu aria-labelledby="statAndReportsDropdown">
+            <a ngbDropdownItem routerLink="admin/userFeedback" [routerLinkActive]="'active'">User Feedback Report</a>
+          </div>
+        </li>
+        <li class="nav-item" ngbDropdown>
           <a class="nav-link" ngbDropdownToggle id="comToolsDropdown" role="button">
             User Communication Tools
           </a>

@@ -37,6 +37,7 @@ public class ReportDownloadDto implements Serializable{
 	private String emissionsCalcMethod;
     private String lastModifiedBy;
 	private String lastModifiedDate;
+	private String calculationComment;
 	
     public String getThroughputUom() {
 		return throughputUom;
@@ -170,6 +171,12 @@ public class ReportDownloadDto implements Serializable{
 	}
 	public void setOverallControlPercent(BigDecimal overallControlPercent) {
 		this.overallControlPercent = overallControlPercent;
+	}
+	public String getCalculationComment() {
+		return calculationComment;
+	}
+	public void setCalculationComment(String calculationComment) {
+		this.calculationComment = calculationComment;
 	}
 
 }
