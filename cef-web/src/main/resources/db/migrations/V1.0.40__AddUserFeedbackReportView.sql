@@ -15,6 +15,7 @@ CREATE INDEX i_user_feedback_year_and_agency_code
 
 /* create temp table with desired data */
 SELECT 
+	uf.id as userfeedback_id,
 	er.id as report_id, 
 	fs.name as facility_name, 
 	er.year as year,
@@ -34,7 +35,7 @@ BEGIN
 		IF fb_record.facility_name IS NULL THEN
 			UPDATE user_feedback set facility_name = 
 			(SELECT facility_name FROM temp_feedback 
-			WHERE user_feedback.report_id = temp_feedback.report_id);
+			WHERE user_feedback.id = temp_feedback.userfeedback_id);
 		END IF;
 	END LOOP;
 
