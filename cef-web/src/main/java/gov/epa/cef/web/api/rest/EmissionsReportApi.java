@@ -17,10 +17,12 @@ import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
+import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
+import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.validation.ValidationResult;
@@ -62,6 +64,8 @@ public class EmissionsReportApi {
 
     private final EmissionsReportStatusService emissionsReportStatusService;
 
+    private final FacilitySiteService facilitySiteService;
+
     private final ObjectMapper objectMapper;
 
     private final ReportService reportService;
@@ -80,6 +84,7 @@ public class EmissionsReportApi {
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
                        EmissionsReportStatusService emissionsReportStatusService,
+                       FacilitySiteService facilitySiteService,
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
                        BulkUploadService uploadService,
@@ -89,6 +94,7 @@ public class EmissionsReportApi {
         this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
         this.emissionsReportStatusService = emissionsReportStatusService;
+        this.facilitySiteService = facilitySiteService;
         this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
@@ -273,10 +279,12 @@ public class EmissionsReportApi {
 
         this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
-        //TODO: update filename to match the filename on the frontend and update this to use facilitySiteId
+        EmissionsReportDto report = emissionsReportService.findById(reportId);
+        FacilitySiteDto facility = facilitySiteService.findByEisProgramIdAndReportId(report.getEisProgramId(), reportId);
+
         return ResponseEntity.ok()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + reportId + "_export.xlsx\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s-%s-%d.xlsx\"", report.getEisProgramId(), facility.getName(), report.getYear()))
                 .body(outputStream -> {
                     uploadService.generateExcel(reportId, outputStream);
                 });
