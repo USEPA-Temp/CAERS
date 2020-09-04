@@ -271,6 +271,9 @@ public class EmissionsReportApi {
     public ResponseEntity<StreamingResponseBody> exportReportExcel(
         @NotNull @PathVariable Long reportId) {
 
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
+        //TODO: update filename to match the filename on the frontend and update this to use facilitySiteId
         return ResponseEntity.ok()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + reportId + "_export.xlsx\"")

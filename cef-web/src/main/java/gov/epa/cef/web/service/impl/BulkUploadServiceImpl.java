@@ -120,6 +120,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     // TODO: make a property
     private static final String EXCEL_FILE_PATH = "./src/main/resources/excel/CEF_BulkUpload_Template.xlsx";
+    private static final String EXCEL_GENERIC_LOOKUP_TEXT = "INDEX(%s!$A$2:$A$%d,MATCH(\"%s\",%s!$B$2:$B$%d,0))";
+    private static final String EXCEL_GENERIC_LOOKUP_NUMBER = "INDEX(%s!$A$2:$A$%d,MATCH(%s,%s!$B$2:$B$%d,0))";
 
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngineRepo;
@@ -275,6 +277,18 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         return reportDto;
     }
 
+    /**
+     * Generate an excel spreadsheet export for a report
+     * 
+     * Maps a report into our excel template for uploading. This creates a temporary copy of the excel template
+     * and then uses Apache POI to populate that copy with the existing data. We modify existing rows like a 
+     * user would so that validation and formulas remain intact and populate dropdowns by looking up the value
+     * in the spreadsheet for the code we have.
+     * 
+     * Currently has commented out debugging code while more sections are added
+     * @param reportId
+     * @param outputStream
+     */
     public void generateExcel(Long reportId, OutputStream outputStream) {
 
         logger.info("Begin generate excel");
@@ -379,14 +393,24 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     }
 
+    /**
+     * Generate a basic reverse lookup formula for creating excel exports.
+     * The formula will find the dropdown value for a code in a basic lookup sheet in excel
+     * @param workbook
+     * @param sheetName
+     * @param value the code to lookup
+     * @param text if the code is text or number in excel
+     * @return
+     */
     private String generateLookupFormula(Workbook workbook, String sheetName, String value, boolean text) {
 
         int rowCount = workbook.getSheet(sheetName).getLastRowNum();
         String result;
+        // if the code is a number in excel we need to make sure it's a number here too so it will match
         if (text) {
-            result = String.format("INDEX(%s!$A$2:$A$%d,MATCH(\"%s\",%s!$B$2:$B$%d,0))", sheetName, rowCount, value, sheetName, rowCount);
+            result = String.format(EXCEL_GENERIC_LOOKUP_TEXT, sheetName, rowCount, value, sheetName, rowCount);
         } else {
-            result = String.format("INDEX(%s!$A$2:$A$%d,MATCH(%s,%s!$B$2:$B$%d,0))", sheetName, rowCount, value, sheetName, rowCount);
+            result = String.format(EXCEL_GENERIC_LOOKUP_NUMBER, sheetName, rowCount, value, sheetName, rowCount);
         }
         //logger.info(result);
         return result;
