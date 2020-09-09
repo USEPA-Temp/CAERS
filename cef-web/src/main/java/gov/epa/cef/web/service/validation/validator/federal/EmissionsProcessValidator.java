@@ -20,6 +20,7 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -58,8 +59,6 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	
 	@Autowired
 	private EmissionRepository emissionRepo;
-	
-	private static final String STATUS_OPERATING = "OP";
     
     @Override
     public void compose(FluentValidator validator,
@@ -133,7 +132,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         	}
         }
         
-        if (STATUS_OPERATING.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+        if (ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
         	
             // Check for valid SCC Code
             if (Strings.emptyToNull(emissionsProcess.getSccCode()) != null) {
