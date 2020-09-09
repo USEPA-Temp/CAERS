@@ -112,7 +112,10 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        }
         }
         
-        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        //Only run the following checks is the Unit status is operating. Otherwise, these checks are moot b/c
+        //the data will not be sent to EIS and the user shouldn't have to go back and update them. Only id, status, 
+        //and status year are sent to EIS for units that are not operating.
+        if (STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
             // Design capacity warning
             if (emissionsUnit.getUnitTypeCode() != null && emissionsUnit.getDesignCapacity() == null) {
                 List<String> typeCodeWarn = new ArrayList<String>(); 

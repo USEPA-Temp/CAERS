@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator;
 
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -71,7 +72,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
-
+        
+        //Verify QA checks are Run correctly when the Release Point is Operating
         cefContext = createContext();
         testData.setExitGasTemperature((short) -31);
 
@@ -89,23 +91,40 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_TEMP.value()) && errorMap.get(ValidationField.RP_GAS_TEMP.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        testData.setExitGasTemperature((short) -31);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+
+        cefContext = createContext();
+        testData.setExitGasTemperature((short) 4001);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
 
-		@Test
-		public void exitGasTemperatureRangeTest() {
-			
-			CefValidatorContext cefContext = createContext();
-			ReleasePoint testData = createBaseReleasePoint();
-			testData.setExitGasTemperature((short) -30);
-	
-			assertTrue(this.validator.validate(cefContext, testData));
-			assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-	
-			cefContext = createContext();
-			testData.setExitGasTemperature((short) 4000);
-	
-			assertTrue(this.validator.validate(cefContext, testData));
-			assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+	@Test
+	public void exitGasTemperatureRangeTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		ReleasePoint testData = createBaseReleasePoint();
+		testData.setExitGasTemperature((short) -30);
+
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+		cefContext = createContext();
+		testData.setExitGasTemperature((short) 4000);
+
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
     
     @Test
@@ -123,6 +142,16 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_RELEASE.value()) && errorMap.get(ValidationField.RP_GAS_RELEASE.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -164,6 +193,37 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        testData = createBaseReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+
+        cefContext = createContext();
+        releasePointTypeCode.setCode("1");
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setExitGasFlowRate(200000.1);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        cefContext = createContext();
+        flowUom = new UnitMeasureCode();
+        flowUom.setCode("ACFM");
+        velocityUom = new UnitMeasureCode();
+        velocityUom.setCode("FPM");    
+        testData.setExitGasFlowUomCode(flowUom);
+        testData.setExitGasVelocityUomCode(velocityUom);
+        testData.setExitGasFlowRate(12000000.1);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+    
     }
     
     @Test
@@ -188,6 +248,25 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        testData = createBaseReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        testData.setExitGasFlowRate(null);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+
+        cefContext = createContext();
+        testData.setExitGasFlowUomCode(null);
+        testData.setExitGasFlowRate(0.002);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
     }
     
     @Test
@@ -229,6 +308,38 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        testData = createBaseReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("ONRE");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+
+        cefContext = createContext();
+        releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("1");
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setExitGasVelocity(1500.1);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+
+        cefContext = createContext();
+        flowUom = new UnitMeasureCode();
+        flowUom.setCode("ACFM");
+        velocityUom = new UnitMeasureCode();
+        velocityUom.setCode("FPM");    
+        testData.setExitGasFlowUomCode(flowUom);
+        testData.setExitGasVelocityUomCode(velocityUom);
+        testData.setExitGasVelocity(90000.1);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+    
     }
     
     @Test
@@ -255,6 +366,26 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        testData = createBaseReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("I");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setExitGasVelocity(null);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        cefContext = createContext();
+        testData.setExitGasVelocityUomCode(null);
+        testData.setExitGasVelocity(1000.0);
+        testData.setExitGasFlowRate(null);
+        testData.setExitGasFlowUomCode(null);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -286,6 +417,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	
     	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
     	assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+    	
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
 
     }
     
@@ -308,6 +448,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	
     	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
     	assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -329,6 +478,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setFenceLineDistance((long) 100000);
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setFenceLineDistance((long) -1);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setFenceLineDistance((long) 100000);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -351,6 +516,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("ONP");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setFugitiveHeight((long) -1);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setFugitiveHeight((long) 600);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -373,6 +554,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setFugitiveLength((long) 0);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setFugitiveLength((long) 20000);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -395,6 +592,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setFugitiveWidth((long) 0);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setFugitiveWidth((long) 20000);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -413,10 +626,26 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setFugitiveWidth((long) 90);
+        testData.setFugitiveAngle((long) 90);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("I");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setFugitiveAngle((long) -1);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setFugitiveAngle((long) 90);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -447,6 +676,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+   
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setStackHeight(0.5);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setStackHeight(1400.0);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -478,6 +723,27 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setStackDiameter(null);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setStackDiameter(0.0);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setStackDiameter(400.0);
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -540,6 +806,36 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        testData = createBaseFugitiveReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatCode);
+  
+        testData.setFenceLineUomCode(uomM);
+
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setStackDiameter(0.0);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        cefContext = createContext();
+        testData.setFenceLineUomCode(uomFT);
+        testData.setFugitiveLengthUomCode(uomM);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        cefContext = createContext();
+        testData.setFugitiveLengthUomCode(uomFT);
+        testData.setFugitiveWidthUomCode(uomM);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -559,6 +855,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK_WARNING.value()) && errorMap.get(ValidationField.RP_STACK_WARNING.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
 
     @Test
@@ -585,13 +890,37 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         
         cefContext = createContext();
         testData = createBaseReleasePoint();
-        testData.setLatitude(32.959000);
+        testData.setLongitude(-84.888000);
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        testData = createBaseFugitiveReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        testData.setLatitude(32.959000);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        cefContext = createContext();
+        testData.setLongitude(-84.888000);
+        testData.setLatitude(33.951000);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        cefContext = createContext();
+        testData.setLongitude(-84.888000);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -628,6 +957,16 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        testData = createBaseReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -663,6 +1002,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_FLOW.value()) && errorMap.get(ValidationField.RP_GAS_FLOW.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -708,6 +1056,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK_WARNING.value()) && errorMap.get(ValidationField.RP_STACK_WARNING.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -725,6 +1082,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK_WARNING.value()) && errorMap.get(ValidationField.RP_STACK_WARNING.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -800,6 +1166,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_TYPE_CODE.value()) && errorMap.get(ValidationField.RP_TYPE_CODE.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -826,6 +1201,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when RP is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     
@@ -835,7 +1219,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	er.setYear((short)2019);
     	
         OperatingStatusCode opStatCode = new OperatingStatusCode();
-        opStatCode.setCode("TS");
+        opStatCode.setCode("OP");
         
         FacilitySite facility = new FacilitySite();
         facility.setId(1L);
@@ -924,5 +1308,61 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	result.setOperatingStatusCode(opStatCode);
     	
     	return result;
-  }
+    }
+    
+private ReleasePoint createNonOperatingReleasePoint() {
+    	
+    	EmissionsReport er = new EmissionsReport();
+    	er.setYear((short)2019);
+    	
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        
+        FacilitySite facility = new FacilitySite();
+        facility.setId(1L);
+        facility.setEisProgramId("111111");
+        facility.setLatitude(new BigDecimal(33.949000));
+        facility.setLongitude(new BigDecimal(-84.388000));
+        facility.setOperatingStatusCode(opStatCode);
+        facility.setEmissionsReport(er);
+        er.getFacilitySites().add(facility);
+        
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("2");
+        
+        UnitMeasureCode flowUom = new UnitMeasureCode();
+        flowUom.setCode("ACFS");     
+        
+        UnitMeasureCode velUom = new UnitMeasureCode();
+        velUom.setCode("FPS");    
+        
+        UnitMeasureCode distUom = new UnitMeasureCode();
+        distUom.setCode("FT");    
+        
+        ReleasePoint result = new ReleasePoint();
+        result.setExitGasTemperature((short) 50);
+        result.setExitGasFlowRate(0.002);
+        result.setExitGasFlowUomCode(flowUom);
+        result.setExitGasVelocity(0.01);
+        result.setExitGasVelocityUomCode(velUom);
+        result.setFenceLineDistance((long) 1);
+        result.setFenceLineUomCode(distUom);
+        result.setStackHeightUomCode(distUom);
+        result.setStackDiameterUomCode(distUom);
+        result.setStackHeight(1.0);
+        result.setStackDiameter(0.5);
+        result.setTypeCode(releasePointTypeCode);
+        result.setLatitude(33.949000);
+        result.setLongitude(-84.388000);
+        result.setFacilitySite(facility);
+        result.setFugitiveLine1Latitude(33.949000);
+        result.setFugitiveLine1Longitude(-84.388000);
+        result.setFugitiveLine2Latitude(33.949000);
+        result.setFugitiveLine2Longitude(-84.388000);
+        result.setStatusYear((short) 2000);
+        result.setOperatingStatusCode(opStatCode);
+        result.setId(1L);
+        
+        return result;
+    }
 }
