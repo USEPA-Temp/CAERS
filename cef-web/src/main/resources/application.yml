@@ -41,3 +41,4 @@ spring:
           instance_name: cef-hazelcast-cache
   jackson.serialization.FAIL_ON_EMPTY_BEANS: false
   jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: false
+excel-export.enabled: true

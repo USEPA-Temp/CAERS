@@ -63,9 +63,13 @@ public class CefConfig {
     public boolean getSccUpdateTaskEnabled() {
         return this.propertyProvider.getBoolean(AppPropertyName.SccUpdateTaskEnabled);
     }
-    
+
     public String getMaxFileSize() {
     	return environment.getProperty("spring.servlet.multipart.max-file-size");
+    }
+
+    public Boolean getExcelExportEnabled() {
+        return environment.getProperty("excel-export.enabled", Boolean.class, Boolean.FALSE);
     }
 
 }

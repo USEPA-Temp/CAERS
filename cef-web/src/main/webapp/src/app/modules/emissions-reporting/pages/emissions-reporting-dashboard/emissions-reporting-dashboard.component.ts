@@ -14,6 +14,7 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FileDownloadService } from 'src/app/core/services/file-download.service';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -26,6 +27,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     reports: EmissionsReport[];
     emissionsReport: EmissionsReport;
     operatingStatusValues: BaseCodeLookup[];
+    excelExportEnabled = false;
 
     @ViewChild('FailedToCreateMessageBox', {static: true})
     _failedToCreateTemplate: TemplateRef<any>;
@@ -41,6 +43,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         public router: Router,
         public userContext: UserContextService,
         private facilitySiteService: FacilitySiteService,
+        private propertyService: ConfigPropertyService,
         private lookupService: LookupService) { }
 
 
@@ -57,6 +60,11 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             });
         this.sharedService.emitChange(null);
         this.facilitySite = new FacilitySite();
+
+        this.propertyService.retrieveExcelExportEnabled()
+        .subscribe(result => {
+            this.excelExportEnabled = result;
+        });
 
         this.lookupService.retrieveOperatingStatus()
         .subscribe(result => {
