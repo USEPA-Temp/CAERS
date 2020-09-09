@@ -82,8 +82,10 @@ import gov.epa.cef.web.util.TempFile;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -308,78 +310,14 @@ public class BulkUploadServiceImpl implements BulkUploadService {
  
             XSSFSheet facilitySheet = wb.getSheetAt(0);
 //            facilitySheet.disableLocking();
- 
-            if (facilitySheet != null) {
-                int rowCount = facilitySheet.getLastRowNum();
-//                logger.info("" + rowCount);
 
-                for (FacilitySiteBulkUploadDto fs : uploadDto.getFacilitySites()) {
-                    Row row = facilitySheet.getRow(rowCount);
+            int firstRowCount = facilitySheet.getLastRowNum();
 
-                    row.getCell(2).setCellValue(fs.getFrsFacilityId());
-                    row.getCell(3).setCellValue(fs.getAltSiteIdentifier());
-                    row.getCell(4).setCellValue(fs.getFacilityCategoryCode());
-//                    row.getCell(5).setCellValue(fs.getFacilitySourceTypeCode());
-                    if (fs.getFacilitySourceTypeCode() != null) {
-                        row.getCell(6).setCellFormula(generateLookupFormula(wb, "FacilitySourceTypeCode", fs.getFacilitySourceTypeCode(), false));
-                        formulaEvaluator.evaluateInCell(row.getCell(6));
-                    }
-                    row.getCell(7).setCellValue(fs.getName());
-                    row.getCell(8).setCellValue(fs.getDescription());
-//                    row.getCell(9).setCellValue(fs.getOperatingStatusCode());
-                    if (fs.getOperatingStatusCode() != null) {
-                        row.getCell(10).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", fs.getOperatingStatusCode(), true));
-                        formulaEvaluator.evaluateInCell(row.getCell(10));
-                    }
-                    row.getCell(11).setCellValue(fs.getStatusYear());
-//                    row.getCell(12).setCellValue(fs.getProgramSystemCode());
-                    if (fs.getProgramSystemCode() != null) {
-                        row.getCell(13).setCellFormula(generateLookupFormula(wb, "ProgramSystemCode", fs.getProgramSystemCode(), true));
-                        formulaEvaluator.evaluateInCell(row.getCell(13));
-                    }
-                    row.getCell(14).setCellValue(fs.getStreetAddress());
-                    row.getCell(15).setCellValue(fs.getCity());
-                    row.getCell(16).setCellValue(fs.getStateFipsCode());
-                    row.getCell(17).setCellValue(fs.getStateCode());
-                    row.getCell(18).setCellValue(fs.getCountyCode());
-                    row.getCell(19).setCellValue(String.format("%s (%s)", fs.getCounty(), fs.getStateCode()));
-//                    row.getCell(20).setCellValue(fs.getCountryCode());
-                    row.getCell(21).setCellValue(fs.getPostalCode());
-                    row.getCell(22).setCellValue(fs.getLatitude());
-                    row.getCell(23).setCellValue(fs.getLongitude());
-                    row.getCell(24).setCellValue(fs.getMailingStreetAddress());
-                    row.getCell(25).setCellValue(fs.getMailingCity());
-                    row.getCell(26).setCellValue(fs.getMailingStateCode());
-                    row.getCell(27).setCellValue(fs.getMailingPostalCode());
-//                    row.getCell(28).setCellValue(fs.getMailingCountryCode());
-                    row.getCell(29).setCellValue(fs.getEisProgramId());
-//                    row.getCell(30).setCellValue(fs.getTribalCode());
-                    if (fs.getTribalCode() != null) {
-                        row.getCell(31).setCellFormula(generateLookupFormula(wb, "TribalCode", fs.getTribalCode(), false));
-                        formulaEvaluator.evaluateInCell(row.getCell(31));
-                    }
+            generateFacilityExcelSheet(wb, formulaEvaluator, facilitySheet, uploadDto.getFacilitySites(), firstRowCount);
+            generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheetAt(1), uploadDto.getFacilityContacts(), firstRowCount);
 
-                    rowCount++;
+            generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheetAt(4), uploadDto.getEmissionsUnits(), firstRowCount);
 
-                }
-            }
-
-            XSSFSheet euSheet = wb.getSheetAt(4);
-
-            if (euSheet != null) {
-                int rowCount = 23;
-//                logger.info("" + rowCount);
-
-                for (EmissionsUnitBulkUploadDto eu : uploadDto.getEmissionsUnits()) {
-                    Row row = euSheet.getRow(rowCount);
-
-                    row.getCell(2).setCellValue(eu.getUnitIdentifier());
-
-                    rowCount++;
-     
-                }
-            }
- 
             wb.setForceFormulaRecalculation(true);
             wb.write(outputStream);
             wb.close();
@@ -388,7 +326,154 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         } catch (IOException | EncryptedDocumentException | InvalidFormatException ex) {
 
+            logger.error("Unable to generate Excel export ", ex);
             throw new IllegalStateException(ex);
+        }
+
+    }
+
+    /**
+     * Map facility site into the facility site excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateFacilityExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteBulkUploadDto> dtos, int firstRow) {
+
+        int currentRow = firstRow;
+
+        for (FacilitySiteBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getFrsFacilityId());
+            row.getCell(3).setCellValue(dto.getAltSiteIdentifier());
+            row.getCell(4).setCellValue(dto.getFacilityCategoryCode());
+//                row.getCell(5).setCellValue(dto.getFacilitySourceTypeCode());
+            if (dto.getFacilitySourceTypeCode() != null) {
+                // find the display name using the code in an excel lookup similar to how the code is found for the dropdown
+                // generates a lookup formula then evaluates it to get the correct value using evaluateInCell so that the formula is removed afterwards
+                row.getCell(6).setCellFormula(generateLookupFormula(wb, "FacilitySourceTypeCode", dto.getFacilitySourceTypeCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(6));
+            }
+            row.getCell(7).setCellValue(dto.getName());
+            row.getCell(8).setCellValue(dto.getDescription());
+//                row.getCell(9).setCellValue(dto.getOperatingStatusCode());
+            if (dto.getOperatingStatusCode() != null) {
+                row.getCell(10).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(10));
+            }
+            row.getCell(11).setCellValue(dto.getStatusYear());
+//                row.getCell(12).setCellValue(dto.getProgramSystemCode());
+            if (dto.getProgramSystemCode() != null) {
+                row.getCell(13).setCellFormula(generateLookupFormula(wb, "ProgramSystemCode", dto.getProgramSystemCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(13));
+            }
+            row.getCell(14).setCellValue(dto.getStreetAddress());
+            row.getCell(15).setCellValue(dto.getCity());
+            row.getCell(16).setCellValue(dto.getStateFipsCode());
+            row.getCell(17).setCellValue(dto.getStateCode());
+            row.getCell(18).setCellValue(dto.getCountyCode());
+            row.getCell(19).setCellValue(String.format("%s (%s)", dto.getCounty(), dto.getStateCode()));
+//                row.getCell(20).setCellValue(dto.getCountryCode());
+            row.getCell(21).setCellValue(dto.getPostalCode());
+            row.getCell(22).setCellValue(dto.getLatitude());
+            row.getCell(23).setCellValue(dto.getLongitude());
+            row.getCell(24).setCellValue(dto.getMailingStreetAddress());
+            row.getCell(25).setCellValue(dto.getMailingCity());
+            row.getCell(26).setCellValue(dto.getMailingStateCode());
+            row.getCell(27).setCellValue(dto.getMailingPostalCode());
+//                row.getCell(28).setCellValue(dto.getMailingCountryCode());
+            row.getCell(29).setCellValue(dto.getEisProgramId());
+//                row.getCell(30).setCellValue(dto.getTribalCode());
+            if (dto.getTribalCode() != null) {
+                row.getCell(31).setCellFormula(generateLookupFormula(wb, "TribalCode", dto.getTribalCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(31));
+            }
+
+            currentRow++;
+
+        }
+    }
+
+    /**
+     * Map facility contacts into the facility contacts excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateFacilityContactExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteContactBulkUploadDto> dtos, int firstRow) {
+
+        int currentRow = firstRow;
+
+        for(FacilitySiteContactBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getType() != null) {
+                row.getCell(4).setCellFormula(generateLookupFormula(wb, "ContactTypeCode", dto.getType(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(4));
+            }
+            row.getCell(5).setCellValue(dto.getPrefix());
+            row.getCell(6).setCellValue(dto.getFirstName());
+            row.getCell(7).setCellValue(dto.getLastName());
+            row.getCell(8).setCellValue(dto.getEmail());
+            row.getCell(9).setCellValue(dto.getPhone());
+            row.getCell(10).setCellValue(dto.getPhoneExt());
+            row.getCell(11).setCellValue(dto.getStreetAddress());
+            row.getCell(12).setCellValue(dto.getCity());
+//            row.getCell(13).setCellValue(dto.getStateFipsCode());
+            row.getCell(14).setCellValue(dto.getStateCode());
+//            row.getCell(15).setCellValue(dto.getCountyCode());
+            row.getCell(16).setCellValue(String.format("%s (%s)", dto.getCounty(), dto.getStateCode()));
+//            row.getCell(17).setCellValue(dto.getCountryCode());
+            row.getCell(18).setCellValue(dto.getPostalCode());
+            row.getCell(19).setCellValue(dto.getMailingStreetAddress());
+            row.getCell(20).setCellValue(dto.getMailingCity());
+            row.getCell(21).setCellValue(dto.getMailingStateCode());
+//            row.getCell(22).setCellValue(dto.getMailingCountryCode());
+            row.getCell(23).setCellValue(dto.getMailingPostalCode());
+//            row.getCell().setCellValue(dto.);
+
+            currentRow++;
+
+        }
+    }
+
+    /**
+     * Map emissions units into the emissions units excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateEmissionUnitExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<EmissionsUnitBulkUploadDto> dtos, int firstRow) {
+        
+        int currentRow = firstRow;
+
+        for (EmissionsUnitBulkUploadDto eu : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(eu.getUnitIdentifier());
+            row.getCell(4).setCellValue(eu.getDescription());
+            if (eu.getTypeCode() != null) {
+                row.getCell(6).setCellFormula(generateLookupFormula(wb, "UnitTypeCode", eu.getTypeCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(6));
+            }
+            if (eu.getOperatingStatusCodeDescription() != null) {
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", eu.getOperatingStatusCodeDescription(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            row.getCell(9).setCellValue(eu.getStatusYear());
+            row.getCell(10).setCellValue(eu.getDesignCapacity());
+            row.getCell(11).setCellValue(eu.getUnitOfMeasureCode());
+            row.getCell(12).setCellValue(eu.getComments());
+
+            currentRow++;
+
         }
 
     }

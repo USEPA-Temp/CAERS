@@ -37,4 +37,9 @@ export class ConfigPropertyService {
     return this.http.get<AppProperty>(url);
   }
 
+  retrieveExcelExportEnabled(): Observable<boolean> {
+    const url = `${this.baseUrl}/excelExport/enabled`;
+    return this.http.get<boolean>(url);
+  }
+
 }

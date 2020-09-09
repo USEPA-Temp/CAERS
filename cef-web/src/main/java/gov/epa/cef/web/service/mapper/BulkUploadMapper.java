@@ -214,6 +214,7 @@ public interface BulkUploadMapper {
     List<FacilityNAICSBulkUploadDto> faciliytNAICSToDtoList(List<FacilityNAICSXref> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
+    @Mapping(source="countyCode.name", target="county")
     @Mapping(source="countyCode.countyCode", target="countyCode")
     @Mapping(source="type.code", target="type")
     @Mapping(source="stateCode.uspsCode", target="stateCode")
