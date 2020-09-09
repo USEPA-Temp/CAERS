@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.io.Resources;
+
 import gov.epa.cef.web.client.api.ExcelParserClient;
 import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
@@ -104,6 +106,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -120,10 +124,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    // TODO: make a property
-    private static final String EXCEL_FILE_PATH = "./src/main/resources/excel/CEF_BulkUpload_Template.xlsx";
+    private static final String EXCEL_FILE_PATH = "excel/CEF_BulkUpload_Template.xlsx";
     private static final String EXCEL_GENERIC_LOOKUP_TEXT = "INDEX(%s!$A$2:$A$%d,MATCH(\"%s\",%s!$B$2:$B$%d,0))";
     private static final String EXCEL_GENERIC_LOOKUP_NUMBER = "INDEX(%s!$A$2:$A$%d,MATCH(%s,%s!$B$2:$B$%d,0))";
+    private static final int EXCEL_MAPPING_HEADER_ROWS = 23;
 
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngineRepo;
@@ -299,7 +303,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         logger.info("Begin file manipulation");
 
-        try (FileInputStream is = new FileInputStream(new File(EXCEL_FILE_PATH));
+        URL template = Resources.getResource(EXCEL_FILE_PATH);
+
+        try (FileInputStream is = new FileInputStream(new File(template.toURI()));
              TempFile tempFile = TempFile.from(is, UUID.randomUUID().toString());
              XSSFWorkbook wb = XSSFWorkbookFactory.createWorkbook(tempFile.getFile(), false)) {
 
@@ -308,15 +314,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             XSSFFormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
  
-            XSSFSheet facilitySheet = wb.getSheetAt(0);
 //            facilitySheet.disableLocking();
 
-            int firstRowCount = facilitySheet.getLastRowNum();
+            generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheetAt(0), uploadDto.getFacilitySites());
+            generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheetAt(1), uploadDto.getFacilityContacts());
 
-            generateFacilityExcelSheet(wb, formulaEvaluator, facilitySheet, uploadDto.getFacilitySites(), firstRowCount);
-            generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheetAt(1), uploadDto.getFacilityContacts(), firstRowCount);
-
-            generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheetAt(4), uploadDto.getEmissionsUnits(), firstRowCount);
+            generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheetAt(4), uploadDto.getEmissionsUnits());
 
             wb.setForceFormulaRecalculation(true);
             wb.write(outputStream);
@@ -324,7 +327,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             logger.info("Finish generate excel");
 
-        } catch (IOException | EncryptedDocumentException | InvalidFormatException ex) {
+        } catch (IOException | EncryptedDocumentException | InvalidFormatException | URISyntaxException ex) {
 
             logger.error("Unable to generate Excel export ", ex);
             throw new IllegalStateException(ex);
@@ -340,9 +343,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param dtos
      * @param firstRow
      */
-    private void generateFacilityExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteBulkUploadDto> dtos, int firstRow) {
+    private void generateFacilityExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteBulkUploadDto> dtos) {
 
-        int currentRow = firstRow;
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
 
         for (FacilitySiteBulkUploadDto dto : dtos) {
             Row row = sheet.getRow(currentRow);
@@ -405,9 +408,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param dtos
      * @param firstRow
      */
-    private void generateFacilityContactExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteContactBulkUploadDto> dtos, int firstRow) {
+    private void generateFacilityContactExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteContactBulkUploadDto> dtos) {
 
-        int currentRow = firstRow;
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
 
         for(FacilitySiteContactBulkUploadDto dto : dtos) {
             Row row = sheet.getRow(currentRow);
@@ -450,9 +453,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param dtos
      * @param firstRow
      */
-    private void generateEmissionUnitExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<EmissionsUnitBulkUploadDto> dtos, int firstRow) {
+    private void generateEmissionUnitExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<EmissionsUnitBulkUploadDto> dtos) {
         
-        int currentRow = firstRow;
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
 
         for (EmissionsUnitBulkUploadDto eu : dtos) {
             Row row = sheet.getRow(currentRow);
