@@ -15,10 +15,12 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
+import gov.epa.cef.web.service.impl.CersXmlServiceImpl;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +42,8 @@ import com.google.common.base.Strings;
 
 @Component
 public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmissionsProcessValidator.class);
 	
 	@Autowired
 	private PointSourceSccCodeRepository sccRepo;
@@ -53,9 +59,6 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	
 	@Autowired
 	private EmissionRepository emissionRepo;
-	
-	private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
-	private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
     
     @Override
     public void compose(FluentValidator validator,
@@ -75,64 +78,117 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         boolean result = true;
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
-        
-        // Check for valid SCC Code
-        if (Strings.emptyToNull(emissionsProcess.getSccCode()) != null) {
 
-        	PointSourceSccCode isPointSourceSccCode = sccRepo.findById(emissionsProcess.getSccCode()).orElse(null);
-        	short reportYear = emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear();
-        	
-        	if (isPointSourceSccCode == null) {
-        		
-        		result = false;
-        		context.addFederalError(
-                    ValidationField.PROCESS_INFO_SCC.value(),
-                    "emissionsProcess.information.scc.invalid",
-                    createValidationDetails(emissionsProcess),
-                    emissionsProcess.getSccCode());
-            
-        	} else if (isPointSourceSccCode.getLastInventoryYear() != null
-        		&& isPointSourceSccCode.getLastInventoryYear() < reportYear) {
-        		
-        		result = false;
-        		context.addFederalError(
-        			ValidationField.PROCESS_INFO_SCC.value(),
-        			"emissionsProcess.information.scc.expired",
-        			createValidationDetails(emissionsProcess),
-        			emissionsProcess.getSccCode(),
-        			isPointSourceSccCode.getLastInventoryYear().toString());
-        		
-        	} else if (isPointSourceSccCode.getLastInventoryYear() != null
-        		&& isPointSourceSccCode.getLastInventoryYear() >= reportYear) {
-        		
-        		result = false;
-        		context.addFederalWarning(
-        			ValidationField.PROCESS_INFO_SCC.value(),
-        			"emissionsProcess.information.scc.retired",
-        			createValidationDetails(emissionsProcess),
-        			emissionsProcess.getSccCode(),
-        			isPointSourceSccCode.getLastInventoryYear().toString());
-          }
-        	
-          List<String> aircraftEngineScc = new ArrayList<String>();
-          Collections.addAll(aircraftEngineScc, "2275001000", "2275020000", "2275050011", "2275050012", "2275060011", "2275060012");
-        	
-          // if SCC is an aircraft engine type, then aircraft engine code is required 
-          for (String code: aircraftEngineScc) {
-          	if (code.contentEquals(emissionsProcess.getSccCode()) && emissionsProcess.getAircraftEngineTypeCode() == null) {
-          		
-          		result = false;
-          		context.addFederalError(
-          				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
-          				"emissionsProcess.aircraftCode.required",
-          				createValidationDetails(emissionsProcess));
-          		
-          	} 
-          }
+        Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
+        // Might need to add a rounding tolerance.
+        if (100 != totalReleasePointPercent) {
+
+        	result = false;
+        	context.addFederalError(
+                  ValidationField.PROCESS_RP_PCT.value(),
+                  "emissionsProcess.releasePointAppts.percent.total",
+                  createValidationDetails(emissionsProcess));
+        }
+	  
+        Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
+            .filter(rpa -> rpa.getReleasePoint() != null)
+            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
+	     
+        // Process must go to at least one release point
+        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
+
+        	result = false;
+        	context.addFederalError(
+        			ValidationField.PROCESS_RP.value(),
+        			"emissionsProcess.releasePointAppts.required",
+        			createValidationDetails(emissionsProcess));
         }
         
-        if (emissionsProcess != null) {
+        // release point can be used only once per rp appt collection
+        for (List<ReleasePointAppt> rpa: rpaMap.values()) {
         	
+        	if (rpa.size() > 1) {
+        		
+        		result = false;
+	        	context.addFederalError(
+	        			ValidationField.PROCESS_RP.value(),
+	        			"emissionsProcess.releasePointAppts.duplicate",
+	        			createValidationDetails(emissionsProcess),
+	        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
+	        }
+	      }
+        
+        // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
+        if (emissionsProcess.getReleasePointAppts() != null) {
+        	for(ReleasePointAppt rpa: emissionsProcess.getReleasePointAppts()){
+        		  if((rpa.getPercent() < 1) || (rpa.getPercent() > 100)){
+  	        		result = false;
+		        	context.addFederalError(
+		        			ValidationField.PROCESS_RP_PCT.value(),
+		        			"emissionsProcess.releasePointAppts.percent.range",
+		        			createValidationDetails(emissionsProcess),
+		        			rpa.getReleasePoint().getReleasePointIdentifier());  
+        		  }
+        	}
+        }
+        
+        if (ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+        	
+            // Check for valid SCC Code
+            if (Strings.emptyToNull(emissionsProcess.getSccCode()) != null) {
+
+            	PointSourceSccCode isPointSourceSccCode = sccRepo.findById(emissionsProcess.getSccCode()).orElse(null);
+            	short reportYear = emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear();
+            	
+            	if (isPointSourceSccCode == null) {
+            		
+            		result = false;
+            		context.addFederalError(
+                        ValidationField.PROCESS_INFO_SCC.value(),
+                        "emissionsProcess.information.scc.invalid",
+                        createValidationDetails(emissionsProcess),
+                        emissionsProcess.getSccCode());
+                
+            	} else if (isPointSourceSccCode.getLastInventoryYear() != null
+            		&& isPointSourceSccCode.getLastInventoryYear() < reportYear) {
+            		
+            		result = false;
+            		context.addFederalError(
+            			ValidationField.PROCESS_INFO_SCC.value(),
+            			"emissionsProcess.information.scc.expired",
+            			createValidationDetails(emissionsProcess),
+            			emissionsProcess.getSccCode(),
+            			isPointSourceSccCode.getLastInventoryYear().toString());
+            		
+            	} else if (isPointSourceSccCode.getLastInventoryYear() != null
+            		&& isPointSourceSccCode.getLastInventoryYear() >= reportYear) {
+            		
+            		result = false;
+            		context.addFederalWarning(
+            			ValidationField.PROCESS_INFO_SCC.value(),
+            			"emissionsProcess.information.scc.retired",
+            			createValidationDetails(emissionsProcess),
+            			emissionsProcess.getSccCode(),
+            			isPointSourceSccCode.getLastInventoryYear().toString());
+              }
+            	
+              List<String> aircraftEngineScc = new ArrayList<String>();
+              Collections.addAll(aircraftEngineScc, "2275001000", "2275020000", "2275050011", "2275050012", "2275060011", "2275060012");
+            	
+              // if SCC is an aircraft engine type, then aircraft engine code is required 
+              for (String code: aircraftEngineScc) {
+              	if (code.contentEquals(emissionsProcess.getSccCode()) && emissionsProcess.getAircraftEngineTypeCode() == null) {
+              		
+              		result = false;
+              		context.addFederalError(
+              				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
+              				"emissionsProcess.aircraftCode.required",
+              				createValidationDetails(emissionsProcess));
+              		
+              	} 
+              }
+            }
+            
             // Check for unique SCC and AircraftEngineType code combination within a facility site
             if ((emissionsProcess.getSccCode() != null) && (emissionsProcess.getAircraftEngineTypeCode() != null)) {
             	String testingCombination = emissionsProcess.getAircraftEngineTypeCode().getCode() + emissionsProcess.getSccCode();
@@ -158,89 +214,34 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
                 }
             }
       
-          // aircraft engine code must match assigned SCC
-          if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
-          	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
-          	
-          	if (sccHasEngineType != null && !emissionsProcess.getSccCode().contentEquals(sccHasEngineType.getScc())) {
-          		
-          		result = false;
-          		context.addFederalError(
-          				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
-          				"emissionsProcess.aircraftCode.valid",
-          				createValidationDetails(emissionsProcess));
-        		}
-        	}
-
-          if (emissionsProcess.getAircraftEngineTypeCode() != null && emissionsProcess.getAircraftEngineTypeCode().getLastInventoryYear() != null
-                  && emissionsProcess.getAircraftEngineTypeCode().getLastInventoryYear() < getReportYear(emissionsProcess)) {
-
-              result = false;
-              context.addFederalError(
-                      ValidationField.PROCESS_AIRCRAFT_CODE.value(),
-                      "emissionsProcess.aircraftCode.legacy", 
-                      createValidationDetails(emissionsProcess),
-                      emissionsProcess.getAircraftEngineTypeCode().getFaaAircraftType(),
-                      emissionsProcess.getAircraftEngineTypeCode().getEngine());
-          }
-
-    	  Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
-          // Might need to add a rounding tolerance.
-          if (100 != totalReleasePointPercent) {
-
-              result = false;
-              context.addFederalError(
-                      ValidationField.PROCESS_RP_PCT.value(),
-                      "emissionsProcess.releasePointAppts.percent.total",
-                      createValidationDetails(emissionsProcess));
-          }
-    	  
-    	  Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
-	            .filter(rpa -> rpa.getReleasePoint() != null)
-	            .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
-	     
-	        // Process must go to at least one release point
-	        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
-	
-	        	result = false;
-	        	context.addFederalError(
-	        			ValidationField.PROCESS_RP.value(),
-	        			"emissionsProcess.releasePointAppts.required",
-	        			createValidationDetails(emissionsProcess));
-	        }
-	        
-	        // release point can be used only once per rp appt collection
-	        for (List<ReleasePointAppt> rpa: rpaMap.values()) {
-	        	
-	        	if (rpa.size() > 1) {
-	        		
-	        		result = false;
-		        	context.addFederalError(
-		        			ValidationField.PROCESS_RP.value(),
-		        			"emissionsProcess.releasePointAppts.duplicate",
-		        			createValidationDetails(emissionsProcess),
-		        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
-		        }
-		      }
-	        
-	        // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
-	        if (emissionsProcess.getReleasePointAppts() != null) {
-	        	for(ReleasePointAppt rpa: emissionsProcess.getReleasePointAppts()){
-	        		  if((rpa.getPercent() < 1) || (rpa.getPercent() > 100)){
-	  	        		result = false;
-			        	context.addFederalError(
-			        			ValidationField.PROCESS_RP_PCT.value(),
-			        			"emissionsProcess.releasePointAppts.percent.range",
-			        			createValidationDetails(emissionsProcess),
-			        			rpa.getReleasePoint().getReleasePointIdentifier());  
-	        		  }
-	        	}
-	        }
-        }
-        
-        // At least one emission is recorded for the Reporting Period when Process Status is "Operating.
-        // and when Process Status is not "Permanently Shutdown" or "Temporarily Shutdown".
-        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()) && !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+			  // aircraft engine code must match assigned SCC
+			  if (emissionsProcess.getSccCode() != null && emissionsProcess.getAircraftEngineTypeCode() != null) {
+			  	AircraftEngineTypeCode sccHasEngineType = aircraftEngCodeRepo.findById(emissionsProcess.getAircraftEngineTypeCode().getCode()).orElse(null);
+			  	
+			  	if (sccHasEngineType != null && !emissionsProcess.getSccCode().contentEquals(sccHasEngineType.getScc())) {
+			  		
+			  		result = false;
+			  		context.addFederalError(
+			  				ValidationField.PROCESS_AIRCRAFT_CODE.value(),
+			  				"emissionsProcess.aircraftCode.valid",
+			  				createValidationDetails(emissionsProcess));
+					}
+				}
+			
+			  if (emissionsProcess.getAircraftEngineTypeCode() != null && emissionsProcess.getAircraftEngineTypeCode().getLastInventoryYear() != null
+			          && emissionsProcess.getAircraftEngineTypeCode().getLastInventoryYear() < getReportYear(emissionsProcess)) {
+			
+			      result = false;
+			      context.addFederalError(
+			              ValidationField.PROCESS_AIRCRAFT_CODE.value(),
+			              "emissionsProcess.aircraftCode.legacy", 
+			              createValidationDetails(emissionsProcess),
+			              emissionsProcess.getAircraftEngineTypeCode().getFaaAircraftType(),
+			              emissionsProcess.getAircraftEngineTypeCode().getEngine());
+			  }
+        	
+        	
+            // At least one emission is recorded for the Reporting Period when Process Status is "Operating.
         	if (emissionsProcess.getReportingPeriods() != null) {
         		for (ReportingPeriod rp : emissionsProcess.getReportingPeriods()) {
         			if (rp.getEmissions() == null || rp.getEmissions().size() == 0) {
@@ -301,7 +302,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	        		}
 	        		
 	        } catch (NullPointerException e) {
-	        	System.out.println("No Emissions found for Emissions Report");
+	        	LOGGER.debug("No Emissions found for Emissions Report");
 	        }
         }
         

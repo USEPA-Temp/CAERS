@@ -20,6 +20,7 @@ import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapper;
 import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapper;
 import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapper;
+import gov.epa.cef.web.util.ConstantUtils;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlMeasureDataType;
@@ -29,7 +30,6 @@ import net.exchangenetwork.schema.cer._1._2.FacilitySiteDataType;
 import net.exchangenetwork.schema.cer._1._2.ObjectFactory;
 import net.exchangenetwork.schema.cer._1._2.ProcessDataType;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
 
 @Service
 public class CersXmlServiceImpl implements CersXmlService {
@@ -91,7 +92,7 @@ public class CersXmlServiceImpl implements CersXmlService {
             .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
 
         if (submissionStatus != null) {
-            if ("Point".contentEquals(submissionStatus.dataCategory())) {
+            if (ConstantUtils.EIS_TRANSMISSION_POINT_EMISSIONS.contentEquals(submissionStatus.dataCategory())) {
                 source.getFacilitySites().forEach(fs -> {
 
                     // remove extra data
@@ -106,48 +107,54 @@ public class CersXmlServiceImpl implements CersXmlService {
                             eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
                                .peek(ep -> {
 
-                                   // remove extra data and remove periods without emissions
+                                   // remove extra data and remove reporting periods without emissions
                                    ep.getReleasePointAppts().clear();
                                    ep.setReportingPeriods(ep.getReportingPeriods().stream()
                                            .filter(rp -> !rp.getEmissions().isEmpty())
                                            .collect(Collectors.toList()));
 
-                               }).filter(ep -> "OP".equals(ep.getOperatingStatusCode().getCode()) && !ep.getReportingPeriods().isEmpty())
+                               }).filter(ep -> ConstantUtils.STATUS_OPERATING.equals(ep.getOperatingStatusCode().getCode()) && !ep.getReportingPeriods().isEmpty())
                                .collect(Collectors.toList()));
-                        }).filter(eu -> "OP".equals(eu.getOperatingStatusCode().getCode()) && !eu.getEmissionsProcesses().isEmpty())
+                        }).filter(eu -> ConstantUtils.STATUS_OPERATING.equals(eu.getOperatingStatusCode().getCode()) && !eu.getEmissionsProcesses().isEmpty())
                         .collect(Collectors.toList()));
                 });
-            } else if ("FacilityInventory".contentEquals(submissionStatus.dataCategory())) {
+            } else if (ConstantUtils.EIS_TRANSMISSION_FACILITY_INVENTORY.equals(submissionStatus.dataCategory())) {
                 source.getFacilitySites().forEach(fs -> {
 
-                    // remove extra information from PS units
                     fs.setEmissionsUnits(fs.getEmissionsUnits().stream()
                         .map(eu -> {
+                            
+                        	//first set the Processes for the emissions unit
+                            eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
+                                .map(ep -> {
+                                	
+                                    //remove all reporting periods, operating details, and emissions from the emission process
+                                    //for a FacilityInventory submission
+                                    ep.getReportingPeriods().clear();
 
-                            if ("PS".equals(eu.getOperatingStatusCode().getCode())) {
-                                EmissionsUnit result = this.euMapper.emissionsUnitToPSEmissionsUnit(eu);
+                                    // remove extra information from processes which are not operational
+                                    if (!ConstantUtils.STATUS_OPERATING.equals(ep.getOperatingStatusCode().getCode())) {
+                                        EmissionsProcess result = this.euMapper.processToNonOperatingEmissionsProcess(ep);                                           
+                                        return result;
+                                    }                   
+                                    return ep;
+                                }).collect(Collectors.toList()));
+                            
+                            // remove extra information from units which are not operational
+                            if (!ConstantUtils.STATUS_OPERATING.equals(eu.getOperatingStatusCode().getCode())) {
+                                EmissionsUnit result = this.euMapper.emissionsUnitToNonOperatingEmissionsUnit(eu);
                                 return result;
-                            } else {
-                                // remove extra information from PS processes
-                                eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
-                                    .map(ep -> {
-
-                                        if ("PS".equals(ep.getOperatingStatusCode().getCode())) {
-                                            EmissionsProcess result = this.euMapper.processToPsEmissionsProcess(ep);
-                                            return result;
-                                        }
-                                        return ep;
-                                    }).collect(Collectors.toList()));
                             }
                             return eu;
+                            
                         }).collect(Collectors.toList()));
 
-                    // remove extra information from PS release points
                     fs.setReleasePoints(fs.getReleasePoints().stream()
                         .map(rp -> {
 
-                            if ("PS".equals(rp.getOperatingStatusCode().getCode())) {
-                                ReleasePoint result = this.rpMapper.releasePointToPSReleasePoint(rp);
+                            // remove extra information from release points which are not operational
+                            if (!ConstantUtils.STATUS_OPERATING.equals(rp.getOperatingStatusCode().getCode())) {
+                                ReleasePoint result = this.rpMapper.releasePointToNonOperatingReleasePoint(rp);
                                 return result;
                             }
                             return rp;
@@ -164,7 +171,7 @@ public class CersXmlServiceImpl implements CersXmlService {
             cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
         }
 
-        if (submissionStatus == null || !"Point".contentEquals(submissionStatus.dataCategory())) {
+        if (submissionStatus == null || !ConstantUtils.EIS_TRANSMISSION_POINT_EMISSIONS.equals(submissionStatus.dataCategory())) {
             addProcessControls(source, cers);
         }
 
@@ -314,15 +321,8 @@ public class CersXmlServiceImpl implements CersXmlService {
 
         for (ControlAssignment assignment : path.getAssignments()) {
 
-            if (assignment.getControl() != null && "OP".equals(assignment.getControl().getOperatingStatusCode().getCode())) {
+            if (assignment.getControl() != null && ConstantUtils.STATUS_OPERATING.equals(assignment.getControl().getOperatingStatusCode().getCode())) {
                 result.add(assignment.getControl());
-
-//                if (!isDuplicateControlMeasure(ca.getControlMeasure(), assignment.getControl())) {
-//                    ControlMeasureDataType cm = new ControlMeasureDataType();
-//                    cm.setControlMeasureCode(assignment.getControl().getControlMeasureCode().getCode());
-//                    cm.setControlMeasureSequence(assignment.getSequenceNumber().toString());
-//                    ca.getControlMeasure().add(cm);
-//                }
             }
 
             if (assignment.getControlPathChild() != null) {
@@ -354,22 +354,6 @@ public class CersXmlServiceImpl implements CersXmlService {
 			    }
 			}
 		}
-	}
-
-
-	/***
-	 * Return true if the control already exists in the controlMeasures list
-	 * @param controlMeasures
-	 * @param control
-	 * @return
-	 */
-	private boolean isDuplicateControlMeasure(List<ControlMeasureDataType> controlMeasures, Control control) {
-		for (ControlMeasureDataType controlMeasure : controlMeasures) {
-			if (controlMeasure.getControlMeasureCode().equals(control.getControlMeasureCode().getDescription())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 

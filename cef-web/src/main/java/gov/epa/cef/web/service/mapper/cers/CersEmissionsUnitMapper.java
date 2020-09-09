@@ -98,14 +98,15 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="facilitySite", target="facilitySite")
     @Mapping(source="unitIdentifier", target="unitIdentifier")
     @Mapping(source="statusYear", target="statusYear")
-    EmissionsUnit emissionsUnitToPSEmissionsUnit(EmissionsUnit source);
+    @Mapping(source="emissionsProcesses", target="emissionsProcesses")
+    EmissionsUnit emissionsUnitToNonOperatingEmissionsUnit(EmissionsUnit source);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source="operatingStatusCode", target="operatingStatusCode")
     @Mapping(source="emissionsUnit", target="emissionsUnit")
     @Mapping(source="emissionsProcessIdentifier", target="emissionsProcessIdentifier")
     @Mapping(source="statusYear", target="statusYear")
-    EmissionsProcess processToPsEmissionsProcess(EmissionsProcess source);
+    EmissionsProcess processToNonOperatingEmissionsProcess(EmissionsProcess source);
 
     // TODO: the XML appears to only support 1 operating detail per reporting period, might want to change our db schema
     default OperatingDetailsDataType operatingDetailsFromOperatingDetailList(Collection<OperatingDetail> source) {

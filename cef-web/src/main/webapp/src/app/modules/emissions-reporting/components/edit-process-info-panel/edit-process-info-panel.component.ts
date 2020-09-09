@@ -13,11 +13,14 @@ import { ActivatedRoute } from '@angular/router';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 
+const statusOperating = 'OP';
+
 @Component({
   selector: 'app-edit-process-info-panel',
   templateUrl: './edit-process-info-panel.component.html',
   styleUrls: ['./edit-process-info-panel.component.scss']
 })
+
 export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterContentChecked{
   @Input() process: Process;
   @Input() unitIdentifier: string;
@@ -51,11 +54,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       Validators.maxLength(20)
     ]],
     sccDescription: ['', [
-      Validators.required,
+      this.requiredIfOperating(),
       Validators.maxLength(500)
     ]],
     description: ['', [
-      Validators.required,
+      this.requiredIfOperating(),
       Validators.maxLength(200)
     ]],
     comments: ['', Validators.maxLength(400)]
@@ -135,6 +138,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     if (newValue) {
       this.processForm.controls.statusYear.reset();
     }
+    this.processForm.controls.description.updateValueAndValidity();
+    this.processForm.controls.sccDescription.updateValueAndValidity();
   }
 
   openSccSearchModal() {
@@ -352,6 +357,20 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       }
       return null;
     };
+  }
+
+  requiredIfOperating() {
+    return (formControl => {
+      if (!formControl.parent) {
+        return null;
+      }
+
+      if (this.processForm.get('operatingStatusCode').value
+        && this.processForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
+        return Validators.required(formControl);
+      }
+      return null;
+    });
   }
 
 }
