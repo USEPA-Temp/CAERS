@@ -123,29 +123,31 @@ public class CersXmlServiceImpl implements CersXmlService {
 
                     fs.setEmissionsUnits(fs.getEmissionsUnits().stream()
                         .map(eu -> {
-                            
-                        	//first set the Processes for the emissions unit
-                            eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
-                                .map(ep -> {
-                                	
-                                    //remove all reporting periods, operating details, and emissions from the emission process
-                                    //for a FacilityInventory submission
-                                    ep.getReportingPeriods().clear();
-
-                                    // remove extra information from processes which are not operational
-                                    if (!ConstantUtils.STATUS_OPERATING.equals(ep.getOperatingStatusCode().getCode())) {
-                                        EmissionsProcess result = this.euMapper.processToNonOperatingEmissionsProcess(ep);                                           
-                                        return result;
-                                    }                   
-                                    return ep;
-                                }).collect(Collectors.toList()));
-                            
+                        	
                             // remove extra information from units which are not operational
                             if (!ConstantUtils.STATUS_OPERATING.equals(eu.getOperatingStatusCode().getCode())) {
                                 EmissionsUnit result = this.euMapper.emissionsUnitToNonOperatingEmissionsUnit(eu);
                                 return result;
+                            } else {
+                            
+	                        	//first set the Processes for the emissions unit
+	                            eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
+	                                .map(ep -> {
+	                                	
+	                                    //remove all reporting periods, operating details, and emissions from the emission process
+	                                    //for a FacilityInventory submission
+	                                    ep.getReportingPeriods().clear();
+	
+	                                    // remove extra information from processes which are not operational
+	                                    if (!ConstantUtils.STATUS_OPERATING.equals(ep.getOperatingStatusCode().getCode())) {
+	                                        EmissionsProcess result = this.euMapper.processToNonOperatingEmissionsProcess(ep);                                           
+	                                        return result;
+	                                    }                   
+	                                    return ep;
+	                                }).collect(Collectors.toList()));
+	                            
+	                            return eu;
                             }
-                            return eu;
                             
                         }).collect(Collectors.toList()));
 
