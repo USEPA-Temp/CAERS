@@ -98,7 +98,6 @@ public interface CersEmissionsUnitMapper {
     @Mapping(source="facilitySite", target="facilitySite")
     @Mapping(source="unitIdentifier", target="unitIdentifier")
     @Mapping(source="statusYear", target="statusYear")
-    @Mapping(source="emissionsProcesses", target="emissionsProcesses")
     EmissionsUnit emissionsUnitToNonOperatingEmissionsUnit(EmissionsUnit source);
 
     @BeanMapping(ignoreByDefault = true)
