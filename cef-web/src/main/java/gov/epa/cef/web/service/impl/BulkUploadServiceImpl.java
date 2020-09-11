@@ -76,6 +76,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetName;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.CalculationUtils;
@@ -225,6 +226,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         List<FacilitySite> facilitySites = report.getFacilitySites();
         List<EmissionsUnit> units = facilitySites.stream()
             .flatMap(f -> f.getEmissionsUnits().stream())
+            .sorted((i1, i2) -> i1.getUnitIdentifier().compareToIgnoreCase(i2.getUnitIdentifier()))
             .collect(Collectors.toList());
         List<EmissionsProcess> processes = units.stream()
             .flatMap(u -> u.getEmissionsProcesses().stream())
@@ -249,6 +251,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             .collect(Collectors.toList());
         List<Control> controls = facilitySites.stream()
             .flatMap(c -> c.getControls().stream())
+            .sorted((i1, i2) -> i1.getIdentifier().compareToIgnoreCase(i2.getIdentifier()))
             .collect(Collectors.toList());
         // control_path_id in the DB is non-null so this should get every assignment exactly once
         List<ControlAssignment> controlAssignments = controlPaths.stream()
@@ -316,10 +319,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
  
 //            facilitySheet.disableLocking();
 
-            generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheetAt(0), uploadDto.getFacilitySites());
-            generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheetAt(1), uploadDto.getFacilityContacts());
+            generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySite.sheetName()), uploadDto.getFacilitySites());
+            generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySiteContact.sheetName()), uploadDto.getFacilityContacts());
 
-            generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheetAt(4), uploadDto.getEmissionsUnits());
+            generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsUnit.sheetName()), uploadDto.getEmissionsUnits());
+            
+            generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
 
             wb.setForceFormulaRecalculation(true);
             wb.write(outputStream);
@@ -454,26 +459,63 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param firstRow
      */
     private void generateEmissionUnitExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<EmissionsUnitBulkUploadDto> dtos) {
-        
+
         int currentRow = EXCEL_MAPPING_HEADER_ROWS;
 
-        for (EmissionsUnitBulkUploadDto eu : dtos) {
+        for (EmissionsUnitBulkUploadDto dto : dtos) {
             Row row = sheet.getRow(currentRow);
 
-            row.getCell(2).setCellValue(eu.getUnitIdentifier());
-            row.getCell(4).setCellValue(eu.getDescription());
-            if (eu.getTypeCode() != null) {
-                row.getCell(6).setCellFormula(generateLookupFormula(wb, "UnitTypeCode", eu.getTypeCode(), false));
+            row.getCell(2).setCellValue(dto.getUnitIdentifier());
+            row.getCell(4).setCellValue(dto.getDescription());
+            if (dto.getTypeCode() != null) {
+                row.getCell(6).setCellFormula(generateLookupFormula(wb, "UnitTypeCode", dto.getTypeCode(), false));
                 formulaEvaluator.evaluateInCell(row.getCell(6));
             }
-            if (eu.getOperatingStatusCodeDescription() != null) {
-                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", eu.getOperatingStatusCodeDescription(), true));
+            if (dto.getOperatingStatusCodeDescription() != null) {
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCodeDescription(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(8));
             }
-            row.getCell(9).setCellValue(eu.getStatusYear());
-            row.getCell(10).setCellValue(eu.getDesignCapacity());
-            row.getCell(11).setCellValue(eu.getUnitOfMeasureCode());
-            row.getCell(12).setCellValue(eu.getComments());
+            row.getCell(9).setCellValue(dto.getStatusYear());
+            row.getCell(10).setCellValue(dto.getDesignCapacity());
+            row.getCell(11).setCellValue(dto.getUnitOfMeasureCode());
+            row.getCell(12).setCellValue(dto.getComments());
+
+            currentRow++;
+
+        }
+
+    }
+    
+    /**
+     * Map controls into the controls excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateControlsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<ControlBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ControlBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getIdentifier());
+            row.getCell(4).setCellValue(dto.getDescription());
+            row.getCell(5).setCellValue(dto.getPercentCapture());
+            row.getCell(6).setCellValue(dto.getPercentControl());
+            if (dto.getOperatingStatusCode() != null) {
+                row.getCell(7).setCellValue(dto.getOperatingStatusCode());
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            if (dto.getControlMeasureCode() != null) {
+                row.getCell(9).setCellValue(dto.getControlMeasureCode());
+                row.getCell(10).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(10));
+            }
+            row.getCell(11).setCellValue(dto.getComments());
 
             currentRow++;
 
