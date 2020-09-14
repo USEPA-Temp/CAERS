@@ -187,6 +187,12 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
     downloadExcelTemplate(report: EmissionsReport) {
 
+        let reportFacility: FacilitySite;
+        this.facilitySiteService.retrieveForReport(report.eisProgramId, report.id)
+        .subscribe(result => {
+            reportFacility = result;
+        });
+
         const modalWindow = this.modalService.open(BusyModalComponent, {
             backdrop: 'static',
             size: 'lg'
@@ -197,7 +203,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         this.reportService.downloadExcelExport(report.id)
         .subscribe(file => {
             modalWindow.dismiss();
-            this.fileDownloadService.downloadFile(file, `${report.eisProgramId}-${this.facility.facilityName}-${report.year}.xlsx`);
+            this.fileDownloadService.downloadFile(file, `${reportFacility.altSiteIdentifier}-${this.facility.facilityName}-${report.year}.xlsx`);
             error => console.error(error);
         });
     }

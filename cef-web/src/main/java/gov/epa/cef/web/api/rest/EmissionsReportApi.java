@@ -284,7 +284,7 @@ public class EmissionsReportApi {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s-%s-%d.xlsx\"", report.getEisProgramId(), facility.getName(), report.getYear()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s-%s-%d.xlsx\"", facility.getAltSiteIdentifier(), facility.getName(), report.getYear()))
                 .body(outputStream -> {
                     uploadService.generateExcel(reportId, outputStream);
                 });
