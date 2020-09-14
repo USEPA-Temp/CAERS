@@ -10,6 +10,7 @@ import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,9 +30,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     
     private static final String FUGITIVE_RELEASE_POINT_CODE = "1"; 
     private static final BigDecimal DEFAULT_TOLERANCE = BigDecimal.valueOf(0.003).setScale(6, RoundingMode.DOWN);
-    private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
-    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
-    private static final String STATUS_OPERATING = "OP";
     private static final String VELOCITY_UOM_FPS = "FPS";
     private static final String VELOCITY_UOM_FPM = "FPM";
     private static final String FLOW_RATE_UOM_ACFS = "ACFS";
@@ -45,8 +43,11 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
-        // Disable most validations for permanently shutdown release points
-        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
+        // Disable most validations for non-operating release points
+        //Only run the following checks is the Release Point status is operating. Otherwise, these checks are moot b/c
+        //the data will not be sent to EIS and the user shouldn't have to go back and update them. Only id, status, 
+        //and status year, and RP type are sent to EIS for units that are not operating.
+        if (ConstantUtils.STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
         
             // STACK RELEASE POINT CHECKS
             if (!releasePoint.getTypeCode().getCode().equals(FUGITIVE_RELEASE_POINT_CODE)) {
@@ -490,7 +491,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
         // CHECKS FOR ALL RELEASE POINT TYPES
         // If release point operation status is not operating, status year is required
-        if (!STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
+        if (!ConstantUtils.STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
     
             result = false;
             context.addFederalError(

@@ -11,6 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 const statusPermShutdown = 'PS';
+const statusTempShutdown = 'TS';
+const statusOperating = 'OP';
 
 @Component({
   selector: 'app-edit-emission-unit-info-panel',
@@ -46,7 +48,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       Validators.maxLength(20)
     ]],
     description: ['', [
-      this.requiredIfStatusNotPS(),
+      this.requiredIfOperating(),
       Validators.maxLength(100)
     ]],
     comments: [null, Validators.maxLength(400)]
@@ -85,9 +87,11 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
           this.emissionUnitIdentifiers.push(eu.unitIdentifier);
         });
 
-        // if an emission unit is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
+        // if an emission unit is being edited then filter that identifer out the list so the validator
+        // check doesnt identify it as a duplicate
         if (this.emissionUnit) {
-          this.emissionUnitIdentifiers = this.emissionUnitIdentifiers.filter(identifer => identifer.toString() !== this.emissionUnit.unitIdentifier);
+          this.emissionUnitIdentifiers = this.emissionUnitIdentifiers.filter(identifer =>
+            identifer.toString() !== this.emissionUnit.unitIdentifier);
         } else {
           this.edit = false;
         }
@@ -128,7 +132,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   onChange(newValue) {
     if (newValue && this.edit) {
       this.emissionUnitForm.controls.statusYear.reset();
-      this.toastr.warning('', 'If the operating status of the Emission Unit is changed, then the operating status of all the child Emission Processes that are underneath this unit will also be updated, unless they are already Permanently Shutdown.');
+      this.toastr.warning('', 'If the operating status of the Emission Unit is changed,' +
+       ' then the operating status of all the child Emission Processes that are underneath ' +
+       ' this unit will also be updated, unless they are already Permanently Shutdown.');
     }
     this.emissionUnitForm.controls.statusYear.markAsTouched();
     this.emissionUnitForm.controls.description.updateValueAndValidity();
@@ -171,8 +177,6 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const statusPermShutdown = 'PS';
-      const statusTempShutdown = 'TS';
       const controlStatus = control.get('operatingStatusCode').value;
 
       if (this.facilityOpCode && controlStatus) {
@@ -206,7 +210,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       const designCapacityUom = control.get('unitOfMeasureCode').value;
 
       if (control.get('operatingStatusCode').value
-        && !control.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+        && control.get('operatingStatusCode').value.code.includes(statusOperating)) {
         if (designCapacityUom && (designCapacityUom.legacy || !designCapacityUom.unitDesignCapacity)) {
           return {eisUomInvalid: true};
         }
@@ -215,13 +219,14 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  requiredIfStatusNotPS() {
+  requiredIfOperating() {
     return (formControl => {
       if (!formControl.parent) {
         return null;
       }
+
       if (this.emissionUnitForm.get('operatingStatusCode').value
-        && !this.emissionUnitForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+        && this.emissionUnitForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
         return Validators.required(formControl);
       }
       return null;

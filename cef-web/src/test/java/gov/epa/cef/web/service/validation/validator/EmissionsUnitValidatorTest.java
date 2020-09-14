@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator;
 
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -116,6 +117,15 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_CAPACITY.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_CAPACITY.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -136,6 +146,22 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     	
     	assertFalse(this.validator.validate(cefContext, testData));
     	assertTrue(cefContext.result.getErrors() != null || cefContext.result.getErrors().size() == 1);
+   
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+    	testData.setDesignCapacity(BigDecimal.valueOf(0.0001));
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setDesignCapacity(BigDecimal.valueOf(200000000));
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -184,6 +210,27 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_CAPACITY.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_CAPACITY.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        testData = createBaseEmissionsUnit();
+        utc = new UnitTypeCode();
+        utc.setCode("200");
+        testData.setUnitTypeCode(utc);
+        testData.setDesignCapacity(null);
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        cefContext = createContext();
+        testData.setUnitOfMeasureCode(null);
+        testData.setDesignCapacity(BigDecimal.valueOf(1000.0));
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
 
     @Test
@@ -198,6 +245,15 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_UOM.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_UOM.value()).size() == 1);
+    
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
 
     @Test

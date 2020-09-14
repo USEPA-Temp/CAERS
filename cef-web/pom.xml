@@ -79,6 +79,7 @@
         <powermock.version>2.0.2</powermock.version>
         <postgresql-embedded.version>2.10</postgresql-embedded.version>
         <swagger-annotations.version>2.0.9</swagger-annotations.version>
+        <poi.version>4.1.1</poi.version>
 
         <!-- Plugin versions -->
         <jib-maven-plugin.version>0.9.11</jib-maven-plugin.version>
@@ -224,6 +225,17 @@
             <groupId>org.mariuszgromada.math</groupId>
             <artifactId>MathParser.org-mXparser</artifactId>
             <version>4.4.0</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+               </exclusion>
+            </exclusions>
         </dependency>
 
 

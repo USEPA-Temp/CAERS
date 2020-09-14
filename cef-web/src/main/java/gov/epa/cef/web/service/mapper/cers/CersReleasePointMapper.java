@@ -66,7 +66,7 @@ public interface CersReleasePointMapper {
     @Mapping(source="operatingStatusCode", target="operatingStatusCode")
     @Mapping(source="statusYear", target="statusYear")
     @Mapping(source="releasePointIdentifier", target="releasePointIdentifier")
-    ReleasePoint releasePointToPSReleasePoint(ReleasePoint source);
+    ReleasePoint releasePointToNonOperatingReleasePoint(ReleasePoint source);
 
     default List<IdentificationDataType> identificationListFromReleasePoint(ReleasePoint source) {
         if (source == null) {

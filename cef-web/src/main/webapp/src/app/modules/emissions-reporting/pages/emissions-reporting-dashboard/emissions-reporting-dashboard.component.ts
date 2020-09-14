@@ -13,6 +13,8 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
+import { FileDownloadService } from 'src/app/core/services/file-download.service';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -25,6 +27,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     reports: EmissionsReport[];
     emissionsReport: EmissionsReport;
     operatingStatusValues: BaseCodeLookup[];
+    excelExportEnabled = false;
 
     @ViewChild('FailedToCreateMessageBox', {static: true})
     _failedToCreateTemplate: TemplateRef<any>;
@@ -33,12 +36,14 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
     constructor(
         private reportService: EmissionsReportingService,
+        private fileDownloadService: FileDownloadService,
         private route: ActivatedRoute,
         private sharedService: SharedService,
         private modalService: NgbModal,
         public router: Router,
         public userContext: UserContextService,
         private facilitySiteService: FacilitySiteService,
+        private propertyService: ConfigPropertyService,
         private lookupService: LookupService) { }
 
 
@@ -55,6 +60,11 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             });
         this.sharedService.emitChange(null);
         this.facilitySite = new FacilitySite();
+
+        this.propertyService.retrieveExcelExportEnabled()
+        .subscribe(result => {
+            this.excelExportEnabled = result;
+        });
 
         this.lookupService.retrieveOperatingStatus()
         .subscribe(result => {
@@ -172,6 +182,29 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalRef.componentInstance.message = modalMessage;
         modalRef.componentInstance.continue.subscribe(() => {
             this.deleteReport(reportId);
+        });
+    }
+
+    downloadExcelTemplate(report: EmissionsReport) {
+
+        let reportFacility: FacilitySite;
+        this.facilitySiteService.retrieveForReport(report.eisProgramId, report.id)
+        .subscribe(result => {
+            reportFacility = result;
+        });
+
+        const modalWindow = this.modalService.open(BusyModalComponent, {
+            backdrop: 'static',
+            size: 'lg'
+        });
+
+        modalWindow.componentInstance.message = 'Please wait while we generate the Excel Template for this report.';
+
+        this.reportService.downloadExcelExport(report.id)
+        .subscribe(file => {
+            modalWindow.dismiss();
+            this.fileDownloadService.downloadFile(file, `${reportFacility.altSiteIdentifier}-${this.facility.facilityName}-${report.year}.xlsx`);
+            error => console.error(error);
         });
     }
 

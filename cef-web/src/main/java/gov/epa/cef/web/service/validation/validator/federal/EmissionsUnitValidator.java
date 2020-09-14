@@ -8,6 +8,7 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -23,10 +24,6 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 
 @Component
 public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
-
-    private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
-    private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
-    private static final String STATUS_OPERATING = "OP";
     
     @Override
     public void compose(FluentValidator validator,
@@ -47,10 +44,11 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
-        if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        //if the unit is temporarily shutdown, then the underlying processes must also be temporarily or permanently shutdown
+        if (ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
         	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
-        			.filter(emissionsProcess -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())
-        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
+        			.filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())
+        					&& !ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
         			.collect(Collectors.toList());
         	
         	for (EmissionsProcess ep: epList) {
@@ -60,9 +58,11 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         				"emissionsProcess.statusTypeCode.temporarilyShutdown",
         				createEmissionsProcessValidationDetails(ep));
         	}
-        } else if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        	
+        //if the unit is permanently shutdown, then the underlying processes must also be temporarily or permanently shutdown
+        } else if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
         	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
-        			.filter(emissionsProcess -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
+        			.filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
         			.collect(Collectors.toList());
         	
         	for (EmissionsProcess ep: epList) {
@@ -75,7 +75,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         }
         
         // If unit operation status is not operating, status year is required
-        if (!STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getStatusYear() == null) {
+        if (!ConstantUtils.STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode()) && emissionsUnit.getStatusYear() == null) {
  	
         	result = false;
         	context.addFederalError(
@@ -112,7 +112,10 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        }
         }
         
-        if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        //Only run the following checks is the Unit status is operating. Otherwise, these checks are moot b/c
+        //the data will not be sent to EIS and the user shouldn't have to go back and update them. Only id, status, 
+        //and status year are sent to EIS for units that are not operating.
+        if (ConstantUtils.STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
             // Design capacity warning
             if (emissionsUnit.getUnitTypeCode() != null && emissionsUnit.getDesignCapacity() == null) {
                 List<String> typeCodeWarn = new ArrayList<String>(); 

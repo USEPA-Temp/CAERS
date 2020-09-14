@@ -6,6 +6,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.util.TempFile;
 
+import java.io.OutputStream;
 import java.util.function.Function;
 
 public interface BulkUploadService {
@@ -17,6 +18,13 @@ public interface BulkUploadService {
      * @return
      */
     EmissionsReportBulkUploadDto generateBulkUploadDto(Long reportId);
+
+    /**
+     * Generate an excel spreadsheet export for a report
+     * @param reportId
+     * @param outputStream
+     */
+    void generateExcel(Long reportId, OutputStream outputStream);
 
     /**
      * Converts JSON to EmissionsReportUploadDto.

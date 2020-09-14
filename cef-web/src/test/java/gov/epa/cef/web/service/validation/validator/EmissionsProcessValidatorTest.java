@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator;
 
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -199,6 +200,26 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_INFO_SCC.value()) && errorMap.get(ValidationField.PROCESS_INFO_SCC.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        testData.setSccCode("40500701");
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setSccCode("2862000000");
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
+        
+        testData.setSccCode("30700599");
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -259,6 +280,15 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -278,6 +308,15 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -353,6 +392,15 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE_AND_SCC_CODE.value()).size() == 1);
+        
+        //Verify QA Checks are NOT run when Unit is NOT Operating
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("I");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        cefContext = createContext();
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test

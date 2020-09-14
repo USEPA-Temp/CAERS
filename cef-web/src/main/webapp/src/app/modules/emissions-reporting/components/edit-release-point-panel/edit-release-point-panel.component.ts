@@ -15,6 +15,8 @@ import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-co
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 
 const statusPermShutdown = 'PS';
+const statusTempShutdown = 'TS';
+const statusOperating = 'OP';
 
 @Component({
   selector: 'app-edit-release-point-panel',
@@ -64,7 +66,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     typeCode: [null],
     description: ['', [
       Validators.maxLength(200),
-      this.requiredIfStatusNotPS()
+      this.requiredIfOperating()
     ]],
     latitude: [null, [
       Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
@@ -118,25 +120,25 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       Validators.min(1),
       Validators.max(1300),
       Validators.pattern(this.numberPattern83),
-      this.requiredIfStatusNotPS()
+      this.requiredIfOperating()
     ]],
     stackHeightUomCode: [null, [
-    this.requiredIfStatusNotPS()
+    this.requiredIfOperating()
     ]],
     stackDiameter: ['', [
       Validators.min(0.001),
       Validators.max(300),
       Validators.pattern(this.numberPattern83),
-      this.requiredIfStatusNotPS()
+      this.requiredIfOperating()
     ]],
     stackDiameterUomCode: [null, [
-      this.requiredIfStatusNotPS()
+      this.requiredIfOperating()
     ]],
     exitGasTemperature: ['', [
       Validators.min(-30),
       Validators.max(4000),
       Validators.pattern('^\-?[0-9]+$'),
-      this.requiredIfStatusNotPS()
+      this.requiredIfOperating()
     ]]
   }, { validators: [
     this.exitFlowConsistencyCheck(),
@@ -240,8 +242,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.uomRequiredCheck();
 
     if (this.releasePointForm.get('operatingStatusCode').value
-      && !this.releasePointForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
-      this.releasePointForm.get('typeCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
+      && this.releasePointForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
+      this.releasePointForm.get('typeCode').setValidators([Validators.required,
+        legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
       this.releasePointForm.controls.typeCode.markAsTouched();
     } else {
       this.releasePointForm.get('typeCode').setValidators([Validators.required]);
@@ -472,7 +475,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const flowRate = control.get('exitGasFlowRate');
       const velocity = control.get('exitGasVelocity');
 
-      if (control.get('operatingStatusCode').value && !control.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+      if (control.get('operatingStatusCode').value && control.get('operatingStatusCode').value.code.includes(statusOperating)) {
         if (control.get('typeCode').value !== null && control.get('typeCode').value.description !== this.fugitiveType) {
           if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
             return { invalidVelocity: true };
@@ -652,8 +655,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   // QA Check - operating status check vs facility site operating status
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const statusPermShutdown = 'PS';
-      const statusTempShutdown = 'TS';
+
       const controlStatus = control.get('operatingStatusCode').value;
 
       if (this.facilityOpCode && controlStatus) {
@@ -684,13 +686,13 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     };
   }
 
-  requiredIfStatusNotPS() {
+  requiredIfOperating() {
     return (formControl => {
       if (!formControl.parent) {
         return null;
       }
       if (this.releasePointForm.get('operatingStatusCode').value
-        && !this.releasePointForm.get('operatingStatusCode').value.code.includes(statusPermShutdown)) {
+        && this.releasePointForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
         return Validators.required(formControl);
       }
       return null;

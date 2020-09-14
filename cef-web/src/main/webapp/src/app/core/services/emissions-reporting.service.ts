@@ -139,6 +139,12 @@ export class EmissionsReportingService {
         return this.http.post<EmissionsReport>(url, jsonFileData);
     }
 
+    /** GET download excel template for specified report */
+    downloadExcelExport(reportId: number): Observable<any> {
+        const url = `${this.baseUrl}/export/${reportId}/excel`;
+        return this.http.get(url, { responseType: 'blob' });
+    }
+
     /** DELETE specified emissions report from database */
     delete(reportId: number): Observable<{}> {
         const url = `${this.baseUrl}/${reportId}`;

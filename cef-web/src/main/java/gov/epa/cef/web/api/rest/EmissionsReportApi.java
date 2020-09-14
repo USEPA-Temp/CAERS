@@ -17,10 +17,12 @@ import gov.epa.cef.web.service.BulkUploadService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
+import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
+import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.validation.ValidationResult;
@@ -29,6 +31,7 @@ import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotBlank;
@@ -59,6 +63,8 @@ public class EmissionsReportApi {
     private final EmissionsReportService emissionsReportService;
 
     private final EmissionsReportStatusService emissionsReportStatusService;
+
+    private final FacilitySiteService facilitySiteService;
 
     private final ObjectMapper objectMapper;
 
@@ -78,6 +84,7 @@ public class EmissionsReportApi {
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
                        EmissionsReportStatusService emissionsReportStatusService,
+                       FacilitySiteService facilitySiteService,
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
                        BulkUploadService uploadService,
@@ -87,6 +94,7 @@ public class EmissionsReportApi {
         this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
         this.emissionsReportStatusService = emissionsReportStatusService;
+        this.facilitySiteService = facilitySiteService;
         this.reportService = reportService;
         this.validationService = validationService;
         this.uploadService = uploadService;
@@ -257,6 +265,29 @@ public class EmissionsReportApi {
             uploadService.generateBulkUploadDto(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Generate an excel spreadsheet export for a report
+     *
+     * @param reportId
+     * @return
+     */
+    @GetMapping(value = "/export/{reportId}/excel")
+    public ResponseEntity<StreamingResponseBody> exportReportExcel(
+        @NotNull @PathVariable Long reportId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
+        EmissionsReportDto report = emissionsReportService.findById(reportId);
+        FacilitySiteDto facility = facilitySiteService.findByEisProgramIdAndReportId(report.getEisProgramId(), reportId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s-%s-%d.xlsx\"", facility.getAltSiteIdentifier(), facility.getName(), report.getYear()))
+                .body(outputStream -> {
+                    uploadService.generateExcel(reportId, outputStream);
+                });
     }
 
     /**

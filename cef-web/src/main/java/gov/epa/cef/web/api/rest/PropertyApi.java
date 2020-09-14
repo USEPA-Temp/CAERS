@@ -78,5 +78,16 @@ public class PropertyApi {
         return new ResponseEntity<>(new PropertyDto().withValue(result.toString()), HttpStatus.OK);
     }
 
+    /**
+     * Retrieve excel export enabled property
+     * @return
+     */
+    @GetMapping(value = "/excelExport/enabled")
+    @ResponseBody
+    public ResponseEntity<Boolean> retrieveExcelExportEnabled() {
+        Boolean result = this.cefConfig.getExcelExportEnabled();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 }

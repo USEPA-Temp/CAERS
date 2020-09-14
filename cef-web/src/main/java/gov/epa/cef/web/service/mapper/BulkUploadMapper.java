@@ -50,7 +50,9 @@ public interface BulkUploadMapper {
     EmissionsReportBulkUploadDto emissionsReportToDto(EmissionsReport source);
 
     @Mapping(source="countyCode.countyCode", target="countyCode")
+    @Mapping(source="countyCode.name", target="county")
     @Mapping(source="stateCode.uspsCode", target="stateCode")
+    @Mapping(source="stateCode.code", target="stateFipsCode")
     @Mapping(source="mailingStateCode.uspsCode", target="mailingStateCode")
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
     @Mapping(source="facilitySourceTypeCode.code", target="facilitySourceTypeCode")
@@ -212,6 +214,7 @@ public interface BulkUploadMapper {
     List<FacilityNAICSBulkUploadDto> faciliytNAICSToDtoList(List<FacilityNAICSXref> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
+    @Mapping(source="countyCode.name", target="county")
     @Mapping(source="countyCode.countyCode", target="countyCode")
     @Mapping(source="type.code", target="type")
     @Mapping(source="stateCode.uspsCode", target="stateCode")

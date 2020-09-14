@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.io.Resources;
+
 import gov.epa.cef.web.client.api.ExcelParserClient;
 import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
@@ -74,11 +76,24 @@ import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetName;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 import gov.epa.cef.web.util.TempFile;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,14 +101,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -102,6 +124,11 @@ import java.util.stream.Collectors;
 public class BulkUploadServiceImpl implements BulkUploadService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static final String EXCEL_FILE_PATH = "excel/CEF_BulkUpload_Template.xlsx";
+    private static final String EXCEL_GENERIC_LOOKUP_TEXT = "INDEX(%s!$A$2:$A$%d,MATCH(\"%s\",%s!$B$2:$B$%d,0))";
+    private static final String EXCEL_GENERIC_LOOKUP_NUMBER = "INDEX(%s!$A$2:$A$%d,MATCH(%s,%s!$B$2:$B$%d,0))";
+    private static final int EXCEL_MAPPING_HEADER_ROWS = 23;
 
     @Autowired
     private AircraftEngineTypeCodeRepository aircraftEngineRepo;
@@ -199,6 +226,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         List<FacilitySite> facilitySites = report.getFacilitySites();
         List<EmissionsUnit> units = facilitySites.stream()
             .flatMap(f -> f.getEmissionsUnits().stream())
+            .sorted((i1, i2) -> i1.getUnitIdentifier().compareToIgnoreCase(i2.getUnitIdentifier()))
             .collect(Collectors.toList());
         List<EmissionsProcess> processes = units.stream()
             .flatMap(u -> u.getEmissionsProcesses().stream())
@@ -214,6 +242,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             .collect(Collectors.toList());
         List<ReleasePoint> releasePoints = facilitySites.stream()
             .flatMap(f -> f.getReleasePoints().stream())
+            .sorted((i1, i2) -> i1.getReleasePointIdentifier().compareToIgnoreCase(i2.getReleasePointIdentifier()))
             .collect(Collectors.toList());
         List<ReleasePointAppt> releasePointAppts = releasePoints.stream()
             .flatMap(r -> r.getReleasePointAppts().stream())
@@ -223,6 +252,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             .collect(Collectors.toList());
         List<Control> controls = facilitySites.stream()
             .flatMap(c -> c.getControls().stream())
+            .sorted((i1, i2) -> i1.getIdentifier().compareToIgnoreCase(i2.getIdentifier()))
             .collect(Collectors.toList());
         // control_path_id in the DB is non-null so this should get every assignment exactly once
         List<ControlAssignment> controlAssignments = controlPaths.stream()
@@ -255,6 +285,355 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         reportDto.setFacilityContacts(uploadMapper.facilitySiteContactToDtoList(facilityContacts));
 
         return reportDto;
+    }
+
+    /**
+     * Generate an excel spreadsheet export for a report
+     * 
+     * Maps a report into our excel template for uploading. This creates a temporary copy of the excel template
+     * and then uses Apache POI to populate that copy with the existing data. We modify existing rows like a 
+     * user would so that validation and formulas remain intact and populate dropdowns by looking up the value
+     * in the spreadsheet for the code we have.
+     * 
+     * Currently has commented out debugging code while more sections are added
+     * @param reportId
+     * @param outputStream
+     */
+    public void generateExcel(Long reportId, OutputStream outputStream) {
+
+        logger.info("Begin generate excel");
+
+        EmissionsReportBulkUploadDto uploadDto = this.generateBulkUploadDto(reportId);
+
+        logger.info("Begin file manipulation");
+
+        URL template = Resources.getResource(EXCEL_FILE_PATH);
+
+        try (FileInputStream is = new FileInputStream(new File(template.toURI()));
+             TempFile tempFile = TempFile.from(is, UUID.randomUUID().toString());
+             XSSFWorkbook wb = XSSFWorkbookFactory.createWorkbook(tempFile.getFile(), false)) {
+
+            // locked cells will return null and cause null pointer exceptions without this
+            wb.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
+
+            XSSFFormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
+ 
+//            facilitySheet.disableLocking();
+
+            generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySite.sheetName()), uploadDto.getFacilitySites());
+            generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySiteContact.sheetName()), uploadDto.getFacilityContacts());
+            generateNAICSExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilityNaics.sheetName()), uploadDto.getFacilityNAICS());
+            generateReleasePointsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReleasePoint.sheetName()), uploadDto.getReleasePoints());
+            generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsUnit.sheetName()), uploadDto.getEmissionsUnits());
+            
+            generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
+
+            wb.setForceFormulaRecalculation(true);
+            wb.write(outputStream);
+            wb.close();
+
+            logger.info("Finish generate excel");
+
+        } catch (IOException | EncryptedDocumentException | InvalidFormatException | URISyntaxException ex) {
+
+            logger.error("Unable to generate Excel export ", ex);
+            throw new IllegalStateException(ex);
+        }
+
+    }
+
+    /**
+     * Map facility site into the facility site excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateFacilityExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (FacilitySiteBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getFrsFacilityId());
+            row.getCell(3).setCellValue(dto.getAltSiteIdentifier());
+            row.getCell(4).setCellValue(dto.getFacilityCategoryCode());
+//                row.getCell(5).setCellValue(dto.getFacilitySourceTypeCode());
+            if (dto.getFacilitySourceTypeCode() != null) {
+                // find the display name using the code in an excel lookup similar to how the code is found for the dropdown
+                // generates a lookup formula then evaluates it to get the correct value using evaluateInCell so that the formula is removed afterwards
+                row.getCell(6).setCellFormula(generateLookupFormula(wb, "FacilitySourceTypeCode", dto.getFacilitySourceTypeCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(6));
+            }
+            row.getCell(7).setCellValue(dto.getName());
+            row.getCell(8).setCellValue(dto.getDescription());
+//                row.getCell(9).setCellValue(dto.getOperatingStatusCode());
+            if (dto.getOperatingStatusCode() != null) {
+                row.getCell(10).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(10));
+            }
+            row.getCell(11).setCellValue(dto.getStatusYear());
+//                row.getCell(12).setCellValue(dto.getProgramSystemCode());
+            if (dto.getProgramSystemCode() != null) {
+                row.getCell(13).setCellFormula(generateLookupFormula(wb, "ProgramSystemCode", dto.getProgramSystemCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(13));
+            }
+            row.getCell(14).setCellValue(dto.getStreetAddress());
+            row.getCell(15).setCellValue(dto.getCity());
+            row.getCell(16).setCellValue(dto.getStateFipsCode());
+            row.getCell(17).setCellValue(dto.getStateCode());
+            row.getCell(18).setCellValue(dto.getCountyCode());
+            row.getCell(19).setCellValue(String.format("%s (%s)", dto.getCounty(), dto.getStateCode()));
+//                row.getCell(20).setCellValue(dto.getCountryCode());
+            row.getCell(21).setCellValue(dto.getPostalCode());
+            row.getCell(22).setCellValue(dto.getLatitude());
+            row.getCell(23).setCellValue(dto.getLongitude());
+            row.getCell(24).setCellValue(dto.getMailingStreetAddress());
+            row.getCell(25).setCellValue(dto.getMailingCity());
+            row.getCell(26).setCellValue(dto.getMailingStateCode());
+            row.getCell(27).setCellValue(dto.getMailingPostalCode());
+//                row.getCell(28).setCellValue(dto.getMailingCountryCode());
+            row.getCell(29).setCellValue(dto.getEisProgramId());
+//                row.getCell(30).setCellValue(dto.getTribalCode());
+            if (dto.getTribalCode() != null) {
+                row.getCell(31).setCellFormula(generateLookupFormula(wb, "TribalCode", dto.getTribalCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(31));
+            }
+
+            currentRow++;
+
+        }
+    }
+
+    /**
+     * Map facility contacts into the facility contacts excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateFacilityContactExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteContactBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for(FacilitySiteContactBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getType() != null) {
+                row.getCell(4).setCellFormula(generateLookupFormula(wb, "ContactTypeCode", dto.getType(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(4));
+            }
+            row.getCell(5).setCellValue(dto.getPrefix());
+            row.getCell(6).setCellValue(dto.getFirstName());
+            row.getCell(7).setCellValue(dto.getLastName());
+            row.getCell(8).setCellValue(dto.getEmail());
+            row.getCell(9).setCellValue(dto.getPhone());
+            row.getCell(10).setCellValue(dto.getPhoneExt());
+            row.getCell(11).setCellValue(dto.getStreetAddress());
+            row.getCell(12).setCellValue(dto.getCity());
+//            row.getCell(13).setCellValue(dto.getStateFipsCode());
+            row.getCell(14).setCellValue(dto.getStateCode());
+//            row.getCell(15).setCellValue(dto.getCountyCode());
+            row.getCell(16).setCellValue(String.format("%s (%s)", dto.getCounty(), dto.getStateCode()));
+//            row.getCell(17).setCellValue(dto.getCountryCode());
+            row.getCell(18).setCellValue(dto.getPostalCode());
+            row.getCell(19).setCellValue(dto.getMailingStreetAddress());
+            row.getCell(20).setCellValue(dto.getMailingCity());
+            row.getCell(21).setCellValue(dto.getMailingStateCode());
+//            row.getCell(22).setCellValue(dto.getMailingCountryCode());
+            row.getCell(23).setCellValue(dto.getMailingPostalCode());
+//            row.getCell().setCellValue(dto.);
+
+            currentRow++;
+
+        }
+    }
+
+    /**
+     * Map NAICS into the NAICS excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateNAICSExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilityNAICSBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (FacilityNAICSBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getCode() != null) {
+                row.getCell(3).setCellValue(dto.getCode());
+                row.getCell(4).setCellFormula(generateLookupFormula(wb, "NaicsCode", dto.getCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(4));
+            }
+            row.getCell(5).setCellValue("" + dto.isPrimaryFlag());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Map release points into the release points excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateReleasePointsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<ReleasePointBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ReleasePointBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getReleasePointIdentifier());
+            if (dto.getTypeCode() != null) {
+                row.getCell(4).setCellValue(dto.getTypeCode());
+                row.getCell(5).setCellFormula(generateLookupFormula(wb, "ReleasePointTypeCode", dto.getTypeCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(5));
+            }
+            row.getCell(6).setCellValue(dto.getDescription());
+            if (dto.getOperatingStatusCode() != null) {
+                row.getCell(7).setCellValue(dto.getOperatingStatusCode());
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            row.getCell(9).setCellValue(dto.getStatusYear());
+            row.getCell(10).setCellValue(dto.getLatitude());
+            row.getCell(11).setCellValue(dto.getLongitude());
+            row.getCell(12).setCellValue(dto.getFugitiveLine1Latitude());
+            row.getCell(13).setCellValue(dto.getFugitiveLine1Longitude());
+            row.getCell(14).setCellValue(dto.getFugitiveLine2Latitude());
+            row.getCell(15).setCellValue(dto.getFugitiveLine2Longitude());
+            row.getCell(16).setCellValue(dto.getStackHeight());
+            row.getCell(17).setCellValue(dto.getStackHeightUomCode());
+            row.getCell(18).setCellValue(dto.getStackDiameter());
+            row.getCell(19).setCellValue(dto.getStackDiameterUomCode());
+            row.getCell(20).setCellValue(dto.getExitGasVelocity());
+            row.getCell(21).setCellValue(dto.getExitGasVelocityUomCode());
+            row.getCell(22).setCellValue(dto.getExitGasTemperature());
+            row.getCell(23).setCellValue(dto.getExitGasFlowRate());
+            row.getCell(24).setCellValue(dto.getExitGasFlowUomCode());
+            row.getCell(25).setCellValue(dto.getFenceLineDistance());
+            row.getCell(26).setCellValue(dto.getFenceLineUomCode());
+            row.getCell(27).setCellValue(dto.getFugitiveHeight());
+            row.getCell(28).setCellValue(dto.getFugitiveHeightUomCode());
+            row.getCell(29).setCellValue(dto.getFugitiveWidth());
+            row.getCell(30).setCellValue(dto.getFugitiveWidthUomCode());
+            row.getCell(31).setCellValue(dto.getFugitiveLength());
+            row.getCell(32).setCellValue(dto.getFugitiveLengthUomCode());
+            row.getCell(33).setCellValue(dto.getFugitiveAngle());
+            row.getCell(34).setCellValue(dto.getComments());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Map emissions units into the emissions units excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateEmissionUnitExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<EmissionsUnitBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (EmissionsUnitBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getUnitIdentifier());
+            row.getCell(4).setCellValue(dto.getDescription());
+            if (dto.getTypeCode() != null) {
+                row.getCell(6).setCellFormula(generateLookupFormula(wb, "UnitTypeCode", dto.getTypeCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(6));
+            }
+            if (dto.getOperatingStatusCodeDescription() != null) {
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCodeDescription(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            row.getCell(9).setCellValue(dto.getStatusYear());
+            row.getCell(10).setCellValue(dto.getDesignCapacity());
+            row.getCell(11).setCellValue(dto.getUnitOfMeasureCode());
+            row.getCell(12).setCellValue(dto.getComments());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Map controls into the controls excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateControlsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<ControlBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ControlBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getIdentifier());
+            row.getCell(4).setCellValue(dto.getDescription());
+            row.getCell(5).setCellValue(dto.getPercentCapture());
+            row.getCell(6).setCellValue(dto.getPercentControl());
+            if (dto.getOperatingStatusCode() != null) {
+                row.getCell(7).setCellValue(dto.getOperatingStatusCode());
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            if (dto.getControlMeasureCode() != null) {
+                row.getCell(9).setCellValue(dto.getControlMeasureCode());
+                row.getCell(10).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(10));
+            }
+            row.getCell(11).setCellValue(dto.getComments());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Generate a basic reverse lookup formula for creating excel exports.
+     * The formula will find the dropdown value for a code in a basic lookup sheet in excel
+     * @param workbook
+     * @param sheetName
+     * @param value the code to lookup
+     * @param text if the code is text or number in excel
+     * @return
+     */
+    private String generateLookupFormula(Workbook workbook, String sheetName, String value, boolean text) {
+
+        int rowCount = workbook.getSheet(sheetName).getLastRowNum();
+        String result;
+        // if the code is a number in excel we need to make sure it's a number here too so it will match
+        if (text) {
+            result = String.format(EXCEL_GENERIC_LOOKUP_TEXT, sheetName, rowCount, value, sheetName, rowCount);
+        } else {
+            result = String.format(EXCEL_GENERIC_LOOKUP_NUMBER, sheetName, rowCount, value, sheetName, rowCount);
+        }
+        //logger.info(result);
+        return result;
     }
 
     @Override

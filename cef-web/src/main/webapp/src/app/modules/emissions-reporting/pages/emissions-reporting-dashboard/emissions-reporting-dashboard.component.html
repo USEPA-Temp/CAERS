@@ -34,6 +34,12 @@
                        *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 
 					<a [routerLink]="['.']"
+						*ngIf="excelExportEnabled && report.status !== 'NEW'"
+						class="text-dark font-weight-bold pipe-item"
+						[attr.aria-label]="'download '+ report.year +' report template'"
+						(click)="downloadExcelTemplate(report)">Download as Template</a>
+
+					<a [routerLink]="['.']"
 						class="text-dark font-weight-bold pipe-item"
 						[attr.aria-label]="'reopen'+ report.year +'report'"
 						(click)="reopenReport(report)"
