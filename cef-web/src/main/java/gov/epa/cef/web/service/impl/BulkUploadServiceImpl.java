@@ -242,6 +242,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             .collect(Collectors.toList());
         List<ReleasePoint> releasePoints = facilitySites.stream()
             .flatMap(f -> f.getReleasePoints().stream())
+            .sorted((i1, i2) -> i1.getReleasePointIdentifier().compareToIgnoreCase(i2.getReleasePointIdentifier()))
             .collect(Collectors.toList());
         List<ReleasePointAppt> releasePointAppts = releasePoints.stream()
             .flatMap(r -> r.getReleasePointAppts().stream())
@@ -321,7 +322,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySite.sheetName()), uploadDto.getFacilitySites());
             generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySiteContact.sheetName()), uploadDto.getFacilityContacts());
-
+            generateNAICSExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilityNaics.sheetName()), uploadDto.getFacilityNAICS());
+            generateReleasePointsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReleasePoint.sheetName()), uploadDto.getReleasePoints());
             generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsUnit.sheetName()), uploadDto.getEmissionsUnits());
             
             generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
@@ -451,6 +453,94 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     }
 
     /**
+     * Map NAICS into the NAICS excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateNAICSExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilityNAICSBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (FacilityNAICSBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getCode() != null) {
+                row.getCell(3).setCellValue(dto.getCode());
+                row.getCell(4).setCellFormula(generateLookupFormula(wb, "NaicsCode", dto.getCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(4));
+            }
+            row.getCell(5).setCellValue("" + dto.isPrimaryFlag());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Map release points into the release points excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     * @param firstRow
+     */
+    private void generateReleasePointsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<ReleasePointBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ReleasePointBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getReleasePointIdentifier());
+            if (dto.getTypeCode() != null) {
+                row.getCell(4).setCellValue(dto.getTypeCode());
+                row.getCell(5).setCellFormula(generateLookupFormula(wb, "ReleasePointTypeCode", dto.getTypeCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(5));
+            }
+            row.getCell(6).setCellValue(dto.getDescription());
+            if (dto.getOperatingStatusCode() != null) {
+                row.getCell(7).setCellValue(dto.getOperatingStatusCode());
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            row.getCell(9).setCellValue(dto.getStatusYear());
+            row.getCell(10).setCellValue(dto.getLatitude());
+            row.getCell(11).setCellValue(dto.getLongitude());
+            row.getCell(12).setCellValue(dto.getFugitiveLine1Latitude());
+            row.getCell(13).setCellValue(dto.getFugitiveLine1Longitude());
+            row.getCell(14).setCellValue(dto.getFugitiveLine2Latitude());
+            row.getCell(15).setCellValue(dto.getFugitiveLine2Longitude());
+            row.getCell(16).setCellValue(dto.getStackHeight());
+            row.getCell(17).setCellValue(dto.getStackHeightUomCode());
+            row.getCell(18).setCellValue(dto.getStackDiameter());
+            row.getCell(19).setCellValue(dto.getStackDiameterUomCode());
+            row.getCell(20).setCellValue(dto.getExitGasVelocity());
+            row.getCell(21).setCellValue(dto.getExitGasVelocityUomCode());
+            row.getCell(22).setCellValue(dto.getExitGasTemperature());
+            row.getCell(23).setCellValue(dto.getExitGasFlowRate());
+            row.getCell(24).setCellValue(dto.getExitGasFlowUomCode());
+            row.getCell(25).setCellValue(dto.getFenceLineDistance());
+            row.getCell(26).setCellValue(dto.getFenceLineUomCode());
+            row.getCell(27).setCellValue(dto.getFugitiveHeight());
+            row.getCell(28).setCellValue(dto.getFugitiveHeightUomCode());
+            row.getCell(29).setCellValue(dto.getFugitiveWidth());
+            row.getCell(30).setCellValue(dto.getFugitiveWidthUomCode());
+            row.getCell(31).setCellValue(dto.getFugitiveLength());
+            row.getCell(32).setCellValue(dto.getFugitiveLengthUomCode());
+            row.getCell(33).setCellValue(dto.getFugitiveAngle());
+            row.getCell(34).setCellValue(dto.getComments());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
      * Map emissions units into the emissions units excel sheet
      * @param wb
      * @param formulaEvaluator
@@ -485,7 +575,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
 
     }
-    
+
     /**
      * Map controls into the controls excel sheet
      * @param wb
