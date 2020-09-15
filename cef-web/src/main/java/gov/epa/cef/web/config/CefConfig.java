@@ -68,8 +68,4 @@ public class CefConfig {
     	return environment.getProperty("spring.servlet.multipart.max-file-size");
     }
 
-    public Boolean getExcelExportEnabled() {
-        return environment.getProperty("excel-export.enabled", Boolean.class, Boolean.FALSE);
-    }
-
 }

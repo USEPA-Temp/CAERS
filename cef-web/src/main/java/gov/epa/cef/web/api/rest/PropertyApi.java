@@ -85,7 +85,7 @@ public class PropertyApi {
     @GetMapping(value = "/excelExport/enabled")
     @ResponseBody
     public ResponseEntity<Boolean> retrieveExcelExportEnabled() {
-        Boolean result = this.cefConfig.getExcelExportEnabled();
+        Boolean result = propertyProvider.getBoolean(AppPropertyName.FeatureExcelExportEnabled);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
