@@ -12,6 +12,7 @@ public enum AppPropertyName implements IPropertyKey {
     FeatureAnnouncementEnabled("feature.announcement.enabled"),
     FeatureAnnouncementText("feature.announcement.text"),
     FeatureBulkEntryEnabled("feature.bulk-entry.enabled"),
+    FeatureExcelExportEnabled("feature.excel-export.enabled"),
     FeatureUserFeedbackEnabled("feature.user-feedback.enabled"),
     LastSccUpdateDate("task.scc-update.last-ran"),
     SccUpdateTaskCron("task.scc-update.cron"),
