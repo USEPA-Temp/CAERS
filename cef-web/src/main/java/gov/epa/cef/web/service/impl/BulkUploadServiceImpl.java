@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Functions;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.io.Resources;
@@ -85,6 +86,7 @@ import gov.epa.cef.web.util.TempFile;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
@@ -320,12 +322,15 @@ public class BulkUploadServiceImpl implements BulkUploadService {
  
 //            facilitySheet.disableLocking();
 
+            Map<Long, EmissionsUnitBulkUploadDto> euMap = uploadDto.getEmissionsUnits()
+                    .stream().collect(Collectors.toMap(EmissionsUnitBulkUploadDto::getId, Functions.identity()));
+
             generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySite.sheetName()), uploadDto.getFacilitySites());
             generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySiteContact.sheetName()), uploadDto.getFacilityContacts());
             generateNAICSExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilityNaics.sheetName()), uploadDto.getFacilityNAICS());
             generateReleasePointsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReleasePoint.sheetName()), uploadDto.getReleasePoints());
             generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsUnit.sheetName()), uploadDto.getEmissionsUnits());
-            
+            generateProcessesExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsProcess.sheetName()), uploadDto.getEmissionsProcesses(), euMap);
             generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
 
             wb.setForceFormulaRecalculation(true);
@@ -348,7 +353,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param formulaEvaluator
      * @param sheet
      * @param dtos
-     * @param firstRow
      */
     private void generateFacilityExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteBulkUploadDto> dtos) {
 
@@ -413,7 +417,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param formulaEvaluator
      * @param sheet
      * @param dtos
-     * @param firstRow
      */
     private void generateFacilityContactExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilitySiteContactBulkUploadDto> dtos) {
 
@@ -458,20 +461,34 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param formulaEvaluator
      * @param sheet
      * @param dtos
-     * @param firstRow
      */
     private void generateNAICSExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<FacilityNAICSBulkUploadDto> dtos) {
 
         int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        // The last 2 columns for NAICS codes were not leading the correct style and were defaulting
+        // to general data type and locked. This will get the overall column style for the columns
+        // and use them instead which have the correct data types and are unlocked
+
+        // general data type and unlocked
+        CellStyle unlockedStyle = wb.createCellStyle();
+        unlockedStyle.cloneStyleFrom(sheet.getColumnStyle(4));
+
+        // text datatype and unlocked
+        CellStyle tfStyle = wb.createCellStyle();
+        tfStyle.cloneStyleFrom(sheet.getColumnStyle(5));
 
         for (FacilityNAICSBulkUploadDto dto : dtos) {
             Row row = sheet.getRow(currentRow);
 
             if (dto.getCode() != null) {
                 row.getCell(3).setCellValue(dto.getCode());
+
+                row.getCell(4).setCellStyle(unlockedStyle);
                 row.getCell(4).setCellFormula(generateLookupFormula(wb, "NaicsCode", dto.getCode(), false));
                 formulaEvaluator.evaluateInCell(row.getCell(4));
             }
+            row.getCell(5).setCellStyle(tfStyle);
             row.getCell(5).setCellValue("" + dto.isPrimaryFlag());
 
             currentRow++;
@@ -486,7 +503,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param formulaEvaluator
      * @param sheet
      * @param dtos
-     * @param firstRow
      */
     private void generateReleasePointsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<ReleasePointBulkUploadDto> dtos) {
 
@@ -546,7 +562,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      * @param formulaEvaluator
      * @param sheet
      * @param dtos
-     * @param firstRow
      */
     private void generateEmissionUnitExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<EmissionsUnitBulkUploadDto> dtos) {
 
@@ -577,12 +592,50 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     }
 
     /**
+     * Map emissions processes into the emissions processes excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateProcessesExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, 
+            List<EmissionsProcessBulkUploadDto> dtos, Map<Long, EmissionsUnitBulkUploadDto> euMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (EmissionsProcessBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(euMap.get(dto.getEmissionsUnitId()).getUnitIdentifier());
+            row.getCell(3).setCellValue(dto.getEmissionsProcessIdentifier());
+            row.getCell(6).setCellValue(dto.getDescription());
+            if (dto.getOperatingStatusCode() != null) {
+                row.getCell(7).setCellValue(dto.getOperatingStatusCode());
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            row.getCell(9).setCellValue(dto.getStatusYear());
+            
+            row.getCell(11).setCellValue(Double.valueOf(dto.getSccCode()));
+            if (dto.getAircraftEngineTypeCode() != null) {
+                row.getCell(12).setCellValue(dto.getAircraftEngineTypeCode());
+                row.getCell(13).setCellFormula(generateLookupFormula(wb, "AircraftEngineTypeCode", dto.getAircraftEngineTypeCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(13));
+            }
+            row.getCell(14).setCellValue(dto.getComments());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
      * Map controls into the controls excel sheet
      * @param wb
      * @param formulaEvaluator
      * @param sheet
      * @param dtos
-     * @param firstRow
      */
     private void generateControlsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<ControlBulkUploadDto> dtos) {
 
