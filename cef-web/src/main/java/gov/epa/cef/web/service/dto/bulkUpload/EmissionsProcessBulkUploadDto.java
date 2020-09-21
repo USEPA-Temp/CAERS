@@ -20,6 +20,8 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
     @Size(max = 20, message = "Emissions Process Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsProcessIdentifier;
 
+    private String displayName;
+
     @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
@@ -85,6 +87,13 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
     }
     public void setEmissionsProcessIdentifier(String emissionsProcessIdentifier) {
         this.emissionsProcessIdentifier = emissionsProcessIdentifier;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getStatusYear() {

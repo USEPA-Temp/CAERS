@@ -324,6 +324,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             Map<Long, EmissionsUnitBulkUploadDto> euMap = uploadDto.getEmissionsUnits()
                     .stream().collect(Collectors.toMap(EmissionsUnitBulkUploadDto::getId, Functions.identity()));
+            Map<Long, EmissionsProcessBulkUploadDto> epMap = uploadDto.getEmissionsProcesses()
+                    .stream().collect(Collectors.toMap(EmissionsProcessBulkUploadDto::getId, Functions.identity()));
 
             generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySite.sheetName()), uploadDto.getFacilitySites());
             generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySiteContact.sheetName()), uploadDto.getFacilityContacts());
@@ -332,6 +334,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsUnit.sheetName()), uploadDto.getEmissionsUnits());
             generateProcessesExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsProcess.sheetName()), uploadDto.getEmissionsProcesses(), euMap);
             generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
+            
+            generateReportingPeriodExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReportingPeriod.sheetName()), uploadDto.getReportingPeriods(), epMap);
 
             wb.setForceFormulaRecalculation(true);
             wb.write(outputStream);
@@ -615,7 +619,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 formulaEvaluator.evaluateInCell(row.getCell(8));
             }
             row.getCell(9).setCellValue(dto.getStatusYear());
-            
+            // using the double version of setCellValue since the spreadsheet expects this value to display as a number
             row.getCell(11).setCellValue(Double.valueOf(dto.getSccCode()));
             if (dto.getAircraftEngineTypeCode() != null) {
                 row.getCell(12).setCellValue(dto.getAircraftEngineTypeCode());
@@ -625,6 +629,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             row.getCell(14).setCellValue(dto.getComments());
 
             currentRow++;
+
+            // store values to be used in later sheets; after row increments to deal with difference between 0-based and 1-based
+            dto.setRow(currentRow);
+            dto.setDisplayName(euMap.get(dto.getEmissionsUnitId()).getUnitIdentifier() + "-" + dto.getEmissionsProcessIdentifier());
 
         }
 
@@ -659,6 +667,55 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 formulaEvaluator.evaluateInCell(row.getCell(10));
             }
             row.getCell(11).setCellValue(dto.getComments());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Map reporting periods into the reporting period excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateReportingPeriodExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<ReportingPeriodBulkUploadDto> dtos, Map<Long, EmissionsProcessBulkUploadDto> epMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ReportingPeriodBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getEmissionsProcessId() != null) {
+                row.getCell(1).setCellValue(epMap.get(dto.getEmissionsProcessId()).getRow());
+                row.getCell(2).setCellValue(epMap.get(dto.getEmissionsProcessId()).getDisplayName());
+            }
+            if (dto.getReportingPeriodTypeCode() != null) {
+                row.getCell(5).setCellValue(dto.getReportingPeriodTypeCode());
+                row.getCell(6).setCellFormula(generateLookupFormula(wb, "ReportingPeriodTypeCode", dto.getReportingPeriodTypeCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(6));
+            }
+            if (dto.getEmissionsOperatingTypeCode() != null) {
+                row.getCell(7).setCellValue(dto.getEmissionsOperatingTypeCode());
+                row.getCell(8).setCellFormula(generateLookupFormula(wb, "EmissionsOperatingTypeCode", dto.getEmissionsOperatingTypeCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(8));
+            }
+            if (dto.getCalculationParameterTypeCode() != null) {
+                row.getCell(9).setCellValue(dto.getCalculationParameterTypeCode());
+                row.getCell(10).setCellFormula(generateLookupFormula(wb, "CalculationParameterTypeCode", dto.getCalculationParameterTypeCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(10));
+            }
+            row.getCell(11).setCellValue(dto.getCalculationParameterValue());
+            row.getCell(12).setCellValue(dto.getCalculationParameterUom());
+            if (dto.getCalculationMaterialCode() != null) {
+                row.getCell(13).setCellValue(dto.getCalculationMaterialCode());
+                row.getCell(14).setCellFormula(generateLookupFormula(wb, "CalculationMaterialCode", dto.getCalculationMaterialCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(14));
+            }
+            row.getCell(15).setCellValue(dto.getComments());
 
             currentRow++;
 
