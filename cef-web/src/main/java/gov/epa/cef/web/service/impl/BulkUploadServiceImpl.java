@@ -326,6 +326,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     .stream().collect(Collectors.toMap(EmissionsUnitBulkUploadDto::getId, Functions.identity()));
             Map<Long, EmissionsProcessBulkUploadDto> epMap = uploadDto.getEmissionsProcesses()
                     .stream().collect(Collectors.toMap(EmissionsProcessBulkUploadDto::getId, Functions.identity()));
+            Map<Long, ReportingPeriodBulkUploadDto> periodMap = uploadDto.getReportingPeriods()
+                    .stream().collect(Collectors.toMap(ReportingPeriodBulkUploadDto::getId, Functions.identity()));
 
             generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySite.sheetName()), uploadDto.getFacilitySites());
             generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySiteContact.sheetName()), uploadDto.getFacilityContacts());
@@ -336,6 +338,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
             
             generateReportingPeriodExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReportingPeriod.sheetName()), uploadDto.getReportingPeriods(), epMap);
+            generateOperatingDetailExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.OperatingDetail.sheetName()), uploadDto.getOperatingDetails(), periodMap);
 
             wb.setForceFormulaRecalculation(true);
             wb.write(outputStream);
@@ -716,6 +719,44 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 formulaEvaluator.evaluateInCell(row.getCell(14));
             }
             row.getCell(15).setCellValue(dto.getComments());
+
+            currentRow++;
+
+            dto.setRow(currentRow);
+            // have to pull value from cell since we don't have this value anywhere else
+            dto.setDisplayName(epMap.get(dto.getEmissionsProcessId()).getDisplayName() + "-" + row.getCell(6).getStringCellValue());
+
+        }
+
+    }
+
+    /**
+     * Map operating details into the operating details excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateOperatingDetailExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<OperatingDetailBulkUploadDto> dtos, Map<Long, ReportingPeriodBulkUploadDto> periodMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (OperatingDetailBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getReportingPeriodId() != null) {
+                row.getCell(2).setCellValue(periodMap.get(dto.getReportingPeriodId()).getRow());
+                row.getCell(3).setCellValue(periodMap.get(dto.getReportingPeriodId()).getDisplayName());
+            }
+            row.getCell(4).setCellValue(dto.getActualHoursPerPeriod());
+            row.getCell(5).setCellValue(dto.getAverageHoursPerDay());
+            row.getCell(6).setCellValue(dto.getAverageDaysPerWeek());
+            row.getCell(7).setCellValue(dto.getAverageWeeksPerPeriod());
+            row.getCell(8).setCellValue(dto.getPercentWinter());
+            row.getCell(9).setCellValue(dto.getPercentSpring());
+            row.getCell(10).setCellValue(dto.getPercentSummer());
+            row.getCell(11).setCellValue(dto.getPercentFall());
 
             currentRow++;
 
