@@ -17,14 +17,14 @@ public interface UserFeedbackRepository extends CrudRepository<UserFeedback, Lon
      * @param id
      * @return userFeedback
      */
-    UserFeedback findByReportId(@Param("id") Long id);
+    UserFeedback findByEmissionsReportId(@Param("id") Long id);
     
     /**
      * Retrieve a List of User Feedback for a Report Id
      * @param id
      * @return userFeedback
      */
-    List<UserFeedback> findAllByReportId(@Param("id") Long id);
+    List<UserFeedback> findAllByEmissionsReportId(@Param("id") Long id);
 	
     /**
      * Retrieve a List of User Feedback for a year and agency code
