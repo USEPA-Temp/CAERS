@@ -722,7 +722,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         		facilitySiteRepo.deleteById(oldSite.getId());
         	}
         	
-        	//add in the new facilityj site from the uploaded report to the old report
+        	//add in the new facility site from the uploaded report to the old report
         	EmissionsReport reportToUpdate = previousReport.get();
         	reportToUpdate.getFacilitySites().clear();
         	List<FacilitySite> newFacilitySites = emissionsReport.getFacilitySites();
