@@ -16,6 +16,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @NotNull(message = "Report Period is required.")
     private Long reportingPeriodId;
 
+    private String displayName;
+
     @NotBlank(message = "Pollutant Code is required.")
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
@@ -82,6 +84,14 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     }
     public void setReportingPeriodId(Long reportingPeriodId) {
         this.reportingPeriodId = reportingPeriodId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getPollutantCode() {

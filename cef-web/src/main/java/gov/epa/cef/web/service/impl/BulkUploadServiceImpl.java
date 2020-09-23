@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -246,6 +247,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         List<Emission> emissions = periods.stream()
             .flatMap(p -> p.getEmissions().stream())
             .collect(Collectors.toList());
+        List<EmissionFormulaVariable> variables = emissions.stream()
+                .flatMap(e -> e.getVariables().stream())
+                .collect(Collectors.toList());
         List<ReleasePoint> releasePoints = facilitySites.stream()
             .flatMap(f -> f.getReleasePoints().stream())
             .sorted((i1, i2) -> i1.getReleasePointIdentifier().compareToIgnoreCase(i2.getReleasePointIdentifier()))
@@ -281,6 +285,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         reportDto.setReportingPeriods(uploadMapper.reportingPeriodToDtoList(periods));
         reportDto.setOperatingDetails(uploadMapper.operatingDetailToDtoList(operatingDetails));
         reportDto.setEmissions(uploadMapper.emissionToDtoList(emissions));
+        reportDto.setEmissionFormulaVariables(uploadMapper.emissionFormulaVariableToDtoList(variables));
         reportDto.setReleasePoints(uploadMapper.releasePointToDtoList(releasePoints));
         reportDto.setReleasePointAppts(uploadMapper.releasePointApptToDtoList(releasePointAppts));
         reportDto.setControlPaths(uploadMapper.controlPathToDtoList(controlPaths));
@@ -332,6 +337,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     .stream().collect(Collectors.toMap(EmissionsProcessBulkUploadDto::getId, Functions.identity()));
             Map<Long, ReportingPeriodBulkUploadDto> periodMap = uploadDto.getReportingPeriods()
                     .stream().collect(Collectors.toMap(ReportingPeriodBulkUploadDto::getId, Functions.identity()));
+            Map<Long, EmissionBulkUploadDto> emissionMap = uploadDto.getEmissions()
+                    .stream().collect(Collectors.toMap(EmissionBulkUploadDto::getId, Functions.identity()));
 
             generateFacilityExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySite.sheetName()), uploadDto.getFacilitySites());
             generateFacilityContactExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.FacilitySiteContact.sheetName()), uploadDto.getFacilityContacts());
@@ -343,6 +350,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             
             generateReportingPeriodExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReportingPeriod.sheetName()), uploadDto.getReportingPeriods(), epMap);
             generateOperatingDetailExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.OperatingDetail.sheetName()), uploadDto.getOperatingDetails(), periodMap);
+            generateEmissionExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Emission.sheetName()), uploadDto.getEmissions(), periodMap);
+            generateEmissionFormulaVariableExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionFormulaVariable.sheetName()), 
+                    uploadDto.getEmissionFormulaVariables(), emissionMap);
 
             wb.setForceFormulaRecalculation(true);
             wb.write(outputStream);
@@ -769,6 +779,91 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     }
 
     /**
+     * Map emissions into the emission excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateEmissionExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<EmissionBulkUploadDto> dtos, Map<Long, ReportingPeriodBulkUploadDto> periodMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (EmissionBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getReportingPeriodId() != null) {
+                row.getCell(1).setCellValue(periodMap.get(dto.getReportingPeriodId()).getRow());
+                row.getCell(2).setCellValue(periodMap.get(dto.getReportingPeriodId()).getDisplayName());
+            }
+            if (dto.getPollutantCode() != null) {
+                row.getCell(3).setCellValue(dto.getPollutantCode());
+                // check if the code is a number or not when looking it up
+                row.getCell(4).setCellFormula(generateLookupFormula(wb, "Pollutant", dto.getPollutantCode(), !NumberUtils.isCreatable(dto.getPollutantCode())));
+                formulaEvaluator.evaluateInCell(row.getCell(4));
+            }
+            row.getCell(5).setCellValue("" + dto.isTotalManualEntry());
+            row.getCell(6).setCellValue(dto.getTotalEmissions());
+            row.getCell(7).setCellValue(dto.getEmissionsUomCode());
+            row.getCell(8).setCellValue(dto.getOverallControlPercent());
+            row.getCell(9).setCellValue(dto.getEmissionsFactor());
+            row.getCell(10).setCellValue(dto.getEmissionsFactorText());
+            
+            row.getCell(13).setCellValue(dto.getEmissionsFactorFormula());
+            if (dto.getEmissionsCalcMethodCode() != null) {
+                row.getCell(14).setCellValue(dto.getEmissionsCalcMethodCode());
+                row.getCell(15).setCellFormula(generateLookupFormula(wb, "CalculationMethodCode", dto.getEmissionsCalcMethodCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(15));
+            }
+            row.getCell(16).setCellValue(dto.getEmissionsNumeratorUom());
+            row.getCell(17).setCellValue(dto.getEmissionsDenominatorUom());
+            row.getCell(18).setCellValue(dto.getCalculationComment());
+            row.getCell(19).setCellValue(dto.getComments());
+
+            currentRow++;
+            
+            dto.setRow(currentRow);
+            // have to pull value from cell since we don't have this value anywhere else
+            dto.setDisplayName(String.format("%s (%s)", periodMap.get(dto.getReportingPeriodId()).getDisplayName(), row.getCell(4).getStringCellValue()));
+
+        }
+
+    }
+
+    /**
+     * Map emission formula variables into the emission formula variable excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateEmissionFormulaVariableExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<EmissionFormulaVariableBulkUploadDto> dtos, Map<Long, EmissionBulkUploadDto> emissionMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (EmissionFormulaVariableBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getEmissionId() != null) {
+                row.getCell(2).setCellValue(emissionMap.get(dto.getEmissionId()).getRow());
+                row.getCell(4).setCellValue(emissionMap.get(dto.getEmissionId()).getDisplayName());
+            }
+            if (dto.getEmissionFormulaVariableCode() != null) {
+                row.getCell(5).setCellValue(dto.getEmissionFormulaVariableCode());
+                row.getCell(6).setCellFormula(generateLookupFormula(wb, "EmissionFormulaVariable", dto.getEmissionFormulaVariableCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(6));
+            }
+            row.getCell(7).setCellValue(dto.getValue());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
      * Generate a basic reverse lookup formula for creating excel exports.
      * The formula will find the dropdown value for a code in a basic lookup sheet in excel
      * @param workbook
@@ -779,7 +874,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
      */
     private String generateLookupFormula(Workbook workbook, String sheetName, String value, boolean text) {
 
-        int rowCount = workbook.getSheet(sheetName).getLastRowNum();
+        int rowCount = workbook.getSheet(sheetName).getLastRowNum() + 1;
         String result;
         // if the code is a number in excel we need to make sure it's a number here too so it will match
         if (text) {
@@ -787,7 +882,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         } else {
             result = String.format(EXCEL_GENERIC_LOOKUP_NUMBER, sheetName, rowCount, value, sheetName, rowCount);
         }
-        //logger.info(result);
+//        logger.info(result);
         return result;
     }
 
