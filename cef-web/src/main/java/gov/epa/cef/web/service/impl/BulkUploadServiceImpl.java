@@ -1,5 +1,42 @@
 package gov.epa.cef.web.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,6 +79,7 @@ import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.EmissionFormulaVariableCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
+import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsCountyRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
@@ -83,43 +121,6 @@ import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 import gov.epa.cef.web.util.TempFile;
-
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -212,6 +213,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private BulkReportValidator validator;
+    
+    @Autowired
+    private FacilitySiteRepository facilitySiteRepo;
 
     /**
      * Testing method for generating upload JSON for a report
@@ -803,19 +807,44 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     public EmissionsReportDto saveBulkEmissionsReport(EmissionsReportBulkUploadDto bulkEmissionsReport) {
 
         EmissionsReport emissionsReport = toEmissionsReport().apply(bulkEmissionsReport);
+        
+        // if a previous report already exists, then update that existing report with the data from this uploaded file
+        // and reset the validation, report, and CROMERR status for the report
+        Optional<EmissionsReport> previousReport = this.emissionsReportService.retrieveByEisProgramIdAndYear(bulkEmissionsReport.getEisProgramId(), bulkEmissionsReport.getYear());
+        if (previousReport.isPresent()) {
+        	
+        	//remove any previous facilitySites from the report (the main report data)
+        	//should be only one facility site, but putting in a loop for security
+        	List<FacilitySite> oldSites = previousReport.get().getFacilitySites();
+        	for (FacilitySite oldSite : oldSites) {
+        		facilitySiteRepo.deleteById(oldSite.getId());
+        	}
+        	
+        	//add in the new facility site from the uploaded report to the old report
+        	EmissionsReport reportToUpdate = previousReport.get();
+        	reportToUpdate.getFacilitySites().clear();
+        	List<FacilitySite> newFacilitySites = emissionsReport.getFacilitySites();
+        	for (FacilitySite newSite : newFacilitySites) {
+        		newSite.setEmissionsReport(reportToUpdate);
+        		reportToUpdate.getFacilitySites().add(newSite);
+        	}
 
-        return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.UPLOADED);
+        	//update the report metadata to make sure it's reset since the report has been recreated
+        	reportToUpdate.setStatus(ReportStatus.IN_PROGRESS);
+        	reportToUpdate.setValidationStatus(ValidationStatus.UNVALIDATED);
+        	reportToUpdate.setCromerrActivityId(null);
+        	reportToUpdate.setCromerrDocumentId(null);
+        	return this.emissionsReportService.saveAndAuditEmissionsReport(reportToUpdate, ReportAction.UPLOADED);
+        }
+        //otherwise, just add the entire report from the excel upload into the system
+        else {
+        	return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.UPLOADED);
+        }
     }
 
     public EmissionsReportDto saveBulkWorkbook(EmissionsReportStarterDto metadata, TempFile workbook) {
 
         EmissionsReportDto result = null;
-
-        this.emissionsReportService.retrieveByEisProgramIdAndYear(metadata.getEisProgramId(), metadata.getYear())
-            .ifPresent(report -> {
-
-                this.emissionsReportService.delete(report.getId());
-            });
 
         ExcelParserResponse response = this.excelParserClient.parseWorkbook(workbook);
 

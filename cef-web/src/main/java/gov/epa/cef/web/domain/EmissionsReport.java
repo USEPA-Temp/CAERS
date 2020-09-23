@@ -57,6 +57,9 @@ public class EmissionsReport extends BaseAuditEntity {
 
     @Column(name = "has_submitted")
     private Boolean hasSubmitted;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
+    private List<UserFeedback> userFeedback = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private List<ReportAttachment> reportAttachments = new ArrayList<>();
@@ -218,8 +221,17 @@ public class EmissionsReport extends BaseAuditEntity {
 
         this.hasSubmitted = hasSubmitted;
     }
+    
 
-    public List<ReportAttachment> getReportAttachments() {
+    public List<UserFeedback> getUserFeedback() {
+		return userFeedback;
+	}
+
+	public void setUserFeedback(List<UserFeedback> userFeedback) {
+		this.userFeedback = userFeedback;
+	}
+
+	public List<ReportAttachment> getReportAttachments() {
 
         return this.reportAttachments;
     }
