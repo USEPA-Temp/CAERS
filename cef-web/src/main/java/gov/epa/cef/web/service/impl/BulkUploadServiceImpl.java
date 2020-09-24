@@ -335,6 +335,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     .stream().collect(Collectors.toMap(EmissionsUnitBulkUploadDto::getId, Functions.identity()));
             Map<Long, EmissionsProcessBulkUploadDto> epMap = uploadDto.getEmissionsProcesses()
                     .stream().collect(Collectors.toMap(EmissionsProcessBulkUploadDto::getId, Functions.identity()));
+            Map<Long, ControlBulkUploadDto> controlMap = uploadDto.getControls()
+                    .stream().collect(Collectors.toMap(ControlBulkUploadDto::getId, Functions.identity()));
             Map<Long, ReportingPeriodBulkUploadDto> periodMap = uploadDto.getReportingPeriods()
                     .stream().collect(Collectors.toMap(ReportingPeriodBulkUploadDto::getId, Functions.identity()));
             Map<Long, EmissionBulkUploadDto> emissionMap = uploadDto.getEmissions()
@@ -347,6 +349,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             generateEmissionUnitExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsUnit.sheetName()), uploadDto.getEmissionsUnits());
             generateProcessesExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsProcess.sheetName()), uploadDto.getEmissionsProcesses(), euMap);
             generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
+            generateControlPathsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPath.sheetName()), uploadDto.getControlPaths());
+            
+            generateControlPollutantExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPollutant.sheetName()), uploadDto.getControlPollutants(), controlMap);
             
             generateReportingPeriodExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReportingPeriod.sheetName()), uploadDto.getReportingPeriods(), epMap);
             generateOperatingDetailExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.OperatingDetail.sheetName()), uploadDto.getOperatingDetails(), periodMap);
@@ -684,6 +689,64 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 formulaEvaluator.evaluateInCell(row.getCell(10));
             }
             row.getCell(11).setCellValue(dto.getComments());
+
+            currentRow++;
+
+            dto.setRow(currentRow);
+
+        }
+
+    }
+
+    /**
+     * Map control paths into the control path excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateControlPathsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet, List<ControlPathBulkUploadDto> dtos) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ControlPathBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            row.getCell(2).setCellValue(dto.getPathId());
+            row.getCell(3).setCellValue(dto.getDescription());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Map control pollutants into the control pollutant excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateControlPollutantExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<ControlPollutantBulkUploadDto> dtos, Map<Long, ControlBulkUploadDto> controlMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ControlPollutantBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getControlId() != null) {
+                row.getCell(2).setCellValue(controlMap.get(dto.getControlId()).getRow());
+                row.getCell(3).setCellValue(controlMap.get(dto.getControlId()).getIdentifier());
+            }
+            if (dto.getPollutantCode() != null) {
+                row.getCell(4).setCellValue(dto.getPollutantCode());
+                // check if the code is a number or not when looking it up
+                row.getCell(5).setCellFormula(generateLookupFormula(wb, "Pollutant", dto.getPollutantCode(), !NumberUtils.isCreatable(dto.getPollutantCode())));
+                formulaEvaluator.evaluateInCell(row.getCell(5));
+            }
+            row.getCell(6).setCellValue(dto.getPercentReduction());
 
             currentRow++;
 
