@@ -59,6 +59,8 @@ export class EmissionDetailsComponent implements OnInit {
   processUrl: string;
   unitIdentifier: string;
 
+  emissionsMaxSignificantFigures = 6;
+
   emissionForm = this.fb.group({
     pollutant: [null, [Validators.required]],
     formulaIndicator: [false, Validators.required],
@@ -81,7 +83,8 @@ export class EmissionDetailsComponent implements OnInit {
     this.pollutantEmissionsUoMValidator(),
     this.checkPercentSulfurRange(),
     this.checkPercentAshRange(),
-    this.overallControlPercentValidator()
+    this.overallControlPercentValidator(),
+    this.checkSignificantFigures()
     ]
   });
 
@@ -644,6 +647,28 @@ export class EmissionDetailsComponent implements OnInit {
     return formulaValues;
   }
 
+
+  /**
+   * Return the number of significant figures contained in the value of the currentValue argument
+   */
+  private getSignificantFigures(currentValue: number): number {
+    let tempValue = Math.abs(currentValue);
+    if (tempValue === 0) {
+        return 0;
+    }
+    const p = Math.floor(Math.log10(tempValue)) + 1;
+    if (p > 0) {
+        tempValue = tempValue / (10 ** p);
+    } else {
+        if (p < 0) {
+            tempValue = tempValue * (10 ** -p);
+        }
+    }
+    tempValue = Math.round(tempValue * 1e16) / 1e16; // remove floating points errors
+    return (tempValue + '').length - 2;
+  }
+
+
   searchPollutants = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -721,6 +746,16 @@ export class EmissionDetailsComponent implements OnInit {
       if (calcMethod.value.controlIndicator
       && (overallControl.value && overallControl.value !== 0)) {
         return {overallControlPercentInvalid: true};
+      }
+      return null;
+    };
+  }
+
+  checkSignificantFigures(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const totalEmissions = control.get('totalEmissions');
+      if (totalEmissions.value && this.getSignificantFigures(totalEmissions.value) > this.emissionsMaxSignificantFigures) {
+        return {significantFiguresInvalid: true};
       }
       return null;
     };

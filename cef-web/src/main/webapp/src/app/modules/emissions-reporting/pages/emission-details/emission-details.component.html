@@ -288,6 +288,9 @@
                                 <div *ngIf="!calcParamValue">
                                     Cannot calculate Total Emissions. Annual Throughput for Reporting Period must be greater than or equal to zero.
                                 </div>
+                                <div *ngIf="emissionForm.getError('significantFiguresInvalid')">
+                                    Please enter a maximum of 6 significant figures.
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-3">
