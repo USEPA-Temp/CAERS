@@ -1,6 +1,7 @@
 package gov.epa.cef.web.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class CalculationUtils {
     private static final Argument HP = new Argument("hp = 745.69987158 * [J] / [s]");
     private static final Argument YEAR = new Argument("year = 365 * [day]");
     private static final Argument LEAP_YEAR = new Argument("year = 366 * [day]");
+    public static final int EMISSIONS_PRECISION = 6;
 
     public static BigDecimal convertMassUnits(BigDecimal sourceValue, MassUomConversion sourceUnit, MassUomConversion targetUnit) {
         BigDecimal result = sourceValue.multiply(sourceUnit.conversionFactor()).divide(targetUnit.conversionFactor());
@@ -66,6 +68,19 @@ public class CalculationUtils {
 //        logger.info(formula);
 
         return BigDecimal.valueOf(e.calculate());
+    }
+
+    /**
+     * Return a BigDecimal that has a maximum number of significant figures.  If the current value already has less than or equal the max significant figures
+     * then the same number will be returned, trailing 0's will not be added.
+     */
+    public static BigDecimal setSignificantFigures(BigDecimal currentValue, int maxSignificantFigures) {
+        if (currentValue.precision() > maxSignificantFigures) {
+            int newScale = maxSignificantFigures - currentValue.precision() + currentValue.scale();
+            currentValue = currentValue.setScale(newScale, RoundingMode.HALF_UP);
+        }
+
+        return currentValue;
     }
 
 }

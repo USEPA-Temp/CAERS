@@ -1321,6 +1321,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             result.setCalculatedEmissionsTons(calculateEmissionTons(result));
         }
 
+        result.setTotalEmissions(CalculationUtils.setSignificantFigures(result.getTotalEmissions(), CalculationUtils.EMISSIONS_PRECISION));
+
         return result;
     }
 
