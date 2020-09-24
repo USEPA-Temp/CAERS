@@ -12,7 +12,7 @@ public enum WorksheetName {
     ControlPath("Control Paths"),
     Control("Controls"),
     ControlAssignment("Control Assignments"),
-    ControlPollutant("Control Pollutant"),
+    ControlPollutant("Control Pollutants"),
     FacilitySiteContact("Facility Contacts"),
     FacilityNaics("NAICS"),
     EmissionFormulaVariable("Emission Formula Variables");
