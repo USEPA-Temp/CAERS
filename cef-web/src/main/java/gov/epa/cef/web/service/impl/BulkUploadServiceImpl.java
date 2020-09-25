@@ -248,8 +248,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             .flatMap(p -> p.getEmissions().stream())
             .collect(Collectors.toList());
         List<EmissionFormulaVariable> variables = emissions.stream()
-                .flatMap(e -> e.getVariables().stream())
-                .collect(Collectors.toList());
+            .flatMap(e -> e.getVariables().stream())
+            .collect(Collectors.toList());
         List<ReleasePoint> releasePoints = facilitySites.stream()
             .flatMap(f -> f.getReleasePoints().stream())
             .sorted((i1, i2) -> i1.getReleasePointIdentifier().compareToIgnoreCase(i2.getReleasePointIdentifier()))
@@ -354,7 +354,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             generateProcessesExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.EmissionsProcess.sheetName()), uploadDto.getEmissionsProcesses(), euMap);
             generateControlsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Control.sheetName()), uploadDto.getControls());
             generateControlPathsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPath.sheetName()), uploadDto.getControlPaths());
-            
+            generateControlAssignmentsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlAssignment.sheetName()), uploadDto.getControlAssignments(), controlMap, pathMap);
             generateControlPollutantExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPollutant.sheetName()), uploadDto.getControlPollutants(), controlMap);
             generateApportionmentExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReleasePointAppt.sheetName()), uploadDto.getReleasePointAppts(), rpMap, epMap, pathMap);
             generateReportingPeriodExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReportingPeriod.sheetName()), uploadDto.getReportingPeriods(), epMap);
@@ -726,6 +726,43 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             currentRow++;
 
             dto.setRow(currentRow);
+
+        }
+
+    }
+
+    /**
+     * Map control assignments into the control assignments excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateControlAssignmentsExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<ControlAssignmentBulkUploadDto> dtos, Map<Long, ControlBulkUploadDto> controlMap,
+            Map<Long, ControlPathBulkUploadDto> pathMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ControlAssignmentBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getControlPathId() != null) {
+                row.getCell(2).setCellValue(pathMap.get(dto.getControlPathId()).getRow());
+                row.getCell(3).setCellValue(pathMap.get(dto.getControlPathId()).getPathId());
+            }
+            if (dto.getControlId() != null) {
+                row.getCell(4).setCellValue(controlMap.get(dto.getControlId()).getRow());
+                row.getCell(5).setCellValue(controlMap.get(dto.getControlId()).getIdentifier());
+            }
+            if (dto.getControlPathChildId() != null) {
+                row.getCell(6).setCellValue(pathMap.get(dto.getControlPathChildId()).getRow());
+                row.getCell(7).setCellValue(pathMap.get(dto.getControlPathChildId()).getPathId());
+            }
+            row.getCell(8).setCellValue(dto.getSequenceNumber());
+            row.getCell(9).setCellValue(dto.getPercentApportionment());
+
+            currentRow++;
 
         }
 
