@@ -331,12 +331,16 @@ public class BulkUploadServiceImpl implements BulkUploadService {
  
 //            facilitySheet.disableLocking();
 
+            Map<Long, ReleasePointBulkUploadDto> rpMap = uploadDto.getReleasePoints()
+                    .stream().collect(Collectors.toMap(ReleasePointBulkUploadDto::getId, Functions.identity()));
             Map<Long, EmissionsUnitBulkUploadDto> euMap = uploadDto.getEmissionsUnits()
                     .stream().collect(Collectors.toMap(EmissionsUnitBulkUploadDto::getId, Functions.identity()));
             Map<Long, EmissionsProcessBulkUploadDto> epMap = uploadDto.getEmissionsProcesses()
                     .stream().collect(Collectors.toMap(EmissionsProcessBulkUploadDto::getId, Functions.identity()));
             Map<Long, ControlBulkUploadDto> controlMap = uploadDto.getControls()
                     .stream().collect(Collectors.toMap(ControlBulkUploadDto::getId, Functions.identity()));
+            Map<Long, ControlPathBulkUploadDto> pathMap = uploadDto.getControlPaths()
+                    .stream().collect(Collectors.toMap(ControlPathBulkUploadDto::getId, Functions.identity()));
             Map<Long, ReportingPeriodBulkUploadDto> periodMap = uploadDto.getReportingPeriods()
                     .stream().collect(Collectors.toMap(ReportingPeriodBulkUploadDto::getId, Functions.identity()));
             Map<Long, EmissionBulkUploadDto> emissionMap = uploadDto.getEmissions()
@@ -352,7 +356,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             generateControlPathsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPath.sheetName()), uploadDto.getControlPaths());
             
             generateControlPollutantExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPollutant.sheetName()), uploadDto.getControlPollutants(), controlMap);
-            
+            generateApportionmentExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReleasePointAppt.sheetName()), uploadDto.getReleasePointAppts(), rpMap, epMap, pathMap);
             generateReportingPeriodExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReportingPeriod.sheetName()), uploadDto.getReportingPeriods(), epMap);
             generateOperatingDetailExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.OperatingDetail.sheetName()), uploadDto.getOperatingDetails(), periodMap);
             generateEmissionExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.Emission.sheetName()), uploadDto.getEmissions(), periodMap);
@@ -578,6 +582,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             currentRow++;
 
+            dto.setRow(currentRow);
+
         }
 
     }
@@ -612,6 +618,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             row.getCell(12).setCellValue(dto.getComments());
 
             currentRow++;
+
+            dto.setRow(currentRow);
 
         }
 
@@ -717,6 +725,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             currentRow++;
 
+            dto.setRow(currentRow);
+
         }
 
     }
@@ -747,6 +757,42 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 formulaEvaluator.evaluateInCell(row.getCell(5));
             }
             row.getCell(6).setCellValue(dto.getPercentReduction());
+
+            currentRow++;
+
+        }
+
+    }
+
+    /**
+     * Map apportionments into the apportionment excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateApportionmentExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<ReleasePointApptBulkUploadDto> dtos, Map<Long, ReleasePointBulkUploadDto> rpMap,
+            Map<Long, EmissionsProcessBulkUploadDto> epMap, Map<Long, ControlPathBulkUploadDto> pathMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ReleasePointApptBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getReleasePointId() != null) {
+                row.getCell(2).setCellValue(rpMap.get(dto.getReleasePointId()).getRow());
+                row.getCell(3).setCellValue(rpMap.get(dto.getReleasePointId()).getReleasePointIdentifier());
+            }
+            if (dto.getEmissionProcessId() != null) {
+                row.getCell(4).setCellValue(epMap.get(dto.getEmissionProcessId()).getRow());
+                row.getCell(5).setCellValue(epMap.get(dto.getEmissionProcessId()).getDisplayName());
+            }
+            if (dto.getControlPathId() != null) {
+                row.getCell(6).setCellValue(pathMap.get(dto.getControlPathId()).getRow());
+                row.getCell(7).setCellValue(pathMap.get(dto.getControlPathId()).getPathId());
+            }
+            row.getCell(8).setCellValue(dto.getPercent());
 
             currentRow++;
 
@@ -870,7 +916,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             row.getCell(6).setCellValue(dto.getTotalEmissions());
             row.getCell(7).setCellValue(dto.getEmissionsUomCode());
             row.getCell(8).setCellValue(dto.getOverallControlPercent());
-            row.getCell(9).setCellValue(dto.getEmissionsFactor());
+            // don't include EF for formula emissions
+            if (Strings.emptyToNull(dto.getEmissionsFactorFormula()) == null) {
+                row.getCell(9).setCellValue(dto.getEmissionsFactor());
+            }
             row.getCell(10).setCellValue(dto.getEmissionsFactorText());
             
             row.getCell(13).setCellValue(dto.getEmissionsFactorFormula());
