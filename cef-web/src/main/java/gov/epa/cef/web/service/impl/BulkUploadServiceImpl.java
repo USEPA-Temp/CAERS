@@ -243,6 +243,17 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             .collect(Collectors.toList());
         List<OperatingDetail> operatingDetails = periods.stream()
             .flatMap(p -> p.getOperatingDetails().stream())
+            .sorted((i1, i2) -> {
+                String display1 = String.format("%s-%s-%s", 
+                        i1.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                        i1.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier(),
+                        i1.getReportingPeriod().getReportingPeriodTypeCode().getShortName());
+                String display2 = String.format("%s-%s-%s", 
+                        i2.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                        i2.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier(),
+                        i2.getReportingPeriod().getReportingPeriodTypeCode().getShortName());
+                return display1.compareToIgnoreCase(display2);
+            })
             .collect(Collectors.toList());
         List<Emission> emissions = periods.stream()
             .flatMap(p -> p.getEmissions().stream())
@@ -281,10 +292,39 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         EmissionsReportBulkUploadDto reportDto = uploadMapper.emissionsReportToDto(report);
         reportDto.setFacilitySites(uploadMapper.facilitySiteToDtoList(facilitySites));
         reportDto.setEmissionsUnits(uploadMapper.emissionsUnitToDtoList(units));
-        reportDto.setEmissionsProcesses(uploadMapper.emissionsProcessToDtoList(processes));
-        reportDto.setReportingPeriods(uploadMapper.reportingPeriodToDtoList(periods));
+
+        reportDto.setEmissionsProcesses(processes.stream().map(i -> {
+                EmissionsProcessBulkUploadDto result = uploadMapper.emissionsProcessToDto(i);
+                result.setDisplayName(String.format("%s-%s", 
+                        i.getEmissionsUnit().getUnitIdentifier(), 
+                        i.getEmissionsProcessIdentifier()));
+                return result;
+            }).sorted((i1, i2) -> i1.getDisplayName().compareToIgnoreCase(i2.getDisplayName()))
+            .collect(Collectors.toList()));
+
+        reportDto.setReportingPeriods(periods.stream().map(i -> {
+                ReportingPeriodBulkUploadDto result = uploadMapper.reportingPeriodToDto(i);
+                result.setDisplayName(String.format("%s-%s-%s", 
+                        i.getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                        i.getEmissionsProcess().getEmissionsProcessIdentifier(),
+                        i.getReportingPeriodTypeCode().getShortName()));
+                return result;
+            }).sorted((i1, i2) -> i1.getDisplayName().compareToIgnoreCase(i2.getDisplayName()))
+            .collect(Collectors.toList()));
+
         reportDto.setOperatingDetails(uploadMapper.operatingDetailToDtoList(operatingDetails));
-        reportDto.setEmissions(uploadMapper.emissionToDtoList(emissions));
+
+        reportDto.setEmissions(emissions.stream().map(i -> {
+            EmissionBulkUploadDto result = uploadMapper.emissionToDto(i);
+            result.setDisplayName(String.format("%s-%s-%s(%s)", 
+                    i.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                    i.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier(),
+                    i.getReportingPeriod().getReportingPeriodTypeCode().getShortName(),
+                    i.getPollutant().getPollutantName()));
+            return result;
+        }).sorted((i1, i2) -> i1.getDisplayName().compareToIgnoreCase(i2.getDisplayName()))
+        .collect(Collectors.toList()));
+
         reportDto.setEmissionFormulaVariables(uploadMapper.emissionFormulaVariableToDtoList(variables));
         reportDto.setReleasePoints(uploadMapper.releasePointToDtoList(releasePoints));
         reportDto.setReleasePointAppts(uploadMapper.releasePointApptToDtoList(releasePointAppts));
