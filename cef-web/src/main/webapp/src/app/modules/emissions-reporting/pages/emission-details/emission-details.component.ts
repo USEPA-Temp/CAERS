@@ -652,20 +652,19 @@ export class EmissionDetailsComponent implements OnInit {
    * Return the number of significant figures contained in the value of the currentValue argument
    */
   private getSignificantFigures(currentValue: number): number {
-    let tempValue = Math.abs(currentValue);
-    if (tempValue === 0) {
+
+    currentValue = Math.abs(parseInt(String(currentValue).replace('.', ''), 10));
+    if (currentValue === 0) {
         return 0;
     }
-    const p = Math.floor(Math.log10(tempValue)) + 1;
-    if (p > 0) {
-        tempValue = tempValue / (10 ** p);
-    } else {
-        if (p < 0) {
-            tempValue = tempValue * (10 ** -p);
-        }
+
+    // Remove trailing zeroes
+    while (currentValue !== 0 && currentValue % 10 === 0) {
+        currentValue /= 10;
     }
-    tempValue = Math.round(tempValue * 1e16) / 1e16; // remove floating points errors
-    return (tempValue + '').length - 2;
+
+    return Math.floor(Math.log(currentValue) / Math.log(10)) + 1;
+
   }
 
 
