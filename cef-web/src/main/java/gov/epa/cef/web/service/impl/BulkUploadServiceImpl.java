@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -243,6 +244,17 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             .collect(Collectors.toList());
         List<OperatingDetail> operatingDetails = periods.stream()
             .flatMap(p -> p.getOperatingDetails().stream())
+            .sorted((i1, i2) -> {
+                String display1 = String.format("%s-%s-%s", 
+                        i1.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                        i1.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier(),
+                        i1.getReportingPeriod().getReportingPeriodTypeCode().getShortName());
+                String display2 = String.format("%s-%s-%s", 
+                        i2.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                        i2.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier(),
+                        i2.getReportingPeriod().getReportingPeriodTypeCode().getShortName());
+                return display1.compareToIgnoreCase(display2);
+            })
             .collect(Collectors.toList());
         List<Emission> emissions = periods.stream()
             .flatMap(p -> p.getEmissions().stream())
@@ -281,10 +293,39 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         EmissionsReportBulkUploadDto reportDto = uploadMapper.emissionsReportToDto(report);
         reportDto.setFacilitySites(uploadMapper.facilitySiteToDtoList(facilitySites));
         reportDto.setEmissionsUnits(uploadMapper.emissionsUnitToDtoList(units));
-        reportDto.setEmissionsProcesses(uploadMapper.emissionsProcessToDtoList(processes));
-        reportDto.setReportingPeriods(uploadMapper.reportingPeriodToDtoList(periods));
+
+        reportDto.setEmissionsProcesses(processes.stream().map(i -> {
+                EmissionsProcessBulkUploadDto result = uploadMapper.emissionsProcessToDto(i);
+                result.setDisplayName(String.format("%s-%s", 
+                        i.getEmissionsUnit().getUnitIdentifier(), 
+                        i.getEmissionsProcessIdentifier()));
+                return result;
+            }).sorted((i1, i2) -> i1.getDisplayName().compareToIgnoreCase(i2.getDisplayName()))
+            .collect(Collectors.toList()));
+
+        reportDto.setReportingPeriods(periods.stream().map(i -> {
+                ReportingPeriodBulkUploadDto result = uploadMapper.reportingPeriodToDto(i);
+                result.setDisplayName(String.format("%s-%s-%s", 
+                        i.getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                        i.getEmissionsProcess().getEmissionsProcessIdentifier(),
+                        i.getReportingPeriodTypeCode().getShortName()));
+                return result;
+            }).sorted((i1, i2) -> i1.getDisplayName().compareToIgnoreCase(i2.getDisplayName()))
+            .collect(Collectors.toList()));
+
         reportDto.setOperatingDetails(uploadMapper.operatingDetailToDtoList(operatingDetails));
-        reportDto.setEmissions(uploadMapper.emissionToDtoList(emissions));
+
+        reportDto.setEmissions(emissions.stream().map(i -> {
+            EmissionBulkUploadDto result = uploadMapper.emissionToDto(i);
+            result.setDisplayName(String.format("%s-%s-%s(%s)", 
+                    i.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getUnitIdentifier(), 
+                    i.getReportingPeriod().getEmissionsProcess().getEmissionsProcessIdentifier(),
+                    i.getReportingPeriod().getReportingPeriodTypeCode().getShortName(),
+                    i.getPollutant().getPollutantName()));
+            return result;
+        }).sorted((i1, i2) -> i1.getDisplayName().compareToIgnoreCase(i2.getDisplayName()))
+        .collect(Collectors.toList()));
+
         reportDto.setEmissionFormulaVariables(uploadMapper.emissionFormulaVariableToDtoList(variables));
         reportDto.setReleasePoints(uploadMapper.releasePointToDtoList(releasePoints));
         reportDto.setReleasePointAppts(uploadMapper.releasePointApptToDtoList(releasePointAppts));
@@ -408,7 +449,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(10).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(10));
             }
-            row.getCell(11).setCellValue(dto.getStatusYear());
+            setCellNumberValue(row.getCell(11), dto.getStatusYear());
 //                row.getCell(12).setCellValue(dto.getProgramSystemCode());
             if (dto.getProgramSystemCode() != null) {
                 row.getCell(13).setCellFormula(generateLookupFormula(wb, "ProgramSystemCode", dto.getProgramSystemCode(), true));
@@ -422,8 +463,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             row.getCell(19).setCellValue(String.format("%s (%s)", dto.getCounty(), dto.getStateCode()));
 //                row.getCell(20).setCellValue(dto.getCountryCode());
             row.getCell(21).setCellValue(dto.getPostalCode());
-            row.getCell(22).setCellValue(dto.getLatitude());
-            row.getCell(23).setCellValue(dto.getLongitude());
+            setCellNumberValue(row.getCell(22), dto.getLatitude());
+            setCellNumberValue(row.getCell(23), dto.getLongitude());
             row.getCell(24).setCellValue(dto.getMailingStreetAddress());
             row.getCell(25).setCellValue(dto.getMailingCity());
             row.getCell(26).setCellValue(dto.getMailingStateCode());
@@ -463,7 +504,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             row.getCell(6).setCellValue(dto.getFirstName());
             row.getCell(7).setCellValue(dto.getLastName());
             row.getCell(8).setCellValue(dto.getEmail());
-            row.getCell(9).setCellValue(dto.getPhone());
+            setCellNumberValue(row.getCell(9), dto.getPhone());
             row.getCell(10).setCellValue(dto.getPhoneExt());
             row.getCell(11).setCellValue(dto.getStreetAddress());
             row.getCell(12).setCellValue(dto.getCity());
@@ -553,31 +594,31 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(8));
             }
-            row.getCell(9).setCellValue(dto.getStatusYear());
-            row.getCell(10).setCellValue(dto.getLatitude());
-            row.getCell(11).setCellValue(dto.getLongitude());
-            row.getCell(12).setCellValue(dto.getFugitiveLine1Latitude());
-            row.getCell(13).setCellValue(dto.getFugitiveLine1Longitude());
-            row.getCell(14).setCellValue(dto.getFugitiveLine2Latitude());
-            row.getCell(15).setCellValue(dto.getFugitiveLine2Longitude());
-            row.getCell(16).setCellValue(dto.getStackHeight());
+            setCellNumberValue(row.getCell(9), dto.getStatusYear());
+            setCellNumberValue(row.getCell(10), dto.getLatitude());
+            setCellNumberValue(row.getCell(11), dto.getLongitude());
+            setCellNumberValue(row.getCell(12), dto.getFugitiveLine1Latitude());
+            setCellNumberValue(row.getCell(13), dto.getFugitiveLine1Longitude());
+            setCellNumberValue(row.getCell(14), dto.getFugitiveLine2Latitude());
+            setCellNumberValue(row.getCell(15), dto.getFugitiveLine2Longitude());
+            setCellNumberValue(row.getCell(16), dto.getStackHeight());
             row.getCell(17).setCellValue(dto.getStackHeightUomCode());
-            row.getCell(18).setCellValue(dto.getStackDiameter());
+            setCellNumberValue(row.getCell(18), dto.getStackDiameter());
             row.getCell(19).setCellValue(dto.getStackDiameterUomCode());
-            row.getCell(20).setCellValue(dto.getExitGasVelocity());
+            setCellNumberValue(row.getCell(20), dto.getExitGasVelocity());
             row.getCell(21).setCellValue(dto.getExitGasVelocityUomCode());
-            row.getCell(22).setCellValue(dto.getExitGasTemperature());
-            row.getCell(23).setCellValue(dto.getExitGasFlowRate());
+            setCellNumberValue(row.getCell(22), dto.getExitGasTemperature());
+            setCellNumberValue(row.getCell(23), dto.getExitGasFlowRate());
             row.getCell(24).setCellValue(dto.getExitGasFlowUomCode());
-            row.getCell(25).setCellValue(dto.getFenceLineDistance());
+            setCellNumberValue(row.getCell(25), dto.getFenceLineDistance());
             row.getCell(26).setCellValue(dto.getFenceLineUomCode());
-            row.getCell(27).setCellValue(dto.getFugitiveHeight());
+            setCellNumberValue(row.getCell(27), dto.getFugitiveHeight());
             row.getCell(28).setCellValue(dto.getFugitiveHeightUomCode());
-            row.getCell(29).setCellValue(dto.getFugitiveWidth());
+            setCellNumberValue(row.getCell(29), dto.getFugitiveWidth());
             row.getCell(30).setCellValue(dto.getFugitiveWidthUomCode());
-            row.getCell(31).setCellValue(dto.getFugitiveLength());
+            setCellNumberValue(row.getCell(31), dto.getFugitiveLength());
             row.getCell(32).setCellValue(dto.getFugitiveLengthUomCode());
-            row.getCell(33).setCellValue(dto.getFugitiveAngle());
+            setCellNumberValue(row.getCell(33), dto.getFugitiveAngle());
             row.getCell(34).setCellValue(dto.getComments());
 
             currentRow++;
@@ -612,8 +653,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCodeDescription(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(8));
             }
-            row.getCell(9).setCellValue(dto.getStatusYear());
-            row.getCell(10).setCellValue(dto.getDesignCapacity());
+            setCellNumberValue(row.getCell(9), dto.getStatusYear());
+            setCellNumberValue(row.getCell(10), dto.getDesignCapacity());
             row.getCell(11).setCellValue(dto.getUnitOfMeasureCode());
             row.getCell(12).setCellValue(dto.getComments());
 
@@ -648,9 +689,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(8));
             }
-            row.getCell(9).setCellValue(dto.getStatusYear());
+            setCellNumberValue(row.getCell(9), dto.getStatusYear());
             // using the double version of setCellValue since the spreadsheet expects this value to display as a number
-            row.getCell(11).setCellValue(Double.valueOf(dto.getSccCode()));
+            setCellNumberValue(row.getCell(11), dto.getSccCode());
             if (dto.getAircraftEngineTypeCode() != null) {
                 row.getCell(12).setCellValue(dto.getAircraftEngineTypeCode());
                 row.getCell(13).setCellFormula(generateLookupFormula(wb, "AircraftEngineTypeCode", dto.getAircraftEngineTypeCode(), true));
@@ -684,8 +725,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             row.getCell(2).setCellValue(dto.getIdentifier());
             row.getCell(4).setCellValue(dto.getDescription());
-            row.getCell(5).setCellValue(dto.getPercentCapture());
-            row.getCell(6).setCellValue(dto.getPercentControl());
+            setCellNumberValue(row.getCell(5), dto.getPercentCapture());
+            setCellNumberValue(row.getCell(6), dto.getPercentControl());
             if (dto.getOperatingStatusCode() != null) {
                 row.getCell(7).setCellValue(dto.getOperatingStatusCode());
                 row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
@@ -759,8 +800,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(6).setCellValue(pathMap.get(dto.getControlPathChildId()).getRow());
                 row.getCell(7).setCellValue(pathMap.get(dto.getControlPathChildId()).getPathId());
             }
-            row.getCell(8).setCellValue(dto.getSequenceNumber());
-            row.getCell(9).setCellValue(dto.getPercentApportionment());
+            setCellNumberValue(row.getCell(8), dto.getSequenceNumber());
+            setCellNumberValue(row.getCell(9), dto.getPercentApportionment());
 
             currentRow++;
 
@@ -793,7 +834,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(5).setCellFormula(generateLookupFormula(wb, "Pollutant", dto.getPollutantCode(), !NumberUtils.isCreatable(dto.getPollutantCode())));
                 formulaEvaluator.evaluateInCell(row.getCell(5));
             }
-            row.getCell(6).setCellValue(dto.getPercentReduction());
+            setCellNumberValue(row.getCell(6), dto.getPercentReduction());
 
             currentRow++;
 
@@ -829,7 +870,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(6).setCellValue(pathMap.get(dto.getControlPathId()).getRow());
                 row.getCell(7).setCellValue(pathMap.get(dto.getControlPathId()).getPathId());
             }
-            row.getCell(8).setCellValue(dto.getPercent());
+            setCellNumberValue(row.getCell(8), dto.getPercent());
 
             currentRow++;
 
@@ -871,7 +912,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(10).setCellFormula(generateLookupFormula(wb, "CalculationParameterTypeCode", dto.getCalculationParameterTypeCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(10));
             }
-            row.getCell(11).setCellValue(dto.getCalculationParameterValue());
+            setCellNumberValue(row.getCell(11), dto.getCalculationParameterValue());
             row.getCell(12).setCellValue(dto.getCalculationParameterUom());
             if (dto.getCalculationMaterialCode() != null) {
                 row.getCell(13).setCellValue(dto.getCalculationMaterialCode());
@@ -909,14 +950,14 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(2).setCellValue(periodMap.get(dto.getReportingPeriodId()).getRow());
                 row.getCell(3).setCellValue(periodMap.get(dto.getReportingPeriodId()).getDisplayName());
             }
-            row.getCell(4).setCellValue(dto.getActualHoursPerPeriod());
-            row.getCell(5).setCellValue(dto.getAverageHoursPerDay());
-            row.getCell(6).setCellValue(dto.getAverageDaysPerWeek());
-            row.getCell(7).setCellValue(dto.getAverageWeeksPerPeriod());
-            row.getCell(8).setCellValue(dto.getPercentWinter());
-            row.getCell(9).setCellValue(dto.getPercentSpring());
-            row.getCell(10).setCellValue(dto.getPercentSummer());
-            row.getCell(11).setCellValue(dto.getPercentFall());
+            setCellNumberValue(row.getCell(4), dto.getActualHoursPerPeriod());
+            setCellNumberValue(row.getCell(5), dto.getAverageHoursPerDay());
+            setCellNumberValue(row.getCell(6), dto.getAverageDaysPerWeek());
+            setCellNumberValue(row.getCell(7), dto.getAverageWeeksPerPeriod());
+            setCellNumberValue(row.getCell(8), dto.getPercentWinter());
+            setCellNumberValue(row.getCell(9), dto.getPercentSpring());
+            setCellNumberValue(row.getCell(10), dto.getPercentSummer());
+            setCellNumberValue(row.getCell(11), dto.getPercentFall());
 
             currentRow++;
 
@@ -950,12 +991,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 formulaEvaluator.evaluateInCell(row.getCell(4));
             }
             row.getCell(5).setCellValue("" + dto.isTotalManualEntry());
-            row.getCell(6).setCellValue(dto.getTotalEmissions());
+            setCellNumberValue(row.getCell(6), dto.getTotalEmissions());
             row.getCell(7).setCellValue(dto.getEmissionsUomCode());
-            row.getCell(8).setCellValue(dto.getOverallControlPercent());
+            setCellNumberValue(row.getCell(8), dto.getOverallControlPercent());
             // don't include EF for formula emissions
             if (Strings.emptyToNull(dto.getEmissionsFactorFormula()) == null) {
-                row.getCell(9).setCellValue(dto.getEmissionsFactor());
+                setCellNumberValue(row.getCell(9), dto.getEmissionsFactor());
             }
             row.getCell(10).setCellValue(dto.getEmissionsFactorText());
             
@@ -1004,12 +1045,24 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 row.getCell(6).setCellFormula(generateLookupFormula(wb, "EmissionFormulaVariable", dto.getEmissionFormulaVariableCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(6));
             }
-            row.getCell(7).setCellValue(dto.getValue());
+            setCellNumberValue(row.getCell(7), dto.getValue());
 
             currentRow++;
 
         }
 
+    }
+
+    /**
+     * Set the value of a cell as a number for formatting
+     * @param cell
+     * @param value
+     */
+    private void setCellNumberValue(Cell cell, String value) {
+        Double numVal = toDouble(value);
+        if (numVal != null) {
+            cell.setCellValue(numVal);
+        }
     }
 
     /**
