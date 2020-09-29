@@ -5,6 +5,7 @@ import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
@@ -20,6 +21,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
@@ -132,6 +134,12 @@ public interface BulkUploadMapper {
     EmissionBulkUploadDto emissionToDto(Emission source);
 
     List<EmissionBulkUploadDto> emissionToDtoList(List<Emission> source);
+
+    @Mapping(source="emission.id", target="emissionId")
+    @Mapping(source="variableCode.code", target="emissionFormulaVariableCode")
+    EmissionFormulaVariableBulkUploadDto emissionFormulaVariableToDto(EmissionFormulaVariable source);
+
+    List<EmissionFormulaVariableBulkUploadDto> emissionFormulaVariableToDtoList(List<EmissionFormulaVariable> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
     @Mapping(source="typeCode.code", target="typeCode")

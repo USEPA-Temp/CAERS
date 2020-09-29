@@ -398,6 +398,8 @@ public class EmissionServiceImpl implements EmissionService {
             totalEmissions = totalEmissions.multiply(controlRate);
         }
 
+        totalEmissions = CalculationUtils.setSignificantFigures(totalEmissions, CalculationUtils.EMISSIONS_PRECISION);
+
         emission.setTotalEmissions(totalEmissions);
 
         return emission;

@@ -2,6 +2,9 @@ package gov.epa.cef.web.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
@@ -15,8 +18,9 @@ public class UserFeedback extends BaseAuditEntity {
 
     // Fields
     
-    @Column(name = "report_id")
-    private Long reportId;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_id")
+    private EmissionsReport emissionsReport;
     
     @Column(name = "facility_name")
     private String facilityName;
@@ -65,12 +69,12 @@ public class UserFeedback extends BaseAuditEntity {
      */
     public UserFeedback() {}
     
-	public Long getReportId() {
-		return reportId;
+	public EmissionsReport getEmissionsReport() {
+		return emissionsReport;
 	}
 
-	public void setReportId(Long reportId) {
-		this.reportId = reportId;
+	public void setEmissionsReport(EmissionsReport emissionsReport) {
+		this.emissionsReport = emissionsReport;
 	}
 
 	public Long getIntuitiveRating() {

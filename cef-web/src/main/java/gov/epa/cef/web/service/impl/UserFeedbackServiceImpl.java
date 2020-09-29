@@ -38,10 +38,10 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 	}
 		
 	public void removeReportFromUserFeedback(Long reportId) {
-		if(userFeedbackRepo.findAllByReportId(reportId) != null) {
-			List<UserFeedback> userFeedback = userFeedbackRepo.findAllByReportId(reportId);
+		List<UserFeedback> userFeedback = userFeedbackRepo.findAllByEmissionsReportId(reportId);
+		if(userFeedback != null) {
 			userFeedback.forEach(submission -> {
-				submission.setReportId(null);
+				submission.setEmissionsReport(null);
 				userFeedbackRepo.save(submission);
 			});
 		}

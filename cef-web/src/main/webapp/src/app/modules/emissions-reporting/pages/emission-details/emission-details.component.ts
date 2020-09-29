@@ -59,6 +59,8 @@ export class EmissionDetailsComponent implements OnInit {
   processUrl: string;
   unitIdentifier: string;
 
+  emissionsMaxSignificantFigures = 6;
+
   emissionForm = this.fb.group({
     pollutant: [null, [Validators.required]],
     formulaIndicator: [false, Validators.required],
@@ -81,7 +83,8 @@ export class EmissionDetailsComponent implements OnInit {
     this.pollutantEmissionsUoMValidator(),
     this.checkPercentSulfurRange(),
     this.checkPercentAshRange(),
-    this.overallControlPercentValidator()
+    this.overallControlPercentValidator(),
+    this.checkSignificantFigures()
     ]
   });
 
@@ -644,6 +647,27 @@ export class EmissionDetailsComponent implements OnInit {
     return formulaValues;
   }
 
+
+  /**
+   * Return the number of significant figures contained in the value of the currentValue argument
+   */
+  private getSignificantFigures(currentValue: number): number {
+
+    currentValue = Math.abs(parseInt(String(currentValue).replace('.', ''), 10));
+    if (currentValue === 0) {
+        return 0;
+    }
+
+    // Remove trailing zeroes
+    while (currentValue !== 0 && currentValue % 10 === 0) {
+        currentValue /= 10;
+    }
+
+    return Math.floor(Math.log(currentValue) / Math.log(10)) + 1;
+
+  }
+
+
   searchPollutants = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -721,6 +745,16 @@ export class EmissionDetailsComponent implements OnInit {
       if (calcMethod.value.controlIndicator
       && (overallControl.value && overallControl.value !== 0)) {
         return {overallControlPercentInvalid: true};
+      }
+      return null;
+    };
+  }
+
+  checkSignificantFigures(): ValidatorFn {
+    return (control: FormGroup): {[key: string]: any} | null => {
+      const totalEmissions = control.get('totalEmissions');
+      if (totalEmissions.value && this.getSignificantFigures(totalEmissions.value) > this.emissionsMaxSignificantFigures) {
+        return {significantFiguresInvalid: true};
       }
       return null;
     };

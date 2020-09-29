@@ -16,6 +16,8 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     @NotNull(message = "Emissions Process ID is required.")
     private Long emissionsProcessId;
 
+    private String displayName;
+
     @NotNull(message = "Reporting Period Type Code is required.")
     @Size(max = 20, message = "Reporting Period Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String reportingPeriodTypeCode;
@@ -61,6 +63,13 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     }
     public void setEmissionsProcessId(Long emissionsProcessId) {
         this.emissionsProcessId = emissionsProcessId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getReportingPeriodTypeCode() {
