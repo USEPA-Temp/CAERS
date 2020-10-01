@@ -38,6 +38,8 @@ public enum ValidationField {
     CONTROL_PATH_RPA_WARNING("report.facilitySite.controlPath.releasePointApportionment"),
     CONTROL_PATH_WARNING("report.facilitySite.control.pathWarning"),
     CONTROL_STATUS_CODE("report.facilitySite.control.statusTypeCode"),
+    CONTROL_PERCENT_CAPTURE("report.facilitySite.control.percentCapture"),
+    CONTROL_PERCENT_CONTROL("report.facilitySite.control.percentControl"),
     CONTROL_POLLUTANT("report.facilitySite.control.controlPollutant"),
     CONTROL_MEASURE_CODE("report.facilitySite.control.controlMeasureCode"),
     PROCESS_RP_PCT("report.facilitySite.emissionsUnit.emissionsProcess.releasePointAppts.percent"),

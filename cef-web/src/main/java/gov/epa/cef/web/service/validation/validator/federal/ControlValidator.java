@@ -67,6 +67,24 @@ public class ControlValidator extends BaseValidator<Control> {
 
         }
 
+        if (control.getPercentCapture() < 5 || control.getPercentCapture() > 100) {
+            
+            result = false;
+            context.addFederalError(
+            ValidationField.CONTROL_PERCENT_CAPTURE.value(),
+            "control.percentCapture.range",
+            createValidationDetails(control));
+        }
+
+        if (control.getPercentControl() < 5 || control.getPercentControl() > 100) {
+            
+            result = false;
+            context.addFederalError(
+            ValidationField.CONTROL_PERCENT_CONTROL.value(),
+            "control.percentControl.range",
+            createValidationDetails(control));
+        }
+
 		for  (ControlPollutant cp: control.getPollutants()) {
 
 		    if (cp.getPollutant().getLastInventoryYear() != null && cp.getPollutant().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
