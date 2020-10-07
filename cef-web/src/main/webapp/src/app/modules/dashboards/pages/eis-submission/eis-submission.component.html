@@ -59,6 +59,13 @@
                   "Submit to EIS" button.
                </p>
 
+
+               <input type="checkbox"
+               class="form-check-inline mr-0"
+               [formControl]="chkSelectAll"/> Select All
+
+
+
                <div class="mh-100 overflow-auto">
                   <table class="table table-sm table-striped table-bordered"
                          style="width: 100%">
@@ -99,12 +106,12 @@
                            <strong class="text-larger">No data available.</strong>
                         </td>
                      </tr>
-                     <tr *ngFor="let report of (tableData | dataFilter:txtFilter.value:'facilityName,agencyFacilityId,eisProgramId,lastTransactionId')">
+                     <tr *ngFor="let report of tableData">
                         <td class="text-center">
                            <input type="checkbox"
                                   [attr.aria-label]="report.facilityName"
                                   class="form-check-inline mr-0"
-                                  (change)="onSelectChange($event, report)"/>
+                                  [formControl]="report.reportCheckbox" />
                         </td>
                         <td>
                            <span [textContent]="report.facilityName"></span>

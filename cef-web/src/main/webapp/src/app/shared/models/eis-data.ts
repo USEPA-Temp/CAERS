@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { EisTransactionAttachment } from 'src/app/shared/models/eis-transaction-attachment';
 
 export interface EisDataStats {
@@ -41,6 +42,7 @@ export interface EisDataReport {
    lastTransactionId: string;
    passed: boolean;
    reportingYear: number;
+   reportCheckbox: FormControl;
 }
 
 export interface EisReportStatusUpdate {
