@@ -1128,7 +1128,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         	//update the report metadata to make sure it's reset since the report has been recreated
         	reportToUpdate.setStatus(ReportStatus.IN_PROGRESS);
-        	reportToUpdate.setValidationStatus(ValidationStatus.UNVALIDATED);
+            reportToUpdate.setValidationStatus(ValidationStatus.UNVALIDATED);
+            reportToUpdate.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         	reportToUpdate.setCromerrActivityId(null);
         	reportToUpdate.setCromerrDocumentId(null);
         	return this.emissionsReportService.saveAndAuditEmissionsReport(reportToUpdate, ReportAction.UPLOADED);
@@ -1833,6 +1834,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
            result.setYear(metadata.getYear());
            result.setStatus(ReportStatus.IN_PROGRESS.name());
            result.setValidationStatus(ValidationStatus.UNVALIDATED.name());
+           result.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted.name());
 
            return result;
 

@@ -16,6 +16,7 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     private Short year;
     private String status;
     private String validationStatus;
+    private String eisLastSubmissionStatus;
     private List<FacilitySiteBulkUploadDto> facilitySites = new ArrayList<>();
     private List<EmissionsUnitBulkUploadDto> emissionsUnits = new ArrayList<>();
     private List<EmissionsProcessBulkUploadDto> emissionsProcesses = new ArrayList<>();
@@ -86,6 +87,15 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     }
     public void setValidationStatus(String validationStatus) {
         this.validationStatus = validationStatus;
+    }
+    
+
+    public String getEisLastSubmissionStatus() {
+        return eisLastSubmissionStatus;
+    }
+
+    public void setEisLastSubmissionStatus(String eisLastSubmissionStatus) {
+        this.eisLastSubmissionStatus = eisLastSubmissionStatus;
     }
 
 
