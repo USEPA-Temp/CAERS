@@ -66,6 +66,10 @@
 </div>
 
 <div class="validation-message" *ngIf="control.errors">
+  <div *ngIf="control.errors?.significantFiguresInvalid">
+    Please enter a maximum of 6 significant figures.
+  </div>
+
   <div *ngIf="control.errors?.legacyUom">
       The Unit of Measure {{control.errors.legacyUom.value}} is no longer a valid UoM. Please select a different UoM.
   </div>
