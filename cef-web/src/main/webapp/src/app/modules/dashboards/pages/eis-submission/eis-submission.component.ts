@@ -2,7 +2,7 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {EisDataService} from 'src/app/core/services/eis-data.service';
 import {EisDataReport, EisSubmissionStatus} from 'src/app/shared/models/eis-data';
 import {BaseSortableTable} from 'src/app/shared/components/sortable-table/base-sortable-table';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormArray} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { ToastrService } from 'ngx-toastr';
@@ -61,6 +61,9 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    cboSubmitCategory = new FormControl();
    cboSubmitType = new FormControl();
 
+   chkSelectAll = new FormControl();
+   reportCheckboxes = new FormArray([]);
+
    dlgEditComment: DlgEditComment;
 
    stats: EisDataStats;
@@ -93,6 +96,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       this.availableStatuses = [];
 
       this.tableData = [];
+      this.reportCheckboxes = new FormArray([]);
       this.selectedReports = new Set<number>();
 
       this.stats = {
@@ -105,12 +109,22 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
       };
 
       this.cboFilterYear.valueChanges.subscribe(() => {
+         this.txtFilter.setValue(null, {emitEvent: false});
+         this.cboFilterStatus.setValue(EisSubmissionStatus.All, {emitEvent: false});
          this.retrieveData();
-         this.cboFilterStatus.setValue(EisSubmissionStatus.All);
       });
 
       this.cboFilterStatus.valueChanges.subscribe(() => {
+         this.txtFilter.setValue(null, {emitEvent: false});
          this.retrieveData();
+      });
+
+      this.chkSelectAll.valueChanges.subscribe(() => {
+          this.onSelectAll();
+      });
+
+      this.txtFilter.valueChanges.subscribe(() => {
+          this.retrieveData();
       });
 
       this.txtComment.valueChanges.subscribe(() => {
@@ -234,6 +248,11 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    retrieveData() {
+      const csvKeys = 'facilityName,agencyFacilityId,eisProgramId,lastTransactionId';
+      const keys = csvKeys
+          .replace(/\\w/g, '')
+          .replace(/,,/g, ',')
+          .split(',');
       this.filterMenu();
       this.eisDataService.searchData({
          year: this.cboFilterYear.value,
@@ -241,18 +260,37 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
       }).subscribe(resp => {
 
-         this.tableData = resp.reports.map(report => {
+         this.reportCheckboxes = new FormArray([]);
+         this.tableData = resp.reports.filter(item => {
+            if (this.txtFilter.value) {
+                let match = false;
+                for (let i = 0; i < keys.length; ++i) {
+                    const str = item[keys[i]];
 
-            if (report.lastSubmissionStatus) {
+                    if (str && str.toLowerCase().indexOf(this.txtFilter.value.toLowerCase()) > -1) {
+                        match = true;
+                        break;
+                    }
+                }
 
-               report.lastSubmissionStatus = EisSubmissionStatus[report.lastSubmissionStatus];
-
+                return match;
+            } else {
+                return true;
             }
-
+         }).map(report => {
+            if (report.lastSubmissionStatus) {
+               report.lastSubmissionStatus = EisSubmissionStatus[report.lastSubmissionStatus];
+            }
+            report.reportCheckbox = new FormControl('');
+            report.reportCheckbox.valueChanges.subscribe(() => {
+                this.onSelectChange(report.reportCheckbox.value, report.emissionsReportId);
+            });
+            this.reportCheckboxes.push(report.reportCheckbox);
             return report;
          });
 
          this.onSort({column: 'facilityName', direction: 'asc'});
+         this.chkSelectAll.setValue(false);
       });
    }
 
@@ -390,20 +428,37 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    }
 
    onClearFilterClick() {
-
       this.txtFilter.setValue(null);
    }
 
-   onSelectChange($event: any, report: EisDataReport) {
 
-      if ($event.target.checked) {
+   onSelectAll() {
+       this.selectedReports.clear();
+       this.reportCheckboxes.controls.forEach(cb => {
+           cb.setValue(this.chkSelectAll.value);
+        });
+   }
 
-         this.selectedReports.add(report.emissionsReportId);
+   onSelectChange(selected: boolean, reportId: number) {
+       if (selected) {
+           if (this.areAllChecked() === true) {
+               this.chkSelectAll.setValue(true, {emitEvent: false});
+           }
+           this.selectedReports.add(reportId);
+        } else {
+            this.chkSelectAll.setValue(false, {emitEvent: false});
+            this.selectedReports.delete(reportId);
+        }
+   }
 
-      } else {
-
-         this.selectedReports.delete(report.emissionsReportId);
-      }
+   areAllChecked(): boolean {
+       let allChecked = true;
+       this.reportCheckboxes.controls.forEach(cb => {
+           if (cb.value === false) {
+               allChecked = false;
+           }
+        });
+       return allChecked;
    }
 
    download(data: EisTransactionAttachment) {

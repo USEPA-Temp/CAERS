@@ -18,6 +18,7 @@ import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.util.RepoLocator;
+import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 
 @Service
 public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusService {
@@ -51,7 +52,7 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
      */
     @Override
     public List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds) {
-        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED);
+        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED, EisSubmissionStatus.NotStarted);
     }
 
     /**
@@ -61,7 +62,7 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
      */
     @Override
     public List<EmissionsReportDto> resetEmissionsReport(List<Long> reportIds) {
-        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED);
+        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED, EisSubmissionStatus.NotStarted);
     }
 
     /**
@@ -87,7 +88,7 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
                 });
         }).collect(Collectors.toList());
 
-        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED);
+        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED, EisSubmissionStatus.NotStarted);
     }
 
     /**
@@ -95,9 +96,10 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
      * @param reportIds
      * @param status
      * @param validationStatus
+     * @param eisStatus
      * @return
      */
-    private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status, ValidationStatus validationStatus) {
+    private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status, ValidationStatus validationStatus, EisSubmissionStatus eisStatus) {
 
         return StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
             .map(report -> {
@@ -108,6 +110,9 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
                     }
                     if(validationStatus != null) {
                         report.setValidationStatus(validationStatus);
+                    }
+                    if (eisStatus != null) {
+                        report.setEisLastSubmissionStatus(eisStatus);
                     }
                     return this.emissionsReportMapper.toDto(this.erRepo.save(report));
                 }
@@ -122,7 +127,17 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
      * @param status
      * @return
      */
+    private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status, ValidationStatus validationStatus) {
+        return updateEmissionsReportsStatus(reportIds, status, validationStatus, null);
+    }
+    
+    /**
+     * Update the status of the specified reports
+     * @param reportIds
+     * @param status
+     * @return
+     */
     private List<EmissionsReportDto> updateEmissionsReportsStatus(List<Long> reportIds, ReportStatus status) {
-        return updateEmissionsReportsStatus(reportIds, status, null);
+        return updateEmissionsReportsStatus(reportIds, status, null, null);
     }
 }

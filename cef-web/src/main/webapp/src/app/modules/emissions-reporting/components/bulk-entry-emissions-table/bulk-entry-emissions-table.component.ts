@@ -2,11 +2,12 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { EmissionService } from 'src/app/core/services/emission.service';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, ValidatorFn, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { BulkEntryEmissionHolder } from 'src/app/shared/models/bulk-entry-emission-holder';
 import { Emission } from 'src/app/shared/models/emission';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 
 @Component({
   selector: 'app-bulk-entry-emissions-table',
@@ -26,7 +27,8 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
       private emissionService: EmissionService,
       private route: ActivatedRoute,
       private fb: FormBuilder,
-      private toastr: ToastrService) {
+      private toastr: ToastrService,
+      public formUtils: FormUtilsService) {
     super();
   }
 
@@ -62,29 +64,33 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
         if ((e.totalManualEntry || e.emissionsCalcMethodCode.totalDirectEntry)
             && !(rp.operatingStatusCode.code === 'TS' || rp.operatingStatusCode.code === 'PS')) {
           if (!this.emissionForm.contains('' + e.id)) {
-            this.emissionForm.setControl('' + e.id, new FormControl({
-              value: e.totalEmissions,
-              disabled: false
-            }, {
-              validators: [
-                Validators.required,
-                Validators.min(0)
-              ],
-              updateOn: 'blur'
-            }));
+            const fc = new FormControl({
+                value: e.totalEmissions,
+                disabled: false
+              }, {
+                  updateOn: 'blur'
+              });
+            fc.setValidators([
+              Validators.required,
+              Validators.min(0),
+              this.checkSignificantFigures(fc)
+            ]);
+            this.emissionForm.setControl('' + e.id, fc);
           }
         } else {
           // use setControl to make sure new values are applied
-          this.emissionForm.setControl('' + e.id, new FormControl({
+          const fc = new FormControl({
               value: e.totalEmissions,
               disabled: true
             }, {
-              validators: [
-                Validators.required,
-                Validators.min(0)
-              ],
-              updateOn: 'blur'
-            }));
+                updateOn: 'blur'
+            });
+          fc.setValidators([
+            Validators.required,
+            Validators.min(0),
+            this.checkSignificantFigures(fc)
+          ]);
+          this.emissionForm.setControl('' + e.id, fc);
         }
       });
     });
@@ -114,6 +120,16 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
       });
 
     }
+  }
+
+
+  checkSignificantFigures(totalEmissions: FormControl): ValidatorFn {
+      return (control: FormGroup): {[key: string]: any} | null => {
+          if (totalEmissions.value && this.formUtils.getSignificantFigures(totalEmissions.value) > this.formUtils.emissionsMaxSignificantFigures) {
+              return {significantFiguresInvalid: true};
+            }
+          return null;
+    };
   }
 
 }
