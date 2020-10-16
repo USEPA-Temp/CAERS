@@ -76,7 +76,7 @@ public class ControlValidator extends BaseValidator<Control> {
             createValidationDetails(control));
         }
 
-        if (control.getPercentControl() != null && (control.getPercentControl() < 5 || control.getPercentControl() > 100)) {
+        if (control.getPercentControl() != null && (control.getPercentControl() < 1 || control.getPercentControl() > 100)) {
             
             result = false;
             context.addFederalError(
