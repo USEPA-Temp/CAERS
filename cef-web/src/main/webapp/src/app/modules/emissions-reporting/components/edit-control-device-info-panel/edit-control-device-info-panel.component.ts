@@ -31,7 +31,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     ]],
     percentControl: ['', [
       Validators.max(100.0),
-      Validators.min(5),
+      Validators.min(1),
       Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
     ]],
     operatingStatusCode: [null, Validators.required],
