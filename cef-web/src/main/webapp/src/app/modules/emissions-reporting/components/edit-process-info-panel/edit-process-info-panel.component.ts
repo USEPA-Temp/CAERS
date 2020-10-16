@@ -68,7 +68,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     this.legacyAetcValidator(),
     this.checkMatchSccAircraft(),
     this.checkSccAndAircraftDuplicate(),
-    this.facilitySiteStatusCheck()]
+    this.facilitySiteStatusCheck(),
+    this.statusYearRequiredCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -354,6 +355,17 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
           && controlStatus.code !== statusPermShutdown) {
             return {invalidStatusCodePS: true};
           }
+      }
+      return null;
+    };
+  }
+
+  statusYearRequiredCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const statusYear = control.get('statusYear').value;
+
+      if (statusYear === null || statusYear === '') {
+          return {statusYearRequiredFailed: true};
       }
       return null;
     };
