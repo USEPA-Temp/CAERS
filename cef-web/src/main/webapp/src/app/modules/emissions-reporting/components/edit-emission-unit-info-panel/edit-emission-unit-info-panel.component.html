@@ -51,7 +51,7 @@
             <input type="text" class="form-control" maxlength="4" id="unitStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="emissionUnitForm.get('statusYear')"></app-validation-message>
             <div class="validation-message" *ngIf="emissionUnitForm.errors?.statusYearRequiredFailed">
-                Enter a year greater than the last year of reported emissions.
+                If Shutdown (temporary or permanent), enter a year greater than the last year of reported emissions.
             </div>
         </div>
     </div>
