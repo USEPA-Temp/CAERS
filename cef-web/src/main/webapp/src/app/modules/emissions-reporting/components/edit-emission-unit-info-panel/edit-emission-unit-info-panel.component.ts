@@ -57,7 +57,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     this.emissionUnitIdentifierCheck(),
     this.facilitySiteStatusCheck(),
     this.capacityUomCheck(),
-    this.capacityLegacyUomCheck()]
+    this.capacityLegacyUomCheck(),
+    this.statusYearRequiredCheck()]
   });
 
   operatingStatusValues: BaseCodeLookup[];
@@ -214,6 +215,17 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         if (designCapacityUom && (designCapacityUom.legacy || !designCapacityUom.unitDesignCapacity)) {
           return {eisUomInvalid: true};
         }
+      }
+      return null;
+    };
+  }
+
+  statusYearRequiredCheck(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const statusYear = control.get('statusYear').value;
+
+      if (statusYear === null || statusYear === '') {
+          return {statusYearRequiredFailed: true};
       }
       return null;
     };
