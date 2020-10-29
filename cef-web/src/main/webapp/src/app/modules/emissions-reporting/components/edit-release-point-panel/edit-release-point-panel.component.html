@@ -18,7 +18,7 @@
         <div class="col-sm-3">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="releaseStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+                <option *ngFor="let opt of operatingSubFacilityStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="releasePointForm.get('operatingStatusCode')"></app-validation-message>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidStatusCodeTS">

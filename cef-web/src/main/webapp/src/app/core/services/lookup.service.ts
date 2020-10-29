@@ -43,6 +43,16 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
+  retrieveSubFacilityOperatingStatus(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/subFacilityOperatingStatus`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveFacilityOperatingStatus(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/facilityOperatingStatus`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
   retrieveEmissionsOperatingType(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/emissionsOperatingType`;
     return this.http.get<BaseCodeLookup[]>(url);

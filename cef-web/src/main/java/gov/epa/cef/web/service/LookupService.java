@@ -67,6 +67,18 @@ public interface LookupService {
     List<CodeLookupDto> retrieveOperatingStatusCodes();
 
     /**
+     * Retrieve Operating Status codes for sub-facility components
+     * @return
+     */
+    List<CodeLookupDto> retrieveSubFacilityOperatingStatusCodes();
+
+    /**
+     * Retrieve Operating Status codes for facilities
+     * @return
+     */
+    List<CodeLookupDto> retrieveFacilityOperatingStatusCodes();
+
+    /**
      * Retrieve Pollutants
      * @return
      */

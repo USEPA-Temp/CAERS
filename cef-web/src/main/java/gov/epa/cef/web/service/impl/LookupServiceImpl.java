@@ -214,6 +214,38 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see gov.epa.cef.web.service.impl.LookupService#retrieveSubFacilityOperatingStatusCodes()
+     */
+    public List<CodeLookupDto> retrieveSubFacilityOperatingStatusCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
+
+        entities.forEach(entity -> {
+            if (entity.getSubFacilityStatus()) {
+                result.add(lookupMapper.toDto(entity));
+            }
+        });
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see gov.epa.cef.web.service.impl.LookupService#retrieveFacilityOperatingStatusCodes()
+     */
+    public List<CodeLookupDto> retrieveFacilityOperatingStatusCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
+
+        entities.forEach(entity -> {
+            if (entity.getFacilityStatus()) {
+                result.add(lookupMapper.toDto(entity));
+            }
+        });
+        return result;
+    }
+
     public OperatingStatusCode retrieveOperatingStatusCodeEntityByCode(String code) {
         OperatingStatusCode result= operatingStatusRepo
             .findById(code)

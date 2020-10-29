@@ -157,7 +157,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
   });
 
   releasePointTypeCode: InventoryYearCodeLookup[];
-  operatingStatusValues: BaseCodeLookup[];
+  operatingSubFacilityStatusValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
   flowUomValues: UnitMeasureCode[];
   velocityUomValues: UnitMeasureCode[];
@@ -176,9 +176,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       this.releasePointTypeCode = result;
     });
 
-    this.lookupService.retrieveOperatingStatus()
+    this.lookupService.retrieveSubFacilityOperatingStatus()
     .subscribe(result => {
-      this.operatingStatusValues = result;
+      this.operatingSubFacilityStatusValues = result;
     });
 
     this.lookupService.retrieveUom()

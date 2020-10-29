@@ -22,7 +22,7 @@
         <div class="col-sm-4">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="processStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+                <option *ngFor="let opt of operatingSubFacilityStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="processForm.get('operatingStatusCode')"></app-validation-message>
             <div class="validation-message" *ngIf="processForm.errors?.invalidStatusCodeTS">
