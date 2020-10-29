@@ -200,32 +200,15 @@ public class LookupServiceImpl implements LookupService {
     }
 
     /* (non-Javadoc)
-     * @see gov.epa.cef.web.service.impl.LookupService#retrieveOperatingStatusCodes()
-     */
-    @Override
-    public List<CodeLookupDto> retrieveOperatingStatusCodes() {
-
-        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
-
-        entities.forEach(entity -> {
-            result.add(lookupMapper.toDto(entity));
-        });
-        return result;
-    }
-
-    /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveSubFacilityOperatingStatusCodes()
      */
     public List<CodeLookupDto> retrieveSubFacilityOperatingStatusCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
+        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAllSubFacilityStatuses(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
-            if (entity.getSubFacilityStatus()) {
-                result.add(lookupMapper.toDto(entity));
-            }
+            result.add(lookupMapper.toDto(entity));
         });
         return result;
     }
@@ -236,12 +219,10 @@ public class LookupServiceImpl implements LookupService {
     public List<CodeLookupDto> retrieveFacilityOperatingStatusCodes() {
 
         List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAll(Sort.by(Direction.ASC, DESCRIPTION));
+        Iterable<OperatingStatusCode> entities = operatingStatusRepo.findAllFacilityStatuses(Sort.by(Direction.ASC, DESCRIPTION));
 
         entities.forEach(entity -> {
-            if (entity.getFacilityStatus()) {
-                result.add(lookupMapper.toDto(entity));
-            }
+            result.add(lookupMapper.toDto(entity));
         });
         return result;
     }

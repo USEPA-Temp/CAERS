@@ -61,12 +61,6 @@ public interface LookupService {
     CalculationParameterTypeCode retrieveCalcParamTypeCodeEntityByCode(String code);
 
     /**
-     * Retrieve Operating Status codes
-     * @return
-     */
-    List<CodeLookupDto> retrieveOperatingStatusCodes();
-
-    /**
      * Retrieve Operating Status codes for sub-facility components
      * @return
      */

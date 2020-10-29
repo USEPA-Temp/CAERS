@@ -66,7 +66,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             this.excelExportEnabled = result;
         });
 
-        this.lookupService.retrieveOperatingStatus()
+        this.lookupService.retrieveFacilityOperatingStatus()
         .subscribe(result => {
             this.operatingFacilityStatusValues = result;
         });

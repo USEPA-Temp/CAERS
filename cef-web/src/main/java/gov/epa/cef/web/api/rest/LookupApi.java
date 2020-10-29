@@ -69,18 +69,6 @@ public class LookupApi {
     }
 
     /**
-     * Retrieve Operating Status codes
-     * @return
-     */
-    @GetMapping(value = "/operatingStatus")
-    @ResponseBody
-    public ResponseEntity<List<CodeLookupDto>> retrieveOperatingStatusCodes() {
-
-        List<CodeLookupDto> result = lookupService.retrieveOperatingStatusCodes();
-        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
-    }
-
-    /**
      * Retrieve Operating Status codes for sub-facility components
      * @return
      */
