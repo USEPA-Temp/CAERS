@@ -38,8 +38,13 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
-  retrieveOperatingStatus(): Observable<BaseCodeLookup[]> {
-    const url = `${this.baseUrl}/operatingStatus`;
+  retrieveSubFacilityOperatingStatus(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/subFacilityOperatingStatus`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveFacilityOperatingStatus(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/facilityOperatingStatus`;
     return this.http.get<BaseCodeLookup[]>(url);
   }
 

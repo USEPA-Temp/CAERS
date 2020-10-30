@@ -69,17 +69,29 @@ public class LookupApi {
     }
 
     /**
-     * Retrieve Operating Status codes
+     * Retrieve Operating Status codes for sub-facility components
      * @return
      */
-    @GetMapping(value = "/operatingStatus")
+    @GetMapping(value = "/subFacilityOperatingStatus")
     @ResponseBody
-    public ResponseEntity<List<CodeLookupDto>> retrieveOperatingStatusCodes() {
+    public ResponseEntity<List<CodeLookupDto>> retrieveSubFacilityOperatingStatusCodes() {
 
-        List<CodeLookupDto> result = lookupService.retrieveOperatingStatusCodes();
+        List<CodeLookupDto> result = lookupService.retrieveSubFacilityOperatingStatusCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
-    
+
+    /**
+     * Retrieve Operating Status codes for facilities
+     * @return
+     */
+    @GetMapping(value = "/facilityOperatingStatus")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveFacilityOperatingStatusCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveFacilityOperatingStatusCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+
     /**
      * Retrieve Emissions Operating Type Codes
      * @return

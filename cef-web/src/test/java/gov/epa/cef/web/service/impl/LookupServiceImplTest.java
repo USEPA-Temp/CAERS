@@ -174,8 +174,14 @@ public class LookupServiceImplTest extends BaseServiceTest {
     }
 
     @Test
-    public void retrieveOperatingStatusCodes_Should_Return_CodeLookupDtoList(){
-        List<CodeLookupDto> result = lookupServiceImpl.retrieveOperatingStatusCodes();
+    public void retrieveFacilityOperatingStatusCodes_Should_Return_CodeLookupDtoList(){
+        List<CodeLookupDto> result = lookupServiceImpl.retrieveFacilityOperatingStatusCodes();
+        assertNotEquals(null, result);
+    }
+
+    @Test
+    public void retrieveSubFacilityOperatingStatusCodes_Should_Return_CodeLookupDtoList(){
+        List<CodeLookupDto> result = lookupServiceImpl.retrieveSubFacilityOperatingStatusCodes();
         assertNotEquals(null, result);
     }
 

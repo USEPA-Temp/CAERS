@@ -65,7 +65,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     comments: ['', Validators.maxLength(400)]
   }, {validators: this.mailingAddressValidator()});
 
-  operatingStatusValues: BaseCodeLookup[];
+  facilityOperatingStatusValues: BaseCodeLookup[];
   tribalCodeValues: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
   facilityCategoryCodeValues: FacilityCategoryCode[];
@@ -98,9 +98,9 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
       }
     });
 
-    this.lookupService.retrieveOperatingStatus()
+    this.lookupService.retrieveFacilityOperatingStatus()
     .subscribe(result => {
-      this.operatingStatusValues = result;
+      this.facilityOperatingStatusValues = result;
     });
 
     this.lookupService.retrieveTribalCode()

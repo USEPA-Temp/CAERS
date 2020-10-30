@@ -72,7 +72,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     this.statusYearRequiredCheck()]
   });
 
-  operatingStatusValues: BaseCodeLookup[];
+  operatingSubFacilityStatusValues: BaseCodeLookup[];
   aircraftEngineTypeValue: AircraftEngineTypeCode[];
   aircraftEngineSCC: string[];
 
@@ -85,9 +85,9 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     private fb: FormBuilder) {}
 
   ngOnInit() {
-    this.lookupService.retrieveOperatingStatus()
+    this.lookupService.retrieveSubFacilityOperatingStatus()
     .subscribe(result => {
-      this.operatingStatusValues = result;
+      this.operatingSubFacilityStatusValues = result;
     });
 
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {

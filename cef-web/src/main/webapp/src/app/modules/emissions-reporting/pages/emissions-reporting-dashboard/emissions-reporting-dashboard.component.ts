@@ -26,7 +26,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     facilitySite: FacilitySite;
     reports: EmissionsReport[];
     emissionsReport: EmissionsReport;
-    operatingStatusValues: BaseCodeLookup[];
+    operatingFacilityStatusValues: BaseCodeLookup[];
     excelExportEnabled = false;
 
     @ViewChild('FailedToCreateMessageBox', {static: true})
@@ -66,9 +66,9 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             this.excelExportEnabled = result;
         });
 
-        this.lookupService.retrieveOperatingStatus()
+        this.lookupService.retrieveFacilityOperatingStatus()
         .subscribe(result => {
-            this.operatingStatusValues = result;
+            this.operatingFacilityStatusValues = result;
         });
 
     }
@@ -132,7 +132,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
               Object.assign(this.facilitySite, this.facility);
               this.facilitySite.emissionsReport = this.emissionsReport;
               this.facilitySite.name = this.facility.facilityName;
-              this.operatingStatusValues.forEach(opStatus => {
+              this.operatingFacilityStatusValues.forEach(opStatus => {
                   if (opStatus.code === 'OP') {
                       this.facilitySite.operatingStatusCode = opStatus;
                   }

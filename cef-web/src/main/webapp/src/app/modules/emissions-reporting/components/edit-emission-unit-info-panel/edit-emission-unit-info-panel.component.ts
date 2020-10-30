@@ -61,7 +61,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     this.statusYearRequiredCheck()]
   });
 
-  operatingStatusValues: BaseCodeLookup[];
+  subFacilityOperatingStatusValues: BaseCodeLookup[];
   unitTypeValues: BaseCodeLookup[];
   uomValues: UnitMeasureCode[];
   designCapacityUomValues: UnitMeasureCode[];
@@ -106,9 +106,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       this.designCapacityUomValues = this.uomValues.filter(val => val.unitDesignCapacity);
     });
 
-    this.lookupService.retrieveOperatingStatus()
+    this.lookupService.retrieveSubFacilityOperatingStatus()
     .subscribe(result => {
-      this.operatingStatusValues = result;
+      this.subFacilityOperatingStatusValues = result;
     });
 
     this.lookupService.retrieveUnitType()

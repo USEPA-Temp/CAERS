@@ -13,7 +13,7 @@
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="facilityStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt?.description}}</option>
+                <option *ngFor="let opt of facilityOperatingStatusValues" [ngValue]="opt">{{opt?.description}}</option>
             </select>
             <app-validation-message [control]="facilitySiteForm.get('operatingStatusCode')"></app-validation-message>
         </div>
