@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
 import { BulkEntryEmissionHolder } from 'src/app/shared/models/bulk-entry-emission-holder';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-bulk-entry-reporting-period-table',
@@ -22,6 +23,8 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
 
   reportingPeriodForm = this.fb.group({});
 
+  operatingStatus = OperatingStatus;
+
   constructor(
       private reportingPeriodService: ReportingPeriodService,
       private route: ActivatedRoute,
@@ -34,7 +37,7 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
 
     this.tableData.forEach(rp => {
 
-      const disabled = rp.operatingStatusCode.code === 'TS' || rp.operatingStatusCode.code === 'PS';
+      const disabled = rp.operatingStatusCode.code === OperatingStatus.TEMP_SHUTDOWN || rp.operatingStatusCode.code === OperatingStatus.PERM_SHUTDOWN;
       this.reportingPeriodForm.addControl('' + rp.reportingPeriodId, new FormControl(
         {value: rp.calculationParameterValue, disabled},
         { validators: [

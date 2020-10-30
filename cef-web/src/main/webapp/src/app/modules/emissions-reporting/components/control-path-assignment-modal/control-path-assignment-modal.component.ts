@@ -6,9 +6,7 @@ import { ControlService } from 'src/app/core/services/control.service';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
-const statusPermShutdown = 'PS';
-const statusTempShutdown = 'TS';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-control-path-assignment-modal',
@@ -181,7 +179,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     if (this.controlPathAssignmentForm.get('control').value) {
       controlList = this.assignmentList.filter(val => val.control && (val.control.id === this.controlPathAssignmentForm.get('control').value.id));
 
-      if (this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === statusTempShutdown) {
+      if (this.controlPathAssignmentForm.get('control').value.operatingStatusCode.code === OperatingStatus.TEMP_SHUTDOWN) {
         this.tempShutdownControlWarning = 'Warning: This Control Path is associated with the Temporarily Shutdown Control Device.';
       } else {
         this.tempShutdownControlWarning = null;
@@ -267,7 +265,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
     if (!controlField && !controlPathChildField) {
       return { controlAndPathNotSelected: true};
     }
-    if (controlField && !controlPathChildField && controlField.operatingStatusCode.code === statusPermShutdown) {
+    if (controlField && !controlPathChildField && controlField.operatingStatusCode.code === OperatingStatus.PERM_SHUTDOWN) {
       return { permShutdownControl: true };
     }
     if ((controlField || controlPathChildField) && (sequenceNumber && percentApportionment)) {

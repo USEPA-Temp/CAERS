@@ -13,10 +13,7 @@ import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tol
 import { ReleasePointService } from 'src/app/core/services/release-point.service';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
-
-const statusPermShutdown = 'PS';
-const statusTempShutdown = 'TS';
-const statusOperating = 'OP';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-edit-release-point-panel',
@@ -242,7 +239,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     this.uomRequiredCheck();
 
     if (this.releasePointForm.get('operatingStatusCode').value
-      && this.releasePointForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
+      && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
       this.releasePointForm.get('typeCode').setValidators([Validators.required,
         legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
       this.releasePointForm.controls.typeCode.markAsTouched();
@@ -475,7 +472,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const flowRate = control.get('exitGasFlowRate');
       const velocity = control.get('exitGasVelocity');
 
-      if (control.get('operatingStatusCode').value && control.get('operatingStatusCode').value.code.includes(statusOperating)) {
+      if (control.get('operatingStatusCode').value && control.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
         if (control.get('typeCode').value !== null && control.get('typeCode').value.description !== this.fugitiveType) {
           if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
             return { invalidVelocity: true };
@@ -659,12 +656,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
       const controlStatus = control.get('operatingStatusCode').value;
 
       if (this.facilityOpCode && controlStatus) {
-        if (this.facilityOpCode.code === statusTempShutdown
-          && controlStatus.code !== statusPermShutdown
-          && controlStatus.code !== statusTempShutdown) {
+        if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === statusPermShutdown
-          && controlStatus.code !== statusPermShutdown) {
+          } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
             return {invalidStatusCodePS: true};
           }
       }
@@ -692,7 +689,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         return null;
       }
       if (this.releasePointForm.get('operatingStatusCode').value
-        && this.releasePointForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
+        && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
         return Validators.required(formControl);
       }
       return null;

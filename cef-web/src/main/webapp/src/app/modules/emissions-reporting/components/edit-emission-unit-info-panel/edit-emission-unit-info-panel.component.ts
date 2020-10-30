@@ -9,10 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { ActivatedRoute } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
-
-const statusPermShutdown = 'PS';
-const statusTempShutdown = 'TS';
-const statusOperating = 'OP';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-edit-emission-unit-info-panel',
@@ -181,12 +178,12 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       const controlStatus = control.get('operatingStatusCode').value;
 
       if (this.facilityOpCode && controlStatus) {
-        if (this.facilityOpCode.code === statusTempShutdown
-          && controlStatus.code !== statusPermShutdown
-          && controlStatus.code !== statusTempShutdown) {
+        if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === statusPermShutdown
-          && controlStatus.code !== statusPermShutdown) {
+          } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
             return {invalidStatusCodePS: true};
           }
       }
@@ -211,7 +208,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       const designCapacityUom = control.get('unitOfMeasureCode').value;
 
       if (control.get('operatingStatusCode').value
-        && control.get('operatingStatusCode').value.code.includes(statusOperating)) {
+        && control.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
         if (designCapacityUom && (designCapacityUom.legacy || !designCapacityUom.unitDesignCapacity)) {
           return {eisUomInvalid: true};
         }
@@ -238,7 +235,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
       }
 
       if (this.emissionUnitForm.get('operatingStatusCode').value
-        && this.emissionUnitForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
+        && this.emissionUnitForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
         return Validators.required(formControl);
       }
       return null;
