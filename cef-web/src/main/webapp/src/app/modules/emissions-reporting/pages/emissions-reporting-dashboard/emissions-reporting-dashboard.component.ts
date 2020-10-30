@@ -15,6 +15,7 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FileDownloadService } from 'src/app/core/services/file-download.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -133,7 +134,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
               this.facilitySite.emissionsReport = this.emissionsReport;
               this.facilitySite.name = this.facility.facilityName;
               this.operatingFacilityStatusValues.forEach(opStatus => {
-                  if (opStatus.code === 'OP') {
+                  if (opStatus.code === OperatingStatus.OPERATING) {
                       this.facilitySite.operatingStatusCode = opStatus;
                   }
               });

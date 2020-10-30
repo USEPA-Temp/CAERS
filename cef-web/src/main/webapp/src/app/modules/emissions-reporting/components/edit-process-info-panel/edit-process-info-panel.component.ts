@@ -12,8 +12,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
-
-const statusOperating = 'OP';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -21,7 +20,7 @@ const statusOperating = 'OP';
   styleUrls: ['./edit-process-info-panel.component.scss']
 })
 
-export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterContentChecked{
+export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterContentChecked {
   @Input() process: Process;
   @Input() unitIdentifier: string;
   @Input() emissionsUnit: EmissionUnit;
@@ -342,17 +341,15 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const statusPermShutdown = 'PS';
-      const statusTempShutdown = 'TS';
       const controlStatus = control.get('operatingStatusCode').value;
 
       if (this.facilityOpCode && controlStatus) {
-        if (this.facilityOpCode.code === statusTempShutdown
-          && controlStatus.code !== statusPermShutdown
-          && controlStatus.code !== statusTempShutdown) {
+        if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === statusPermShutdown
-          && controlStatus.code !== statusPermShutdown) {
+          } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
             return {invalidStatusCodePS: true};
           }
       }
@@ -378,7 +375,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       }
 
       if (this.processForm.get('operatingStatusCode').value
-        && this.processForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
+        && this.processForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
         return Validators.required(formControl);
       }
       return null;
