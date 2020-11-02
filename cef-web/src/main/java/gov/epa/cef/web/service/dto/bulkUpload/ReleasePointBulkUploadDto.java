@@ -24,8 +24,8 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Exit Gas Flow Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String exitGasFlowUomCode;
 
-    @Pattern(regexp = "^\\d{0,4}$",
-        message = "Exit Gas Temperature is not in expected format: {4} digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^[+-]?\\d{0,4}$",
+        message = "Exit Gas Temperature is not in expected format: '+/-{4}' digits; found '${validatedValue}'.")
     private String exitGasTemperature;
 
     @Pattern(regexp = "^\\d{0,5}(\\.\\d{1,3})?$",
