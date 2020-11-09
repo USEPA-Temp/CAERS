@@ -57,8 +57,8 @@
         <div class="col-sm-4">
             <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="processForm.get('statusYear')"></app-validation-message>
-            <div class="validation-message" *ngIf="processForm.errors?.statusYearRequiredFailed">
-                If Shutdown (temporary or permanent), enter a year greater than the last year of reported emissions.
+            <div class="validation-message" *ngIf="processForm.get('statusYear').errors?.statusYearRequiredFailed && (processForm.dirty || processForm.touched)">                
+                Status Year must be entered when creating a new process or updating the process's operating status. If shutdown (temporary or permanent), enter a year greater than the last year of reported emissions for this process.
             </div>
         </div>
     </div>

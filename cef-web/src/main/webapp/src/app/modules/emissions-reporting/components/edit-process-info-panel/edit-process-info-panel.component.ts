@@ -43,7 +43,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       Validators.maxLength(20)
     ]],
     statusYear: ['', [
-      Validators.required,
       Validators.min(1900),
       Validators.max(2050),
       Validators.pattern('[0-9]*')
@@ -362,7 +361,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       const statusYear = control.get('statusYear').value;
 
       if (statusYear === null || statusYear === '') {
-          return {statusYearRequiredFailed: true};
+        control.get('statusYear').setErrors({statusYearRequiredFailed: true});
       }
       return null;
     };
