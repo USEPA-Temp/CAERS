@@ -37,6 +37,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
 
+    @NotBlank(message = "Status Year is required.")
     @Pattern(regexp = YearPattern,
         message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
     private String statusYear;
@@ -52,6 +53,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 60, message = "City can not exceed {max} chars; found '${validatedValue}'.")
     private String city;
 
+    @NotBlank(message = "County is required.")
     @Size(max = 43, message = "County can not exceed {max} chars; found '${validatedValue}'.")
     private String county;
 
@@ -82,15 +84,19 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         message = "Longitude is not in expected numeric format: '+/-{3}.{6}' digits; found '${validatedValue}.")
     private String longitude;
 
+    @NotBlank(message = "Mailing Street Address is required.")
     @Size(max = 100, message = "Mailing Street Address can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingStreetAddress;
 
+    @NotBlank(message = "Mailing City is required.")
     @Size(max = 60, message = "Mailing City can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingCity;
 
+    @NotBlank(message = "Mailing State Code is required.")
     @Size(max = 5, message = "Mailing State Code can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingStateCode;
 
+    @NotBlank(message = "Mailing Postal Code is required.")
     @Size(max = 10, message = "Mailing Postal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String mailingPostalCode;
 

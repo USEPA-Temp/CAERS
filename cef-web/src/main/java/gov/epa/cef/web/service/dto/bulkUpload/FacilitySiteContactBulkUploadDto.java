@@ -23,16 +23,18 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
     @Size(max = 15, message = "Prefix can not exceed {max} chars; found '${validatedValue}'.")
 	private String prefix;
 
+    @NotBlank(message = "First Name is required.")
     @Size(max = 20, message = "First Name can not exceed {max} chars; found '${validatedValue}'.")
 	private String firstName;
 
+    @NotBlank(message = "Last Name is required.")
     @Size(max = 20, message = "Last Name can not exceed {max} chars; found '${validatedValue}'.")
 	private String lastName;
 
     @NotBlank(message = "Email is required.")
     @Size(max = 255, message = "Email can not exceed {max} chars; found '${validatedValue}'.")
 	private String email;
-    
+
     @NotBlank(message = "Phone number is required.")
     @Pattern(regexp = PhonePattern,
     message = "Phone number is not in expected numeric format: '[0-9]{10}' digits; found '${validatedValue}.")
@@ -66,6 +68,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
     @Size(max = 10, message = "Country Code can not exceed {max} chars; found '${validatedValue}'.")
 	private String countryCode;
 
+    @NotBlank(message = "Postal Code is required.")
     @Size(max = 10, message = "Postal Code can not exceed {max} chars; found '${validatedValue}'.")
 	private String postalCode;
 
