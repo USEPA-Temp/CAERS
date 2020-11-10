@@ -17,6 +17,7 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     @Size(max = 20, message = "Control Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String controlMeasureCode;
 
+    @NotBlank(message = "Description is required.")
     @Size(max = 200, message = "Description can not exceed {max} chars.")
     private String description;
 

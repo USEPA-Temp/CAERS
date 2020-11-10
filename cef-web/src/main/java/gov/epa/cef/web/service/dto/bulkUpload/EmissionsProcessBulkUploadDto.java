@@ -26,6 +26,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
 
+    @NotBlank(message = "Status Year is required.")
     @Pattern(regexp = YearPattern,
         message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
     private String statusYear;
@@ -37,6 +38,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
     @Size(max = 100, message = "SCC Short Name can not exceed {max} chars; found '${validatedValue}'.")
     private String sccShortName;
 
+    @NotBlank(message = "Description is required.")
     @Size(max = 200, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
 

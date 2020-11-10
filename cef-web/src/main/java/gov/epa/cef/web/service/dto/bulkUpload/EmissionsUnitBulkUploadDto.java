@@ -13,6 +13,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
 
+    @NotBlank(message = "Description is required.")
     @Size(max = 100, message = "Description can not exceed {max} chars; found '${validatedValue}'.")
     private String description;
 
@@ -30,6 +31,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCodeDescription;
 
+    @NotBlank(message = "Status Year is required.")
     @Pattern(regexp = YearPattern,
         message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
     private String statusYear;

@@ -119,6 +119,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Stack Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackHeightUomCode;
 
+    @NotBlank(message = "Status Year is required.")
     @Pattern(regexp = YearPattern,
         message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
     private String statusYear;
