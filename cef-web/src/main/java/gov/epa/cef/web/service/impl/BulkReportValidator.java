@@ -139,19 +139,19 @@ public class BulkReportValidator {
     	for(String cp: childPaths){
     		boolean added = assignmentTree.add(cp);
     		if(!added){
-    			String childPathDesc = "";
-    			String parentPathDesc = "";
+    		    ControlPathBulkUploadDto childPathDto = null;
+    		    ControlPathBulkUploadDto parentPathDto = null;
     			for(ControlPathBulkUploadDto controlPath: controlPaths){
     				if(controlPath.getId().toString().contentEquals(cp)){
-    					childPathDesc = controlPath.getPathId();
+    					childPathDto = controlPath;
     				}
     				if(controlPath.getId().toString().contentEquals(parentPath)){
-    					parentPathDesc = controlPath.getPathId();
+    					parentPathDto = controlPath;
     				}
     			}
-    			String msg = String.format("Control Paths '%s' and '%s' form a control path loop. A control path must be associated only once with another control path.",
-                        childPathDesc, parentPathDesc);        		
-    			violations.add(new WorksheetError("Control Assignments", 1, msg));
+    			String msg = String.format("Control Path '%s' is associated more than once with Control Path '%s'. A control path may be associated only once with another control path.",
+                        childPathDto.getPathId(), parentPathDto.getPathId());
+    			violations.add(new WorksheetError("Control Assignments", parentPathDto.getRow(), msg));
     			return true;
     		}
     	}
