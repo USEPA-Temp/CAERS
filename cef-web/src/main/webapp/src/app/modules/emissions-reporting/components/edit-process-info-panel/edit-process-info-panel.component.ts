@@ -165,12 +165,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     if (this.aircraftSCCcheck) {
       // get AETC list and set form value
       this.getAircraftEngineCodes();
-    } else if (!this.aircraftSCCcheck && this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
-      this.aircraftEngineTypeValue = null;
-      this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
-      this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
-      this.processHasAETC = true;
-      this.invalidAircraftSCC = true;
     }
   }
 
@@ -190,16 +184,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
       this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
     } else if (!this.aircraftSCCcheck) {
+      this.processForm.controls.aircraftEngineTypeCode.setValue(null);
       this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
       this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
-      if (this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
-        this.processForm.controls.aircraftEngineTypeCode.reset(this.process.aircraftEngineTypeCode);
-        this.invalidAircraftSCC = true;
-        this.processHasAETC = true;
-      } else {
-        this.aircraftEngineTypeValue = null;
-        this.processHasAETC = false;
-      }
+      this.aircraftEngineTypeValue = null;
+      this.processHasAETC = false;
     }
   }
 
