@@ -26,7 +26,7 @@ export class ControlPathAssignmentModalComponent implements OnInit {
   tempShutdownControlWarning: string;
 
   controlPathAssignmentForm = this.fb.group({
-    percentApportionment: ['', [Validators.required, Validators.min(0.1), Validators.max(100), Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')]],
+    percentApportionment: ['', [Validators.required, Validators.min(0.1), Validators.max(100), Validators.pattern('^[0-9]{1,3}([\.][0-9]{1,2})?$')]],
     control: [''],
     controlPathChild: [''],
     sequenceNumber: ['', [Validators.required, Validators.pattern('[0-9]*')]]

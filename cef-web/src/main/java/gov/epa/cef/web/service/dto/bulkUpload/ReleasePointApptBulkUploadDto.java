@@ -19,8 +19,8 @@ public class ReleasePointApptBulkUploadDto extends BaseWorksheetDto implements S
     private Long emissionProcessId;
 
     @NotBlank(message = "Percent Apportionment is required.")
-    @Pattern(regexp = PercentPattern,
-        message = "Percent is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,2})?$",
+        message = "Percent is not in expected numeric format: '{3}.{2}' digits; found '${validatedValue}'.")
     private String percent;
 
     private Long controlPathId;
