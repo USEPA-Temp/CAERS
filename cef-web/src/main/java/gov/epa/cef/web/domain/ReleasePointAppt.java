@@ -29,7 +29,7 @@ public class ReleasePointAppt extends BaseAuditEntity {
     @JoinColumn(name = "emissions_process_id", nullable = false)
     private EmissionsProcess emissionsProcess;
     
-    @Column(name = "percent", nullable = false, precision = 4, scale = 1)
+    @Column(name = "percent", nullable = false, precision = 5, scale = 2)
     private Double percent;
 
     @ManyToOne(fetch = FetchType.LAZY)

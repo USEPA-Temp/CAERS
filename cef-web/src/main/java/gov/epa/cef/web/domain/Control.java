@@ -37,7 +37,7 @@ public class Control extends BaseAuditEntity {
     @Column(name = "percent_capture", precision = 4, scale = 1)
     private Double percentCapture;
 
-    @Column(name = "percent_control", precision = 4, scale = 1)
+    @Column(name = "percent_control", precision = 6, scale = 3)
     private Double percentControl;
     
     @Column(name = "comments", length = 400)

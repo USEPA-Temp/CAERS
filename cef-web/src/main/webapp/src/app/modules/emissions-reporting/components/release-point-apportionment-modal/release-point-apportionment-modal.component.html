@@ -21,7 +21,7 @@
         </select>
         <fa-icon class="mt-2 mr-2" title="The average annual percent of an emissions process that is vented through a release point. 100% of total emissions from that process should be apportioned to one or more release points." [icon]="['fas', 'question-circle']"></fa-icon>
         <strong>Enter the Emission Percentage</strong>
-        <input class="ml-4 mb-1" type="text" maxlength="3" formControlName="percent" id="percentInput" aria-label="emission percentage">
+        <input class="ml-4 mb-1" type="text" maxlength="5" formControlName="percent" id="percentInput" aria-label="emission percentage">
         <app-validation-message [control]="releasePointApptForm.get('percent')"></app-validation-message>
     </div>
 
