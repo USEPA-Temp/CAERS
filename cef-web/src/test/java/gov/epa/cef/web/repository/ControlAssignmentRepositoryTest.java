@@ -99,7 +99,7 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
             "select * from control_assignment where id = :id", params);
 
         assertEquals(1, controls.size());
-        assertEquals(BigDecimal.valueOf(100.0), controls.get(0).get("percent_apportionment"));
+        assertEquals(BigDecimal.valueOf(100.0).setScale(2), controls.get(0).get("percent_apportionment"));
     }
 
 

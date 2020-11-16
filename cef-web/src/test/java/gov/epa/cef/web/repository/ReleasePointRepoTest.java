@@ -204,9 +204,9 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
 
 		List<Map<String, Object>> releasePtAppt = this.jdbcTemplate
 				.queryForList("select * from release_point_appt where id = :id", params);
-
+		
 		assertEquals(1, releasePtAppt.size());
-		assertEquals(BigDecimal.valueOf(44.0), releasePtAppt.get(0).get("percent"));
+		assertEquals(BigDecimal.valueOf(44.0).setScale(2), releasePtAppt.get(0).get("percent"));
     }
 
 private ReleasePointAppt newReleasePtAppt() {
