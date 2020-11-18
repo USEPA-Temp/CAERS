@@ -47,11 +47,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       Validators.max(2050),
       Validators.pattern('[0-9]*')
     ]],
-    sccCode: ['', [
+    sccCode: [{value: '', disabled: true}, [
       Validators.required,
       Validators.maxLength(20)
     ]],
-    sccDescription: ['', [
+    sccDescription: [{value: '', disabled: true}, [
       this.requiredIfOperating(),
       Validators.maxLength(500)
     ]],
@@ -149,8 +149,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       if (modalScc) {
         this.processForm.get('sccCode').setValue(modalScc.code);
         this.processForm.get('sccDescription').setValue(modalScc.description);
-
+        this.processForm.get('sccCode').enable();
+        this.processForm.get('sccDescription').enable();
         this.checkAircraftSCC();
+        this.processForm.get('sccCode').disable();
+        this.processForm.get('sccDescription').disable();
+
       }
     }, () => {
       // needed for dismissing without errors

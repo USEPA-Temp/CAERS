@@ -79,6 +79,9 @@ export class CreateEmissionsProcessComponent implements OnInit {
       const operatingDetails = new OperatingDetail();
       const reportingPeriod = new ReportingPeriod();
 
+
+      this.infoComponent.processForm.get('sccCode').enable();
+      this.infoComponent.processForm.get('sccDescription').enable();
       Object.assign(process, this.infoComponent.processForm.value);
       Object.assign(operatingDetails, this.operatingDetailsComponent.operatingDetailsForm.value);
       Object.assign(reportingPeriod, this.reportingPeriodComponent.reportingPeriodForm.value);
