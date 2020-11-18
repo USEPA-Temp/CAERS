@@ -271,7 +271,7 @@ public class CersXmlServiceImpl implements CersXmlService {
         // average percent control
         ca.setPercentControlApproachEffectiveness(BigDecimal.valueOf(controls.stream()
                 .filter(c -> c.getPercentControl() != null)
-                .collect(Collectors.averagingDouble(Control::getPercentControl))).setScale(1, RoundingMode.HALF_UP));
+                .collect(Collectors.averagingDouble(Control::getPercentControl))).setScale(3, RoundingMode.HALF_UP));
 
         // make description a list of control measure code descriptions
         ca.setControlApproachDescription(controls.stream()
@@ -302,7 +302,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 
             ControlPollutantDataType cp = new ControlPollutantDataType();
             cp.setPercentControlMeasuresReductionEfficiency(BigDecimal.valueOf((entry.getValue().stream()
-                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction)))).setScale(1, RoundingMode.HALF_UP));
+                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction)))).setScale(3, RoundingMode.HALF_UP));
             cp.setPollutantCode(entry.getKey());
             ca.getControlPollutant().add(cp);
         }
