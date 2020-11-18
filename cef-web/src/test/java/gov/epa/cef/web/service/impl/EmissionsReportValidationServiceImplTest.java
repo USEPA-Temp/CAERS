@@ -5,6 +5,7 @@ import com.baidu.unbiz.fluentvalidator.ValidatorChain;
 
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
@@ -17,6 +18,7 @@ import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
@@ -69,6 +71,9 @@ public class EmissionsReportValidationServiceImplTest {
     private ReportHistoryRepository historyRepo;
     
     @Spy
+    private ControlAssignmentRepository assignmentRepo;
+    
+    @Spy
     @InjectMocks
     private EmissionsReportValidator erValidator;
     
@@ -95,9 +100,21 @@ public class EmissionsReportValidationServiceImplTest {
         ra.setFileDeleted(false);
         raList.add(ra);
         
+        List<ControlAssignment> caList = new ArrayList<ControlAssignment>();
+        ControlAssignment ca = new ControlAssignment();
+        ControlPath cp1 = new ControlPath();
+        ControlPath cp2 = new ControlPath();
+        cp1.setId(1L);
+        cp2.setId(2L);
+        ca.setId(1L);
+        ca.setControlPath(cp2);
+        ca.setControlPathChild(cp1);
+        caList.add(ca);
+        
         when(emissionRepo.findAllByReportId(1L)).thenReturn(eList);
         when(historyRepo.findByEmissionsReportIdOrderByActionDate(1L)).thenReturn(raList);
-
+        when(assignmentRepo.findByControlPathChildId(1L)).thenReturn(caList);
+        
         when(validationRegistry.findOneByType(FacilitySiteValidator.class))
             .thenReturn(new FacilitySiteValidator());
 
@@ -148,6 +165,7 @@ public class EmissionsReportValidationServiceImplTest {
         Emission emission = new Emission();
         emission.setTotalEmissions(new BigDecimal(10));
         ControlPath controlPath = new ControlPath();
+        controlPath.setId(1L);
         Control control = new Control(); 
         control.setIdentifier("control_Identifier");
         control.setPercentCapture(50.0);
@@ -187,7 +205,7 @@ public class EmissionsReportValidationServiceImplTest {
         emissionsUnit.setFacilitySite(facilitySite);
         facilitySite.getEmissionsUnits().add(emissionsUnit);
         report.getFacilitySites().add(facilitySite);
-
+        
         ValidationResult result = this.validationService.validate(report);
         assertFalse(result.isValid());
 
