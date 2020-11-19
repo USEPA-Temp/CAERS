@@ -34,9 +34,9 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	@Override
 	public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
 		
-	boolean result = true;
-	CefValidatorContext context = getCefValidatorContext(validatorContext);
-	
+		boolean result = true;
+		CefValidatorContext context = getCefValidatorContext(validatorContext);
+		
 		List<ControlAssignment> controlAssignmentList = new ArrayList<ControlAssignment>();
 		controlAssignmentList = controlAssignmentListBuilder(controlPath.getAssignments());
 		
@@ -49,11 +49,11 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 				
 				result = false;
 					context.addFederalError(
-		  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
-		  			"controlPath.assignment.controlDevice.duplicate",
-		  			createValidationDetails(controlPath),
-		  			cdList.get(0).getControl().getIdentifier(),
-		  			cdList.get(0).getControl().getControlMeasureCode().getDescription());
+				  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+				  			"controlPath.assignment.controlDevice.duplicate",
+				  			createValidationDetails(controlPath),
+				  			cdList.get(0).getControl().getIdentifier(),
+				  			cdList.get(0).getControl().getControlMeasureCode().getDescription());
 			}
 		}
 		
@@ -66,10 +66,10 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 		
                  result = false;
                  context.addFederalError(
-                   ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
-                   "controlPath.assignment.controlPath.duplicate",
-                   createValidationDetails(controlPath),
-                   cpList.get(0).getControlPathChild().getPathId());
+                		 ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+						 "controlPath.assignment.controlPath.duplicate",
+						 createValidationDetails(controlPath),
+						 cpList.get(0).getControlPathChild().getPathId());
                     
             }
         }
@@ -82,21 +82,32 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 			if (ca.getPercentApportionment() < 0.1 || ca.getPercentApportionment() > 100) {
 				result = false;
 					context.addFederalError(
-		  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
-		  			"controlPath.assignment.percentApportionment.range",
-		  			createValidationDetails(controlPath),
-		  			ca.getControlPath().getPathId());
+				  			ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
+				  			"controlPath.assignment.percentApportionment.range",
+				  			createValidationDetails(controlPath),
+				  			ca.getControlPath().getPathId());
 			}
 		}
-	
-		if(controlPath.getReleasePointAppts().isEmpty()){
-        	result = false;
-        	context.addFederalWarning(
-        			ValidationField.CONTROL_PATH_RPA_WARNING.value(),
-        			"controlPath.releasePointApportionment.notAssigned",
-        			createValidationDetails(controlPath));
+		
+		// check if control path is a parent path without a rp appt, or if both parent path of control path and control path does not have rp appt
+		List<ControlPath> contAssignList = new ArrayList<ControlPath>();
+		contAssignList = buildParentPathsList(controlPath);
+		
+		List<ControlPath> cpMap = contAssignList.stream()
+				.filter(cd -> (cd.getReleasePointAppts().size() > 0)).collect(Collectors.toList());
+				
+		if(controlPath.getReleasePointAppts().isEmpty()) {
+			
+			if(contAssignList.isEmpty() || cpMap.size() < 1){
+				result = false;
+	        	context.addFederalWarning(
+		    			ValidationField.CONTROL_PATH_RPA_WARNING.value(),
+		    			"controlPath.releasePointApportionment.notAssigned",
+		    			createValidationDetails(controlPath));
+			}
 		}
-
+		
+	
     	List<Control> controls = new ArrayList<Control>(); 
 		List<Control> controlsList = buildAssignedControlsList(controlPath.getAssignments(), controls);
 		
@@ -249,5 +260,17 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
     	}
     	return controlAssignmentList;
 	}
+    
+    private List<ControlPath> buildParentPathsList(ControlPath cp){
+    	List<ControlPath> parentPathList = new ArrayList<ControlPath>();
+		List<ControlAssignment> controlAssignmentList = assignmentRepo.findByControlPathChildId(cp.getId());
+		parentPathList.add(cp);
+		for(ControlAssignment c: controlAssignmentList){
+			if(controlAssignmentList.size() > 0) {
+				parentPathList.addAll(buildParentPathsList(c.getControlPath()));
+	    	}
+		}
+    	return parentPathList;
+    }
     
 }
