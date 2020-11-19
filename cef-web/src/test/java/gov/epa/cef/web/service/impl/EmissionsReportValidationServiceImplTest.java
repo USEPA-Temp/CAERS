@@ -77,6 +77,10 @@ public class EmissionsReportValidationServiceImplTest {
     @InjectMocks
     private EmissionsReportValidator erValidator;
     
+    @Spy
+    @InjectMocks
+    private ControlPathValidator cpValidator;
+    
     @InjectMocks
     private EmissionsReportValidationServiceImpl validationService;
 
@@ -140,7 +144,7 @@ public class EmissionsReportValidationServiceImplTest {
             .thenReturn(new EmissionValidator());
         
         when(validationRegistry.findOneByType(ControlPathValidator.class))
-        .thenReturn(new ControlPathValidator());
+            .thenReturn(cpValidator);
 
         ValidatorChain reportChain = new ValidatorChain();
         reportChain.setValidators(Arrays.asList(erValidator, new GeorgiaValidator()));
