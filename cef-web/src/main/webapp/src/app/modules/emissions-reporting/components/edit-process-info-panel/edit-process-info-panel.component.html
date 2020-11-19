@@ -69,7 +69,7 @@
             <label for="processSccInput" class="ml-1 col-form-label"><strong>SCC:</strong></label>
         </div>
         <div class="col-sm-4">
-            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()">
+            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()" readonly>
             <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.invalidAircraftSCCCombination">
                 Combination of SCC and Aircraft Engine Type Code must be unique within a facility.
             </div>
@@ -99,7 +99,7 @@
             <label for="sccDescriptionInput" class="ml-1 col-form-label"><strong>SCC Description:</strong></label>
         </div>
         <div class="col-sm-10">
-            <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription"></textarea>
+            <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription" readonly></textarea>
             <app-validation-message [control]="processForm.get('sccDescription')"></app-validation-message>
         </div>
     </div>
