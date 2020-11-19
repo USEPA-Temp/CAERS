@@ -149,9 +149,10 @@ public class BulkReportValidator {
     					parentPathDto = controlPath;
     				}
     			}
-    			String msg = String.format("Control Path '%s' is associated more than once with Control Path '%s'. A control path may be associated only once with another control path.",
-                        childPathDto.getPathId(), parentPathDto.getPathId());
-    			violations.add(new WorksheetError("Control Assignments", parentPathDto.getRow(), msg));
+    			String msg = String.format("Control Path '%s' is associated more than once with a control path in rows %s. "
+    			                         + "A control path may be associated only once with another control path.",
+                        parentPathDto.getPathId(), assignmentTree.toString());
+    			violations.add(new WorksheetError("Control Assignments", childPathDto.getRow(), msg));
     			return true;
     		}
     	}
