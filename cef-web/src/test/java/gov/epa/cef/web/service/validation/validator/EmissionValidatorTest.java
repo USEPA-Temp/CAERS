@@ -237,7 +237,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         testData.getEmissionsCalcMethodCode().setControlIndicator(false);
         testData.getEmissionsCalcMethodCode().setTotalDirectEntry(false);
         testData.setCalculationComment("manually entered/calculated total emissions");
-        
+        testData.setEmissionsFactorText("❤🌈 ");
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
@@ -706,6 +706,34 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
    }
+   
+   @Test
+   public void emissionsCalcMethodIsEmissionFactorAndNoDescription_FailTest() {
+	   CefValidatorContext cefContext = createContext();
+	   Emission testData = createBaseEmission(false);
+	   testData.setEmissionsFactorText(null);
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF.value()) && errorMap.get(ValidationField.EMISSION_EF.value()).size() == 1);
+       
+       cefContext = createContext();
+	   testData.setEmissionsFactorText("");
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+       
+       errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF.value()) && errorMap.get(ValidationField.EMISSION_EF.value()).size() == 1);
+   }
+   
+   @Test
+   public void emissionCalcMethodIsNotEmissionFactorAndNoDescription_PassTest() {
+	   CefValidatorContext cefContext = createContext();
+       Emission testData = createBaseEmission(true);
+       assertTrue(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+   }
 
 
     private Emission createBaseEmission(boolean totalDirectEntry) {
@@ -748,6 +776,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
             result.setEmissionsNumeratorUom(tonUom);
             result.setEmissionsFactor(new BigDecimal("1"));
             result.setTotalManualEntry(false);
+            result.setEmissionsFactorText("❤🌈");
         } else {
             result.setComments("Comment");
             result.setTotalManualEntry(true);
@@ -769,7 +798,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         result.setEmissionsFactorFormula("5.9*A");
         result.setFormulaIndicator(true);
         result.getVariables().add(variable);
-
+        
         return result;
     }
 }

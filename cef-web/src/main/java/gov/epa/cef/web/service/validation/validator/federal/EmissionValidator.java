@@ -220,6 +220,16 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        		}
 	        	}
 	        }
+	        
+	        if (emission.getEmissionsCalcMethodCode() != null && emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false) {
+	        	if (Strings.emptyToNull(emission.getEmissionsFactorText()) == null) {
+	        		valid = false;
+	        		context.addFederalError( 
+	        				ValidationField.EMISSION_EF.value(),
+	        				"emission.emissionsFactor.description.required",
+	        				createValidationDetails(emission));
+	        	}
+	        }
 	
 	        // Emission Calculation checks
 	        if (emission.getEmissionsCalcMethodCode() != null 
