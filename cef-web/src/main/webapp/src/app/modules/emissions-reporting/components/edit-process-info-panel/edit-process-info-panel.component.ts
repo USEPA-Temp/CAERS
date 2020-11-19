@@ -149,7 +149,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       if (modalScc) {
         this.processForm.get('sccCode').setValue(modalScc.code);
         this.processForm.get('sccDescription').setValue(modalScc.description);
-
         this.checkAircraftSCC();
       }
     }, () => {
