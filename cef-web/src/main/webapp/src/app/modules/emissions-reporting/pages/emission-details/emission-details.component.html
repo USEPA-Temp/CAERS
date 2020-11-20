@@ -195,10 +195,10 @@
                         </div>
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Explanation for emission factor." [icon]="['fas', 'question-circle']"></fa-icon>
-                            <label for="emissionsFactorTextInput" style="font-size:95%" class="ml-1 col-form-label"><strong>Emissions Factor Description:</strong></label>
+                            <label for="emissionsFactorTextInput" style="font-size:95%" class="ml-1 col-form-label"><strong>Emission Factor Description:</strong></label>
                         </div>
                         <div class="col-sm-3">
-                            <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText"></textarea>
+                            <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText" [readonly]="epaEmissionFactor"></textarea>
                             <app-validation-message [control]="emissionForm.controls.emissionsFactorText"></app-validation-message>
                         </div>
                     </div>
