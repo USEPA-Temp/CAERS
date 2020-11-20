@@ -276,9 +276,6 @@ export class EmissionDetailsComponent implements OnInit {
     // Reconfigure form after calculation method changes
     this.emissionForm.get('emissionsCalcMethodCode').valueChanges
     .subscribe(value => {
-      this.emissionForm.get('emissionsFactor').reset();
-      this.emissionForm.get('emissionsFactorText').reset();
-
       this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status, false);
     });
 
