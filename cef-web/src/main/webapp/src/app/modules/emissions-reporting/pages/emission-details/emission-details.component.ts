@@ -217,6 +217,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.epaEmissionFactor = true;
         if (!sameCalcMethod || forceReset) {
           this.emissionForm.get('emissionsFactor').reset();
+          this.emissionForm.get('emissionsFactorText').reset();
           this.emissionForm.get('emissionsFactorFormula').reset();
           this.emissionForm.get('formulaIndicator').reset();
           this.emissionForm.get('formulaVariables').reset();
