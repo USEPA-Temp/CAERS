@@ -102,7 +102,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-        
+
         testData.setEmissionsFactor(null);
         testData.setTotalManualEntry(true);
 
@@ -148,7 +148,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
     }
 
     /**
-     * There should be one error when Calculation Method Code has true total direct entry and 
+     * There should be one error when Calculation Method Code has true total direct entry and
      * the reporting period's calculation parameter value is zero but the total emissions is not zero
      */
 //    @Test
@@ -220,7 +220,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_NUM_UOM.value()) && errorMap.get(ValidationField.EMISSION_NUM_UOM.value()).size() == 1);
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_DENOM_UOM.value()) && errorMap.get(ValidationField.EMISSION_DENOM_UOM.value()).size() == 1);
     }
-    
+
     /**
      * There should be one error when Emissions Factor is less than or equal to zero and the Numerator and Denominator are non-null
      */
@@ -305,10 +305,10 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("TS");
-        
+
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-        
+
         cefContext = createContext();
         testData.setTotalManualEntry(true);
 
@@ -335,10 +335,10 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("PS");
-        
+
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-        
+
         cefContext = createContext();
         testData.setTotalManualEntry(true);
 
@@ -387,10 +387,10 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1
                 && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).get(0).getErrorCode() == ValidationResult.FEDERAL_ERROR_CODE);
-        
+
         cefContext = createContext();
         testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("TS");
-        
+
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
@@ -472,15 +472,15 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-        
+
         cefContext = createContext();
         testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("PS");
-        
+
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
     }
-    
+
     /**
      * There should be two errors when pollutant is 605 and UoM is not CURIE and when UoM is null
      */
@@ -492,13 +492,13 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         Pollutant pollutant = new Pollutant();
         pollutant.setPollutantCode("605");
         testData.setPollutant(pollutant);
-        
+
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_CURIE_UOM.value()) && errorMap.get(ValidationField.EMISSION_CURIE_UOM.value()).size() == 1);
-        
+
         cefContext = createContext();
         testData = createBaseEmission(false);
         testData.setEmissionsUomCode(null);
@@ -536,17 +536,17 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         var1.setValue(new BigDecimal(31));
-        
+
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-        
+
         cefContext = createContext();
         var1.setValue(new BigDecimal(0.01));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
-    
+
     /**
      * There should be two errors when emission formula variable value for % sulfur is less than 0.01 and greater than 10,
      * and there should be no errors when value is within range.
@@ -571,17 +571,17 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         var1.setValue(new BigDecimal(11));
-        
+
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-        
+
         cefContext = createContext();
         var1.setValue(new BigDecimal(10));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
-    
+
     /**
     * There should be one error when total emissions values is less than 0,
     * one error for total emissions are outside of tolerance,
@@ -596,10 +596,10 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
        assertFalse(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-       
+
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
-       
+
        cefContext = createContext();
        testData.setTotalEmissions(new BigDecimal(-10));
 
@@ -608,11 +608,11 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
        cefContext = createContext();
        testData.setTotalEmissions(new BigDecimal(10));
-       
+
        assertTrue(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
    }
-   
+
    /**
     * There should be no errors when facility with status of not OP is a landfill or if the status year is > current cycle year
     */
@@ -622,22 +622,22 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        CefValidatorContext cefContext = createContext();
        Emission testData = createBaseEmission(false);
        testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getOperatingStatusCode().setCode("TS");
-       
+
        assertTrue(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-       
+
        cefContext = createContext();
        testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().getFacilitySourceTypeCode().setCode("104");
        testData.getReportingPeriod().getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2000);
-       
-       
+
+
        assertTrue(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
    }
-   
+
    /**
     * There should be errors for overall control percentage when the overall control percent is < 0 or >= 100.
-    * There are errors for emissions outside of tolerance range due to control percentage. 
+    * There are errors for emissions outside of tolerance range due to control percentage.
     */
    @Test
    public void overallControlPercentRangeTest() {
@@ -645,29 +645,29 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        CefValidatorContext cefContext = createContext();
        Emission testData = createBaseEmission(false);
        testData.setOverallControlPercent(new BigDecimal(30));
-       
+
        assertFalse(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-       
+
        cefContext = createContext();
        testData.setOverallControlPercent(new BigDecimal(-10));
-       
+
        assertFalse(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
 
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
-       
+
        cefContext = createContext();
        testData.setOverallControlPercent(new BigDecimal(100));
-       
+
        assertFalse(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
 
        errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
    }
-   
+
    /**
     * There should be one error when total emissions has true total manual entry, has an ef, and a null calculation description
     */
@@ -686,7 +686,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CALC_DESC.value()) && errorMap.get(ValidationField.EMISSION_CALC_DESC.value()).size() == 1);
    }
-   
+
    /**
     * There should be one error when calculation method includes control efficiency and overall control percent is > 0
     */
@@ -706,7 +706,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_CONTROL_PERCENT.value()) && errorMap.get(ValidationField.EMISSION_CONTROL_PERCENT.value()).size() == 1);
    }
-   
+
    @Test
    public void emissionsCalcMethodIsEmissionFactorAndNoDescription_FailTest() {
 	   CefValidatorContext cefContext = createContext();
@@ -716,17 +716,17 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-       assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF.value()) && errorMap.get(ValidationField.EMISSION_EF.value()).size() == 1);
-       
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF_TEXT.value()) && errorMap.get(ValidationField.EMISSION_EF_TEXT.value()).size() == 1);
+
        cefContext = createContext();
 	   testData.setEmissionsFactorText("");
        assertFalse(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-       
+
        errorMap = mapErrors(cefContext.result.getErrors());
-       assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF.value()) && errorMap.get(ValidationField.EMISSION_EF.value()).size() == 1);
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF_TEXT.value()) && errorMap.get(ValidationField.EMISSION_EF_TEXT.value()).size() == 1);
    }
-   
+
    @Test
    public void emissionCalcMethodIsNotEmissionFactorAndNoDescription_PassTest() {
 	   CefValidatorContext cefContext = createContext();
@@ -739,7 +739,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
     private Emission createBaseEmission(boolean totalDirectEntry) {
 
         Emission result = new Emission();
-        
+
         CalculationMethodCode calcMethod = new CalculationMethodCode();
         calcMethod.setCode("2");
         calcMethod.setDescription("Engineering Judgment");
@@ -747,7 +747,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         calcMethod.setEpaEmissionFactor(false);
         calcMethod.setTotalDirectEntry(totalDirectEntry);
         result.setEmissionsCalcMethodCode(calcMethod);
-        
+
         FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
         sourceType.setCode("100");
         OperatingStatusCode opStatCode = new OperatingStatusCode();
@@ -798,7 +798,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         result.setEmissionsFactorFormula("5.9*A");
         result.setFormulaIndicator(true);
         result.getVariables().add(variable);
-        
+
         return result;
     }
 }
