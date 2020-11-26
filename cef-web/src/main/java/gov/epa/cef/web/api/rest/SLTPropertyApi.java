@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.epa.cef.web.config.slt.SLTAgencyCode;
 import gov.epa.cef.web.domain.SLTConfigProperty;
 import gov.epa.cef.web.provider.system.SLTPropertyProvider;
 import gov.epa.cef.web.security.AppRole;
@@ -46,9 +45,9 @@ public class SLTPropertyApi {
     @GetMapping(value = "/{name}")
     public ResponseEntity<PropertyDto> retrieveProperty(@NotNull @PathVariable String name) {
 
-        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
+        String userProgramSystem = this.securityService.getCurrentProgramSystemCode();
 
-        PropertyDto result = mapper.sltToDto(propertyProvider.retrieve(new PropertyDto().withName(name), userAgency));
+        PropertyDto result = mapper.sltToDto(propertyProvider.retrieve(new PropertyDto().withName(name), userProgramSystem));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -59,9 +58,9 @@ public class SLTPropertyApi {
     @GetMapping
     public ResponseEntity<List<PropertyDto>> retrieveAllProperties() {
 
-        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
+        String userProgramSystem = this.securityService.getCurrentProgramSystemCode();
 
-        List<PropertyDto> result = mapper.sltToDtoList(propertyProvider.retrieveAllForAgency(userAgency));
+        List<PropertyDto> result = mapper.sltToDtoList(propertyProvider.retrieveAllForProgramSystem(userProgramSystem));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -73,8 +72,8 @@ public class SLTPropertyApi {
     public ResponseEntity<PropertyDto> updateProperty(@NotNull @PathVariable String propName,
             @NotNull @RequestBody PropertyDto dto) {
 
-        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
-        SLTConfigProperty result = this.propertyProvider.update(dto.withName(propName), userAgency, dto.getValue());
+        String userProgramSystem = this.securityService.getCurrentProgramSystemCode();
+        SLTConfigProperty result = this.propertyProvider.update(dto.withName(propName), userProgramSystem, dto.getValue());
         return new ResponseEntity<>(mapper.sltToDto(result), HttpStatus.OK);
     }
 
@@ -85,10 +84,10 @@ public class SLTPropertyApi {
     @PostMapping
     public ResponseEntity<List<PropertyDto>> updateProperties(@NotNull @RequestBody List<PropertyDto> dtos) {
 
-        SLTAgencyCode userAgency = this.securityService.getCurrentAgencyCode();
+        String userProgramSystem = this.securityService.getCurrentProgramSystemCode();
 
         List<PropertyDto> result = dtos.stream().map(dto -> {
-            SLTConfigProperty prop = this.propertyProvider.update(dto, userAgency, dto.getValue());
+            SLTConfigProperty prop = this.propertyProvider.update(dto, userProgramSystem, dto.getValue());
             return mapper.sltToDto(prop);
         }).collect(Collectors.toList());
 

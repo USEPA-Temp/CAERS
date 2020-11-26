@@ -14,8 +14,8 @@ public interface SLTConfigRepository extends CrudRepository<SLTConfigProperty, L
 
     List<SLTConfigProperty> findAll(Sort sort);
 
-    Optional<SLTConfigProperty> findByNameAndAgencyCode(String name, String agencyCode);
+    Optional<SLTConfigProperty> findByNameAndProgramSystemCodeCode(String name, String programSystemCode);
 
-    List<SLTConfigProperty> findByAgencyCode(String agencyCode);
+    List<SLTConfigProperty> findByProgramSystemCodeCode(String programSystemCode);
 
 }

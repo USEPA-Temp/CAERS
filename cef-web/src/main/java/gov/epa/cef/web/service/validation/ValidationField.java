@@ -2,9 +2,9 @@ package gov.epa.cef.web.service.validation;
 
 public enum ValidationField {
     REPORT_YEAR("report.year"),
-    REPORT_AGENCY_CODE("report.agencyCode"),
     REPORT_FRS_ID("report.frsFacilityId"),
     REPORT_EIS_ID("report.eisProgramId"),
+    REPORT_PROGRAM_SYSTEM_CODE("report.programSystemCode"),
     REPORT_ATTACHMENT("report.reportAttachment"),
     FACILITY_EIS_ID("report.facilitySite.eisProgramId"),
     FACILITY_COUNTY("report.facilitySite.countyCode"),

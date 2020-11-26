@@ -34,30 +34,30 @@ public class SubmissionsReviewDasboardServiceImpl implements SubmissionsReviewDa
      * @see gov.epa.cef.web.service.SubmissionsReviewDasboardService#retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear()
      */
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndAgencyCode(ReportStatus reportStatus) {
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndProgramSystemCode(ReportStatus reportStatus) {
     	UserDto currentUser=userService.getCurrentUser();
-    	List<SubmissionsReviewDashboardView> reportsList=repo.findByReportStatusAndAgencyCode(reportStatus, currentUser.getAgencyCode());
+    	List<SubmissionsReviewDashboardView> reportsList=repo.findByReportStatusAndProgramSystemCode(reportStatus, currentUser.getProgramSystemCode());
         return mapper.toDtoList(reportsList);
     }
 
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear() {
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear() {
         UserDto currentUser=userService.getCurrentUser();
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByAgencyCode(currentUser.getAgencyCode());
+        List<SubmissionsReviewDashboardView> reportsList=repo.findByProgramSystemCode(currentUser.getProgramSystemCode());
         return mapper.toDtoList(reportsList);
     }
     
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(Short reportYear, ReportStatus reportStatus){
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndProgramSystemCode(Short reportYear, ReportStatus reportStatus){
         UserDto currentUser=userService.getCurrentUser();
-    	List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndReportStatusAndAgencyCode(reportYear, reportStatus, currentUser.getAgencyCode());
+    	List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndReportStatusAndProgramSystemCode(reportYear, reportStatus, currentUser.getProgramSystemCode());
         return mapper.toDtoList(reportsList);
     }
     
     @Override
-    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndAgencyCode(Short reportYear){
+    public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndProgramSystemCode(Short reportYear){
         UserDto currentUser=userService.getCurrentUser();
-        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndAgencyCode(reportYear, currentUser.getAgencyCode());
+        List<SubmissionsReviewDashboardView> reportsList=repo.findByYearAndProgramSystemCode(reportYear, currentUser.getProgramSystemCode());
         return mapper.toDtoList(reportsList);
     }
     

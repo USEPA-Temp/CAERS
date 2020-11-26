@@ -2,7 +2,7 @@
   "id": 123,
   "frsFacilityId": "110000588383",
   "eisProgramId": "9776711",
-  "agencyCode": "GA",
+  "programSystemCode": "GADNR",
   "year": "2018",
   "status": "APPROVED",
   "validationStatus": "PASSED",

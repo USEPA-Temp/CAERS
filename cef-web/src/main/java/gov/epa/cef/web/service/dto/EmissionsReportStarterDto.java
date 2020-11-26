@@ -14,6 +14,8 @@ public class EmissionsReportStarterDto {
 
     private String frsFacilityId;
 
+    private String programSystemCode;
+
     private SourceType source;
 
     private String stateCode;
@@ -62,6 +64,16 @@ public class EmissionsReportStarterDto {
         this.frsFacilityId = frsFacilityId;
     }
 
+    public String getProgramSystemCode() {
+
+        return programSystemCode;
+    }
+
+    public void setProgramSystemCode(String programSystemCode) {
+
+        this.programSystemCode = programSystemCode;
+    }
+
     public SourceType getSource() {
 
         return source;
@@ -99,6 +111,7 @@ public class EmissionsReportStarterDto {
             .add("eisProgramId", eisProgramId)
             .add("facilitySite", facilitySite)
             .add("frsFacilityId", frsFacilityId)
+            .add("programSystemCode", programSystemCode)
             .add("source", source)
             .add("stateCode", stateCode)
             .add("stateFacilityId", stateFacilityId)

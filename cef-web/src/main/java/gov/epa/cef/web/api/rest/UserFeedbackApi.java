@@ -52,7 +52,7 @@ public class UserFeedbackApi {
     @ResponseBody
     public ResponseEntity<List<UserFeedbackDto>> retrieveAllByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
 
-    	List<UserFeedbackDto> result =userFeedbackService.retrieveAllByYearAndAgency(year, agency);
+    	List<UserFeedbackDto> result =userFeedbackService.retrieveAllByYearAndProgramSystem(year, agency);
         return new ResponseEntity<List<UserFeedbackDto>>(result, HttpStatus.OK);
     }
     
@@ -65,7 +65,7 @@ public class UserFeedbackApi {
     @ResponseBody
     public ResponseEntity<IUserFeedbackStatsDto> retrieveStatsByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
     	
-    	IUserFeedbackStatsDto result = userFeedbackService.retrieveStatsByYearAndAgency(year, agency);
+    	IUserFeedbackStatsDto result = userFeedbackService.retrieveStatsByYearAndProgramSystem(year, agency);
         return new ResponseEntity<IUserFeedbackStatsDto>(result, HttpStatus.OK);
     }
     
@@ -91,7 +91,7 @@ public class UserFeedbackApi {
     @ResponseBody
     public ResponseEntity<List<String>> retrieveAvailableAgencies() {
     	
-    	List<String> result =userFeedbackService.retrieveAvailableAgencies();
+    	List<String> result =userFeedbackService.retrieveAvailableProgramSystems();
         return new ResponseEntity<List<String>>(result, HttpStatus.OK);
     }
     

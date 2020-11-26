@@ -5,8 +5,8 @@ delete from emissions_report;
 delete from emission_factor;
 delete from control_measure_code;
 
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999997', '110015680798', '9758611', 'GA', '2019', 'SUBMITTED', 'PASSED_WARNINGS', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999997', '110015680798', '9758611', 'GADNR', '2019', 'SUBMITTED', 'PASSED_WARNINGS', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
 INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,

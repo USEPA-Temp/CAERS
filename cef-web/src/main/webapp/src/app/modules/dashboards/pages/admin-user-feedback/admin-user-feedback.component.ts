@@ -26,7 +26,7 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
   availableYears: number[];
   availableAgencies: string[];
 
-  userAgency: string;
+  userProgramSystem: string;
 
   intuitiveRateAvg = 0;
   dataEntryScreensAvg = 0;
@@ -46,7 +46,7 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
     const CurrentYear = new Date().getFullYear() - 1;
 
     this.userService.getUser().subscribe(user => {
-      this.userAgency = user.agencyCode;
+      this.userProgramSystem = user.programSystemCode;
     });
 
     this.tableData = [];

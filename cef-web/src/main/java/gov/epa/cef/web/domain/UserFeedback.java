@@ -55,8 +55,9 @@ public class UserFeedback extends BaseAuditEntity {
     @Column(name = "quality_assurance_checks")
     private Long qualityAssuranceChecks;
     
-    @Column(name = "agency_code", nullable = false, length = 3)
-    private String agencyCode; 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "program_system_code")
+    private ProgramSystemCode programSystemCode;
     
     @Column(name = "year")
     private Short year;
@@ -157,12 +158,12 @@ public class UserFeedback extends BaseAuditEntity {
 		this.qualityAssuranceChecks = qualityAssuranceChecks;
 	}
 
-	public String getAgencyCode() {
-		return agencyCode;
+	public ProgramSystemCode getProgramSystemCode() {
+		return programSystemCode;
 	}
 
-	public void setAgencyCode(String agencyCode) {
-		this.agencyCode = agencyCode;
+	public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
+		this.programSystemCode = programSystemCode;
 	}
 
 	public Short getYear() {

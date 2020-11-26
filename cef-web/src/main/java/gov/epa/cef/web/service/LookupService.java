@@ -232,6 +232,13 @@ public interface LookupService {
     List<CodeLookupDto> retrieveProgramSystemTypeCodes();
     
     /**
+     * Retrieve Program System code by description
+     * @param description
+     * @return
+     */
+    CodeLookupDto retrieveProgramSystemCodeByDescription(String description);
+    
+    /**
      * Retrieve Program System Type code database object by code
      * @param code
      * @return
