@@ -27,10 +27,10 @@ export class DataBulkEntryComponent implements OnInit {
 
   readOnlyMode = true;
 
-  @ViewChild(BulkEntryReportingPeriodTableComponent, { static: false })
+  @ViewChild(BulkEntryReportingPeriodTableComponent)
   periodComponent: BulkEntryReportingPeriodTableComponent;
 
-  @ViewChild(BulkEntryEmissionsTableComponent, { static: false })
+  @ViewChild(BulkEntryEmissionsTableComponent)
   emissionComponent: BulkEntryEmissionsTableComponent;
 
   constructor(

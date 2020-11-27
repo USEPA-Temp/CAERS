@@ -1,6 +1,7 @@
 import { SortableHeaderDirective, compare, SortEvent, SortDirection } from 'src/app/shared/directives/sortable.directive';
-import { ViewChildren, QueryList } from '@angular/core';
+import { ViewChildren, QueryList, Directive } from '@angular/core';
 
+@Directive()
 export abstract class BaseSortableTable {
   tableData: any[];
   @ViewChildren(SortableHeaderDirective) headers: QueryList<SortableHeaderDirective>;

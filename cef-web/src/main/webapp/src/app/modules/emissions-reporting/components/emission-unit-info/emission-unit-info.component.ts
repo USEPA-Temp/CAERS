@@ -20,7 +20,7 @@ export class EmissionUnitInfoComponent implements OnInit {
   editInfo = false;
   unitId: number;
 
-  @ViewChild(EditEmissionUnitInfoPanelComponent, { static: false })
+  @ViewChild(EditEmissionUnitInfoPanelComponent)
   private infoComponent: EditEmissionUnitInfoPanelComponent;
 
   constructor(private route: ActivatedRoute,

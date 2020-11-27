@@ -26,7 +26,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
   editInfo = false;
   readOnlyMode = true;
 
-  @ViewChild(EditControlDeviceInfoPanelComponent, { static: false })
+  @ViewChild(EditControlDeviceInfoPanelComponent)
   private controlComponent: EditControlDeviceInfoPanelComponent;
 
   constructor(
