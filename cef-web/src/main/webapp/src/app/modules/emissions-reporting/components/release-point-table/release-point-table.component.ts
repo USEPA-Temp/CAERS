@@ -10,6 +10,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-release-point-table',
@@ -20,6 +21,7 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
   @Input() tableData: ReleasePoint[];
   baseUrl: string;
   facilitySiteId: number;
+  faPlus = faPlus;
 
   readOnlyMode = true;
 

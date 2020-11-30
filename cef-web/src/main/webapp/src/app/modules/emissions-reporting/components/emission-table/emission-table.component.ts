@@ -10,6 +10,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { ActivatedRoute } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-emission-table',
@@ -21,7 +22,8 @@ export class EmissionTableComponent extends BaseSortableTable implements OnInit,
   @Input() reportingPeriod: ReportingPeriod;
   @Input() process: Process;
   @Input() readOnlyMode: boolean;
-  baseUrl: string;
+    baseUrl: string;
+    faPlus = faPlus;
 
     constructor(private modalService: NgbModal,
                 private emissionService: EmissionService,

@@ -90,7 +90,10 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [ "src/assets/js/frs-widget.js", "src/assets/js/cromerr-widget.js"],
+            "scripts": [
+              "src/assets/js/frs-widget.js",
+              "src/assets/js/cromerr-widget.js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -145,5 +148,8 @@
     "@schematics/angular:component": {
       "style": "scss"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

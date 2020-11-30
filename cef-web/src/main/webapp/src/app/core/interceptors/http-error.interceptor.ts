@@ -14,7 +14,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,
                 private modalService: NgbModal,
-                private userContext: UserContextService) { }
+                ) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
         return next.handle(request)
@@ -22,7 +22,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 delay(DELAY_MS),
                 concatMap((error, count) => {
 
-                    // console.log("In HttpErrorInterceptor", error, count);
+                    console.log("In HttpErrorInterceptor", error, count);
 
                     if (error.status === 401) {
 
@@ -30,7 +30,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         alert(error.error.message);
 
                         // logout user => send back to CDX
-                        this.userContext.logoutUser();
+                        // this.userContext.logoutUser();
 
                         return EMPTY;
                     }

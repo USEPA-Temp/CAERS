@@ -10,6 +10,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-control-paths-table',
@@ -20,6 +21,7 @@ export class ControlPathsTableComponent extends BaseSortableTable implements OnI
   @Input() tableData: ControlPath[];
   baseUrl: string;
   readOnlyMode = true;
+  faPlus = faPlus;
 
   constructor(private route: ActivatedRoute,
               private modalService: NgbModal,
