@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable, Injector, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {HttpRequest, HttpHandler, HttpInterceptor, HttpResponse, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError, EMPTY, of, from} from 'rxjs';
 import {retryWhen, delay, concatMap} from 'rxjs/operators';
 import {UserContextService} from '../services/user-context.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 const DELAY_MS: number = 1000;
 const MAX_RETRIES: number = 1;
@@ -14,7 +14,14 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,
                 private modalService: NgbModal,
-                ) { }
+                @Inject(NgZone) private ngZone: NgZone,
+                @Inject(Injector) private injector: Injector,
+    ) {
+    }
+
+    private get userContext(): UserContextService {
+        return this.injector.get(UserContextService);
+    }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
         return next.handle(request)
@@ -22,7 +29,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 delay(DELAY_MS),
                 concatMap((error, count) => {
 
-                    console.log("In HttpErrorInterceptor", error, count);
+                    // console.log("In HttpErrorInterceptor", error, count);
 
                     if (error.status === 401) {
 
@@ -30,7 +37,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         alert(error.error.message);
 
                         // logout user => send back to CDX
-                        // this.userContext.logoutUser();
+                        this.userContext.logoutUser();
 
                         return EMPTY;
                     }
