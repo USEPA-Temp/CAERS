@@ -186,7 +186,11 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
                             lastReport.get().getYear());
                     if (!oldEntities.isEmpty()) {
                         dto.setPreviousCalculationParameterValue(oldEntities.get(0).getCalculationParameterValue());
-                        dto.setPreviousCalculationParameterUomCode(oldEntities.get(0).getCalculationParameterUom().getCode());
+                        if (oldEntities.get(0).getCalculationParameterUom() != null) {
+                        	dto.setPreviousCalculationParameterUomCode(oldEntities.get(0).getCalculationParameterUom().getCode());
+                        } else {
+                        	dto.setPreviousCalculationParameterUomCode(null);
+                        }
                     }
                 });
             }

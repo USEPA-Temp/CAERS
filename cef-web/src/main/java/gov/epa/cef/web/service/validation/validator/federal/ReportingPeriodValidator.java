@@ -55,10 +55,27 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
         
         if (!STATUS_PERMANENTLY_SHUTDOWN.contentEquals(period.getEmissionsProcess().getOperatingStatusCode().getCode()) 
         	&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(period.getEmissionsProcess().getOperatingStatusCode().getCode())) {
+        	
+        	if (period.getReportingPeriodTypeCode() == null) {
+        		
+        		valid = false;
+	            context.addFederalError(
+	                ValidationField.PERIOD_TYPE_CODE.value(),
+	                "reportingPeriod.typeCode.required", 
+	                createValidationDetails(period));
+        	}
+        	
+        	if (period.getEmissionsOperatingTypeCode() == null) {
+        		
+        		valid = false;
+	            context.addFederalError(
+	                ValidationField.PERIOD_OPERATING_TYPE_CODE.value(),
+	                "reportingPeriod.operatingTypeCode.required", 
+	                createValidationDetails(period));
+        	}
 
 	        if (period.getCalculationParameterValue() == null) {
-	
-	            // prevented by db constraints
+	        	
 	            valid = false;
 	            context.addFederalError(
 	                ValidationField.PERIOD_CALC_VALUE.value(),
@@ -75,8 +92,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        }
 	
 	        if (period.getCalculationMaterialCode() == null) {
-	
-	            // prevented by db constraints
+	        	
 	            valid = false;
 	            context.addFederalError(
 	                    ValidationField.PERIOD_CALC_MAT_CODE.value(),
@@ -85,8 +101,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        }
 	
 	        if (period.getCalculationParameterTypeCode() == null) {
-	
-	            // prevented by db constraints
+	        	
 	            valid = false;
 	            context.addFederalError(
 	                    ValidationField.PERIOD_CALC_TYPE_CODE.value(),
@@ -95,8 +110,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        }
 	
 	        if (period.getCalculationParameterUom() == null) {
-	
-	            // prevented by db constraints
+	        	
 	            valid = false;
 	            context.addFederalError(
 	                    ValidationField.PERIOD_CALC_UOM.value(),
