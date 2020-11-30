@@ -18,8 +18,6 @@ public class EmissionsReportStarterDto {
 
     private SourceType source;
 
-    private String stateCode;
-
     private String stateFacilityId;
 
     private Short year;
@@ -84,16 +82,6 @@ public class EmissionsReportStarterDto {
         this.source = source;
     }
 
-    public String getStateCode() {
-
-        return stateCode;
-    }
-
-    public void setStateCode(String stateCode) {
-
-        this.stateCode = stateCode;
-    }
-
     public Short getYear() {
 
         return year;
@@ -113,7 +101,6 @@ public class EmissionsReportStarterDto {
             .add("frsFacilityId", frsFacilityId)
             .add("programSystemCode", programSystemCode)
             .add("source", source)
-            .add("stateCode", stateCode)
             .add("stateFacilityId", stateFacilityId)
             .add("year", year)
             .toString();

@@ -222,7 +222,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     private EmissionsReport createHydratedEmissionsReport() {
     	EmissionsReport er = new EmissionsReport();
-    	er.setProgramSystemCode(null);
     	er.setEisProgramId("");
     	er.setFrsFacilityId("");
     	er.setId(1L);

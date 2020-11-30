@@ -79,7 +79,6 @@ export class EmissionsReportingService {
             eisProgramId: facility.programId,
             frsFacilityId: facility.epaRegistryId,
             stateFacilityId: facility.stateFacilityId,
-            stateCode: facility.state,
             source: 'fromScratch',
             facilitySite
         }, {
@@ -101,7 +100,6 @@ export class EmissionsReportingService {
             eisProgramId: facility.programId,
             frsFacilityId: facility.epaRegistryId,
             stateFacilityId: facility.stateFacilityId,
-            stateCode: facility.state,
             source: 'fromScratch'
         })], {
             type: 'application/json'

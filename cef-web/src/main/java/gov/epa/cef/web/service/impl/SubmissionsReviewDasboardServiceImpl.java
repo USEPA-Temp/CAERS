@@ -30,9 +30,6 @@ public class SubmissionsReviewDasboardServiceImpl implements SubmissionsReviewDa
     @Autowired
     private UserService userService;
     
-    /* (non-Javadoc)
-     * @see gov.epa.cef.web.service.SubmissionsReviewDasboardService#retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear()
-     */
     @Override
     public List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndProgramSystemCode(ReportStatus reportStatus) {
     	UserDto currentUser=userService.getCurrentUser();

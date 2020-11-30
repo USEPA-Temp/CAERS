@@ -42,6 +42,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
     private String statusYear;
 
+    @NotBlank(message = "Program System Code is required.")
     @Size(max = 20, message = "Program System Code can not exceed {max} chars; found '${validatedValue}'.")
     private String programSystemCode;
 

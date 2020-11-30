@@ -179,7 +179,10 @@ public class EisTransmissionServiceImpl {
 
         NodeTransaction transaction;
 
-        ProgramSystemCode psc = this.pscRepo.findById(eisHeader.getProgramSystemCode()).orElse(null);
+        ProgramSystemCode psc = this.pscRepo.findById(eisHeader.getProgramSystemCode()).orElseThrow(() -> {
+
+            return new NotExistException("ProgramSystemCode", eisHeader.getProgramSystemCode());
+        });
 
         ExchangeNetworkDocumentType xml = this.xmlService.generateEisDocument(eisHeader);
 
