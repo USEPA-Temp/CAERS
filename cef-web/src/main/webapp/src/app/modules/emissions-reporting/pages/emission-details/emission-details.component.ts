@@ -277,7 +277,9 @@ export class EmissionDetailsComponent implements OnInit {
     // Reconfigure form after calculation method changes
     this.emissionForm.get('emissionsCalcMethodCode').valueChanges
     .subscribe(value => {
-      this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status, false);
+        this.efNumeratorMismatch = false;
+        this.efDenominatorMismatch = false;
+        this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status, false);
     });
 
     // Make user calculate total emissions after changes
@@ -562,6 +564,8 @@ export class EmissionDetailsComponent implements OnInit {
 
     this.emissionForm.get('totalManualEntry').valueChanges
     .subscribe(value => {
+        this.efDenominatorMismatch = false;
+        this.efNumeratorMismatch = false;
       if (this.emissionForm.enabled) {
         this.emissionForm.get('emissionsFactorText').setValidators(null);
         this.emissionForm.controls.emissionsFactorText.updateValueAndValidity();
