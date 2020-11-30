@@ -27,8 +27,10 @@
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": [ "src/assets/js/frs-widget.js", "src/assets/js/cromerr-widget.js"],
-            "es5BrowserSupport": true
+            "scripts": [
+              "src/assets/js/frs-widget.js",
+              "src/assets/js/cromerr-widget.js"
+            ]
           },
           "configurations": {
             "production": {
