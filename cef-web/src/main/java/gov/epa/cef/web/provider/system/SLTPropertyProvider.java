@@ -1,6 +1,5 @@
 package gov.epa.cef.web.provider.system;
 
-import gov.epa.cef.web.config.slt.SLTAgencyCode;
 import gov.epa.cef.web.domain.SLTConfigProperty;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.SLTConfigRepository;
@@ -21,18 +20,18 @@ public class SLTPropertyProvider {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    public String getString(IPropertyKey propertyKey, SLTAgencyCode agencyCode) {
+    public String getString(IPropertyKey propertyKey, String programSystemCode) {
 
-        SLTConfigProperty property = this.retrieve(propertyKey, agencyCode);
+        SLTConfigProperty property = this.retrieve(propertyKey, programSystemCode);
 
         return property.getValue();
     }
 
-    public SLTConfigProperty retrieve(IPropertyKey propertyKey, SLTAgencyCode agencyCode) {
+    public SLTConfigProperty retrieve(IPropertyKey propertyKey, String programSystemCode) {
 
         String name = propertyKey.configKey();
 
-        SLTConfigProperty property = this.propertyRepo.findByNameAndAgencyCode(name, agencyCode.name()).orElseThrow(() -> {
+        SLTConfigProperty property = this.propertyRepo.findByNameAndProgramSystemCodeCode(name, programSystemCode).orElseThrow(() -> {
 
             return new NotExistException("SltConfigProperty", name);
         });
@@ -45,9 +44,9 @@ public class SLTPropertyProvider {
         return this.propertyRepo.findAll();
     }
 
-    public List<SLTConfigProperty> retrieveAllForAgency(SLTAgencyCode agencyCode) {
+    public List<SLTConfigProperty> retrieveAllForProgramSystem(String programSystemCode) {
 
-        return this.propertyRepo.findByAgencyCode(agencyCode.name());
+        return this.propertyRepo.findByProgramSystemCodeCode(programSystemCode);
     }
 
     public SLTConfigProperty update(Long id, String value) {
@@ -64,13 +63,13 @@ public class SLTPropertyProvider {
         return this.propertyRepo.save(property);
     }
 
-    public SLTConfigProperty update(IPropertyKey propertyKey, SLTAgencyCode agencyCode, String value) {
+    public SLTConfigProperty update(IPropertyKey propertyKey, String programSystemCode, String value) {
 
         String name = propertyKey.configKey();
 
-        logger.info("Updating system property '{}, {}' = '{}'", name, agencyCode.name(), value);
+        logger.info("Updating system property '{}, {}' = '{}'", name, programSystemCode, value);
 
-        SLTConfigProperty property = this.retrieve(propertyKey, agencyCode);
+        SLTConfigProperty property = this.retrieve(propertyKey, programSystemCode);
 
         property.setValue(value);
 

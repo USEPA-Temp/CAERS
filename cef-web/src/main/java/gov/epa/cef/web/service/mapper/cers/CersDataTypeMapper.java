@@ -13,5 +13,6 @@ public interface CersDataTypeMapper {
 
     @Mapping(source="year", target="emissionsYear")
     @Mapping(source="facilitySites", target="facilitySite")
+    @Mapping(source="programSystemCode.code", target="programSystemCode")
     CERSDataType fromEmissionsReport(EmissionsReport source);
 }

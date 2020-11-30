@@ -1570,13 +1570,15 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         EmissionsReport emissionsReport = new EmissionsReport();
 
-        emissionsReport.setAgencyCode(bulkEmissionsReport.getAgencyCode());
         emissionsReport.setEisProgramId(bulkEmissionsReport.getEisProgramId());
         emissionsReport.setFrsFacilityId(bulkEmissionsReport.getFrsFacilityId());
         emissionsReport.setYear(bulkEmissionsReport.getYear());
         emissionsReport.setStatus(ReportStatus.valueOf(bulkEmissionsReport.getStatus()));
         emissionsReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
 
+        if (bulkEmissionsReport.getProgramSystemCode() != null) {
+            emissionsReport.setProgramSystemCode(programSystemCodeRepo.findById(bulkEmissionsReport.getProgramSystemCode()).orElse(null));
+        }
         if (bulkEmissionsReport.getValidationStatus() != null) {
             emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));
         }
@@ -1831,7 +1833,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
        return parseJsonNode(true).andThen(result -> {
 
-           result.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
+           result.setProgramSystemCode(metadata.getProgramSystemCode());
            result.setEisProgramId(metadata.getEisProgramId());
            result.setFrsFacilityId(metadata.getFrsFacilityId());
            result.setAltSiteIdentifier(metadata.getStateFacilityId());

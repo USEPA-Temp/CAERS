@@ -15,10 +15,6 @@ import java.util.Optional;
 
 public interface EmissionsReportService {
 
-    // TODO: Remove hard coded value
-    // https://alm.cgifederal.com/projects/browse/CEF-319
-    String __HARD_CODED_AGENCY_CODE__ = "GA";
-
     /**
      * Creates an emissions report from scratch
      * @param reportDto

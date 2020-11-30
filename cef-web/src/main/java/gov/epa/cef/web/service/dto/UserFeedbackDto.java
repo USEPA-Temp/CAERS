@@ -24,7 +24,7 @@ public class UserFeedbackDto implements Serializable {
     private String userName;
     private String userId;
     private String userRole;
-    private String agencyCode; 
+    private CodeLookupDto programSystemCode; 
     private Date createdDate;
     private String lastModifiedBy;
     
@@ -143,11 +143,11 @@ public class UserFeedbackDto implements Serializable {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	public String getAgencyCode() {
-		return agencyCode;
+	public CodeLookupDto getProgramSystemCode() {
+		return programSystemCode;
 	}
-	public void setAgencyCode(String agencyCode) {
-		this.agencyCode = agencyCode;
+	public void setProgramSystemCode(CodeLookupDto programSystemCode) {
+		this.programSystemCode = programSystemCode;
 	}
 	public String getLastModifiedBy() {
 		return lastModifiedBy;

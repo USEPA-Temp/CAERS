@@ -2,20 +2,20 @@ package gov.epa.cef.web.service.dto;
 
 public class EisDataCriteria {
 
-    private String agencyCode;
+    private String programSystemCode;
 
     private short reportingYear;
 
     private EisSubmissionStatus submissionStatus;
 
-    public String getAgencyCode() {
+    public String getProgramSystemCode() {
 
-        return agencyCode;
+        return programSystemCode;
     }
 
-    public void setAgencyCode(String agencyCode) {
+    public void setProgramSystemCode(String programSystemCode) {
 
-        this.agencyCode = agencyCode;
+        this.programSystemCode = programSystemCode;
     }
 
     public short getReportingYear() {
@@ -38,9 +38,9 @@ public class EisDataCriteria {
         this.submissionStatus = submissionStatus;
     }
 
-    public EisDataCriteria withAgencyCode(final String agencyCode) {
+    public EisDataCriteria withProgramSystemCode(final String programSystemCode) {
 
-        setAgencyCode(agencyCode);
+        setProgramSystemCode(programSystemCode);
         return this;
     }
 

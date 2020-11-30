@@ -9,7 +9,7 @@ public class EmissionsReportDto implements Serializable {
     private Long id;
     private String frsFacilityId;
     private String eisProgramId;
-    private String agencyCode;
+    private CodeLookupDto programSystemCode;
     private Short year;
     private String status;
     private String validationStatus;
@@ -41,12 +41,12 @@ public class EmissionsReportDto implements Serializable {
         this.eisProgramId = eisProgramId;
     }
 
-    public String getAgencyCode() {
-        return agencyCode;
+    public CodeLookupDto getProgramSystemCode() {
+        return programSystemCode;
     }
 
-    public void setAgencyCode(String agencyCode) {
-        this.agencyCode = agencyCode;
+    public void setProgramSystemCode(CodeLookupDto programSystemCode) {
+        this.programSystemCode = programSystemCode;
     }
 
     public Short getYear() {

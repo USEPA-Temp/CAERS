@@ -473,6 +473,13 @@ public class LookupServiceImpl implements LookupService {
         });
         return result;
     }
+
+    @Override
+    public CodeLookupDto retrieveProgramSystemCodeByDescription(String description) {
+
+        ProgramSystemCode entity = programSystemCodeRepo.findByDescriptionIgnoreCase(description).orElse(null);
+        return lookupMapper.toDto(entity);
+    }
     
     public ProgramSystemCode retrieveProgramSystemTypeCodeEntityByCode(String code) {
     	ProgramSystemCode result= programSystemCodeRepo

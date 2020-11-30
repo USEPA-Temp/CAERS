@@ -84,7 +84,7 @@ export class UserFeedbackComponent implements OnInit {
     saveUserFeedback.reportId = this.reportId;
     saveUserFeedback.facilityName = this.facilitySite.name;
     saveUserFeedback.year = this.report.year;
-    saveUserFeedback.agencyCode = this.report.agencyCode;
+    saveUserFeedback.programSystemCode = this.report.programSystemCode;
     Object.assign(saveUserFeedback, this.feedbackForm.value);
 
     this.userFeedbackService.create(saveUserFeedback).subscribe(() => {

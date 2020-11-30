@@ -26,7 +26,7 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
   availableYears: number[];
   availableAgencies: string[];
 
-  userAgency: string;
+  userProgramSystem: string;
 
   intuitiveRateAvg = 0;
   dataEntryScreensAvg = 0;
@@ -46,7 +46,7 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
     const CurrentYear = new Date().getFullYear() - 1;
 
     this.userService.getUser().subscribe(user => {
-      this.userAgency = user.agencyCode;
+      this.userProgramSystem = user.programSystemCode;
     });
 
     this.tableData = [];
@@ -74,14 +74,14 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
       .subscribe(years => {
         this.availableYears = years;
       });
-    this.userFeedbackService.retrieveAvailableAgencies()
+    this.userFeedbackService.retrieveAvailableProgramSystemCodes()
       .subscribe(agencies => {
         this.availableAgencies = agencies;
       });
   }
 
   retrieveData() {
-    this.userFeedbackService.retrieveAllByYearAndAgency(this.cboFilterYear.value, this.cboFilterAgency.value)
+    this.userFeedbackService.retrieveAllByYearAndProgramSystemCode(this.cboFilterYear.value, this.cboFilterAgency.value)
       .subscribe(userFB => {
         this.tableData = userFB;
         this.retrieveStats();
@@ -89,7 +89,7 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
   }
 
   retrieveStats() {
-    this.userFeedbackService.retrieveStatsByYearAndAgency(this.cboFilterYear.value, this.cboFilterAgency.value)
+    this.userFeedbackService.retrieveStatsByYearAndProgramSystemCode(this.cboFilterYear.value, this.cboFilterAgency.value)
       .subscribe(stats => {
         this.stats = stats;
       });
