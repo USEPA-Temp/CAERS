@@ -41,13 +41,13 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
   createPeriod = false;
 
-  @ViewChild(EditProcessInfoPanelComponent, { static: false })
+  @ViewChild(EditProcessInfoPanelComponent)
   infoComponent: EditProcessInfoPanelComponent;
 
-  @ViewChild(EditProcessOperatingDetailPanelComponent, { static: false })
+  @ViewChild(EditProcessOperatingDetailPanelComponent)
   operatingDetailsComponent: EditProcessOperatingDetailPanelComponent;
 
-  @ViewChild(EditProcessReportingPeriodPanelComponent, { static: false })
+  @ViewChild(EditProcessReportingPeriodPanelComponent)
   reportingPeriodComponent: EditProcessReportingPeriodPanelComponent;
 
   operatingStatus = OperatingStatus;

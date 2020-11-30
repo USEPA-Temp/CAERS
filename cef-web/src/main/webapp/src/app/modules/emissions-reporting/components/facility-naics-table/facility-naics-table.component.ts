@@ -8,6 +8,7 @@ import { FacilitySiteService } from 'src/app/core/services/facility-site.service
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilityNaicsModalComponent } from '../facility-naics-modal/facility-naics-modal.component';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-facility-naics-table',
@@ -19,6 +20,7 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
   @Input() readOnlyMode: boolean;
   facilitySite: FacilitySite;
   baseUrl: string;
+  faPlus = faPlus;
 
   constructor(
     private modalService: NgbModal,

@@ -8,7 +8,7 @@ import { EmissionsReportingDashboardComponent } from 'src/app/modules/emissions-
 import { EmissionsReportingComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting/emissions-reporting.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionUnitDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emission-unit-dashboard/emission-unit-dashboard.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {FaConfig, FaIconLibrary, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { StepProgressComponent } from 'src/app/modules/emissions-reporting/components/step-progress/step-progress.component';
 
 
@@ -67,6 +67,7 @@ import { UserFeedbackComponent } from './pages/user-feedback/user-feedback.compo
 import { DataBulkEntryComponent } from './pages/data-bulk-entry/data-bulk-entry.component';
 import { BulkEntryReportingPeriodTableComponent } from './components/bulk-entry-reporting-period-table/bulk-entry-reporting-period-table.component';
 import { BulkEntryEmissionsTableComponent } from './components/bulk-entry-emissions-table/bulk-entry-emissions-table.component';
+import {faBan, faPlus, faQuestionCircle, fas, faUserCircle} from "@fortawesome/free-solid-svg-icons";
 
 @NgModule({
   declarations: [
@@ -147,4 +148,10 @@ import { BulkEntryEmissionsTableComponent } from './components/bulk-entry-emissi
     ControlPathAssignmentModalComponent
   ]
 })
-export class EmissionsReportingModule { }
+export class EmissionsReportingModule {
+    constructor(config: FaConfig, library: FaIconLibrary) {
+        config.fallbackIcon = faBan;
+        library.addIconPacks(fas);
+      library.addIcons(faUserCircle, faQuestionCircle, faPlus);
+    }
+}
