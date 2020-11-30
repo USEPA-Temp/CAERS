@@ -17,16 +17,16 @@ public interface UserFeedbackService {
 	void removeReportFromUserFeedback(Long reportId);
 	
     /**
-     * Retrieves all User Feedback for year and agency
+     * Retrieves all User Feedback for year and program system
      * @return
      */
-    List<UserFeedbackDto> retrieveAllByYearAndAgency(Short year, String agency);
+    List<UserFeedbackDto> retrieveAllByYearAndProgramSystem(Short year, String programSystem);
     
     /**
-     * Retrieve stats for selected year and agency code
+     * Retrieve stats for selected year and program system code
      * @return
      */
-    IUserFeedbackStatsDto retrieveStatsByYearAndAgency(Short year, String agency);
+    IUserFeedbackStatsDto retrieveStatsByYearAndProgramSystem(Short year, String programSystem);
     
     /**
      * Retrieve available years
@@ -35,9 +35,9 @@ public interface UserFeedbackService {
     List<Short> retrieveAvailableYears();
     
     /**
-     * Retrieve available agency codes
+     * Retrieve available program system codes
      * @return
      */
-    List<String> retrieveAvailableAgencies();
+    List<String> retrieveAvailableProgramSystems();
 		
 }

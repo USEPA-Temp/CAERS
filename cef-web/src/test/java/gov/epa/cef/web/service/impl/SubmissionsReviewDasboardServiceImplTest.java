@@ -47,7 +47,7 @@ public class SubmissionsReviewDasboardServiceImplTest {
     public void retrieveFacilitiesReports_Should_ReturnListOfSubmissionsUnderReview_When_NoArugmentsPassed() {
 
         UserDto user=new UserDto();
-        user.setAgencyCode("GA");
+        user.setProgramSystemCode("GADNR");
         when(userService.getCurrentUser()).thenReturn(user);
 
         Date date=Calendar.getInstance().getTime();
@@ -56,12 +56,12 @@ public class SubmissionsReviewDasboardServiceImplTest {
         when(DateUtils.getFiscalYearForDate(date)).thenReturn(2019);
 
         List<SubmissionsReviewDashboardView> submissionsReviewDashboardView=new ArrayList<>();
-        when(repo.findByAgencyCode("GA")).thenReturn(submissionsReviewDashboardView);
+        when(repo.findByProgramSystemCode("GADNR")).thenReturn(submissionsReviewDashboardView);
 
         List<SubmissionsReviewDashboardDto> submissionsReviewDashboardDto=new ArrayList<>();
         when(mapper.toDtoList(submissionsReviewDashboardView)).thenReturn(submissionsReviewDashboardDto);
 
-        List<SubmissionsReviewDashboardDto> result= submissionsReviewDasboardServiceImpl.retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear();
+        List<SubmissionsReviewDashboardDto> result= submissionsReviewDasboardServiceImpl.retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear();
 
         assertEquals(submissionsReviewDashboardDto, result);
     }

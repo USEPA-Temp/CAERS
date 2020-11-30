@@ -167,11 +167,6 @@ public class CersXmlServiceImpl implements CersXmlService {
         }
 
         CERSDataType cers = cersMapper.fromEmissionsReport(source);
-        // TODO: find out if programSystemCode should always be the same at the facilitySite and report level
-        // and if this needs to be added at the report level or moved there instead
-        if (!cers.getFacilitySite().isEmpty()) {
-            cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
-        }
 
         if (submissionStatus == null || !ConstantUtils.EIS_TRANSMISSION_POINT_EMISSIONS.equals(submissionStatus.dataCategory())) {
             addProcessControls(source, cers);

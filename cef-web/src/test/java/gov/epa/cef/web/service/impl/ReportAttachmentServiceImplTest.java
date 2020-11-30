@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -95,8 +96,11 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
     }
 
     private EmissionsReport createHydratedEmissionsReport() {
+        ProgramSystemCode psc = new ProgramSystemCode();
+        psc.setCode("GADNR");
+
     	EmissionsReport er = new EmissionsReport();
-		er.setAgencyCode("GA");
+		er.setProgramSystemCode(psc);
 		er.setEisProgramId("ABC");
 		er.setFrsFacilityId("111111111111");
 		er.setId(1L);

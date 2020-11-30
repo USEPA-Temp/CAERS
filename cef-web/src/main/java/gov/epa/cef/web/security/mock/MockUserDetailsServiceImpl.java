@@ -93,7 +93,7 @@ public class MockUserDetailsServiceImpl implements AuthenticationUserDetailsServ
                 user.setIdTypeText(role.roleName());
                 user.setRoleId(role.getId());
                 user.setUserRoleId(USER_ROLE_ID);
-                user.setClientId("GA");
+                user.setClientId("GADNR");
                 //60632 or 95092
                 user.setUserOrganizationId(ORGANIZATION_ID);
 

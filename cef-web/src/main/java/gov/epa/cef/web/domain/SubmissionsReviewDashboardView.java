@@ -53,8 +53,8 @@ public class SubmissionsReviewDashboardView implements Serializable{
     @Column(name = "year", nullable = false)
     private Short year;
     
-    @Column(name = "agency_code", nullable = false, length = 3)
-    private String agencyCode;    
+    @Column(name = "program_system_code", nullable = false, length = 20)
+    private String programSystemCode;
     
     public Long getEmissionsReportId() {
         return emissionsReportId;
@@ -116,11 +116,11 @@ public class SubmissionsReviewDashboardView implements Serializable{
     public void setYear(Short year) {
         this.year = year;
     }
-    public String getAgencyCode() {
-        return agencyCode;
+    public String getProgramSystemCode() {
+        return programSystemCode;
     }
-    public void setAgencyCode(String agencyCode) {
-        this.agencyCode = agencyCode;
+    public void setProgramSystemCode(String programSystemCode) {
+        this.programSystemCode = programSystemCode;
     }
     
 }

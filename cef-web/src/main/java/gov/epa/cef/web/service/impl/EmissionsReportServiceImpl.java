@@ -192,7 +192,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
                 erRepo.save(emissionsReport);
 
-                SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getAgencyCode());
+                SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
 
                 //send an email notification to the SLT's predefined address that a report has been submitted
                 notificationService.sendReportSubmittedNotification(sltConfig.getSltEmail(),
@@ -272,7 +272,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setStatus(ReportStatus.IN_PROGRESS);
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
-        newReport.setAgencyCode(reportDto.getStateCode());
         newReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         newReport.setHasSubmitted(false);
 
@@ -280,24 +279,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         facilitySite.setEmissionsReport(newReport);
         facilitySite.setEisProgramId(reportDto.getEisProgramId());
 
-        //TODO:
-        //Hard coding this as a temporary workaround to test onboarding for DC. Long term we should consider changing the
-        //"agency code" on the report table to use the EIS Program System Code instead of state abbreviations. We can use
-        //the "Responsible Agency Code" returned by CDX to give us the program system code and look that up instead.
-        String programSystemCode = null;
-        switch (reportDto.getStateCode()) {
-			case "GA": 
-				programSystemCode = "GADNR";
-				break;
-			case "DC":
-				programSystemCode = "DOEE";
-				break;
-			default:
-				//do nothing
-		};
-        
-        facilitySite.setProgramSystemCode(
-        		this.lookupService.retrieveProgramSystemTypeCodeEntityByCode(programSystemCode));
+        newReport.setProgramSystemCode(facilitySite.getProgramSystemCode());
 
         newReport.getFacilitySites().add(facilitySite);
 

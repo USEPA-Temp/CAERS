@@ -8,7 +8,7 @@ export class User {
   lastName: string;
   role: AppRole;
   userRoleId: number;
-  agencyCode: string;
+  programSystemCode: string;
 
   // these methods can be used for easier role checking
   public canReview() {

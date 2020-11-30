@@ -29,7 +29,7 @@ public class SubmissionsReviewDashboardApiTest extends BaseApiTest {
     @Test
     public void retrieveFacilitiesReportsForReview_Should_ReturnListOfFacilitiesReportsForReview_WhenNoParameterPassed() {
         List<SubmissionsReviewDashboardDto> submissionsUnderReview=new ArrayList<>();
-        when(submissionsReviewDasboardServiceImpl.retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear()).thenReturn(new ArrayList<>());
+        when(submissionsReviewDasboardServiceImpl.retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear()).thenReturn(new ArrayList<>());
         ResponseEntity<List<SubmissionsReviewDashboardDto>> result=submissionsReviewDashboardApi.retrieveFacilitiesReportsForReview();
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(submissionsUnderReview, result.getBody());

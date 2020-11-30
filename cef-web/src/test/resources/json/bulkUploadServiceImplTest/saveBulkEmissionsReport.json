@@ -2,7 +2,7 @@
     "id": 9999997,
     "frsFacilityId": "110015680798",
     "eisProgramId": "9758611",
-    "agencyCode": "GA",
+    "programSystemCode": "GADNR",
     "year": 2010,
     "status": "IN_PROGRESS",
     "validationStatus": "PASSED_WARNINGS",

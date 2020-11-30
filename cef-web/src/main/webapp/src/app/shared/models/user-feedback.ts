@@ -1,3 +1,5 @@
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+
 export class UserFeedback {
     id: number;
 	reportId: string;
@@ -16,7 +18,7 @@ export class UserFeedback {
     userId: string;
     userName: string;
     userRole: string;
-    agencyCode: string;
+    programSystemCode: BaseCodeLookup;
     createdDate: string;
     lastModifiedBy: string;
 }

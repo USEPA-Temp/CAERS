@@ -18,16 +18,16 @@ export class UserFeedbackService {
     return this.http.post<UserFeedback>(url, userFeedback);
   }
 
-  retrieveAllByYearAndAgency(year: number, agency: string): Observable<UserFeedback[]> {
-    const url = `${this.baseUrl}/byYearAndAgency`;
+  retrieveAllByYearAndProgramSystemCode(year: number, programSystemCode: string): Observable<UserFeedback[]> {
+    const url = `${this.baseUrl}/byYearAndProgramSystemCode`;
     const params = new HttpParams()
          .append('year', year.toString())
-         .append('agency', agency);
+         .append('programSystemCode', programSystemCode);
     return this.http.get<UserFeedback[]>(url, {params});
   }
 
-  retrieveAvailableAgencies(): Observable<string[]> {
-    const url = `${this.baseUrl}/agencies`;
+  retrieveAvailableProgramSystemCodes(): Observable<string[]> {
+    const url = `${this.baseUrl}/programSystemCodes`;
     return this.http.get<string[]>(url);
   }
 
@@ -36,11 +36,11 @@ export class UserFeedbackService {
     return this.http.get<number[]>(url);
   }
 
-  retrieveStatsByYearAndAgency(year: number, agency: string): Observable<UserFeedbackStats> {
+  retrieveStatsByYearAndProgramSystemCode(year: number, programSystemCode: string): Observable<UserFeedbackStats> {
     const params = new HttpParams()
          .append('year', year.toString())
-         .append('agency', agency);
-    const url = `${this.baseUrl}/stats/byYearAndAgency`;
+         .append('programSystemCode', programSystemCode);
+    const url = `${this.baseUrl}/stats/byYearAndProgramSystemCode`;
     return this.http.get<UserFeedbackStats>(url, {params});
   }
 

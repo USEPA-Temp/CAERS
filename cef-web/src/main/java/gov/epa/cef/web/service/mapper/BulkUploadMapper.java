@@ -49,6 +49,7 @@ public interface BulkUploadMapper {
     @Mapping(target = "releasePointAppts", ignore = true)
     @Mapping(target = "reportingPeriods", ignore = true)
     @Mapping(target = "emissions", ignore = true)
+    @Mapping(source="programSystemCode.code", target="programSystemCode")
     EmissionsReportBulkUploadDto emissionsReportToDto(EmissionsReport source);
 
     @Mapping(source="countyCode.countyCode", target="countyCode")

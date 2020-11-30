@@ -47,32 +47,32 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 		}
 	}
 	
-	public List<UserFeedbackDto> retrieveAllByYearAndAgency(Short year, String agency) {
+	public List<UserFeedbackDto> retrieveAllByYearAndProgramSystem(Short year, String programSystem) {
 		
-		List<UserFeedback> userFeedback = agency.contentEquals("ALL_AGENCIES")
+		List<UserFeedback> userFeedback = programSystem.contentEquals("ALL_AGENCIES")
 	            ? this.userFeedbackRepo.findAllByYear(year, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "createdDate"))
-	            : this.userFeedbackRepo.findByYearAndAgencyCode(year, agency, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "createdDate"));
+	            : this.userFeedbackRepo.findByYearAndProgramSystemCodeCode(year, programSystem, Sort.by(Sort.DEFAULT_DIRECTION.DESC, "createdDate"));
 		
 		return userFeedbackMapper.toDtoList(userFeedback);
 	}
 	
-	public IUserFeedbackStatsDto retrieveStatsByYearAndAgency(Short year, String agency) {
+	public IUserFeedbackStatsDto retrieveStatsByYearAndProgramSystem(Short year, String programSystem) {
 		
-		IUserFeedbackStatsDto userFeedback = agency.contentEquals("ALL_AGENCIES")
+		IUserFeedbackStatsDto userFeedback = programSystem.contentEquals("ALL_AGENCIES")
 	            ? this.userFeedbackRepo.findAvgByYear(year) 
-	            : this.userFeedbackRepo.findAvgByYearAndAgency(year, agency);
+	            : this.userFeedbackRepo.findAvgByYearAndProgramSystem(year, programSystem);
 	            
 		return userFeedback;
 	}
 	
-	public List<String> retrieveAvailableAgencies() {
+	public List<String> retrieveAvailableProgramSystems() {
 		
-		return this.userFeedbackRepo.findDistinctAgencies(Sort.by(Sort.DEFAULT_DIRECTION.DESC, "agencyCode"));
+		return this.userFeedbackRepo.findDistinctProgramSystems(Sort.by(Sort.Direction.DESC, "programSystemCode.code"));
 	}
 	
 	public List<Short> retrieveAvailableYears() {
 		
-		return this.userFeedbackRepo.findDistinctYears(Sort.by(Sort.DEFAULT_DIRECTION.DESC, "year"));
+		return this.userFeedbackRepo.findDistinctYears(Sort.by(Sort.Direction.DESC, "year"));
 	}
 	
 	

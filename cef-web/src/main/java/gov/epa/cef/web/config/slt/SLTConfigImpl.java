@@ -6,29 +6,29 @@ import gov.epa.cef.web.provider.system.SLTPropertyProvider;
 
 public class SLTConfigImpl implements SLTBaseConfig {
 
-    private final SLTAgencyCode agencyCode;
+    private final String programSystemCode;
 
     private final SLTPropertyProvider propertyProvider;
 
-    public SLTConfigImpl(SLTAgencyCode agencyCode, SLTPropertyProvider propertyProvider) {
+    public SLTConfigImpl(String programSystemCode, SLTPropertyProvider propertyProvider) {
 
         super();
 
-        this.agencyCode = agencyCode;
+        this.programSystemCode = programSystemCode;
         this.propertyProvider = propertyProvider;
 
     }
 
     public String getSltEmail() {
-        return this.propertyProvider.getString(SLTPropertyName.EmailAddress, agencyCode);
+        return this.propertyProvider.getString(SLTPropertyName.EmailAddress, programSystemCode);
     }
 
     public String getSltEisUser() {
-        return this.propertyProvider.getString(SLTPropertyName.EisUser, agencyCode);
+        return this.propertyProvider.getString(SLTPropertyName.EisUser, programSystemCode);
     }
 
     public String getSltEisProgramCode() {
-        return this.propertyProvider.getString(SLTPropertyName.EisProgramCode, agencyCode);
+        return this.propertyProvider.getString(SLTPropertyName.EisProgramCode, programSystemCode);
     }
 
 }

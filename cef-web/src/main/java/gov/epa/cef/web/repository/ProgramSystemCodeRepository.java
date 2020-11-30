@@ -1,5 +1,7 @@
 package gov.epa.cef.web.repository;
 
+import java.util.Optional;
+
 import javax.persistence.QueryHint;
 
 import org.springframework.data.domain.Sort;
@@ -13,5 +15,7 @@ public interface ProgramSystemCodeRepository extends CrudRepository<ProgramSyste
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Iterable<ProgramSystemCode> findAll(Sort sort);
+
+    Optional<ProgramSystemCode> findByDescriptionIgnoreCase(String description);
 
 }

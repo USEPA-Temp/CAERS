@@ -44,33 +44,35 @@ public class UserFeedbackApi {
     }
     
     /**
-     * Retrieve all feedback for selected year and agency code
+     * Retrieve all feedback for selected year and program system code
      * @return
      */
     @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
-    @GetMapping(value = "/byYearAndAgency")
+    @GetMapping(value = "/byYearAndProgramSystemCode")
     @ResponseBody
-    public ResponseEntity<List<UserFeedbackDto>> retrieveAllByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
+    public ResponseEntity<List<UserFeedbackDto>> retrieveAllByYearAndProgramSystem(@NotNull @RequestParam(value = "year") Short year, 
+            @NotNull @RequestParam(value = "programSystemCode") String programSystemCode) {
 
-    	List<UserFeedbackDto> result =userFeedbackService.retrieveAllByYearAndAgency(year, agency);
+    	List<UserFeedbackDto> result =userFeedbackService.retrieveAllByYearAndProgramSystem(year, programSystemCode);
         return new ResponseEntity<List<UserFeedbackDto>>(result, HttpStatus.OK);
     }
     
     /**
-     * Retrieve stats for selected year and agency code
+     * Retrieve stats for selected year and program system code
      * @return
      */
     @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
-    @GetMapping(value = "/stats/byYearAndAgency")
+    @GetMapping(value = "/stats/byYearAndProgramSystemCode")
     @ResponseBody
-    public ResponseEntity<IUserFeedbackStatsDto> retrieveStatsByYearAndAgency(@NotNull @RequestParam(value = "year") Short year, @NotNull @RequestParam(value = "agency") String agency) {
+    public ResponseEntity<IUserFeedbackStatsDto> retrieveStatsByYearAndProgramSystem(@NotNull @RequestParam(value = "year") Short year, 
+            @NotNull @RequestParam(value = "programSystemCode") String programSystemCode) {
     	
-    	IUserFeedbackStatsDto result = userFeedbackService.retrieveStatsByYearAndAgency(year, agency);
+    	IUserFeedbackStatsDto result = userFeedbackService.retrieveStatsByYearAndProgramSystem(year, programSystemCode);
         return new ResponseEntity<IUserFeedbackStatsDto>(result, HttpStatus.OK);
     }
     
     /**
-     * Retrieve available year and agency codes
+     * Retrieve available year and program system codes
      * @return
      */
     @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
@@ -83,15 +85,15 @@ public class UserFeedbackApi {
     }
     
     /**
-     * Retrieve available year and agency codes
+     * Retrieve available year and program system codes
      * @return
      */
     @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
-    @GetMapping(value = "/agencies")
+    @GetMapping(value = "/programSystemCodes")
     @ResponseBody
-    public ResponseEntity<List<String>> retrieveAvailableAgencies() {
+    public ResponseEntity<List<String>> retrieveAvailableProgramSystems() {
     	
-    	List<String> result =userFeedbackService.retrieveAvailableAgencies();
+    	List<String> result =userFeedbackService.retrieveAvailableProgramSystems();
         return new ResponseEntity<List<String>>(result, HttpStatus.OK);
     }
     

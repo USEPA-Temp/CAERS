@@ -104,11 +104,15 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                         // no previous report
 
                         this.copyFacilitySiteFromCdxModel();
-                        this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
-                        .subscribe(reportResp => {
-                            modalWindow.dismiss();
-                            this.reportCompleted(reportResp.body);
-                        });
+                        this.lookupService.retrieveProgramSystemCodeByDescription(this.facility.responsibleAgency)
+                        .subscribe(result => {
+                            this.facilitySite.programSystemCode = result;
+                            this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
+                            .subscribe(reportResp => {
+                                modalWindow.dismiss();
+                                this.reportCompleted(reportResp.body);
+                            });
+                        })
                     } else if (reportResp.status === 200) {
                         // 200 OK
                         // previous report was copied

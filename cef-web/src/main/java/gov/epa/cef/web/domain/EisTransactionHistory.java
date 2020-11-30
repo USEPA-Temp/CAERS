@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,8 +20,9 @@ public class EisTransactionHistory extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "agency_code", nullable = false, length = 3)
-    private String agencyCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "program_system_code")
+    private ProgramSystemCode programSystemCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "eis_sub_status", nullable = false)
@@ -34,12 +37,12 @@ public class EisTransactionHistory extends BaseAuditEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "transactionHistory")
     private EisTransactionAttachment attachment;
 
-    public String getAgencyCode() {
-        return agencyCode;
+    public ProgramSystemCode getProgramSystemCode() {
+        return programSystemCode;
     }
 
-    public void setAgencyCode(String agencyCode) {
-        this.agencyCode = agencyCode;
+    public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
+        this.programSystemCode = programSystemCode;
     }
 
     public EisSubmissionStatus getEisSubmissionStatus() {

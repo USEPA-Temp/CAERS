@@ -263,7 +263,19 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveProgramSystemTypeCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
-    
+
+    /**
+     * Retrieve Program System code by description
+     * @return
+     */
+    @GetMapping(value = "/programSystem/description/{description}")
+    @ResponseBody
+    public ResponseEntity<CodeLookupDto> retrieveProgramSystemCodeByDescription(@NotNull @PathVariable String description) {
+
+        CodeLookupDto result = lookupService.retrieveProgramSystemCodeByDescription(description);
+        return new ResponseEntity<CodeLookupDto>(result, HttpStatus.OK);
+    }
+
     /**
      * Retrieve Control Measure codes
      * @return

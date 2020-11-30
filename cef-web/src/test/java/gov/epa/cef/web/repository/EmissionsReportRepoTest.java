@@ -24,6 +24,7 @@ import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
+import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReleasePointTypeCode;
@@ -132,8 +133,11 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 	}
 
 	private EmissionsReport createHydratedEmissionsReport() {
+	    ProgramSystemCode psc = new ProgramSystemCode();
+        psc.setCode("GADNR");
+
 		EmissionsReport er = new EmissionsReport();
-		er.setAgencyCode("GA");
+		er.setProgramSystemCode(psc);
 		er.setEisProgramId("ABC");
 		er.setFrsFacilityId("111111111111");
 		er.setId(1L);

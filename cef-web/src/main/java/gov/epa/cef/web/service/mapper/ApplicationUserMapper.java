@@ -16,7 +16,7 @@ public interface ApplicationUserMapper {
 
     @Mapping(source="userId", target="cdxUserId")
     @Mapping(source="idTypeText", target="role")
-    @Mapping(source="clientId", target="agencyCode")
+    @Mapping(source="clientId", target="programSystemCode")
     UserDto toUserDto(ApplicationUser applicationUser);
     
 }

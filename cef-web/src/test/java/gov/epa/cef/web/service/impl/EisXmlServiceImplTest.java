@@ -90,7 +90,7 @@ public class EisXmlServiceImplTest {
         gaConfig.setSltEisUser("test");
 
         SLTConfigHelper sltConfigHelper = mock(SLTConfigHelper.class);
-        when(sltConfigHelper.getCurrentSLTConfig("GA")).thenReturn(gaConfig);
+        when(sltConfigHelper.getCurrentSLTConfig("GADNR")).thenReturn(gaConfig);
 
         this.eisXmlService = new EisXmlServiceImpl(cersXmlService, sltConfigHelper);
     }
@@ -99,7 +99,7 @@ public class EisXmlServiceImplTest {
     public void generateEisDataTest() throws Exception {
 
         EisHeaderDto eisHeader = new EisHeaderDto()
-            .withAgencyCode("GA")
+            .withProgramSystemCode("GADNR")
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
@@ -120,7 +120,7 @@ public class EisXmlServiceImplTest {
     public void writeEisXmlToTest() throws Exception {
 
         EisHeaderDto eisHeader = new EisHeaderDto()
-            .withAgencyCode("GA")
+            .withProgramSystemCode("GADNR")
             .withAuthorName("Jim Horner")
             .withOrganizationName("Slate Rock and Gravel")
             .withSubmissionStatus(EisSubmissionStatus.ProdEmissions)
