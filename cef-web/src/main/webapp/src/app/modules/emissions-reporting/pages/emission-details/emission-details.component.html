@@ -283,16 +283,16 @@
                             <app-validation-message [control]="emissionForm.controls.totalEmissions"></app-validation-message>
                             <div class="validation-message" *ngIf="emissionForm.errors && (emissionForm.dirty || emissionForm.touched)">
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
-                                    The Total Emissions must be recalculated.<br/>
+                                    The Total Emissions must be recalculated.
                                 </div>
                                 <div *ngIf="!calcParamValue || !calcParamUom">
-                                    Cannot calculate Total Emissions.<br/>
+                                    Cannot calculate Total Emissions.
                                 </div>
                                 <div *ngIf="!calcParamValue">
-                                    Annual Throughput for Reporting Period must be greater than or equal to zero.<br/>
+                                    Annual Throughput for Reporting Period must be greater than or equal to zero.
                                 </div>
                                 <div *ngIf="!calcParamUom">
-                                    Throughput UoM for Reporting Period is required.<br/>
+                                    Throughput UoM for Reporting Period is required.
                                 </div>
                                 <div *ngIf="emissionForm.getError('significantFiguresInvalid')">
                                     Please enter a maximum of 6 significant figures.

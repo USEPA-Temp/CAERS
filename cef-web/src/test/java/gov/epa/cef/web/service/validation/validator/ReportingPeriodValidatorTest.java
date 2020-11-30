@@ -45,20 +45,6 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
     }
 	
 	@Test
-    public void reportingPeriodTypeCodeFailTest() {
-		
-		CefValidatorContext cefContext = createContext();
-        ReportingPeriod testData = createBaseReportingPeriod();
-        testData.setReportingPeriodTypeCode(null);
-        
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.PERIOD_TYPE_CODE.value()) && errorMap.get(ValidationField.PERIOD_TYPE_CODE.value()).size() == 1);
-	}
-	
-	@Test
     public void operatingTypeCodeFailTest() {
 		
 		CefValidatorContext cefContext = createContext();
