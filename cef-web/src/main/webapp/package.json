@@ -40,6 +40,7 @@
     "@angular/cli": "~10.2.0",
     "@angular/compiler-cli": "^10.2.3",
     "@angular/language-service": "^10.2.3",
+    "@angular/localize": "^10.2.3",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^12.11.1",
