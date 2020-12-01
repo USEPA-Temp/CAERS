@@ -37,7 +37,8 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
 
     this.tableData.forEach(rp => {
 
-      const disabled = rp.operatingStatusCode.code === OperatingStatus.TEMP_SHUTDOWN || rp.operatingStatusCode.code === OperatingStatus.PERM_SHUTDOWN;
+      const disabled = rp.operatingStatusCode.code === OperatingStatus.TEMP_SHUTDOWN
+                    || rp.operatingStatusCode.code === OperatingStatus.PERM_SHUTDOWN;
       this.reportingPeriodForm.addControl('' + rp.reportingPeriodId, new FormControl(
         {value: rp.calculationParameterValue, disabled},
         { validators: [

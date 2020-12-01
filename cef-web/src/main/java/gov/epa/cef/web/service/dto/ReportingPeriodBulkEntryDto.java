@@ -11,6 +11,7 @@ public class ReportingPeriodBulkEntryDto implements Serializable {
     private Long emissionsUnitId;
     private String unitIdentifier;
     private String unitDescription;
+    private CodeLookupDto unitStatus;
 
     // process
     private Long emissionsProcessId;
@@ -49,6 +50,14 @@ public class ReportingPeriodBulkEntryDto implements Serializable {
 
     public void setUnitDescription(String unitDescription) {
         this.unitDescription = unitDescription;
+    }
+
+    public CodeLookupDto getUnitStatus() {
+        return unitStatus;
+    }
+
+    public void setUnitStatus(CodeLookupDto unitStatus) {
+        this.unitStatus = unitStatus;
     }
 
     public Long getEmissionsProcessId() {

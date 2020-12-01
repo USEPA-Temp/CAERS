@@ -93,6 +93,7 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
         reportingPeriod.setEmissionsProcess(new EmissionsProcess());
         reportingPeriod.getEmissionsProcess().setOperatingStatusCode(statusCode);
         reportingPeriod.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
+        reportingPeriod.getEmissionsProcess().getEmissionsUnit().setOperatingStatusCode(statusCode);
         reportingPeriod.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
         reportingPeriod.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEisProgramId("1");
         reportingPeriod.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(report2019);
