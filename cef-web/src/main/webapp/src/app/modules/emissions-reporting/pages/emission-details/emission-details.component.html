@@ -14,7 +14,7 @@
                 <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
                 <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode.shortName}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode?.shortName}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
                 <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
             </div>
@@ -23,16 +23,16 @@
           <div *ngIf="reportingPeriod">
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Throughput Material:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationMaterialCode.description}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationMaterialCode?.description}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Throughput Value:</strong></div>
                 <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterValue}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Throughput UoM:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom.description}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom?.description}}</div>
             </div>
 
             <div class="row">
                 <div class="col-sm-6 col-md-2"><strong>Throughput Parameter:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode.description}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode?.description}}</div>
             </div>
           </div>
         </div>
@@ -285,8 +285,14 @@
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
                                     The Total Emissions must be recalculated.
                                 </div>
+                                <div *ngIf="!calcParamValue || !calcParamUom">
+                                    Cannot calculate Total Emissions.
+                                </div>
                                 <div *ngIf="!calcParamValue">
-                                    Cannot calculate Total Emissions. Annual Throughput for Reporting Period must be greater than or equal to zero.
+                                    Annual Throughput for Reporting Period must be greater than or equal to zero.
+                                </div>
+                                <div *ngIf="!calcParamUom">
+                                    Throughput UoM for Reporting Period is required.
                                 </div>
                                 <div *ngIf="emissionForm.getError('significantFiguresInvalid')">
                                     Please enter a maximum of 6 significant figures.

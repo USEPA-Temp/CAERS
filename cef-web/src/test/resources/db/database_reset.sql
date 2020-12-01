@@ -67,6 +67,9 @@ DROP TABLE IF EXISTS naics_code_industry;
 DROP TABLE IF EXISTS pollutant;
 DROP TABLE IF EXISTS point_source_scc_code;
 DROP TABLE IF EXISTS eis_latlong_tolerance_lookup;
+DROP TABLE IF EXISTS eis_transaction_attachment;
+DROP TABLE IF EXISTS eis_transaction_history;
+DROP TABLE IF EXISTS slt_config;
 
 --SEQUENCES
 DROP SEQUENCE IF EXISTS emission_factor_id_seq;
@@ -79,3 +82,6 @@ DROP SEQUENCE IF EXISTS operating_detail_id_seq;
 DROP SEQUENCE IF EXISTS release_point_appt_id_seq;
 DROP SEQUENCE IF EXISTS release_point_id_seq;
 DROP SEQUENCE IF EXISTS reporting_period_id_seq;
+DROP SEQUENCE IF EXISTS eis_transaction_attachment_id_seq;
+DROP SEQUENCE IF EXISTS eis_transaction_history_id_seq;
+DROP SEQUENCE IF EXISTS slt_config_id_seq;
