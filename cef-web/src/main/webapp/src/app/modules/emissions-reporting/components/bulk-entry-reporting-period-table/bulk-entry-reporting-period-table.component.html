@@ -17,6 +17,13 @@
             <td>
               {{item.unitIdentifier}}
               <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.unitDescription"></fa-icon>
+              <span *ngIf="item.unitStatus.code === operatingStatus.TEMP_SHUTDOWN">
+                <fa-icon class="mt-2 ml-1" [icon]="['fas', 'power-off']" 
+                    title="This Emissions Unit is Temporarily Shutdown. Each sub-facility component must also be either Temporarily Shutdown or Permanently Shutdown."></fa-icon>
+              </span>
+              <span *ngIf="item.unitStatus.code === operatingStatus.PERM_SHUTDOWN">
+                <fa-icon class="mt-2 ml-1" [icon]="['fas', 'power-off']" title="This Emissions Unit is Permanently Shutdown. Each sub-facility component must also be Permanently Shutdown."></fa-icon>
+              </span>
             </td>
             <td>
               <a routerLink="{{baseUrl}}/process/{{item.emissionsProcessId}}" [title]="item.emissionsProcessDescription" 

@@ -45,6 +45,7 @@ public interface EmissionMapper {
     @Mapping(source="emissionsProcess.emissionsUnit.id", target="emissionsUnitId")
     @Mapping(source="emissionsProcess.emissionsUnit.unitIdentifier", target="unitIdentifier")
     @Mapping(source="emissionsProcess.emissionsUnit.description", target="unitDescription")
+    @Mapping(source="emissionsProcess.emissionsUnit.operatingStatusCode", target="unitStatus")
     @Mapping(source="emissionsProcess.id", target="emissionsProcessId")
     @Mapping(source="emissionsProcess.emissionsProcessIdentifier", target="emissionsProcessIdentifier")
     @Mapping(source="emissionsProcess.description", target="emissionsProcessDescription")
