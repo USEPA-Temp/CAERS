@@ -38,24 +38,24 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         message = "Average Weeks Per Period is not in expected numeric format; found '${validatedValue}'.")
     private String averageWeeksPerPeriod;
 
-    @NotBlank(message = "Winter Season percent is required.")
+    @NotBlank(message = "Winter Operating Percent is required.")
     @Pattern(regexp = PercentPattern,
-        message = "Percent Winter is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+        message = "Winter Operating Percent is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentWinter;
 
-    @NotBlank(message = "Spring Season percent is required.")
+    @NotBlank(message = "Spring Operating Percent is required.")
     @Pattern(regexp = PercentPattern,
-        message = "Percent Spring is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+        message = "Spring Operating Percent is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentSpring;
 
-    @NotBlank(message = "Summer Season percent is required.")
+    @NotBlank(message = "Summer Operating Percent is required.")
     @Pattern(regexp = PercentPattern,
-        message = "Percent Summer is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+        message = "Summer Operating Percent is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentSummer;
 
-    @NotBlank(message = "Fall Season percent is required.")
+    @NotBlank(message = "Fall Operating Percent is required.")
     @Pattern(regexp = PercentPattern,
-        message = "Percent Fall is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+        message = "Fall Operating Percent is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentFall;
 
     public OperatingDetailBulkUploadDto() {
