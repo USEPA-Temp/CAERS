@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.dto.bulkUpload;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
@@ -17,34 +18,42 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
     @NotNull(message = "Reporting Period ID is required.")
     private Long reportingPeriodId;
 
+    @NotNull(message = "Actual Hours Per Period is required.")
     @Pattern(regexp = "^\\d{0,4}$",
         message = "Actual Hours Per Period is not in expected numeric format; found '${validatedValue}'.")
     private String actualHoursPerPeriod;
 
+    @NotNull(message = "Average Hours Per Day is required.")
     @Pattern(regexp = "^\\d{0,2}(\\.\\d)?$",
         message = "Average Hours Per Day is not in expected numeric format: '{2}.{1}' digits; found '${validatedValue}'.")
     private String averageHoursPerDay;
 
+    @NotNull(message = "Average Days Per Week is required.")
     @Pattern(regexp = "^\\d?(\\.\\d)?$",
         message = "Average Days Per Week is not in expected numeric format: '{1}.{1}' digits; found '${validatedValue}'.")
     private String averageDaysPerWeek;
 
+    @NotNull(message = "Average Weeks Per Period is required.")
     @Pattern(regexp = "^\\d{0,2}$",
         message = "Average Weeks Per Period is not in expected numeric format; found '${validatedValue}'.")
     private String averageWeeksPerPeriod;
 
+    @NotBlank(message = "Winter Season percent is required.")
     @Pattern(regexp = PercentPattern,
         message = "Percent Winter is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentWinter;
 
+    @NotBlank(message = "Spring Season percent is required.")
     @Pattern(regexp = PercentPattern,
         message = "Percent Spring is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentSpring;
 
+    @NotBlank(message = "Summer Season percent is required.")
     @Pattern(regexp = PercentPattern,
         message = "Percent Summer is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentSummer;
 
+    @NotBlank(message = "Fall Season percent is required.")
     @Pattern(regexp = PercentPattern,
         message = "Percent Fall is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentFall;
