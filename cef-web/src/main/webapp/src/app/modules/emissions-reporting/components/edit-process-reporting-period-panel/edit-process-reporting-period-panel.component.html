@@ -5,7 +5,7 @@
             <label for="rpTypeCodeSelect" class="ml-1 col-form-label"><strong>Reporting Period:</strong></label>
         </div>
         <div class="col-sm-2">
-            <select type="text" class="form-control" id="rpTypeCodeSelect" formControlName="reportingPeriodTypeCode" [compareWith]="formUtils.compareCode">
+            <select type="text" class="form-control" id="rpTypeCodeSelect" formControlName="reportingPeriodTypeCode" [compareWith]="formUtils.compareCode" aria-readonly="true">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of reportingPeriodValues" [ngValue]="opt">{{opt.shortName}}</option>
             </select>

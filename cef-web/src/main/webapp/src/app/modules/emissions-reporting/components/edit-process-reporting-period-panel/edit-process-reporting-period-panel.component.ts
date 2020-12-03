@@ -15,7 +15,7 @@ import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom
 export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChanges {
   @Input() reportingPeriod: ReportingPeriod;
   reportingPeriodForm = this.fb.group({
-    reportingPeriodTypeCode: [{code: 'A'}, Validators.required],
+    reportingPeriodTypeCode: [{value: 'A', disabled: true}, Validators.required],
     emissionsOperatingTypeCode: [null, Validators.required],
     calculationParameterTypeCode: [null, Validators.required],
     calculationParameterValue: ['', [
@@ -60,6 +60,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     this.lookupService.retrieveReportingPeriod()
     .subscribe(result => {
       this.reportingPeriodValues = result;
+      const annual = this.reportingPeriodValues.find(period => period.code === 'A');
+      this.reportingPeriodForm.get('reportingPeriodTypeCode').patchValue(annual);
     });
 
     this.lookupService.retrieveUom()
