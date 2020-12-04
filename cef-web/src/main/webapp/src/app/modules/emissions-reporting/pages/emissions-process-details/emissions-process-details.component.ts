@@ -226,7 +226,6 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         this.toastr.error('', 'Total Operating Percent must be between 99.5 and 100.5');
       }
     } else {
-
       const operatingDetails = new OperatingDetail();
       const reportingPeriod = new ReportingPeriod();
 

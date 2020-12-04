@@ -31,7 +31,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   materialValues: BaseCodeLookup[];
   parameterTypeValues: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
-  reportingPeriodValues: BaseCodeLookup[];
+  reportingPeriodValues: BaseCodeLookup[] = [];
   uomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
 
@@ -59,7 +59,10 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
     this.lookupService.retrieveReportingPeriod()
     .subscribe(result => {
-      this.reportingPeriodValues = result;
+      // this.reportingPeriodValues = result;
+      const annual = result.find(period => period.code === 'A');
+      this.reportingPeriodValues.push(annual);
+      this.reportingPeriodForm.get('reportingPeriodTypeCode').patchValue(annual);
     });
 
     this.lookupService.retrieveUom()
