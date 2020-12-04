@@ -174,7 +174,6 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     if (!this.reportingPeriodComponent.reportingPeriodForm.valid) {
       this.reportingPeriodComponent.reportingPeriodForm.markAllAsTouched();
     } else {
-      this.reportingPeriodComponent.reportingPeriodForm.get('reportingPeriodTypeCode').enable();
       const updatedReportingPeriod = new ReportingPeriod();
 
       Object.assign(updatedReportingPeriod, this.reportingPeriodComponent.reportingPeriodForm.value);
@@ -227,7 +226,6 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         this.toastr.error('', 'Total Operating Percent must be between 99.5 and 100.5');
       }
     } else {
-      this.reportingPeriodComponent.reportingPeriodForm.get('reportingPeriodTypeCode').enable();
       const operatingDetails = new OperatingDetail();
       const reportingPeriod = new ReportingPeriod();
 
