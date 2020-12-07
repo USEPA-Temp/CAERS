@@ -54,6 +54,17 @@ public class ReportingPeriod extends BaseAuditEntity {
     @JoinColumn(name = "calculation_material_code", nullable = false)
     private CalculationMaterialCode calculationMaterialCode;
     
+    @Column(name = "fuel_use_value", nullable = false, precision = 131089, scale = 0)
+    private BigDecimal fuelUseValue;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fuel_use_uom", nullable = false)
+    private UnitMeasureCode fuelUseValueUom;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fuel_use_material_code", nullable = false)
+    private CalculationMaterialCode fuelUseValueMaterialCode;
+    
     @Column(name = "comments", length = 400)
     private String comments;
     
@@ -84,6 +95,9 @@ public class ReportingPeriod extends BaseAuditEntity {
         this.calculationParameterValue = originalReportingPeriod.getCalculationParameterValue();
         this.calculationParameterUom = originalReportingPeriod.getCalculationParameterUom();
         this.calculationMaterialCode = originalReportingPeriod.getCalculationMaterialCode();
+        this.fuelUseValue = originalReportingPeriod.getFuelUseValue();
+        this.fuelUseValueUom = originalReportingPeriod.getFuelUseValueUom();
+        this.fuelUseValueMaterialCode = originalReportingPeriod.getFuelUseValueMaterialCode();
         this.comments = originalReportingPeriod.getComments();
 
         for (Emission emission : originalReportingPeriod.getEmissions()) {
@@ -150,7 +164,32 @@ public class ReportingPeriod extends BaseAuditEntity {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public String getComments() {
+    public BigDecimal getFuelUseValue() {
+		return fuelUseValue;
+	}
+
+	public void setFuelUseValue(BigDecimal fuelUseValue) {
+		this.fuelUseValue = fuelUseValue;
+	}
+
+	public UnitMeasureCode getFuelUseValueUom() {
+		return fuelUseValueUom;
+	}
+
+	public void setFuelUseValueUom(UnitMeasureCode fuelUseValueUom) {
+		this.fuelUseValueUom = fuelUseValueUom;
+	}
+
+	public CalculationMaterialCode getFuelUseValueMaterialCode() {
+		return fuelUseValueMaterialCode;
+	}
+
+	public void setFuelUseValueMaterialCode(
+			CalculationMaterialCode fuelUseValueMaterialCode) {
+		this.fuelUseValueMaterialCode = fuelUseValueMaterialCode;
+	}
+
+	public String getComments() {
         return comments;
     }
 

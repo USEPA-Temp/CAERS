@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
@@ -25,15 +25,25 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     ]],
     calculationParameterUom: [null, [Validators.required, legacyUomValidator()]],
     calculationMaterialCode: [null, Validators.required],
+    fuelUseValue: ['', [
+      Validators.min(0),
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+    ]],
+    fuelUseUom: [null, [legacyUomValidator()]],
+    fuelUseMaterialCode: [null],
     comments: [null, Validators.maxLength(400)]
-  });
+  }, { validators: [
+    this.checkFuelUseFields()
+  ]});
 
   materialValues: BaseCodeLookup[];
+  fuelUseMaterialValues: BaseCodeLookup[];
   parameterTypeValues: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
   reportingPeriodValues: BaseCodeLookup[] = [];
   uomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
+  fuelUseUomValues: UnitMeasureCode[];
 
   constructor(
     private lookupService: LookupService,
@@ -45,6 +55,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     this.lookupService.retrieveCalcMaterial()
     .subscribe(result => {
       this.materialValues = result;
+      // this.fuelUseMaterialValues = this.materialValues.filter(val => val.fuelUse);
     });
 
     this.lookupService.retrieveCalcParam()
@@ -69,6 +80,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     .subscribe(result => {
       this.uomValues = result;
       this.denominatorUomValues = this.uomValues.filter(val => val.efDenominator);
+      // this.fuelUseUomValues = this.uomValues.filter(val => val.fuelUse);
     });
   }
 
@@ -79,11 +91,20 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
   onSubmit() {
 
-    // console.log(this.reportingPeriodForm);
+    console.log(this.reportingPeriodForm);
 
     // let period = new ReportingPeriod();
     // Object.assign(period, this.reportingPeriodForm.value);
     // console.log(period);
+  }
+
+  checkFuelUseFields(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      if (control.get('fuelUseValue').value || control.get('fuelUseMaterial').value || control.get('fuelUseUom').value) {
+        // control.get('fuelUseValue');
+      }
+        return null;
+    };
   }
 
 }

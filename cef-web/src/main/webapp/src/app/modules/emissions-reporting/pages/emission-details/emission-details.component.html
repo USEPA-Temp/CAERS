@@ -30,6 +30,15 @@
                 <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom?.description}}</div>
             </div>
 
+            <div class="row" *ngIf="reportingPeriod.fuelUseValue">
+                <div class="col-sm-6 col-md-2"><strong>Fuel Material:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseMaterialCode?.description}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Fuel Value:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseValue}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Fuel UoM:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseUom?.description}}</div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-6 col-md-2"><strong>Throughput Parameter:</strong></div>
                 <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode?.description}}</div>

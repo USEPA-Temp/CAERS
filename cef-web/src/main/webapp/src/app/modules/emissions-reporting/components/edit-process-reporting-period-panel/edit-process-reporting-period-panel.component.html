@@ -67,6 +67,38 @@
             <app-validation-message [control]="reportingPeriodForm.controls.calculationParameterUom"></app-validation-message>
         </div>
     </div>
+    <div class="row pb-1">
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Code for fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpMaterialSelect" class="ml-1 col-form-label"><strong>Fuel Material:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <select type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of fuelUseMaterialValues" [ngValue]="opt">{{opt.description}}</option>
+            </select>
+            <app-validation-message [control]="reportingPeriodForm.controls.fuelUseMaterialCode"></app-validation-message>
+        </div>
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Fuel use of the process for a given time period." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpFuelValueInput" class="ml-1 col-form-label"><strong>Fuel Value:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" id="rpFuelValueInput" formControlName="fuelUseValue" >
+            <app-validation-message [control]="reportingPeriodForm.controls.fuelUseValue"></app-validation-message>
+        </div>
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Code for the unit of measure for fuel use value." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpFuelUomSelect" class="ml-1 col-form-label"><strong>Fuel UoM:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <select type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of fuelUseUomValues" [ngValue]="opt">{{opt.code}}</option>
+            </select>
+            <app-validation-message [control]="reportingPeriodForm.controls.fuelUseParameterUom"></app-validation-message>
+        </div>
+    </div>
 
     <div class="row pb-1">
         <div class="col-sm-2">

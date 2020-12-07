@@ -16,6 +16,9 @@ public class ReportingPeriodDto implements Serializable {
     private BigDecimal calculationParameterValue;
     private UnitMeasureCodeDto calculationParameterUom;
     private CodeLookupDto calculationMaterialCode;
+    private BigDecimal fuelUseValue;
+    private UnitMeasureCodeDto fuelUseValueUom;
+    private CodeLookupDto fuelUseValueMaterialCode;
     private String comments;
     private List<EmissionDto> emissions;
     private List<OperatingDetailDto> operatingDetails;
@@ -84,7 +87,32 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public String getComments() {
+    public BigDecimal getFuelUseValue() {
+		return fuelUseValue;
+	}
+
+	public void setFuelUseValue(BigDecimal fuelUseValue) {
+		this.fuelUseValue = fuelUseValue;
+	}
+
+	public UnitMeasureCodeDto getFuelUseValueUom() {
+		return fuelUseValueUom;
+	}
+
+	public void setFuelUseValueUom(UnitMeasureCodeDto fuelUseValueUom) {
+		this.fuelUseValueUom = fuelUseValueUom;
+	}
+
+	public CodeLookupDto getFuelUseValueMaterialCode() {
+		return fuelUseValueMaterialCode;
+	}
+
+	public void setFuelUseValueMaterialCode(
+			CodeLookupDto fuelUseValueMaterialCode) {
+		this.fuelUseValueMaterialCode = fuelUseValueMaterialCode;
+	}
+
+	public String getComments() {
         return comments;
     }
 

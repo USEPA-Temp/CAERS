@@ -138,6 +138,15 @@
                         <div class="col-sm-6 col-md-2"><strong>Throughput UoM:</strong></div>
                         <div class="col-sm-6 col-md-2">{{period.calculationParameterUom?.description}}</div>
                     </div>
+                    
+                    <div class="row" *ngIf="period.fuelUseValue">
+                        <div class="col-sm-6 col-md-2"><strong>Fuel Material:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.fuelUseMaterialCode?.description}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Fuel Value:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.fuelUseValue}}</div>
+                        <div class="col-sm-6 col-md-2"><strong>Fuel UoM:</strong></div>
+                        <div class="col-sm-6 col-md-2">{{period.fuelUseUom?.description}}</div>
+                    </div>
 
                     <div class="row">
                         <div class="col-sm-6 col-md-2"><strong>Comments:</strong></div>
