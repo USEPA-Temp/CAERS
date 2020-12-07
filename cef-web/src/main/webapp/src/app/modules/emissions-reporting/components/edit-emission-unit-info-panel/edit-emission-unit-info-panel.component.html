@@ -19,7 +19,7 @@
         <div class="col-sm-3">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="unitStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+                <option *ngFor="let opt of subFacilityOperatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <div class="validation-message" *ngIf="emissionUnitForm.errors?.invalidStatusCodeTS">
                 If the facility site  status is Temporarily Shutdown then each sub-facility component must also be either Permanently Shutdown or Temporarily Shutdown.            
@@ -50,8 +50,8 @@
         <div class="col-sm-3">
             <input type="text" class="form-control" maxlength="4" id="unitStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="emissionUnitForm.get('statusYear')"></app-validation-message>
-            <div class="validation-message" *ngIf="emissionUnitForm.errors?.statusYearRequiredFailed">
-                If Shutdown (temporary or permanent), enter a year greater than the last year of reported emissions.
+            <div class="validation-message" *ngIf="emissionUnitForm.get('statusYear').errors?.statusYearRequiredFailed && (emissionUnitForm.dirty || emissionUnitForm.touched)">
+                Status Year must be entered when creating a new unit or updating the unit's operating status. If shutdown (temporary or permanent), enter a year greater than the last year of reported emissions for this unit.
             </div>
         </div>
     </div>

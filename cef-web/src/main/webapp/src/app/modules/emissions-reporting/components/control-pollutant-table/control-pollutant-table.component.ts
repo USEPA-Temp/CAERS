@@ -7,6 +7,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { ControlPollutantModalComponent } from 'src/app/modules/emissions-reporting/components/control-pollutant-modal/control-pollutant-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-control-pollutant-table',
@@ -19,6 +20,8 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
   @Input() controlId: number;
   @Input() facilitySiteId: number;
   @Input() year: number;
+  faPlus = faPlus;
+  faEdit = faEdit;
 
 
   constructor(private modalService: NgbModal,

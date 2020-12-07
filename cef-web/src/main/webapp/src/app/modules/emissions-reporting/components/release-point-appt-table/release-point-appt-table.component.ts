@@ -11,6 +11,7 @@ import { Process } from 'src/app/shared/models/process';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
+import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-release-point-appt-table',
@@ -25,6 +26,8 @@ export class ReleasePointApptTableComponent extends BaseSortableTable implements
   controlPaths: ControlPath[];
   baseUrl: string;
   totalApptPct = 0;
+  faPlus = faPlus;
+  faEdit = faEdit;
 
   constructor(
     private modalService: NgbModal,

@@ -56,7 +56,7 @@ public class EisXmlServiceImpl {
 
     public ExchangeNetworkDocumentType generateEisDocument(EisHeaderDto eisHeader) {
 
-        SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(eisHeader.getAgencyCode());
+        SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(eisHeader.getProgramSystemCode());
 
         CERSDataType cersData = new CERSDataType();
         cersData.setUserIdentifier(sltConfig.getSltEisUser());

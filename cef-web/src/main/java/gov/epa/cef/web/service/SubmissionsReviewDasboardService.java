@@ -11,26 +11,26 @@ public interface SubmissionsReviewDasboardService {
      * Retrieves all the facilities reports for review 
      * 
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsForCurrentUserAgencyForTheCurrentFiscalYear();
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear();
     
     /**
      * Retrieves all the facilities reports for review by report status
      * 
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndAgencyCode(ReportStatus reportStatus);
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndProgramSystemCode(ReportStatus reportStatus);
     
     /**
      * Retrieves all the facilities reports for review based on reportYear and reportStatus
      * @param reportYear
      * @param reportStatus
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndAgencyCode(Short reportYear, ReportStatus reportStatus);
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndProgramSystemCode(Short reportYear, ReportStatus reportStatus);
     
     /**
      * Retrieves all the facilities reports for review for current reporting year
      * @param reportYear
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndAgencyCode(Short reportYear);
+    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndProgramSystemCode(Short reportYear);
     
     
 }

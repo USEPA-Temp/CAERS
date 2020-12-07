@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -40,14 +41,16 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
   createPeriod = false;
 
-  @ViewChild(EditProcessInfoPanelComponent, { static: false })
+  @ViewChild(EditProcessInfoPanelComponent)
   infoComponent: EditProcessInfoPanelComponent;
 
-  @ViewChild(EditProcessOperatingDetailPanelComponent, { static: false })
+  @ViewChild(EditProcessOperatingDetailPanelComponent)
   operatingDetailsComponent: EditProcessOperatingDetailPanelComponent;
 
-  @ViewChild(EditProcessReportingPeriodPanelComponent, { static: false })
+  @ViewChild(EditProcessReportingPeriodPanelComponent)
   reportingPeriodComponent: EditProcessReportingPeriodPanelComponent;
+
+  operatingStatus = OperatingStatus;
 
   constructor(
     private emissionUnitService: EmissionUnitService,
@@ -223,7 +226,6 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         this.toastr.error('', 'Total Operating Percent must be between 99.5 and 100.5');
       }
     } else {
-
       const operatingDetails = new OperatingDetail();
       const reportingPeriod = new ReportingPeriod();
 

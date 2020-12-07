@@ -1080,9 +1080,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         String result;
         // if the code is a number in excel we need to make sure it's a number here too so it will match
         if (text) {
-            result = String.format(EXCEL_GENERIC_LOOKUP_TEXT, sheetName, rowCount, value, sheetName, rowCount);
+            String query = String.format(EXCEL_GENERIC_LOOKUP_TEXT, sheetName, rowCount, value, sheetName, rowCount);
+            // leave field blank if invalid value
+            result = String.format("IF(ISNA(%s), \"\", %s)", query, query);
         } else {
-            result = String.format(EXCEL_GENERIC_LOOKUP_NUMBER, sheetName, rowCount, value, sheetName, rowCount);
+            String query = String.format(EXCEL_GENERIC_LOOKUP_NUMBER, sheetName, rowCount, value, sheetName, rowCount);
+            // leave field blank if invalid value
+            result = String.format("IF(ISNA(%s), \"\", %s)", query, query);
         }
 //        logger.info(result);
         return result;
@@ -1566,13 +1570,15 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         EmissionsReport emissionsReport = new EmissionsReport();
 
-        emissionsReport.setAgencyCode(bulkEmissionsReport.getAgencyCode());
         emissionsReport.setEisProgramId(bulkEmissionsReport.getEisProgramId());
         emissionsReport.setFrsFacilityId(bulkEmissionsReport.getFrsFacilityId());
         emissionsReport.setYear(bulkEmissionsReport.getYear());
         emissionsReport.setStatus(ReportStatus.valueOf(bulkEmissionsReport.getStatus()));
         emissionsReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
 
+        if (bulkEmissionsReport.getProgramSystemCode() != null) {
+            emissionsReport.setProgramSystemCode(programSystemCodeRepo.findById(bulkEmissionsReport.getProgramSystemCode()).orElse(null));
+        }
         if (bulkEmissionsReport.getValidationStatus() != null) {
             emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));
         }
@@ -1827,7 +1833,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
        return parseJsonNode(true).andThen(result -> {
 
-           result.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
+           result.setProgramSystemCode(metadata.getProgramSystemCode());
            result.setEisProgramId(metadata.getEisProgramId());
            result.setFrsFacilityId(metadata.getFrsFacilityId());
            result.setAltSiteIdentifier(metadata.getStateFacilityId());

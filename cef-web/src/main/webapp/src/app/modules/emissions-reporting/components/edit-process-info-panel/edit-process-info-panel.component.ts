@@ -12,8 +12,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
-
-const statusOperating = 'OP';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -21,7 +20,7 @@ const statusOperating = 'OP';
   styleUrls: ['./edit-process-info-panel.component.scss']
 })
 
-export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterContentChecked{
+export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterContentChecked {
   @Input() process: Process;
   @Input() unitIdentifier: string;
   @Input() emissionsUnit: EmissionUnit;
@@ -44,7 +43,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       Validators.maxLength(20)
     ]],
     statusYear: ['', [
-      Validators.required,
       Validators.min(1900),
       Validators.max(2050),
       Validators.pattern('[0-9]*')
@@ -72,7 +70,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     this.statusYearRequiredCheck()]
   });
 
-  operatingStatusValues: BaseCodeLookup[];
+  operatingSubFacilityStatusValues: BaseCodeLookup[];
   aircraftEngineTypeValue: AircraftEngineTypeCode[];
   aircraftEngineSCC: string[];
 
@@ -85,9 +83,9 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     private fb: FormBuilder) {}
 
   ngOnInit() {
-    this.lookupService.retrieveOperatingStatus()
+    this.lookupService.retrieveSubFacilityOperatingStatus()
     .subscribe(result => {
-      this.operatingStatusValues = result;
+      this.operatingSubFacilityStatusValues = result;
     });
 
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
@@ -151,7 +149,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       if (modalScc) {
         this.processForm.get('sccCode').setValue(modalScc.code);
         this.processForm.get('sccDescription').setValue(modalScc.description);
-
         this.checkAircraftSCC();
       }
     }, () => {
@@ -167,12 +164,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     if (this.aircraftSCCcheck) {
       // get AETC list and set form value
       this.getAircraftEngineCodes();
-    } else if (!this.aircraftSCCcheck && this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
-      this.aircraftEngineTypeValue = null;
-      this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
-      this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
-      this.processHasAETC = true;
-      this.invalidAircraftSCC = true;
     }
   }
 
@@ -192,16 +183,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       this.processForm.controls.aircraftEngineTypeCode.setValidators([Validators.required]);
       this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
     } else if (!this.aircraftSCCcheck) {
+      this.processForm.controls.aircraftEngineTypeCode.setValue(null);
       this.processForm.controls.aircraftEngineTypeCode.setValidators(null);
       this.processForm.controls.aircraftEngineTypeCode.updateValueAndValidity();
-      if (this.process !== undefined && this.process.aircraftEngineTypeCode !== null) {
-        this.processForm.controls.aircraftEngineTypeCode.reset(this.process.aircraftEngineTypeCode);
-        this.invalidAircraftSCC = true;
-        this.processHasAETC = true;
-      } else {
-        this.aircraftEngineTypeValue = null;
-        this.processHasAETC = false;
-      }
+      this.aircraftEngineTypeValue = null;
+      this.processHasAETC = false;
     }
   }
 
@@ -342,17 +328,15 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const statusPermShutdown = 'PS';
-      const statusTempShutdown = 'TS';
       const controlStatus = control.get('operatingStatusCode').value;
 
       if (this.facilityOpCode && controlStatus) {
-        if (this.facilityOpCode.code === statusTempShutdown
-          && controlStatus.code !== statusPermShutdown
-          && controlStatus.code !== statusTempShutdown) {
+        if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === statusPermShutdown
-          && controlStatus.code !== statusPermShutdown) {
+          } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
             return {invalidStatusCodePS: true};
           }
       }
@@ -365,7 +349,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       const statusYear = control.get('statusYear').value;
 
       if (statusYear === null || statusYear === '') {
-          return {statusYearRequiredFailed: true};
+        control.get('statusYear').setErrors({statusYearRequiredFailed: true});
       }
       return null;
     };
@@ -378,7 +362,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       }
 
       if (this.processForm.get('operatingStatusCode').value
-        && this.processForm.get('operatingStatusCode').value.code.includes(statusOperating)) {
+        && this.processForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
         return Validators.required(formControl);
       }
       return null;

@@ -20,7 +20,7 @@
       <td>{{item.percentApportionment}}</td>
       <ng-container *ngIf="!readOnlyMode">
         <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit control path assignment sequence number' + item?.sequenceNumber">
-          <fa-icon style="color:#209c98" [icon]="['fa', 'edit']"></fa-icon>
+          <fa-icon style="color:#209c98" [icon]="faEdit"></fa-icon>
         </a></td>
         <td><a routerLink="." (click)="openDeleteModal(item?.control?.identifier, item.id, item?.controlPathChild?.pathId)"
           [attr.aria-label]="'delete control path assignment sequence number' + item?.sequenceNumber">
@@ -32,7 +32,7 @@
       <ng-container *ngIf="!readOnlyMode">
         <tr>
           <td colspan="4"></td>
-          <td><button style="color:#187773;border:none;background-color: Transparent;padding: 0;" (click)="openCreateModal()" aria-label="add control path assignment"><fa-icon [icon]="['fa', 'plus']"></fa-icon></button></td> 
+          <td><button style="color:#187773;border:none;background-color: Transparent;padding: 0;" (click)="openCreateModal()" aria-label="add control path assignment"><fa-icon [icon]="faPlus"></fa-icon></button></td> 
         </tr>
       </ng-container> 
     </tbody>

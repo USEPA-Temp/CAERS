@@ -19,12 +19,21 @@
           <tr [class.striped]="!(i%2)">
             <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1">
               {{item.unitIdentifier}}
+              <br>
               <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.unitDescription"></fa-icon>
+              <span *ngIf="item.unitStatus.code === operatingStatus.TEMP_SHUTDOWN">
+                <fa-icon class="mt-2 ml-1" [icon]="['fas', 'power-off']" 
+                    title="This Emissions Unit is Temporarily Shutdown. Each sub-facility component must also be either Temporarily Shutdown or Permanently Shutdown."></fa-icon>
+              </span>
+              <span *ngIf="item.unitStatus.code === operatingStatus.PERM_SHUTDOWN">
+                <fa-icon class="mt-2 ml-1" [icon]="['fas', 'power-off']" title="This Emissions Unit is Permanently Shutdown. Each sub-facility component must also be Permanently Shutdown."></fa-icon>
+              </span>
             </td>
             <td class="align-middle" [attr.rowSpan]="item.emissions.length + 1">
               {{item.emissionsProcessIdentifier}}
+              <br>
               <fa-icon class="mt-2 ml-1" [icon]="['fas', 'question-circle']" [title]="item.emissionsProcessDescription"></fa-icon>
-              <span *ngIf="item.operatingStatusCode.code === 'TS'">
+              <span *ngIf="item.operatingStatusCode.code === operatingStatus.TEMP_SHUTDOWN">
                 <fa-icon class="mt-2 ml-1" [icon]="['fas', 'power-off']" title="This process is Temporarily Shutdown and cannot be edited."></fa-icon>
               </span>
             </td>

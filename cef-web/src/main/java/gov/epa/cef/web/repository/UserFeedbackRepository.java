@@ -27,12 +27,12 @@ public interface UserFeedbackRepository extends CrudRepository<UserFeedback, Lon
     List<UserFeedback> findAllByEmissionsReportId(@Param("id") Long id);
 	
     /**
-     * Retrieve a List of User Feedback for a year and agency code
+     * Retrieve a List of User Feedback for a year and program system code
      * @param year
-     * @param agencyCode
+     * @param programSystemCode
      * @return userFeedback
      */
-    List<UserFeedback> findByYearAndAgencyCode(Short year, String agencyCode, Sort sort);
+    List<UserFeedback> findByYearAndProgramSystemCodeCode(Short year, String programSystemCode, Sort sort);
     
     /**
      * Retrieve a List of User Feedback for a year and all agencies
@@ -41,8 +41,8 @@ public interface UserFeedbackRepository extends CrudRepository<UserFeedback, Lon
      */
     List<UserFeedback> findAllByYear(Short year, Sort sort);
     
-    @Query("select distinct agencyCode FROM UserFeedback")
-    List<String> findDistinctAgencies(Sort sort);
+    @Query("select distinct programSystemCode.code FROM UserFeedback")
+    List<String> findDistinctProgramSystems(Sort sort);
     
     @Query("select distinct year FROM UserFeedback")
     List<Short> findDistinctYears(Sort sort);
@@ -51,8 +51,8 @@ public interface UserFeedbackRepository extends CrudRepository<UserFeedback, Lon
     		+ "ROUND(AVG(dataEntryBulkUpload),0) as dataEntryBulkUploadAvg, ROUND(AVG(calculationScreens),0) as calculationScreensAvg, "
     		+ "ROUND(AVG(controlsAndControlPathAssignments),0) as controlsAndControlPathAssignAvg, "
     		+ "ROUND(AVG(qualityAssuranceChecks),0) as qualityAssuranceChecksAvg, ROUND(AVG(overallReportingTime),0) as overallReportingTimeAvg "
-    		+ "FROM UserFeedback WHERE year = :year AND agencyCode = :agencyCode")
-    IUserFeedbackStatsDto findAvgByYearAndAgency(@Param("year") Short year, @Param("agencyCode") String agency);
+    		+ "FROM UserFeedback WHERE year = :year AND programSystemCode.code = :programSystemCode")
+    IUserFeedbackStatsDto findAvgByYearAndProgramSystem(@Param("year") Short year, @Param("programSystemCode") String programSystemCode);
     
     @Query("select ROUND(AVG(intuitiveRating),0) as intuitiveRateAvg, ROUND(AVG(dataEntryScreens),0) as dataEntryScreensAvg, "
     		+ "ROUND(AVG(dataEntryBulkUpload),0) as dataEntryBulkUploadAvg, ROUND(AVG(calculationScreens),0) as calculationScreensAvg, "

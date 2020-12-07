@@ -12,7 +12,7 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     private String frsFacilityId;
     private String eisProgramId;
     private String altSiteIdentifier;
-    private String agencyCode;
+    private String programSystemCode;
     private Short year;
     private String status;
     private String validationStatus;
@@ -61,11 +61,11 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
         this.altSiteIdentifier = altSiteIdentifier;
     }
 
-    public String getAgencyCode() {
-        return agencyCode;
+    public String getProgramSystemCode() {
+        return programSystemCode;
     }
-    public void setAgencyCode(String agencyCode) {
-        this.agencyCode = agencyCode;
+    public void setProgramSystemCode(String programSystemCode) {
+        this.programSystemCode = programSystemCode;
     }
 
     public Short getYear() {

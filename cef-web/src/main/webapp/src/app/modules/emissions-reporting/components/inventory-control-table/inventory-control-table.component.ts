@@ -10,6 +10,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { ControlService } from 'src/app/core/services/control.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-inventory-control-table',
@@ -19,6 +20,7 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
 export class InventoryControlTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: Control[];
   baseUrl: string;
+  faPlus = faPlus;
 
   readOnlyMode = true;
 

@@ -20,7 +20,7 @@
         <div class="col-sm-3">
             <select type="text" class="form-control" id="controlStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+                <option *ngFor="let opt of subFacilityOperatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="controlDeviceForm.get('operatingStatusCode')"></app-validation-message>
             <div class="validation-message" *ngIf="controlDeviceForm.errors?.invalidStatusCodeTS">
@@ -62,7 +62,7 @@
             <label for="percentControlInput" class="ml-1 col-form-label"><strong>Percent Control Effectiveness:</strong></label>
         </div>       
         <div class="col-sm-3">
-            <input type="text" class="form-control" maxlength="5" id="percentControlInput" formControlName="percentControl">
+            <input type="text" class="form-control" maxlength="6" id="percentControlInput" formControlName="percentControl">
             <app-validation-message [control]="controlDeviceForm.get('percentControl')"></app-validation-message>
         </div>
     </div>

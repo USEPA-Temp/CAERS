@@ -21,7 +21,7 @@ export class ControlPathDetailsComponent implements OnInit {
   readOnlyMode = true;
   facilitySite: FacilitySite;
 
-  @ViewChild(EditControlPathInfoPanelComponent, { static: false })
+  @ViewChild(EditControlPathInfoPanelComponent)
   private controlPathComponent: EditControlPathInfoPanelComponent;
 
   constructor(private controlPathService: ControlPathService,

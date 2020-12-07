@@ -8,6 +8,7 @@ import { BulkEntryEmissionHolder } from 'src/app/shared/models/bulk-entry-emissi
 import { Emission } from 'src/app/shared/models/emission';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FormUtilsService } from 'src/app/core/services/form-utils.service';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-bulk-entry-emissions-table',
@@ -22,6 +23,8 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
   facilitySite: FacilitySite;
 
   emissionForm = this.fb.group({});
+
+  operatingStatus = OperatingStatus;
 
   constructor(
       private emissionService: EmissionService,
@@ -62,7 +65,8 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
     this.tableData.forEach(rp => {
       rp.emissions.forEach(e => {
         if ((e.totalManualEntry || e.emissionsCalcMethodCode.totalDirectEntry)
-            && !(rp.operatingStatusCode.code === 'TS' || rp.operatingStatusCode.code === 'PS')) {
+            && !(rp.operatingStatusCode.code === OperatingStatus.TEMP_SHUTDOWN
+              || rp.operatingStatusCode.code === OperatingStatus.PERM_SHUTDOWN)) {
           if (!this.emissionForm.contains('' + e.id)) {
             const fc = new FormControl({
                 value: e.totalEmissions,

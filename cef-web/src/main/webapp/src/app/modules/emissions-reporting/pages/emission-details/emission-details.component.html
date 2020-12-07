@@ -14,7 +14,7 @@
                 <div class="col-sm-6 col-md-2"><strong>Process ID:</strong></div>
                 <div class="col-sm-6 col-md-2">{{process.emissionsProcessIdentifier}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Reporting Period:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode.shortName}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.reportingPeriodTypeCode?.shortName}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Operating Status:</strong></div>
                 <div class="col-sm-6 col-md-2">{{process.operatingStatusCode.description}}</div>
             </div>
@@ -23,16 +23,16 @@
           <div *ngIf="reportingPeriod">
             <div class="row pb-2">
                 <div class="col-sm-6 col-md-2"><strong>Throughput Material:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationMaterialCode.description}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationMaterialCode?.description}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Throughput Value:</strong></div>
                 <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterValue}}</div>
                 <div class="col-sm-6 col-md-2"><strong>Throughput UoM:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom.description}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterUom?.description}}</div>
             </div>
-                
+
             <div class="row">
                 <div class="col-sm-6 col-md-2"><strong>Throughput Parameter:</strong></div>
-                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode.description}}</div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode?.description}}</div>
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="row pb-2">
-                        
+
                         <div class="col-sm-4 col-lg-2"><strong>Calculation Method:</strong></div>
                         <div class="col-sm-8 col-lg-10">{{emission.emissionsCalcMethodCode.description}}</div>
                     </div>
@@ -69,7 +69,7 @@
                             <div class="col-sm-4 col-lg-2"><strong>Emission Factor:</strong></div>
                             <div class="col-sm-8 col-lg-4" *ngIf="!emission.formulaIndicator">{{emission.emissionsFactor}}</div>
                             <div class="col-sm-8 col-lg-4" *ngIf="emission.formulaIndicator">{{emission.emissionsFactorFormula}}</div>
-                            <div class="col-sm-4 col-lg-2"><strong>Emissions Factor Description:</strong></div>
+                            <div class="col-sm-4 col-lg-2"><strong>Emission Factor Description:</strong></div>
                             <div class="col-sm-8 col-lg-4">{{emission.emissionsFactorText}}</div>
                         </div>
 
@@ -104,7 +104,7 @@
                         <div class="col-sm-6"></div>
                         <div class="col" style="float: right">
                             <input type="checkbox" checked="checked " disabled>
-                            <strong> I prefer to calculate the total emissions of this pollutant</strong>
+                            <strong> I prefer to calculate the total emissions of this pollutant.</strong>
                         </div>
                     </div>
 
@@ -195,10 +195,10 @@
                         </div>
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Explanation for emission factor." [icon]="['fas', 'question-circle']"></fa-icon>
-                            <label for="emissionsFactorTextInput" style="font-size:95%" class="ml-1 col-form-label"><strong>Emissions Factor Description:</strong></label>
+                            <label for="emissionsFactorTextInput" style="font-size:95%" class="ml-1 col-form-label"><strong>Emission Factor Description:</strong></label>
                         </div>
                         <div class="col-sm-3">
-                            <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText"></textarea>
+                            <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText" [readonly]="epaEmissionFactor"></textarea>
                             <app-validation-message [control]="emissionForm.controls.emissionsFactorText"></app-validation-message>
                         </div>
                     </div>
@@ -235,8 +235,8 @@
                                 </select>
                                 <app-validation-message [control]="emissionForm.controls.emissionsNumeratorUom"></app-validation-message>
                                 <div class="validation-message" *ngIf="efNumeratorMismatch">
-                                    The Emission Factor Numerator UoM ({{failedNumDesc}}) 
-                                    cannot be converted into the Total Emissions UoM ({{failedTotalDesc}}) - 
+                                    The Emission Factor Numerator UoM ({{failedNumDesc}})
+                                    cannot be converted into the Total Emissions UoM ({{failedTotalDesc}}) -
                                     Calculation cannot be completed.
                                 </div>
                             </div>
@@ -251,8 +251,8 @@
                                 </select>
                                 <app-validation-message [control]="emissionForm.controls.emissionsDenominatorUom"></app-validation-message>
                                 <div class="validation-message" *ngIf="efDenominatorMismatch">
-                                    The Reporting Period Throughput UoM ({{failedRpCalcDesc}}) 
-                                    cannot be converted into the Emission Factor Denominator UoM ({{failedDenomDesc}}) - 
+                                    The Reporting Period Throughput UoM ({{failedRpCalcDesc}})
+                                    cannot be converted into the Emission Factor Denominator UoM ({{failedDenomDesc}}) -
                                     Calculation cannot be completed.
                                 </div>
                             </div>
@@ -285,8 +285,14 @@
                                 <div *ngIf="emissionForm.getError('emissionsCalculated')">
                                     The Total Emissions must be recalculated.
                                 </div>
+                                <div *ngIf="!calcParamValue || !calcParamUom">
+                                    Cannot calculate Total Emissions.
+                                </div>
                                 <div *ngIf="!calcParamValue">
-                                    Cannot calculate Total Emissions. Annual Throughput for Reporting Period must be greater than or equal to zero.
+                                    Annual Throughput for Reporting Period must be greater than or equal to zero.
+                                </div>
+                                <div *ngIf="!calcParamUom">
+                                    Throughput UoM for Reporting Period is required.
                                 </div>
                                 <div *ngIf="emissionForm.getError('significantFiguresInvalid')">
                                     Please enter a maximum of 6 significant figures.
@@ -304,8 +310,8 @@
                             </select>
                             <app-validation-message [control]="emissionForm.controls.emissionsUomCode"></app-validation-message>
                             <div class="validation-message" *ngIf="efNumeratorMismatch">
-                                The Emission Factor Numerator UoM ({{failedNumDesc}}) 
-                                cannot be converted into the Total Emissions UoM ({{failedTotalDesc}}) - 
+                                The Emission Factor Numerator UoM ({{failedNumDesc}})
+                                cannot be converted into the Total Emissions UoM ({{failedTotalDesc}}) -
                                 Calculation cannot be completed.
                             </div>
                             <div class="validation-message" *ngIf="emissionForm.getError('emissionsUomCodeCurie')">
@@ -318,7 +324,7 @@
                         <div class="col">
                             <div class="float-right form-group form-check" *ngIf="!getCalcMethodCodeValue()?.totalDirectEntry">
                                 <input type="checkbox" class="form-check-input" id="manualEntryCb" formControlName="totalManualEntry" >
-                                <label for="manualEntryCb" class="form-check-label"><strong>I prefer to calculate the total emissions of this pollutant</strong></label>
+                                <label for="manualEntryCb" class="form-check-label"><strong>I prefer to calculate the total emissions of this pollutant.</strong></label>
                             </div>
                         </div>
                     </div>
@@ -330,7 +336,7 @@
                         </div>
                         <div class="col-sm-9">
                             <textarea rows="3" class="form-control" maxlength="4000" id="emissionCalcCommentInput" formControlName="calculationComment"></textarea>
-                            <div class="validation-message" *ngIf="emissionForm.get('calculationComment').errors 
+                            <div class="validation-message" *ngIf="emissionForm.get('calculationComment').errors
                                     && (emissionForm.get('calculationComment').dirty || emissionForm.get('calculationComment').touched)">
                                 <div *ngIf="emissionForm.get('calculationComment').getError('required')">
                                     Description of Calculation field is required when using an emission factor and choosing to perform the calculations yourself.
@@ -351,7 +357,7 @@
                             <textarea rows="3" class="form-control" maxlength="400" id="emissionCommentsInput" formControlName="comments"></textarea>
                             <div class="validation-message" *ngIf="emissionForm.get('comments').errors && (emissionForm.get('comments').dirty || emissionForm.get('comments').touched)">
                                 <div *ngIf="emissionForm.get('comments').getError('required')">
-                                    You must enter an explanation of the total emissions calculation when the 
+                                    You must enter an explanation of the total emissions calculation when the
                                     {{getCalcMethodCodeValue()?.description}} calculation method is selected.
                                 </div>
 

@@ -26,7 +26,7 @@ export class FacilityInformationComponent implements OnInit {
 
   createUrl: string;
 
-  @ViewChild(EditFacilitySiteInfoPanelComponent, { static: false })
+  @ViewChild(EditFacilitySiteInfoPanelComponent)
   private facilitySiteComponent: EditFacilitySiteInfoPanelComponent;
 
   constructor(

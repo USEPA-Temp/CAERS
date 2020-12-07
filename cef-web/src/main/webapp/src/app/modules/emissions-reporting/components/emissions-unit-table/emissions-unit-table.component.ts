@@ -10,6 +10,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-emissions-unit-table',
@@ -21,6 +22,7 @@ export class EmissionsUnitTableComponent extends BaseSortableTable implements On
   @Input() createUrl = '.';
   readOnlyMode = true;
   baseUrl: string;
+  faPlus = faPlus;
 
   constructor(private modalService: NgbModal,
               private emissionUnitService: EmissionUnitService,

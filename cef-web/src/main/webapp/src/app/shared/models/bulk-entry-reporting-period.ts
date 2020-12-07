@@ -6,6 +6,7 @@ export class BulkEntryReportingPeriod {
   emissionsUnitId: number;
   unitIdentifier: string;
   unitDescription: string;
+  unitStatus: BaseCodeLookup;
 
   emissionsProcessId: number;
   emissionsProcessIdentifier: string;

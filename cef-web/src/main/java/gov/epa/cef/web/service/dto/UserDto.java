@@ -12,8 +12,6 @@ public class UserDto implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private String agencyCode;
-
     private String cdxUserId;
 
     private String email;
@@ -21,6 +19,8 @@ public class UserDto implements Serializable {
     private String firstName;
 
     private String lastName;
+
+    private String programSystemCode;
 
     private AppRole.RoleType role = AppRole.RoleType.UNKNOWN;
 
@@ -91,14 +91,14 @@ public class UserDto implements Serializable {
         this.userRoleId = userRoleId;
     }
 
-    public String getAgencyCode() {
+    public String getProgramSystemCode() {
 
-        return agencyCode;
+        return programSystemCode;
     }
 
-    public void setAgencyCode(String agencyCode) {
+    public void setProgramSystemCode(String programSystemCode) {
 
-        this.agencyCode = agencyCode;
+        this.programSystemCode = programSystemCode;
     }
 
     public UserDto withCdxUserId(String cdxUserId) {
@@ -143,9 +143,9 @@ public class UserDto implements Serializable {
         return this;
     }
 
-    public UserDto withAgencyCode(String agencyCode) {
+    public UserDto withProgramSystemCode(String programSystemCode) {
 
-        setAgencyCode(agencyCode);
+        setProgramSystemCode(programSystemCode);
         return this;
     }
 
@@ -159,7 +159,7 @@ public class UserDto implements Serializable {
             .add("lastName", lastName)
             .add("role", role)
             .add("userRoleId", userRoleId)
-            .add("agencyCode", agencyCode)
+            .add("programSystemCode", programSystemCode)
             .toString();
     }
 }

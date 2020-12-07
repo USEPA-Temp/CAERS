@@ -15,6 +15,7 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FileDownloadService } from 'src/app/core/services/file-download.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -26,7 +27,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     facilitySite: FacilitySite;
     reports: EmissionsReport[];
     emissionsReport: EmissionsReport;
-    operatingStatusValues: BaseCodeLookup[];
+    operatingFacilityStatusValues: BaseCodeLookup[];
     excelExportEnabled = false;
 
     @ViewChild('FailedToCreateMessageBox', {static: true})
@@ -66,9 +67,9 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             this.excelExportEnabled = result;
         });
 
-        this.lookupService.retrieveOperatingStatus()
+        this.lookupService.retrieveFacilityOperatingStatus()
         .subscribe(result => {
-            this.operatingStatusValues = result;
+            this.operatingFacilityStatusValues = result;
         });
 
     }
@@ -103,11 +104,15 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                         // no previous report
 
                         this.copyFacilitySiteFromCdxModel();
-                        this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
-                        .subscribe(reportResp => {
-                            modalWindow.dismiss();
-                            this.reportCompleted(reportResp.body);
-                        });
+                        this.lookupService.retrieveProgramSystemCodeByDescription(this.facility.responsibleAgency)
+                        .subscribe(result => {
+                            this.facilitySite.programSystemCode = result;
+                            this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
+                            .subscribe(reportResp => {
+                                modalWindow.dismiss();
+                                this.reportCompleted(reportResp.body);
+                            });
+                        })
                     } else if (reportResp.status === 200) {
                         // 200 OK
                         // previous report was copied
@@ -132,8 +137,8 @@ export class EmissionsReportingDashboardComponent implements OnInit {
               Object.assign(this.facilitySite, this.facility);
               this.facilitySite.emissionsReport = this.emissionsReport;
               this.facilitySite.name = this.facility.facilityName;
-              this.operatingStatusValues.forEach(opStatus => {
-                  if (opStatus.code === 'OP') {
+              this.operatingFacilityStatusValues.forEach(opStatus => {
+                  if (opStatus.code === OperatingStatus.OPERATING) {
                       this.facilitySite.operatingStatusCode = opStatus;
                   }
               });

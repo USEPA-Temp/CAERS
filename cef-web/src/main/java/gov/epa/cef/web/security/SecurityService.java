@@ -3,8 +3,6 @@ package gov.epa.cef.web.security;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.config.CacheName;
-import gov.epa.cef.web.config.CefConfig;
-import gov.epa.cef.web.config.slt.SLTAgencyCode;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
@@ -115,9 +113,9 @@ public class SecurityService {
         return getCurrentApplicationUser().getUsername();
     }
 
-    public SLTAgencyCode getCurrentAgencyCode() {
+    public String getCurrentProgramSystemCode() {
 
-        return SLTAgencyCode.valueOf(getCurrentApplicationUser().getClientId());
+        return getCurrentApplicationUser().getClientId();
     }
 
     /**

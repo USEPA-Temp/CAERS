@@ -109,7 +109,7 @@ public class EisApi {
 
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
-        eisHeader.withAgencyCode(appUser.getClientId())
+        eisHeader.withProgramSystemCode(appUser.getClientId())
             .withAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()))
             .withOrganizationName(appUser.getOrganization());
 
@@ -154,7 +154,7 @@ public class EisApi {
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
         EisDataCriteria criteria = new EisDataCriteria()
-            .withAgencyCode(appUser.getClientId())
+            .withProgramSystemCode(appUser.getClientId())
             .withReportingYear(year)
             .withSubmissionStatus(status);
 
@@ -286,7 +286,7 @@ public class EisApi {
         ApplicationUser appUser = this.securityService.getCurrentApplicationUser();
 
         EisHeaderDto eisHeader = new EisHeaderDto()
-            .withAgencyCode(appUser.getClientId())
+            .withProgramSystemCode(appUser.getClientId())
             .withAuthorName(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()))
             .withOrganizationName(appUser.getOrganization())
             .withSubmissionStatus(EisSubmissionStatus.ProdFacility)

@@ -22,7 +22,7 @@
         <div class="col-sm-4">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="processStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
-                <option *ngFor="let opt of operatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
+                <option *ngFor="let opt of operatingSubFacilityStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="processForm.get('operatingStatusCode')"></app-validation-message>
             <div class="validation-message" *ngIf="processForm.errors?.invalidStatusCodeTS">
@@ -57,8 +57,8 @@
         <div class="col-sm-4">
             <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="processForm.get('statusYear')"></app-validation-message>
-            <div class="validation-message" *ngIf="processForm.errors?.statusYearRequiredFailed">
-                If Shutdown (temporary or permanent), enter a year greater than the last year of reported emissions.
+            <div class="validation-message" *ngIf="processForm.get('statusYear').errors?.statusYearRequiredFailed && (processForm.dirty || processForm.touched)">                
+                Status Year must be entered when creating a new process or updating the process's operating status. If shutdown (temporary or permanent), enter a year greater than the last year of reported emissions for this process.
             </div>
         </div>
     </div>
@@ -69,14 +69,14 @@
             <label for="processSccInput" class="ml-1 col-form-label"><strong>SCC:</strong></label>
         </div>
         <div class="col-sm-4">
-            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()">
+            <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()" readonly>
             <div class="validation-message" *ngIf="processForm.get('sccCode').errors?.invalidAircraftSCCCombination">
                 Combination of SCC and Aircraft Engine Type Code must be unique within a facility.
             </div>
             <app-validation-message [control]="processForm.get('sccCode')"></app-validation-message>
         </div>
         <div class="col-sm-4">
-            <button type="button" class="btn btn-success mr-2" (click)="openSccSearchModal()">Search for SCC Code</button>
+            <button type="button" class="btn btn-success mr-2" (click)="openSccSearchModal()">Search for Source Classification Code</button>
         </div>
     </div>
     <div class="row">
@@ -99,7 +99,7 @@
             <label for="sccDescriptionInput" class="ml-1 col-form-label"><strong>SCC Description:</strong></label>
         </div>
         <div class="col-sm-10">
-            <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription"></textarea>
+            <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription" readonly></textarea>
             <app-validation-message [control]="processForm.get('sccDescription')"></app-validation-message>
         </div>
     </div>

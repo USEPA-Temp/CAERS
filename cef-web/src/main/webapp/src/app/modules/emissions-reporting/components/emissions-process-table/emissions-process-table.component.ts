@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-emissions-process-table',
@@ -18,7 +19,8 @@ export class EmissionsProcessTableComponent extends BaseSortableTable implements
   @Input() createUrl = '.';
   @Input() parentComponentType: string;
   @Input() readOnlyMode: boolean;
-  baseUrl: string;
+    baseUrl: string;
+    faPlus = faPlus;
 
     constructor(private route: ActivatedRoute,
                 private processService: EmissionsProcessService,

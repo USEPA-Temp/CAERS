@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-control-path-assignment-table',
@@ -22,6 +23,8 @@ export class ControlPathAssignmentTableComponent extends BaseSortableTable imple
   @Input() facilitySiteId: number;
   baseUrlForControlDevice: string;
   baseUrlForControlPath: string;
+  faPlus = faPlus;
+  faEdit = faEdit;
 
   constructor(private modalService: NgbModal,
               private controlPathService: ControlPathService,

@@ -4,28 +4,28 @@ TRUNCATE TABLE EMISSIONS_REPORT CASCADE;
 TRUNCATE TABLE CONTROL_PATH CASCADE;
 
 --EMISSION REPORTS
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999997', '110015680798', '9758611', 'GA', '2018', 'IN_PROGRESS', 'PASSED_WARNINGS', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999996', '110015680798', '9758611', 'GA', '2014', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999995', '110015680798', '9758611', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999994', '110015680798', '9758611', 'GA', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999993', '110015680798', '9758611', 'GA', '2015', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999998', '110024286002', '2774511', 'GA', '2013', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
- INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999999', '110024286002', '2774511', 'GA', '2018', 'SUBMITTED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999910', '110024286002', '2774511', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999911', '110024286002', '2774511', 'GA', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999912', '110020517412', '3721011', 'GA', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, agency_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999913', '110020517412', '3721011', 'GA', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999997', '110015680798', '9758611', 'GADNR', '2018', 'IN_PROGRESS', 'PASSED_WARNINGS', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999996', '110015680798', '9758611', 'GADNR', '2014', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999995', '110015680798', '9758611', 'GADNR', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999994', '110015680798', '9758611', 'GADNR', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999993', '110015680798', '9758611', 'GADNR', '2015', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999998', '110024286002', '2774511', 'GADNR', '2013', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999999', '110024286002', '2774511', 'GADNR', '2018', 'SUBMITTED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999910', '110024286002', '2774511', 'GADNR', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999911', '110024286002', '2774511', 'GADNR', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999912', '110020517412', '3721011', 'GADNR', '2017', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999913', '110020517412', '3721011', 'GADNR', '2016', 'APPROVED', 'PASSED', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
 INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,

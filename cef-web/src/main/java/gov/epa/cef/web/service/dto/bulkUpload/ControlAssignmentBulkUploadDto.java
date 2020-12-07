@@ -20,8 +20,8 @@ public class ControlAssignmentBulkUploadDto extends BaseWorksheetDto implements 
     private Long id;
 
     @NotBlank(message = "Percent Apportionment is required.")
-    @Pattern(regexp = PercentPattern,
-        message = "Percent Apportionment is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,2})?$",
+        message = "Percent Apportionment is not in expected numeric format: '{3}.{2}' digits; found '${validatedValue}'.")
     private String percentApportionment;
 
     @NotBlank(message = "Sequence number is required.")

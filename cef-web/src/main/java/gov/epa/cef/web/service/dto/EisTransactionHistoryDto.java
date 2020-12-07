@@ -8,7 +8,7 @@ public class EisTransactionHistoryDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String agencyCode;
+    private CodeLookupDto programSystemCode;
     private Date createdDate;
     private EisSubmissionStatus eisSubmissionStatus;
     private String transactionId;
@@ -23,12 +23,12 @@ public class EisTransactionHistoryDto implements Serializable {
         this.id = id;
     }
 
-    public String getAgencyCode() {
-        return agencyCode;
+    public CodeLookupDto getProgramSystemCode() {
+        return programSystemCode;
     }
 
-    public void setAgencyCode(String agencyCode) {
-        this.agencyCode = agencyCode;
+    public void setProgramSystemCode(CodeLookupDto programSystemCode) {
+        this.programSystemCode = programSystemCode;
     }
 
     public Date getCreatedDate() {

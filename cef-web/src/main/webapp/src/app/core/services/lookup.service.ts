@@ -38,8 +38,13 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
-  retrieveOperatingStatus(): Observable<BaseCodeLookup[]> {
-    const url = `${this.baseUrl}/operatingStatus`;
+  retrieveSubFacilityOperatingStatus(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/subFacilityOperatingStatus`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveFacilityOperatingStatus(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/facilityOperatingStatus`;
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
@@ -116,6 +121,11 @@ export class LookupService {
   retrieveProgramSystemTypeCode(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/programSystemType`;
     return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveProgramSystemCodeByDescription(description: string): Observable<BaseCodeLookup> {
+    const url = `${this.baseUrl}/programSystem/description/${description}`;
+    return this.http.get<BaseCodeLookup>(url);
   }
 
   retrieveControlMeasureCodes(): Observable<BaseCodeLookup[]> {

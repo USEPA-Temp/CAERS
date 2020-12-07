@@ -46,6 +46,7 @@ export class EmissionDetailsComponent implements OnInit {
   epaEmissionFactor = false;
   efNumeratorMismatch = false;
   calcParamValue = true;
+  calcParamUom = true;
   failedNumDesc: string;
   failedTotalDesc: string;
   efDenominatorMismatch = false;
@@ -217,6 +218,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.epaEmissionFactor = true;
         if (!sameCalcMethod || forceReset) {
           this.emissionForm.get('emissionsFactor').reset();
+          this.emissionForm.get('emissionsFactorText').reset();
           this.emissionForm.get('emissionsFactorFormula').reset();
           this.emissionForm.get('formulaIndicator').reset();
           this.emissionForm.get('formulaVariables').reset();
@@ -276,7 +278,9 @@ export class EmissionDetailsComponent implements OnInit {
     // Reconfigure form after calculation method changes
     this.emissionForm.get('emissionsCalcMethodCode').valueChanges
     .subscribe(value => {
-      this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status, false);
+        this.efNumeratorMismatch = false;
+        this.efDenominatorMismatch = false;
+        this.onMethodChange(value, this.emissionForm.get('emissionsCalcMethodCode').status, false);
     });
 
     // Make user calculate total emissions after changes
@@ -314,15 +318,23 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.canCalculate()) {
       this.emissionForm.markAllAsTouched();
     } else {
-      if (!(this.reportingPeriod.calculationParameterUom && this.emissionForm.get('emissionsDenominatorUom').value
-            && this.reportingPeriod.calculationParameterUom.unitType === this.emissionForm.get('emissionsDenominatorUom').value.unitType)) {
-        this.failedRpCalcDesc = this.reportingPeriod.calculationParameterUom.description;
-        this.failedDenomDesc = this.emissionForm.get('emissionsDenominatorUom').value.description;
-        this.efDenominatorMismatch = true;
+
+      if (!this.reportingPeriod.calculationParameterUom) {
+        this.calcParamUom = false;
       } else {
-        this.efDenominatorMismatch = false;
-        this.failedRpCalcDesc = null;
-        this.failedDenomDesc = null;
+        this.calcParamUom = true;
+      }
+
+      if (this.reportingPeriod.calculationParameterUom && this.emissionForm.get('emissionsDenominatorUom').value) {
+        if (this.reportingPeriod.calculationParameterUom.unitType !== this.emissionForm.get('emissionsDenominatorUom').value.unitType) {
+          this.failedRpCalcDesc = this.reportingPeriod.calculationParameterUom.description;
+          this.failedDenomDesc = this.emissionForm.get('emissionsDenominatorUom').value.description;
+          this.efDenominatorMismatch = true;
+        } else {
+          this.efDenominatorMismatch = false;
+          this.failedRpCalcDesc = null;
+          this.failedDenomDesc = null;
+        }
       }
 
       if (!(this.emissionForm.get('emissionsUomCode').value && this.emissionForm.get('emissionsNumeratorUom').value
@@ -336,13 +348,13 @@ export class EmissionDetailsComponent implements OnInit {
         this.failedTotalDesc = null;
       }
 
-      if (this.reportingPeriod.calculationParameterValue < 0) {
+      if (this.reportingPeriod.calculationParameterValue < 0 || !this.reportingPeriod.calculationParameterValue) {
         this.calcParamValue = false;
       } else {
         this.calcParamValue = true;
       }
 
-      if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.reportingPeriod.calculationParameterValue >= 0) {
+      if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.calcParamValue) {
         const calcEmission = new Emission();
         Object.assign(calcEmission, this.emissionForm.value);
 
@@ -561,6 +573,8 @@ export class EmissionDetailsComponent implements OnInit {
 
     this.emissionForm.get('totalManualEntry').valueChanges
     .subscribe(value => {
+        this.efDenominatorMismatch = false;
+        this.efNumeratorMismatch = false;
       if (this.emissionForm.enabled) {
         this.emissionForm.get('emissionsFactorText').setValidators(null);
         this.emissionForm.controls.emissionsFactorText.updateValueAndValidity();

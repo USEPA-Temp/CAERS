@@ -21,6 +21,7 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
@@ -107,17 +108,17 @@ public class EmissionsReportValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void nullAgencyCodeTest() {
+    public void nullProgramSystemCodeTest() {
 
         CefValidatorContext cefContext = createContext();
         EmissionsReport testData = createBaseReport();
-        testData.setAgencyCode(null);
+        testData.setProgramSystemCode(null);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.REPORT_AGENCY_CODE.value()) && errorMap.get(ValidationField.REPORT_AGENCY_CODE.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.REPORT_PROGRAM_SYSTEM_CODE.value()) && errorMap.get(ValidationField.REPORT_PROGRAM_SYSTEM_CODE.value()).size() == 1);
     }
 
     @Test
@@ -165,9 +166,12 @@ public class EmissionsReportValidatorTest extends BaseValidatorTest {
 
     private EmissionsReport createBaseReport() {
 
+        ProgramSystemCode psc = new ProgramSystemCode();
+        psc.setCode("GADNR");
+
         EmissionsReport result = new EmissionsReport();
         result.setYear(Integer.valueOf(Calendar.getInstance().get(Calendar.YEAR) - 1).shortValue());
-        result.setAgencyCode("GA");
+        result.setProgramSystemCode(psc);
         result.setFrsFacilityId("1");
         result.setEisProgramId("1");
         result.setId(1L);

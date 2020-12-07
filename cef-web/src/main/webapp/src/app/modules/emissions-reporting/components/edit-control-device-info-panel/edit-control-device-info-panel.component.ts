@@ -32,7 +32,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     percentControl: ['', [
       Validators.max(100.0),
       Validators.min(1),
-      Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
+      Validators.pattern('^[0-9]{1,3}([\.][0-9]{1,3})?$')
     ]],
     operatingStatusCode: [null, Validators.required],
     controlMeasureCode: [null, [Validators.required]],
@@ -46,7 +46,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     this.facilitySiteStatusCheck()
   ]});
 
-  operatingStatusValues: BaseCodeLookup[];
+  subFacilityOperatingStatusValues: BaseCodeLookup[];
   controlMeasureCode: InventoryYearCodeLookup[];
 
   constructor(private fb: FormBuilder,
@@ -58,9 +58,9 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
-    this.lookupService.retrieveOperatingStatus()
+    this.lookupService.retrieveSubFacilityOperatingStatus()
       .subscribe(result => {
-        this.operatingStatusValues = result;
+        this.subFacilityOperatingStatusValues = result;
       });
 
     this.controlDeviceForm.get('controlMeasureCode').setValidators([Validators.required, legacyItemValidator(this.year, 'Control Measure Code', 'description')]);

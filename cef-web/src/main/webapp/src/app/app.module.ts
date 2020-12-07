@@ -16,9 +16,8 @@ import { FacilityListItemComponent } from 'src/app/modules/dashboards/components
 import { BreadcrumbNavComponent } from 'src/app/shared/components/breadcrumb-nav/breadcrumb-nav.component';
 import { SubmissionReviewDashboardComponent } from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
 import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/components/submission-review-list/submission-review-list.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule, FaConfig, FaIconLibrary  } from '@fortawesome/angular-fontawesome';
+import {faUserCircle, faQuestionCircle, faBan, fas, faPlus} from '@fortawesome/free-solid-svg-icons';
 import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/redirect.component';
 import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
 import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
@@ -113,7 +112,9 @@ import { UserFeedbackReportModalComponent } from './modules/dashboards/component
   bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor() {
-        library.add(faUserCircle, faQuestionCircle);
+    constructor(config: FaConfig, library: FaIconLibrary) {
+        config.fallbackIcon = faBan;
+        library.addIconPacks(fas);
+        library.addIcons(faUserCircle, faQuestionCircle, faPlus)
       }
 }

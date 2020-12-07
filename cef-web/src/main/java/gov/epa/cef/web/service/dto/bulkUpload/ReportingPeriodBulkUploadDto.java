@@ -22,8 +22,8 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     @Size(max = 20, message = "Reporting Period Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String reportingPeriodTypeCode;
 
-    @NotNull(message = "Emissions Operating Type Code is required.")
-    @Size(max = 20, message = "Emissions Operating Type Code can not exceed {max} chars; found '${validatedValue}'.")
+    @NotNull(message = "Reporting Period Operating Type Code is required.")
+    @Size(max = 20, message = "Reporting Period Operating Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsOperatingTypeCode;
 
     @NotNull(message = "Throughput Parameter Type Code is required.")

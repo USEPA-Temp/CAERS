@@ -31,7 +31,7 @@ export class UserContextService {
     if (this.user) {
         return of(this.user);
     } else {
-        return this.userService.getCurrentUser();
+        return this.userService?.getCurrentUser();
     }
   }
 }

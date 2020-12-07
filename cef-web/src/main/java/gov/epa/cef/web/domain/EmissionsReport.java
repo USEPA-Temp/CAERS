@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -24,8 +26,9 @@ public class EmissionsReport extends BaseAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "agency_code", nullable = false, length = 3)
-    private String agencyCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "program_system_code")
+    private ProgramSystemCode programSystemCode;
 
     @Column(name = "cromerr_activity_id", length = 37)
     private String cromerrActivityId;
@@ -94,7 +97,7 @@ public class EmissionsReport extends BaseAuditEntity {
         this.id = originalEmissionsReport.getId();
         this.frsFacilityId = originalEmissionsReport.frsFacilityId;
         this.eisProgramId = originalEmissionsReport.eisProgramId;
-        this.agencyCode = originalEmissionsReport.agencyCode;
+        this.programSystemCode = originalEmissionsReport.programSystemCode;
         this.year = originalEmissionsReport.year;
         this.status = originalEmissionsReport.status;
         this.validationStatus = originalEmissionsReport.validationStatus;
@@ -119,14 +122,14 @@ public class EmissionsReport extends BaseAuditEntity {
         }
     }
 
-    public String getAgencyCode() {
+    public ProgramSystemCode getProgramSystemCode() {
 
-        return this.agencyCode;
+        return this.programSystemCode;
     }
 
-    public void setAgencyCode(String agencyCode) {
+    public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
 
-        this.agencyCode = agencyCode;
+        this.programSystemCode = programSystemCode;
     }
 
     public String getCromerrActivityId() {

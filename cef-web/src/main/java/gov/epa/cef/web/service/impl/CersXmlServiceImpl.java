@@ -167,11 +167,6 @@ public class CersXmlServiceImpl implements CersXmlService {
         }
 
         CERSDataType cers = cersMapper.fromEmissionsReport(source);
-        // TODO: find out if programSystemCode should always be the same at the facilitySite and report level
-        // and if this needs to be added at the report level or moved there instead
-        if (!cers.getFacilitySite().isEmpty()) {
-            cers.setProgramSystemCode(cers.getFacilitySite().get(0).getFacilityIdentification().get(0).getProgramSystemCode());
-        }
 
         if (submissionStatus == null || !ConstantUtils.EIS_TRANSMISSION_POINT_EMISSIONS.equals(submissionStatus.dataCategory())) {
             addProcessControls(source, cers);
@@ -271,7 +266,7 @@ public class CersXmlServiceImpl implements CersXmlService {
         // average percent control
         ca.setPercentControlApproachEffectiveness(BigDecimal.valueOf(controls.stream()
                 .filter(c -> c.getPercentControl() != null)
-                .collect(Collectors.averagingDouble(Control::getPercentControl))).setScale(1, RoundingMode.HALF_UP));
+                .collect(Collectors.averagingDouble(Control::getPercentControl))).setScale(3, RoundingMode.HALF_UP));
 
         // make description a list of control measure code descriptions
         ca.setControlApproachDescription(controls.stream()
@@ -302,7 +297,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 
             ControlPollutantDataType cp = new ControlPollutantDataType();
             cp.setPercentControlMeasuresReductionEfficiency(BigDecimal.valueOf((entry.getValue().stream()
-                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction)))).setScale(1, RoundingMode.HALF_UP));
+                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction)))).setScale(3, RoundingMode.HALF_UP));
             cp.setPollutantCode(entry.getKey());
             ca.getControlPollutant().add(cp);
         }

@@ -28,7 +28,7 @@ export class ReleasePointDetailsComponent implements OnInit {
   readOnlyMode = true;
   editInfo = false;
 
-  @ViewChild(EditReleasePointPanelComponent, { static: false })
+  @ViewChild(EditReleasePointPanelComponent)
   private releasePointComponent: EditReleasePointPanelComponent;
 
   constructor(

@@ -7,10 +7,12 @@ import gov.epa.cef.web.client.soap.NodeTransaction;
 import gov.epa.cef.web.config.NetworkNodeName;
 import gov.epa.cef.web.domain.EisTransactionHistory;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EisTransactionAttachmentRepository;
 import gov.epa.cef.web.repository.EisTransactionHistoryRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.service.dto.EisDataCriteria;
 import gov.epa.cef.web.service.dto.EisDataListDto;
 import gov.epa.cef.web.service.dto.EisDataReportDto;
@@ -49,6 +51,8 @@ public class EisTransmissionServiceImpl {
 
     private final EisTransactionAttachmentRepository attachmentRepo;
 
+    private final ProgramSystemCodeRepository pscRepo;
+
     private final EisXmlServiceImpl xmlService;
 
     private final EisTransactionMapper mapper;
@@ -62,6 +66,7 @@ public class EisTransmissionServiceImpl {
                                EmissionsReportRepository reportRepository,
                                EisTransactionHistoryRepository transactionHistoryRepo,
                                EisTransactionAttachmentRepository attachmentRepo,
+                               ProgramSystemCodeRepository pscRepo,
                                EisTransactionMapper mapper,
                                NodeClient nodeClient) {
 
@@ -69,6 +74,7 @@ public class EisTransmissionServiceImpl {
         this.reportRepository = reportRepository;
         this.transactionHistoryRepo = transactionHistoryRepo;
         this.attachmentRepo = attachmentRepo;
+        this.pscRepo = pscRepo;
         this.mapper = mapper;
         this.nodeClient = nodeClient;
     }
@@ -84,11 +90,11 @@ public class EisTransmissionServiceImpl {
         return result;
     }
 
-	public EisDataStatsDto retrieveStatInfoByYear(String agencyCode, Short year) {
+	public EisDataStatsDto retrieveStatInfoByYear(String programSystemCode, Short year) {
 
-        Collection<EisDataStatsDto.EisDataStatusStat> stats = this.reportRepository.findEisDataStatusesByYear(agencyCode, year);
+        Collection<EisDataStatsDto.EisDataStatusStat> stats = this.reportRepository.findEisDataStatusesByYear(programSystemCode, year);
 
-        Collection<Integer> years = this.reportRepository.findEisDataYears(agencyCode);
+        Collection<Integer> years = this.reportRepository.findEisDataYears(programSystemCode);
 
         return new EisDataStatsDto()
             .withStatuses(stats)
@@ -117,9 +123,9 @@ public class EisTransmissionServiceImpl {
                 .collect(Collectors.toList()));
     }
 
-    public List<EisTransactionHistoryDto> retrieveTransactionHistory(String agencyCode) {
+    public List<EisTransactionHistoryDto> retrieveTransactionHistory(String programSystemCode) {
 
-        return mapper.historyToDtoList(this.transactionHistoryRepo.findByAgencyCode(agencyCode));
+        return mapper.historyToDtoList(this.transactionHistoryRepo.findByProgramSystemCodeCode(programSystemCode));
     }
 
     public EisDataListDto submitReports(EisHeaderDto eisHeader) {
@@ -173,6 +179,11 @@ public class EisTransmissionServiceImpl {
 
         NodeTransaction transaction;
 
+        ProgramSystemCode psc = this.pscRepo.findById(eisHeader.getProgramSystemCode()).orElseThrow(() -> {
+
+            return new NotExistException("ProgramSystemCode", eisHeader.getProgramSystemCode());
+        });
+
         ExchangeNetworkDocumentType xml = this.xmlService.generateEisDocument(eisHeader);
 
         try (TempFile tmpFile = TempFile.create("submission" + xml.getId(), ".zip")) {
@@ -204,7 +215,7 @@ public class EisTransmissionServiceImpl {
             history.setEisSubmissionStatus(eisHeader.getSubmissionStatus());
             history.setSubmitterName(eisHeader.getAuthorName());
             history.setTransactionId(transaction.getTransactionId());
-            history.setAgencyCode(eisHeader.getAgencyCode());
+            history.setProgramSystemCode(psc);
 
             this.transactionHistoryRepo.save(history);
 

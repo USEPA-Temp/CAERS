@@ -30,7 +30,7 @@ public class ControlAssignment extends BaseAuditEntity {
     @Column(name = "sequence_number", nullable = false)
     private Integer sequenceNumber;
     
-    @Column(name = "percent_apportionment", nullable = false, precision = 4, scale = 1)
+    @Column(name = "percent_apportionment", nullable = false, precision = 5, scale = 2)
     private Double percentApportionment;
 
     

@@ -229,7 +229,7 @@ public class CersXmlServiceImplTest {
 
         FacilitySiteBulkUploadDto facilitySite = dto.getFacilitySites().get(0);
 
-        dto.setAgencyCode(EmissionsReportService.__HARD_CODED_AGENCY_CODE__);
+        dto.setProgramSystemCode("GADNR");
         dto.setEisProgramId(facilitySite.getEisProgramId());
         dto.setFrsFacilityId(facilitySite.getFrsFacilityId());
         dto.setAltSiteIdentifier(facilitySite.getStateCode());

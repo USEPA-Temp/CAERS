@@ -73,11 +73,11 @@ public class EmissionsReportValidator
             context.addFederalWarning(ValidationField.REPORT_YEAR.value(), "report.year.min", "" + (Calendar.getInstance().get(Calendar.YEAR) - 1));
         }
 
-        if (Strings.emptyToNull(report.getAgencyCode()) == null) {
+        if (report.getProgramSystemCode() == null) {
 
             // prevented by db constraints
             valid = false;
-            context.addFederalError(ValidationField.REPORT_AGENCY_CODE.value(), "report.agencyCode.required");
+            context.addFederalError(ValidationField.REPORT_PROGRAM_SYSTEM_CODE.value(), "report.programSystemCode.required");
         }
 
         if (Strings.emptyToNull(report.getFrsFacilityId()) == null) {
