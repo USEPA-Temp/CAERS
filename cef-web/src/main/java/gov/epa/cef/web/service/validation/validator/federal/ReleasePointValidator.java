@@ -507,7 +507,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                     context.addFederalError(
                         ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.apportioned",
                         createValidationDetails(releasePoint),
-                        releasePoint.getReleasePointIdentifier(),
                         releasePoint.getOperatingStatusCode().getDescription()
                     );
                 }
