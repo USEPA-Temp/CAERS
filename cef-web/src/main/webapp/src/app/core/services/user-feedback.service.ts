@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {UserFeedback, UserFeedbackExport} from 'src/app/shared/models/user-feedback';
 import {UserFeedbackStats} from 'src/app/shared/models/user-feedback-stats';
 import {Observable} from 'rxjs';
-import {ReportDownloadService} from "./report-download.service";
+import {ReportDownloadService} from "src/app/core/services/report-download.service";
 
 @Injectable({
     providedIn: 'root'
