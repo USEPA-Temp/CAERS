@@ -100,4 +100,8 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
     modalWindow.componentInstance.feedback = feedback;
   }
 
+  exportTable(): void {
+      this.userFeedbackService.downloadFilteredReport(this.tableData);
+  }
+
 }
