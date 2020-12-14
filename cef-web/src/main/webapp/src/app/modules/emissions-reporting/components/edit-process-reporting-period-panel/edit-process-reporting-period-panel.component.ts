@@ -95,7 +95,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     this.lookupService.retrieveFuelUseUom()
     .subscribe(result => {
       this.fuelUseUomValues = result;
-      this.heatContentUomValues = this.uomValues.filter(val => val.heatContentUnit);
+      this.heatContentUomValues = this.uomValues.filter(val => val.heatContentUom);
     });
 
   }

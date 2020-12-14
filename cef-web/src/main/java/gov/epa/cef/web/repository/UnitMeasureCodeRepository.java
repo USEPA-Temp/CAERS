@@ -24,6 +24,6 @@ public interface UnitMeasureCodeRepository extends CrudRepository<UnitMeasureCod
     
     @QueryHints({
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    @Query("select uom from UnitMeasureCode uom where uom.fuelEfDenominator = true")
+    @Query("select uom from UnitMeasureCode uom where uom.fuelUseUom = true")
     List<UnitMeasureCode> findAllFuelUseUom(Sort sort);
 }

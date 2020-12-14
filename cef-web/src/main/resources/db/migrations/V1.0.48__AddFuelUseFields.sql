@@ -6,8 +6,8 @@ ALTER TABLE reporting_period
 	ADD COLUMN heat_content_uom character varying(20);
 
 ALTER TABLE calculation_material_code ADD COLUMN fuel_use_material boolean NOT NULL DEFAULT false;
-ALTER TABLE unit_measure_code ADD COLUMN fuel_ef_denominator boolean NOT NULL DEFAULT false;
-ALTER TABLE unit_measure_code ADD COLUMN heat_content_unit boolean NOT NULL DEFAULT false;
+ALTER TABLE unit_measure_code ADD COLUMN fuel_use_uom boolean NOT NULL DEFAULT false;
+ALTER TABLE unit_measure_code ADD COLUMN heat_content_uom boolean NOT NULL DEFAULT false;
 
 UPDATE calculation_material_code SET fuel_use_material = true WHERE code = '124';
 UPDATE calculation_material_code SET fuel_use_material = true WHERE code = '794';
@@ -78,31 +78,31 @@ UPDATE calculation_material_code SET fuel_use_material = true WHERE code = '502'
 UPDATE calculation_material_code SET fuel_use_material = true WHERE code = '209';
 UPDATE calculation_material_code SET fuel_use_material = true WHERE code = '251';
 
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'BTU';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E6BTU';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'THERM';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'BBL';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'BBL50GAL';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E2BBL';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E3BBL';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E3BBL31G';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E3GAL';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E6GAL';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'GAL';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E2LB';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E2TON';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E3LB';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E3TON';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E6LB';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E6TON';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'LB';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'TON';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E3FT3S';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'E6FT3S';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'FT3S';
-UPDATE unit_measure_code SET fuel_ef_denominator = true WHERE code = 'FT3SD';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'BTU';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E6BTU';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'THERM';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'BBL';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'BBL50GAL';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E2BBL';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E3BBL';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E3BBL31G';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E3GAL';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E6GAL';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'GAL';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E2LB';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E2TON';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E3LB';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E3TON';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E6LB';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E6TON';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'LB';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'TON';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E3FT3S';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'E6FT3S';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'FT3S';
+UPDATE unit_measure_code SET fuel_use_uom = true WHERE code = 'FT3SD';
 
-UPDATE unit_measure_code SET heat_content_unit = true WHERE code = 'BTU';
-UPDATE unit_measure_code SET heat_content_unit = true WHERE code = 'E6BTU';
-UPDATE unit_measure_code SET heat_content_unit = true WHERE code = 'THERM';
+UPDATE unit_measure_code SET heat_content_uom = true WHERE code = 'BTU';
+UPDATE unit_measure_code SET heat_content_uom = true WHERE code = 'E6BTU';
+UPDATE unit_measure_code SET heat_content_uom = true WHERE code = 'THERM';
 
