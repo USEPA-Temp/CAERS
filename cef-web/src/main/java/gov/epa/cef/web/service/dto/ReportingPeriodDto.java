@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import gov.epa.cef.web.domain.UnitMeasureCode;
-
 public class ReportingPeriodDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +20,7 @@ public class ReportingPeriodDto implements Serializable {
     private UnitMeasureCodeDto fuelUseUom;
     private CodeLookupDto fuelUseMaterialCode;
     private BigDecimal heatContentValue;
-    private UnitMeasureCode heatContentUom;
+    private UnitMeasureCodeDto heatContentUom;
     private String comments;
     private List<EmissionDto> emissions;
     private List<OperatingDetailDto> operatingDetails;
@@ -123,11 +121,11 @@ public class ReportingPeriodDto implements Serializable {
 		this.heatContentValue = heatContentValue;
 	}
 
-	public UnitMeasureCode getHeatContentUom() {
+	public UnitMeasureCodeDto getHeatContentUom() {
 		return heatContentUom;
 	}
 
-	public void setHeatContentUom(UnitMeasureCode heatContentUom) {
+	public void setHeatContentUom(UnitMeasureCodeDto heatContentUom) {
 		this.heatContentUom = heatContentUom;
 	}
 

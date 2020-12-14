@@ -119,20 +119,15 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        }
 	        
 	        // Fuel Use fields are optional but if one field is valid, then all fields must be valid.
-    		if (period.getFuelUseValue() != null || 
-	        		(period.getFuelUseUom() != null && period.getFuelUseUom().getCode() != null) || 
-	        		(period.getFuelUseMaterialCode() != null && period.getFuelUseMaterialCode().getCode() != null)) {
-	        	if (!((period.getFuelUseUom() != null && period.getFuelUseUom().getCode() != null) && 
-	        			(period.getFuelUseMaterialCode() != null && period.getFuelUseMaterialCode().getCode() != null) && 
-	        			period.getFuelUseValue() != null)) {
+	        if ((period.getFuelUseValue() != null || period.getFuelUseUom() != null || period.getFuelUseMaterialCode() != null ) &&
+	        	(period.getFuelUseUom() == null || period.getFuelUseMaterialCode() == null || period.getFuelUseValue() == null)) {
 	        		
-	        		valid = false;
-		            context.addFederalWarning(
-		                ValidationField.PERIOD_FUEL_USE_VALUES.value(),
-		                "reportingPeriod.fuelUseValues.required", 
-		                createValidationDetails(period));
+        		valid = false;
+	            context.addFederalWarning(
+	            		ValidationField.PERIOD_FUEL_USE_VALUES.value(),
+	            		"reportingPeriod.fuelUseValues.required", 
+	            		createValidationDetails(period));
 		            
-	        	}
 	        }
 	        
 	        Map<String, List<Emission>> emissionMap = period.getEmissions().stream()

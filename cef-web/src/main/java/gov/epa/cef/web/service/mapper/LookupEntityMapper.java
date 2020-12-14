@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.mapper;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
+import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
@@ -67,6 +68,8 @@ public abstract class LookupEntityMapper {
     public abstract CodeLookupDto controlMeasureCodeToDto(ControlMeasureCode source);
 
     public abstract List<CodeLookupDto> controlMeasureCodeToDtoList(List<ControlMeasureCode> source);
+    
+    public abstract List<CodeLookupDto> calculationMaterialToDtoList(List<CalculationMaterialCode> source);
     
     public abstract CodeLookupDto releasePointTypCodeToDto(ReleasePointTypeCode source);
     

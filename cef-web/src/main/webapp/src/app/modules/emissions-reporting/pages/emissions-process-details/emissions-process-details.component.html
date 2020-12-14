@@ -138,7 +138,7 @@
                         <div class="col-sm-6 col-md-2"><strong>Throughput UoM:</strong></div>
                         <div class="col-sm-6 col-md-2">{{period.calculationParameterUom?.description}}</div>
                     </div>
-                    <div *ngIf="period.fuelUseValue && period.fuelUseUom && period.fuelUseMaterialCode">
+                    <div *ngIf="period.fuelUseValue !== null && period.fuelUseUom && period.fuelUseMaterialCode">
                         <div class="row">
                             <div class="col-sm-6 col-md-2"><strong>Fuel Material:</strong></div>
                             <div class="col-sm-6 col-md-2">{{period.fuelUseMaterialCode?.description}}</div>

@@ -164,12 +164,10 @@ public class LookupServiceImpl implements LookupService {
      */
     public List<CodeLookupDto> retrieveFuelUseMaterialCodes() {
 
-        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
-        Iterable<CalculationMaterialCode> entities = materialCodeRepo.findAllFuelUseMaterial(Sort.by(Direction.ASC, DESCRIPTION));
+        List<CalculationMaterialCode> entities = materialCodeRepo.findAllFuelUseMaterial(Sort.by(Direction.ASC, DESCRIPTION));
 
-        entities.forEach(entity -> {
-            result.add(lookupMapper.toDto(entity));
-        });
+        List<CodeLookupDto> result = lookupMapper.calculationMaterialToDtoList(entities);
+
         return result;
     }
 

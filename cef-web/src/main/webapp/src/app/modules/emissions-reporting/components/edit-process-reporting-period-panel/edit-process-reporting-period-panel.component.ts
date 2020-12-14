@@ -95,7 +95,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     this.lookupService.retrieveFuelUseUom()
     .subscribe(result => {
       this.fuelUseUomValues = result;
-      this.heatContentUomValues = this.uomValues.filter(val => val.heatContentUom);
+      this.heatContentUomValues = this.fuelUseUomValues.filter(val => val.heatContentUom);
     });
 
   }
@@ -112,10 +112,13 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     // console.log(period);
   }
 
+  // heat content uom validation message ngif calls this method
   checkHeatContentUom() {
     if (this.reportingPeriodForm.value.heatContentValue && !this.reportingPeriodForm.value.heatContentUom) {
       this.reportingPeriodForm.get('heatContentUom').setErrors({heatContentUom: true});
       return {heatContentUom: true};
+    } else {
+      this.reportingPeriodForm.get('heatContentUom').setErrors(null);
     }
   }
 
@@ -125,10 +128,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       const fuelMaterial = control.get('fuelUseMaterialCode').value;
       const fuelUom = control.get('fuelUseUom').value;
 
-      if (fuelValue || (fuelMaterial && fuelMaterial.code) || (fuelUom && fuelUom.code)) {
-        if (!(fuelValue && (fuelMaterial && fuelMaterial.code) && (fuelUom && fuelUom.code))) {
-          return {fuelUsefields: true};
-        }
+      if ((fuelValue || fuelMaterial || fuelUom) && (fuelValue === null || fuelValue === '' || !fuelMaterial || !fuelUom)) {
+        return {fuelUsefields: true};
       }
       return null;
     };

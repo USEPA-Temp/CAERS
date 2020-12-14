@@ -3,7 +3,19 @@ ALTER TABLE reporting_period
 	ADD COLUMN fuel_use_uom character varying(20),
 	ADD COLUMN fuel_use_material_code character varying(20),
 	ADD COLUMN heat_content_value numeric,
-	ADD COLUMN heat_content_uom character varying(20);
+	ADD COLUMN heat_content_uom character varying(20),
+	ADD CONSTRAINT fuel_use_uom_fkey FOREIGN KEY (fuel_use_uom)
+        REFERENCES unit_measure_code (code) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    ADD CONSTRAINT heat_content_uom_fkey FOREIGN KEY (heat_content_uom)
+	    REFERENCES unit_measure_code (code) MATCH SIMPLE
+	    ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    ADD CONSTRAINT fuel_use_material_code_fkey FOREIGN KEY (fuel_use_material_code)
+	    REFERENCES calculation_material_code (code) MATCH SIMPLE
+	    ON UPDATE NO ACTION
+        ON DELETE NO ACTION;
 
 ALTER TABLE calculation_material_code ADD COLUMN fuel_use_material boolean NOT NULL DEFAULT false;
 ALTER TABLE unit_measure_code ADD COLUMN fuel_use_uom boolean NOT NULL DEFAULT false;
