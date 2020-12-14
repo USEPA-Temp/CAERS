@@ -107,8 +107,6 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
   onSubmit() {
 
-    console.log(this.reportingPeriodForm);
-
     // let period = new ReportingPeriod();
     // Object.assign(period, this.reportingPeriodForm.value);
     // console.log(period);
