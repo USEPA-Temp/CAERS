@@ -28,6 +28,11 @@ export class LookupService {
     return this.http.get<BaseCodeLookup[]>(url);
   }
 
+  retrieveFuelUseMaterial(): Observable<BaseCodeLookup[]> {
+    const url = `${this.baseUrl}/fuelUse/material`;
+    return this.http.get<BaseCodeLookup[]>(url);
+  }
+
   retrieveCalcMethod(): Observable<CalculationMethodCode[]> {
     const url = `${this.baseUrl}/calculation/method`;
     return this.http.get<CalculationMethodCode[]>(url);
@@ -70,6 +75,11 @@ export class LookupService {
 
   retrieveUom(): Observable<UnitMeasureCode[]> {
     const url = `${this.baseUrl}/uom`;
+    return this.http.get<UnitMeasureCode[]>(url);
+  }
+
+  retrieveFuelUseUom(): Observable<UnitMeasureCode[]> {
+    const url = `${this.baseUrl}/fuelUse/uom`;
     return this.http.get<UnitMeasureCode[]>(url);
   }
 

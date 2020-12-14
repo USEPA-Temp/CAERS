@@ -36,6 +36,12 @@ public class UnitMeasureCode extends BaseLookupEntity {
     
     @Column(name = "unit_design_capacity", nullable = false)
     private Boolean unitDesignCapacity;
+    
+    @Column(name = "fuel_ef_denominator", nullable = false)
+    private Boolean fuelEfDenominator;
+    
+    @Column(name = "heat_content_unit", nullable = false)
+    private Boolean heatContentUnit;
 
     @Column(name = "legacy", nullable = false)
     private Boolean legacy;
@@ -80,7 +86,23 @@ public class UnitMeasureCode extends BaseLookupEntity {
         this.unitDesignCapacity = unitDesignCapacity;
     }
 
-    public Boolean getLegacy() {
+    public Boolean getFuelEfDenominator() {
+		return fuelEfDenominator;
+	}
+
+	public void setFuelEfDenominator(Boolean fuelEfDenominator) {
+		this.fuelEfDenominator = fuelEfDenominator;
+	}
+
+	public Boolean getHeatContentUnit() {
+		return heatContentUnit;
+	}
+
+	public void setHeatContentUnit(Boolean heatContentUnit) {
+		this.heatContentUnit = heatContentUnit;
+	}
+
+	public Boolean getLegacy() {
         return legacy;
     }
 

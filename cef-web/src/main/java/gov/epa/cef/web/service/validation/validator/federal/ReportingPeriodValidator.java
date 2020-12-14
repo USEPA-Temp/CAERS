@@ -117,7 +117,24 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	                    createValidationDetails(period),
 	                    period.getCalculationParameterUom().getDescription());
 	        }
-	
+	        
+	        // Fuel Use fields are optional but if one field is valid, then all fields must be valid.
+    		if (period.getFuelUseValue() != null || 
+	        		(period.getFuelUseUom() != null && period.getFuelUseUom().getCode() != null) || 
+	        		(period.getFuelUseMaterialCode() != null && period.getFuelUseMaterialCode().getCode() != null)) {
+	        	if (!((period.getFuelUseUom() != null && period.getFuelUseUom().getCode() != null) && 
+	        			(period.getFuelUseMaterialCode() != null && period.getFuelUseMaterialCode().getCode() != null) && 
+	        			period.getFuelUseValue() != null)) {
+	        		
+	        		valid = false;
+		            context.addFederalWarning(
+		                ValidationField.PERIOD_FUEL_USE_VALUES.value(),
+		                "reportingPeriod.fuelUseValues.required", 
+		                createValidationDetails(period));
+		            
+	        	}
+	        }
+	        
 	        Map<String, List<Emission>> emissionMap = period.getEmissions().stream()
 	                .filter(e -> e.getPollutant() != null)
 	                .collect(Collectors.groupingBy(e -> e.getPollutant().getPollutantCode()));

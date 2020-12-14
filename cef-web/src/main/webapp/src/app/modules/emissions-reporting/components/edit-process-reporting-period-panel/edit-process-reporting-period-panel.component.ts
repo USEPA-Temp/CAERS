@@ -31,6 +31,11 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     ]],
     fuelUseUom: [null, [legacyUomValidator()]],
     fuelUseMaterialCode: [null],
+    heatContentValue: ['', [
+      Validators.min(0),
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+    ]],
+    heatContentUom: [null, [legacyUomValidator()]],
     comments: [null, Validators.maxLength(400)]
   }, { validators: [
     this.checkFuelUseFields()
@@ -44,6 +49,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   uomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
   fuelUseUomValues: UnitMeasureCode[];
+  heatContentUomValues: UnitMeasureCode[];
 
   constructor(
     private lookupService: LookupService,
@@ -55,7 +61,11 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     this.lookupService.retrieveCalcMaterial()
     .subscribe(result => {
       this.materialValues = result;
-      // this.fuelUseMaterialValues = this.materialValues.filter(val => val.fuelUse);
+    });
+
+    this.lookupService.retrieveFuelUseMaterial()
+    .subscribe(result => {
+      this.fuelUseMaterialValues = result;
     });
 
     this.lookupService.retrieveCalcParam()
@@ -80,8 +90,14 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     .subscribe(result => {
       this.uomValues = result;
       this.denominatorUomValues = this.uomValues.filter(val => val.efDenominator);
-      // this.fuelUseUomValues = this.uomValues.filter(val => val.fuelUse);
     });
+
+    this.lookupService.retrieveFuelUseUom()
+    .subscribe(result => {
+      this.fuelUseUomValues = result;
+      this.heatContentUomValues = this.uomValues.filter(val => val.heatContentUnit);
+    });
+
   }
 
   ngOnChanges() {
@@ -98,12 +114,25 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     // console.log(period);
   }
 
+  checkHeatContentUom() {
+    if (this.reportingPeriodForm.value.heatContentValue && !this.reportingPeriodForm.value.heatContentUom) {
+      this.reportingPeriodForm.get('heatContentUom').setErrors({heatContentUom: true});
+      return {heatContentUom: true};
+    }
+  }
+
   checkFuelUseFields(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      if (control.get('fuelUseValue').value || control.get('fuelUseMaterial').value || control.get('fuelUseUom').value) {
-        // control.get('fuelUseValue');
+      const fuelValue = control.get('fuelUseValue').value;
+      const fuelMaterial = control.get('fuelUseMaterialCode').value;
+      const fuelUom = control.get('fuelUseUom').value;
+
+      if (fuelValue || (fuelMaterial && fuelMaterial.code) || (fuelUom && fuelUom.code)) {
+        if (!(fuelValue && (fuelMaterial && fuelMaterial.code) && (fuelUom && fuelUom.code))) {
+          return {fuelUsefields: true};
+        }
       }
-        return null;
+      return null;
     };
   }
 

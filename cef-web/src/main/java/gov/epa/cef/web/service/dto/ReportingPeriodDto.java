@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import gov.epa.cef.web.domain.UnitMeasureCode;
+
 public class ReportingPeriodDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,8 +19,10 @@ public class ReportingPeriodDto implements Serializable {
     private UnitMeasureCodeDto calculationParameterUom;
     private CodeLookupDto calculationMaterialCode;
     private BigDecimal fuelUseValue;
-    private UnitMeasureCodeDto fuelUseValueUom;
-    private CodeLookupDto fuelUseValueMaterialCode;
+    private UnitMeasureCodeDto fuelUseUom;
+    private CodeLookupDto fuelUseMaterialCode;
+    private BigDecimal heatContentValue;
+    private UnitMeasureCode heatContentUom;
     private String comments;
     private List<EmissionDto> emissions;
     private List<OperatingDetailDto> operatingDetails;
@@ -95,21 +99,36 @@ public class ReportingPeriodDto implements Serializable {
 		this.fuelUseValue = fuelUseValue;
 	}
 
-	public UnitMeasureCodeDto getFuelUseValueUom() {
-		return fuelUseValueUom;
+	public UnitMeasureCodeDto getFuelUseUom() {
+		return fuelUseUom;
 	}
 
-	public void setFuelUseValueUom(UnitMeasureCodeDto fuelUseValueUom) {
-		this.fuelUseValueUom = fuelUseValueUom;
+	public void setFuelUseUom(UnitMeasureCodeDto fuelUseUom) {
+		this.fuelUseUom = fuelUseUom;
 	}
 
-	public CodeLookupDto getFuelUseValueMaterialCode() {
-		return fuelUseValueMaterialCode;
+	public CodeLookupDto getFuelUseMaterialCode() {
+		return fuelUseMaterialCode;
 	}
 
-	public void setFuelUseValueMaterialCode(
-			CodeLookupDto fuelUseValueMaterialCode) {
-		this.fuelUseValueMaterialCode = fuelUseValueMaterialCode;
+	public void setFuelUseMaterialCode(CodeLookupDto fuelUseMaterialCode) {
+		this.fuelUseMaterialCode = fuelUseMaterialCode;
+	}
+
+	public BigDecimal getHeatContentValue() {
+		return heatContentValue;
+	}
+
+	public void setHeatContentValue(BigDecimal heatContentValue) {
+		this.heatContentValue = heatContentValue;
+	}
+
+	public UnitMeasureCode getHeatContentUom() {
+		return heatContentUom;
+	}
+
+	public void setHeatContentUom(UnitMeasureCode heatContentUom) {
+		this.heatContentUom = heatContentUom;
 	}
 
 	public String getComments() {

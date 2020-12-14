@@ -11,6 +11,10 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
     private Boolean efDenominator;
     
     private Boolean unitDesignCapacity;
+    
+    private Boolean fuelEfDenominator;
+    
+    private Boolean heatContentUnit;
 
     private Boolean legacy;
 
@@ -46,7 +50,23 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
         this.unitDesignCapacity = unitDesignCapacity;
     }
 
-    public Boolean getLegacy() {
+    public Boolean getFuelEfDenominator() {
+		return fuelEfDenominator;
+	}
+
+	public void setFuelEfDenominator(Boolean fuelEfDenominator) {
+		this.fuelEfDenominator = fuelEfDenominator;
+	}
+
+	public Boolean getHeatContentUnit() {
+		return heatContentUnit;
+	}
+
+	public void setHeatContentUnit(Boolean heatContentUnit) {
+		this.heatContentUnit = heatContentUnit;
+	}
+
+	public Boolean getLegacy() {
         return legacy;
     }
 

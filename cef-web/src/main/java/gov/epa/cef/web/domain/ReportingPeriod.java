@@ -59,11 +59,18 @@ public class ReportingPeriod extends BaseAuditEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fuel_use_uom", nullable = false)
-    private UnitMeasureCode fuelUseValueUom;
+    private UnitMeasureCode fuelUseUom;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fuel_use_material_code", nullable = false)
-    private CalculationMaterialCode fuelUseValueMaterialCode;
+    private CalculationMaterialCode fuelUseMaterialCode;
+    
+    @Column(name = "heat_content_value", nullable = false, precision = 131089, scale = 0)
+    private BigDecimal heatContentValue;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "heat_content_uom", nullable = false)
+    private UnitMeasureCode heatContentUom;
     
     @Column(name = "comments", length = 400)
     private String comments;
@@ -96,8 +103,10 @@ public class ReportingPeriod extends BaseAuditEntity {
         this.calculationParameterUom = originalReportingPeriod.getCalculationParameterUom();
         this.calculationMaterialCode = originalReportingPeriod.getCalculationMaterialCode();
         this.fuelUseValue = originalReportingPeriod.getFuelUseValue();
-        this.fuelUseValueUom = originalReportingPeriod.getFuelUseValueUom();
-        this.fuelUseValueMaterialCode = originalReportingPeriod.getFuelUseValueMaterialCode();
+        this.fuelUseUom = originalReportingPeriod.getFuelUseUom();
+        this.fuelUseMaterialCode = originalReportingPeriod.getFuelUseMaterialCode();
+        this.heatContentValue = originalReportingPeriod.getHeatContentValue();
+        this.heatContentUom = originalReportingPeriod.getHeatContentUom();
         this.comments = originalReportingPeriod.getComments();
 
         for (Emission emission : originalReportingPeriod.getEmissions()) {
@@ -172,21 +181,37 @@ public class ReportingPeriod extends BaseAuditEntity {
 		this.fuelUseValue = fuelUseValue;
 	}
 
-	public UnitMeasureCode getFuelUseValueUom() {
-		return fuelUseValueUom;
+	public UnitMeasureCode getFuelUseUom() {
+		return fuelUseUom;
 	}
 
-	public void setFuelUseValueUom(UnitMeasureCode fuelUseValueUom) {
-		this.fuelUseValueUom = fuelUseValueUom;
+	public void setFuelUseUom(UnitMeasureCode fuelUseUom) {
+		this.fuelUseUom = fuelUseUom;
 	}
 
-	public CalculationMaterialCode getFuelUseValueMaterialCode() {
-		return fuelUseValueMaterialCode;
+	public CalculationMaterialCode getFuelUseMaterialCode() {
+		return fuelUseMaterialCode;
 	}
 
-	public void setFuelUseValueMaterialCode(
-			CalculationMaterialCode fuelUseValueMaterialCode) {
-		this.fuelUseValueMaterialCode = fuelUseValueMaterialCode;
+	public void setFuelUseMaterialCode(
+			CalculationMaterialCode fuelUseMaterialCode) {
+		this.fuelUseMaterialCode = fuelUseMaterialCode;
+	}
+
+	public BigDecimal getHeatContentValue() {
+		return heatContentValue;
+	}
+
+	public void setHeatContentValue(BigDecimal heatContentValue) {
+		this.heatContentValue = heatContentValue;
+	}
+
+	public UnitMeasureCode getHeatContentUom() {
+		return heatContentUom;
+	}
+
+	public void setHeatContentUom(UnitMeasureCode heatContentUom) {
+		this.heatContentUom = heatContentUom;
 	}
 
 	public String getComments() {

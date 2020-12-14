@@ -51,7 +51,6 @@ DROP TABLE IF EXISTS horizontal_collection_method_code;
 DROP TABLE IF EXISTS horizontal_reference_datum_code;
 DROP TABLE IF EXISTS naics_code;
 DROP TABLE IF EXISTS operating_status_code;
-DROP TABLE IF EXISTS program_system_code;
 DROP TABLE IF EXISTS region_code;
 DROP TABLE IF EXISTS regulatory_code;
 DROP TABLE IF EXISTS tribal_code;
@@ -70,6 +69,7 @@ DROP TABLE IF EXISTS eis_latlong_tolerance_lookup;
 DROP TABLE IF EXISTS eis_transaction_attachment;
 DROP TABLE IF EXISTS eis_transaction_history;
 DROP TABLE IF EXISTS slt_config;
+DROP TABLE IF EXISTS program_system_code;
 
 --SEQUENCES
 DROP SEQUENCE IF EXISTS emission_factor_id_seq;

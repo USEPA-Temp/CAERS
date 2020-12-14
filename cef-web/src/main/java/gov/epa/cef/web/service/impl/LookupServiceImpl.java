@@ -158,6 +158,20 @@ public class LookupServiceImpl implements LookupService {
         });
         return result;
     }
+    
+    /* (non-Javadoc)
+     * @see gov.epa.cef.web.service.impl.LookupService#retrieveFuelUseMaterialCodes()
+     */
+    public List<CodeLookupDto> retrieveFuelUseMaterialCodes() {
+
+        List<CodeLookupDto> result = new ArrayList<CodeLookupDto>();
+        Iterable<CalculationMaterialCode> entities = materialCodeRepo.findAllFuelUseMaterial(Sort.by(Direction.ASC, DESCRIPTION));
+
+        entities.forEach(entity -> {
+            result.add(lookupMapper.toDto(entity));
+        });
+        return result;
+    }
 
     public CalculationMaterialCode retrieveCalcMaterialCodeEntityByCode(String code) {
         CalculationMaterialCode result= materialCodeRepo
@@ -327,6 +341,19 @@ public class LookupServiceImpl implements LookupService {
 
         
         List<UnitMeasureCode> entities = uomRepo.findAllCurrent(Sort.by(Direction.ASC, "code"));
+
+        List<UnitMeasureCodeDto> result = lookupMapper.unitMeasureCodeToDtoList(entities);
+        return result;
+    }
+    
+    /*
+     * Retrieve Fuel Use UoM codes
+     * @return
+     */
+    @Override
+    public List<UnitMeasureCodeDto> retrieveFuelUseUnitMeasureCodes() {
+
+        List<UnitMeasureCode> entities = uomRepo.findAllFuelUseUom(Sort.by(Direction.ASC, "code"));
 
         List<UnitMeasureCodeDto> result = lookupMapper.unitMeasureCodeToDtoList(entities);
         return result;

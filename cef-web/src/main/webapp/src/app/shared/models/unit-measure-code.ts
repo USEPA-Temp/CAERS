@@ -7,6 +7,8 @@ export class UnitMeasureCode implements BaseCodeLookup {
   unitType: string;
   efNumerator: boolean;
   efDenominator: boolean;
+  fuelEfDenominator: boolean;
   unitDesignCapacity: boolean;
+  heatContentUnit: boolean;
   legacy: boolean;
 }

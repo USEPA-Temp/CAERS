@@ -343,6 +343,48 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PERIOD_EMISSION.value()) && errorMap.get(ValidationField.PERIOD_EMISSION.value()).size() == 1);
 	}
 	
+	@Test
+    public void fuelUsePassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        UnitMeasureCode uom = new UnitMeasureCode();
+        uom.setCode("BTU");
+        
+        CalculationMaterialCode cmc = new CalculationMaterialCode();
+        cmc.setFuelUseMaterial(true);
+		cmc.setCode("794");
+		
+        testData.setFuelUseMaterialCode(cmc);
+        testData.setFuelUseUom(uom);
+        testData.setFuelUseValue(BigDecimal.valueOf(100));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+	
+	@Test
+    public void fuelUseValuesFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        
+        CalculationMaterialCode cmc = new CalculationMaterialCode();
+        cmc.setFuelUseMaterial(true);
+		cmc.setCode("794");
+		
+        testData.setFuelUseMaterialCode(cmc);
+        testData.setFuelUseUom(null);
+        testData.setFuelUseValue(BigDecimal.valueOf(100));
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PERIOD_FUEL_USE_VALUES.value()) && errorMap.get(ValidationField.PERIOD_FUEL_USE_VALUES.value()).size() == 1);
+        
+	}
+	
 	private ReportingPeriod createBaseReportingPeriod() {
 		
 		OperatingStatusCode opStatCode = new OperatingStatusCode();

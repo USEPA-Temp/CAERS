@@ -15,6 +15,8 @@ export class ReportingPeriod {
   fuelUseValue: number;
   fuelUseUom: UnitMeasureCode;
   fuelUseMaterialCode: BaseCodeLookup;
+  heatContentValue: number;
+  heatContentUom: UnitMeasureCode;
   comments: string;
   emissions: Emission[];
   operatingDetails: OperatingDetail[];

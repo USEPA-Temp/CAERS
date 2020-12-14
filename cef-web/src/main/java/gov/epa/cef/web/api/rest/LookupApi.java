@@ -43,6 +43,18 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveCalcMaterialCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve Fuel Use Material codes
+     * @return
+     */
+    @GetMapping(value = "/fuelUse/material")
+    @ResponseBody
+    public ResponseEntity<List<CodeLookupDto>> retrieveFuelUseMaterialCodes() {
+
+        List<CodeLookupDto> result = lookupService.retrieveFuelUseMaterialCodes();
+        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
 
     /**
      * Retrieve Calculation Method codes
@@ -151,6 +163,18 @@ public class LookupApi {
 
         List<CodeLookupDto> result = lookupService.retrieveUnitTypeCodes();
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Fuel Use UoM codes
+     * @return
+     */
+    @GetMapping(value = "/fuelUse/uom")
+    @ResponseBody
+    public ResponseEntity<List<UnitMeasureCodeDto>> retrieveFuelUseUnitMeasureCodes() {
+
+        List<UnitMeasureCodeDto> result = lookupService.retrieveFuelUseUnitMeasureCodes();
+        return new ResponseEntity<List<UnitMeasureCodeDto>>(result, HttpStatus.OK);
     }
     
     /**
