@@ -80,8 +80,8 @@ tr.striped {
 }
 
 .modal-dialog {
-    top: 10%; 
-} 
+    top: 10%;
+}
 
 .cursor-pointer{
   cursor: pointer;
@@ -97,4 +97,11 @@ tr.striped {
     vertical-align: middle;
     background: $yellow;
     padding: 20px;
+}
+
+.pagination-bottom-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
