@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS report_attachment;
 DROP TABLE IF EXISTS user_feedback;
 DROP TABLE IF EXISTS eis_tri_xref;
 DROP TABLE IF EXISTS emissions_report;
+DROP TABLE IF EXISTS master_facility_record;
 DROP TABLE IF EXISTS admin_properties;
 
 --REFERENCE TABLES

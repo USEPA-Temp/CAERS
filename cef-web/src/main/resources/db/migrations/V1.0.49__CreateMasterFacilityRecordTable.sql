@@ -99,3 +99,5 @@ update emissions_report er
     set master_facility_id = mfr.id
     from master_facility_record mfr
     where mfr.eis_program_id = er.eis_program_id;
+
+ALTER TABLE emissions_report ALTER COLUMN master_facility_id SET NOT NULL;

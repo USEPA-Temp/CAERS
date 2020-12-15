@@ -85,6 +85,7 @@ import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsCountyRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
+import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
@@ -120,6 +121,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetName;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 import gov.epa.cef.web.util.TempFile;
@@ -176,6 +178,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private FacilitySourceTypeCodeRepository facilitySourceTypeRepo;
+
+    @Autowired
+    private MasterFacilityRecordMapper mfrMapper;
+
+    @Autowired
+    private MasterFacilityRecordRepository mfrRepo;
 
     @Autowired
     private NaicsCodeRepository naicsCodeRepo;
@@ -1109,6 +1117,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         EmissionsReport emissionsReport = toEmissionsReport().apply(bulkEmissionsReport);
         
+        // TODO: remove once MFR is fully implemented
+        // creates an MFR if one doesn't already exist, should be removed once associations are managed locally
+        if (emissionsReport.getMasterFacilityRecord() == null) {
+            emissionsReport.setMasterFacilityRecord(mfrMapper.fromFacilitySite(emissionsReport.getFacilitySites().get(0)));
+            mfrRepo.save(emissionsReport.getMasterFacilityRecord());
+        }
+        
         // if a previous report already exists, then update that existing report with the data from this uploaded file
         // and reset the validation, report, and CROMERR status for the report
         Optional<EmissionsReport> previousReport = this.emissionsReportService.retrieveByEisProgramIdAndYear(bulkEmissionsReport.getEisProgramId(), bulkEmissionsReport.getYear());
@@ -1582,6 +1597,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (bulkEmissionsReport.getValidationStatus() != null) {
             emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));
         }
+        emissionsReport.setMasterFacilityRecord(mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId()).orElse(null));
+        // TODO: switch to this once MFR is fully implemented
+//        emissionsReport.setMasterFacilityRecord(mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId())
+//                .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getEisProgramId())));
 
         return emissionsReport;
     }

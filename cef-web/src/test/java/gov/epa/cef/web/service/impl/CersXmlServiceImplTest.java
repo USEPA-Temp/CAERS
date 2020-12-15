@@ -17,6 +17,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportStatus;
@@ -36,6 +37,7 @@ import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsCountyRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
+import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
@@ -313,6 +315,7 @@ public class CersXmlServiceImplTest {
         when(this.emissionsOperatingTypeCodeRepo.findById(any())).thenReturn(Optional.empty());
         when(this.facilityCategoryRepo.findById(any())).thenReturn(Optional.empty());
         when(this.facilitySourceTypeRepo.findById(any())).thenReturn(Optional.empty());
+        when(this.mfrRepo.findByEisProgramId(any())).thenReturn(Optional.of(new MasterFacilityRecord()));
         when(this.naicsCodeRepo.findById(any())).thenReturn(Optional.empty());
         when(this.operatingStatusRepo.findById(any())).then(invocation -> {
 
@@ -403,6 +406,9 @@ public class CersXmlServiceImplTest {
 
     @Mock
     FacilitySourceTypeCodeRepository facilitySourceTypeRepo;
+
+    @Mock
+    MasterFacilityRecordRepository mfrRepo;
 
     @Mock
     NaicsCodeRepository naicsCodeRepo;
