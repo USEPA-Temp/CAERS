@@ -20,6 +20,7 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -133,10 +134,14 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 	}
 
 	private EmissionsReport createHydratedEmissionsReport() {
+	    MasterFacilityRecord mfr = new MasterFacilityRecord();
+	    mfr.setId(9999991L);
+
 	    ProgramSystemCode psc = new ProgramSystemCode();
         psc.setCode("GADNR");
 
 		EmissionsReport er = new EmissionsReport();
+		er.setMasterFacilityRecord(mfr);
 		er.setProgramSystemCode(psc);
 		er.setEisProgramId("ABC");
 		er.setFrsFacilityId("111111111111");

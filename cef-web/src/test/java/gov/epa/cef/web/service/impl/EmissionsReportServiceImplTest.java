@@ -14,6 +14,7 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReportStatus;
@@ -26,6 +27,8 @@ import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +62,9 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Mock
     private EmissionsReportMapper emissionsReportMapper;
+
+    @Mock
+    private MasterFacilityRecordMapper mfrMapper;
     
     @Mock
     private ReportService reportService;
@@ -221,6 +227,15 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 */
 
     private EmissionsReport createHydratedEmissionsReport() {
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setAgencyFacilityId("ALTID");
+        mfr.setCity("Raleigh");
+        mfr.setDescription("Facility Description");
+        mfr.setEisProgramId("EISID");
+        mfr.setId(1L);
+        mfr.setLatitude(BigDecimal.valueOf(2.5d));
+        mfr.setLongitude(BigDecimal.valueOf(2.5d));
+        
     	EmissionsReport er = new EmissionsReport();
     	er.setEisProgramId("");
     	er.setFrsFacilityId("");

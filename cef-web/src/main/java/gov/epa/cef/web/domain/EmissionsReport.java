@@ -30,6 +30,10 @@ public class EmissionsReport extends BaseAuditEntity {
     @JoinColumn(name = "program_system_code")
     private ProgramSystemCode programSystemCode;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "master_facility_id")
+    private MasterFacilityRecord masterFacilityRecord;
+
     @Column(name = "cromerr_activity_id", length = 37)
     private String cromerrActivityId;
 
@@ -95,6 +99,7 @@ public class EmissionsReport extends BaseAuditEntity {
     public EmissionsReport(EmissionsReport originalEmissionsReport) {
 
         this.id = originalEmissionsReport.getId();
+        this.masterFacilityRecord = originalEmissionsReport.getMasterFacilityRecord();
         this.frsFacilityId = originalEmissionsReport.frsFacilityId;
         this.eisProgramId = originalEmissionsReport.eisProgramId;
         this.programSystemCode = originalEmissionsReport.programSystemCode;
@@ -130,6 +135,14 @@ public class EmissionsReport extends BaseAuditEntity {
     public void setProgramSystemCode(ProgramSystemCode programSystemCode) {
 
         this.programSystemCode = programSystemCode;
+    }
+
+    public MasterFacilityRecord getMasterFacilityRecord() {
+        return masterFacilityRecord;
+    }
+
+    public void setMasterFacilityRecord(MasterFacilityRecord masterFacilityRecord) {
+        this.masterFacilityRecord = masterFacilityRecord;
     }
 
     public String getCromerrActivityId() {

@@ -154,6 +154,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
               this.facilitySite.mailingCity = this.facility.city;
               this.facilitySite.mailingPostalCode = this.facility.zipCode;
               this.facilitySite.altSiteIdentifier = this.facility.stateFacilityId;
+              this.facilitySite.eisProgramId = this.facility.programId;
     }
 
 
