@@ -16,6 +16,11 @@ public class ReportingPeriodDto implements Serializable {
     private BigDecimal calculationParameterValue;
     private UnitMeasureCodeDto calculationParameterUom;
     private CodeLookupDto calculationMaterialCode;
+    private BigDecimal fuelUseValue;
+    private UnitMeasureCodeDto fuelUseUom;
+    private CodeLookupDto fuelUseMaterialCode;
+    private BigDecimal heatContentValue;
+    private UnitMeasureCodeDto heatContentUom;
     private String comments;
     private List<EmissionDto> emissions;
     private List<OperatingDetailDto> operatingDetails;
@@ -84,7 +89,47 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public String getComments() {
+    public BigDecimal getFuelUseValue() {
+		return fuelUseValue;
+	}
+
+	public void setFuelUseValue(BigDecimal fuelUseValue) {
+		this.fuelUseValue = fuelUseValue;
+	}
+
+	public UnitMeasureCodeDto getFuelUseUom() {
+		return fuelUseUom;
+	}
+
+	public void setFuelUseUom(UnitMeasureCodeDto fuelUseUom) {
+		this.fuelUseUom = fuelUseUom;
+	}
+
+	public CodeLookupDto getFuelUseMaterialCode() {
+		return fuelUseMaterialCode;
+	}
+
+	public void setFuelUseMaterialCode(CodeLookupDto fuelUseMaterialCode) {
+		this.fuelUseMaterialCode = fuelUseMaterialCode;
+	}
+
+	public BigDecimal getHeatContentValue() {
+		return heatContentValue;
+	}
+
+	public void setHeatContentValue(BigDecimal heatContentValue) {
+		this.heatContentValue = heatContentValue;
+	}
+
+	public UnitMeasureCodeDto getHeatContentUom() {
+		return heatContentUom;
+	}
+
+	public void setHeatContentUom(UnitMeasureCodeDto heatContentUom) {
+		this.heatContentUom = heatContentUom;
+	}
+
+	public String getComments() {
         return comments;
     }
 

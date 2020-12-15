@@ -12,6 +12,11 @@ export class ReportingPeriod {
   calculationParameterValue: number;
   calculationParameterUom: UnitMeasureCode;
   calculationMaterialCode: BaseCodeLookup;
+  fuelUseValue: number;
+  fuelUseUom: UnitMeasureCode;
+  fuelUseMaterialCode: BaseCodeLookup;
+  heatContentValue: number;
+  heatContentUom: UnitMeasureCode;
   comments: string;
   emissions: Emission[];
   operatingDetails: OperatingDetail[];

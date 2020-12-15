@@ -67,6 +67,71 @@
             <app-validation-message [control]="reportingPeriodForm.controls.calculationParameterUom"></app-validation-message>
         </div>
     </div>
+    <div class="row pb-3">
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Code for fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpMaterialSelect" class="ml-1 col-form-label"><strong>Fuel Material:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <select type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of fuelUseMaterialValues" [ngValue]="opt">{{opt.description}}</option>
+            </select>
+            <app-validation-message [control]="reportingPeriodForm.controls.fuelUseMaterialCode"></app-validation-message>
+        </div>
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Fuel use of the process for a given time period." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpFuelValueInput" class="ml-1 col-form-label"><strong>Fuel Value:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" id="rpFuelValueInput" formControlName="fuelUseValue" >
+            <app-validation-message [control]="reportingPeriodForm.controls.fuelUseValue"></app-validation-message>
+        </div>
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Code for the unit of measure for fuel use value." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpFuelUomSelect" class="ml-1 col-form-label"><strong>Fuel UoM:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <select type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of fuelUseUomValues" [ngValue]="opt">{{opt.code}}</option>
+            </select>
+            <app-validation-message [control]="reportingPeriodForm.controls.fuelUseUom"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row-1" *ngIf="reportingPeriodForm.getError('fuelUsefields')">
+        <div class="col-sm-12">
+            <div class="validation-message" style="padding-left: 10px;">
+                Fuel Use Material, Fuel Use Value, and Fuel Use UoM are optional fields. If any Fuel Use fields are reported, then all fields must be reported.
+            </div>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Heat content value of Fuel Material" [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpHeatContentValueInput" class="ml-1 col-form-label"><strong>Heat Content Value:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" id="rpHeatContentValueInput" formControlName="heatContentValue" >
+            <app-validation-message [control]="reportingPeriodForm.controls.heatContentValue"></app-validation-message>
+        </div>
+        <div class="col-sm-2">
+            <fa-icon class="mt-2" title="Code for the unit of measure for heat content value." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpHeatContentUomSelect" class="ml-1 col-form-label"><strong>Heat Content UoM:</strong></label>
+        </div>
+        <div class="col-sm-2">
+            <select type="text" class="form-control" id="rpHeatContentUomSelect" formControlName="heatContentUom" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of heatContentUomValues" [ngValue]="opt">{{opt.code}}</option>
+            </select>
+            <app-validation-message [control]="reportingPeriodForm.controls.heatContentUom"></app-validation-message>
+            <div class="validation-message" *ngIf="checkHeatContentUom()">
+                Heat Capacity Value is an optional field. If it is reported, UoMs must be reported with it.
+            </div>
+        </div>
+    </div>
 
     <div class="row pb-1">
         <div class="col-sm-2">

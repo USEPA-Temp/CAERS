@@ -28,6 +28,9 @@ public interface ReportingPeriodMapper {
     @Mapping(target = "calculationParameterTypeCode", ignore = true)
     @Mapping(target = "calculationParameterUom", ignore = true)
     @Mapping(target = "calculationMaterialCode", ignore = true)
+    @Mapping(target = "fuelUseUom", ignore = true)
+    @Mapping(target = "fuelUseMaterialCode", ignore = true)
+    @Mapping(target = "heatContentUom", ignore = true)
     @Mapping(target = "emissions", ignore = true)
     @Mapping(target = "operatingDetails", ignore = true)
     void updateFromDto(ReportingPeriodDto source, @MappingTarget ReportingPeriod target);

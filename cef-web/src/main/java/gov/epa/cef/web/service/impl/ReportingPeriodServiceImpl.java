@@ -74,6 +74,18 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
         if (dto.getReportingPeriodTypeCode() != null) {
             period.setReportingPeriodTypeCode(lookupService.retrieveReportingPeriodCodeEntityByCode(dto.getReportingPeriodTypeCode().getCode()));
         }
+        
+        if (dto.getFuelUseMaterialCode() != null) {
+            period.setFuelUseMaterialCode(lookupService.retrieveCalcMaterialCodeEntityByCode(dto.getFuelUseMaterialCode().getCode()));
+        }
+        
+        if (dto.getFuelUseUom() != null) {
+            period.setFuelUseUom(lookupService.retrieveUnitMeasureCodeEntityByCode(dto.getFuelUseUom().getCode()));
+        }
+        
+        if (dto.getHeatContentUom() != null) {
+            period.setHeatContentUom(lookupService.retrieveUnitMeasureCodeEntityByCode(dto.getHeatContentUom().getCode()));
+        }
 
         period.getOperatingDetails().forEach(od -> {
             od.setReportingPeriod(period);
@@ -109,6 +121,24 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
         if (dto.getReportingPeriodTypeCode() != null) {
             period.setReportingPeriodTypeCode(lookupService.retrieveReportingPeriodCodeEntityByCode(dto.getReportingPeriodTypeCode().getCode()));
+        }
+        
+        if (dto.getFuelUseMaterialCode() != null) {
+            period.setFuelUseMaterialCode(lookupService.retrieveCalcMaterialCodeEntityByCode(dto.getFuelUseMaterialCode().getCode()));
+        } else {
+        	period.setFuelUseMaterialCode(null);
+        }
+        
+        if (dto.getFuelUseUom() != null) {
+            period.setFuelUseUom(lookupService.retrieveUnitMeasureCodeEntityByCode(dto.getFuelUseUom().getCode()));
+        } else {
+        	period.setFuelUseUom(null);
+        }
+        
+        if (dto.getHeatContentUom() != null) {
+            period.setHeatContentUom(lookupService.retrieveUnitMeasureCodeEntityByCode(dto.getHeatContentUom().getCode()));
+        } else {
+        	period.setHeatContentUom(null);
         }
 
         ReportingPeriodUpdateResponseDto result = new ReportingPeriodUpdateResponseDto();
