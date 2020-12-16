@@ -180,9 +180,6 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
       updatedReportingPeriod.emissionsProcessId = this.process.id;
       updatedReportingPeriod.id = period.id;
-      if (!updatedReportingPeriod.heatContentValue && updatedReportingPeriod.heatContentUom) {
-        updatedReportingPeriod.heatContentUom = null;
-      }
 
       this.reportingPeriodService.update(updatedReportingPeriod)
       .subscribe(result => {
@@ -237,9 +234,6 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
       reportingPeriod.operatingDetails = [operatingDetails];
       reportingPeriod.emissionsProcessId = this.process.id;
-      if (!reportingPeriod.heatContentValue && reportingPeriod.heatContentUom) {
-        reportingPeriod.heatContentUom = null;
-      }
 
       console.log(reportingPeriod);
 
