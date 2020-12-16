@@ -67,7 +67,7 @@
             <app-validation-message [control]="reportingPeriodForm.controls.calculationParameterUom"></app-validation-message>
         </div>
     </div>
-    <div class="row pb-3">
+    <div class="row pb-1">
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Code for fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpMaterialSelect" class="ml-1 col-form-label"><strong>Fuel Material:</strong></label>
@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    <div class="row-1" *ngIf="reportingPeriodForm.getError('fuelUsefields')">
+    <div class="row pb-1" *ngIf="reportingPeriodForm.getError('fuelUsefields')">
         <div class="col-sm-12">
             <div class="validation-message" style="padding-left: 10px;">
                 Fuel Use Material, Fuel Use Value, and Fuel Use UoM are optional fields. If any Fuel Use fields are reported, then all fields must be reported.
@@ -130,7 +130,7 @@
         </div>
     </div>
     
-    <div class="row-1" *ngIf="reportingPeriodForm.errors?.heatContentInvalid">
+    <div class="row pb-1" *ngIf="reportingPeriodForm.errors?.heatContentInvalid">
         <div class="col-sm-12">
             <div class="validation-message" style="padding-left: 10px;">
                 Heat Capacity Value and Heat Capacity UoM are optional fields. If either field is reported, then both must be reported together.
