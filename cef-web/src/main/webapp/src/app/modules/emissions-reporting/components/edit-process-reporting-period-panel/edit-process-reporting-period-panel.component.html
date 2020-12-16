@@ -127,7 +127,12 @@
                 <option *ngFor="let opt of heatContentUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.heatContentUom"></app-validation-message>
-            <div class="validation-message" *ngIf="checkHeatContentUom()">
+        </div>
+    </div>
+    
+    <div class="row" *ngIf="reportingPeriodForm.errors?.heatContentInvalid">
+        <div class="col-sm-6">
+            <div class="validation-message" style="padding-left: 10px;">
                 Heat Capacity Value is an optional field. If it is reported, UoMs must be reported with it.
             </div>
         </div>

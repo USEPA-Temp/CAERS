@@ -38,7 +38,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     heatContentUom: [null, [legacyUomValidator()]],
     comments: [null, Validators.maxLength(400)]
   }, { validators: [
-    this.checkFuelUseFields()
+    this.checkFuelUseFields(),
+    this.checkHeatCapacityUom()
   ]});
 
   materialValues: BaseCodeLookup[];
@@ -112,14 +113,16 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     // console.log(period);
   }
 
-  // heat content uom validation message ngif calls this method
-  checkHeatContentUom() {
-    if (this.reportingPeriodForm.value.heatContentValue && !this.reportingPeriodForm.value.heatContentUom) {
-      this.reportingPeriodForm.get('heatContentUom').setErrors({heatContentUom: true});
-      return {heatContentUom: true};
-    } else {
-      this.reportingPeriodForm.get('heatContentUom').setErrors(null);
-    }
+  checkHeatCapacityUom(): ValidatorFn {
+    return (control: FormGroup): ValidationErrors | null => {
+      const heatContentValue = control.get('heatContentValue').value;
+      const heatContentUom = control.get('heatContentUom').value;
+
+      if ((heatContentValue && !heatContentUom) || (!heatContentValue && heatContentUom)) {
+        return {heatContentInvalid: true};
+      }
+      return null;
+    };
   }
 
   checkFuelUseFields(): ValidatorFn {
