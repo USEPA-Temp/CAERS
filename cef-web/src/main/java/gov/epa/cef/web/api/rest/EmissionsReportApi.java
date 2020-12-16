@@ -14,6 +14,7 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.BulkUploadService;
+import gov.epa.cef.web.service.EmissionsReportExportService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
@@ -63,6 +64,8 @@ public class EmissionsReportApi {
     private final EmissionsReportService emissionsReportService;
 
     private final EmissionsReportStatusService emissionsReportStatusService;
+    
+    private final EmissionsReportExportService exportService;
 
     private final FacilitySiteService facilitySiteService;
 
@@ -84,6 +87,7 @@ public class EmissionsReportApi {
     EmissionsReportApi(SecurityService securityService,
                        EmissionsReportService emissionsReportService,
                        EmissionsReportStatusService emissionsReportStatusService,
+                       EmissionsReportExportService exportService,
                        FacilitySiteService facilitySiteService,
                        ReportService reportService,
                        EmissionsReportValidationService validationService,
@@ -94,6 +98,7 @@ public class EmissionsReportApi {
         this.securityService = securityService;
         this.emissionsReportService = emissionsReportService;
         this.emissionsReportStatusService = emissionsReportStatusService;
+        this.exportService = exportService;
         this.facilitySiteService = facilitySiteService;
         this.reportService = reportService;
         this.validationService = validationService;
@@ -262,7 +267,7 @@ public class EmissionsReportApi {
         @NotNull @PathVariable Long reportId) {
 
         EmissionsReportBulkUploadDto result =
-            uploadService.generateBulkUploadDto(reportId);
+            exportService.generateBulkUploadDto(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -286,7 +291,7 @@ public class EmissionsReportApi {
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s-%s-%d.xlsx\"", facility.getAltSiteIdentifier(), facility.getName(), report.getYear()))
                 .body(outputStream -> {
-                    uploadService.generateExcel(reportId, outputStream);
+                    exportService.generateExcel(reportId, outputStream);
                 });
     }
 
