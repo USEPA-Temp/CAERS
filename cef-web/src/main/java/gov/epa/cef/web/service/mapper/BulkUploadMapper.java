@@ -92,6 +92,9 @@ public interface BulkUploadMapper {
     @Mapping(target="calculationParameterTypeCode", ignore = true)
     @Mapping(target="calculationParameterUom", ignore = true)
     @Mapping(target="calculationMaterialCode", ignore = true)
+    @Mapping(target="fuelUseUom", ignore = true)
+    @Mapping(target="fuelUseMaterialCode", ignore = true)
+    @Mapping(target="heatContentUom", ignore = true)
     ReportingPeriod reportingPeriodFromDto(ReportingPeriodBulkUploadDto source);
 
     @Mapping(source="emissionsProcess.id", target="emissionsProcessId")
@@ -100,6 +103,9 @@ public interface BulkUploadMapper {
     @Mapping(source="calculationParameterTypeCode.code", target="calculationParameterTypeCode")
     @Mapping(source="calculationParameterUom.code", target="calculationParameterUom")
     @Mapping(source="calculationMaterialCode.code", target="calculationMaterialCode")
+    @Mapping(source="fuelUseUom.code", target="fuelUseUom")
+    @Mapping(source="fuelUseMaterialCode.code", target="fuelUseMaterialCode")
+    @Mapping(source="heatContentUom.code", target="heatContentUom")
     ReportingPeriodBulkUploadDto reportingPeriodToDto(ReportingPeriod source);
 
     List<ReportingPeriodBulkUploadDto> reportingPeriodToDtoList(List<ReportingPeriod> source);

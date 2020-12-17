@@ -936,6 +936,15 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (dto.getReportingPeriodTypeCode() != null) {
             result.setReportingPeriodTypeCode(reportingPeriodCodeRepo.findById(dto.getReportingPeriodTypeCode()).orElse(null));
         }
+        if (dto.getFuelUseMaterialCode() != null) {
+            result.setFuelUseMaterialCode(calcMaterialCodeRepo.findById(dto.getFuelUseMaterialCode()).orElse(null));
+        }
+        if (dto.getFuelUseUom() != null) {
+            result.setFuelUseUom(unitMeasureCodeRepo.findById(dto.getFuelUseUom()).orElse(null));
+        }
+        if (dto.getHeatContentUom() != null) {
+            result.setHeatContentUom(unitMeasureCodeRepo.findById(dto.getHeatContentUom()).orElse(null));
+        }
 
         return result;
     }
