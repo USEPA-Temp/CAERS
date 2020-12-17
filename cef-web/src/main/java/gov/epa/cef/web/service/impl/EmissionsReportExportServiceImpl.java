@@ -789,7 +789,16 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
                 row.getCell(14).setCellFormula(generateLookupFormula(wb, "CalculationMaterialCode", dto.getCalculationMaterialCode(), false));
                 formulaEvaluator.evaluateInCell(row.getCell(14));
             }
-            row.getCell(15).setCellValue(dto.getComments());
+            setCellNumberValue(row.getCell(15), dto.getFuelUseValue());
+            row.getCell(16).setCellValue(dto.getFuelUseUom());
+            if (dto.getFuelUseMaterialCode() != null) {
+                row.getCell(17).setCellValue(dto.getFuelUseMaterialCode());
+                row.getCell(18).setCellFormula(generateLookupFormula(wb, "CalculationMaterialCode", dto.getFuelUseMaterialCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(18));
+            }
+            setCellNumberValue(row.getCell(19), dto.getHeatContentValue());
+            row.getCell(20).setCellValue(dto.getHeatContentUom());
+            row.getCell(21).setCellValue(dto.getComments());
 
             currentRow++;
 

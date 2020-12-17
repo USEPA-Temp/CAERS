@@ -60,6 +60,18 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
             if (period.getReportingPeriodTypeCode() != null) {
                 period.setReportingPeriodTypeCode(lookupService.retrieveReportingPeriodCodeEntityByCode(period.getReportingPeriodTypeCode().getCode()));
             }
+            
+            if (period.getFuelUseMaterialCode() != null) {
+                period.setFuelUseMaterialCode(lookupService.retrieveCalcMaterialCodeEntityByCode(period.getFuelUseMaterialCode().getCode()));
+            }
+            
+            if (period.getFuelUseUom() != null) {
+                period.setFuelUseUom(lookupService.retrieveUnitMeasureCodeEntityByCode(period.getFuelUseUom().getCode()));
+            }
+            
+            if (period.getHeatContentUom() != null) {
+                period.setHeatContentUom(lookupService.retrieveUnitMeasureCodeEntityByCode(period.getHeatContentUom().getCode()));
+            }
 
             period.setEmissionsProcess(process);
 
