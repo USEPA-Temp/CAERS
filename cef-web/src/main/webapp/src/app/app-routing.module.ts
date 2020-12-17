@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {FacilityDashboardComponent} from 'src/app/modules/dashboards/pages/facility-dashboard/facility-dashboard.component';
-import {FacilityDataReviewComponent} from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
 import {SubmissionReviewDashboardComponent} from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
 import {EisSubmissionComponent} from "src/app/modules/dashboards/pages/eis-submission/eis-submission.component";
 import {FacilityResolverService} from 'src/app/core/services/facility-resolver.service';
@@ -31,12 +30,7 @@ const routes: Routes = [
           {
             path: 'report',
             loadChildren: () => import('src/app/modules/emissions-reporting/emissions-reporting.module').then(m => m.EmissionsReportingModule)
-          },
-          {
-              path: 'review',
-              component: FacilityDataReviewComponent,
-              data: { breadcrumb: 'Facility Information' }
-            }
+          }
         ]
       }, {
         path: '',
