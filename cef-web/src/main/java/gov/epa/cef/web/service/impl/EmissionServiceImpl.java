@@ -22,6 +22,7 @@ import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
@@ -41,6 +42,7 @@ import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
 import gov.epa.cef.web.util.CalculationUtils;
+import gov.epa.cef.web.util.ConstantUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 
 @Service
@@ -170,7 +172,11 @@ public class EmissionServiceImpl implements EmissionService {
 
         List<ReportingPeriod> entities = periodRepo.findByFacilitySiteId(facilitySiteId).stream()
                 .filter(rp -> !"PS".equals(rp.getEmissionsProcess().getOperatingStatusCode().getCode()))
-                .collect(Collectors.toList());
+                .filter(rp -> {
+                    FacilitySourceTypeCode typeCode = rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getFacilitySourceTypeCode();
+                    return !"PS".equals(rp.getEmissionsProcess().getEmissionsUnit().getOperatingStatusCode().getCode())
+                            || (typeCode != null && ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(typeCode.getCode()));
+                }).collect(Collectors.toList());
 
         List<EmissionBulkEntryHolderDto> result = emissionMapper.periodToEmissionBulkEntryDtoList(entities);
 

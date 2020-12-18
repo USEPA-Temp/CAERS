@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
@@ -15,6 +16,7 @@ import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
 import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import gov.epa.cef.web.util.CalculationUtils;
+import gov.epa.cef.web.util.ConstantUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 
 import org.slf4j.Logger;
@@ -197,7 +199,11 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
         List<ReportingPeriod> entities = repo.findByFacilitySiteId(facilitySiteId).stream()
                 .filter(rp -> !"PS".equals(rp.getEmissionsProcess().getOperatingStatusCode().getCode()))
-                .collect(Collectors.toList());
+                .filter(rp -> {
+                    FacilitySourceTypeCode typeCode = rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getFacilitySourceTypeCode();
+                    return !"PS".equals(rp.getEmissionsProcess().getEmissionsUnit().getOperatingStatusCode().getCode())
+                            || (typeCode != null && ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(typeCode.getCode()));
+                }).collect(Collectors.toList());
 
         List<ReportingPeriodBulkEntryDto> result = mapper.toBulkEntryDtoList(entities);
 
