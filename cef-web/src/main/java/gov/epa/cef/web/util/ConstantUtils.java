@@ -11,4 +11,7 @@ public class ConstantUtils {
 	public static final String EIS_TRANSMISSION_FACILITY_INVENTORY = "FacilityInventory";
 	public static final String EIS_TRANSMISSION_POINT_EMISSIONS = "Point";
 	
+	// LANDFILL FACILITY SOURCE TYPE CODE
+	public static final String FACILITY_SOURCE_LANDFILL_CODE = "104";
+	
 }
