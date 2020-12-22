@@ -44,13 +44,13 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     private String calculationMaterialCode;
     
     @Pattern(regexp = PositiveDecimalPattern,
-        message = "Fuel Use Value is not in expected numeric format; found '${validatedValue}'.")
+        message = "Fuel Value is not in expected numeric format; found '${validatedValue}'.")
     private String fuelUseValue;
 
-    @Size(max = 20, message = "Fuel Use Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    @Size(max = 20, message = "Fuel Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fuelUseUom;
 
-    @Size(max = 20, message = "Fuel Use Material Code can not exceed {max} chars; found '${validatedValue}'.")
+    @Size(max = 20, message = "Fuel Material Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fuelUseMaterialCode;
     
     @Pattern(regexp = PositiveDecimalPattern,
