@@ -64,7 +64,7 @@ export class BulkUploadComponent implements OnInit {
 
 
   onUploadComplete(report: EmissionsReport) {
-        console.log(`emissionsReport: ${report.programSystemCode.code}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
+        console.log(`emissionsReport: ${report.programSystemCode}; ${report.eisProgramId}; ${report.facilityId}; ${report.id};
           ${report.status}; ${report.validationStatus}; ${report.year}; `);
         this.uploadStatus += `** '${decodeURI(report.fileName)}' successfully uploaded.<br/>`;
   }
