@@ -42,6 +42,9 @@ import { RecalculateEmissionTonsModalComponent } from './modules/dashboards/comp
 import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
 import { AdminUserFeedbackComponent } from './modules/dashboards/pages/admin-user-feedback/admin-user-feedback.component';
 import { UserFeedbackReportModalComponent } from './modules/dashboards/components/user-feedback-report-modal/user-feedback-report-modal.component';
+import { MasterFacilityInformationComponent } from './modules/dashboards/pages/master-facility-information/master-facility-information.component';
+import { MasterFacilityTableComponent } from './modules/dashboards/components/master-facility-table/master-facility-table.component';
+import { MasterFacilityInfoComponent } from './modules/dashboards/components/master-facility-info/master-facility-info.component';
 
 
 @NgModule({
@@ -74,7 +77,10 @@ import { UserFeedbackReportModalComponent } from './modules/dashboards/component
     DataFilterPipe,
     RecalculateEmissionTonsModalComponent,
     UserFeedbackReportModalComponent,
-    SltPropertiesComponent
+    SltPropertiesComponent,
+    MasterFacilityInformationComponent,
+    MasterFacilityTableComponent,
+    MasterFacilityInfoComponent
   ],
   imports: [
     BrowserModule,
