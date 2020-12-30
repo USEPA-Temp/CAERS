@@ -9,6 +9,19 @@
 
    <div id="nb-reviewer-component" class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
+         <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle id="nb-facility-management"
+               class="nav-link dropdown-toggle"
+               style="cursor: pointer"
+               role="button" aria-haspopup="true" aria-expanded="false">
+               <span>Facility Management</span>
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu"
+                 aria-labelledby="nb-facility-management">
+               <a ngbDropdownItem class="dropdown-item"
+                  routerLink="/reviewer/facility">Facility Information</a>
+            </div>
+         </li>
          <li class="nav-item" [routerLinkActive]="'active'">
             <a class="nav-link" routerLink="/reviewer/dashboard">Submission Review</a>
          </li>
