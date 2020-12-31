@@ -22,19 +22,19 @@
     <table class="table table-sm table-striped table-bordered">
       <thead class="thead-cef-medium">
         <tr>
-          <th scope="col" sortable="name" (sort)="onSort($event)">Facility Name</th>
-          <th scope="col" sortable="agencyFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
+          <th scope="col" sortable="name" (sort)="sortAndSearch($event)">Facility Name</th>
+          <th scope="col" sortable="agencyFacilityId" (sort)="sortAndSearch($event)">Agency Facility ID</th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let item of filteredItems | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-          <tr [class.table-active]="item === selectedFacility" (click)="selectFacility(item)">
+          <tr class="cursor-pointer" [class.table-dark]="item === selectedFacility" (click)="selectFacility(item)">
             <td>{{item.name}}</td>
             <td>{{item.agencyFacilityId}}</td>
           </tr>
         </ng-container>
       </tbody>
     </table>
-    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredItems.length"></ngb-pagination>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredItems.length" [maxSize]="5" [rotate]="true"></ngb-pagination>
   </div>
 </div>
