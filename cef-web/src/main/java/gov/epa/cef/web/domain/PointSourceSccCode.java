@@ -28,6 +28,9 @@ public class PointSourceSccCode implements java.io.Serializable {
 
   @Column(name = "last_inventory_year")
   private Short lastInventoryYear;
+  
+  @Column(name = "fuel_use_required", nullable = false)
+  private Boolean fuelUseRequired;
 
   // Property accessors
 
@@ -45,6 +48,14 @@ public class PointSourceSccCode implements java.io.Serializable {
 
   public void setLastInventoryYear(Short lastInventoryYear) {
       this.lastInventoryYear = lastInventoryYear;
+  }
+  
+  public Boolean getFuelUseRequired() {
+	  return fuelUseRequired;
+  }
+  
+  public void setFuelUseRequired(Boolean fuelUseRequired) {
+	  this.fuelUseRequired = fuelUseRequired;
   }
 
 }
