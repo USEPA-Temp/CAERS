@@ -148,7 +148,7 @@
                             <div class="col-sm-6 col-md-2">{{period.fuelUseUom?.description}}</div>
                         </div>
 
-                        <div class="row">
+                        <div class="row justify-content-end">
                             <div class="col-sm-6 col-md-2"><strong>Heat Content Value:</strong></div>
                             <div class="col-sm-6 col-md-2">{{period.heatContentValue}}</div>
                             <div class="col-sm-6 col-md-2"><strong>Heat Content UoM:</strong></div>
@@ -162,7 +162,7 @@
                     </div>
 
                         <div *ngIf="editPeriod">
-                            <app-edit-process-reporting-period-panel [reportingPeriod]="period"></app-edit-process-reporting-period-panel>
+                            <app-edit-process-reporting-period-panel [reportingPeriod]="period" [sccCode]="process.sccCode"></app-edit-process-reporting-period-panel>
                             <div class="float-right pb-3 pr-3" *ngIf="reportingPeriodComponent">
                                 <button type="button" class="btn btn-primary mr-2" (click)="setEditPeriod(false)">Cancel</button>
                                 <button type="submit" class="btn btn-success" (click)="updateReportingPeriod(period)">Save</button>

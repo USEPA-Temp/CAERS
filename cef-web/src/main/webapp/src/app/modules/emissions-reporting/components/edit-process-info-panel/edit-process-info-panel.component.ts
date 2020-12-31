@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -80,6 +81,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     private emissionUnitService: EmissionUnitService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private sharedService: SharedService,
     private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -150,6 +152,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         this.processForm.get('sccCode').setValue(modalScc.code);
         this.processForm.get('sccDescription').setValue(modalScc.description);
         this.checkAircraftSCC();
+        this.sharedService.emitProcessSccChange(modalScc.code);
       }
     }, () => {
       // needed for dismissing without errors
