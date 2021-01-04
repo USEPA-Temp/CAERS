@@ -2,14 +2,19 @@ package gov.epa.cef.web.service.validation.validator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.baidu.unbiz.fluentvalidator.ValidationError;
@@ -20,10 +25,12 @@ import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ReportingPeriodValidator;
@@ -33,6 +40,27 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 	
 	@InjectMocks
 	private ReportingPeriodValidator validator;
+	
+	@Mock
+	private PointSourceSccCodeRepository sccRepo;
+	
+	@Before
+    public void init(){
+
+		List<PointSourceSccCode> sccList = new ArrayList<PointSourceSccCode>();
+		PointSourceSccCode scc1 = new PointSourceSccCode();
+		scc1.setCode("10200302");
+		scc1.setFuelUseRequired(true);
+		sccList.add(scc1);
+		
+		PointSourceSccCode scc2 = new PointSourceSccCode();
+		scc2.setCode("10200301");
+		scc2.setFuelUseRequired(false);
+		sccList.add(scc2);
+
+    	when(sccRepo.findById("10200302")).thenReturn(Optional.of(scc1));
+    	when(sccRepo.findById("10200301")).thenReturn(Optional.of(scc2));
+    }
 	
 	@Test
     public void simpleValidatePassTest() {
@@ -364,10 +392,12 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
     }
 	
 	@Test
-    public void fuelUseValuesFailTest() {
+    public void fuelDataValuesFailTest() {
 		
 		CefValidatorContext cefContext = createContext();
         ReportingPeriod testData = createBaseReportingPeriod();
+        
+        testData.getEmissionsProcess().setSccCode("10200301");
         
         CalculationMaterialCode cmc = new CalculationMaterialCode();
         cmc.setFuelUseMaterial(true);
@@ -382,6 +412,67 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PERIOD_FUEL_USE_VALUES.value()) && errorMap.get(ValidationField.PERIOD_FUEL_USE_VALUES.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData = createBaseReportingPeriod();
+        testData.getEmissionsProcess().setSccCode("10200302");
+        
+        UnitMeasureCode uom = new UnitMeasureCode();
+		uom.setCode("BTU");
+        
+        testData.setFuelUseMaterialCode(null);
+        testData.setFuelUseUom(null);
+        testData.setFuelUseValue(null);
+        testData.setHeatContentUom(uom);
+        testData.setHeatContentValue(BigDecimal.valueOf(100));
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PERIOD_FUEL_USE_VALUES.value()) && errorMap.get(ValidationField.PERIOD_FUEL_USE_VALUES.value()).size() == 1);
+        
+	}
+	
+	@Test
+    public void heatContentValuesFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        
+        testData.getEmissionsProcess().setSccCode("10200301");
+        
+        testData.setHeatContentUom(null);
+        testData.setHeatContentValue(BigDecimal.valueOf(100));
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PERIOD_HEAT_CONTENT_VALUES.value()) && errorMap.get(ValidationField.PERIOD_HEAT_CONTENT_VALUES.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData = createBaseReportingPeriod();
+        testData.getEmissionsProcess().setSccCode("10200302");
+        
+        CalculationMaterialCode cmc = new CalculationMaterialCode();
+        cmc.setFuelUseMaterial(true);
+		cmc.setCode("794");
+		
+		UnitMeasureCode uom = new UnitMeasureCode();
+		uom.setCode("BTU");
+        
+        testData.setFuelUseMaterialCode(cmc);
+        testData.setFuelUseUom(uom);
+        testData.setFuelUseValue(BigDecimal.valueOf(100));
+        testData.setHeatContentUom(null);
+        testData.setHeatContentValue(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PERIOD_HEAT_CONTENT_VALUES.value()) && errorMap.get(ValidationField.PERIOD_HEAT_CONTENT_VALUES.value()).size() == 1);
         
 	}
 	

@@ -25,6 +25,8 @@ public interface MasterFacilityRecordRepository extends CrudRepository<MasterFac
      */
     List<MasterFacilityRecord> findByStateCode(String stateCode);
 
+    List<MasterFacilityRecord> findByProgramSystemCodeCode(String programSystemCode);
+
     /**
      *
      * @param id

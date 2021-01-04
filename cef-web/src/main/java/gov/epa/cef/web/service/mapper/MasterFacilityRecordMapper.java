@@ -1,5 +1,7 @@
 package gov.epa.cef.web.service.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -11,6 +13,10 @@ import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 
 @Mapper(componentModel = "spring", uses = {LookupEntityMapper.class})
 public interface MasterFacilityRecordMapper {
+
+    MasterFacilityRecordDto toDto(MasterFacilityRecord source);
+
+    List<MasterFacilityRecordDto> toDtoList(List<MasterFacilityRecord> source);
 
     @Mapping(target="countyCode", qualifiedByName = "CountyCode")
     @Mapping(target="stateCode", qualifiedByName = "FipsStateCode")

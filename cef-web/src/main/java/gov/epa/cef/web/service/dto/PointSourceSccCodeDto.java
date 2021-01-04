@@ -8,6 +8,7 @@ public class PointSourceSccCodeDto implements Serializable {
 	
 	private String code;
 	private Short lastInventoryYear;
+	private Boolean fuelUseRequired;
 	
 	public String getCode() {
 		return code;
@@ -23,6 +24,14 @@ public class PointSourceSccCodeDto implements Serializable {
 	
 	public void setLastInventoryYear(Short lastInventoryYear) {
 		this.lastInventoryYear = lastInventoryYear;
+	}
+	
+	public Boolean getFuelUseRequired() {
+		return fuelUseRequired;
+	}
+	  
+	public void setFuelUseRequired(Boolean fuelUseRequired) {
+		this.fuelUseRequired = fuelUseRequired;
 	}
 
 }
