@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
@@ -29,7 +30,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@SqlGroup(value = {@Sql("classpath:db/test/emptyTestData.sql")})
+@SqlGroup(value = {@Sql("classpath:db/test/baseTestData.sql")})
 @ContextConfiguration(initializers = {
     CommonInitializers.NoCacheInitializer.class
 })
@@ -96,11 +97,15 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
     }
 
     private EmissionsReport createHydratedEmissionsReport() {
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(9999991L);
+
         ProgramSystemCode psc = new ProgramSystemCode();
         psc.setCode("GADNR");
 
     	EmissionsReport er = new EmissionsReport();
 		er.setProgramSystemCode(psc);
+		er.setMasterFacilityRecord(mfr);
 		er.setEisProgramId("ABC");
 		er.setFrsFacilityId("111111111111");
 		er.setId(1L);

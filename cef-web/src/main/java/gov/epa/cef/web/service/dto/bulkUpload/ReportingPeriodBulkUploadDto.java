@@ -42,6 +42,23 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     @NotNull(message = "Throughput Material Code is required.")
     @Size(max = 20, message = "Throughput Material Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationMaterialCode;
+    
+    @Pattern(regexp = PositiveDecimalPattern,
+        message = "Fuel Value is not in expected numeric format; found '${validatedValue}'.")
+    private String fuelUseValue;
+
+    @Size(max = 20, message = "Fuel Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String fuelUseUom;
+
+    @Size(max = 20, message = "Fuel Material Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String fuelUseMaterialCode;
+    
+    @Pattern(regexp = PositiveDecimalPattern,
+        message = "Heat Content Value is not in expected numeric format; found '${validatedValue}'.")
+    private String heatContentValue;
+
+    @Size(max = 20, message = "Heat Content Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String heatContentUom;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
@@ -114,7 +131,42 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public String getComments() {
+    public String getFuelUseValue() {
+		return fuelUseValue;
+	}
+	public void setFuelUseValue(String fuelUseValue) {
+		this.fuelUseValue = fuelUseValue;
+	}
+
+	public String getFuelUseUom() {
+		return fuelUseUom;
+	}
+	public void setFuelUseUom(String fuelUseUom) {
+		this.fuelUseUom = fuelUseUom;
+	}
+
+	public String getFuelUseMaterialCode() {
+		return fuelUseMaterialCode;
+	}
+	public void setFuelUseMaterialCode(String fuelUseMaterialCode) {
+		this.fuelUseMaterialCode = fuelUseMaterialCode;
+	}
+
+	public String getHeatContentValue() {
+		return heatContentValue;
+	}
+	public void setHeatContentValue(String heatContentValue) {
+		this.heatContentValue = heatContentValue;
+	}
+
+	public String getHeatContentUom() {
+		return heatContentUom;
+	}
+	public void setHeatContentUom(String heatContentUom) {
+		this.heatContentUom = heatContentUom;
+	}
+
+	public String getComments() {
         return comments;
     }
     public void setComments(String comments) {

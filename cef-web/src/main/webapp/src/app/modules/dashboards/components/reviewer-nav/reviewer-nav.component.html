@@ -12,10 +12,9 @@
          <li class="nav-item" [routerLinkActive]="'active'">
             <a class="nav-link" routerLink="/reviewer/dashboard">Submission Review</a>
          </li>
-         <li ngbDropdown class="nav-item dropdown">
+         <li ngbDropdown class="nav-item dropdown" [routerLinkActive]="'active'">
             <a ngbDropdownToggle id="nb-eis-transmission"
                class="nav-link dropdown-toggle"
-               [ngClass]="{'active': eisTransmissionActive}"
                style="cursor: pointer"
                role="button" aria-haspopup="true" aria-expanded="false">
                <span>EIS Transmission</span>
@@ -23,13 +22,29 @@
             <div ngbDropdownMenu class="dropdown-menu"
                  aria-labelledby="nb-eis-transmission">
                <a ngbDropdownItem class="dropdown-item"
-                  routerLink="/reviewer/eisSubmitData">Submit Data</a>
+                  routerLink="/reviewer/eisSubmitData"
+                  [routerLinkActive]="'active'">Submit Data</a>
                <a ngbDropdownItem class="dropdown-item"
-                  routerLink="/reviewer/eisTransactions">Review Transactions</a>
+                  routerLink="/reviewer/eisTransactions"
+                  [routerLinkActive]="'active'">Review Transactions</a>
             </div>
          </li>
          <li class="nav-item" [routerLinkActive]="'active'">
             <a class="nav-link disabled" href="#">Statistics and Reports</a>
+         </li>
+         <li ngbDropdown class="nav-item dropdown" [routerLinkActive]="'active'">
+            <a ngbDropdownToggle id="nb-facility-management"
+               class="nav-link dropdown-toggle"
+               style="cursor: pointer"
+               role="button" aria-haspopup="true" aria-expanded="false">
+               <span>Facility Management</span>
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu"
+                 aria-labelledby="nb-facility-management">
+               <a ngbDropdownItem class="dropdown-item"
+                  routerLink="/reviewer/facility"
+                  [routerLinkActive]="'active'">Facility Information</a>
+            </div>
          </li>
          <li class="nav-item" [routerLinkActive]="'active'">
             <a class="nav-link" routerLink="/reviewer/properties">Agency Administration</a>

@@ -36,6 +36,12 @@ public class UnitMeasureCode extends BaseLookupEntity {
     
     @Column(name = "unit_design_capacity", nullable = false)
     private Boolean unitDesignCapacity;
+    
+    @Column(name = "fuel_use_uom", nullable = false)
+    private Boolean fuelUseUom;
+    
+    @Column(name = "heat_content_uom", nullable = false)
+    private Boolean heatContentUom;
 
     @Column(name = "legacy", nullable = false)
     private Boolean legacy;
@@ -80,7 +86,23 @@ public class UnitMeasureCode extends BaseLookupEntity {
         this.unitDesignCapacity = unitDesignCapacity;
     }
 
-    public Boolean getLegacy() {
+	public Boolean getHeatContentUom() {
+		return heatContentUom;
+	}
+
+	public void setHeatContentUom(Boolean heatContentUom) {
+		this.heatContentUom = heatContentUom;
+	}
+
+	public Boolean getFuelUseUom() {
+		return fuelUseUom;
+	}
+
+	public void setFuelUseUom(Boolean fuelUseUom) {
+		this.fuelUseUom = fuelUseUom;
+	}
+
+	public Boolean getLegacy() {
         return legacy;
     }
 

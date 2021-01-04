@@ -500,7 +500,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         if (hasApportionment && !isRelPointOperating) {
             List<ReleasePointAppt> appts = releasePoint.getReleasePointAppts();
             for (ReleasePointAppt appt : appts) {
-                boolean isProcessOperating = appt.getEmissionsProcess().getOperatingStatusCode().getCode().equals("OP");
+                boolean isProcessOperating = ConstantUtils.STATUS_OPERATING.contentEquals(appt.getEmissionsProcess().getOperatingStatusCode().getCode());
 
                 if (isProcessOperating) {
                     result = false;
@@ -509,6 +509,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                         createValidationDetails(releasePoint),
                         releasePoint.getOperatingStatusCode().getDescription()
                     );
+                    break;
                 }
             }
         }

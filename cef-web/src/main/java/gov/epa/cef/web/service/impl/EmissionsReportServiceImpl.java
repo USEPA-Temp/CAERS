@@ -7,6 +7,7 @@ import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.domain.ReportStatus;
@@ -15,6 +16,7 @@ import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
@@ -30,6 +32,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
@@ -69,10 +72,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
 
     @Autowired
+    private MasterFacilityRecordRepository mfrRepo;
+
+    @Autowired
     private ReportAttachmentRepository reportAttachmentsRepo;
 
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
+
+    @Autowired
+    private MasterFacilityRecordMapper mfrMapper;
 
     @Autowired
     private CefConfig cefConfig;
@@ -88,6 +97,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private FacilitySiteService facilitySiteService;
+
+    @Autowired
+    private MasterFacilityRecordServiceImpl mfrService;
 
     @Autowired
     private NotificationService notificationService;
@@ -227,6 +239,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.setHasSubmitted(false);
                 cloneReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
+                cloneReport.getFacilitySites().forEach(fs -> {
+                    this.mfrMapper.updateFacilitySite(cloneReport.getMasterFacilityRecord(), fs);
+                });
                 cloneReport.clearId();
 
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
@@ -266,8 +281,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
 
+        // TODO: remove once MFR is fully implemented
+        // creates an MFR if one doesn't already exist, should be removed once associations are managed locally
+        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId()).orElseGet(() -> {
+            return this.mfrRepo.save(this.mfrService.transformFacilitySite(reportDto.getFacilitySite()));
+        });
+        // TODO: uncomment when MFR is fully implemented
+//        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId())
+//           .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getEisProgramId())));
+
         EmissionsReport newReport = new EmissionsReport();
         newReport.setEisProgramId(reportDto.getEisProgramId());
+        newReport.setMasterFacilityRecord(mfr);
         newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
@@ -275,9 +300,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         newReport.setHasSubmitted(false);
 
-        FacilitySite facilitySite = this.facilitySiteService.transform(reportDto.getFacilitySite());
+        FacilitySite facilitySite = this.mfrMapper.toFacilitySite(mfr);
         facilitySite.setEmissionsReport(newReport);
-        facilitySite.setEisProgramId(reportDto.getEisProgramId());
 
         newReport.setProgramSystemCode(facilitySite.getProgramSystemCode());
 

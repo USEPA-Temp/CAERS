@@ -17,7 +17,6 @@ import {
     faFilter, faTimes, faSearch, faUpload, faPowerOff, faBan, fas
 } from '@fortawesome/free-solid-svg-icons';
 import {CollapseIconComponent} from 'src/app/modules/shared/components/collapse-icon/collapse-icon.component';
-import {FacilityWidgetComponent} from 'src/app/modules/shared/components/facility-widget/facility-widget.component';
 import {SidebarComponent} from 'src/app/modules/shared/components/sidebar/sidebar.component';
 import {CollapseNavComponent} from 'src/app/modules/shared/components/collapse-nav/collapse-nav.component';
 import {SidebarInnerNavComponent} from 'src/app/modules/shared/components/sidebar-inner-nav/sidebar-inner-nav.component';
@@ -45,7 +44,6 @@ import {EisTransactionAttachmentModalComponent} from './components/eis-transacti
     declarations: [
         FacilityInfoComponent,
         CollapseIconComponent,
-        FacilityWidgetComponent,
         SidebarComponent,
         CollapseNavComponent,
         SidebarInnerNavComponent,
@@ -75,7 +73,6 @@ import {EisTransactionAttachmentModalComponent} from './components/eis-transacti
         CollapseNavComponent,
         SidebarInnerNavComponent,
         SidebarInnerNavItemComponent,
-        FacilityWidgetComponent,
         SortableHeaderDirective,
         PhoneNumberPipe,
         ReportSummaryTableComponent,

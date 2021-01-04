@@ -21,4 +21,9 @@ public interface UnitMeasureCodeRepository extends CrudRepository<UnitMeasureCod
         @QueryHint(name = "org.hibernate.cacheable", value = "true")})
     @Query("select uom from UnitMeasureCode uom where uom.legacy = false")
     List<UnitMeasureCode> findAllCurrent(Sort sort);
+    
+    @QueryHints({
+        @QueryHint(name = "org.hibernate.cacheable", value = "true")})
+    @Query("select uom from UnitMeasureCode uom where uom.fuelUseUom = true")
+    List<UnitMeasureCode> findAllFuelUseUom(Sort sort);
 }

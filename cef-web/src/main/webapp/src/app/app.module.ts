@@ -19,7 +19,6 @@ import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/compon
 import { FontAwesomeModule, FaConfig, FaIconLibrary  } from '@fortawesome/angular-fontawesome';
 import {faUserCircle, faQuestionCircle, faBan, fas, faPlus} from '@fortawesome/free-solid-svg-icons';
 import { RedirectComponent } from 'src/app/modules/dashboards/pages/redirect/redirect.component';
-import { FacilityDataReviewComponent } from 'src/app/modules/dashboards/components/facility-data-review/facility-data-review.component';
 import { GlobalErrorHandlerService } from 'src/app/core/services/global-error-handler.service';
 import { HttpErrorInterceptor } from 'src/app/core/interceptors/http-error.interceptor';
 import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
@@ -35,7 +34,6 @@ import { HelpPageComponent } from './modules/dashboards/pages/help-page/help-pag
 import { AdminPropertiesComponent } from './modules/dashboards/pages/admin-properties/admin-properties.component';
 import { AdminAnnouncementPropertiesComponent } from './modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
 import { ReviewerNavComponent } from './modules/dashboards/components/reviewer-nav/reviewer-nav.component';
-import {AdminNavComponent} from "./modules/shared/components/admin-nav/admin-nav.component";
 import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submission/eis-submission.component';
 import { EisTransactionsComponent } from './modules/dashboards/pages/eis-transactions/eis-transactions.component';
 import { SortByPipe } from './shared/pipes/sort-by.pipe';
@@ -44,6 +42,9 @@ import { RecalculateEmissionTonsModalComponent } from './modules/dashboards/comp
 import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
 import { AdminUserFeedbackComponent } from './modules/dashboards/pages/admin-user-feedback/admin-user-feedback.component';
 import { UserFeedbackReportModalComponent } from './modules/dashboards/components/user-feedback-report-modal/user-feedback-report-modal.component';
+import { MasterFacilityInformationComponent } from './modules/dashboards/pages/master-facility-information/master-facility-information.component';
+import { MasterFacilityTableComponent } from './modules/dashboards/components/master-facility-table/master-facility-table.component';
+import { MasterFacilityInfoComponent } from './modules/dashboards/components/master-facility-info/master-facility-info.component';
 
 
 @NgModule({
@@ -59,7 +60,6 @@ import { UserFeedbackReportModalComponent } from './modules/dashboards/component
     FacilityListItemComponent,
     BreadcrumbNavComponent,
     SubmissionReviewListComponent,
-    FacilityDataReviewComponent,
     ReportSummaryModalComponent,
     BusyModalComponent,
     RejectSubmissionModalComponent,
@@ -77,7 +77,10 @@ import { UserFeedbackReportModalComponent } from './modules/dashboards/component
     DataFilterPipe,
     RecalculateEmissionTonsModalComponent,
     UserFeedbackReportModalComponent,
-    SltPropertiesComponent
+    SltPropertiesComponent,
+    MasterFacilityInformationComponent,
+    MasterFacilityTableComponent,
+    MasterFacilityInfoComponent
   ],
   imports: [
     BrowserModule,

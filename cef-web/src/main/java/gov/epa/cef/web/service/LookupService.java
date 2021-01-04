@@ -33,6 +33,12 @@ public interface LookupService {
      * @return
      */
     List<CodeLookupDto> retrieveCalcMaterialCodes();
+    
+    /**
+     * Retrieve Fuel Use Calculation Material codes
+     * @return
+     */
+    List<CodeLookupDto> retrieveFuelUseMaterialCodes();
 
     /**
      * Retrieve Calculation Material code database object by code
@@ -116,6 +122,12 @@ public interface LookupService {
      * @return
      */
     List<UnitMeasureCodeDto> retrieveCurrentUnitMeasureCodes();
+    
+    /**
+     * Retrieve Fuel Use UoM codes 
+     * @return
+     */
+    List<UnitMeasureCodeDto> retrieveFuelUseUnitMeasureCodes();
 
     /**
      * Retrieve UoM code database object by code

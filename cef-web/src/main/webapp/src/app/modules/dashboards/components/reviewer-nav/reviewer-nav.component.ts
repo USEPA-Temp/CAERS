@@ -13,18 +13,10 @@ export class ReviewerNavComponent implements OnInit {
 
    user: User;
 
-   eisTransmissionActive: boolean;
-
    constructor(private userContext: UserContextService,
                private route: ActivatedRoute) { }
 
    ngOnInit() {
-
-      this.route.url.pipe(map(segments => segments.join('')))
-         .subscribe(result => {
-
-            this.eisTransmissionActive = result.indexOf("eis") == 0;
-         });
 
       this.userContext.getUser()
          .subscribe(result => {
