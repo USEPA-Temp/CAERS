@@ -21,7 +21,7 @@ import gov.epa.cef.web.domain.common.BaseAuditEntity;
 @Table(name = "release_point")
 
 public class ReleasePoint extends BaseAuditEntity {
-    
+
     private static final long serialVersionUID = 1L;
 
     // Fields
@@ -33,120 +33,135 @@ public class ReleasePoint extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_site_id", nullable = false)
     private FacilitySite facilitySite;
-    
+
     @Column(name = "release_point_identifier", nullable = false, length = 20)
     private String releasePointIdentifier;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_code", nullable = false)
     private ReleasePointTypeCode typeCode;
 
     @Column(name = "description", length = 200)
     private String description;
-    
+
     @Column(name = "fence_line_distance", precision = 6, scale = 0)
     private Long fenceLineDistance;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fence_line_distance_uom_code", nullable = false)
     private UnitMeasureCode fenceLineUomCode;
 
     @Column(name = "stack_height", precision = 8, scale = 3)
     private Double stackHeight;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_height_uom_code", nullable = false)
     private UnitMeasureCode stackHeightUomCode;
-    
+
     @Column(name = "stack_diameter", precision = 6, scale = 3)
     private Double stackDiameter;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_diameter_uom_code", nullable = false)
     private UnitMeasureCode stackDiameterUomCode;
-    
+
+    @Column(name = "stack_width", precision = 6, scale = 3)
+    private Double stackWidth;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stack_width_uom_code", nullable = false)
+    private UnitMeasureCode stackWidthUomCode;
+
+    @Column(name = "stack_length", precision = 6, scale = 3)
+    private Double stackLength;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stack_length_uom_code", nullable = false)
+    private UnitMeasureCode stackLengthUomCode;
+
     @Column(name = "exit_gas_velocity", precision = 8, scale = 3)
     private Double exitGasVelocity;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exit_gas_velocity_uom_code", nullable = false)
     private UnitMeasureCode exitGasVelocityUomCode;
-    
+
     @Column(name = "exit_gas_temperature", precision = 4, scale = 0)
     private Short exitGasTemperature;
-    
+
     @Column(name = "exit_gas_flow_rate", precision = 16, scale = 8)
     private Double exitGasFlowRate;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exit_gas_flow_uom_code", nullable = false)
     private UnitMeasureCode exitGasFlowUomCode;
-    
+
     @Column(name = "status_year")
     private Short statusYear;
-    
+
     @Column(name = "fugitive_line_1_latitude", precision = 10, scale = 6)
     private Double fugitiveLine1Latitude;
-    
+
     @Column(name = "fugitive_line_1_longitude", precision = 10, scale = 6)
     private Double fugitiveLine1Longitude;
-    
+
     @Column(name = "fugitive_line_2_latitude", precision = 10, scale = 6)
     private Double fugitiveLine2Latitude;
-    
+
     @Column(name = "fugitive_line_2_longitude", precision = 10, scale = 6)
     private Double fugitiveLine2Longitude;
-    
+
     @Column(name = "latitude", precision = 10, scale = 6)
     private Double latitude;
-    
+
     @Column(name = "longitude", precision = 10, scale = 6)
     private Double longitude;
-    
+
     @Column(name = "fugitive_height", precision = 3, scale = 0)
     private Long fugitiveHeight;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_height_uom_code", nullable = false)
     private UnitMeasureCode fugitiveHeightUomCode;
-    
+
     @Column(name = "fugitive_width", precision = 6, scale = 0)
     private Long fugitiveWidth;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_width_uom_code", nullable = false)
     private UnitMeasureCode fugitiveWidthUomCode;
-    
+
     @Column(name = "fugitive_length", precision = 6, scale = 0)
     private Long fugitiveLength;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_length_uom_code", nullable = false)
     private UnitMeasureCode fugitiveLengthUomCode;
-    
+
     @Column(name = "fugitive_angle", precision = 3, scale = 0)
     private Long fugitiveAngle;
-    
+
     @Column(name = "comments", length = 400)
     private String comments;
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")
     private List<ReleasePointAppt> releasePointAppts = new ArrayList<ReleasePointAppt>(0);
 
-    
+
     /***
      * Default constructor
      */
-    public ReleasePoint() {}
-    
-    
+    public ReleasePoint() {
+    }
+
+
     /***
      * Copy constructor (release point apportionment is not copied here, they are copied within the EmissionsProcess entity)
      * @param facilitySite The facility site object that this release point should be associated with
      * @param originalReleasePoint The release point object being copied
      */
     public ReleasePoint(FacilitySite facilitySite, ReleasePoint originalReleasePoint) {
-		this.id = originalReleasePoint.getId();
+        this.id = originalReleasePoint.getId();
         this.operatingStatusCode = originalReleasePoint.getOperatingStatusCode();
         this.facilitySite = facilitySite;
         this.releasePointIdentifier = originalReleasePoint.getReleasePointIdentifier();
@@ -156,6 +171,10 @@ public class ReleasePoint extends BaseAuditEntity {
         this.stackHeightUomCode = originalReleasePoint.getStackHeightUomCode();
         this.stackDiameter = originalReleasePoint.getStackDiameter();
         this.stackDiameterUomCode = originalReleasePoint.getStackDiameterUomCode();
+        this.stackWidth = originalReleasePoint.getStackWidth();
+        this.stackWidthUomCode = originalReleasePoint.getStackWidthUomCode();
+        this.stackLength = originalReleasePoint.getStackLength();
+        this.stackLengthUomCode = originalReleasePoint.getStackLengthUomCode();
         this.exitGasVelocity = originalReleasePoint.getExitGasVelocity();
         this.exitGasVelocityUomCode = originalReleasePoint.getExitGasVelocityUomCode();
         this.exitGasTemperature = originalReleasePoint.getExitGasTemperature();
@@ -179,7 +198,7 @@ public class ReleasePoint extends BaseAuditEntity {
         this.fenceLineDistance = originalReleasePoint.getFenceLineDistance();
         this.fenceLineUomCode = originalReleasePoint.getFenceLineUomCode();
     }
-    
+
     // Property accessors
     public OperatingStatusCode getOperatingStatusCode() {
         return this.operatingStatusCode;
@@ -251,6 +270,38 @@ public class ReleasePoint extends BaseAuditEntity {
 
     public void setStackDiameterUomCode(UnitMeasureCode stackDiameterUomCode) {
         this.stackDiameterUomCode = stackDiameterUomCode;
+    }
+
+    public Double getStackWidth() {
+        return stackWidth;
+    }
+
+    public void setStackWidth(Double stackWidth) {
+        this.stackWidth = stackWidth;
+    }
+
+    public UnitMeasureCode getStackWidthUomCode() {
+        return stackWidthUomCode;
+    }
+
+    public void setStackWidthUomCode(UnitMeasureCode stackWidthUomCode) {
+        this.stackWidthUomCode = stackWidthUomCode;
+    }
+
+    public Double getStackLength() {
+        return stackLength;
+    }
+
+    public void setStackLength(Double stackLength) {
+        this.stackLength = stackLength;
+    }
+
+    public UnitMeasureCode getStackLengthUomCode() {
+        return stackLengthUomCode;
+    }
+
+    public void setStackLengthUomCode(UnitMeasureCode stackLengthUomCode) {
+        this.stackLengthUomCode = stackLengthUomCode;
     }
 
     public Double getExitGasVelocity() {
@@ -358,91 +409,91 @@ public class ReleasePoint extends BaseAuditEntity {
     }
 
     public Long getFenceLineDistance() {
-			return fenceLineDistance;
-		}
+        return fenceLineDistance;
+    }
 
-		public void setFenceLineDistance(Long fenceLineDistance) {
-			this.fenceLineDistance = fenceLineDistance;
-		}
+    public void setFenceLineDistance(Long fenceLineDistance) {
+        this.fenceLineDistance = fenceLineDistance;
+    }
 
-		public UnitMeasureCode getFenceLineUomCode() {
-			return fenceLineUomCode;
-		}
+    public UnitMeasureCode getFenceLineUomCode() {
+        return fenceLineUomCode;
+    }
 
-		public void setFenceLineUomCode(UnitMeasureCode fenceLineUomCode) {
-			this.fenceLineUomCode = fenceLineUomCode;
-		}
+    public void setFenceLineUomCode(UnitMeasureCode fenceLineUomCode) {
+        this.fenceLineUomCode = fenceLineUomCode;
+    }
 
-		public Long getFugitiveHeight() {
-			return fugitiveHeight;
-		}
+    public Long getFugitiveHeight() {
+        return fugitiveHeight;
+    }
 
-		public void setFugitiveHeight(Long fugitiveHeight) {
-			this.fugitiveHeight = fugitiveHeight;
-		}
+    public void setFugitiveHeight(Long fugitiveHeight) {
+        this.fugitiveHeight = fugitiveHeight;
+    }
 
-		public UnitMeasureCode getFugitiveHeightUomCode() {
-			return fugitiveHeightUomCode;
-		}
+    public UnitMeasureCode getFugitiveHeightUomCode() {
+        return fugitiveHeightUomCode;
+    }
 
-		public void setFugitiveHeightUomCode(UnitMeasureCode fugitiveHeightUomCode) {
-			this.fugitiveHeightUomCode = fugitiveHeightUomCode;
-		}
+    public void setFugitiveHeightUomCode(UnitMeasureCode fugitiveHeightUomCode) {
+        this.fugitiveHeightUomCode = fugitiveHeightUomCode;
+    }
 
-		public Long getFugitiveWidth() {
-			return fugitiveWidth;
-		}
+    public Long getFugitiveWidth() {
+        return fugitiveWidth;
+    }
 
-		public void setFugitiveWidth(Long fugitiveWidth) {
-			this.fugitiveWidth = fugitiveWidth;
-		}
+    public void setFugitiveWidth(Long fugitiveWidth) {
+        this.fugitiveWidth = fugitiveWidth;
+    }
 
-		public UnitMeasureCode getFugitiveWidthUomCode() {
-			return fugitiveWidthUomCode;
-		}
+    public UnitMeasureCode getFugitiveWidthUomCode() {
+        return fugitiveWidthUomCode;
+    }
 
-		public void setFugitiveWidthUomCode(UnitMeasureCode fugitiveWidthUomCode) {
-			this.fugitiveWidthUomCode = fugitiveWidthUomCode;
-		}
+    public void setFugitiveWidthUomCode(UnitMeasureCode fugitiveWidthUomCode) {
+        this.fugitiveWidthUomCode = fugitiveWidthUomCode;
+    }
 
-		public Long getFugitiveLength() {
-			return fugitiveLength;
-		}
+    public Long getFugitiveLength() {
+        return fugitiveLength;
+    }
 
-		public void setFugitiveLength(Long fugitiveLength) {
-			this.fugitiveLength = fugitiveLength;
-		}
+    public void setFugitiveLength(Long fugitiveLength) {
+        this.fugitiveLength = fugitiveLength;
+    }
 
-		public UnitMeasureCode getFugitiveLengthUomCode() {
-			return fugitiveLengthUomCode;
-		}
+    public UnitMeasureCode getFugitiveLengthUomCode() {
+        return fugitiveLengthUomCode;
+    }
 
-		public void setFugitiveLengthUomCode(UnitMeasureCode fugitiveLengthUomCode) {
-			this.fugitiveLengthUomCode = fugitiveLengthUomCode;
-		}
+    public void setFugitiveLengthUomCode(UnitMeasureCode fugitiveLengthUomCode) {
+        this.fugitiveLengthUomCode = fugitiveLengthUomCode;
+    }
 
-		public Long getFugitiveAngle() {
-			return fugitiveAngle;
-		}
+    public Long getFugitiveAngle() {
+        return fugitiveAngle;
+    }
 
-		public void setFugitiveAngle(Long fugitiveAngle) {
-			this.fugitiveAngle = fugitiveAngle;
-		}
+    public void setFugitiveAngle(Long fugitiveAngle) {
+        this.fugitiveAngle = fugitiveAngle;
+    }
 
-		public List<ReleasePointAppt> getReleasePointAppts() {
+    public List<ReleasePointAppt> getReleasePointAppts() {
         return this.releasePointAppts;
     }
 
     public void setReleasePointAppts(List<ReleasePointAppt> releasePointAppts) {
         this.releasePointAppts = releasePointAppts;
     }
-    
-    
+
+
     /***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */
     public void clearId() {
-    	this.id = null;
+        this.id = null;
     }
 
 }
