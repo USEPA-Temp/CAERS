@@ -4,6 +4,7 @@ import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
+import { SortEvent } from 'src/app/shared/directives/sortable.directive';
 
 @Component({
   selector: 'app-master-facility-table',
@@ -46,6 +47,12 @@ export class MasterFacilityTableComponent extends BaseSortableTable implements O
 
   onClearFilterClick() {
       this.filter.setValue('');
+   }
+
+   sortAndSearch(sortEvent: SortEvent) {
+
+    this.onSort(sortEvent);
+    this.filteredItems = this.search(this.filter.value);
    }
 
   search(text: string): MasterFacilityRecord[] {
