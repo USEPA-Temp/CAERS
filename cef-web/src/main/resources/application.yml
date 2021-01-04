@@ -18,7 +18,7 @@ spring:
     mode: HTML
   mvc:
     async:
-      request-timeout: 60000
+      request-timeout: 120000
   jpa:
       # 14:48:39.624-05 WARN  [...JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration]
       # spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering.

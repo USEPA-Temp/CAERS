@@ -3,10 +3,10 @@
   <app-reviewer-nav></app-reviewer-nav>
 
   <div class="row">
-    <div class="col-3">
+    <div class="col-4">
       <app-master-facility-table [tableData]="records" (facilitySelected)="onFacilitySelected($event)"></app-master-facility-table>
     </div>
-    <div class="col-9">
+    <div class="col-8">
       <div class="card mb-3" *ngIf="selectedFacility">
         <div class="card-header text-center">
             <strong>Facility Details</strong>
