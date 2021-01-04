@@ -58,8 +58,8 @@ export class MasterFacilityTableComponent extends BaseSortableTable implements O
   search(text: string): MasterFacilityRecord[] {
     return this.tableData.filter(item => {
       const term = text.toLowerCase();
-      return item.name.toLowerCase().includes(term)
-          || item.agencyFacilityId.toLowerCase().includes(term);
+      return item.name?.toLowerCase().includes(term)
+          || item.agencyFacilityId?.toLowerCase().includes(term);
     });
   }
 
