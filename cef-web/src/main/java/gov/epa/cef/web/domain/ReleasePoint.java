@@ -65,14 +65,14 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "stack_diameter_uom_code", nullable = false)
     private UnitMeasureCode stackDiameterUomCode;
 
-    @Column(name = "stack_width", precision = 6, scale = 3)
+    @Column(name = "stack_width", precision = 4, scale = 1)
     private Double stackWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_width_uom_code", nullable = false)
     private UnitMeasureCode stackWidthUomCode;
 
-    @Column(name = "stack_length", precision = 6, scale = 3)
+    @Column(name = "stack_length", precision = 4, scale = 1)
     private Double stackLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
