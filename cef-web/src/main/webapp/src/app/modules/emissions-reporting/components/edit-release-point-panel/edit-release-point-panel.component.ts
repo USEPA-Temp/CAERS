@@ -408,7 +408,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         //       }
         //     });
 
-        // this.releasePointForm.get('fugitiveWidthUomCode').valueChanges
+        // this.releasePointForm.get('fugitiveWidth').valueChanges
         // .subscribe(value => {
         //     if (this.releasePointForm.get('fugitiveWidth').value) {
         //       this.releasePointForm.get('fugitiveWidthUomCode').setValidators([Validators.required]);

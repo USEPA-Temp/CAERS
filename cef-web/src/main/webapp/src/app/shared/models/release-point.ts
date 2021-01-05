@@ -15,7 +15,7 @@ export class ReleasePoint {
   stackWidth: number;
   stackWidthUomCode: BaseCodeLookup;
   stackLength: number;
-  stackLengthUomCode;
+  stackLengthUomCode: BaseCodeLookup;
   exitGasVelocity: number;
   exitGasVelocityUomCode: BaseCodeLookup;
   exitGasTemperature: number;
