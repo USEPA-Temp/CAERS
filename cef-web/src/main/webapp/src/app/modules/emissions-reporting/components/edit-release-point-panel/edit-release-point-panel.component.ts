@@ -383,51 +383,52 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
 
     // sets uom to required if optional fields have values
+    // Commented out while automatically setting UoM to feet.
+    // This should be uncommented if other UoMs are allowed
     uomRequiredCheck() {
-        this.releasePointForm.get('fenceLineDistance').valueChanges
-            .subscribe(value => {
-                if (this.releasePointForm.get('fenceLineDistance').value) {
-                    // this.releasePointForm.get('fenceLineUomCode').setValidators([Validators.required]);
-                    // this.releasePointForm.controls.fenceLineUomCode.updateValueAndValidity();
-                } else {
-                    // this.releasePointForm.get('fenceLineUomCode').setValidators(null);
-                    // this.releasePointForm.controls.fenceLineUomCode.updateValueAndValidity();
-                }
-            });
+        // this.releasePointForm.get('fenceLineDistance').valueChanges
+        //     .subscribe(value => {
+        //         if (this.releasePointForm.get('fenceLineDistance').value) {
+        //                 this.releasePointForm.get('fenceLineUomCode').setValidators([Validators.required]);
+        //                 this.releasePointForm.controls.fenceLineUomCode.updateValueAndValidity();
+        //         } else {
+        //                 this.releasePointForm.get('fenceLineUomCode').setValidators(null);
+        //                 this.releasePointForm.controls.fenceLineUomCode.updateValueAndValidity();
+        //         }
+        //     });
 
         // this.releasePointForm.get('fugitiveLength').valueChanges
-        // .subscribe(value => {
-        //   if (this.releasePointForm.get('fugitiveLength').value) {
-        //     this.releasePointForm.get('fugitiveLengthUomCode').setValidators([Validators.required]);
-        //     this.releasePointForm.controls.fugitiveLengthUomCode.updateValueAndValidity();
-        //   } else {
-        //     this.releasePointForm.get('fugitiveLengthUomCode').setValidators(null);
-        //     this.releasePointForm.controls.fugitiveLengthUomCode.updateValueAndValidity();
-        //   }
-        // });
-        //
-        this.releasePointForm.get('fugitiveWidthUomCode').valueChanges
-        .subscribe(value => {
-            console.log('it changed!', this.fugitiveWidthUomCode.value)
-          // if (this.releasePointForm.get('fugitiveWidth').value) {
-          //   this.releasePointForm.get('fugitiveWidthUomCode').setValidators([Validators.required]);
-          //   this.releasePointForm.controls.fugitiveWidthUomCode.updateValueAndValidity();
-          // } else {
-          //   this.releasePointForm.get('fugitiveWidthUomCode').setValidators(null);
-          //   this.releasePointForm.controls.fugitiveWidthUomCode.updateValueAndValidity();
-          // }
-        });
+        //     .subscribe(value => {
+        //       if (this.releasePointForm.get('fugitiveLength').value) {
+        //         this.releasePointForm.get('fugitiveLengthUomCode').setValidators([Validators.required]);
+        //         this.releasePointForm.controls.fugitiveLengthUomCode.updateValueAndValidity();
+        //       } else {
+        //         this.releasePointForm.get('fugitiveLengthUomCode').setValidators(null);
+        //         this.releasePointForm.controls.fugitiveLengthUomCode.updateValueAndValidity();
+        //       }
+        //     });
 
-        this.releasePointForm.get('fugitiveHeight').valueChanges
-            .subscribe(value => {
-                if (this.releasePointForm.get('fugitiveHeight').value) {
-                    // this.releasePointForm.get('fugitiveHeightUomCode').setValidators([Validators.required]);
-                    // this.releasePointForm.controls.fugitiveHeightUomCode.updateValueAndValidity();
-                } else {
-                    // this.releasePointForm.get('fugitiveHeightUomCode').setValidators(null);
-                    // this.releasePointForm.controls.fugitiveHeightUomCode.updateValueAndValidity();
-                }
-            });
+        // this.releasePointForm.get('fugitiveWidthUomCode').valueChanges
+        // .subscribe(value => {
+        //     if (this.releasePointForm.get('fugitiveWidth').value) {
+        //       this.releasePointForm.get('fugitiveWidthUomCode').setValidators([Validators.required]);
+        //       this.releasePointForm.controls.fugitiveWidthUomCode.updateValueAndValidity();
+        //     } else {
+        //       this.releasePointForm.get('fugitiveWidthUomCode').setValidators(null);
+        //       this.releasePointForm.controls.fugitiveWidthUomCode.updateValueAndValidity();
+        //     }
+        // });
+
+        // this.releasePointForm.get('fugitiveHeight').valueChanges
+        //     .subscribe(value => {
+        //         if (this.releasePointForm.get('fugitiveHeight').value) {
+        //             this.releasePointForm.get('fugitiveHeightUomCode').setValidators([Validators.required]);
+        //             this.releasePointForm.controls.fugitiveHeightUomCode.updateValueAndValidity();
+        //         } else {
+        //               this.releasePointForm.get('fugitiveHeightUomCode').setValidators(null);
+        //               this.releasePointForm.controls.fugitiveHeightUomCode.updateValueAndValidity();
+        //         }
+        //     });
     }
 
     // sets lat and long to required if one of the optional fields has a value

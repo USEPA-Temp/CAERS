@@ -120,14 +120,14 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     private String stackHeightUomCode;
 
     @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
-        message = "Stack Width is not in expected numeric format: {6} digits; found '${validatedValue}'.")
+        message = "Stack Width is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String stackWidth;
 
     @Size(max = 20, message = "Stack Width Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackWidthUomCode;
 
     @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
-        message = "Stack Length is not in expected numeric format: {6} digits; found '${validatedValue}'.")
+        message = "Stack Length is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String stackLength;
 
     @Size(max = 20, message = "Stack Length Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
