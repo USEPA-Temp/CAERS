@@ -35,22 +35,20 @@
                 <div class="col-sm-6 col-md-2">{{reportingPeriod.calculationParameterTypeCode?.description}}</div>
             </div>
 
-            <div *ngIf="reportingPeriod.fuelUseValue !== null && reportingPeriod.fuelUseUom && reportingPeriod.fuelUseMaterialCode">
-                <div class="row pb-2">
-                    <div class="col-sm-6 col-md-2"><strong>Fuel Material:</strong></div>
-                    <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseMaterialCode?.description}}</div>
-                    <div class="col-sm-6 col-md-2"><strong>Fuel Value:</strong></div>
-                    <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseValue}}</div>
-                    <div class="col-sm-6 col-md-2"><strong>Fuel UoM:</strong></div>
-                    <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseUom?.description}}</div>
-                </div>
-                
-                <div class="row justify-content-end">
-                    <div class="col-sm-6 col-md-2"><strong>Heat Content Value:</strong></div>
-                    <div class="col-sm-6 col-md-2">{{reportingPeriod.heatContentValue}}</div>
-                    <div class="col-sm-6 col-md-2"><strong>Heat Content UoM:</strong></div>
-                    <div class="col-sm-6 col-md-2">{{reportingPeriod.heatContentUom?.description}}</div>
-                </div>
+            <div class="row pb-2">
+                <div class="col-sm-6 col-md-2"><strong>Fuel Material:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseMaterialCode?.description}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Fuel Value:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseValue}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Fuel UoM:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.fuelUseUom?.description}}</div>
+            </div>
+            
+            <div class="row justify-content-end">
+                <div class="col-sm-6 col-md-2"><strong>Heat Content Value:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.heatContentValue}}</div>
+                <div class="col-sm-6 col-md-2"><strong>Heat Content UoM:</strong></div>
+                <div class="col-sm-6 col-md-2">{{reportingPeriod.heatContentUom?.description}}</div>
             </div>
           </div>
         </div>
