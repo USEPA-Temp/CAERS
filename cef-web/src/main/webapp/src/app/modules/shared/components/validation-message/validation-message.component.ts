@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-validation-message',
@@ -7,7 +7,7 @@ import { AbstractControl } from '@angular/forms';
   styleUrls: ['./validation-message.component.scss']
 })
 export class ValidationMessageComponent implements OnInit {
-  @Input() control: AbstractControl;
+  @Input() control: FormControl;
 
   constructor() { }
 
