@@ -38,6 +38,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     facilityOpCode: BaseCodeLookup;
     diameterCheckHeightWarning: string;
     diameterCheckFlowAndVelWarning: string;
+    diameterOrLengthAndWidthMessage: string;
     velAndFlowCheckDiameterWarning: string;
     calculatedVelocity: string;
     calculatedFlowRate: string;
@@ -98,7 +99,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             Validators.max(10000),
         ]],
         fugitiveWidthUomCode: [null],
-        stackWidth: ['', [
+        stackWidth: [null, [
             Validators.min(.1),
             Validators.max(100),
         ]],
@@ -109,7 +110,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             Validators.max(10000),
         ]],
         fugitiveLengthUomCode: [null],
-        stackLength: ['', [
+        stackLength: [null, [
             Validators.min(.1),
             Validators.max(100),
         ]],
@@ -132,15 +133,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         stackHeightUomCode: [null, [
             this.requiredIfOperating()
         ]],
-        stackDiameter: ['', [
+        stackDiameter: [null, [
             Validators.min(0.001),
             Validators.max(300),
             Validators.pattern(this.numberPattern83),
-            this.requiredIfOperating()
         ]],
-        stackDiameterUomCode: [null, [
-            this.requiredIfOperating()
-        ]],
+        stackDiameterUomCode: [null, []],
         exitGasTemperature: ['', [
             Validators.min(-30),
             Validators.max(4000),
@@ -160,7 +158,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.exitGasFlowUomCheck(),
             this.exitGasVelocityUomCheck(),
             this.releasePointIdentifierCheck(),
-            this.latLongRequiredCheck()
+            this.latLongRequiredCheck(),
+            this.stackDiameterOrStackWidthAndLength()
         ]
     });
 
@@ -198,6 +197,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 this.stackLengthUomCode.patchValue(ftUom);
                 this.fugitiveWidthUomCode.patchValue(ftUom);
                 this.fugitiveLengthUomCode.patchValue(ftUom);
+                this.stackDiameterUomCode.patchValue(ftUom);
+                this.stackHeightUomCode.patchValue(ftUom);
                 console.log(this.fugitiveWidthUomCode.value)
                 console.log(this.releasePointForm.getRawValue())
                 this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
@@ -226,21 +227,57 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.setFormValidation();
     }
 
-    get stackWidth() { return this.releasePointForm.get('stackWidth'); }
+    get stackWidth() {
+        return this.releasePointForm.get('stackWidth');
+    }
 
-    get stackWidthUomCode() { return this.releasePointForm.get('stackWidthUomCode'); }
+    get stackWidthUomCode() {
+        return this.releasePointForm.get('stackWidthUomCode');
+    }
 
-    get stackLength() { return this.releasePointForm.get('stackLength'); }
+    get stackLength() {
+        return this.releasePointForm.get('stackLength');
+    }
 
-    get stackLengthUomCode() { return this.releasePointForm.get('stackLengthUomCode'); }
+    get stackLengthUomCode() {
+        return this.releasePointForm.get('stackLengthUomCode');
+    }
 
-    get fugitiveWidth() { return this.releasePointForm.get('fugitiveWidth'); }
+    get stackDiameter() {
+        return this.releasePointForm.get('stackDiameter');
+    }
 
-    get fugitiveWidthUomCode() { return this.releasePointForm.get('fugitiveWidthUomCode'); }
+    get stackDiameterUomCode() {
+        return this.releasePointForm.get('stackDiameterUomCode')
+    }
 
-    get fugitiveLength() { return this.releasePointForm.get('fugitiveLength'); }
+    get stackHeight() {
+        return this.releasePointForm.get('stackHeight');
+    }
 
-    get fugitiveLengthUomCode() { return this.releasePointForm.get('fugitiveLengthUomCode'); }
+    get stackHeightUomCode() {
+        return this.releasePointForm.get('stackHeightUomCode')
+    }
+
+    get fugitiveWidth() {
+        return this.releasePointForm.get('fugitiveWidth');
+    }
+
+    get fugitiveWidthUomCode() {
+        return this.releasePointForm.get('fugitiveWidthUomCode');
+    }
+
+    get fugitiveLength() {
+        return this.releasePointForm.get('fugitiveLength');
+    }
+
+    get fugitiveLengthUomCode() {
+        return this.releasePointForm.get('fugitiveLengthUomCode');
+    }
+
+    get typeCode() {
+        return this.releasePointForm.get('typeCode');
+    }
 
     ngOnChanges() {
 
@@ -548,6 +585,28 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             }
         };
     }
+
+    stackDiameterOrStackWidthAndLength(): ValidatorFn {
+        return (control: FormGroup): ValidationErrors | null => {
+            const diameter = control.get('stackDiameter'); // ft
+            const length = control.get('stackLength');
+            const width = control.get('stackWidth');
+
+            if (this.releaseType && this.releaseType !== this.fugitiveType && this.releasePointForm.get('operatingStatusCode').value
+                && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
+                if ((diameter !== null && !diameter.value) && (!length?.value || !width?.value)) {
+                    this.diameterOrLengthAndWidthMessage = 'Stack Diameter or Length/Width must be entered when Release Point Type is a stack.';
+                    return {invalidDimensions: true};
+                } else if (this.stackDiameter?.value && (this.stackWidth?.value || this.stackLength?.value)) {
+                    this.diameterOrLengthAndWidthMessage = 'The release point may have values for Stack Diameter or Length/Width, but not both.';
+                    return {invalidDimensions: true};
+                } else {
+                    this.diameterOrLengthAndWidthMessage = null;
+                }
+            }
+            return null;
+        }
+    };
 
     // QA Check - Stack Diameter information is reported, Exit Gas Flow Rate and Velocity should be reported
     stackDiameterCheckForVelAndFlow(): ValidatorFn {
