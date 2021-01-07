@@ -138,11 +138,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             Validators.min(0.001),
             Validators.max(300),
             Validators.pattern(this.numberPattern83),
-            // this.requiredIfOperating()
         ]],
-        stackDiameterUomCode: [null, [
-            this.requiredIfOperating()
-        ]],
+        stackDiameterUomCode: [null, []],
         exitGasTemperature: ['', [
             Validators.min(-30),
             Validators.max(4000),
