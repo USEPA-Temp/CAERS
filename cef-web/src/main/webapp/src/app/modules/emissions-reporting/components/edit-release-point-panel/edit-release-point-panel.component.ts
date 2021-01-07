@@ -32,7 +32,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     @Input() year: number;
     releasePointIdentifiers: string[] = [];
     readonly fugitiveType = 'Fugitive';
-    readonly stackType = 'Stack'
     facilitySite: FacilitySite;
     releaseType: string;
     eisProgramId: string;
@@ -592,7 +591,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             const diameter = control.get('stackDiameter'); // ft
             const length = control.get('stackLength');
             const width = control.get('stackWidth');
-            if (this.releaseType && this.releaseType !== this.fugitiveType) {
+
+            if (this.releaseType && this.releaseType !== this.fugitiveType && this.releasePointForm.get('operatingStatusCode').value
+                && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
                 if ((diameter !== null && !diameter.value) && (!length?.value || !width?.value)) {
                     this.diameterOrLengthAndWidthMessage = 'Stack Diameter or Length/Width must be entered when Release Point Type is a stack.';
                     return {invalidDimensions: true};
