@@ -601,7 +601,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                     this.diameterOrLengthAndWidthMessage = 'The release point may have values for Stack Diameter or Length/Width, but not both.';
                     return {invalidDimensions: true};
                 } else {
-                    this.diameterCheckFlowAndVelWarning = null;
+                    this.diameterOrLengthAndWidthMessage = null;
                 }
             }
             return null;
