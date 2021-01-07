@@ -853,6 +853,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         releasePoint.setDescription(bulkReleasePoint.getDescription());
         releasePoint.setStackHeight(toDouble(bulkReleasePoint.getStackHeight()));
         releasePoint.setStackDiameter(toDouble(bulkReleasePoint.getStackDiameter()));
+        releasePoint.setStackWidth(toDouble(bulkReleasePoint.getStackWidth()));
+        releasePoint.setStackLength(toDouble(bulkReleasePoint.getStackLength()));
         releasePoint.setExitGasVelocity(toDouble(bulkReleasePoint.getExitGasVelocity()));
         releasePoint.setExitGasTemperature(toShort(bulkReleasePoint.getExitGasTemperature()));
         releasePoint.setExitGasFlowRate(toDouble(bulkReleasePoint.getExitGasFlowRate()));
@@ -881,6 +883,12 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
         if (bulkReleasePoint.getStackDiameterUomCode() != null) {
             releasePoint.setStackDiameterUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getStackDiameterUomCode()).orElse(null));
+        }
+        if (bulkReleasePoint.getStackWidthUomCode() != null) {
+            releasePoint.setStackWidthUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getStackWidthUomCode()).orElse(null));
+        }
+        if (bulkReleasePoint.getStackLengthUomCode() != null) {
+            releasePoint.setStackLengthUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getStackLengthUomCode()).orElse(null));
         }
         if (bulkReleasePoint.getExitGasVelocityUomCode() != null) {
             releasePoint.setExitGasVelocityUomCode(unitMeasureCodeRepo.findById(bulkReleasePoint.getExitGasVelocityUomCode()).orElse(null));

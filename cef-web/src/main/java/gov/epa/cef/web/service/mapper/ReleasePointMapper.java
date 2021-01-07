@@ -16,18 +16,20 @@ public interface ReleasePointMapper {
 
 	@Mapping(source="facilitySite.id", target="facilitySiteId")
     ReleasePointDto toDto(ReleasePoint releasePoint);
-    
+
     List<ReleasePointDto> toDtoList(List<ReleasePoint> releasePointList);
-    
+
     ReleasePointPostOrderDto toUpDto(ReleasePoint releasePoint);
-    
+
     @Mapping(source="facilitySiteId", target="facilitySite.id")
     ReleasePoint fromDto(ReleasePointDto source);
-    
+
     @Mapping(target="typeCode", qualifiedByName="ReleasePointTypeCode")
     @Mapping(target="operatingStatusCode", qualifiedByName="OperatingStatusCode")
     @Mapping(target="stackHeightUomCode", qualifiedByName="UnitMeasureCode")
     @Mapping(target="stackDiameterUomCode", qualifiedByName="UnitMeasureCode")
+    @Mapping(target="stackWidthUomCode", qualifiedByName="UnitMeasureCode")
+    @Mapping(target="stackLengthUomCode", qualifiedByName="UnitMeasureCode")
     @Mapping(target="exitGasVelocityUomCode", qualifiedByName="UnitMeasureCode")
     @Mapping(target="exitGasFlowUomCode", qualifiedByName="UnitMeasureCode")
     @Mapping(target="fenceLineUomCode", qualifiedByName="UnitMeasureCode")

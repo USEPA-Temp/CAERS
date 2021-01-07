@@ -152,6 +152,8 @@ public interface BulkUploadMapper {
     @Mapping(source="typeCode.code", target="typeCode")
     @Mapping(source="stackHeightUomCode.code", target="stackHeightUomCode")
     @Mapping(source="stackDiameterUomCode.code", target="stackDiameterUomCode")
+    @Mapping(source="stackWidthUomCode.code", target="stackWidthUomCode")
+    @Mapping(source="stackLengthUomCode.code", target="stackLengthUomCode")
     @Mapping(source="exitGasVelocityUomCode.code", target="exitGasVelocityUomCode")
     @Mapping(source="exitGasFlowUomCode.code", target="exitGasFlowUomCode")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
