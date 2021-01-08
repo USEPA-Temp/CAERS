@@ -45,6 +45,7 @@ import { UserFeedbackReportModalComponent } from './modules/dashboards/component
 import { MasterFacilityInformationComponent } from './modules/dashboards/pages/master-facility-information/master-facility-information.component';
 import { MasterFacilityTableComponent } from './modules/dashboards/components/master-facility-table/master-facility-table.component';
 import { MasterFacilityInfoComponent } from './modules/dashboards/components/master-facility-info/master-facility-info.component';
+import { UserFacilityAssociationTableComponent } from './modules/dashboards/components/user-facility-association-table/user-facility-association-table.component';
 
 
 @NgModule({
@@ -80,7 +81,8 @@ import { MasterFacilityInfoComponent } from './modules/dashboards/components/mas
     SltPropertiesComponent,
     MasterFacilityInformationComponent,
     MasterFacilityTableComponent,
-    MasterFacilityInfoComponent
+    MasterFacilityInfoComponent,
+    UserFacilityAssociationTableComponent
   ],
   imports: [
     BrowserModule,
