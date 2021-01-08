@@ -182,9 +182,6 @@
                 Rate {{calculatedFlowRate}} {{calculatedFlowRateUom}}, calculated using the formula: Exit Gas Flow Rate
                 = (Pi * (Stack Diameter /2) ^ 2) * Velocity (assuming a circular stack).
             </div>
-            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidVelocity">
-                Exit Gas Flow Rate or Exit Gas Velocity must be entered.
-            </div>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidComputedVelocity">
                 The calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}}, calculated using
                 the formula: Exit Gas Velocity = Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).
