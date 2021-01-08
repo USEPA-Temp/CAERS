@@ -24,8 +24,10 @@ public class CdxConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private Map<String, String> registerEndpointConfiguration;
     private Map<String, String> registerProgramFacilityEndpointConfiguration;
     private Map<String, String> registerSignEndpointConfiguration;
+    private Map<String, String> streamlinedRegistrationEndpointConfiguration;
 
     @NotBlank
     private String naasUser;
@@ -43,6 +45,17 @@ public class CdxConfig {
     private String cdxBaseUrl;
 
     private final List<String> allowedOrigins = new ArrayList<>();
+
+    public Map<String, String> getRegisterEndpointConfiguration() {
+        return registerEndpointConfiguration;
+    }
+
+    public void setRegisterEndpointConfiguration(Map<String, String> registerEndpointConfiguration) {
+        this.registerEndpointConfiguration = registerEndpointConfiguration;
+    }
+    public String getRegisterServiceEndpoint() {
+        return getRegisterEndpointConfiguration().get("serviceUrl");
+    }
 
     public Map<String, String> getRegisterProgramFacilityEndpointConfiguration() {
         return registerProgramFacilityEndpointConfiguration;
@@ -64,6 +77,17 @@ public class CdxConfig {
     }
     public String getRegisterSignServiceEndpoint() {
         return getRegisterSignEndpointConfiguration().get("serviceUrl");
+    }
+
+    public Map<String, String> getStreamlinedRegistrationEndpointConfiguration() {
+        return streamlinedRegistrationEndpointConfiguration;
+    }
+
+    public void setStreamlinedRegistrationEndpointConfiguration(Map<String, String> streamlinedRegistrationEndpointConfiguration) {
+        this.streamlinedRegistrationEndpointConfiguration = streamlinedRegistrationEndpointConfiguration;
+    }
+    public String getStreamlinedRegistrationServiceEndpoint() {
+        return getStreamlinedRegistrationEndpointConfiguration().get("serviceUrl");
     }
 
     public String getNaasUser() {

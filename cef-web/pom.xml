@@ -599,8 +599,10 @@
                             <wsdlFiles>
                                 <wsdlFile>RegisterProgramFacilityService.wsdl</wsdlFile>
                                 <wsdlFile>SecurityToken_v30.wsdl</wsdlFile>
+                                <wsdlFile>RegisterService.wsdl</wsdlFile>
                                 <wsdlFile>RegisterSignService.wsdl</wsdlFile>
                                 <wsdlFile>NetworkNode2Service.wsdl</wsdlFile>
+                                <wsdlFile>StreamlinedRegistrationService.wsdl</wsdlFile>
                                 <wsdlFile>virusscanMTOM.wsdl</wsdlFile>
                             </wsdlFiles>
                         </configuration>
