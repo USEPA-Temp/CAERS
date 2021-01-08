@@ -149,7 +149,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         validators: [
             this.exitFlowConsistencyCheck(),
             this.stackDiameterCheck(),
-            this.exitGasFlowCheck(),
             this.exitVelocityCheck(),
             this.coordinateToleranceCheck(),
             this.stackVelAndFlowCheckForDiameter(),
@@ -199,8 +198,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 this.fugitiveLengthUomCode.patchValue(ftUom);
                 this.stackDiameterUomCode.patchValue(ftUom);
                 this.stackHeightUomCode.patchValue(ftUom);
-                console.log(this.fugitiveWidthUomCode.value)
-                console.log(this.releasePointForm.getRawValue())
                 this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
                 this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
             });
@@ -225,6 +222,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             });
 
         this.setFormValidation();
+
+        if (this.releasePoint?.id) {
+            this.releasePointForm.markAllAsTouched();
+        }
     }
 
     get stackWidth() {
@@ -363,59 +364,61 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     // QA Check - exit gas flow rate range
     setGasFlowRangeValidation() {
-        if (this.releasePointForm.controls.exitGasFlowUomCode.value !== null) {
-            this.isReleasePointFugitiveType();
+        this.isReleasePointFugitiveType();
 
-            if (this.releasePointForm.controls.exitGasFlowUomCode.value.code === 'ACFS') {
-                if (this.releaseType === this.fugitiveType) {
-                    this.releasePointForm.controls.exitGasFlowRate.setValidators([
-                        Validators.min(0), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
-                } else {
-                    this.releasePointForm.controls.exitGasFlowRate.setValidators([
-                        Validators.min(0.00000001), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
-                }
-                this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
-                this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
-            } else {
-                if (this.releaseType === this.fugitiveType) {
-                    this.releasePointForm.controls.exitGasFlowRate.setValidators([
-                        Validators.min(0), Validators.max(12000000), Validators.pattern(this.numberPattern168)]);
-                } else {
-                    this.releasePointForm.controls.exitGasFlowRate.setValidators([
-                        Validators.min(0.00000001), Validators.max(12000000), Validators.pattern(this.numberPattern168)]);
-                }
-                this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
-                this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
+        if (this.releaseType === this.fugitiveType) {
+            this.releasePointForm.controls.exitGasFlowRate.setValidators([
+                Validators.min(0), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
+
+            if (this.releasePointForm.controls.exitGasFlowUomCode.value?.code === 'ACFM') {
+                this.releasePointForm.controls.exitGasFlowRate.setValidators([
+                    Validators.min(0), Validators.max(12000000), Validators.pattern(this.numberPattern168)]);
             }
+            this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
+            this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
+
+        } else {
+            this.releasePointForm.controls.exitGasFlowRate.setValidators([
+                Validators.min(0.00000001), Validators.max(200000),
+                Validators.pattern(this.numberPattern168), this.requiredIfOperating()]);
+
+            if (this.releasePointForm.controls.exitGasFlowUomCode.value?.code === 'ACFM') {
+                this.releasePointForm.controls.exitGasFlowRate.setValidators([
+                    Validators.min(0.00000001), Validators.max(12000000),
+                    Validators.pattern(this.numberPattern168), this.requiredIfOperating()]);
+            }
+            this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
+            this.releasePointForm.controls.exitGasFlowUomCode.updateValueAndValidity();
         }
     }
 
     // QA Check - exit gas velocity range
     setGasVelocityRangeValidation() {
-        if (this.releasePointForm.controls.exitGasVelocityUomCode.value !== null) {
-            this.isReleasePointFugitiveType();
+        this.isReleasePointFugitiveType();
 
-            if (this.releasePointForm.controls.exitGasVelocityUomCode.value.code === 'FPS') {
-                if (this.releaseType === this.fugitiveType) {
-                    this.releasePointForm.controls.exitGasVelocity.setValidators([
-                        Validators.min(0), Validators.max(400), Validators.pattern(this.numberPattern83)]);
-                } else {
-                    this.releasePointForm.controls.exitGasVelocity.setValidators([
-                        Validators.min(0.001), Validators.max(1500), Validators.pattern(this.numberPattern83)]);
-                }
-                this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
-                this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
-            } else {
-                if (this.releaseType === this.fugitiveType) {
-                    this.releasePointForm.controls.exitGasVelocity.setValidators([
-                        Validators.min(0), Validators.max(24000), Validators.pattern(this.numberPattern83)]);
-                } else {
-                    this.releasePointForm.controls.exitGasVelocity.setValidators([
-                        Validators.min(0.060), Validators.max(90000), Validators.pattern(this.numberPattern83)]);
-                }
-                this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
-                this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
+        if (this.releaseType === this.fugitiveType) {
+            this.releasePointForm.controls.exitGasVelocity.setValidators([
+                Validators.min(0), Validators.max(400), Validators.pattern(this.numberPattern83)]);
+
+            if (this.releasePointForm.controls.exitGasVelocityUomCode.value?.code === 'FPM') {
+                this.releasePointForm.controls.exitGasVelocity.setValidators([
+                    Validators.min(0), Validators.max(24000), Validators.pattern(this.numberPattern83)]);
             }
+            this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
+            this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
+
+        } else {
+            this.releasePointForm.controls.exitGasVelocity.setValidators([
+                Validators.min(0.001), Validators.max(1500),
+                Validators.pattern(this.numberPattern83), this.requiredIfOperating()]);
+                
+            if (this.releasePointForm.controls.exitGasVelocityUomCode.value?.code === 'FPM') {
+                this.releasePointForm.controls.exitGasVelocity.setValidators([
+                    Validators.min(0.060), Validators.max(90000),
+                    Validators.pattern(this.numberPattern83), this.requiredIfOperating()]);
+            }
+            this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
+            this.releasePointForm.controls.exitGasVelocityUomCode.updateValueAndValidity();
         }
     }
 
@@ -545,23 +548,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                     }
                 }
                 return null;
-            }
-            return null;
-        };
-    }
-
-    // QA Check - Exit gas flow rate or Exit gas velocity must be entered
-    exitGasFlowCheck(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            const flowRate = control.get('exitGasFlowRate');
-            const velocity = control.get('exitGasVelocity');
-
-            if (control.get('operatingStatusCode').value && control.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-                if (control.get('typeCode').value !== null && control.get('typeCode').value.description !== this.fugitiveType) {
-                    if ((flowRate.value === null || flowRate.value === '') && (velocity.value === null || velocity.value === '')) {
-                        return {invalidVelocity: true};
-                    }
-                }
             }
             return null;
         };

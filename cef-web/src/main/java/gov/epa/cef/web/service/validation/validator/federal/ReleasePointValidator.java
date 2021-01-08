@@ -73,13 +73,23 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	                    createValidationDetails(releasePoint));
     	        }
 
-    	        // Exit Gas Flow Rate OR Exit Gas Velocity is required.
-    	        if ((releasePoint.getExitGasFlowRate() == null && releasePoint.getExitGasVelocity() == null)) {
+    	        // Exit Gas Velocity is required.
+    	        if (releasePoint.getExitGasVelocity() == null) {
+    	        	
     	        	result = false;
-
     	        	context.addFederalError(
-                    		ValidationField.RP_GAS_RELEASE.value(),
-                    		"releasePoint.release.required",
+                    		ValidationField.RP_GAS_VELOCITY.value(),
+                    		"releasePoint.exitGasVelocity.required",
+                    		createValidationDetails(releasePoint));
+    	        }
+    	        
+    	     // Exit Gas Flow Rate is required.
+    	        if (releasePoint.getExitGasFlowRate() == null) {
+    	        	
+    	        	result = false;
+    	        	context.addFederalError(
+                    		ValidationField.RP_GAS_FLOW.value(),
+                    		"releasePoint.exitGasFlowRate.required",
                     		createValidationDetails(releasePoint));
     	        }
 
@@ -314,7 +324,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_FLOW.value(),
-                        "releasePoint.exitGasFlowRate.required",
+                        "releasePoint.exitGasFlowRate.uom.required",
                         createValidationDetails(releasePoint));
 
               } else if (releasePoint.getExitGasFlowUomCode() != null && (
@@ -325,7 +335,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_FLOW.value(),
-                        "releasePoint.exitGasFlowRate.uom.required",
+                        "releasePoint.exitGasFlowRate.requiredUom",
                         createValidationDetails(releasePoint));
               }
 
@@ -421,7 +431,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_VELOCITY.value(),
-                        "releasePoint.exitGasVelocity.required",
+                        "releasePoint.exitGasVelocity.uom.required",
                         createValidationDetails(releasePoint));
 
               } else if (releasePoint.getExitGasVelocityUomCode() != null && (
@@ -432,7 +442,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_VELOCITY.value(),
-                        "releasePoint.exitGasVelocity.uom.required",
+                        "releasePoint.exitGasVelocity.requiredUom",
                         createValidationDetails(releasePoint));
               }
 

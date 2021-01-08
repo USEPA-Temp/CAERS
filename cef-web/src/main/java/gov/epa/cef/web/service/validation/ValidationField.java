@@ -23,7 +23,6 @@ public enum ValidationField {
     RP_GAS_TEMP("report.facilitySite.releasePoint.exitGasTemperature"),
     RP_GAS_FLOW("report.facilitySite.releasePoint.exitGasFlowRate"),
     RP_GAS_VELOCITY("report.facilitySite.releasePoint.exitGasVelocity"),
-    RP_GAS_RELEASE("report.facilitySite.releasePoint.release"),
     RP_FENCELINE("report.facilitySite.releasePoint.fenceLine"),
     RP_UOM_FT("report.facilitySite.releasePoint.uom"),
     RP_FUGITIVE("report.facilitySite.releasePoint.fugitive"),
