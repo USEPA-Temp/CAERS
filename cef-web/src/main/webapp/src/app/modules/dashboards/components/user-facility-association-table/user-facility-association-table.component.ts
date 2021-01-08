@@ -4,6 +4,7 @@ import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { UserFacilityAssociationService } from 'src/app/core/services/user-facility-association.service';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 @Component({
   selector: 'app-user-facility-association-table',
@@ -12,9 +13,10 @@ import { UserFacilityAssociationService } from 'src/app/core/services/user-facil
 })
 export class UserFacilityAssociationTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: UserFacilityAssociation[];
+  @Input() facility: MasterFacilityRecord;
 
   constructor(private modalService: NgbModal,
-    private userFacilityAssociationService: UserFacilityAssociationService) {
+              private userFacilityAssociationService: UserFacilityAssociationService) {
     super();
   }
 
@@ -22,8 +24,8 @@ export class UserFacilityAssociationTableComponent extends BaseSortableTable imp
   }
 
   openDeleteModal(association: UserFacilityAssociation) {
-    const modalMessage = `Are you sure you want to remove ${association.fullName}'s access to this facility?`;
-    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+    const modalMessage = `Are you sure you want to remove ${association.fullName}'s access to ${this.facility.name}?`;
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
         this.deleteAssociation(association);
