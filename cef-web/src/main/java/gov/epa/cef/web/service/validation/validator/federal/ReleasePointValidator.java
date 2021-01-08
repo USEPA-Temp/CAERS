@@ -75,17 +75,17 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
     	        // Exit Gas Velocity is required.
     	        if (releasePoint.getExitGasVelocity() == null) {
-    	        	
+
     	        	result = false;
     	        	context.addFederalError(
                     		ValidationField.RP_GAS_VELOCITY.value(),
                     		"releasePoint.exitGasVelocity.required",
                     		createValidationDetails(releasePoint));
     	        }
-    	        
+
     	     // Exit Gas Flow Rate is required.
     	        if (releasePoint.getExitGasFlowRate() == null) {
-    	        	
+
     	        	result = false;
     	        	context.addFederalError(
                     		ValidationField.RP_GAS_FLOW.value(),
@@ -113,18 +113,29 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	                    createValidationDetails(releasePoint));
     	        }
 
-    	        // Stack Diameter is required
-    	        if (releasePoint.getStackDiameter() == null) {
+    	        // Stack Diameter or stack length/width is required
+    	        if (releasePoint.getStackDiameter() == null && ( releasePoint.getStackWidth() == null || releasePoint.getStackLength() == null)) {
 
-    	        	result = false;
-    	        	context.addFederalError(
-    	        			ValidationField.RP_STACK.value(),
-    	        			"releasePoint.stack.required",
-    	        			createValidationDetails(releasePoint),
-    	        			"Stack Diameter");
+    	            result = false;
+    	            context.addFederalError(
+    	                ValidationField.RP_STACK.value(),
+                        "releasePoint.stack.diameterOrLengthWidth",
+                        createValidationDetails(releasePoint));
 
-                // Stack Diameter range
-    	        } else if (releasePoint.getStackDiameter() < 0.001 || releasePoint.getStackDiameter() > 300) {
+    	            // Only stack diameter or width/length allowed
+    	        } else if (releasePoint.getStackDiameter() != null && (releasePoint.getStackLength() != null || releasePoint.getStackWidth() != null)) {
+    	            result = false;
+    	            context.addFederalError(
+    	                ValidationField.RP_STACK.value(),
+                        "releasePoint.stack.noDiameterAndLengthWidth",
+                        createValidationDetails(releasePoint)
+                    );
+
+                }
+
+
+    	        // Stack Diameter range
+    	        if (releasePoint.getStackDiameter() != null && (releasePoint.getStackDiameter() < 0.001 || releasePoint.getStackDiameter() > 300)) {
 
     	            result = false;
     	            context.addFederalError(
