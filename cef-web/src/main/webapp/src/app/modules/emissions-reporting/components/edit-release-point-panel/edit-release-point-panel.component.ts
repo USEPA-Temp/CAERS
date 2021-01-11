@@ -37,7 +37,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     eisProgramId: string;
     facilityOpCode: BaseCodeLookup;
     diameterCheckHeightWarning: string;
-    diameterCheckFlowAndVelWarning: string;
     diameterOrLengthAndWidthMessage: string;
     velAndFlowCheckDiameterWarning: string;
     calculatedVelocity: string;
@@ -152,7 +151,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.exitVelocityCheck(),
             this.coordinateToleranceCheck(),
             this.stackVelAndFlowCheckForDiameter(),
-            this.stackDiameterCheckForVelAndFlow(),
             this.facilitySiteStatusCheck(),
             this.exitGasFlowUomCheck(),
             this.exitGasVelocityUomCheck(),
@@ -593,27 +591,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             return null;
         }
     };
-
-    // QA Check - Stack Diameter information is reported, Exit Gas Flow Rate and Velocity should be reported
-    stackDiameterCheckForVelAndFlow(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            const diameter = control.get('stackDiameter');
-            const exitVelocity = control.get('exitGasVelocity');
-            const exitFlowRate = control.get('exitGasFlowRate');
-
-            if (this.releaseType !== this.fugitiveType) {
-                if ((diameter !== null && diameter.value !== null && diameter.value !== '') &&
-                    ((exitVelocity === null || exitVelocity.value === null || exitVelocity.value === '')
-                        || (exitFlowRate === null || exitFlowRate.value === null || exitFlowRate.value === ''))
-                ) {
-                    this.diameterCheckFlowAndVelWarning = 'Warning: If Release Point Stack Diameter is reported, Exit Gas Flow Rate and Exit Gas Velocity should also be reported.';
-                } else {
-                    this.diameterCheckFlowAndVelWarning = null;
-                }
-            }
-            return null;
-        };
-    }
 
     // QA Check - Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
     stackVelAndFlowCheckForDiameter(): ValidatorFn {
