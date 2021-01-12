@@ -14,6 +14,8 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
+import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 
 @Component({
   selector: 'app-edit-process-info-panel',
@@ -35,6 +37,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
   invalidAircraftSCC = false;
   processHasAETC = false;
   facilityOpCode: BaseCodeLookup;
+  facilitySourceTypeCode: InventoryYearCodeLookup;
 
   processForm = this.fb.group({
     aircraftEngineTypeCode: [null],
@@ -92,6 +95,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
 
     this.route.data.subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilityOpCode = data.facilitySite.operatingStatusCode;
+      this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
       this.emissionsReportYear = data.facilitySite.emissionsReport.year;
     });
 
@@ -333,15 +337,17 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     return (control: FormGroup): ValidationErrors | null => {
       const controlStatus = control.get('operatingStatusCode').value;
 
-      if (this.facilityOpCode && controlStatus) {
+      if (this.facilityOpCode && controlStatus
+        && (this.facilitySourceTypeCode === null || (this.facilitySourceTypeCode.code !== VariableValidationType.LANDFILL_SOURCE_TYPE))) {
+          
         if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
           && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
           && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
-            return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
+          return {invalidStatusCodeTS: true};
+        } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
           && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
-            return {invalidStatusCodePS: true};
-          }
+          return {invalidStatusCodePS: true};
+        }
       }
       return null;
     };
