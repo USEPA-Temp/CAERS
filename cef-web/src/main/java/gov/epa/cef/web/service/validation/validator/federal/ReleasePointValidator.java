@@ -244,16 +244,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	        				uom);
     	        	}
             	}
-
-    	        // Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
-    	        if (releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasFlowRate() != null && releasePoint.getStackDiameter() == null) {
-
-    	        	result = false;
-    	        	context.addFederalWarning(
-    	        			ValidationField.RP_STACK_WARNING.value(),
-    	        			"releasePoint.stackWarning.diameterCheck.forDiameter",
-    	        			createValidationDetails(releasePoint));
-    	        }
             }
 
             // FUGITIVE RELEASE POINT CHECKS
