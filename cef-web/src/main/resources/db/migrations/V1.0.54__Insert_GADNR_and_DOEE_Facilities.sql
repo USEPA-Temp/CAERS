@@ -480,7 +480,8 @@ insert into master_facility_record (eis_program_id, program_system_code, name, c
 UPDATE emissions_report er
     SET master_facility_id = mfr.id
     FROM master_facility_record mfr
-    WHERE mfr.eis_program_id = er.eis_program_id;
+    WHERE mfr.eis_program_id = er.eis_program_id
+    and er.program_system_code in ('GADNR', 'DOEE');
     
  
 ALTER TABLE emissions_report 
