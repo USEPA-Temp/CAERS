@@ -707,7 +707,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setStackDiameter(null);
 
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
@@ -1042,32 +1042,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void FlowAndVelocityCheckForDiameterFailTest() {
-
-        CefValidatorContext cefContext = createContext();
-        ReleasePoint testData = createBaseReleasePoint();
-
-        cefContext = createContext();
-        testData.setStackDiameter(null);
-        testData.setStackHeight(5.0);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
-
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.RP_STACK_WARNING.value()) && errorMap.get(ValidationField.RP_STACK_WARNING.value()).size() == 1);
-
-        //Verify QA Checks are NOT run when RP is NOT Operating
-        OperatingStatusCode opStatCode = new OperatingStatusCode();
-        opStatCode.setCode("TS");
-        testData.setOperatingStatusCode(opStatCode);
-
-        cefContext = createContext();
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
-    }
-
-    @Test
     public void releasePointNoDiameterOrLengthWidthFailTest() {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
@@ -1077,11 +1051,10 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setStackLength(null);
 
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
-        assertTrue(errorMap.containsKey(ValidationField.RP_STACK_WARNING.value()) && errorMap.get(ValidationField.RP_STACK_WARNING.value()).size() == 1);
 
     }
 
@@ -1094,12 +1067,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setStackWidth(55.0);
         testData.setStackLength(55.0);
 
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        // the failing test here is the stack diameter required if exit gas flow recorded error, not the stack diameter or length/width error.
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.RP_STACK_WARNING.value()) && errorMap.get(ValidationField.RP_STACK_WARNING.value()).size() == 1);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
 
     @Test
