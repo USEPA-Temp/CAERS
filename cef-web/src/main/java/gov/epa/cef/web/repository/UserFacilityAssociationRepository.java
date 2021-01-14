@@ -10,4 +10,6 @@ public interface UserFacilityAssociationRepository extends CrudRepository<UserFa
 
     List<UserFacilityAssociation> findByMasterFacilityRecordId(Long masterFacilityRecordId);
 
+    List<UserFacilityAssociation> findByUserRoleId(Long userRoleId);
+
 }

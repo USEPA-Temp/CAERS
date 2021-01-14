@@ -19,7 +19,7 @@ export class MasterFacilityInfoComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
 
-    this.userFacilityAssociationService.getAssociationsForFacility(this.facility.id)
+    this.userFacilityAssociationService.getAssociationDetailsForFacility(this.facility.id)
     .subscribe(result => {
       this.userFacilityAssociations = result;
     });

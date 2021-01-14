@@ -3,13 +3,11 @@
     <strong>My Facilities</strong>
   </div>
   <div class="list-group list-group-flush">
+    <div class="text-center">
+        <a class="btn btn-primary m-3" routerLink="search">Request Access to a New Facility</a>
+    </div>
     <div *ngFor="let facility of facilities" class="list-group-item">
       <app-facility-list-item [facility]="facility"></app-facility-list-item>
     </div>
-    <!--CEF-378 temporarily commented out until needed again
-    <div class="text-right">
-        <button class="btn btn-primary m-3">Add Facility</button>
-    </div>
-    -->  
   </div>
 </div>

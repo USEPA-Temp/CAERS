@@ -25,6 +25,15 @@ public interface MasterFacilityRecordMapper {
     @Mapping(target ="operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
     @Mapping(target = "facilityCategoryCode", qualifiedByName = "FacilityCategoryCode")
     @Mapping(target = "facilitySourceTypeCode", qualifiedByName = "FacilitySourceTypeCode")
+    MasterFacilityRecord fromDto(MasterFacilityRecordDto source);
+
+    @Mapping(target="countyCode", qualifiedByName = "CountyCode")
+    @Mapping(target="stateCode", qualifiedByName = "FipsStateCode")
+    @Mapping(target="mailingStateCode", qualifiedByName = "FipsStateCode")
+    @Mapping(target="tribalCode", qualifiedByName = "TribalCode")
+    @Mapping(target ="operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
+    @Mapping(target = "facilityCategoryCode", qualifiedByName = "FacilityCategoryCode")
+    @Mapping(target = "facilitySourceTypeCode", qualifiedByName = "FacilitySourceTypeCode")
     void updateFromDto(MasterFacilityRecordDto source, @MappingTarget MasterFacilityRecord target);
 
     @Mapping(target = "id", ignore = true)
