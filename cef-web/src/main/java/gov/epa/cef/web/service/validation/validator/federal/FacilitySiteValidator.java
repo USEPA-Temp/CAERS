@@ -306,8 +306,12 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             }
         }
         
+        // If the facility source type code is landfill, then the emissions units, release points, and controls can still be "operating" because of passive emissions that are emitted from the landfill.
+        // For all other facility source types, if the facility is shutdown, then all the components underneath it must also be shutdown.
         if ((facilitySite.getFacilitySourceTypeCode() != null && !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(facilitySite.getFacilitySourceTypeCode().getCode()))
         		|| facilitySite.getFacilitySourceTypeCode() == null) {
+        	
+        	//if the facility is temporarily shutdown, then the underlying components must also be temporarily or permanently shutdown
 	        if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
 	        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
 	        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode())
@@ -347,6 +351,8 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 	        				"control.statusTypeCode.temporarilyShutdown",
 	        				createControlValidationDetails(c));
 	        	}
+	        
+        	//if the facility is permanently shutdown, then the underlying components must also be permanently shutdown
 	        } else if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
 	        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
 	        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))

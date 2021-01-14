@@ -37,7 +37,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
   invalidAircraftSCC = false;
   processHasAETC = false;
   facilityOpCode: BaseCodeLookup;
-  facilitySourceTypeCode: InventoryYearCodeLookup;
+  facilitySourceTypeCode: BaseCodeLookup;
 
   processForm = this.fb.group({
     aircraftEngineTypeCode: [null],
@@ -70,7 +70,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     this.legacyAetcValidator(),
     this.checkMatchSccAircraft(),
     this.checkSccAndAircraftDuplicate(),
-    this.facilitySiteStatusCheck(),
+    this.operatingStatusCheck(),
     this.statusYearRequiredCheck()]
   });
 
@@ -112,8 +112,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
       this.emissionsUnit.emissionsProcesses.forEach(process => {
         this.emissionsProcessIdentifiers.push(process.emissionsProcessIdentifier);
         if(process['aircraftEngineTypeCode'] && process['sccCode']){
-          // if a process is selected to edit then check to make sure its id isnt equal to the id of the process we are looping through
-          // to avoid comparing its own combination to itself, if its a new process then skip this check
+          // if a process is selected to edit, then check to make sure its id isn't equal to the id of the process we are looping through
+          // to avoid comparing its own combination to itself, if it's a new process then skip this check
           if ((!this.process) || (this.process && process['id']!== this.process.id)){
             const combination = process['aircraftEngineTypeCode'].code + process['sccCode'];
             this.sccAndAircraftCombinations.push(combination);
@@ -333,20 +333,34 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     };
   }
 
-  facilitySiteStatusCheck(): ValidatorFn {
+  operatingStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
       const controlStatus = control.get('operatingStatusCode').value;
 
+      // check process operating status if facility source type is not landfill
       if (this.facilityOpCode && controlStatus
         && (this.facilitySourceTypeCode === null || (this.facilitySourceTypeCode.code !== VariableValidationType.LANDFILL_SOURCE_TYPE))) {
-          
-        if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
+
+          // if facility operating status is TS/PS, then process status must be shutdown
+          if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
           && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
           && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
           return {invalidStatusCodeTS: true};
         } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
           && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
           return {invalidStatusCodePS: true};
+        } else {
+          // if facility is not shutdown, then process status must be shutdown if unit status is TS/PS
+          if (this.emissionUnit && this.emissionUnit.operatingStatusCode.code) {
+            if (this.emissionUnit.operatingStatusCode.code === OperatingStatus.TEMP_SHUTDOWN
+              && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
+              && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
+              return {invalidStatusCodeUnitTS: true};
+            } else if (this.emissionUnit.operatingStatusCode.code === OperatingStatus.PERM_SHUTDOWN
+              && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
+              return {invalidStatusCodeUnitPS: true};
+            }
+          }
         }
       }
       return null;
