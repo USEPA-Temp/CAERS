@@ -37,7 +37,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     releaseType: string;
     eisProgramId: string;
     facilityOpCode: BaseCodeLookup;
-    facilitySourceTypeCode: InventoryYearCodeLookup;
+    facilitySourceTypeCode: BaseCodeLookup;
     diameterCheckHeightWarning: string;
     diameterOrLengthAndWidthMessage: string;
     velAndFlowCheckDiameterWarning: string;

@@ -10,7 +10,6 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { ActivatedRoute } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
-import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 
 @Component({
@@ -24,7 +23,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
   facilitySite: FacilitySite;
   emissionUnitIdentifiers: string[] = [];
   facilityOpCode: BaseCodeLookup;
-  facilitySourceTypeCode: InventoryYearCodeLookup;
+  facilitySourceTypeCode: BaseCodeLookup;
   edit = true;
 
   emissionUnitForm = this.fb.group({

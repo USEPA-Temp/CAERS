@@ -14,7 +14,6 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 
 @Component({

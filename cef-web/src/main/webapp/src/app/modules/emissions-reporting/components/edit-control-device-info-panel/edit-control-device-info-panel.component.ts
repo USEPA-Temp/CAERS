@@ -23,7 +23,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
   @Input() year: number;
   controlIdentifiers: string[] = [];
   facilityOpCode: BaseCodeLookup;
-  facilitySourceTypeCode: InventoryYearCodeLookup;
+  facilitySourceTypeCode: BaseCodeLookup;
 
   controlDeviceForm = this.fb.group({
     identifier: ['', Validators.required],
