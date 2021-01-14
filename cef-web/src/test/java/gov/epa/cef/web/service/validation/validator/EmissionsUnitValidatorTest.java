@@ -19,6 +19,7 @@ import com.baidu.unbiz.fluentvalidator.ValidationError;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
@@ -261,6 +262,8 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     	
     	CefValidatorContext cefContext = createContext();
     	EmissionsUnit testData = createBaseEmissionsUnit();
+    	OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
     	EmissionsProcess ep1 = new EmissionsProcess();
     	EmissionsProcess ep2 = new EmissionsProcess();
     	ep1.setEmissionsProcessIdentifier("ABC");
@@ -299,6 +302,9 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         
         cefContext = createContext();
         testData.getOperatingStatusCode().setCode("PS");
+        FacilitySourceTypeCode stc = new FacilitySourceTypeCode();
+        stc.setCode("100");
+        testData.getFacilitySite().setFacilitySourceTypeCode(stc);
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -335,6 +341,9 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         
         cefContext = createContext();
         testData.getOperatingStatusCode().setCode("TS");
+        FacilitySourceTypeCode stc = new FacilitySourceTypeCode();
+        stc.setCode("100");
+        testData.getFacilitySite().setFacilitySourceTypeCode(stc);
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -395,6 +404,9 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         
         UnitMeasureCode capUom = new UnitMeasureCode();
         capUom.setCode("CURIE");
+        
+        FacilitySourceTypeCode stc = new FacilitySourceTypeCode();
+        stc.setCode("104");
         
         FacilitySite facility = new FacilitySite();
         facility.setId(1L);

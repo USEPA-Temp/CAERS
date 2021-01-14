@@ -14,6 +14,7 @@ import {ReleasePointService} from 'src/app/core/services/release-point.service';
 import {InventoryYearCodeLookup} from 'src/app/shared/models/inventory-year-code-lookup';
 import {legacyItemValidator} from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
+import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 
 @Component({
     selector: 'app-edit-release-point-panel',
@@ -36,6 +37,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     releaseType: string;
     eisProgramId: string;
     facilityOpCode: BaseCodeLookup;
+    facilitySourceTypeCode: BaseCodeLookup;
     diameterCheckHeightWarning: string;
     diameterOrLengthAndWidthMessage: string;
     velAndFlowCheckDiameterWarning: string;
@@ -205,6 +207,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 this.facilitySite = data.facilitySite;
                 this.eisProgramId = this.facilitySite.eisProgramId;
                 this.facilityOpCode = this.facilitySite.operatingStatusCode;
+                this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
                 this.releasePointService.retrieveForFacility(data.facilitySite.id)
                     .subscribe(releasePoints => {
                         releasePoints.forEach(rp => {
@@ -724,7 +727,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
             const controlStatus = control.get('operatingStatusCode').value;
 
-            if (this.facilityOpCode && controlStatus) {
+            if (this.facilityOpCode && controlStatus
+                && (this.facilitySourceTypeCode === null || (this.facilitySourceTypeCode.code !== VariableValidationType.LANDFILL_SOURCE_TYPE))) {
+
                 if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
                     && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
                     && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
