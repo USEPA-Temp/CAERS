@@ -1,15 +1,16 @@
 package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.domain.MasterFacilityRecord;
+import gov.epa.cef.web.domain.common.BaseLookupEntity;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MasterFacilityRecordRepository extends CrudRepository<MasterFacilityRecord, Long>, ProgramIdRetriever {
+public interface MasterFacilityRecordRepository extends JpaRepository<MasterFacilityRecord, Long>, ProgramIdRetriever {
 
     /**
      * Retrieve facility by eis program
@@ -26,6 +27,12 @@ public interface MasterFacilityRecordRepository extends CrudRepository<MasterFac
     List<MasterFacilityRecord> findByStateCode(String stateCode);
 
     List<MasterFacilityRecord> findByProgramSystemCodeCode(String programSystemCode);
+
+    /**
+     * Retrieve program system codes currently in use; sort does not work on this query
+     */
+    @Query("select distinct programSystemCode FROM MasterFacilityRecord")
+    List<BaseLookupEntity> findDistinctProgramSystems();
 
     /**
      *
