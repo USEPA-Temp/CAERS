@@ -81,6 +81,14 @@ export class ReleasePointDetailsComponent implements OnInit {
         this.editInfo = value;
     }
 
+    releasePointType = (): string => {
+        return this.fugitive ? 'Fugitive' : 'Stack'
+    };
+
+    isDiameter = (): boolean => {
+        return !!this.releasePoint.stackDiameter;
+    }
+
     updateReleasePoint() {
         if (!this.releasePointComponent.releasePointForm.valid) {
             this.releasePointComponent.releasePointForm.markAllAsTouched();
