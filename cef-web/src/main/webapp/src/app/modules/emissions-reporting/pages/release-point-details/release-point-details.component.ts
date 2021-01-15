@@ -51,6 +51,8 @@ export class ReleasePointDetailsComponent implements OnInit {
                             this.fugitive = true;
                         }
 
+                        console.log(this.releasePoint)
+
                         this.processService.retrieveForReleasePoint(this.releasePoint.id)
                             .subscribe(processes => {
                                 this.processes = processes;
@@ -79,6 +81,14 @@ export class ReleasePointDetailsComponent implements OnInit {
 
     setEditInfo(value: boolean) {
         this.editInfo = value;
+    }
+
+    releasePointType = (): string => {
+        return this.fugitive ? 'Fugitive' : 'Stack'
+    };
+
+    isDiameter = (): boolean => {
+        return !!this.releasePoint.stackDiameter;
     }
 
     updateReleasePoint() {

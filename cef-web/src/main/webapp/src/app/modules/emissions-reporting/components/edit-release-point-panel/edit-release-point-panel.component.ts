@@ -194,6 +194,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 this.stackLengthUomCode.patchValue(ftUom);
                 this.fugitiveWidthUomCode.patchValue(ftUom);
                 this.fugitiveLengthUomCode.patchValue(ftUom);
+                this.fugitiveHeightUomCode.patchValue(ftUom)
                 this.stackDiameterUomCode.patchValue(ftUom);
                 this.stackHeightUomCode.patchValue(ftUom);
                 this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
@@ -272,6 +273,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     get fugitiveLengthUomCode() {
         return this.releasePointForm.get('fugitiveLengthUomCode');
+    }
+
+    get fugitiveHeightUomCode() {
+        return this.releasePointForm.get('fugitiveHeightUomCode');
     }
 
     get typeCode() {
@@ -409,7 +414,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.releasePointForm.controls.exitGasVelocity.setValidators([
                 Validators.min(0.001), Validators.max(1500),
                 Validators.pattern(this.numberPattern83), this.requiredIfOperating()]);
-                
+
             if (this.releasePointForm.controls.exitGasVelocityUomCode.value?.code === 'FPM') {
                 this.releasePointForm.controls.exitGasVelocity.setValidators([
                     Validators.min(0.060), Validators.max(90000),
@@ -599,15 +604,16 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             const exitVelocity = control.get('exitGasVelocity');
             const exitFlowRate = control.get('exitGasFlowRate');
 
-            if (this.releaseType !== this.fugitiveType) {
-                if (((exitVelocity !== null && exitVelocity.value !== null && exitVelocity.value !== '')
-                    && (exitFlowRate !== null && exitFlowRate.value !== null && exitFlowRate.value !== ''))
-                    && (diameter === null || diameter.value === null || diameter.value === '')) {
-                    this.velAndFlowCheckDiameterWarning = 'Warning: If Release Point Exit Gas Flow Rate and Exit Gas Velocity are reported, Stack Diameter should also be reported.';
-                } else {
-                    this.velAndFlowCheckDiameterWarning = null;
-                }
-            }
+            // Commented out for now
+            // if (this.releaseType !== this.fugitiveType) {
+            //     if (((exitVelocity !== null && exitVelocity.value !== null && exitVelocity.value !== '')
+            //         && (exitFlowRate !== null && exitFlowRate.value !== null && exitFlowRate.value !== ''))
+            //         && (diameter === null || diameter.value === null || diameter.value === '')) {
+            //         this.velAndFlowCheckDiameterWarning = 'Warning: If Release Point Exit Gas Flow Rate and Exit Gas Velocity are reported, Stack Diameter should also be reported.';
+            //     } else {
+            //         this.velAndFlowCheckDiameterWarning = null;
+            //     }
+            // }
             return null;
         };
     }
