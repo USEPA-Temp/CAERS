@@ -165,12 +165,15 @@ public class NotificationServiceImpl implements NotificationService {
         sendAdminEmail(emailSubject, emailBody);
     }
 
-    public void sendUserAccessRequestNotification(String to, String from, String facilityName, String userName)
+    public void sendUserAccessRequestNotification(String to, String from, String facilityName, String agencyFacilityId, String userName, String userEmail, String role)
     {
         String emailSubject = MessageFormat.format(USER_ACCESS_REQUEST_SUBJECT, userName, facilityName);
         Context context = new Context();
         context.setVariable("userName", userName);
+        context.setVariable("userEmail", userEmail);
+        context.setVariable("role", role);
         context.setVariable("facilityName", facilityName);
+        context.setVariable("agencyFacilityId", agencyFacilityId);
         String emailBody = templateEngine.process(USER_ACCESS_REQUEST_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }

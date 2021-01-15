@@ -82,8 +82,11 @@ public class UserFacilityAssociationServiceImpl {
         //send an email notification to the SLT's predefined address that a user has requested access
         notificationService.sendUserAccessRequestNotification(sltConfig.getSltEmail(),
                 cefConfig.getDefaultEmailAddress(),
+                facility.getName(),
                 facility.getAgencyFacilityId(),
-                user.getFirstName() + " " + user.getLastName());
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail(),
+                user.getIdTypeText());
 
         return this.ufaMapper.toDto(result);
     }

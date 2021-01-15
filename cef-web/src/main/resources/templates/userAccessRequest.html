@@ -2,6 +2,9 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-	<p>User ${userName} has requested access to facility ${facilityName} in the EPA Common Emissions Form.</p>
+	<p>
+		User <span th:text="${userName}"></span> (<span th:text="${userEmail}"></span>) has requested access to be a <span th:text="${role}"></span>
+		for <span th:text="${facilityName}"></span>, <span th:text="${agencyFacilityId}"></span>.
+	</p>
 </body>
 </html>
