@@ -26,4 +26,9 @@ export class MasterFacilityRecordService {
         const url = `${this.baseUrl}/${recordId}`;
         return this.http.get<MasterFacilityRecord>(url);
     }
+
+    update(masterFacility: MasterFacilityRecord): Observable<MasterFacilityRecord> {
+        const url = `${this.baseUrl}/${masterFacility.id}`;
+        return this.http.put<MasterFacilityRecord>(url, masterFacility);
+    }
 }

@@ -10,9 +10,10 @@ import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
+import gov.epa.cef.web.service.MasterFacilityRecordService;
 
 @Service
-public class MasterFacilityRecordServiceImpl {
+public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordService {
 
     @Autowired
     private MasterFacilityRecordRepository mfrRepo;
@@ -39,6 +40,16 @@ public class MasterFacilityRecordServiceImpl {
         MasterFacilityRecord mfr = new MasterFacilityRecord();
         this.mapper.updateFromDto(this.mapper.facilitySiteDtoToDto(fs), mfr);
         return mfr;
+    }
+
+
+    public MasterFacilityRecordDto update(MasterFacilityRecordDto dto) {
+
+    	MasterFacilityRecord masterFacilityRecord = mfrRepo.findById(dto.getId()).orElse(null);
+    	mapper.updateFromDto(dto, masterFacilityRecord);
+    	MasterFacilityRecordDto result = mapper.toDto(mfrRepo.save(masterFacilityRecord));
+
+    	return result;
     }
 
 }
