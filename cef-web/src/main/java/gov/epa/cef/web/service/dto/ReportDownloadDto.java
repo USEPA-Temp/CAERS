@@ -33,8 +33,14 @@ public class ReportDownloadDto implements Serializable{
     private String emissionsComment;
     private String reportingPeriodType;
     private String throughputUom;
+    private String throughputMaterial;
     private BigDecimal throughputValue;
 	private String emissionsCalcMethod;
+	private String fuelUseMaterial;
+	private String fuelUseUom;
+	private BigDecimal fuelUseValue;
+	private String heatContentUom;
+	private BigDecimal heatContentValue;
     private String lastModifiedBy;
 	private String lastModifiedDate;
 	private String calculationComment;
@@ -177,6 +183,42 @@ public class ReportDownloadDto implements Serializable{
 	}
 	public void setCalculationComment(String calculationComment) {
 		this.calculationComment = calculationComment;
+	}
+	public String getThroughputMaterial() {
+		return throughputMaterial;
+	}
+	public void setThroughputMaterial(String throughputMaterial) {
+		this.throughputMaterial = throughputMaterial;
+	}
+	public String getFuelUseMaterial() {
+		return fuelUseMaterial;
+	}
+	public void setFuelUseMaterial(String fuelUseMaterial) {
+		this.fuelUseMaterial = fuelUseMaterial;
+	}
+	public String getFuelUseUom() {
+		return fuelUseUom;
+	}
+	public void setFuelUseUom(String fuelUseUom) {
+		this.fuelUseUom = fuelUseUom;
+	}
+	public BigDecimal getFuelUseValue() {
+		return fuelUseValue;
+	}
+	public void setFuelUseValue(BigDecimal fuelUseValue) {
+		this.fuelUseValue = fuelUseValue;
+	}
+	public String getHeatContentUom() {
+		return heatContentUom;
+	}
+	public void setHeatContentUom(String heatContentUom) {
+		this.heatContentUom = heatContentUom;
+	}
+	public BigDecimal getHeatContentValue() {
+		return heatContentValue;
+	}
+	public void setHeatContentValue(BigDecimal heatContentValue) {
+		this.heatContentValue = heatContentValue;
 	}
 
 }
