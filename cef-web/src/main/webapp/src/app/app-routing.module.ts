@@ -26,7 +26,7 @@ const routes: Routes = [
       {
         path: 'search',
         component: MasterFacilitySearchComponent,
-        data: { title: 'Facility Search' },
+        data: { title: 'Facility Search', breadcrumb: 'Facility Search' },
       }, {
         path: ':facilityId',
         resolve: {
