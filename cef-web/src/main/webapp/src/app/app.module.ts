@@ -47,6 +47,8 @@ import { MasterFacilityTableComponent } from './modules/dashboards/components/ma
 import { MasterFacilityInfoComponent } from './modules/dashboards/components/master-facility-info/master-facility-info.component';
 import { UserFacilityAssociationTableComponent } from './modules/dashboards/components/user-facility-association-table/user-facility-association-table.component';
 import { EditMasterFacilityInfoComponent } from './modules/dashboards/components/edit-master-facility-info/edit-master-facility-info.component';
+import { MasterFacilitySearchComponent } from './modules/dashboards/pages/master-facility-search/master-facility-search.component';
+import { MasterFacilitySearchTableComponent } from './modules/dashboards/components/master-facility-search-table/master-facility-search-table.component';
 
 
 @NgModule({
@@ -84,7 +86,10 @@ import { EditMasterFacilityInfoComponent } from './modules/dashboards/components
     MasterFacilityTableComponent,
     MasterFacilityInfoComponent,
     UserFacilityAssociationTableComponent,
-    EditMasterFacilityInfoComponent
+    EditMasterFacilityInfoComponent,
+    MasterFacilitySearchComponent,
+    MasterFacilitySearchTableComponent
+
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.domain.MasterFacilityRecord;
+import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 
@@ -39,4 +40,19 @@ public interface MasterFacilityRecordService {
      */
     MasterFacilityRecordDto update(MasterFacilityRecordDto dto);
 
+
+    /**
+     * 
+     * @param 
+     * @return
+     */
+    List<MasterFacilityRecordDto> findByExample(MasterFacilityRecordDto criteria);
+
+
+    /**
+     * 
+     * @param 
+     * @return
+     */
+    List<CodeLookupDto> findDistinctProgramSystems();
 }
