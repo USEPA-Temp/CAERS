@@ -150,7 +150,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.stackDiameterCheck(),
             this.exitVelocityCheck(),
             this.coordinateToleranceCheck(),
-            this.stackVelAndFlowCheckForDiameter(),
             this.facilitySiteStatusCheck(),
             this.exitGasFlowUomCheck(),
             this.exitGasVelocityUomCheck(),

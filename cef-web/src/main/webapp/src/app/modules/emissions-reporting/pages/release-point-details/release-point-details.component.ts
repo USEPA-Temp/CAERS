@@ -51,8 +51,6 @@ export class ReleasePointDetailsComponent implements OnInit {
                             this.fugitive = true;
                         }
 
-                        console.log(this.releasePoint)
-
                         this.processService.retrieveForReleasePoint(this.releasePoint.id)
                             .subscribe(processes => {
                                 this.processes = processes;
