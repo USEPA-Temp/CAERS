@@ -36,9 +36,9 @@ public class ReportDownloadDto implements Serializable{
     private String throughputMaterial;
     private BigDecimal throughputValue;
 	private String emissionsCalcMethod;
-	private String fuelUseMaterial;
-	private String fuelUseUom;
-	private BigDecimal fuelUseValue;
+	private String fuelMaterial;
+	private String fuelUom;
+	private BigDecimal fuelUValue;
 	private String heatContentUom;
 	private BigDecimal heatContentValue;
     private String lastModifiedBy;
@@ -190,23 +190,23 @@ public class ReportDownloadDto implements Serializable{
 	public void setThroughputMaterial(String throughputMaterial) {
 		this.throughputMaterial = throughputMaterial;
 	}
-	public String getFuelUseMaterial() {
-		return fuelUseMaterial;
+	public String getFuelMaterial() {
+		return fuelMaterial;
 	}
-	public void setFuelUseMaterial(String fuelUseMaterial) {
-		this.fuelUseMaterial = fuelUseMaterial;
+	public void setFuelMaterial(String fuelMaterial) {
+		this.fuelMaterial = fuelMaterial;
 	}
-	public String getFuelUseUom() {
-		return fuelUseUom;
+	public String getFuelUom() {
+		return fuelUom;
 	}
-	public void setFuelUseUom(String fuelUseUom) {
-		this.fuelUseUom = fuelUseUom;
+	public void setFuelUom(String fuelUom) {
+		this.fuelUom = fuelUom;
 	}
-	public BigDecimal getFuelUseValue() {
-		return fuelUseValue;
+	public BigDecimal getFuelUValue() {
+		return fuelUValue;
 	}
-	public void setFuelUseValue(BigDecimal fuelUseValue) {
-		this.fuelUseValue = fuelUseValue;
+	public void setFuelUValue(BigDecimal fuelUValue) {
+		this.fuelUValue = fuelUValue;
 	}
 	public String getHeatContentUom() {
 		return heatContentUom;
