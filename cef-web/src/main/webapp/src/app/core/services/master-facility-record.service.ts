@@ -37,4 +37,9 @@ export class MasterFacilityRecordService {
         const url = `${this.baseUrl}/programSystemCodes`;
         return this.http.get<BaseCodeLookup[]>(url);
     }
+
+    update(masterFacility: MasterFacilityRecord): Observable<MasterFacilityRecord> {
+        const url = `${this.baseUrl}/${masterFacility.id}`;
+        return this.http.put<MasterFacilityRecord>(url, masterFacility);
+    }
 }
