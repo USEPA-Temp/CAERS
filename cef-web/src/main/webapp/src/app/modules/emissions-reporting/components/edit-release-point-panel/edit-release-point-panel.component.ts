@@ -597,27 +597,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         }
     };
 
-    // QA Check - Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
-    stackVelAndFlowCheckForDiameter(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            const diameter = control.get('stackDiameter');
-            const exitVelocity = control.get('exitGasVelocity');
-            const exitFlowRate = control.get('exitGasFlowRate');
-
-            // Commented out for now
-            // if (this.releaseType !== this.fugitiveType) {
-            //     if (((exitVelocity !== null && exitVelocity.value !== null && exitVelocity.value !== '')
-            //         && (exitFlowRate !== null && exitFlowRate.value !== null && exitFlowRate.value !== ''))
-            //         && (diameter === null || diameter.value === null || diameter.value === '')) {
-            //         this.velAndFlowCheckDiameterWarning = 'Warning: If Release Point Exit Gas Flow Rate and Exit Gas Velocity are reported, Stack Diameter should also be reported.';
-            //     } else {
-            //         this.velAndFlowCheckDiameterWarning = null;
-            //     }
-            // }
-            return null;
-        };
-    }
-
     // QA Check - Exit gas flow input must be within +/-5% of computed flow
     exitFlowConsistencyCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
