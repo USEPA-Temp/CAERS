@@ -74,6 +74,24 @@ public class ReportDownloadView extends BaseEntity{
 
     @Column(name = "throughput_amount")
     private BigDecimal throughputValue;
+    
+    @Column(name = "throughput_material", length = 200)
+    private String throughputMaterial;
+    
+    @Column(name = "fuel_value")
+    private BigDecimal fuelValue;
+    
+    @Column(name = "fuel_uom", length = 20)
+    private String fuelUom;
+    
+    @Column(name = "fuel_material", length = 200)
+    private String fuelMaterial;
+
+	@Column(name = "heat_content_value")
+    private BigDecimal heatContentValue;
+    
+    @Column(name = "heat_content_uom", length = 20)
+    private String heatContentUom;
 
 	@Column(name = "total_emissions")
     private BigDecimal totalEmissions;
@@ -267,5 +285,53 @@ public class ReportDownloadView extends BaseEntity{
 
 	public void setCalculationComment(String calculationComment) {
 		this.calculationComment = calculationComment;
+	}
+
+	public String getThroughputMaterial() {
+		return throughputMaterial;
+	}
+
+	public void setThroughputMaterial(String throughputMaterial) {
+		this.throughputMaterial = throughputMaterial;
+	}
+
+	public BigDecimal getFuelValue() {
+		return fuelValue;
+	}
+
+	public void setFuelValue(BigDecimal fuelValue) {
+		this.fuelValue = fuelValue;
+	}
+
+	public String getFuelUom() {
+		return fuelUom;
+	}
+
+	public void setFuelUom(String fuelUom) {
+		this.fuelUom = fuelUom;
+	}
+
+	public String getFuelMaterial() {
+		return fuelMaterial;
+	}
+
+	public void setFuelMaterial(String fuelMaterial) {
+		this.fuelMaterial = fuelMaterial;
+	}
+
+	public BigDecimal getHeatContentValue() {
+		return heatContentValue;
+	}
+
+	public void setHeatContentValue(BigDecimal heatContentValue) {
+		this.heatContentValue = heatContentValue;
+	}
+
+	public String getHeatContentUom() {
+		return heatContentUom;
+	}
+
+	public void setHeatContentUom(String heatContentUom) {
+		this.heatContentUom = heatContentUom;
 	}
 }

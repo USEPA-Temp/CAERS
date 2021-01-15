@@ -10,7 +10,8 @@ export class ReportDownloadService {
     downloadFile(data?: any, filename = 'data', dataCsv?: string) {
 
         const csvData = dataCsv ? dataCsv : this.ConvertToCSV(data, ['facilitySiteId', 'reportYear', 'emissionsUnitId', 'emissionUnitDescription',
-            'processId', 'processDescription', 'reportingPeriodType', 'throughputValue', 'throughputUom', 'pollutantName',
+            'processId', 'processDescription', 'reportingPeriodType', 'throughputMaterial', 'throughputValue', 'throughputUom','fuelMaterial', 
+            'fuelValue', 'fuelUom', 'heatContentValue', 'heatContentUom', 'pollutantName',
             'totalEmissions', 'emissionsUomCode', 'overallControlPercent', 'emissionsCalcMethod', 'emissionsFactor',
             'emissionsNumeratorUom', 'emissionsDenominatorUom', 'emissionsFactorText', 'emissionsComment', 'calculationComment',
             'lastModifiedBy', 'lastModifiedDate']);
