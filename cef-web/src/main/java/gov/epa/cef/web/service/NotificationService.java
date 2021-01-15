@@ -10,7 +10,7 @@ public interface NotificationService {
     void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments, Long attachmentId);
     void sendReportAcceptedNotification(String to, String from, String facilityName, String reportingYear, String comments);
     void sendSccUpdateFailedNotification(Exception exception);
-    void sendUserAccessRequestNotification(String to, String from, String facilityName, String userName);
+    void sendUserAccessRequestNotification(String to, String from, String facilityName, String agencyFacilityId, String userName, String userEmail, String role);
     void sendUserFeedbackNotification(UserFeedbackDto userFeedback);
     
     void sendAdminNotification(AdminEmailType type, Map<String, Object> context);

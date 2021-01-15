@@ -80,6 +80,7 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
     .subscribe(() => {
       this.toastr.success('', `Access requested for ${facility.name}`);
       this.tableData.splice(this.tableData.indexOf(facility), 1);
+      this.filteredItems = this.search(this.filter.value);
       this.selectedFacility = null;
     });
 
