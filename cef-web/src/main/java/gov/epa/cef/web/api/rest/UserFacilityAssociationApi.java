@@ -10,10 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import gov.epa.cef.web.service.dto.UserFacilityAssociationDto;
 import gov.epa.cef.web.service.impl.UserFacilityAssociationServiceImpl;
 
@@ -48,12 +51,39 @@ public class UserFacilityAssociationApi {
         this.ufaService.deleteById(id);
     }
 
-    @GetMapping(value = "/facility/{masterFacilityRecordId}")
-    public ResponseEntity<List<UserFacilityAssociationDto>> retrieveAssociationsForFacility(
+    @PostMapping(value = "/request")
+    public ResponseEntity<UserFacilityAssociationDto> createAssociationRequest(@NotNull @RequestBody MasterFacilityRecordDto facility) {
+
+        UserFacilityAssociationDto result = this.ufaService.requestFacilityAssociation(facility, this.securityService.getCurrentApplicationUser());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/user/{userRoleId}")
+    public ResponseEntity<List<UserFacilityAssociationDto>> retrieveAssociationsForUser(
+        @NotNull @PathVariable Long userRoleId) {
+
+        List<UserFacilityAssociationDto> result =
+            this.ufaService.findByUserRoleId(userRoleId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/facility/{masterFacilityRecordId}/details")
+    public ResponseEntity<List<UserFacilityAssociationDto>> retrieveAssociationDetailsForFacility(
         @NotNull @PathVariable Long masterFacilityRecordId) {
 
         List<UserFacilityAssociationDto> result =
-            this.ufaService.findByMasterFacilityRecordId(masterFacilityRecordId);
+            this.ufaService.findDetailsByMasterFacilityRecordId(masterFacilityRecordId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/my")
+    public ResponseEntity<List<UserFacilityAssociationDto>> retrieveAssociationsForCurrentUser() {
+
+        List<UserFacilityAssociationDto> result =
+            this.ufaService.findByUserRoleId(this.securityService.getCurrentApplicationUser().getUserRoleId());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
