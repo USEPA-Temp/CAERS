@@ -1,0 +1,110 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header text-center">
+        <strong>Request Access to Facility</strong>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+
+            <div class="col-4">
+              <div class="row">
+                <div class="col-6">
+                  <label for="pscSelect" class="ml-1 col-form-label"><strong>Program System Code:</strong></label>
+                </div>
+                <div class="col-6">
+                  <select type="text" class="form-control" id="pscSelect" formControlName="programSystemCode">
+                    <option [ngValue]="null"></option>
+                    <option *ngFor="let opt of programSystemCodeValues" [ngValue]="opt">{{opt?.code}}</option>
+                  </select>
+                  <app-validation-message [control]="searchForm.get('programSystemCode')"></app-validation-message>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="row">
+                <div class="col-3">
+                  <label for="nameInput" class="ml-1 col-form-label"><strong>Name:</strong></label>
+                </div>
+                <div class="col-9">
+                  <input type="text" class="form-control" id="nameInput" formControlName="name">
+                  <app-validation-message [control]="searchForm.get('name')"></app-validation-message>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="row">
+                <div class="col-4">
+                  <label for="agencyFacilityIdInput" class="ml-1 col-form-label"><strong>Agency Facility ID:</strong></label>
+                </div>
+                <div class="col-8">
+                  <input type="text" class="form-control" id="agencyFacilityIdInput" formControlName="agencyFacilityId">
+                  <app-validation-message [control]="searchForm.get('agencyFacilityId')"></app-validation-message>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="row">
+                <div class="col-6">
+                  <label for="cityInput" class="ml-1 col-form-label"><strong>City:</strong></label>
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control" id="cityInput" formControlName="city">
+                  <app-validation-message [control]="searchForm.get('city')"></app-validation-message>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="row">
+                <div class="col-6">
+                  <label for="stateSelect" class="ml-1 col-form-label"><strong>State:</strong></label>
+                </div>
+                <div class="col-6">
+                  <select type="text" class="form-control" id="stateSelect" formControlName="stateCode">
+                    <option [ngValue]="null"></option>
+                    <option *ngFor="let opt of stateValues" [ngValue]="opt">{{opt?.uspsCode}}</option>
+                  </select>
+                  <app-validation-message [control]="searchForm.get('stateCode')"></app-validation-message>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="row">
+                <div class="col-6 text-right">
+                  <label for="postalCodeInput" class="ml-1 col-form-label"><strong>Postal Code:</strong></label>
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control" id="postalCodeInput" formControlName="postalCode">
+                  <app-validation-message [control]="searchForm.get('postalCode')"></app-validation-message>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="float-right pb-3 pr-3">
+                <button type="submit" class="btn btn-success mr-2">Search</button>
+                <button type="reset" class="btn btn-primary mr-2">Reset</button>
+                <a class="btn btn-secondary mr-2" routerLink="/facility">Back to My Facilities</a>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="row" *ngIf="searchResults">
+          <div class="col-12">
+            <hr>
+            <app-master-facility-search-table [tableData]="searchResults"></app-master-facility-search-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

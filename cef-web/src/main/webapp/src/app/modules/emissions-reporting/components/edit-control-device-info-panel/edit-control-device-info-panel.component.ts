@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from "@angular/core";
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Control } from 'src/app/shared/models/control';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
@@ -9,6 +9,8 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
+import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
   selector: 'app-edit-control-device-info-panel',
@@ -21,6 +23,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
   @Input() year: number;
   controlIdentifiers: string[] = [];
   facilityOpCode: BaseCodeLookup;
+  facilitySourceTypeCode: BaseCodeLookup;
 
   controlDeviceForm = this.fb.group({
     identifier: ['', Validators.required],
@@ -73,6 +76,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilityOpCode = data.facilitySite.operatingStatusCode;
+      this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
       this.controlService.retrieveForFacilitySite(data.facilitySite.id)
       .subscribe(controls => {
         controls.forEach(c => {
@@ -103,27 +107,27 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         }
       }
       return null;
-    }
+    };
   }
 
   facilitySiteStatusCheck(): ValidatorFn {
     return (control: FormGroup): ValidationErrors | null => {
-      const status_perm_shutdown = "PS";
-      const status_temp_shutdown = "TS";
-      const control_status = control.get('operatingStatusCode').value;
+      const controlStatus = control.get('operatingStatusCode').value;
 
-      if (this.facilityOpCode && control_status) {
-        if (this.facilityOpCode.code === status_temp_shutdown
-          && control_status.code !== status_perm_shutdown
-          && control_status.code !== status_temp_shutdown) {
+      if (this.facilityOpCode && controlStatus 
+        && (this.facilitySourceTypeCode === null || (this.facilitySourceTypeCode.code !== VariableValidationType.LANDFILL_SOURCE_TYPE))) {
+          
+        if (this.facilityOpCode.code === OperatingStatus.TEMP_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.TEMP_SHUTDOWN) {
             return {invalidStatusCodeTS: true};
-          } else if (this.facilityOpCode.code === status_perm_shutdown
-          && control_status.code !== status_perm_shutdown) {
-            return {invalidStatusCodePS: true};
-          }
+        } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
+          && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
+          return {invalidStatusCodePS: true};
+        }
       }
       return null;
-    }
+    };
   }
 
 }

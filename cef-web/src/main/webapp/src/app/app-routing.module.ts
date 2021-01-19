@@ -16,6 +16,7 @@ import {EisTransactionsComponent} from "src/app/modules/dashboards/pages/eis-tra
 import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
 import { AdminUserFeedbackComponent } from './modules/dashboards/pages/admin-user-feedback/admin-user-feedback.component';
 import { MasterFacilityInformationComponent } from 'src/app/modules/dashboards/pages/master-facility-information/master-facility-information.component';
+import { MasterFacilitySearchComponent } from 'src/app/modules/dashboards/pages/master-facility-search/master-facility-search.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -23,6 +24,10 @@ const routes: Routes = [
     path: 'facility',
     children: [
       {
+        path: 'search',
+        component: MasterFacilitySearchComponent,
+        data: { title: 'Facility Search', breadcrumb: 'Facility Search' },
+      }, {
         path: ':facilityId',
         resolve: {
           facility: FacilityResolverService

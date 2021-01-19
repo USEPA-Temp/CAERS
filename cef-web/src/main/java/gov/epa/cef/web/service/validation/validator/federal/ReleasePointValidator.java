@@ -73,13 +73,23 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	                    createValidationDetails(releasePoint));
     	        }
 
-    	        // Exit Gas Flow Rate OR Exit Gas Velocity is required.
-    	        if ((releasePoint.getExitGasFlowRate() == null && releasePoint.getExitGasVelocity() == null)) {
-    	        	result = false;
+    	        // Exit Gas Velocity is required.
+    	        if (releasePoint.getExitGasVelocity() == null) {
 
+    	        	result = false;
     	        	context.addFederalError(
-                    		ValidationField.RP_GAS_RELEASE.value(),
-                    		"releasePoint.release.required",
+                    		ValidationField.RP_GAS_VELOCITY.value(),
+                    		"releasePoint.exitGasVelocity.required",
+                    		createValidationDetails(releasePoint));
+    	        }
+
+    	     // Exit Gas Flow Rate is required.
+    	        if (releasePoint.getExitGasFlowRate() == null) {
+
+    	        	result = false;
+    	        	context.addFederalError(
+                    		ValidationField.RP_GAS_FLOW.value(),
+                    		"releasePoint.exitGasFlowRate.required",
                     		createValidationDetails(releasePoint));
     	        }
 
@@ -103,18 +113,29 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	                    createValidationDetails(releasePoint));
     	        }
 
-    	        // Stack Diameter is required
-    	        if (releasePoint.getStackDiameter() == null) {
+    	        // Stack Diameter or stack length/width is required
+    	        if (releasePoint.getStackDiameter() == null && ( releasePoint.getStackWidth() == null || releasePoint.getStackLength() == null)) {
 
-    	        	result = false;
-    	        	context.addFederalError(
-    	        			ValidationField.RP_STACK.value(),
-    	        			"releasePoint.stack.required",
-    	        			createValidationDetails(releasePoint),
-    	        			"Stack Diameter");
+    	            result = false;
+    	            context.addFederalError(
+    	                ValidationField.RP_STACK.value(),
+                        "releasePoint.stack.diameterOrLengthWidth",
+                        createValidationDetails(releasePoint));
 
-                // Stack Diameter range
-    	        } else if (releasePoint.getStackDiameter() < 0.001 || releasePoint.getStackDiameter() > 300) {
+    	            // Only stack diameter or width/length allowed
+    	        } else if (releasePoint.getStackDiameter() != null && (releasePoint.getStackLength() != null || releasePoint.getStackWidth() != null)) {
+    	            result = false;
+    	            context.addFederalError(
+    	                ValidationField.RP_STACK.value(),
+                        "releasePoint.stack.noDiameterAndLengthWidth",
+                        createValidationDetails(releasePoint)
+                    );
+
+                }
+
+
+    	        // Stack Diameter range
+    	        if (releasePoint.getStackDiameter() != null && (releasePoint.getStackDiameter() < 0.001 || releasePoint.getStackDiameter() > 300)) {
 
     	            result = false;
     	            context.addFederalError(
@@ -223,27 +244,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	        				uom);
     	        	}
             	}
-
-    	        // Stack Diameter information is reported, Exit Gas Flow Rate and Velocity should be reported
-    	        if ((releasePoint.getStackDiameter() != null && releasePoint.getExitGasVelocity() == null)
-    	        	|| (releasePoint.getStackDiameter() != null && releasePoint.getExitGasFlowRate() == null)) {
-
-    	        	result = false;
-    	        	context.addFederalWarning(
-    	        			ValidationField.RP_STACK_WARNING.value(),
-    	        			"releasePoint.stackWarning.diameterCheck.forFlowAndVelocity",
-    	        			createValidationDetails(releasePoint));
-    	        }
-
-    	        // Exit Gas Flow Rate and Velocity information is reported, Stack Diameter should be reported
-    	        if (releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasFlowRate() != null && releasePoint.getStackDiameter() == null) {
-
-    	        	result = false;
-    	        	context.addFederalWarning(
-    	        			ValidationField.RP_STACK_WARNING.value(),
-    	        			"releasePoint.stackWarning.diameterCheck.forDiameter",
-    	        			createValidationDetails(releasePoint));
-    	        }
             }
 
             // FUGITIVE RELEASE POINT CHECKS
@@ -314,7 +314,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_FLOW.value(),
-                        "releasePoint.exitGasFlowRate.required",
+                        "releasePoint.exitGasFlowRate.uom.required",
                         createValidationDetails(releasePoint));
 
               } else if (releasePoint.getExitGasFlowUomCode() != null && (
@@ -325,7 +325,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_FLOW.value(),
-                        "releasePoint.exitGasFlowRate.uom.required",
+                        "releasePoint.exitGasFlowRate.requiredUom",
                         createValidationDetails(releasePoint));
               }
 
@@ -421,7 +421,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_VELOCITY.value(),
-                        "releasePoint.exitGasVelocity.required",
+                        "releasePoint.exitGasVelocity.uom.required",
                         createValidationDetails(releasePoint));
 
               } else if (releasePoint.getExitGasVelocityUomCode() != null && (
@@ -432,7 +432,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
               	result = false;
               	context.addFederalError(
                         ValidationField.RP_GAS_VELOCITY.value(),
-                        "releasePoint.exitGasVelocity.uom.required",
+                        "releasePoint.exitGasVelocity.requiredUom",
                         createValidationDetails(releasePoint));
               }
 

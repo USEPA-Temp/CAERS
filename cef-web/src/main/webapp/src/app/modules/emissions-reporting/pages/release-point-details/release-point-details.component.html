@@ -1,12 +1,14 @@
 <div *ngIf="releasePoint">
     <div class="row">
         <div class="col-sm-12">
-        
+
             <div class="card mb-3">
                 <div class="card-header text-center">
                     <strong>Release Point Information</strong>
                     <div class="float-right" *ngIf="!editInfo && !readOnlyMode">
-                        <button type="button" class="btn btn-success" aria-label="edit release point" (click)="setEditInfo(true)">Edit</button>
+                        <button type="button" class="btn btn-success" aria-label="edit release point"
+                                (click)="setEditInfo(true)">Edit
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -43,6 +45,8 @@
                             <div class="col-sm-6 col-md-2">{{releasePoint.exitGasVelocity}}</div>
                             <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate Measure:</strong></div>
                             <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowRate}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Exit Gas Temperature Measure (F):</strong></div>
+                            <div class="col-sm-6 col-md-2">{{releasePoint.exitGasTemperature}}</div>
                         </div>
 
                         <div class="row pb-3">
@@ -51,51 +55,101 @@
                             <div class="col-sm-6 col-md-2"><strong>Exit Gas Flow Rate UoM:</strong></div>
                             <div class="col-sm-6 col-md-2">{{releasePoint.exitGasFlowUomCode?.description}}</div>
                         </div>
-                        
+
                         <div *ngIf="!fugitive">
                             <div class="row pb-2">
                                 <div class="col-sm-6 col-md-2"><strong>Stack Height Measure:</strong></div>
                                 <div class="col-sm-6 col-md-2">{{releasePoint.stackHeight}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Stack Diameter Measure:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameter}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Exit Gas Temperature Measure (F):</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.exitGasTemperature}}</div>
+
+                                <div class="col-sm-6 col-md-2" *ngIf="isDiameter()"><strong>Stack Diameter
+                                    Measure:</strong></div>
+                                <div class="col-sm-6 col-md-2" *ngIf="isDiameter()">{{releasePoint.stackDiameter}}</div>
+
+                                <ng-container *ngIf="!isDiameter()">
+
+                                    <div class="col-sm-6 col-md-2"><strong>Stack Width Measure:</strong>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-2">{{ releasePoint.stackWidth }}</div>
+                                    <div class="col-sm-6 col-md-2"><strong>Stack Length Measure:</strong>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-2">{{ releasePoint.stackLength }}</div>
+                                </ng-container>
+
+
                             </div>
-                            
+
                             <div class="row pb-2">
                                 <div class="col-sm-6 col-md-2"><strong>Stack Height UoM:</strong></div>
                                 <div class="col-sm-6 col-md-2">{{releasePoint.stackHeightUomCode?.description}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Stack Diameter UoM:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.stackDiameterUomCode?.description}}</div>
+
+                                <div class="col-sm-6 col-md-2" *ngIf="isDiameter()"><strong>Stack Diameter UoM:</strong>
+                                </div>
+                                <div class="col-sm-6 col-md-2"
+                                     *ngIf="isDiameter()">{{releasePoint.stackDiameterUomCode?.description}}</div>
+
+                                <ng-container *ngIf="!isDiameter()">
+                                    <div class="col-sm-6 col-md-2"><strong>Stack Width UoM:</strong></div>
+                                    <div class="col-sm-6 col-md-2">
+                                        {{releasePoint.stackWidthUomCode?.description}}
+                                    </div>
+                                    <div class="col-sm-6 col-md-2"><strong>Stack Length UoM:</strong></div>
+                                    <div class="col-sm-6 col-md-2">
+                                        {{releasePoint.stackLengthUomCode?.description}}
+                                    </div>
+                                </ng-container>
+
+
                             </div>
                         </div>
-                        
-                        <div *ngIf="fugitive">
-                            <div class="row pb-2">
-                                <div class="col-sm-6 col-md-2"><strong>Fugitive Height Measure:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveHeight}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Fugitive Length Measure:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveLength}}</div>
+
+
+                        <div class="row pb-2" *ngIf="fugitive">
+
+                            <div class="col-sm-6 col-md-2"><strong>Fugitive Height Measure:</strong></div>
+                            <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveHeight}}</div>
+
+                            <div class="col-sm-6 col-md-2"><strong>Fugitive Width Measure:</strong>
                             </div>
-                            
+                            <div
+                                class="col-sm-6 col-md-2">{{releasePoint.fugitiveWidth}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Fugitive Length Measure:</strong>
+                            </div>
+                            <div
+                                class="col-sm-6 col-md-2">{{releasePoint.fugitiveLength}}</div>
+
+                        </div>
+
+                        <div class="row pb-2" *ngIf="fugitive">
+                            <div class="col-sm-6 col-md-2"><strong>Fugitive Height UoM:</strong></div>
+                            <div
+                                class="col-sm-6 col-md-2">{{releasePoint.fugitiveHeight}}</div>
+                            <div class="col-sm-6 col-md-2"><strong>Fugitive Width UoM:</strong></div>
+                            <div class="col-sm-6 col-md-2">
+                                {{releasePoint.fugitiveWidthUomCode?.description}}
+                            </div>
+                            <div class="col-sm-6 col-md-2"><strong>Fugitive Length UoM:</strong></div>
+                            <div class="col-sm-6 col-md-2">
+                                {{releasePoint.fugitiveLengthUomCode?.description}}
+                            </div>
+
+
+                        </div>
+
+                        <div *ngIf="fugitive">
+
+
                             <div class="row pb-2">
-                                <div class="col-sm-6 col-md-2"><strong>Fugitive Height UoM:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveHeightUomCode?.description}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Fugitive Length UoM:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveLengthUomCode?.description}}</div>
+
                             </div>
 
                             <div class="row pb-2">
-                                <div class="col-sm-6 col-md-2"><strong>Fugitive Width Measure:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveWidth}}</div>
-                                <div class="col-sm-6 col-md-2"><strong>Fugitive Angle Measure (degrees azimuth):</strong></div>
+                                <div class="col-sm-6 col-md-2"><strong>Fugitive Angle Measure (degrees
+                                    azimuth):</strong></div>
                                 <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveAngle}}</div>
                             </div>
 
-                            <div class="row pb-2">
-                                <div class="col-sm-6 col-md-2"><strong>Fugitive Width UoM:</strong></div>
-                                <div class="col-sm-6 col-md-2">{{releasePoint.fugitiveWidthUomCode?.description}}</div>
-                            </div>
                         </div>
 
                         <div class="row">
@@ -105,28 +159,33 @@
                     </div>
 
                     <div *ngIf="editInfo">
-                        <app-edit-release-point-panel [releasePoint]="releasePoint" [year]="facilitySite.emissionsReport.year"></app-edit-release-point-panel>
-                        <div class="float-right pb-3 pr-3" *ngIf="releasePointComponent">
-                            <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
-                            <button type="submit" class="btn btn-success" (click)="updateReleasePoint()">Save</button>
-                        </div>
+                        <app-edit-release-point-panel
+                            [releasePoint]="releasePoint"
+                            [year]="facilitySite.emissionsReport.year">
+                        </app-edit-release-point-panel>
                     </div>
                 </div>
             </div>
-            
+            <div class="float-right pb-3 pr-3" *ngIf="releasePointComponent && editInfo">
+                <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel
+                </button>
+                <button type="submit" class="btn btn-success" (click)="updateReleasePoint()">Save</button>
+            </div>
+
         </div>
     </div>
-    
+
     <div *ngIf="processes">
         <div class="row">
             <div class="col-sm-12 col-md-6">
-            
+
                 <div class="card">
                     <div class="card-header text-center">
                         <strong>Processes Associated with this Release Point</strong>
                     </div>
                     <div class="card-body">
-                        <app-emissions-process-table [tableData]="processes" [parentComponentType]="parentComponentType" [readOnlyMode]="readOnlyMode"></app-emissions-process-table>
+                        <app-emissions-process-table [tableData]="processes" [parentComponentType]="parentComponentType"
+                                                     [readOnlyMode]="readOnlyMode"></app-emissions-process-table>
                     </div>
                 </div>
             </div>
@@ -137,11 +196,12 @@
                         <strong>Controls Associated with this Release Point</strong>
                     </div>
                     <div class="card-body">
-                        <app-control-path-panel [tableData]="controlPaths" [readOnlyMode]="readOnlyMode"></app-control-path-panel>
+                        <app-control-path-panel [tableData]="controlPaths"
+                                                [readOnlyMode]="readOnlyMode"></app-control-path-panel>
                     </div>
                 </div>
             </div>
         </div>
-        
+
     </div>
 </div>

@@ -44,34 +44,40 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         
-        //if the unit is temporarily shutdown, then the underlying processes must also be temporarily or permanently shutdown
-        if (ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
-        	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
-        			.filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())
-        					&& !ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-        	
-        	for (EmissionsProcess ep: epList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.PROCESS_STATUS_CODE.value(),
-        				"emissionsProcess.statusTypeCode.temporarilyShutdown",
-        				createEmissionsProcessValidationDetails(ep));
-        	}
-        	
-        //if the unit is permanently shutdown, then the underlying processes must also be temporarily or permanently shutdown
-        } else if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
-        	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
-        			.filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-        	
-        	for (EmissionsProcess ep: epList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.PROCESS_STATUS_CODE.value(),
-        				"emissionsProcess.statusTypeCode.permanentShutdown",
-        				createEmissionsProcessValidationDetails(ep));
-        	}
+        // If the facility source type code is landfill, then the emissions process can still be "operating" because of passive emissions that are emitted from the landfill.
+        // For all other facility source types, if the facility is shutdown, then the emissions process underneath the emissions unit must also be shutdown.
+        if ((emissionsUnit.getFacilitySite().getFacilitySourceTypeCode() != null && !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(emissionsUnit.getFacilitySite().getFacilitySourceTypeCode().getCode()))
+        		|| emissionsUnit.getFacilitySite().getFacilitySourceTypeCode() == null) {
+	        	
+	        //if the unit is temporarily shutdown, then the underlying processes must also be temporarily or permanently shutdown
+	        if (ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+	        	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
+	        			.filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())
+	        					&& !ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	        	
+	        	for (EmissionsProcess ep: epList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.PROCESS_STATUS_CODE.value(),
+	        				"emissionsProcess.statusTypeCode.temporarilyShutdown",
+	        				createEmissionsProcessValidationDetails(ep));
+	        	}
+	        	
+	        //if the unit is permanently shutdown, then the underlying processes must also be permanently shutdown
+	        } else if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+	        	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
+	        			.filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	        	
+	        	for (EmissionsProcess ep: epList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.PROCESS_STATUS_CODE.value(),
+	        				"emissionsProcess.statusTypeCode.permanentShutdown",
+	        				createEmissionsProcessValidationDetails(ep));
+	        	}
+	        }
         }
         
         // If unit operation status is not operating, status year is required

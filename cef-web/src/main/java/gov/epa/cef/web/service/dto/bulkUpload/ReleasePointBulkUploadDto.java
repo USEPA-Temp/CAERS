@@ -119,6 +119,20 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Stack Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackHeightUomCode;
 
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
+        message = "Stack Width is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String stackWidth;
+
+    @Size(max = 20, message = "Stack Width Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String stackWidthUomCode;
+
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
+        message = "Stack Length is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String stackLength;
+
+    @Size(max = 20, message = "Stack Length Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String stackLengthUomCode;
+
     @NotBlank(message = "Status Year is required.")
     @Pattern(regexp = YearPattern,
         message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
@@ -431,6 +445,38 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     public void setStackHeightUomCode(String stackHeightUomCode) {
 
         this.stackHeightUomCode = stackHeightUomCode;
+    }
+
+    public String getStackWidth() {
+        return stackWidth;
+    }
+
+    public void setStackWidth(String stackWidth) {
+        this.stackWidth = stackWidth;
+    }
+
+    public String getStackWidthUomCode() {
+        return stackWidthUomCode;
+    }
+
+    public void setStackWidthUomCode(String stackWidthUomCode) {
+        this.stackWidthUomCode = stackWidthUomCode;
+    }
+
+    public String getStackLength() {
+        return stackLength;
+    }
+
+    public void setStackLength(String stackLength) {
+        this.stackLength = stackLength;
+    }
+
+    public String getStackLengthUomCode() {
+        return stackLengthUomCode;
+    }
+
+    public void setStackLengthUomCode(String stackLengthUomCode) {
+        this.stackLengthUomCode = stackLengthUomCode;
     }
 
     public String getStatusYear() {

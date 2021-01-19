@@ -1,5 +1,5 @@
-import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
-import { InventoryYearCodeLookup } from './inventory-year-code-lookup';
+import {BaseCodeLookup} from 'src/app/shared/models/base-code-lookup';
+import {InventoryYearCodeLookup} from './inventory-year-code-lookup';
 
 export class ReleasePoint {
   id: number;
@@ -12,6 +12,10 @@ export class ReleasePoint {
   stackHeightUomCode: BaseCodeLookup;
   stackDiameter: number;
   stackDiameterUomCode: BaseCodeLookup;
+  stackWidth: number;
+  stackWidthUomCode: BaseCodeLookup;
+  stackLength: number;
+  stackLengthUomCode: BaseCodeLookup;
   exitGasVelocity: number;
   exitGasVelocityUomCode: BaseCodeLookup;
   exitGasTemperature: number;

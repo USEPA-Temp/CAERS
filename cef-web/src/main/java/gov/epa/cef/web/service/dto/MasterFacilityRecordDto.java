@@ -214,5 +214,10 @@ public class MasterFacilityRecordDto implements Serializable {
     public void setTribalCode(CodeLookupDto tribalCode) {
         this.tribalCode = tribalCode;
     }
+    
+    public MasterFacilityRecordDto withId(Long id) {
+    	setId(id);
+    	return this;
+    }
 
 }

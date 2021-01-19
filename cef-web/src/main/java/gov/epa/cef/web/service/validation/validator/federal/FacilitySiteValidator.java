@@ -15,6 +15,8 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -304,81 +306,90 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
             }
         }
         
-        if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
-        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
-        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode())
-        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-
-        	for (EmissionsUnit eu: euList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
-        				"emissionsUnit.statusTypeCode.temporarilyShutdown",
-        				createEmissionsUnitValidationDetails(eu));
-        	}
-
-        	List<ReleasePoint> rpList = facilitySite.getReleasePoints().stream()
-        			.filter(releasePoint -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode())
-        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-
-        	for (ReleasePoint rp: rpList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.RP_STATUS_CODE.value(),
-        				"releasePoint.statusTypeCode.temporarilyShutdown",
-        				createReleasePointValidationDetails(rp));
-        	}
-
-        	List<Control> cList = facilitySite.getControls().stream()
-        			.filter(control -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode())
-        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-
-        	for (Control c: cList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.CONTROL_STATUS_CODE.value(),
-        				"control.statusTypeCode.temporarilyShutdown",
-        				createControlValidationDetails(c));
-        	}
-        } else if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
-        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
-        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-
-        	for (EmissionsUnit eu: euList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
-        				"emissionsUnit.statusTypeCode.permanentShutdown",
-        				createEmissionsUnitValidationDetails(eu));
-        	}
-
-        	List<ReleasePoint> rpList = facilitySite.getReleasePoints().stream()
-        			.filter(releasePoint -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-
-        	for (ReleasePoint rp: rpList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.RP_STATUS_CODE.value(),
-        				"releasePoint.statusTypeCode.permanentShutdown",
-        				createReleasePointValidationDetails(rp));
-        	}
-
-        	List<Control> cList = facilitySite.getControls().stream()
-        			.filter(control -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode()))
-        			.collect(Collectors.toList());
-
-        	for (Control c: cList) {
-        		result = false;
-        		context.addFederalError(
-        				ValidationField.CONTROL_STATUS_CODE.value(),
-        				"control.statusTypeCode.permanentShutdown",
-        				createControlValidationDetails(c));
-        	}
+        // If the facility source type code is landfill, then the emissions units, release points, and controls can still be "operating" because of passive emissions that are emitted from the landfill.
+        // For all other facility source types, if the facility is shutdown, then all the components underneath it must also be shutdown.
+        if ((facilitySite.getFacilitySourceTypeCode() != null && !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(facilitySite.getFacilitySourceTypeCode().getCode()))
+        		|| facilitySite.getFacilitySourceTypeCode() == null) {
+        	
+        	//if the facility is temporarily shutdown, then the underlying components must also be temporarily or permanently shutdown
+	        if (STATUS_TEMPORARILY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
+	        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
+	        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode())
+	        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	
+	        	for (EmissionsUnit eu: euList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+	        				"emissionsUnit.statusTypeCode.temporarilyShutdown",
+	        				createEmissionsUnitValidationDetails(eu));
+	        	}
+	
+	        	List<ReleasePoint> rpList = facilitySite.getReleasePoints().stream()
+	        			.filter(releasePoint -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode())
+	        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	
+	        	for (ReleasePoint rp: rpList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.RP_STATUS_CODE.value(),
+	        				"releasePoint.statusTypeCode.temporarilyShutdown",
+	        				createReleasePointValidationDetails(rp));
+	        	}
+	
+	        	List<Control> cList = facilitySite.getControls().stream()
+	        			.filter(control -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode())
+	        					&& !STATUS_TEMPORARILY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	
+	        	for (Control c: cList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.CONTROL_STATUS_CODE.value(),
+	        				"control.statusTypeCode.temporarilyShutdown",
+	        				createControlValidationDetails(c));
+	        	}
+	        
+        	//if the facility is permanently shutdown, then the underlying components must also be permanently shutdown
+	        } else if (STATUS_PERMANENTLY_SHUTDOWN.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
+	        	List<EmissionsUnit> euList = facilitySite.getEmissionsUnits().stream()
+	        			.filter(emissionUnit -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionUnit.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	
+	        	for (EmissionsUnit eu: euList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+	        				"emissionsUnit.statusTypeCode.permanentShutdown",
+	        				createEmissionsUnitValidationDetails(eu));
+	        	}
+	
+	        	List<ReleasePoint> rpList = facilitySite.getReleasePoints().stream()
+	        			.filter(releasePoint -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	
+	        	for (ReleasePoint rp: rpList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.RP_STATUS_CODE.value(),
+	        				"releasePoint.statusTypeCode.permanentShutdown",
+	        				createReleasePointValidationDetails(rp));
+	        	}
+	
+	        	List<Control> cList = facilitySite.getControls().stream()
+	        			.filter(control -> !STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode()))
+	        			.collect(Collectors.toList());
+	
+	        	for (Control c: cList) {
+	        		result = false;
+	        		context.addFederalError(
+	        				ValidationField.CONTROL_STATUS_CODE.value(),
+	        				"control.statusTypeCode.permanentShutdown",
+	        				createControlValidationDetails(c));
+	        	}
+	        }
         }
 
         if (facilitySite.getStatusYear() != null && facilitySite.getFacilitySourceTypeCode() != null) {
