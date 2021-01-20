@@ -1,15 +1,19 @@
 <form [formGroup]="facilitySiteForm">
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="The ID your facility holds for your State, Local, or Tribal Authority you report to." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="agencyFacilityIdInput" class="ml-1 col-form-label"><strong>Agency Facility ID:</strong></label>
+            <label for="agencyFacilityIdInput" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="The ID your facility holds for your State, Local, or Tribal Authority you report to." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Agency Facility ID:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="30" id="agencyFacilityIdInput" formControlName="agencyFacilityId" [value]="facility.agencyFacilityId" readonly>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="Code that identifies the operating status of the facility site." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="operatingStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
+            <label for="operatingStatusCodeSelect" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="Code that identifies the operating status of the facility site." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Operating Status:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" id="operatingStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
@@ -21,16 +25,20 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="The name of your facility." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="facilityNameInput" class="ml-1 col-form-label"><strong>Facility Name:</strong></label>
+            <label for="facilityNameInput" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="The name of your facility." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Facility Name:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="80" id="facilityNameInput" formControlName="name" readonly>
             <app-validation-message [control]="facilitySiteForm.get('name')"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="The year the current operating status came into effect. Required if facility site status is other than operating. Must be changed when the status changes. Must be between 1900 - 2050" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="statusYearInput" class="ml-1 col-form-label"><strong>Status Year:</strong></label>
+            <label for="statusYearInput" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="The year the current operating status came into effect. Required if facility site status is other than operating. Must be changed when the status changes. Must be between 1900 - 2050" [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Status Year:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="4" id="statusYearInput" formControlName="statusYear">
@@ -40,16 +48,20 @@
     
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="In reference to the location of the facility, the measure of the angular distance east or west from the prime meridian. Because the physical area a facility occupies extends over one latitudinal point, the latitude and longitude reported represent the location of the mid-point of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="longitudeInput" class="ml-1 col-form-label"><strong>Longitude:</strong></label>
+            <label for="longitudeInput" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="In reference to the location of the facility, the measure of the angular distance east or west from the prime meridian. Because the physical area a facility occupies extends over one latitudinal point, the latitude and longitude reported represent the location of the mid-point of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Longitude:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="11" id="longitudeInput" formControlName="longitude" readonly>
             <app-validation-message [control]="facilitySiteForm.get('longitude')"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="In reference to the location of the facility on the surface of the Earth, the measure of the angular distance  north or south from the equator.  Because the physical area a facility occupies extends over one latitudinal point, the latitude and longitude reported represent the location of the mid-point of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="latitudeInput" class="ml-1 col-form-label"><strong>Latitude:</strong></label>
+            <label for="latitudeInput" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="In reference to the location of the facility on the surface of the Earth, the measure of the angular distance  north or south from the equator.  Because the physical area a facility occupies extends over one latitudinal point, the latitude and longitude reported represent the location of the mid-point of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Latitude:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="10" id="latitudeInput" formControlName="latitude" readonly>
@@ -60,8 +72,10 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="Identfies the type of facility." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="facilitySourceTypeCodeSelect" class="ml-1 col-form-label"><strong>Facility Source Type:</strong></label>
+            <label for="facilitySourceTypeCodeSelect" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="Identfies the type of facility." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Facility Source Type:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" id="facilitySourceTypeCodeSelect" formControlName="facilitySourceTypeCode" [compareWith]="formUtils.compareCode">
@@ -70,8 +84,10 @@
             <app-validation-message [control]="facilitySiteForm.get('facilitySourceTypeCode')"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="Code that identifies the Clean Air Act Stationary Source designation." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="facilityCategoryCodeSelect" style="font-size:99%" class="ml-1 col-form-label"><strong>Facility Category Code:</strong></label>
+            <label for="facilityCategoryCodeSelect" style="font-size:99%" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="Code that identifies the Clean Air Act Stationary Source designation." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Facility Category Code:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" id="facilityCategoryCodeSelect" formControlName="facilityCategoryCode" [compareWith]="formUtils.compareCode">
@@ -83,8 +99,10 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="The location of the facility, which may be different from a mailing address or a headquarters office." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="streetAddressInput" class="ml-1 col-form-label"><strong>Facility Address:</strong></label>
+            <label for="streetAddressInput" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="The location of the facility, which may be different from a mailing address or a headquarters office." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> Facility Address:</strong>
+            </label>
         </div>
         <div class="col-sm-10">
             <input type="text" class="form-control"  maxlength="100" id="streetAddressInput" formControlName="streetAddress" readonly>
@@ -94,16 +112,18 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="cityInput" class="ml-1 col-form-label"><strong>City:</strong></label>
+            <label for="cityInput" class="ml-1 col-form-label pl-3">
+                <strong> City:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="60" class="form-control" id="cityInput" formControlName="city" readonly>
             <app-validation-message [control]="facilitySiteForm.get('city')"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="stateCodeSelect" class="ml-1 col-form-label"><strong>State:</strong></label>
+            <label for="stateCodeSelect" class="ml-1 col-form-label pl-3">
+                <strong> State:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode" disabled>
@@ -115,16 +135,18 @@
 
     <div class="row pb-2">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="postalCodeInput" class="ml-1 col-form-label"><strong>ZIP code:</strong></label>
+            <label for="postalCodeInput" class="ml-1 col-form-label pl-3">
+                <strong> ZIP code:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="10" class="form-control" id="postalCodeInput" formControlName="postalCode" readonly>
             <app-validation-message [control]="facilitySiteForm.get('postalCode')"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="countySelect" class="ml-1 col-form-label"><strong>County:</strong></label>
+            <label for="countySelect" class="ml-1 col-form-label pl-3">
+                <strong> County:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode">
@@ -137,8 +159,10 @@
 
     <div class="row pb-3">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="U.S. Bureau of Indian Affairs (BIA) code that identifies tribal entities." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="facilityBIACodeSelect" class="ml-1 col-form-label"><strong>BIA Code:</strong></label>
+            <label for="facilityBIACodeSelect" class="ml-1 col-form-label">
+                <fa-icon class="mt-2" title="U.S. Bureau of Indian Affairs (BIA) code that identifies tribal entities." [icon]="['fas', 'question-circle']"></fa-icon>
+                <strong> BIA Code:</strong>
+            </label>
         </div>
         <div class="col-sm-10">
             <select type="text" class="form-control" id="facilityBIACodeSelect" formControlName="tribalCode" [compareWith]="formUtils.compareCode">
@@ -151,16 +175,18 @@
     
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="mailingStreetAddressInput" style="font-size:97%" class="ml-1 col-form-label"><strong>Mailing Street Address:</strong></label>
+            <label for="mailingStreetAddressInput" style="font-size:97%" class="ml-1 col-form-label">
+                <strong> Mailing Street Address:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="100" class="form-control" id="mailingStreetAddressInput" formControlName="mailingStreetAddress">
             <app-validation-message [control]="facilitySiteForm.get('mailingStreetAddress')"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="mailingPostalCodeInput" class="ml-1 col-form-label"><strong>ZIP code:</strong></label>
+            <label for="mailingPostalCodeInput" class="ml-1 col-form-label pl-3">
+                <strong> ZIP code:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="10" id="mailingPostalCodeInput" formControlName="mailingPostalCode">
@@ -173,8 +199,9 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="mailingCityInput" class="ml-1 col-form-label"><strong>City:</strong></label>
+            <label for="mailingCityInput" class="ml-1 col-form-label pl-3">
+                <strong> City:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="60" class="form-control" id="mailingCityInput" formControlName="mailingCity">
@@ -184,8 +211,9 @@
             </div>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="mailingStateCodeSelect" class="ml-1 col-form-label"><strong>State:</strong></label>
+            <label for="mailingStateCodeSelect" class="ml-1 col-form-label pl-3">
+                <strong> State:</strong>
+            </label>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" id="mailingStateCodeSelect" formControlName="mailingStateCode" [compareWith]="formUtils.compareCode">
@@ -204,8 +232,9 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="descriptionInput" class="ml-1 col-form-label"><strong>Description:</strong></label>
+            <label for="descriptionInput" class="ml-1 col-form-label">
+                <strong> Description:</strong>
+            </label>
         </div>
         <div class="col-sm-10">
             <input type="text" class="form-control" maxlength="100" id="descriptionInput" formControlName="description">
