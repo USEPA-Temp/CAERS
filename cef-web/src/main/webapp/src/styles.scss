@@ -20,13 +20,10 @@
     text-decoration: underline;
 }
 
-.pipe-list .pipe-item::after {
-    content: " | ";
+.button-list-horizontal > a {
+    margin-left: 5px;
 }
 
-.pipe-list .pipe-item:last-child::after {
-    content: "";
-}
 
 th[sortable] {
     cursor: pointer;
