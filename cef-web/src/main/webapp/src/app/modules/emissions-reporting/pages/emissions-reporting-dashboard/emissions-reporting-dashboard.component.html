@@ -7,7 +7,7 @@
 			<div class="d-flex flex-row justify-content-between">
 				<div>{{report.year}} Report</div>
 
-				<div class="pipe-list">
+				<div class="button-list-horizontal">
                     <a [routerLink]="['/facility', report.eisProgramId, 'report', 'upload', report.year]"
 					   class="btn btn-primary"
 					   [attr.aria-label]="'upload'+ report.year +'report'"
