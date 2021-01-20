@@ -24,7 +24,6 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
   tribalCodeValues: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
   facilityCategoryCodeValues: FacilityCategoryCode[];
-  facilitySourceTypeValues: InventoryYearCodeLookup[];
   counties: FipsCounty[];
 
   facilitySiteForm = this.fb.group({
@@ -46,7 +45,6 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
     ]],
     operatingStatusCode: [null, Validators.required],
     facilityCategoryCode: [null],
-    facilitySourceTypeCode: [null],
     statusYear: ['', [
         Validators.required,
         Validators.min(1900),
@@ -111,11 +109,6 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
     this.lookupService.retrieveFacilityCategory()
     .subscribe(result => {
       this.facilityCategoryCodeValues = result;
-    });
-
-    this.lookupService.retrieveCurrentFacilitySourceType((new Date()).getFullYear())
-    .subscribe(result => {
-      this.facilitySourceTypeValues = result;
     });
 
     this.lookupService.retrieveFipsStateCode()

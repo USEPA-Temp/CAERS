@@ -60,16 +60,6 @@
 
     <div class="row pb-1">
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="Identfies the type of facility." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="facilitySourceTypeCodeSelect" class="ml-1 col-form-label"><strong>Facility Source Type:</strong></label>
-        </div>
-        <div class="col-sm-4">
-            <select type="text" class="form-control" id="facilitySourceTypeCodeSelect" formControlName="facilitySourceTypeCode" [compareWith]="formUtils.compareCode">
-                <option *ngFor="let opt of facilitySourceTypeValues" [ngValue]="opt">{{opt?.description}}</option>
-            </select>
-            <app-validation-message [control]="facilitySiteForm.get('facilitySourceTypeCode')"></app-validation-message>
-        </div>
-        <div class="col-sm-2">
             <fa-icon class="mt-2" title="Code that identifies the Clean Air Act Stationary Source designation." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="facilityCategoryCodeSelect" style="font-size:99%" class="ml-1 col-form-label"><strong>Facility Category Code:</strong></label>
         </div>
