@@ -39,7 +39,6 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     ]],
     operatingStatusCode: [null, Validators.required],
     facilityCategoryCode: [null],
-    facilitySourceTypeCode: [null],
     statusYear: ['', [
       Validators.required,
       Validators.min(1900),
@@ -69,7 +68,6 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   tribalCodeValues: BaseCodeLookup[];
   fipsStateCode: FipsStateCode[];
   facilityCategoryCodeValues: FacilityCategoryCode[];
-  facilitySourceTypeValues: InventoryYearCodeLookup[];
   counties: FipsCounty[];
 
   constructor(
@@ -111,13 +109,6 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     this.lookupService.retrieveFacilityCategory()
     .subscribe(result => {
       this.facilityCategoryCodeValues = result;
-    });
-
-    this.facilitySiteForm.get('facilitySourceTypeCode').setValidators([legacyItemValidator(this.facilitySite.emissionsReport.year, 'Facility Source Type Code', 'description')]);
-
-    this.lookupService.retrieveCurrentFacilitySourceType(this.facilitySite.emissionsReport.year)
-    .subscribe(result => {
-      this.facilitySourceTypeValues = result;
     });
 
     this.lookupService.retrieveFipsStateCode()
