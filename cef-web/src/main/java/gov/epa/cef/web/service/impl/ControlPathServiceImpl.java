@@ -127,7 +127,6 @@ public class ControlPathServiceImpl implements ControlPathService {
      */
     public ControlPathPollutantDto createPollutant(ControlPathPollutantDto dto) {
     	ControlPathPollutant controlPath = pollutantMapper.fromDto(dto);
-    	System.out.println(controlPath.getPollutant().getPollutantName());
     	
     	ControlPathPollutantDto result = pollutantMapper.toDto(pollutantRepo.save(controlPath));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getControlPathId()), ControlPathRepository.class);

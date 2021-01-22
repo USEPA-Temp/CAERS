@@ -3,7 +3,7 @@ CREATE TABLE control_path_pollutant
     id bigserial NOT NULL,
     control_path_id bigint NOT NULL,
     pollutant_code character varying(12) NOT NULL,
-    percent_reduction numeric(4, 1),
+    percent_reduction numeric(6, 3),
     created_by character varying(255) NOT NULL,
     created_date timestamp without time zone NOT NULL DEFAULT NOW(),
     last_modified_by character varying(255) NOT NULL,
