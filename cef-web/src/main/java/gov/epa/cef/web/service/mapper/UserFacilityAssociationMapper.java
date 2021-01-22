@@ -12,10 +12,8 @@ import net.exchangenetwork.wsdl.register.streamlined._1.RegistrationNewUserProfi
 @Mapper(componentModel = "spring", uses = {})
 public interface UserFacilityAssociationMapper {
 
-    @Mapping(source="masterFacilityRecord.id", target="masterFacilityRecordId")
     UserFacilityAssociationDto toDto(UserFacilityAssociation source);
 
-    @Mapping(source="source.masterFacilityRecord.id", target="masterFacilityRecordId")
     @Mapping(source="regUser.user.userId", target="cdxUserId")
     @Mapping(source="regUser.user.firstName", target="firstName")
     @Mapping(source="regUser.user.lastName", target="lastName")
@@ -24,6 +22,6 @@ public interface UserFacilityAssociationMapper {
     @Mapping(source="regUser.role.type.description", target="roleDescription")
     UserFacilityAssociationDto toDto(UserFacilityAssociation source, RegistrationNewUserProfile regUser);
 
-    List<UserFacilityAssociationDto> toDtoList(List<UserFacilityAssociation> source);
+    List<UserFacilityAssociationDto> toDtoList(Iterable<UserFacilityAssociation> source);
 
 }

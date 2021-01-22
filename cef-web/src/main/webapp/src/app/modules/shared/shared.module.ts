@@ -39,6 +39,7 @@ import {ReportAttachmentTableComponent} from './components/report-attachment-tab
 import {AdminNavComponent} from './components/admin-nav/admin-nav.component';
 import {LegacyItemValidatorDirective} from './directives/legacy-item-validator.directive';
 import {EisTransactionAttachmentModalComponent} from './components/eis-transaction-attachment-modal/eis-transaction-attachment-modal.component';
+import { CommentModalComponent } from './components/comment-modal/comment-modal.component';
 
 @NgModule({
     declarations: [
@@ -63,7 +64,8 @@ import {EisTransactionAttachmentModalComponent} from './components/eis-transacti
         LegacyUomValidatorDirective,
         AdminNavComponent,
         LegacyItemValidatorDirective,
-        EisTransactionAttachmentModalComponent
+        EisTransactionAttachmentModalComponent,
+        CommentModalComponent
     ],
     exports: [
         FacilityInfoComponent,

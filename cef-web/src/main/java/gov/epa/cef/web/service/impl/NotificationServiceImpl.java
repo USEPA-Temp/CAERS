@@ -44,6 +44,12 @@ public class NotificationServiceImpl implements NotificationService {
     private final String USER_ACCESS_REQUEST_SUBJECT = "User {0} has requested access to facility {1}";
     private final String USER_ACCESS_REQUEST_BODY_TEMPLATE = "userAccessRequest";
 
+    private final String USER_ASSOCIATION_ACCEPTED_SUBJECT = "Your request to access the {0} facility in the Combined Air Emissions Reporting System has been approved";
+    private final String USER_ASSOCIATION_ACCEPTED_BODY_TEMPLATE = "userAssociationAccepted";
+
+    private final String USER_ASSOCIATION_REJECTED_SUBJECT = "Your request to access the {0} facility in the Combined Air Emissions Reporting System has been rejected";
+    private final String USER_ASSOCIATION_REJECTED_BODY_TEMPLATE = "userAssociationRejected";
+
     private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "User feedback Submitted for {0} {1}";
     private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "userFeedback";
 
@@ -175,6 +181,27 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("facilityName", facilityName);
         context.setVariable("agencyFacilityId", agencyFacilityId);
         String emailBody = templateEngine.process(USER_ACCESS_REQUEST_BODY_TEMPLATE, context);
+        sendHtmlMessage(to, from, emailSubject, emailBody);
+    }
+
+    public void sendUserAssociationAcceptedNotification(String to, String from, String facilityName, String role)
+    {
+        String emailSubject = MessageFormat.format(USER_ASSOCIATION_ACCEPTED_SUBJECT, facilityName);
+        Context context = new Context();
+        context.setVariable("role", role);
+        context.setVariable("facilityName", facilityName);
+        String emailBody = templateEngine.process(USER_ASSOCIATION_ACCEPTED_BODY_TEMPLATE, context);
+        sendHtmlMessage(to, from, emailSubject, emailBody);
+    }
+
+    public void sendUserAssociationRejectedNotification(String to, String from, String facilityName, String role, String comments)
+    {
+        String emailSubject = MessageFormat.format(USER_ASSOCIATION_REJECTED_SUBJECT, facilityName);
+        Context context = new Context();
+        context.setVariable("role", role);
+        context.setVariable("facilityName", facilityName);
+        context.setVariable("comments", comments);
+        String emailBody = templateEngine.process(USER_ASSOCIATION_REJECTED_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }
 

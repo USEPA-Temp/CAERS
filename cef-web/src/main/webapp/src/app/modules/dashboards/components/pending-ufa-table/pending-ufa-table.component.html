@@ -1,0 +1,38 @@
+
+<div class="mh-100 overflow-auto">
+  <table class="table table-sm table-striped table-bordered">
+    <thead class="thead-cef-medium">
+      <tr>
+        <th scope="col"></th>
+        <th scope="col" sortable="fullName" (sort)="onSort($event)">Name</th>
+        <th scope="col" sortable="email" (sort)="onSort($event)">Email</th>
+        <th scope="col" sortable="roleDescription" (sort)="onSort($event)">Role</th>
+        <th scope="col" sortable="masterFacilityRecord.name" (sort)="onSort($event)">Facility Name</th>
+        <th scope="col" sortable="masterFacilityRecord.agencyFacilityId" (sort)="onSort($event)">Facility ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!tableData || tableData.length === 0">
+        <td colspan="6" class="text-center">
+            <strong class="text-larger">No data available.</strong>
+        </td>
+      </tr>
+      <tr *ngFor="let item of tableData">
+        <td><input type="checkbox" [attr.aria-label]="" [(ngModel)]="item.checked" class="form-check-inline mr-0"/></td>
+        <td>{{item.fullName}}</td>
+        <td>{{item.email}}</td>
+        <td>{{item.roleDescription}}</td>
+        <td>{{item.masterFacilityRecord.name}}</td>
+        <td>{{item.masterFacilityRecord.agencyFacilityId}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+    <div class="col">
+      <div class="float-right pb-3 pr-3">
+        <button type="button" class="btn btn-success mr-2" (click)="openApproveModal()" [disabled]="!selectedAssociations()?.length">Authorize Requests</button>
+        <button type="button" class="btn btn-primary mr-2" (click)="openRejectModal()" [disabled]="!selectedAssociations()?.length">Reject Requests</button>
+      </div>
+    </div>
+  </div>

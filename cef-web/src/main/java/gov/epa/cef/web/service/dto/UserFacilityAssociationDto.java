@@ -7,7 +7,7 @@ public class UserFacilityAssociationDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private Long masterFacilityRecordId;
+    private MasterFacilityRecordDto masterFacilityRecord;
     private Long userRoleId;
     private Boolean approved;
     private String cdxUserId;
@@ -25,12 +25,12 @@ public class UserFacilityAssociationDto implements Serializable {
         this.id = id;
     }
 
-    public Long getMasterFacilityRecordId() {
-        return masterFacilityRecordId;
+    public MasterFacilityRecordDto getMasterFacilityRecord() {
+        return masterFacilityRecord;
     }
 
-    public void setMasterFacilityRecordId(Long masterFacilityRecordId) {
-        this.masterFacilityRecordId = masterFacilityRecordId;
+    public void setMasterFacilityRecord(MasterFacilityRecordDto masterFacilityRecord) {
+        this.masterFacilityRecord = masterFacilityRecord;
     }
 
     public Long getUserRoleId() {

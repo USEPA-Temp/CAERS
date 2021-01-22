@@ -59,6 +59,22 @@ public class UserFacilityAssociationApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/approve")
+    public ResponseEntity<List<UserFacilityAssociationDto>> approveAssociationRequests(@NotNull @RequestBody List<UserFacilityAssociationDto> associations) {
+
+        List<UserFacilityAssociationDto> result = this.ufaService.approveAssociations(associations);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/reject")
+    public ResponseEntity<List<UserFacilityAssociationDto>> rejectAssociationRequests(@NotNull @RequestBody RejectDto dto) {
+
+        List<UserFacilityAssociationDto> result = this.ufaService.rejectAssociations(dto.getAssociations(), dto.getComments());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/user/{userRoleId}")
     public ResponseEntity<List<UserFacilityAssociationDto>> retrieveAssociationsForUser(
         @NotNull @PathVariable Long userRoleId) {
@@ -79,6 +95,15 @@ public class UserFacilityAssociationApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/pending/details")
+    public ResponseEntity<List<UserFacilityAssociationDto>> retrievePendingAssociationDetailsForCurrentProgram() {
+
+        List<UserFacilityAssociationDto> result =
+            this.ufaService.findDetailsByProgramSystemCodeAndApproved(this.securityService.getCurrentProgramSystemCode(), false);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/my")
     public ResponseEntity<List<UserFacilityAssociationDto>> retrieveAssociationsForCurrentUser() {
 
@@ -86,5 +111,34 @@ public class UserFacilityAssociationApi {
             this.ufaService.findByUserRoleId(this.securityService.getCurrentApplicationUser().getUserRoleId());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    public static class RejectDto {
+
+        private List<UserFacilityAssociationDto> associations;
+
+        private String comments;
+
+        public List<UserFacilityAssociationDto> getAssociations() {
+
+            return associations;
+        }
+
+        public void setAssociations(List<UserFacilityAssociationDto> associations) {
+
+            this.associations = associations;
+        }
+
+        public String getComments() {
+
+            return comments;
+        }
+
+        public void setComments(String comments) {
+
+            this.comments = comments;
+        }
+
     }
 }
