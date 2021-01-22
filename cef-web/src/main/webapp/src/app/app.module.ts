@@ -50,7 +50,6 @@ import { EditMasterFacilityInfoComponent } from './modules/dashboards/components
 import { MasterFacilitySearchComponent } from './modules/dashboards/pages/master-facility-search/master-facility-search.component';
 import { MasterFacilitySearchTableComponent } from './modules/dashboards/components/master-facility-search-table/master-facility-search-table.component';
 import { PendingUserFacilityAssociationsComponent } from './modules/dashboards/pages/pending-user-facility-associations/pending-user-facility-associations.component';
-import { PendingUfaTableComponent } from './modules/dashboards/components/pending-ufa-table/pending-ufa-table.component';
 
 
 @NgModule({
@@ -92,7 +91,6 @@ import { PendingUfaTableComponent } from './modules/dashboards/components/pendin
     MasterFacilitySearchComponent,
     MasterFacilitySearchTableComponent,
     PendingUserFacilityAssociationsComponent,
-    PendingUfaTableComponent
 
   ],
   imports: [
