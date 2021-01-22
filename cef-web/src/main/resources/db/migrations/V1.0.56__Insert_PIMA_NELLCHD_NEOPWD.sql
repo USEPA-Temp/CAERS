@@ -3,6 +3,8 @@ ALTER TABLE emissions_report
     
 ALTER TABLE emissions_report DROP CONSTRAINT master_facility_id_fkey;
 
+DELETE FROM user_facility_association where master_facility_id in (select id from master_facility_record where program_system_code IN ('PIMA', 'NELLCHD', 'NEOPWD'));
+
 DELETE FROM master_facility_record where program_system_code IN ('PIMA', 'NELLCHD', 'NEOPWD');
 
 UPDATE emissions_report 
