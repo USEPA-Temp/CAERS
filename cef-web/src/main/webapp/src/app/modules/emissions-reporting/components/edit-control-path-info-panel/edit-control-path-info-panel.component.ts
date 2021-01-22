@@ -1,11 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import { ControlPathService } from "../../../../core/services/control-path.service";
-import {FacilitySiteService} from "../../../../core/services/facility-site.service";
-import {LookupService} from "../../../../core/services/lookup.service";
+import { ControlPathService } from "src/app/core/services/control-path.service";
 import {ActivatedRoute} from "@angular/router";
-import {FacilitySite} from "../../../../shared/models/facility-site";
+import {FacilitySite} from "src/app/shared/models/facility-site";
 
 @Component({
   selector: 'app-edit-control-path-info-panel',
