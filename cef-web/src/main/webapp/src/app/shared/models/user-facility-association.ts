@@ -1,7 +1,9 @@
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
+
 export class UserFacilityAssociation {
 
   id: number;
-  masterFacilityRecordId: number;
+  masterFacilityRecord: MasterFacilityRecord;
   userRoleId: number;
   approved: boolean;
   cdxUserId: string;
@@ -11,4 +13,6 @@ export class UserFacilityAssociation {
   email: string;
   roleId: number;
   roleDescription: string;
+
+  checked: boolean;
 }

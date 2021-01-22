@@ -11,6 +11,8 @@ public interface NotificationService {
     void sendReportAcceptedNotification(String to, String from, String facilityName, String reportingYear, String comments);
     void sendSccUpdateFailedNotification(Exception exception);
     void sendUserAccessRequestNotification(String to, String from, String facilityName, String agencyFacilityId, String userName, String userEmail, String role);
+    void sendUserAssociationAcceptedNotification(String to, String from, String facilityName, String role);
+    void sendUserAssociationRejectedNotification(String to, String from, String facilityName, String role, String comments);
     void sendUserFeedbackNotification(UserFeedbackDto userFeedback);
     
     void sendAdminNotification(AdminEmailType type, Map<String, Object> context);

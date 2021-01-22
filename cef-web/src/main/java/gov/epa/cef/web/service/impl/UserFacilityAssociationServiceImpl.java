@@ -100,6 +100,45 @@ public class UserFacilityAssociationServiceImpl {
         return this.ufaRepo.save(association);
     }
 
+    public List<UserFacilityAssociationDto> approveAssociations(List<UserFacilityAssociationDto> associations) {
+
+        List<Long> ids = associations.stream().map(UserFacilityAssociationDto::getId).collect(Collectors.toList());
+
+        Iterable<UserFacilityAssociation> entities = this.ufaRepo.findAllById(ids);
+
+        entities.forEach(a -> a.setApproved(true));
+
+        entities = this.ufaRepo.saveAll(entities);
+
+        associations.forEach(a -> {
+            notificationService.sendUserAssociationAcceptedNotification(a.getEmail(),
+                    cefConfig.getDefaultEmailAddress(),
+                    a.getMasterFacilityRecord().getName(),
+                    a.getRoleDescription());
+        });
+
+        return this.ufaMapper.toDtoList(entities);
+    }
+
+    public List<UserFacilityAssociationDto> rejectAssociations(List<UserFacilityAssociationDto> associations, String comments) {
+
+        List<Long> ids = associations.stream().map(UserFacilityAssociationDto::getId).collect(Collectors.toList());
+
+        Iterable<UserFacilityAssociation> entities = this.ufaRepo.findAllById(ids);
+
+        this.ufaRepo.deleteAll(entities);
+
+        associations.forEach(a -> {
+            notificationService.sendUserAssociationRejectedNotification(a.getEmail(),
+                    cefConfig.getDefaultEmailAddress(),
+                    a.getMasterFacilityRecord().getName(),
+                    a.getRoleDescription(),
+                    comments);
+        });
+
+        return this.ufaMapper.toDtoList(entities);
+    }
+
     public List<UserFacilityAssociationDto> findByUserRoleId(Long userRoleId) {
 
         List<UserFacilityAssociation> entities = this.ufaRepo.findByUserRoleId(userRoleId);
@@ -110,6 +149,13 @@ public class UserFacilityAssociationServiceImpl {
     public List<UserFacilityAssociationDto> findDetailsByMasterFacilityRecordId(Long masterFacilityRecordId) {
 
         List<UserFacilityAssociation> entities = this.ufaRepo.findByMasterFacilityRecordId(masterFacilityRecordId);
+
+        return entities.stream().map(this::mapAssociation).collect(Collectors.toList());
+    }
+
+    public List<UserFacilityAssociationDto> findDetailsByProgramSystemCodeAndApproved(String programSystemCode, boolean approved) {
+
+        List<UserFacilityAssociation> entities = this.ufaRepo.findByProgramSystemCodeAndApproved(programSystemCode, approved);
 
         return entities.stream().map(this::mapAssociation).collect(Collectors.toList());
     }

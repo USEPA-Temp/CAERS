@@ -49,6 +49,7 @@ import { UserFacilityAssociationTableComponent } from './modules/dashboards/comp
 import { EditMasterFacilityInfoComponent } from './modules/dashboards/components/edit-master-facility-info/edit-master-facility-info.component';
 import { MasterFacilitySearchComponent } from './modules/dashboards/pages/master-facility-search/master-facility-search.component';
 import { MasterFacilitySearchTableComponent } from './modules/dashboards/components/master-facility-search-table/master-facility-search-table.component';
+import { PendingUserFacilityAssociationsComponent } from './modules/dashboards/pages/pending-user-facility-associations/pending-user-facility-associations.component';
 
 
 @NgModule({
@@ -88,7 +89,8 @@ import { MasterFacilitySearchTableComponent } from './modules/dashboards/compone
     UserFacilityAssociationTableComponent,
     EditMasterFacilityInfoComponent,
     MasterFacilitySearchComponent,
-    MasterFacilitySearchTableComponent
+    MasterFacilitySearchTableComponent,
+    PendingUserFacilityAssociationsComponent,
 
   ],
   imports: [

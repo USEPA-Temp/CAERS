@@ -11,12 +11,12 @@
             <div class="col-4">
               <div class="row">
                 <div class="col-6">
-                  <label for="pscSelect" class="ml-1 col-form-label"><strong>Program System Code:</strong></label>
+                  <label for="pscSelect" class="ml-1 col-form-label"><strong>Agency:</strong></label>
                 </div>
                 <div class="col-6">
                   <select type="text" class="form-control" id="pscSelect" formControlName="programSystemCode">
                     <option [ngValue]="null"></option>
-                    <option *ngFor="let opt of programSystemCodeValues" [ngValue]="opt">{{opt?.code}}</option>
+                    <option *ngFor="let opt of programSystemCodeValues" [ngValue]="opt">{{opt?.description}}</option>
                   </select>
                   <app-validation-message [control]="searchForm.get('programSystemCode')"></app-validation-message>
                 </div>
