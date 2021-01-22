@@ -55,6 +55,7 @@ public class BulkReportValidator {
         loopCheck.accept(report.getControlAssignments());
         report.getControlAssignments().forEach(controlAssignmentCheck.andThen(worksheetValidator));
         report.getControlPollutants().forEach(worksheetValidator);
+        report.getControlPathPollutants().forEach(worksheetValidator);
         report.getFacilityNAICS().forEach(worksheetValidator);
         report.getFacilityContacts().forEach(worksheetValidator);
 

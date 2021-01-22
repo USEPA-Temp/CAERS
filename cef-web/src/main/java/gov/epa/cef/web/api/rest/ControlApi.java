@@ -141,8 +141,8 @@ public class ControlApi {
     }
     
     /**
-     * Update a Control Point by id
-     * @param controlPointId
+     * Update a Control Pollutant by id
+     * @param controlPollutantId
      * @param dto
      * @return
      */
@@ -159,7 +159,7 @@ public class ControlApi {
     
     /**
      * Delete a Control Pollutant for given id
-     * @param controlId
+     * @param controlPollutantId
      * @return
      */
     @DeleteMapping(value = "/pollutant/{controlPollutantId}")

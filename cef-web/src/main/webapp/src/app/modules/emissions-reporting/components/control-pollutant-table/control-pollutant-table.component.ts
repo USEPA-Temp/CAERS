@@ -22,7 +22,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
   @Input() year: number;
   faPlus = faPlus;
   faEdit = faEdit;
-
+  readonly device = 'CONTROL_DEVICE';
 
   constructor(private modalService: NgbModal,
               private controlService: ControlService,
@@ -37,6 +37,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
 
   openCreateModal() {
         const modalRef = this.modalService.open(ControlPollutantModalComponent, {size: 'lg', backdrop: 'static'});
+        modalRef.componentInstance.controlPollutantFor = this.device;
         modalRef.componentInstance.controlId = this.controlId;
         modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
         modalRef.componentInstance.year = this.year;
@@ -54,6 +55,7 @@ export class ControlPollutantTableComponent extends BaseSortableTable implements
 
   openEditModal(selectedPollutant){
     const modalRef = this.modalService.open(ControlPollutantModalComponent, {size: 'lg', backdrop: 'static'});
+    modalRef.componentInstance.controlPollutantFor = this.device;
     modalRef.componentInstance.facilitySiteId = this.facilitySiteId;
     modalRef.componentInstance.year = this.year;
     modalRef.componentInstance.controlId = this.controlId;

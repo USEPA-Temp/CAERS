@@ -1,0 +1,41 @@
+
+<div class="mh-100 overflow-auto">
+  <table class="table table-sm table-striped table-bordered">
+    <thead class="thead-cef-medium">
+    <tr>
+      <th scope="col" sortable="pollutantName" (sort)="onSort($event)">Pollutant Name</th>
+      <th scope="col" sortable="pollutantCode" (sort)="onSort($event)">Code</th>
+      <th scope="col" sortable="pollutantCasId" (sort)="onSort($event)">CAS ID</th>
+      <th scope="col" sortable="percentReudction" (sort)="onSort($event)">% Reduction Efficiency</th>
+      <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </ng-container>
+     
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of tableData">
+      <td>{{item.pollutant.pollutantName}}</td>
+      <td>{{item.pollutant.pollutantCode}}</td>
+      <td>{{item.pollutant.pollutantCasId}}</td>
+      <td>{{item.percentReduction}}</td>
+      <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit control pollutant' + item?.pollutant?.pollutantName">
+          <fa-icon style="color:#209c98" [icon]="faEdit"></fa-icon>
+        </a></td>
+        <td><a routerLink="." (click)="openDeleteModal(item)" [attr.aria-label]="'delete control pollutant' + item?.pollutant?.pollutantName">
+          <fa-icon icon="trash-alt"></fa-icon>
+        </a></td>
+      </ng-container>
+     
+    </tr>
+      <ng-container *ngIf="!readOnlyMode">
+        <tr>
+          <td colspan="5"></td>
+          <td><button style="color:#187773;border:none;background-color:Transparent;padding:0;" (click)="openCreateModal()" aria-label="add control pollutant"><fa-icon [icon]="faPlus"></fa-icon></button></td> 
+        </tr>
+      </ng-container> 
+    </tbody>
+  </table>
+</div>
