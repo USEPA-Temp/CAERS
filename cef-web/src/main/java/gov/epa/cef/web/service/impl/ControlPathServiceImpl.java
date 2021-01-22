@@ -10,15 +10,19 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
+import gov.epa.cef.web.repository.ControlPathPollutantRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
+import gov.epa.cef.web.service.dto.ControlPathPollutantDto;
 import gov.epa.cef.web.service.mapper.ControlAssignmentMapper;
 import gov.epa.cef.web.service.mapper.ControlMapper;
 import gov.epa.cef.web.service.mapper.ControlPathMapper;
+import gov.epa.cef.web.service.mapper.ControlPathPollutantMapper;
 
 @Service
 public class ControlPathServiceImpl implements ControlPathService {
@@ -49,6 +53,12 @@ public class ControlPathServiceImpl implements ControlPathService {
     
     @Autowired
     private ControlServiceImpl controlService;
+    
+    @Autowired
+    private ControlPathPollutantMapper pollutantMapper;
+    
+    @Autowired
+    private ControlPathPollutantRepository pollutantRepo;
       
     @Override
     public ControlPathDto retrieveById(Long id) {
@@ -110,6 +120,39 @@ public class ControlPathServiceImpl implements ControlPathService {
     	ControlPathDto result = mapper.toDto(repo.save(controlPath));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlPathRepository.class);
     	return result;
+    }
+    
+    /**
+     * Create a new Control Path Pollutant from a DTO object
+     */
+    public ControlPathPollutantDto createPollutant(ControlPathPollutantDto dto) {
+    	ControlPathPollutant controlPath = pollutantMapper.fromDto(dto);
+    	
+    	ControlPathPollutantDto result = pollutantMapper.toDto(pollutantRepo.save(controlPath));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getControlPathId()), ControlPathRepository.class);
+    	return result;
+    }
+    
+    /**
+     * Update an existing Control Path Pollutant from a DTO
+     */
+    public ControlPathPollutantDto updateControlPathPollutant(ControlPathPollutantDto dto) {
+    	
+    	ControlPathPollutant controlPath = pollutantRepo.findById(dto.getId()).orElse(null);
+    	pollutantMapper.updateFromDto(dto, controlPath);
+    	
+    	ControlPathPollutantDto result = pollutantMapper.toDto(pollutantRepo.save(controlPath));
+    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getControlPathId()), ControlPathRepository.class);
+    	return result;
+    }
+    
+    /**
+     * Delete a Control Path Pollutant for a given id
+     * @Param controlPathPollutantId
+     */
+    public void deleteControlPathPollutant(Long controlPathPollutantId) {
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPathPollutantId), ControlPathPollutantRepository.class);
+    	pollutantRepo.deleteById(controlPathPollutantId);
     }
     
 	/***

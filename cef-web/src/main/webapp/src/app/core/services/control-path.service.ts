@@ -3,6 +3,7 @@ import { ControlPath } from 'src/app/shared/models/control-path';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ControlAssignment } from 'src/app/shared/models/control-assignment';
+import { ControlPathPollutant } from 'src/app/shared/models/control-path-pollutant';
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +83,24 @@ export class ControlPathService {
   updateAssignmentForControlPath(controlPathAssignment: ControlAssignment): Observable<ControlAssignment> {
     const url = `${this.baseUrl}/controlAssignment/${controlPathAssignment.id}`;
     return this.http.put<ControlAssignment>(url, controlPathAssignment);
+  }
+
+  /** Create Control Path Pollutant */
+  createPollutant(controlPathPollutant: ControlPathPollutant): Observable<{}> {
+    const url = `${this.baseUrl}/pollutant/`;
+    return this.http.post<ControlPathPollutant>(url, controlPathPollutant);
+  }
+
+  /** Update Control Path Pollutant */
+  updatePollutant(controlPathPollutant: ControlPathPollutant): Observable<{}> {
+    const url = `${this.baseUrl}/pollutant/${controlPathPollutant.id}`;
+    return this.http.put<ControlPathPollutant>(url, controlPathPollutant);
+  }
+
+  /** Delete Control Path Pollutant */
+  deletePollutant(id: number): Observable<{}> {
+    const url = `${this.baseUrl}/pollutant/${id}`;
+    return this.http.delete<ControlPathPollutant>(url);
   }
 
 }

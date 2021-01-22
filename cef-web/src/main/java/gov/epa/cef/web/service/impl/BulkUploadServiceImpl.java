@@ -30,6 +30,7 @@ import gov.epa.cef.web.client.api.ExcelParserResponse;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
@@ -80,6 +81,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.BlankToNullModule;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
@@ -434,6 +436,19 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     .map(bulkControlPath -> {
                         ControlPath path = mapControlPath(bulkControlPath);
                         path.setFacilitySite(facility);
+                        
+                        // Map Control Path Pollutants
+                        List<ControlPathPollutant> controlPathPollutants = bulkEmissionsReport.getControlPathPollutants().stream()
+                            .filter(cp -> bulkControlPath.getId().equals(cp.getControlPathId()))
+                            .map(bulkControlPathPollutant -> {
+                            	
+                                ControlPathPollutant controlPathPollutant = mapControlPathPollutant(bulkControlPathPollutant);
+                                controlPathPollutant.setControlPath(path);
+
+                                return controlPathPollutant;
+                            }).collect(Collectors.toList());
+
+                        path.setPollutants(controlPathPollutants);
 
                         controlPathMap.put(bulkControlPath.getId(), path);
 
@@ -599,6 +614,20 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private ControlPollutant mapControlPollutant(ControlPollutantBulkUploadDto dto) {
 
         ControlPollutant result = uploadMapper.controlPollutantFromDto(dto);
+
+        if (dto.getPollutantCode() != null) {
+            result.setPollutant(pollutantRepo.findById(dto.getPollutantCode()).orElse(null));
+        }
+
+        return result;
+    }
+    
+    /**
+     * Map an ControlPathPollutantBulkUploadDto to an ControlPathPollutant domain model
+     */
+    private ControlPathPollutant mapControlPathPollutant(ControlPathPollutantBulkUploadDto dto) {
+
+    	ControlPathPollutant result = uploadMapper.controlPathPollutantFromDto(dto);
 
         if (dto.getPollutantCode() != null) {
             result.setPollutant(pollutantRepo.findById(dto.getPollutantCode()).orElse(null));

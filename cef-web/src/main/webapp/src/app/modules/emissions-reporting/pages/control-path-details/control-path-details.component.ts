@@ -35,6 +35,8 @@ export class ControlPathDetailsComponent implements OnInit {
       this.controlPathService.retrieve(+map.get('controlPathId'))
       .subscribe(controlPath => {
         this.controlPath = controlPath;
+        this.controlPath.pollutants = controlPath.pollutants.sort((a, b) => (a.pollutant.pollutantName > b.pollutant.pollutantName ? 1 : -1));
+
         this.controlPathService.retrieveAssignmentsForControlPath(this.controlPath.id)
         .subscribe(assignments => {
           this.controlPathAssignments = assignments;
@@ -52,7 +54,6 @@ export class ControlPathDetailsComponent implements OnInit {
       });
       this.sharedService.emitChange(data.facilitySite);
     });
-
 
   }
 

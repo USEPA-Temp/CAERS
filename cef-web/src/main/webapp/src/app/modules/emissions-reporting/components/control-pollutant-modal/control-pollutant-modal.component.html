@@ -1,6 +1,7 @@
 <form [formGroup]="pollutantForm">
     <div class="modal-header">
-        <h4 class="modal-title w-100"><strong>Control Pollutant</strong></h4>
+        <h4 class="modal-title w-100" *ngIf="controlPollutantFor == 'CONTROL_PATH'"><strong>Control Path Pollutant</strong></h4>
+        <h4 class="modal-title w-100" *ngIf="controlPollutantFor === 'CONTROL_DEVICE'"><strong>Control Pollutant</strong></h4>
     </div>
 
     <div class="modal-body" style="height: 350px;">

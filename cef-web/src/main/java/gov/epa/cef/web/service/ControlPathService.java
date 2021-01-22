@@ -4,6 +4,7 @@ import java.util.List;
 
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
+import gov.epa.cef.web.service.dto.ControlPathPollutantDto;
 
 public interface ControlPathService {
 
@@ -76,11 +77,30 @@ public interface ControlPathService {
      */
     void delete(Long controlPathId);
     
+    /**
+     * Create a new Control Path Pollutant
+     * @param dto
+	 * @return 
+     */
+    ControlPathPollutantDto createPollutant(ControlPathPollutantDto dto);
+    
+    /**
+     * Update existing Control Path Pollutant
+     * @param dto
+	 * @return 
+     */
+    ControlPathPollutantDto updateControlPathPollutant(ControlPathPollutantDto dto);
+    
+    /**
+     * Delete a Control Path Pollutant for a given id
+     * @param controlPathPollutantId
+     */
+    void deleteControlPathPollutant(Long controlPathPollutantId);
+    	
 	/**
      * Create a new Control Path Assignment
      * @param dto
 	 * @return 
-     * @return
      */
     ControlAssignmentDto createAssignment(ControlAssignmentDto dto);
     
