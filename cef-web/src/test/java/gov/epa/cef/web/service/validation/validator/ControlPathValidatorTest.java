@@ -136,6 +136,9 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = new ControlPath();
+		FacilitySite fs = new FacilitySite();
+		fs.getControlPaths().add(testData);
+		testData.setFacilitySite(fs);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
@@ -149,6 +152,9 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = new ControlPath();
+		FacilitySite fs = new FacilitySite();
+		fs.getControlPaths().add(testData);
+		testData.setFacilitySite(fs);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
