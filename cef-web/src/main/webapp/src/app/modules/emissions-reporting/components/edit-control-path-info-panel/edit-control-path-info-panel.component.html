@@ -7,8 +7,18 @@
         <div class="col-sm-6">
             <input class="form-control" maxlength="20" id="controlPathIdInput" formControlName="pathId">
             <app-validation-message [control]="controlPathForm.get('pathId')"></app-validation-message>
+
 		</div>
+
 	</div>
+    <div class="row pb-1">
+        <div class="col-sm-2" aria-hidden="true"></div>
+        <div class="col-sm-6" *ngIf="controlPathForm.errors?.duplicatePathId">
+            <div class="validation-message" >
+                The Path Identifier must be unique within a facility.
+            </div>
+        </div>
+    </div>
 	<div class="row pb-1">
 		<div class="col-sm-2">
 			<fa-icon class="mt-2 ml-2" title="A text description of the path." [icon]="['fas', 'question-circle']"></fa-icon>

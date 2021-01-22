@@ -35,6 +35,7 @@ public enum ValidationField {
     CONTROL_PATH_ASSIGNMENT_SEQUENCE_NUMBER("report.facilitySite.controlPath.sequenceNumber"),
     CONTROL_PATH_NO_CONTROL_DEVICE_ASSIGNMENT("report.facilitySite.controlPath.notAssigned"),
     CONTROL_PATH_RPA_WARNING("report.facilitySite.controlPath.releasePointApportionment"),
+    CONTROL_PATH_IDENTIFIER("report.facilitySite.controlPath.controlPathIdentifier"),
     CONTROL_PATH_WARNING("report.facilitySite.control.pathWarning"),
     CONTROL_STATUS_CODE("report.facilitySite.control.statusTypeCode"),
     CONTROL_PERCENT_CAPTURE("report.facilitySite.control.percentCapture"),
