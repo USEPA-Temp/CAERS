@@ -49,6 +49,16 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
     List<EmissionsReport> findByEisProgramId(String eisProgramId, Sort sort);
 
 
+    
+    /***
+     * Retrieve facilities based on master facility record id and status
+     * @param masterFacilityRecordId
+     * @param status (APPROVED, IN_PROGRESS, etc)
+     * @return
+     */
+    @Query("select r from EmissionsReport r where r.masterFacilityRecord.id = :masterFacilityId and r.status = gov.epa.cef.web.domain.ReportStatus.IN_PROGRESS")
+    List<EmissionsReport> findInProgressByMasterFacilityId(@NotNull Long masterFacilityId);
+
     /**
      *
      * @param eisProgramId

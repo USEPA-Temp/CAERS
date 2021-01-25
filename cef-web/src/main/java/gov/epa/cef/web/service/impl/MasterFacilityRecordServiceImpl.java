@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
+import gov.epa.cef.web.repository.FacilitySiteRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
@@ -22,6 +24,12 @@ import gov.epa.cef.web.service.MasterFacilityRecordService;
 
 @Service
 public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordService {
+
+    @Autowired
+    private FacilitySiteRepository facilitySiteRepo;
+
+    @Autowired
+    private EmissionsReportRepository emissionsReportRepo;
 
     @Autowired
     private MasterFacilityRecordRepository mfrRepo;
@@ -69,8 +77,33 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     public MasterFacilityRecordDto update(MasterFacilityRecordDto dto) {
 
     	MasterFacilityRecord masterFacilityRecord = mfrRepo.findById(dto.getId()).orElse(null);
-    	mapper.updateFromDto(dto, masterFacilityRecord);
-    	MasterFacilityRecordDto result = mapper.toDto(mfrRepo.save(masterFacilityRecord));
+        mapper.updateFromDto(dto, masterFacilityRecord);
+        MasterFacilityRecord updatedMasterFacilityRecord = mfrRepo.save(masterFacilityRecord);
+
+        //Cascade changes to the master facility record to the facility site for each of the "In Progress" emissions reports
+        emissionsReportRepo.findInProgressByMasterFacilityId(updatedMasterFacilityRecord.getId())
+            .forEach(report -> report.getFacilitySites()
+                .forEach(fs -> {
+                    fs.setCity(updatedMasterFacilityRecord.getCity());
+                    fs.setCountryCode(updatedMasterFacilityRecord.getCountryCode());
+                    fs.setCountyCode(updatedMasterFacilityRecord.getCountyCode());
+                    fs.setDescription(updatedMasterFacilityRecord.getDescription());
+                    fs.setFacilityCategoryCode(updatedMasterFacilityRecord.getFacilityCategoryCode());
+                    fs.setMailingCity(updatedMasterFacilityRecord.getMailingCity());
+                    fs.setMailingPostalCode(updatedMasterFacilityRecord.getMailingPostalCode());
+                    fs.setMailingStateCode(updatedMasterFacilityRecord.getMailingStateCode());
+                    fs.setMailingStreetAddress(updatedMasterFacilityRecord.getMailingStreetAddress());
+                    fs.setName(updatedMasterFacilityRecord.getName());
+                    fs.setOperatingStatusCode(updatedMasterFacilityRecord.getOperatingStatusCode());
+                    fs.setPostalCode(updatedMasterFacilityRecord.getPostalCode());
+                    fs.setStateCode(updatedMasterFacilityRecord.getStateCode());
+                    fs.setStatusYear(updatedMasterFacilityRecord.getStatusYear());
+                    fs.setStreetAddress(updatedMasterFacilityRecord.getStreetAddress());
+                    fs.setTribalCode(updatedMasterFacilityRecord.getTribalCode());
+                    facilitySiteRepo.save(fs);
+                }));
+
+    	MasterFacilityRecordDto result = mapper.toDto(updatedMasterFacilityRecord);
 
     	return result;
     }
