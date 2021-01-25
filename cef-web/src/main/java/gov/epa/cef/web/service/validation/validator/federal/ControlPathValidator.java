@@ -147,6 +147,14 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 
             }
         }
+    	
+    	if (controlPath.getPercentControl() != null && (controlPath.getPercentControl() < 1 || controlPath.getPercentControl() > 100)) {
+            result = false;
+            context.addFederalError(
+	            ValidationField.CONTROL_PATH_PERCENT_CONTROL.value(),
+	            "controlPath.percentControl.range",
+	            createValidationDetails(controlPath));
+        }
 
     	// if control assigned is PS status
     	if ((caPSList.size() > 0)) {

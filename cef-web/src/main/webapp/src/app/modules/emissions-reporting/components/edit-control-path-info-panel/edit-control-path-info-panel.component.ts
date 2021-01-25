@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ControlPath } from 'src/app/shared/models/control-path';
-import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import { ControlPathService } from "src/app/core/services/control-path.service";
-import {ActivatedRoute} from "@angular/router";
-import {FacilitySite} from "src/app/shared/models/facility-site";
+import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import { ControlPathService } from 'src/app/core/services/control-path.service';
+import { ActivatedRoute } from '@angular/router';
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 
 @Component({
   selector: 'app-edit-control-path-info-panel',
@@ -16,6 +16,11 @@ export class EditControlPathInfoPanelComponent implements OnInit {
 
     controlPathForm = this.fb.group({
     pathId: ['', [Validators.required, Validators.maxLength(20)]],
+    percentControl: ['', [
+      Validators.max(100.0),
+      Validators.min(1),
+      Validators.pattern('^[0-9]{1,3}([\.][0-9]{1,3})?$')
+    ]],
     description: ['', [Validators.required, Validators.maxLength(200)]],
     }, {validators: [
         this.pathIdCheck()
@@ -27,16 +32,18 @@ export class EditControlPathInfoPanelComponent implements OnInit {
 
       this.route.data.subscribe((data: {facilitySite: FacilitySite}) => {
           this.ctrlPathSvc.retrieveForFacilitySite(data.facilitySite.id).subscribe(controlPaths => {
-              console.log(controlPaths);
               if (controlPaths) {
                   for (const path of controlPaths) {
-                      this.pathIds.push(path.pathId)
+                      this.pathIds.push(path.pathId);
                   }
-                  console.log(this.pathIds)
               }
-          })
+
+              // if a control path is being edited then filter that pathId out the list so the validator check doesnt identify it as a duplicate
+              if (this.controlPath) {
+                this.pathIds = this.pathIds.filter(identifer => identifer.toString() !== this.controlPath.pathId);
+              }
+          });
       });
-      console.log(this.controlPath)
 
   }
 
@@ -46,12 +53,12 @@ export class EditControlPathInfoPanelComponent implements OnInit {
 
   pathIdCheck(): ValidatorFn {
       return (control: FormGroup): ValidationErrors | null => {
-          for (const id of this.pathIds) {
-              if (control.get('pathId').value === id) {
+            if (this.pathIds) {
+                if (control.get('pathId') && this.pathIds.includes(control.get('pathId').value.trim())) {
                   return {duplicatePathId: true};
               }
-          }
-          return null;
+            }
+            return null;
       }
   }
 
