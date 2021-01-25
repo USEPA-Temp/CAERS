@@ -9,5 +9,6 @@ export class ControlPath {
   assignments: ControlAssignment[];
   facilitySiteId: number;
   pathId: string;
+  percentControl: number;
   pollutants: ControlPathPollutant[];
 }

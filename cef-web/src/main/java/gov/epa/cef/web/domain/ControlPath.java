@@ -25,6 +25,9 @@ public class ControlPath extends BaseAuditEntity {
     
     @Column(name = "path_id", nullable = false, length = 20)
     private String pathId;
+    
+    @Column(name = "percent_control", precision = 6, scale = 3)
+    private Double percentControl;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
     private List<ControlAssignment> assignments = new ArrayList<>();
@@ -58,6 +61,7 @@ public class ControlPath extends BaseAuditEntity {
     	this.facilitySite = facilitySite;
     	this.description = originalControlPath.getDescription();
     	this.pathId = originalControlPath.getPathId();
+    	this.percentControl = originalControlPath.getPercentControl();
     	for (ControlPathPollutant pollutant : originalControlPath.getPollutants()) {
     		this.pollutants.add(new ControlPathPollutant(this, pollutant));
     	}
@@ -78,6 +82,14 @@ public class ControlPath extends BaseAuditEntity {
 
     public void setPathId(String pathId) {
         this.pathId = pathId;
+    }
+    
+    public Double getPercentControl() {
+        return percentControl;
+    }
+
+    public void setPercentControl(Double percentControl) {
+        this.percentControl = percentControl;
     }
 
     public List<ControlAssignment> getAssignments() {

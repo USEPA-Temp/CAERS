@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -22,6 +23,10 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
     @NotBlank(message = "Path ID is required.")
     @Size(max = 20, message = "Path ID can not exceed {max} chars; found ${validatedValue}.")
     private String pathId;
+    
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
+        message = "Percent Control Effectiveness is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
+    private String percentControl;
 
     public ControlPathBulkUploadDto() {
 
@@ -59,5 +64,15 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
 	public void setPathId(String pathId) {
 		this.pathId = pathId;
 	}
+	
+	public String getPercentControl() {
+
+        return percentControl;
+    }
+
+    public void setPercentControl(String percentControl) {
+
+        this.percentControl = percentControl;
+    }
 
 }
