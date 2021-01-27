@@ -2,6 +2,7 @@ package gov.epa.cef.web.api.rest;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import gov.epa.cef.web.service.dto.UserFacilityAssociationDto;
@@ -124,6 +126,7 @@ public class UserFacilityAssociationApi {
     }
 
     @GetMapping(value = "/migrate")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<List<UserFacilityAssociationDto>> migrateUserAssociations() {
 
         List<UserFacilityAssociationDto> result =

@@ -19,6 +19,7 @@ export class AdminPropertiesComponent implements OnInit {
   propertyForm = this.fb.group({});
 
   migrating = false;
+  migrationFeature = false;
 
   constructor(
       private propertyService: AdminPropertyService,
@@ -31,8 +32,6 @@ export class AdminPropertiesComponent implements OnInit {
     this.propertyService.retrieveAll()
     .subscribe(result => {
 
-      console.log(result);
-
       result.sort((a, b) => (a.name > b.name) ? 1 : -1);
       result.forEach(prop => {
         this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
@@ -40,10 +39,15 @@ export class AdminPropertiesComponent implements OnInit {
         ]}));
       });
 
-      console.log(this.propertyForm);
-
       this.properties = result;
+      this.setMigrationFeature();
     });
+  }
+
+  private setMigrationFeature() {
+    this.migrationFeature = this.properties
+                            .find(p => p.name.toLowerCase() === 'feature.cdx-association-migration.enabled')
+                            .value?.toLowerCase() === 'true';
   }
 
   openTestEmailModal() {
@@ -117,8 +121,9 @@ export class AdminPropertiesComponent implements OnInit {
 
       this.propertyService.bulkUpdate(updatedProperties)
       .subscribe(result => {
-        console.log(result);
+
         this.toastr.success('', 'Properties updated successfully.');
+        this.setMigrationFeature();
       });
 
     }

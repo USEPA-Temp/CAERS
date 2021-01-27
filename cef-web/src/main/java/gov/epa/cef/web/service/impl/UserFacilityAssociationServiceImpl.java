@@ -34,6 +34,7 @@ import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register._1.RegistrationUser;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import net.exchangenetwork.wsdl.register.streamlined._1.RegistrationNewUserProfile;
+import net.exchangenetwork.wsdl.register.streamlined._1.RegistrationRoleType;
 import net.exchangenetwork.wsdl.register.streamlined._1.RegistrationUserSearchCriteria;
 
 @Service
@@ -216,6 +217,12 @@ public class UserFacilityAssociationServiceImpl {
         logger.info("User Association migration start");
         RegistrationUserSearchCriteria criteria = new RegistrationUserSearchCriteria();
         criteria.setDataflow("CAER");
+        RegistrationRoleType preparerType = new RegistrationRoleType();
+        preparerType.setCode(142710L);
+        RegistrationRoleType certifierType = new RegistrationRoleType();
+        certifierType.setCode(142720L);
+        criteria.getRoleTypes().add(preparerType);
+        criteria.getRoleTypes().add(certifierType);
         List<RegistrationNewUserProfile> profiles = this.streamlinedRegClient.retrieveUsersByCriteria(criteria);
         logger.info("{} profiles received", profiles.size());
         List<UserFacilityAssociation> associations = profiles.stream().map(p -> {
