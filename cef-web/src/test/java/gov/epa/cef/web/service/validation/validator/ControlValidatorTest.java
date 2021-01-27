@@ -201,7 +201,6 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		Control result = new Control();
 		result.setId(1L);
 		result.setIdentifier("test");
-		result.setPercentCapture(50.0);
 		result.setPercentControl(50.0);
 		FacilitySite fs = new FacilitySite();
 		fs.getControls().add(result);

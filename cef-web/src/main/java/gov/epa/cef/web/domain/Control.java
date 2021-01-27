@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +34,27 @@ public class Control extends BaseAuditEntity {
 
     @Column(name = "description", length = 200)
     private String description;
+    
+    @Column(name = "upgraded_description", length = 200)
+    private String upgradedDescription;
 
     @Column(name = "percent_capture", precision = 4, scale = 1)
     private Double percentCapture;
 
     @Column(name = "percent_control", precision = 6, scale = 3)
     private Double percentControl;
+    
+    @Column(name = "number_operating_months", precision = 2, scale = 0)
+    private Short numberOperatingMonths;
+    
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+    
+    @Column(name = "upgraded_date", nullable = false)
+    private LocalDate upgradedDate;
+    
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
     
     @Column(name = "comments", length = 400)
     private String comments;
@@ -69,8 +85,12 @@ public class Control extends BaseAuditEntity {
     	this.operatingStatusCode = originalControl.getOperatingStatusCode();
     	this.identifier = originalControl.getIdentifier();
     	this.description = originalControl.getDescription();
-    	this.percentCapture = originalControl.getPercentCapture();
     	this.percentControl = originalControl.getPercentControl();
+    	this.upgradedDescription = originalControl.getUpgradedDescription();
+    	this.numberOperatingMonths = originalControl.getNumberOperatingMonths();
+    	this.startDate = originalControl.getStartDate();
+    	this.upgradedDate = originalControl.getUpgradedDate();
+    	this.endDate = originalControl.getEndDate();
     	this.comments = originalControl.getComments();
     	for (ControlPollutant pollutant : originalControl.getPollutants()) {
     		this.pollutants.add(new ControlPollutant(this, pollutant));
@@ -166,8 +186,48 @@ public class Control extends BaseAuditEntity {
         this.controlMeasureCode = controlMeasureCode;
     }
     
-    
-    /***
+    public String getUpgradedDescription() {
+		return upgradedDescription;
+	}
+
+	public void setUpgradedDescription(String upgradedDescription) {
+		this.upgradedDescription = upgradedDescription;
+	}
+
+	public Short getNumberOperatingMonths() {
+		return numberOperatingMonths;
+	}
+
+	public void setNumberOperatingMonths(Short numberOperatingMonths) {
+		this.numberOperatingMonths = numberOperatingMonths;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getUpgradedDate() {
+		return upgradedDate;
+	}
+
+	public void setUpgradedDate(LocalDate upgradedDate) {
+		this.upgradedDate = upgradedDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
+
+	/***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */
     public void clearId() {

@@ -12,7 +12,6 @@
                 Control Identifier must be unique within the facility. 
             </div>
         </div>
-
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
@@ -30,42 +29,22 @@
                 If the facility site  status is Permanently Shutdown then each sub-facility component must also be Permanently Shutdown.            
             </div>
         </div>
-
     </div>
+
     <div class="row pb-1">
-
-        <div class="col-sm-3">
-            <fa-icon class="mt-2 ml-2" title="An estimate of that portion of an affected emission stream that is collected and routed to the control measures when the capture or collection system is operating as designed, reported as a percent." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="percentCaptureInput" class="ml-1 col-form-label"><strong>Percent Capture:</strong></label>
-        </div>
-        <div class="col-sm-3">
-            <input type="text" class="form-control" maxlength="5" id="percentCaptureInput" formControlName="percentCapture">
-            <app-validation-message [control]="controlDeviceForm.get('percentCapture')"></app-validation-message>
-        </div>
-
         <div class="col-sm-3">
             <fa-icon class="ml-2 mt-2" title="Code that describes the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlMeasureCodeSelect" class="ml-1 col-form-label"><strong>Control Measure:</strong></label>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <select type="text" class="form-control" id="controlMeasureCodeSelect" formControlName="controlMeasureCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of controlMeasureCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="controlDeviceForm.get('controlMeasureCode')"></app-validation-message>
         </div>
+    </div>
 
-    </div>
-    <div class="row pb-1">
-        <div class="col-sm-3">
-            <fa-icon class="mt-2 ml-2" title="An estimate of the portion of the reporting period's activity for which the overall control system or approach (including both capture and control measures) were operating as designed (regardless of whether the control measure is due to rule or voluntary)." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="percentControlInput" class="ml-1 col-form-label"><strong>Percent Control Effectiveness:</strong></label>
-        </div>       
-        <div class="col-sm-3">
-            <input type="text" class="form-control" maxlength="7" id="percentControlInput" formControlName="percentControl">
-            <app-validation-message [control]="controlDeviceForm.get('percentControl')"></app-validation-message>
-        </div>
-    </div>
     <div class="row pb-1 mt-2">
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Description of the Control Measure" [icon]="['fas', 'question-circle']"></fa-icon>
@@ -76,6 +55,70 @@
             <app-validation-message [control]="controlDeviceForm.get('description')"></app-validation-message>
         </div>
     </div>
+
+    <div class="row pb-1">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="____."  [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="numberOperatingMonths" class="ml-1 col-form-label"><strong>Number of Operating Months:</strong></label>
+        </div>       
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="numberOperatingMonths" formControlName="numberOperatingMonths">
+            <app-validation-message [control]="controlDeviceForm.get('numberOperatingMonths')"></app-validation-message>
+        </div>
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="An estimate of the portion of the reporting period's activity for which the overall control system or approach (including both capture and control measures) were operating as designed (regardless of whether the control measure is due to rule or voluntary)." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="percentControlInput" class="ml-1 col-form-label"><strong>Percent Control Effectiveness:</strong></label>
+        </div>       
+        <div class="col-sm-3">
+            <input type="text" class="form-control" maxlength="7" id="percentControlInput" formControlName="percentControl">
+            <app-validation-message [control]="controlDeviceForm.get('percentControl')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="____." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="startDate" class="ml-1 col-form-label"><strong>Control Start Date:</strong></label>
+        </div>       
+        <div class="col-sm-3">
+            <input type="date" class="form-control" id="startDate" formControlName="startDate" 
+            placeholder="yyyy-mm-dd">
+            <app-validation-message [control]="controlDeviceForm.get('startDate')"></app-validation-message>
+        </div>
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="____." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="upgradedDate" class="ml-1 col-form-label"><strong>Control Upgrade Date:</strong></label>
+        </div>       
+        <div class="col-sm-3">
+            <input type="date" class="form-control" id="upgradedDate" formControlName="upgradedDate"
+            placeholder="yyyy-mm-dd">
+            <app-validation-message [control]="controlDeviceForm.get('upgradedDate')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="____." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="endDate" class="ml-1 col-form-label"><strong>Control End Date:</strong></label>
+        </div>       
+        <div class="col-sm-3">
+            <input type="date" class="form-control" id="endDate" formControlName="endDate"
+            placeholder="yyyy-mm-dd">
+            <app-validation-message [control]="controlDeviceForm.get('endDate')"></app-validation-message>
+        </div>
+    </div>
+
+    <div class="row pb-1 mt-2">
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="Description of the Control Measure Upgrade" [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="upgradedDescription" class="ml-1 col-form-label"><strong>Control Upgrade Description:</strong></label>
+        </div>
+        <div class="col-sm-9">
+            <textarea rows="3" class="mb-2 form-control" maxlength="200" id="upgradedDescription" formControlName="upgradedDescription"></textarea>
+            <app-validation-message [control]="controlDeviceForm.get('upgradedDescription')"></app-validation-message>
+        </div>
+    </div>
+    
     <div class="row pb-1">
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>

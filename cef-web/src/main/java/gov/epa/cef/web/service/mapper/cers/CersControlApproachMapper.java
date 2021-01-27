@@ -13,13 +13,8 @@ import net.exchangenetwork.schema.cer._1._2.ControlPollutantDataType;
 public interface CersControlApproachMapper {
 
     @Mapping(source="control.description", target="controlApproachDescription")
-    @Mapping(source="control.percentCapture", target="percentControlApproachCaptureEfficiency")
     @Mapping(source="control.percentControl", target="percentControlApproachEffectiveness")
-//    @Mapping(source="", target="percentControlApproachPenetration")
-//    @Mapping(source="", target="firstInventoryYear")
-//    @Mapping(source="", target="lastInventoryYear")
     @Mapping(source="control.comments", target="controlApproachComment")
-//    @Mapping(source="", target="controlMeasure")
     @Mapping(source="control.pollutants", target="controlPollutant")
     ControlApproachDataType fromControlAssignment(ControlAssignment source);
 

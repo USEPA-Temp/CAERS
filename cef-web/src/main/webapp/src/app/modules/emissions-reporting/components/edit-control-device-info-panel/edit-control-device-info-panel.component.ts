@@ -27,11 +27,6 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
 
   controlDeviceForm = this.fb.group({
     identifier: ['', Validators.required],
-    percentCapture: ['', [
-      Validators.max(100.0),
-      Validators.min(5),
-      Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
-    ]],
     percentControl: ['', [
       Validators.max(100.0),
       Validators.min(1),
@@ -39,6 +34,15 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     ]],
     operatingStatusCode: [null, Validators.required],
     controlMeasureCode: [null, [Validators.required]],
+    numberOperatingMonths: [null, [
+      Validators.max(12.0),
+      Validators.min(0)]],
+    upgradedDescription: [null, [
+      Validators.maxLength(200)
+    ]],
+    startDate: [null],
+    upgradedDate: [null],
+    endDate: [null],
     description: ['', [
       Validators.required,
       Validators.maxLength(200)

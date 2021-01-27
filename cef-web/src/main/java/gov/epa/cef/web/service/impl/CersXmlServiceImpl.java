@@ -258,11 +258,6 @@ public class CersXmlServiceImpl implements CersXmlService {
             return null;
         }
 
-        // average percent capture
-        ca.setPercentControlApproachCaptureEfficiency(BigDecimal.valueOf(controls.stream()
-                .filter(c -> c.getPercentCapture() != null)
-                .collect(Collectors.averagingDouble(Control::getPercentCapture))).setScale(1, RoundingMode.HALF_UP));
-
         // average percent control
         ca.setPercentControlApproachEffectiveness(BigDecimal.valueOf(controls.stream()
                 .filter(c -> c.getPercentControl() != null)

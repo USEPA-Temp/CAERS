@@ -584,6 +584,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (dto.getControlMeasureCode() != null) {
             result.setControlMeasureCode(controlMeasureCodeRepo.findById(dto.getControlMeasureCode()).orElse(null));
         }
+        if (dto.getPercentCapture() != null) {
+        	result.setPercentCapture(null);
+        }
 
         return result;
     }

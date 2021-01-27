@@ -35,6 +35,8 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars.")
     private String operatingStatusCode;
 
+    // field has become legacy with CEF-984. Data is no longer saved in db.
+    // field remains to prevent error when uploading older version of template.
     @Pattern(regexp = PercentPattern,
         message = "Percent Capture is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentCapture;
@@ -42,6 +44,17 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
         message = "Percent Control Effectiveness is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
     private String percentControl;
+    
+    private String numberOperatingMonths;
+    
+    private String startDate;
+    
+    private String upgradedDate;
+    
+    private String endDate;
+    
+    @Size(max = 200, message = "Description can not exceed {max} chars.")
+    private String upgradedDescription;
 
     public ControlBulkUploadDto() {
 
@@ -137,5 +150,45 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
 
         this.percentControl = percentControl;
     }
+
+	public String getNumberOperatingMonths() {
+		return numberOperatingMonths;
+	}
+
+	public void setNumberOperatingMonths(String numberOperatingMonths) {
+		this.numberOperatingMonths = numberOperatingMonths;
+	}
+
+	public String getUpgradedDescription() {
+		return upgradedDescription;
+	}
+
+	public void setUpgradedDescription(String upgradedDescription) {
+		this.upgradedDescription = upgradedDescription;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getUpgradedDate() {
+		return upgradedDate;
+	}
+
+	public void setUpgradedDate(String upgradedDate) {
+		this.upgradedDate = upgradedDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 
 }
