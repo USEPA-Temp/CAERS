@@ -12,6 +12,8 @@ public interface UserFacilityAssociationRepository extends CrudRepository<UserFa
 
     List<UserFacilityAssociation> findByMasterFacilityRecordId(Long masterFacilityRecordId);
 
+    List<UserFacilityAssociation> findByMasterFacilityRecordIdAndApproved(Long masterFacilityRecordId, boolean approved);
+
     List<UserFacilityAssociation> findByUserRoleId(Long userRoleId);
 
     @Query("select ufa from UserFacilityAssociation ufa join ufa.masterFacilityRecord mfr join mfr.programSystemCode psc where psc.code = :code")

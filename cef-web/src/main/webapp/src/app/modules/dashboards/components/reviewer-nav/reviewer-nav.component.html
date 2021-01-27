@@ -43,7 +43,8 @@
                  aria-labelledby="nb-facility-management">
                <a ngbDropdownItem class="dropdown-item"
                   routerLink="/reviewer/facility"
-                  [routerLinkActive]="'active'">Facility Information</a>
+                  [routerLinkActive]="'active'"
+                  [routerLinkActiveOptions]="{exact: true}">Facility Information</a>
                <a ngbDropdownItem class="dropdown-item"
                   routerLink="/reviewer/facility/pendingAssociations"
                   [routerLinkActive]="'active'">Pending Authorization Requests</a>
