@@ -218,9 +218,9 @@ public class UserFacilityAssociationServiceImpl {
         RegistrationUserSearchCriteria criteria = new RegistrationUserSearchCriteria();
         criteria.setDataflow("CAER");
         RegistrationRoleType preparerType = new RegistrationRoleType();
-        preparerType.setCode(142710L);
+        preparerType.setCode(AppRole.RoleType.PREPARER.getId());
         RegistrationRoleType certifierType = new RegistrationRoleType();
-        certifierType.setCode(142720L);
+        certifierType.setCode(AppRole.RoleType.NEI_CERTIFIER.getId());
         criteria.getRoleTypes().add(preparerType);
         criteria.getRoleTypes().add(certifierType);
         List<RegistrationNewUserProfile> profiles = this.streamlinedRegClient.retrieveUsersByCriteria(criteria);
