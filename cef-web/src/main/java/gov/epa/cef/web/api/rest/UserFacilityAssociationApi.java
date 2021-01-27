@@ -95,6 +95,16 @@ public class UserFacilityAssociationApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/facility/{masterFacilityRecordId}/approved/details")
+    public ResponseEntity<List<UserFacilityAssociationDto>> retrieveApprovedAssociationDetailsForFacility(
+        @NotNull @PathVariable Long masterFacilityRecordId) {
+
+        List<UserFacilityAssociationDto> result =
+            this.ufaService.findDetailsByMasterFacilityRecordIdAndApproved(masterFacilityRecordId, true);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/pending/details")
     public ResponseEntity<List<UserFacilityAssociationDto>> retrievePendingAssociationDetailsForCurrentProgram() {
 
@@ -109,6 +119,15 @@ public class UserFacilityAssociationApi {
 
         List<UserFacilityAssociationDto> result =
             this.ufaService.findByUserRoleId(this.securityService.getCurrentApplicationUser().getUserRoleId());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/migrate")
+    public ResponseEntity<List<UserFacilityAssociationDto>> migrateUserAssociations() {
+
+        List<UserFacilityAssociationDto> result =
+            this.ufaService.migrateAssociations();
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

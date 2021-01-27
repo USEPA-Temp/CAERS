@@ -6,6 +6,7 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { RecalculateEmissionTonsModalComponent } from 'src/app/modules/dashboards/components/recalculate-emission-tons-modal/recalculate-emission-tons-modal.component';
+import { UserFacilityAssociationService } from 'src/app/core/services/user-facility-association.service';
 
 @Component({
   selector: 'app-admin-properties',
@@ -17,8 +18,11 @@ export class AdminPropertiesComponent implements OnInit {
 
   propertyForm = this.fb.group({});
 
+  migrating = false;
+
   constructor(
       private propertyService: AdminPropertyService,
+      private ufaService: UserFacilityAssociationService,
       private fb: FormBuilder,
       private modalService: NgbModal,
       private toastr: ToastrService) { }
@@ -76,6 +80,25 @@ export class AdminPropertiesComponent implements OnInit {
     .subscribe(result => {
       console.log(result);
       this.toastr.success('', result.length + ' emissions had their emission total in tons updated.');
+    });
+  }
+
+  openMigrateUserAssociationsModal() {
+
+    const modalMessage = `Are you sure you want to migrate user associations? This should only ever be done once.`;
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.continue.subscribe(() => {
+        this.migrateUserAssociations();
+    });
+  }
+
+  migrateUserAssociations() {
+    this.migrating = true;
+    this.ufaService.migrateUserAssociations()
+    .subscribe(() => {
+      this.toastr.success('', 'User Associations Migrated');
+      this.migrating = false;
     });
   }
 
