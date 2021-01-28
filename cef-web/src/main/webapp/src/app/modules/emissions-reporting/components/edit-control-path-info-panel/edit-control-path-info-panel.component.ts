@@ -34,7 +34,7 @@ export class EditControlPathInfoPanelComponent implements OnInit {
           this.ctrlPathSvc.retrieveForFacilitySite(data.facilitySite.id).subscribe(controlPaths => {
               if (controlPaths) {
                   for (const path of controlPaths) {
-                      this.pathIds.push(path.pathId);
+                      this.pathIds.push(path.pathId.toLowerCase().trim());
                   }
               }
 
@@ -54,7 +54,8 @@ export class EditControlPathInfoPanelComponent implements OnInit {
   pathIdCheck(): ValidatorFn {
       return (control: FormGroup): ValidationErrors | null => {
             if (this.pathIds) {
-                if (control.get('pathId') && this.pathIds.includes(control.get('pathId').value.trim())) {
+                const pathId: string = control.get('pathId').value.trim().toLowerCase();
+                if (control.get('pathId') && this.pathIds.includes(pathId)) {
                   return {duplicatePathId: true};
               }
             }

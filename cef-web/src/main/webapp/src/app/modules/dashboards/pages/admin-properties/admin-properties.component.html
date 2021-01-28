@@ -13,6 +13,12 @@
     </div>
 
     <div class="float-right mb-3">
+      <button type="button" class="btn btn-success mr-2" (click)="openMigrateUserAssociationsModal()" [disabled]="migrating" *ngIf="migrationFeature">
+        Migrate User Associations
+        <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="migrating">
+          <span class="sr-only">Migrating...</span>
+        </div>
+      </button>
       <button type="button" class="btn btn-success mr-2" (click)="openRecalculateEmissionTonsModal()">Recalculate Emission Tons</button>
       <button type="button" class="btn btn-success mr-2" (click)="openTestEmailModal()">Send test email</button>
       <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>

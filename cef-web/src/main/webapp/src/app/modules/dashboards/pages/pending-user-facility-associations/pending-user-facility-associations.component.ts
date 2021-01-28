@@ -37,7 +37,7 @@ export class PendingUserFacilityAssociationsComponent extends BaseSortableTable 
     const modalRef = this.modalService.open(ConfirmationDialogComponent);
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
-        this.approveAssociations();
+      this.approveAssociations();
     });
   }
 
@@ -47,7 +47,9 @@ export class PendingUserFacilityAssociationsComponent extends BaseSortableTable 
     modalRef.componentInstance.title = 'Reject Requests';
     modalRef.componentInstance.message = modalMessage;
     modalRef.result.then((resp) => {
-        this.rejectAssociations(resp);
+      this.rejectAssociations(resp);
+    }, () => {
+      // needed for dismissing without errors
     });
   }
 
