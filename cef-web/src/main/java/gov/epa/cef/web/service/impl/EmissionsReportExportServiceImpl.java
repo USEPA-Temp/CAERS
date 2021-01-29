@@ -606,19 +606,23 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
 
             row.getCell(2).setCellValue(dto.getIdentifier());
             row.getCell(4).setCellValue(dto.getDescription());
-            setCellNumberValue(row.getCell(5), dto.getPercentCapture());
-            setCellNumberValue(row.getCell(6), dto.getPercentControl());
+            setCellNumberValue(row.getCell(5), dto.getPercentControl());
             if (dto.getOperatingStatusCode() != null) {
-                row.getCell(7).setCellValue(dto.getOperatingStatusCode());
-                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
-                formulaEvaluator.evaluateInCell(row.getCell(8));
+                row.getCell(6).setCellValue(dto.getOperatingStatusCode());
+                row.getCell(7).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(7));
             }
             if (dto.getControlMeasureCode() != null) {
-                row.getCell(9).setCellValue(dto.getControlMeasureCode());
-                row.getCell(10).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
-                formulaEvaluator.evaluateInCell(row.getCell(10));
+                row.getCell(8).setCellValue(dto.getControlMeasureCode());
+                row.getCell(9).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(9));
             }
-            row.getCell(11).setCellValue(dto.getComments());
+            setCellNumberValue(row.getCell(10), dto.getNumberOperatingMonths());
+            row.getCell(11).setCellValue(dto.getStartDate());
+            row.getCell(12).setCellValue(dto.getUpgradeDate());
+            row.getCell(13).setCellValue(dto.getEndDate());
+            row.getCell(14).setCellValue(dto.getUpgradeDescription());
+            row.getCell(15).setCellValue(dto.getComments());
 
             currentRow++;
 

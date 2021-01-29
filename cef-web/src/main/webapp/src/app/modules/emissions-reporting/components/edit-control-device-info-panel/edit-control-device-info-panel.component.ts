@@ -11,11 +11,12 @@ import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-co
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-edit-control-device-info-panel',
   templateUrl: './edit-control-device-info-panel.component.html',
-  styleUrls: ['./edit-control-device-info-panel.component.scss']
+  styleUrls: ['./edit-control-device-info-panel.component.scss'],
 })
 
 export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
@@ -27,11 +28,6 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
 
   controlDeviceForm = this.fb.group({
     identifier: ['', Validators.required],
-    percentCapture: ['', [
-      Validators.max(100.0),
-      Validators.min(5),
-      Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
-    ]],
     percentControl: ['', [
       Validators.max(100.0),
       Validators.min(1),
@@ -39,6 +35,15 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     ]],
     operatingStatusCode: [null, Validators.required],
     controlMeasureCode: [null, [Validators.required]],
+    numberOperatingMonths: [null, [
+      Validators.max(12.0),
+      Validators.min(0)]],
+    upgradeDescription: [null, [
+      Validators.maxLength(200)
+    ]],
+    startDate: [null],
+    upgradeDate: [null],
+    endDate: [null],
     description: ['', [
       Validators.required,
       Validators.maxLength(200)
@@ -90,11 +95,33 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
 
       });
     });
+
+    if (this.control) {
+      this.controlDeviceForm.get('startDate').setValue(this.transformDate(this.control.startDate));
+      this.controlDeviceForm.get('upgradeDate').setValue(this.transformDate(this.control.upgradeDate));
+      this.controlDeviceForm.get('endDate').setValue(this.transformDate(this.control.endDate));
+    }
   }
 
   ngOnChanges() {
 
     this.controlDeviceForm.reset(this.control);
+  }
+
+  transformDate(date) {
+    if (date) {
+      const existingDate = new Date(date);
+      let transformedDate = null;
+      date = new Date(existingDate.setMinutes(existingDate.getMinutes() + existingDate.getTimezoneOffset()));
+
+      transformedDate = new NgbDate(date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate());
+
+      return transformedDate;
+    }
+
+    return null;
   }
 
   controlIdentifierCheck(): ValidatorFn {

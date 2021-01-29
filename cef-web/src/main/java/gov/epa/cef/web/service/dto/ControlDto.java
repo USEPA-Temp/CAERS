@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ControlDto implements Serializable {
@@ -12,8 +13,13 @@ public class ControlDto implements Serializable {
     private CodeLookupDto operatingStatusCode;
     private String identifier;
     private String description;
+    private String upgradeDescription;
+    private Short numberOperatingMonths;
     private Double percentCapture;
     private Double percentControl;
+    private LocalDate startDate;
+    private LocalDate upgradeDate;
+    private LocalDate endDate;
     private List<ControlPollutantDto> pollutants;
     private String comments;
     private CodeLookupDto controlMeasureCode;
@@ -91,14 +97,54 @@ public class ControlDto implements Serializable {
     }
     
     public CodeLookupDto getControlMeasureCode() {
-      return controlMeasureCode;
-  }
+    	return controlMeasureCode;
+    }
 
-  public void setControlMeasureCode(CodeLookupDto controlMeasureCode) {
-      this.controlMeasureCode = controlMeasureCode;
-  }
+    public void setControlMeasureCode(CodeLookupDto controlMeasureCode) {
+    	this.controlMeasureCode = controlMeasureCode;
+    }
   
-    public ControlDto withId(Long id) {
+    public String getUpgradeDescription() {
+    	return upgradeDescription;
+	}
+	
+	public void setUpgradeDescription(String upgradeDescription) {
+		this.upgradeDescription = upgradeDescription;
+	}
+	
+	public Short getNumberOperatingMonths() {
+		return numberOperatingMonths;
+	}
+	
+	public void setNumberOperatingMonths(Short numberOperatingMonths) {
+		this.numberOperatingMonths = numberOperatingMonths;
+	}
+	
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+	
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+	
+	public LocalDate getUpgradeDate() {
+		return upgradeDate;
+	}
+	
+	public void setUpgradeDate(LocalDate upgradeDate) {
+		this.upgradeDate = upgradeDate;
+	}
+	
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+	
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
+	public ControlDto withId(Long id) {
         setId(id);
         return this;
     }
