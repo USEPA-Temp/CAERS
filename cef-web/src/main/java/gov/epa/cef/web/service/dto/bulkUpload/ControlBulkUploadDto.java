@@ -49,12 +49,12 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     
     private String startDate;
     
-    private String upgradedDate;
+    private String upgradeDate;
     
     private String endDate;
     
     @Size(max = 200, message = "Description can not exceed {max} chars.")
-    private String upgradedDescription;
+    private String upgradeDescription;
 
     public ControlBulkUploadDto() {
 
@@ -159,12 +159,12 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
 		this.numberOperatingMonths = numberOperatingMonths;
 	}
 
-	public String getUpgradedDescription() {
-		return upgradedDescription;
+	public String getUpgradeDescription() {
+		return upgradeDescription;
 	}
 
-	public void setUpgradedDescription(String upgradedDescription) {
-		this.upgradedDescription = upgradedDescription;
+	public void setUpgradeDescription(String upgradeDescription) {
+		this.upgradeDescription = upgradeDescription;
 	}
 
 	public String getStartDate() {
@@ -175,12 +175,12 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
 		this.startDate = startDate;
 	}
 
-	public String getUpgradedDate() {
-		return upgradedDate;
+	public String getUpgradeDate() {
+		return upgradeDate;
 	}
 
-	public void setUpgradedDate(String upgradedDate) {
-		this.upgradedDate = upgradedDate;
+	public void setUpgradeDate(String upgradeDate) {
+		this.upgradeDate = upgradeDate;
 	}
 
 	public String getEndDate() {

@@ -35,8 +35,8 @@ public class Control extends BaseAuditEntity {
     @Column(name = "description", length = 200)
     private String description;
     
-    @Column(name = "upgraded_description", length = 200)
-    private String upgradedDescription;
+    @Column(name = "upgrade_description", length = 200)
+    private String upgradeDescription;
 
     @Column(name = "percent_capture", precision = 4, scale = 1)
     private Double percentCapture;
@@ -47,13 +47,13 @@ public class Control extends BaseAuditEntity {
     @Column(name = "number_operating_months", precision = 2, scale = 0)
     private Short numberOperatingMonths;
     
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private LocalDate startDate;
     
-    @Column(name = "upgraded_date", nullable = false)
-    private LocalDate upgradedDate;
+    @Column(name = "upgrade_date")
+    private LocalDate upgradeDate;
     
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private LocalDate endDate;
     
     @Column(name = "comments", length = 400)
@@ -86,10 +86,10 @@ public class Control extends BaseAuditEntity {
     	this.identifier = originalControl.getIdentifier();
     	this.description = originalControl.getDescription();
     	this.percentControl = originalControl.getPercentControl();
-    	this.upgradedDescription = originalControl.getUpgradedDescription();
+    	this.upgradeDescription = originalControl.getUpgradeDescription();
     	this.numberOperatingMonths = originalControl.getNumberOperatingMonths();
     	this.startDate = originalControl.getStartDate();
-    	this.upgradedDate = originalControl.getUpgradedDate();
+    	this.upgradeDate = originalControl.getUpgradeDate();
     	this.endDate = originalControl.getEndDate();
     	this.comments = originalControl.getComments();
     	for (ControlPollutant pollutant : originalControl.getPollutants()) {
@@ -186,12 +186,12 @@ public class Control extends BaseAuditEntity {
         this.controlMeasureCode = controlMeasureCode;
     }
     
-    public String getUpgradedDescription() {
-		return upgradedDescription;
+    public String getUpgradeDescription() {
+		return upgradeDescription;
 	}
 
-	public void setUpgradedDescription(String upgradedDescription) {
-		this.upgradedDescription = upgradedDescription;
+	public void setUpgradedDescription(String upgradeDescription) {
+		this.upgradeDescription = upgradeDescription;
 	}
 
 	public Short getNumberOperatingMonths() {
@@ -210,12 +210,12 @@ public class Control extends BaseAuditEntity {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getUpgradedDate() {
-		return upgradedDate;
+	public LocalDate getUpgradeDate() {
+		return upgradeDate;
 	}
 
-	public void setUpgradedDate(LocalDate upgradedDate) {
-		this.upgradedDate = upgradedDate;
+	public void setUpgradeDate(LocalDate upgradeDate) {
+		this.upgradeDate = upgradeDate;
 	}
 
 	public LocalDate getEndDate() {

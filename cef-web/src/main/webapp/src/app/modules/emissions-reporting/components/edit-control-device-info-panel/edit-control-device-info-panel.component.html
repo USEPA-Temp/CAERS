@@ -62,7 +62,7 @@
             <label for="numberOperatingMonths" class="ml-1 col-form-label"><strong>Number of Operating Months:</strong></label>
         </div>       
         <div class="col-sm-3">
-            <input type="text" class="form-control" id="numberOperatingMonths" formControlName="numberOperatingMonths">
+            <input type="text" class="form-control" maxlength="2" id="numberOperatingMonths" formControlName="numberOperatingMonths">
             <app-validation-message [control]="controlDeviceForm.get('numberOperatingMonths')"></app-validation-message>
         </div>
         <div class="col-sm-3">
@@ -81,18 +81,28 @@
             <label for="startDate" class="ml-1 col-form-label"><strong>Control Start Date:</strong></label>
         </div>       
         <div class="col-sm-3">
-            <input type="date" class="form-control" id="startDate" formControlName="startDate" 
-            placeholder="yyyy-mm-dd">
+            <div class="input-group">
+                <input class="form-control" placeholder="yyyy-mm-dd"
+                        name="startDate" formControlName="startDate" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><fa-icon class="fas calendar" [icon]="['fas', 'calendar']" aria-hidden="true"></fa-icon></button>
+                </div>
+            </div>
             <app-validation-message [control]="controlDeviceForm.get('startDate')"></app-validation-message>
         </div>
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The date on which the control device was most recently updated." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="upgradedDate" class="ml-1 col-form-label"><strong>Control Upgrade Date:</strong></label>
+            <label for="upgradeDate" class="ml-1 col-form-label"><strong>Control Upgrade Date:</strong></label>
         </div>       
         <div class="col-sm-3">
-            <input type="date" class="form-control" id="upgradedDate" formControlName="upgradedDate"
-            placeholder="yyyy-mm-dd">
-            <app-validation-message [control]="controlDeviceForm.get('upgradedDate')"></app-validation-message>
+            <div class="input-group">
+                <input class="form-control" placeholder="yyyy-mm-dd"
+                        name="upgradeDate" formControlName="upgradeDate" ngbDatepicker #d2="ngbDatepicker">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"><fa-icon class="fas calendar" [icon]="['fas', 'calendar']" aria-hidden="true"></fa-icon></button>
+                </div>
+            </div>
+            <app-validation-message [control]="controlDeviceForm.get('upgradeDate')"></app-validation-message>
         </div>
     </div>
 
@@ -102,8 +112,13 @@
             <label for="endDate" class="ml-1 col-form-label"><strong>Control End Date:</strong></label>
         </div>       
         <div class="col-sm-3">
-            <input type="date" class="form-control" id="endDate" formControlName="endDate"
-            placeholder="yyyy-mm-dd">
+            <div class="input-group">
+                <input class="form-control" placeholder="yyyy-mm-dd" 
+                        name="endDate" formControlName="endDate" ngbDatepicker #d3="ngbDatepicker">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="d3.toggle()" type="button"><fa-icon class="fas calendar" [icon]="['fas', 'calendar']" aria-hidden="true"></fa-icon></button>
+                </div>
+            </div>
             <app-validation-message [control]="controlDeviceForm.get('endDate')"></app-validation-message>
         </div>
     </div>
@@ -111,11 +126,11 @@
     <div class="row pb-1 mt-2">
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Description of the control update performed for the control at a facility." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="upgradedDescription" class="ml-1 col-form-label"><strong>Control Upgrade Description:</strong></label>
+            <label for="upgradeDescription" class="ml-1 col-form-label"><strong>Control Upgrade Description:</strong></label>
         </div>
         <div class="col-sm-9">
-            <textarea rows="3" class="mb-2 form-control" maxlength="200" id="upgradedDescription" formControlName="upgradedDescription"></textarea>
-            <app-validation-message [control]="controlDeviceForm.get('upgradedDescription')"></app-validation-message>
+            <textarea rows="3" class="mb-2 form-control" maxlength="200" id="upgradeDescription" formControlName="upgradeDescription"></textarea>
+            <app-validation-message [control]="controlDeviceForm.get('upgradeDescription')"></app-validation-message>
         </div>
     </div>
     

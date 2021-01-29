@@ -9,14 +9,14 @@ export class Control {
   operatingStatusCode: BaseCodeLookup;
   identifier: string;
   description: string;
-  upgradedDescription: string;
+  upgradeDescription: string;
   percentCapture: number;
   numberOperatingMonths: number;
   percentControl: number;
   assignments: ControlAssignment[];
   pollutants: ControlPollutant[];
   startDate: Date;
-  upgradedDate: Date;
+  upgradeDate: Date;
   endDate: Date;
   comments: string;
   controlMeasureCode: InventoryYearCodeLookup;

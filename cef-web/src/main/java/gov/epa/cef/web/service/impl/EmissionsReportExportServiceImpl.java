@@ -619,9 +619,9 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
             }
             setCellNumberValue(row.getCell(10), dto.getNumberOperatingMonths());
             row.getCell(11).setCellValue(dto.getStartDate());
-            row.getCell(12).setCellValue(dto.getUpgradedDate());
+            row.getCell(12).setCellValue(dto.getUpgradeDate());
             row.getCell(13).setCellValue(dto.getEndDate());
-            row.getCell(14).setCellValue(dto.getUpgradedDescription());
+            row.getCell(14).setCellValue(dto.getUpgradeDescription());
             row.getCell(15).setCellValue(dto.getComments());
 
             currentRow++;

@@ -13,12 +13,12 @@ public class ControlDto implements Serializable {
     private CodeLookupDto operatingStatusCode;
     private String identifier;
     private String description;
-    private String upgradedDescription;
+    private String upgradeDescription;
     private Short numberOperatingMonths;
     private Double percentCapture;
     private Double percentControl;
     private LocalDate startDate;
-    private LocalDate upgradedDate;
+    private LocalDate upgradeDate;
     private LocalDate endDate;
     private List<ControlPollutantDto> pollutants;
     private String comments;
@@ -104,12 +104,12 @@ public class ControlDto implements Serializable {
     	this.controlMeasureCode = controlMeasureCode;
     }
   
-    public String getUpgradedDescription() {
-    	return upgradedDescription;
+    public String getUpgradeDescription() {
+    	return upgradeDescription;
 	}
 	
-	public void setUpgradedDescription(String upgradedDescription) {
-		this.upgradedDescription = upgradedDescription;
+	public void setUpgradeDescription(String upgradeDescription) {
+		this.upgradeDescription = upgradeDescription;
 	}
 	
 	public Short getNumberOperatingMonths() {
@@ -128,12 +128,12 @@ public class ControlDto implements Serializable {
 		this.startDate = startDate;
 	}
 	
-	public LocalDate getUpgradedDate() {
-		return upgradedDate;
+	public LocalDate getUpgradeDate() {
+		return upgradeDate;
 	}
 	
-	public void setUpgradedDate(LocalDate upgradedDate) {
-		this.upgradedDate = upgradedDate;
+	public void setUpgradeDate(LocalDate upgradeDate) {
+		this.upgradeDate = upgradeDate;
 	}
 	
 	public LocalDate getEndDate() {
