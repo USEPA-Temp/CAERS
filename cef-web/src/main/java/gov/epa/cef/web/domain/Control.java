@@ -190,7 +190,7 @@ public class Control extends BaseAuditEntity {
 		return upgradeDescription;
 	}
 
-	public void setUpgradedDescription(String upgradeDescription) {
+	public void setUpgradeDescription(String upgradeDescription) {
 		this.upgradeDescription = upgradeDescription;
 	}
 
