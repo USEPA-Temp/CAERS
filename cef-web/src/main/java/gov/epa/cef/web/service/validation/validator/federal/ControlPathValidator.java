@@ -134,8 +134,8 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 
     	Map<Object, List<ControlPath>> controlPaths = controlPath.getFacilitySite().getControlPaths().stream()
             .filter(cp -> (cp.getPathId() != null))
-            .collect(Collectors.groupingBy(ControlPath::getPathId));
-
+            .collect(Collectors.groupingBy(cpi -> cpi.getPathId().toLowerCase()));
+    	
     	for (List<ControlPath> cpList : controlPaths.values()) {
     	    if (cpList.size() > 1 && cpList.get(0).getPathId().toLowerCase().contentEquals(controlPath.getPathId().toLowerCase())) {
     	        result = false;

@@ -61,8 +61,10 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ControlPath testData = createBaseControlPath();
         ControlPath cp1 = new ControlPath();
-        cp1.setPathId("test control path");
+        cp1.setPathId("Path 1");
+        cp1.setDescription("test description 6");
         testData.getFacilitySite().getControlPaths().add(cp1);
+        
         assertFalse(this.validator.validate(cefContext, testData));
     }
 
@@ -323,8 +325,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ca.setPercentApportionment(100.0);
 		ca.setId(1234L);
 		ca.setControlPath(result);
-		result.setPathId("test control path");
-		result.setDescription("test description");
+		result.setPathId("path 1");
+		result.setDescription("test description 1");
 		result.getReleasePointAppts().add(rpa);
 		FacilitySite fs = new FacilitySite();
 		fs.getControlPaths().add(result);
