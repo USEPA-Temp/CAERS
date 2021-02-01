@@ -137,7 +137,7 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             .collect(Collectors.groupingBy(ControlPath::getPathId));
 
     	for (List<ControlPath> cpList : controlPaths.values()) {
-    	    if (cpList.size() > 1 && cpList.get(0).getPathId().contentEquals(controlPath.getPathId())) {
+    	    if (cpList.size() > 1 && cpList.get(0).getPathId().contentEquals(controlPath.getPathId().toLowerCase())) {
     	        result = false;
     	        context.addFederalError(
     	            ValidationField.CONTROL_PATH_IDENTIFIER.value(),
@@ -147,7 +147,7 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 
             }
         }
-    	
+
     	if (controlPath.getPercentControl() != null && (controlPath.getPercentControl() < 1 || controlPath.getPercentControl() > 100)) {
             result = false;
             context.addFederalError(
