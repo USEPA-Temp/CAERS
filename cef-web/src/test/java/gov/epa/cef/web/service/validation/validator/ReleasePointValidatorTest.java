@@ -343,15 +343,30 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
+        cefContext = createContext();
+        testData = createBaseReleasePoint();
+        flowUom = new UnitMeasureCode();
+        flowUom.setCode("ACFM");
+        velocityUom = new UnitMeasureCode();
+        velocityUom.setCode("FPM");
+        testData.setExitGasFlowUomCode(flowUom);
+
+
+        releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("6");
+        testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(null);
+        testData.setStackDiameter(null);
         testData.setExitGasFlowRate(9.0);
         testData.setStackLength(23.0);
-        testData.setStackWidth(6.5);
+        testData.setStackWidth(8.5);
 
-        System.out.println();
 
+
+        System.out.println(errorMap.values().toString());
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
+
 
     }
 
@@ -1074,8 +1089,9 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         testData.setStackDiameter(null);
-        testData.setStackWidth(55.0);
-        testData.setStackLength(55.0);
+        testData.setStackWidth(23.0);
+        testData.setStackLength(23.0);
+        System.out.println(cefContext.result.getErrors());
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -1090,11 +1106,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setStackWidth(55.0);
         testData.setStackLength(55.0);
 
-        assertFalse(this.validator.validate(cefContext, testData));
-        for(ValidationError error : cefContext.result.getErrors()) {
-            System.out.println(error.getErrorMsg());
-        }
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);

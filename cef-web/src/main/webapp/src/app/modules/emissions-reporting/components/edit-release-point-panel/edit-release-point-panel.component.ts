@@ -541,6 +541,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                     this.stackVelocityFormula = isDiameter ? 'Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).': 'Exit Gas Flow Rate/(Stack Length * Stack Width) (assuming a rectangular stack).';
                     const computedArea: number = isDiameter ? ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))) : width * length;
                     calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
+                    console.log(control.get('typeCode').value)
 
                     if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
                         minVelocity = 0.060; // fpm
