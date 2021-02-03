@@ -184,9 +184,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
     	        	String uom= VELOCITY_UOM_FPS;
 
-    	        	double calcArea = isDiameter ? (Math.PI)*(Math.pow((inputDiameter/2), 2)) : releasePoint.getStackWidth() * releasePoint.getStackLength();
+    	        	double calcArea = isDiameter ? (Math.PI)*(Math.pow((inputDiameter/2), 2)) : ( releasePoint.getStackWidth() * releasePoint.getStackLength());
     	        	calcVelocity = BigDecimal.valueOf(inputFlowRate/calcArea).setScale(3, RoundingMode.HALF_UP);
-    	        	System.out.println("calcArea: " + calcArea);
 
     	        	if (releasePoint.getExitGasFlowUomCode() != null && !FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
     	        		minVelocity = BigDecimal.valueOf(0.060);
@@ -195,7 +194,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	        	}
 
     	        	if (calcVelocity.compareTo(maxVelocity.setScale(3, RoundingMode.HALF_UP)) == 1 || calcVelocity.compareTo(minVelocity.setScale(3, RoundingMode.HALF_UP)) == -1) {
-                        System.out.println("failed---");
 
                         result = false;
     	        		context.addFederalError(
@@ -209,10 +207,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	        				maxVelocity,
     	        				uom);
     	        	}
-    	        	System.out.println("calcVelocity: " + calcVelocity);
-    	        	System.out.println("length: " + releasePoint.getStackLength());
-                    System.out.println("width: " + releasePoint.getStackWidth());
-                    System.out.println("Diameter: " + releasePoint.getStackDiameter());
     	        }
 
     	        // Check exit gas flow rate if exit gas flow rate, exit gas velocity, and stack diameter are submitted.
