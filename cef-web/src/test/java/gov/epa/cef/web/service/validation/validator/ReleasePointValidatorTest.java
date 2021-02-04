@@ -362,9 +362,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setStackLength(23.0);
         testData.setStackWidth(8.5);
 
-
-
-        System.out.println(errorMap.values().toString());
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
 
@@ -1090,14 +1087,9 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         testData.setStackDiameter(null);
-
         testData.setExitGasFlowRate(9.0);
         testData.setStackLength(23.0);
         testData.setStackWidth(8.5);
-
-        this.validator.validate(cefContext, testData);
-        System.out.println(cefContext.result.getErrors());
-
 
 
         assertTrue(this.validator.validate(cefContext, testData));
@@ -1109,7 +1101,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
 
-        testData.setStackHeight(20.0);
         testData.setStackDiameter(0.5);
         testData.setStackLength(1.0);
         testData.setStackWidth(1.96);

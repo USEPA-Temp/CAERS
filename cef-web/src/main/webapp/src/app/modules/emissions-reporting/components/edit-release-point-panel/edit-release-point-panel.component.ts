@@ -538,10 +538,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
                 if (flowRate.value && exitGasFlowUom.value && (diameter.value || (length && width))) {
                     const isDiameter = !!diameter.value;
-                    this.stackVelocityFormula = isDiameter ? 'Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).': 'Exit Gas Flow Rate/(Stack Length * Stack Width) (assuming a rectangular stack).';
+                    const dFormula: string = 'Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).';
+                    const lwFormula: string = 'Exit Gas Flow Rate/(Stack Length * Stack Width) (assuming a rectangular stack).';
+                    this.stackVelocityFormula = isDiameter ? dFormula : lwFormula;
                     const computedArea: number = isDiameter ? ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))) : width * length;
                     calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
-                    console.log(control.get('typeCode').value)
 
                     if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
                         minVelocity = 0.060; // fpm
@@ -550,7 +551,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                     }
 
                     if (calculatedVelocity > maxVelocity || calculatedVelocity < minVelocity) {
-                        console.log('should trigger')
                         this.calculatedVelocity = calculatedVelocity.toString();
                         this.minVelocity = minVelocity;
                         this.maxVelocity = maxVelocity;

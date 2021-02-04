@@ -177,7 +177,10 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	        	double inputFlowRate = releasePoint.getExitGasFlowRate();
     	        	Double inputDiameter = null;
     	        	boolean isDiameter = releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0;
-    	        	String formula = isDiameter ? "\\: Exit Gas Velocity \\= Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack)." : "\\: Exit Gas Velocity \\= Flow Rate / (Stack Length * Stack Width) (assuming a rectangular stack).";
+
+    	        	String diameterFormula  = "\\: Exit Gas Velocity \\= Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).";
+    	        	String lengthWidthFormula = "\\: Exit Gas Velocity \\= Flow Rate / (Stack Length * Stack Width) (assuming a rectangular stack).";
+    	        	String formula = isDiameter ? diameterFormula : lengthWidthFormula;
 
     	        	if (isDiameter)
     	        	    inputDiameter = releasePoint.getStackDiameter();
