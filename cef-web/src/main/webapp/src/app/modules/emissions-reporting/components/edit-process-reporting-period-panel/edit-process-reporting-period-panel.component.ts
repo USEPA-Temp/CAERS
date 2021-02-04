@@ -54,6 +54,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   denominatorUomValues: UnitMeasureCode[];
   fuelUseUomValues: UnitMeasureCode[];
   heatContentUomValues: UnitMeasureCode[];
+  showFuelDataCopyMessage = false;
 
   constructor(
     private lookupService: LookupService,
@@ -171,6 +172,28 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       }
       return null;
     };
+  }
+
+  copyFuelDataToThroughput() {
+      const fuelMaterial = this.reportingPeriodForm.get('fuelUseMaterialCode').value;
+      const fuelValue = this.reportingPeriodForm.get('fuelUseValue').value;
+      const fuelUom = this.reportingPeriodForm.get('fuelUseUom').value
+      console.log(fuelMaterial, fuelValue, fuelUom)
+
+      this.reportingPeriodForm.get('calculationMaterialCode').patchValue(fuelMaterial);
+      this.reportingPeriodForm.get('calculationParameterValue').patchValue(fuelValue);
+      this.reportingPeriodForm.get('calculationParameterUom').patchValue(fuelUom);
+      this.showFuelDataCopyMessage = true;
+
+  }
+
+  isFuelUseDirty = ():boolean => {
+      const fuelMaterial = this.reportingPeriodForm.get('fuelUseMaterialCode');
+      const fuelValue = this.reportingPeriodForm.get('fuelUseValue');
+      const fuelUom = this.reportingPeriodForm.get('fuelUseUom');
+
+      return fuelMaterial.dirty && fuelValue.dirty && fuelUom.dirty;
+
   }
 
 }
