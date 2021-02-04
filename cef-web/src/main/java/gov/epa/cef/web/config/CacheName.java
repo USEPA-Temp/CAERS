@@ -48,6 +48,8 @@ public class CacheName {
 
     public static final String UserProgramFacilities = "UserProgramFacilities";
 
+    public static final String UserMasterFacilityIds = "UserMasterFacilityIds";
+
     public static final String ProgramFacilities = "ProgramFacilities";
 
     public static final String ReleasePointApptEmissionsReportIds = "ReleasePointApptEmissionsReportIds";

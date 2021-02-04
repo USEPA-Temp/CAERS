@@ -283,15 +283,15 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         // TODO: remove once MFR is fully implemented
         // creates an MFR if one doesn't already exist, should be removed once associations are managed locally
-        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId()).orElseGet(() -> {
-            return this.mfrRepo.save(this.mfrService.transformFacilitySite(reportDto.getFacilitySite()));
-        });
+//        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId()).orElseGet(() -> {
+//            return this.mfrRepo.save(this.mfrService.transformFacilitySite(reportDto.getFacilitySite()));
+//        });
         // TODO: uncomment when MFR is fully implemented
-//        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId())
-//           .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getEisProgramId())));
+        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId())
+           .orElseThrow(() -> new NotExistException("Master Facility Record", reportDto.getEisProgramId()));
 
         EmissionsReport newReport = new EmissionsReport();
-        newReport.setEisProgramId(reportDto.getEisProgramId());
+        newReport.setEisProgramId(mfr.getEisProgramId());
         newReport.setMasterFacilityRecord(mfr);
         newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);

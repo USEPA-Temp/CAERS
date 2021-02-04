@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
 import {FacilitySite} from 'src/app/shared/models/facility-site';
 import {CdxFacility} from '../../shared/models/cdx-facility';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 @Injectable({
     providedIn: 'root'
@@ -69,37 +70,32 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a report for the current year from scratch */
-    createReportFromScratch(facility: CdxFacility,
-                            reportYear: number,
-                            facilitySite: FacilitySite): Observable<HttpResponse<EmissionsReport>> {
+    createReportFromScratch(eisFacilityId: string,
+                            reportYear: number): Observable<HttpResponse<EmissionsReport>> {
 
-        const url = `${this.baseUrl}/facility/${facility.programId}`;
+        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
-            eisProgramId: facility.programId,
-            frsFacilityId: facility.epaRegistryId,
-            stateFacilityId: facility.stateFacilityId,
-            source: 'fromScratch',
-            facilitySite
+            eisProgramId: eisFacilityId,
+            source: 'fromScratch'
         }, {
             observe: 'response'
         });
     }
 
     /** POST request to the server to create a report for the current year from uploaded workbook */
-    createReportFromUpload(facility: CdxFacility,
+    createReportFromUpload(facility: MasterFacilityRecord,
                            reportYear: number,
                            workbook: File): Observable<HttpEvent<EmissionsReport>> {
 
-        const url = `${this.baseUrl}/facility/${facility.programId}`;
+        const url = `${this.baseUrl}/facility/${facility.eisProgramId}`;
 
         const formData = new FormData();
         formData.append('workbook', workbook);
         formData.append('metadata', new Blob([JSON.stringify({
             year: reportYear,
-            eisProgramId: facility.programId,
-            frsFacilityId: facility.epaRegistryId,
-            stateFacilityId: facility.stateFacilityId,
+            eisProgramId: facility.eisProgramId,
+            stateFacilityId: facility.agencyFacilityId,
             source: 'fromScratch'
         })], {
             type: 'application/json'

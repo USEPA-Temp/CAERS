@@ -164,6 +164,13 @@ public class UserFacilityAssociationServiceImpl {
         return this.ufaMapper.toDtoList(entities);
     }
 
+    public List<UserFacilityAssociationDto> findByUserRoleIdAndApproved(Long userRoleId, boolean approved) {
+
+        List<UserFacilityAssociation> entities = this.ufaRepo.findByUserRoleIdAndApproved(userRoleId, approved);
+
+        return this.ufaMapper.toDtoList(entities);
+    }
+
     public List<UserFacilityAssociationDto> findDetailsByMasterFacilityRecordId(Long masterFacilityRecordId) {
 
         List<UserFacilityAssociation> entities = this.ufaRepo.findByMasterFacilityRecordId(masterFacilityRecordId);

@@ -21,7 +21,7 @@ export class MasterFacilityInformationComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.mfrService.getMyRecords()
+    this.mfrService.getMyProgramRecords()
     .subscribe(result =>
       this.records = result.sort((a, b) => (a.name > b.name) ? 1 : -1)
       );

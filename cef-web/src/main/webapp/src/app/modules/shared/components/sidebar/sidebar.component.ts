@@ -6,6 +6,7 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { SharedService } from 'src/app/core/services/shared.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { ConfigPropertyService } from 'src/app/core/services/config-property.ser
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  @Input() facility: CdxFacility;
+  @Input() facility: MasterFacilityRecord;
   facilitySite: FacilitySite;
   emissionsNavItems: SideNavItem[];
   facilityNavItems: SideNavItem[];

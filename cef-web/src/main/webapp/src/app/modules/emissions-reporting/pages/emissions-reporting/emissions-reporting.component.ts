@@ -1,6 +1,6 @@
-import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 @Component( {
     selector: 'app-emissions-reporting',
@@ -8,13 +8,13 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./emissions-reporting.component.scss']
 } )
 export class EmissionsReportingComponent implements OnInit, AfterViewChecked {
-    facility: CdxFacility;
+    facility: MasterFacilityRecord;
 
     constructor( private route: ActivatedRoute, private cdRef: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.route.data
-        .subscribe(( data: { facility: CdxFacility } ) => {
+        .subscribe(( data: { facility: MasterFacilityRecord } ) => {
             this.facility = data.facility;
         });
     }

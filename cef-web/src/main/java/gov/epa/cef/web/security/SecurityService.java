@@ -3,14 +3,15 @@ package gov.epa.cef.web.security;
 
 import gov.epa.cdx.shared.security.ApplicationUser;
 import gov.epa.cef.web.config.CacheName;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
+import gov.epa.cef.web.domain.UserFacilityAssociation;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.repository.UserFacilityAssociationRepository;
 import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcer;
 import gov.epa.cef.web.security.enforcer.FacilityAccessEnforcerImpl;
 import gov.epa.cef.web.security.enforcer.ProgramIdRepoLocator;
 import gov.epa.cef.web.security.enforcer.ReviewerFacilityAccessEnforcerImpl;
-import gov.epa.cef.web.service.RegistrationService;
-import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +39,14 @@ public class SecurityService {
 
     private final ProgramIdRepoLocator programIdRepoLocator;
 
-    private final RegistrationService registrationService;
+    private final UserFacilityAssociationRepository ufaRepo;
 
     @Autowired
-    SecurityService(RegistrationService registrationService,
+    SecurityService(UserFacilityAssociationRepository ufaRepo,
                     CacheManager cacheManager,
                     ProgramIdRepoLocator programIdRepoLocator) {
 
-        this.registrationService = registrationService;
+        this.ufaRepo = ufaRepo;
 
         this.cacheManager = cacheManager;
 
@@ -66,7 +67,8 @@ public class SecurityService {
 
         if (userRoleId != null) {
             try {
-                roles.addAll(this.registrationService.retrieveFacilities(userRoleId).stream()
+                roles.addAll(this.ufaRepo.findByUserRoleId(userRoleId).stream()
+                    .map(UserFacilityAssociation::getMasterFacilityRecord)
                     .map(new SecurityService.FacilityToRoleTransform())
                     .collect(Collectors.toList()));
             } catch (Exception e) {
@@ -156,6 +158,7 @@ public class SecurityService {
     void evictUserCachedItems(long userRoleId) {
 
         this.cacheManager.getCache(CacheName.UserProgramFacilities).evict(userRoleId);
+        this.cacheManager.getCache(CacheName.UserMasterFacilityIds).evict(userRoleId);
 
         logger.info("Program Facilities for UserRoleId-[{}] were evicted from cache.", userRoleId);
     }
@@ -203,19 +206,16 @@ public class SecurityService {
 
     private List<String> getCurrentUserFacilityProgramIds() {
 
-        return getCurrentApplicationUser().getAuthorities().stream()
-            .filter(r -> r.getAuthority().startsWith(SecurityService.FACILITY_ROLE_PREFIX))
-            .map(r -> r.getAuthority().substring(SecurityService.FACILITY_ROLE_PREFIX.length()))
-            .collect(Collectors.toList());
+        return this.ufaRepo.retrieveMasterFacilityRecordIds(getCurrentApplicationUser().getUserRoleId());
     }
 
-    static class FacilityToRoleTransform implements Function<ProgramFacility, GrantedAuthority> {
+    static class FacilityToRoleTransform implements Function<MasterFacilityRecord, GrantedAuthority> {
 
         @Override
-        public GrantedAuthority apply(ProgramFacility programFacility) {
+        public GrantedAuthority apply(MasterFacilityRecord mfr) {
 
             return new SimpleGrantedAuthority(
-                String.format("%s%s", FACILITY_ROLE_PREFIX, programFacility.getProgramId()));
+                String.format("%s%s", FACILITY_ROLE_PREFIX, mfr.getEisProgramId()));
         }
     }
 }

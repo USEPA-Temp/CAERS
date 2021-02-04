@@ -45,6 +45,14 @@ public class MasterFacilityRecordApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/eisProgramId/{eisProgramId}")
+    public ResponseEntity<MasterFacilityRecordDto> retrieveRecordByEisProgramId(@NotNull @PathVariable String eisProgramId) {
+
+        MasterFacilityRecordDto result = this.mfrService.findByEisProgramId(eisProgramId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/program/{programSystemCode}")
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForProgram(
         @NotNull @PathVariable String programSystemCode) {
@@ -64,8 +72,8 @@ public class MasterFacilityRecordApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/my")
-    public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentUser() {
+    @GetMapping(value = "/program/my")
+    public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentProgram() {
 
 //        this.securityService.facilityEnforcer().enforceProgramId(programSystemCode);
 
@@ -74,7 +82,7 @@ public class MasterFacilityRecordApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Update an existing master facility record
      * @param masterFacilityRecordId

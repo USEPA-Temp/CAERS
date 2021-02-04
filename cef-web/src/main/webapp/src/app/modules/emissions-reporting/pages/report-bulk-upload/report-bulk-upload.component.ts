@@ -10,6 +10,7 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {EMPTY} from 'rxjs';
 import {UserService} from 'src/app/core/services/user.service';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 interface PleaseWaitConfig {
     modal: NgbModalRef;
@@ -34,7 +35,7 @@ interface WorksheetError {
 export class ReportBulkUploadComponent implements OnInit {
 
     reportingYear: number;
-    facility: CdxFacility;
+    facility: MasterFacilityRecord;
     selectedFile: File = null;
 
     bsflags: any;
@@ -69,7 +70,7 @@ export class ReportBulkUploadComponent implements OnInit {
         bsCustomFileInput.init('#file-excel-workbook');
 
         this.route.data
-            .subscribe((data: { facility: CdxFacility }) => {
+            .subscribe((data: { facility: MasterFacilityRecord }) => {
                 this.facility = data.facility;
             });
 
