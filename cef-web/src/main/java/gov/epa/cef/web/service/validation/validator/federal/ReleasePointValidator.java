@@ -37,6 +37,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     private static final String FLOW_RATE_UOM_ACFS = "ACFS";
     private static final String FLOW_RATE_UOM_ACFM = "ACFM";
     private static final String UOM_FT = "FT";
+    private static final String DIAMETER_FORMULA  = "\\: Exit Gas Velocity \\= Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).";
+    private static final String LENGTH_WIDTH_FORMULA = "\\: Exit Gas Velocity \\= Flow Rate / (Stack Length * Stack Width) (assuming a rectangular stack).";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, ReleasePoint releasePoint) {
@@ -167,16 +169,24 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
     	        // Check exit gas velocity if exit gas flow rate and stack diameter are submitted.
     	        if ((releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
-    	        	&& (releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)) {
+    	        	&& ((releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)
+                    || (releasePoint.getStackWidth() != null && releasePoint.getStackWidth() > 0 && releasePoint.getStackLength() != null && releasePoint.getStackLength() > 0)
+                    )) {
 
     	        	BigDecimal minVelocity = BigDecimal.valueOf(0.001);
     	        	BigDecimal maxVelocity = BigDecimal.valueOf(1500.0);
     	        	BigDecimal calcVelocity = new BigDecimal(0);
     	        	double inputFlowRate = releasePoint.getExitGasFlowRate();
-    	        	double inputDiameter = releasePoint.getStackDiameter();
+    	        	Double inputDiameter = null;
+    	        	boolean isDiameter = releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0;
+    	        	String formula = isDiameter ? DIAMETER_FORMULA : LENGTH_WIDTH_FORMULA;
+
+    	        	if (isDiameter)
+    	        	    inputDiameter = releasePoint.getStackDiameter();
+
     	        	String uom= VELOCITY_UOM_FPS;
 
-    	        	double calcArea = (Math.PI)*(Math.pow((inputDiameter/2), 2));
+    	        	double calcArea = isDiameter ? (Math.PI)*(Math.pow((inputDiameter/2), 2)) : ( releasePoint.getStackWidth() * releasePoint.getStackLength());
     	        	calcVelocity = BigDecimal.valueOf(inputFlowRate/calcArea).setScale(3, RoundingMode.HALF_UP);
 
     	        	if (releasePoint.getExitGasFlowUomCode() != null && !FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
@@ -187,13 +197,14 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
     	        	if (calcVelocity.compareTo(maxVelocity.setScale(3, RoundingMode.HALF_UP)) == 1 || calcVelocity.compareTo(minVelocity.setScale(3, RoundingMode.HALF_UP)) == -1) {
 
-    	        		result = false;
+                        result = false;
     	        		context.addFederalError(
     	        				ValidationField.RP_GAS_VELOCITY.value(),
     	        				"releasePoint.exitGasVelocity.range",
     	        				createValidationDetails(releasePoint),
     	        				calcVelocity.toString(),
     	        				uom,
+    	        				formula,
     	        				minVelocity,
     	        				maxVelocity,
     	        				uom);

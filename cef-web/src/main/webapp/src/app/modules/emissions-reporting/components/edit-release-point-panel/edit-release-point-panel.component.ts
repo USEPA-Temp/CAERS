@@ -14,7 +14,7 @@ import {ReleasePointService} from 'src/app/core/services/release-point.service';
 import {InventoryYearCodeLookup} from 'src/app/shared/models/inventory-year-code-lookup';
 import {legacyItemValidator} from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
-import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
+import {VariableValidationType} from 'src/app/shared/enums/variable-validation-type';
 
 @Component({
     selector: 'app-edit-release-point-panel',
@@ -49,6 +49,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     maxVelocity: number;
     coordinateTolerance: EisLatLongToleranceLookup;
     tolerance: number;
+    stackVelocityFormula: string;
 
     releasePointForm = this.fb.group({
         releasePointIdentifier: ['', [
@@ -157,7 +158,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.exitGasVelocityUomCheck(),
             this.releasePointIdentifierCheck(),
             this.latLongRequiredCheck(),
-            this.stackDiameterOrStackWidthAndLength()
+            this.stackDiameterOrStackWidthAndLength(),
         ]
     });
 
@@ -493,6 +494,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         };
     }
 
+
     // QA Check - exit gas flow rate and uom must be submitted together
     exitGasFlowUomCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
@@ -526,30 +528,33 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 const flowRate = control.get('exitGasFlowRate'); // acfs/acfm
                 const velocity = control.get('exitGasVelocity'); // fps/fps
                 const diameter = control.get('stackDiameter'); // ft
+                const exitGasFlowUom = control.get('exitGasFlowUomCode');
+                const length: number = control.get('stackLength')?.value;
+                const width: number = control.get('stackWidth')?.value;
                 let calculatedVelocity;
                 this.calculatedVelocityUom = 'FPS';
                 let minVelocity = 0.001; // fps
                 let maxVelocity = 1500; // fps
 
-                if ((diameter !== null && diameter.value > 0)
-                    && (flowRate !== null && flowRate.value > 0)) {
-                    const computedArea = ((Math.PI) * (Math.pow((diameter.value / 2.0), 2)));
+                if (flowRate.value && exitGasFlowUom.value && (diameter.value || (length && width))) {
+                    const isDiameter = !!diameter.value;
+                    const dFormula: string = 'Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).';
+                    const lwFormula: string = 'Exit Gas Flow Rate/(Stack Length * Stack Width) (assuming a rectangular stack).';
+                    this.stackVelocityFormula = isDiameter ? dFormula : lwFormula;
+                    const computedArea: number = isDiameter ? ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))) : width * length;
+                    calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
 
-                    if (control.get('exitGasFlowUomCode').value !== null) {
-                        calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
-
-                        if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
-                            minVelocity = 0.060; // fpm
-                            maxVelocity = 90000; // fpm
-                            this.calculatedVelocityUom = 'FPM';
-                        }
+                    if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
+                        minVelocity = 0.060; // fpm
+                        maxVelocity = 90000; // fpm
+                        this.calculatedVelocityUom = 'FPM';
                     }
 
                     if (calculatedVelocity > maxVelocity || calculatedVelocity < minVelocity) {
                         this.calculatedVelocity = calculatedVelocity.toString();
                         this.minVelocity = minVelocity;
                         this.maxVelocity = maxVelocity;
-                        return {invalidComputedVelocity: true};
+                        return { invalidComputedVelocity: true };
                     }
                 }
                 return null;
