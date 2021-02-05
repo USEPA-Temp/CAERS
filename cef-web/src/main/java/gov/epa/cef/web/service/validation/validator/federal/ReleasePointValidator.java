@@ -37,6 +37,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     private static final String FLOW_RATE_UOM_ACFS = "ACFS";
     private static final String FLOW_RATE_UOM_ACFM = "ACFM";
     private static final String UOM_FT = "FT";
+    private static final String DIAMETER_FORMULA  = "\\: Exit Gas Velocity \\= Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).";
+    private static final String LENGTH_WIDTH_FORMULA = "\\: Exit Gas Velocity \\= Flow Rate / (Stack Length * Stack Width) (assuming a rectangular stack).";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, ReleasePoint releasePoint) {
@@ -177,10 +179,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	        	double inputFlowRate = releasePoint.getExitGasFlowRate();
     	        	Double inputDiameter = null;
     	        	boolean isDiameter = releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0;
-
-    	        	String diameterFormula  = "\\: Exit Gas Velocity \\= Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).";
-    	        	String lengthWidthFormula = "\\: Exit Gas Velocity \\= Flow Rate / (Stack Length * Stack Width) (assuming a rectangular stack).";
-    	        	String formula = isDiameter ? diameterFormula : lengthWidthFormula;
+    	        	String formula = isDiameter ? DIAMETER_FORMULA : LENGTH_WIDTH_FORMULA;
 
     	        	if (isDiameter)
     	        	    inputDiameter = releasePoint.getStackDiameter();
