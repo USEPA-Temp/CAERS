@@ -34,8 +34,6 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
     private static final String PM25PRI = "PM25-PRI";
     private static final String PMCON = "PM-CON";
     
-    @Autowired
-	private PointSourceSccCodeRepository sccRepo;
   	
     @Override
     public void compose(FluentValidator validator,
@@ -125,55 +123,6 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        }
 	        
 	        
-	        if (period.getEmissionsProcess().getSccCode() != null){
-	        	PointSourceSccCode isFuelUsePointSourceSccCode = sccRepo.findById(period.getEmissionsProcess().getSccCode()).orElse(null);
-	        
-	        	if (isFuelUsePointSourceSccCode.getFuelUseRequired()) {
-	        		
-	        		if (period.getFuelUseValue() == null || period.getFuelUseUom() == null || period.getFuelUseMaterialCode() == null) {
-	    		        	
-	    	        		valid = false;
-	    		            context.addFederalError(
-	    		            		ValidationField.PERIOD_FUEL_USE_VALUES.value(),
-	    		            		"reportingPeriod.fuelUseValues.required", 
-	    		            		createValidationDetails(period),
-	    		            		period.getEmissionsProcess().getSccCode());
-	    		    }
-	        		
-	        		if (period.getHeatContentUom() == null || period.getHeatContentValue() == null) {
-	    		        	
-	    	        		valid = false;
-	    		            context.addFederalError(
-	    		            		ValidationField.PERIOD_HEAT_CONTENT_VALUES.value(),
-	    		            		"reportingPeriod.heatContentValues.required", 
-	    		            		createValidationDetails(period),
-	    		            		period.getEmissionsProcess().getSccCode());
-	    		     }
-	        		
-	        	} else {
-	        		if ((period.getFuelUseValue() != null || period.getFuelUseUom() != null || period.getFuelUseMaterialCode() != null ) &&
-			        	(period.getFuelUseUom() == null || period.getFuelUseMaterialCode() == null || period.getFuelUseValue() == null)) {
-	        			
-			        		valid = false;
-				            context.addFederalWarning(
-				            		ValidationField.PERIOD_FUEL_USE_VALUES.value(),
-				            		"reportingPeriod.fuelUseValues.optionalFields.required", 
-				            		createValidationDetails(period));
-				            
-			        }
-	        		
-	        		if ((period.getHeatContentValue() != null || period.getHeatContentUom() != null) &&
-				        	(period.getHeatContentUom() == null || period.getHeatContentValue() == null)) {
-	        		
-			        		valid = false;
-				            context.addFederalWarning(
-				            		ValidationField.PERIOD_HEAT_CONTENT_VALUES.value(),
-				            		"reportingPeriod.heatContentValues.optionalFields.required", 
-				            		createValidationDetails(period));
-					            
-				    }
-	        	}
-	        }
 	        
 	        Map<String, List<Emission>> emissionMap = period.getEmissions().stream()
 	                .filter(e -> e.getPollutant() != null)
