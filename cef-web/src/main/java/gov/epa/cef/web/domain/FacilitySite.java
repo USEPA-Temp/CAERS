@@ -49,7 +49,7 @@ public class FacilitySite extends BaseAuditEntity {
     @Column(name = "eis_program_id", length = 22)
     private String eisProgramId;
 
-    @Column(name = "alt_site_identifier", length = 30)
+    @Column(name = "alt_site_identifier", nullable = false, length = 30)
     private String altSiteIdentifier;
 
     @Column(name = "name", nullable = false, length = 80)

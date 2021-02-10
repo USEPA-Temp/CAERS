@@ -176,7 +176,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-6 col-md-10">
+        <div class="col-sm-12">
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidFlowRate">
                 Exit Gas Flow Rate must be within 5% of calculated Exit Gas Flow
                 Rate {{calculatedFlowRate}} {{calculatedFlowRateUom}}, calculated using the formula: Exit Gas Flow Rate
@@ -184,7 +184,7 @@
             </div>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidComputedVelocity">
                 The calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}}, calculated using
-                the formula: Exit Gas Velocity = Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).
+                the formula: Exit Gas Velocity = {{ stackVelocityFormula }}
                 Exit Gas Velocity must be between {{minVelocity}} and {{maxVelocity}} {{calculatedVelocityUom}}.
             </div>
         </div>
@@ -420,13 +420,14 @@
     <div class="row">
         <div class="col-sm-6 col-md-10">
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidDimensions">
-                {{diameterOrLengthAndWidthMessage}}
+                {{ diameterOrLengthAndWidthMessage }}
             </div>
         </div>
+
     </div>
 
 
-    <div class="row pb-3">
+    <div class="row pb-6">
         <div class="col-sm-3">
             <fa-icon class="mt-2" style="visibility: hidden;" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="releaseCommentsInput" class="ml-1 col-form-label"><strong>Comments:</strong></label>
