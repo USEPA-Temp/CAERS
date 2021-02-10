@@ -36,15 +36,6 @@ public interface MasterFacilityRecordRepository extends JpaRepository<MasterFaci
     @Query("select distinct programSystemCode FROM MasterFacilityRecord")
     List<BaseLookupEntity> findDistinctProgramSystems();
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.MasterFacilityProgramIds)
-    @Query("select mfr.eisProgramId from MasterFacilityRecord mfr where mfr.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
-
     @Cacheable(value = CacheName.MasterFacilityMasterIds)
     @Query("select mfr.id from MasterFacilityRecord mfr where mfr.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);

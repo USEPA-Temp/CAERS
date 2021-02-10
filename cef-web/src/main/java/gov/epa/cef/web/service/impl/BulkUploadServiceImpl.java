@@ -756,7 +756,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         FacilitySite facility = new FacilitySite();
 
-        facility.setFrsFacilityId(bulkFacility.getFrsFacilityId());
         facility.setAltSiteIdentifier(bulkFacility.getAltSiteIdentifier());
         facility.setName(bulkFacility.getName());
         facility.setDescription(bulkFacility.getDescription());

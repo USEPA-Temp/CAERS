@@ -55,6 +55,12 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      */
     List<EmissionsReport> findByEisProgramId(String eisProgramId, Sort sort);
 
+    /**
+     * Find report for a given masterFacilityRecordId with the specified order
+     * @param id
+     * @param sort
+     * @return
+     */
     List<EmissionsReport> findByMasterFacilityRecordId(Long id, Sort sort);
 
 
@@ -69,7 +75,7 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
     List<EmissionsReport> findInProgressByMasterFacilityId(@NotNull Long masterFacilityId);
 
     /**
-     *
+     * Find the report for a specified master facility record id for the specified year
      * @param masterFacilityRecordId
      * @param year
      * @return
@@ -96,15 +102,6 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
 
     @Query("select distinct r.year from EmissionsReport r where r.programSystemCode.code = :programSystemCode and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED")
     Collection<Integer> findEisDataYears(@Param("programSystemCode") String programSystemCode);
-
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.ReportProgramIds)
-    @Query("select mfr.eisProgramId from EmissionsReport r join r.masterFacilityRecord mfr where r.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
 
     @Cacheable(value = CacheName.ReportMasterIds)
     @Query("select mfr.id from EmissionsReport r join r.masterFacilityRecord mfr where r.id = :id")

@@ -29,15 +29,6 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
     @Query("select eu from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where eu.unitIdentifier = :identifier and mfr.id = :mfrId and r.year = :year")
     List<EmissionsUnit> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("mfrId") Long mfrId, @Param("year") Short year);
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.UnitProgramIds)
-    @Query("select mfr.eisProgramId from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where eu.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
-
     @Cacheable(value = CacheName.UnitMasterIds)
     @Query("select mfr.id from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where eu.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);

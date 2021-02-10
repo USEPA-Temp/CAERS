@@ -28,15 +28,6 @@ public interface FacilitySiteContactRepository extends CrudRepository<FacilitySi
      */
     List<FacilitySiteContact> findByFacilitySiteIdAndType(Long facilitySiteId, ContactTypeCode contactTypeCode);
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.FacilitySiteContactProgramIds)
-    @Query("select mfr.eisProgramId from FacilitySiteContact c join c.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where c.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
-
     @Cacheable(value = CacheName.FacilitySiteContactMasterIds)
     @Query("select mfr.id from FacilitySiteContact c join c.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where c.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
