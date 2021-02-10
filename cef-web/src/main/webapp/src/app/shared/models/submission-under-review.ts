@@ -1,5 +1,6 @@
 export class SubmissionUnderReview {
     emissionsReportId: number;
+    masterFacilityId: number;
     eisProgramId: string;
     facilityName: string;
     facilitySiteId: number;

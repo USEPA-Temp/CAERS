@@ -20,15 +20,15 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
     List<ReleasePoint> findByFacilitySiteIdOrderByReleasePointIdentifier(Long facilitySiteId);
 
     /**
-     * Find Release Points with the specified identifier, EIS program id, and year
+     * Find Release Points with the specified identifier, master facility record id, and year
      * @param identifier
-     * @param eisProgramId
+     * @param mfrId
      * @param year
      * @return
      */
-    @Query("select rp from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r "
-            + "where rp.releasePointIdentifier = :identifier and fs.eisProgramId = :eisProgramId and r.year = :year")
-    List<ReleasePoint> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
+    @Query("select rp from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr "
+            + "where rp.releasePointIdentifier = :identifier and mfr.id = :mfrId and r.year = :year")
+    List<ReleasePoint> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("mfrId") Long mfrId, @Param("year") Short year);
 
     /**
      *
@@ -36,8 +36,12 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
      * @return EIS Program ID
      */
     @Cacheable(value = CacheName.ReleasePointProgramIds)
-    @Query("select fs.eisProgramId from ReleasePoint rp join rp.facilitySite fs where rp.id = :id")
+    @Query("select mfr.eisProgramId from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where rp.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    @Cacheable(value = CacheName.ReleasePointMasterIds)
+    @Query("select mfr.id from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where rp.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for a Release Point

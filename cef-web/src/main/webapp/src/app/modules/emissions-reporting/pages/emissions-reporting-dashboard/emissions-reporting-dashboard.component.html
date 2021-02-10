@@ -8,7 +8,7 @@
 				<div>{{report.year}} Report</div>
 
 				<div class="button-list-horizontal">
-                    <a [routerLink]="['/facility', report.eisProgramId, 'report', 'upload', report.year]"
+                    <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', 'upload', report.year]"
 					   class="btn btn-primary"
 					   [attr.aria-label]="'upload'+ report.year +'report'"
                        *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'VALIDATED'])">
@@ -20,7 +20,7 @@
 					   [attr.aria-label]="'create new'+ report.year +'report'"
 						(click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
 
-					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
+					<a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
 						class="btn btn-primary"
 						[attr.aria-label]="'continue'+ report.year +'report'"
 						*ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
@@ -28,7 +28,7 @@
 					<a href="#" class="btn btn-primary"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>
 
-                    <a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
+                    <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
 					   class="btn btn-primary"
 					   [attr.aria-label]="'view'+ report.year +'report'"
                        *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>

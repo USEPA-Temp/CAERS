@@ -46,9 +46,9 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     }
 
     @Override
-    public FacilitySiteDto findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId) {
+    public FacilitySiteDto findByReportId(Long emissionsReportId) {
 
-        return facSiteRepo.findByEisProgramIdAndEmissionsReportId(eisProgramId, emissionsReportId)
+        return facSiteRepo.findByEmissionsReportId(emissionsReportId)
             .stream()
             .findFirst()
             .map(facilitySiteMapper::toDto)

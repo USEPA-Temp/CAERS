@@ -48,6 +48,13 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
                 .orElse(null);
     }
 
+    public MasterFacilityRecordDto findByEisProgramId(String eisProgramId) {
+
+        return mfrRepo.findByEisProgramId(eisProgramId)
+                .map(this.mapper::toDto)
+                .orElse(null);
+    }
+
     public List<MasterFacilityRecordDto> findByProgramSystemCode(String programSystemCode) {
 
         List<MasterFacilityRecord> entities = this.mfrRepo.findByProgramSystemCodeCode(programSystemCode);

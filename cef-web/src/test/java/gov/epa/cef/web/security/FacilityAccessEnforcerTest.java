@@ -37,10 +37,10 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = Test.None.class /* no exception expected */)
     public void enforceEntities_Authorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(2L)).thenReturn(Optional.of(2L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceEntities(Arrays.asList(2L, 4L), EmissionsReportRepository.class);
     }
@@ -48,11 +48,11 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = FacilityAccessException.class)
     public void enforceEntities_NotAuthorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
-        when(programIdRetriever.retrieveEisProgramIdById(5L)).thenReturn(Optional.of("5"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(2L)).thenReturn(Optional.of(2L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(5L)).thenReturn(Optional.of(5L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceEntities(Arrays.asList(2L, 4L, 5L), ReportingPeriodRepository.class);
     }
@@ -60,11 +60,11 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = NotExistException.class)
     public void enforceEntities_NotExist() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
-        when(programIdRetriever.retrieveEisProgramIdById(6L)).thenReturn(Optional.empty());
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(2L)).thenReturn(Optional.of(2L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(6L)).thenReturn(Optional.empty());
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceEntities(Arrays.asList(2L, 4L, 6L), EmissionRepository.class);
     }
@@ -72,9 +72,9 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = Test.None.class)
     public void enforceEntity_Authorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceEntity(4L, ReleasePointRepository.class);
     }
@@ -82,9 +82,9 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = FacilityAccessException.class)
     public void enforceEntity_NotAuthorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(5L)).thenReturn(Optional.of("5"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(5L)).thenReturn(Optional.of(5L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceEntity(5L, EmissionsUnitRepository.class);
     }
@@ -92,9 +92,9 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = NotExistException.class)
     public void enforceEntity_NotExist() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(6L)).thenReturn(Optional.empty());
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(6L)).thenReturn(Optional.empty());
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceEntity(6L, ControlRepository.class);
     }
@@ -103,9 +103,9 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = Test.None.class)
     public void enforceFacilitySite_Authorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceFacilitySite(4L);
     }
@@ -113,9 +113,9 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = FacilityAccessException.class)
     public void enforceFacilitySite_NotAuthorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(5L)).thenReturn(Optional.of("5"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(5L)).thenReturn(Optional.of(5L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceFacilitySite(5L);
     }
@@ -123,9 +123,9 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = NotExistException.class)
     public void enforceFacilitySite_NotExist() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(6L)).thenReturn(Optional.empty());
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(6L)).thenReturn(Optional.empty());
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceFacilitySite(6L);
     }
@@ -133,10 +133,10 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = Test.None.class)
     public void enforceFacilitySites_Authorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(2L)).thenReturn(Optional.of(2L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceFacilitySites(Arrays.asList(2L, 4L));
     }
@@ -144,11 +144,11 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = FacilityAccessException.class)
     public void enforceFacilitySites_NotAuthorized() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
-        when(programIdRetriever.retrieveEisProgramIdById(5L)).thenReturn(Optional.of("5"));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(2L)).thenReturn(Optional.of(2L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(5L)).thenReturn(Optional.of(5L));
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceFacilitySites(Arrays.asList(2L, 4L, 5L));
     }
@@ -156,11 +156,11 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = NotExistException.class)
     public void enforceFacilitySites_NotExist() {
 
-        when(programIdRetriever.retrieveEisProgramIdById(2L)).thenReturn(Optional.of("2"));
-        when(programIdRetriever.retrieveEisProgramIdById(4L)).thenReturn(Optional.of("4"));
-        when(programIdRetriever.retrieveEisProgramIdById(6L)).thenReturn(Optional.empty());
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(2L)).thenReturn(Optional.of(2L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(4L)).thenReturn(Optional.of(4L));
+        when(programIdRetriever.retrieveMasterFacilityRecordIdById(6L)).thenReturn(Optional.empty());
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
         createEnforcer(authorized).enforceFacilitySites(Arrays.asList(2L, 4L, 6L));
     }
@@ -168,42 +168,42 @@ public class FacilityAccessEnforcerTest extends BaseSecurityTest {
     @Test(expected = Test.None.class)
     public void enforceProgramId_Authorized() {
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
-        createEnforcer(authorized).enforceProgramId("4");
+        createEnforcer(authorized).enforceMasterId(4L);
     }
 
     @Test(expected = FacilityAccessException.class)
     public void enforceProgramId_NotAuthorized() {
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
 
-        createEnforcer(authorized).enforceProgramId("5");
+        createEnforcer(authorized).enforceMasterId(5L);
     }
 
     @Test(expected = Test.None.class)
     public void enforceProgramIds_Authorized() {
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
-        Set<String> goodcheck = Sets.newHashSet("2", "4");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
+        Set<Long> goodcheck = Sets.newHashSet(2L, 4L);
 
-        createEnforcer(authorized).enforceProgramIds(goodcheck);
+        createEnforcer(authorized).enforceMasterIds(goodcheck);
     }
 
     @Test(expected = FacilityAccessException.class)
     public void enforceProgramIds_NotAuthorized() {
 
-        Set<String> authorized = Sets.newHashSet("1", "2", "3", "4");
-        Set<String> badcheck = Sets.newHashSet("2", "4", "5", "6", "7");
+        Set<Long> authorized = Sets.newHashSet(1L, 2L, 3L, 4L);
+        Set<Long> badcheck = Sets.newHashSet(2L, 4L, 5L, 6L, 7L);
 
-        createEnforcer(authorized).enforceProgramIds(badcheck);
+        createEnforcer(authorized).enforceMasterIds(badcheck);
     }
 
-    private FacilityAccessEnforcerImpl createEnforcer(Collection<String> programIds) {
+    private FacilityAccessEnforcerImpl createEnforcer(Collection<Long> masterIds) {
 
         when(this.programIdRepoLocator.getProgramIdRepository(any()))
             .thenReturn(this.programIdRetriever);
 
-        return new FacilityAccessEnforcerImpl(this.programIdRepoLocator, programIds);
+        return new FacilityAccessEnforcerImpl(this.programIdRepoLocator, masterIds);
     }
 }

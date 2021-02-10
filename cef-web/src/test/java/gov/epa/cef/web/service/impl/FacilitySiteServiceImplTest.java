@@ -54,8 +54,8 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
         List<FacilitySite> testSiteList = new ArrayList<FacilitySite>();
         testSiteList.add(testSite);
         List<FacilitySite> nullSiteList = null;
-        when(facSiteRepo.findByEisProgramIdAndEmissionsReportId("XXXX", 1L)).thenReturn(testSiteList);
-        when(facSiteRepo.findByEisProgramIdAndEmissionsReportId("XXXX", 2L)).thenReturn(new ArrayList<>());
+        when(facSiteRepo.findByEmissionsReportId(1L)).thenReturn(testSiteList);
+        when(facSiteRepo.findByEmissionsReportId(2L)).thenReturn(new ArrayList<>());
         when(facSiteRepo.findByStateCode("GA")).thenReturn(testSiteList);
         when(facSiteRepo.findByStateCode("AK")).thenReturn(nullSiteList);
         when(facilitySiteMapper.toDtoList(nullSiteList)).thenReturn(null);
@@ -65,14 +65,14 @@ public class FacilitySiteServiceImplTest extends BaseServiceTest {
     @Test
     public void retrieveByEisProgramIdAndReportId_Should_Return_FacilitySiteObject_When_FacilitySiteExists() {
 
-        FacilitySiteDto facilitySite = facilitySiteServiceImpl.findByEisProgramIdAndReportId("XXXX", 1L);
+        FacilitySiteDto facilitySite = facilitySiteServiceImpl.findByReportId(1L);
         assertNotEquals(null, facilitySite);
     }
 
     @Test
     public void retrieveByEisProgramIdAndReportId_Should_Return_Null_When_FacilitySiteDoesNotExist() {
 
-        FacilitySiteDto facilitySite = facilitySiteServiceImpl.findByEisProgramIdAndReportId("XXXX", 2L);
+        FacilitySiteDto facilitySite = facilitySiteServiceImpl.findByReportId(2L);
         assertEquals(null, facilitySite);
     }
 

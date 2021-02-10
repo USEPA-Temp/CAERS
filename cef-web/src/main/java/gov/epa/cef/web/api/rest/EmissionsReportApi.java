@@ -64,7 +64,7 @@ public class EmissionsReportApi {
     private final EmissionsReportService emissionsReportService;
 
     private final EmissionsReportStatusService emissionsReportStatusService;
-    
+
     private final EmissionsReportExportService exportService;
 
     private final FacilitySiteService facilitySiteService;
@@ -143,17 +143,17 @@ public class EmissionsReportApi {
      * @param reportDto
      * @return
      */
-    @PostMapping(value = "/facility/{facilityEisProgramId}",
+    @PostMapping(value = "/facility/{masterFacilityRecordId}",
         consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmissionsReportDto> create(
-        @NotNull @PathVariable String facilityEisProgramId,
+        @NotNull @PathVariable Long masterFacilityRecordId,
         @NotBlank @RequestPart("workbook") MultipartFile workbook,
         @NotNull @RequestPart("metadata") EmissionsReportStarterDto reportDto) {
 
-        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
+        this.securityService.facilityEnforcer().enforceMasterId(masterFacilityRecordId);
 
-        reportDto.setEisProgramId(facilityEisProgramId);
+        reportDto.setMasterFacilityRecordId(masterFacilityRecordId);
 
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
@@ -197,15 +197,15 @@ public class EmissionsReportApi {
      * @param reportDto
      * @return
      */
-    @PostMapping(value = "/facility/{facilityEisProgramId}",
+    @PostMapping(value = "/facility/{masterFacilityRecordId}",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmissionsReportDto> create(@NotNull @PathVariable String facilityEisProgramId,
+    public ResponseEntity<EmissionsReportDto> create(@NotNull @PathVariable Long masterFacilityRecordId,
                                                      @NotNull @RequestBody EmissionsReportStarterDto reportDto) {
 
-        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
+        this.securityService.facilityEnforcer().enforceMasterId(masterFacilityRecordId);
 
-        reportDto.setEisProgramId(facilityEisProgramId);
+        reportDto.setMasterFacilityRecordId(masterFacilityRecordId);
 
         if (reportDto.getYear() == null) {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Reporting Year must be set.");
@@ -285,7 +285,7 @@ public class EmissionsReportApi {
         this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
         EmissionsReportDto report = emissionsReportService.findById(reportId);
-        FacilitySiteDto facility = facilitySiteService.findByEisProgramIdAndReportId(report.getEisProgramId(), reportId);
+        FacilitySiteDto facility = facilitySiteService.findByReportId(reportId);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -337,13 +337,13 @@ public class EmissionsReportApi {
      * @param facilityEisProgramId {@link ProgramFacility}'s programId
      * @return
      */
-    @GetMapping(value = "/facility/{facilityEisProgramId}/current")
+    @GetMapping(value = "/facility/{masterFacilityRecordId}/current")
     public ResponseEntity<EmissionsReportDto> retrieveCurrentReportForFacility(
-        @NotNull @PathVariable String facilityEisProgramId) {
+        @NotNull @PathVariable Long masterFacilityRecordId) {
 
-        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
+        this.securityService.facilityEnforcer().enforceMasterId(masterFacilityRecordId);
 
-        EmissionsReportDto result = emissionsReportService.findMostRecentByFacilityEisProgramId(facilityEisProgramId);
+        EmissionsReportDto result = emissionsReportService.findMostRecentByMasterFacilityRecordId(masterFacilityRecordId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -370,14 +370,14 @@ public class EmissionsReportApi {
      * @param facilityEisProgramId {@link ProgramFacility}'s programId
      * @return
      */
-    @GetMapping(value = "/facility/{facilityEisProgramId}")
+    @GetMapping(value = "/facility/{masterFacilityRecordId}")
     public ResponseEntity<List<EmissionsReportDto>> retrieveReportsForFacility(
-        @NotNull @PathVariable String facilityEisProgramId) {
+        @NotNull @PathVariable Long masterFacilityRecordId) {
 
-        this.securityService.facilityEnforcer().enforceProgramId(facilityEisProgramId);
+        this.securityService.facilityEnforcer().enforceMasterId(masterFacilityRecordId);
 
         List<EmissionsReportDto> result =
-            emissionsReportService.findByFacilityEisProgramId(facilityEisProgramId, true);
+            emissionsReportService.findByMasterFacilityRecordId(masterFacilityRecordId, true);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -448,11 +448,11 @@ public class EmissionsReportApi {
 
         EmissionsReportDto result;
 
-        String facilityEisProgramId = reportDto.getEisProgramId();
+        Long masterFacilityRecordId = reportDto.getMasterFacilityRecordId();
 
         switch (reportDto.getSource()) {
             case previous:
-                result = this.emissionsReportService.createEmissionReportCopy(facilityEisProgramId, reportDto.getYear());
+                result = this.emissionsReportService.createEmissionReportCopy(masterFacilityRecordId, reportDto.getYear());
                 break;
             case fromScratch:
                 result = this.emissionsReportService.createEmissionReport(reportDto);

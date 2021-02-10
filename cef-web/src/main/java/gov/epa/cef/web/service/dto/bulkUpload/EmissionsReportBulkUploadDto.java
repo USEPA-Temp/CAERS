@@ -9,6 +9,7 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    private Long masterFacilityRecordId;
     private String frsFacilityId;
     private String eisProgramId;
     private String altSiteIdentifier;
@@ -39,6 +40,13 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     }
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getMasterFacilityRecordId() {
+        return masterFacilityRecordId;
+    }
+    public void setMasterFacilityRecordId(Long masterFacilityId) {
+        this.masterFacilityRecordId = masterFacilityId;
     }
 
     public String getFrsFacilityId() {

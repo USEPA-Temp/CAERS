@@ -13,7 +13,7 @@ export class MasterFacilityRecordService {
 
     constructor(private http: HttpClient) { }
 
-    getRecord(recordId: string): Observable<MasterFacilityRecord> {
+    getRecord(recordId: number): Observable<MasterFacilityRecord> {
         const url = `${this.baseUrl}/${recordId}`;
         return this.http.get<MasterFacilityRecord>(url);
     }
@@ -28,8 +28,8 @@ export class MasterFacilityRecordService {
         return this.http.post<MasterFacilityRecord[]>(url, criteria);
     }
 
-    getMyRecords(): Observable<MasterFacilityRecord[]> {
-        const url = `${this.baseUrl}/my`;
+    getMyProgramRecords(): Observable<MasterFacilityRecord[]> {
+        const url = `${this.baseUrl}/program/my`;
         return this.http.get<MasterFacilityRecord[]>(url);
     }
 

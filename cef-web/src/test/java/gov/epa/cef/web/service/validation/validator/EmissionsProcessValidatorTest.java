@@ -28,6 +28,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.Pollutant;
@@ -116,6 +117,8 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       when(aircraftEngCodeRepo.findById("1850")).thenReturn(Optional.of(aircraft2));
       
       List<EmissionsReport> erList = new ArrayList<EmissionsReport>();
+      MasterFacilityRecord mfr = new MasterFacilityRecord();
+      mfr.setId(1L);
       EmissionsReport er1 = new EmissionsReport();
       EmissionsReport er2 = new EmissionsReport();
       er1.setId(1L);
@@ -124,6 +127,8 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       er2.setYear((short) 2020);
       er1.setEisProgramId("1");
       er2.setEisProgramId("1");
+      er1.setMasterFacilityRecord(mfr);
+      er2.setMasterFacilityRecord(mfr);
       erList.add(er1);
       erList.add(er2);
       
@@ -139,9 +144,9 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       eList.add(previousE1);
       eList.add(previousE2);
 	    
-      when(reportRepo.findByEisProgramId("1")).thenReturn(erList);
+      when(reportRepo.findByMasterFacilityRecordId(1L)).thenReturn(erList);
       when(processRepo.retrieveByIdentifierParentFacilityYear(
-      		"Boiler 001","test_unit","1",(short) 2018)).thenReturn(Collections.singletonList(p1));
+      		"Boiler 001","test_unit",1L,(short) 2018)).thenReturn(Collections.singletonList(p1));
       when(emissionRepo.findAllByProcessIdReportId(2L,1L)).thenReturn(eList);
       
     }
@@ -470,10 +475,14 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(1L);
+        
         EmissionsReport report = new EmissionsReport();
         report.setYear(new Short("2019"));
         report.setId(3L);
         report.setEisProgramId("1");
+        report.setMasterFacilityRecord(mfr);
         
         FacilitySite facility = new FacilitySite();
         facility.setId(1L);

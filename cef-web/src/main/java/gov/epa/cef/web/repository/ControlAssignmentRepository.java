@@ -41,7 +41,11 @@ public interface ControlAssignmentRepository extends CrudRepository<ControlAssig
     * @return EIS Program ID
     */
     @Cacheable(value = CacheName.ControlAssignmentsProgramIds)
-    @Query("select fs.eisProgramId from ControlAssignment ca join ca.controlPath cp join cp.facilitySite fs where ca.id = :id")
+    @Query("select mfr.eisProgramId from ControlAssignment ca join ca.controlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where ca.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+    
+    @Cacheable(value = CacheName.ControlAssignmentsMasterIds)
+    @Query("select mfr.id from ControlAssignment ca join ca.controlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where ca.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
     
 }

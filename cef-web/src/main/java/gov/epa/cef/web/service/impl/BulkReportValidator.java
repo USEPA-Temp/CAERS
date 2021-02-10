@@ -204,7 +204,7 @@ public class BulkReportValidator {
 
             String blank = ":BLANK:";
 
-            if (report.getFrsFacilityId().equals(facilitySite.getFrsFacilityId()) == false) {
+            if (Strings.emptyToNull(report.getFrsFacilityId()) != null && report.getFrsFacilityId().equals(facilitySite.getFrsFacilityId()) == false) {
 
                 String val = MoreObjects.firstNonNull(Strings.emptyToNull(facilitySite.getFrsFacilityId()), blank);
                 String msg = String.format("The FRS Facility ID '%s' indicated on the Facility Information tab does not match the FRS id '%s' for the facility for which you are attempting to upload a CAERS report.",

@@ -18,8 +18,16 @@ public interface OperatingDetailRepository extends CrudRepository<OperatingDetai
      * @return EIS Program ID
      */
     @Cacheable(value = CacheName.OperatingDetailProgramIds)
-    @Query("select fs.eisProgramId from OperatingDetail od join od.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs where od.id = :id")
+    @Query("select mfr.eisProgramId "
+            + "from OperatingDetail od join od.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs "
+            + "join fs.emissionsReport r join r.masterFacilityRecord mfr where od.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    @Cacheable(value = CacheName.OperatingDetailMasterIds)
+    @Query("select mfr.id "
+            + "from OperatingDetail od join od.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs "
+            + "join fs.emissionsReport r join r.masterFacilityRecord mfr where od.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for an Operating Detail

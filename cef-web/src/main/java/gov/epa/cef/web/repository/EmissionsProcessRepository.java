@@ -17,17 +17,17 @@ public interface EmissionsProcessRepository extends CrudRepository<EmissionsProc
     List<EmissionsProcess> findByEmissionsUnitIdOrderByEmissionsProcessIdentifier(Long emissionsUnitId);
 
     /**
-     * Find Emissions Process with the specified identifier, parent identifier, EIS program id, and year
+     * Find Emissions Process with the specified identifier, parent identifier, master facility record id, and year
      * @param identifier
      * @param parentIdentifier
-     * @param eisProgramId
+     * @param mfrId
      * @param year
      * @return
      */
-    @Query("select ep from EmissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r "
-            + "where ep.emissionsProcessIdentifier = :identifier and eu.unitIdentifier = :parentIdentifier and fs.eisProgramId = :eisProgramId and r.year = :year")
+    @Query("select ep from EmissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr "
+            + "where ep.emissionsProcessIdentifier = :identifier and eu.unitIdentifier = :parentIdentifier and mfr.id = :mfrId and r.year = :year")
     List<EmissionsProcess> retrieveByIdentifierParentFacilityYear(@Param("identifier") String identifier, @Param("parentIdentifier") String parentIdentifier, 
-                                                                      @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
+                                                                      @Param("mfrId") Long mfrId, @Param("year") Short year);
 
     /**
      *
@@ -35,8 +35,12 @@ public interface EmissionsProcessRepository extends CrudRepository<EmissionsProc
      * @return EIS Program ID
      */
     @Cacheable(value = CacheName.ProcessProgramIds)
-    @Query("select fs.eisProgramId from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs where p.id = :id")
+    @Query("select mfr.eisProgramId from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where p.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    @Cacheable(value = CacheName.ProcessMasterIds)
+    @Query("select mfr.id from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where p.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for an Emissions Process

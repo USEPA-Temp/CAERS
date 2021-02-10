@@ -50,8 +50,12 @@ public interface ControlPathRepository extends CrudRepository<ControlPath, Long>
      * @return EIS Program ID
      */
 	@Cacheable(value = CacheName.ControlPathProgramIds)
-    @Query("select fs.eisProgramId from ControlPath cp join cp.facilitySite fs where cp.id = :id")
+    @Query("select mfr.eisProgramId from ControlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where cp.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+	@Cacheable(value = CacheName.ControlPathMasterIds)
+    @Query("select mfr.id from ControlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where cp.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for a Control Path

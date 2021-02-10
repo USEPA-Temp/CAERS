@@ -49,6 +49,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.BulkReportValidationException;
 import gov.epa.cef.web.exception.CalculationException;
+import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
@@ -212,16 +213,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         EmissionsReport emissionsReport = toEmissionsReport().apply(bulkEmissionsReport);
         
-        // TODO: remove once MFR is fully implemented
-        // creates an MFR if one doesn't already exist, should be removed once associations are managed locally
-        if (emissionsReport.getMasterFacilityRecord() == null) {
-            emissionsReport.setMasterFacilityRecord(mfrMapper.fromFacilitySite(emissionsReport.getFacilitySites().get(0)));
-            mfrRepo.save(emissionsReport.getMasterFacilityRecord());
-        }
-        
         // if a previous report already exists, then update that existing report with the data from this uploaded file
         // and reset the validation, report, and CROMERR status for the report
-        Optional<EmissionsReport> previousReport = this.emissionsReportService.retrieveByEisProgramIdAndYear(bulkEmissionsReport.getEisProgramId(), bulkEmissionsReport.getYear());
+        Optional<EmissionsReport> previousReport = this.emissionsReportService.retrieveByMasterFacilityRecordIdAndYear(bulkEmissionsReport.getMasterFacilityRecordId(), 
+                                                                                                                       bulkEmissionsReport.getYear());
         if (previousReport.isPresent()) {
         	
         	//remove any previous facilitySites from the report (the main report data)
@@ -722,10 +717,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (bulkEmissionsReport.getValidationStatus() != null) {
             emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));
         }
-        emissionsReport.setMasterFacilityRecord(mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId()).orElse(null));
-        // TODO: switch to this once MFR is fully implemented
-//        emissionsReport.setMasterFacilityRecord(mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId())
-//                .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getEisProgramId())));
+        emissionsReport.setMasterFacilityRecord(mfrRepo.findById(bulkEmissionsReport.getMasterFacilityRecordId())
+                .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getMasterFacilityRecordId())));
 
         return emissionsReport;
     }
@@ -995,6 +988,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
        return parseJsonNode(true).andThen(result -> {
 
            result.setProgramSystemCode(metadata.getProgramSystemCode());
+           result.setMasterFacilityRecordId(metadata.getMasterFacilityRecordId());
            result.setEisProgramId(metadata.getEisProgramId());
            result.setFrsFacilityId(metadata.getFrsFacilityId());
            result.setAltSiteIdentifier(metadata.getStateFacilityId());

@@ -39,8 +39,8 @@ public class EmissionsReportApiTest extends BaseApiTest {
         emissionsReportDto=new EmissionsReportDto();
         emissionsReportDtoList=new ArrayList<>();
         when(emissionsReportService.findById(1L)).thenReturn(emissionsReportDto);
-        when(emissionsReportService.findByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDtoList);
-        when(emissionsReportService.findMostRecentByFacilityEisProgramId("p-id")).thenReturn(emissionsReportDto);
+        when(emissionsReportService.findByMasterFacilityRecordId(1234L)).thenReturn(emissionsReportDtoList);
+        when(emissionsReportService.findMostRecentByMasterFacilityRecordId(1234L)).thenReturn(emissionsReportDto);
 
         when(securityService.facilityEnforcer()).thenReturn(new ReviewerFacilityAccessEnforcerImpl());
     }
@@ -54,14 +54,14 @@ public class EmissionsReportApiTest extends BaseApiTest {
 
     @Test
     public void retrieveReportsForFacility_Should_ReturnEmissionsReportListWithStatusOk_When_ValidFacilityProgramIdPassed() {
-        ResponseEntity<List<EmissionsReportDto>> result=emissionsReportApi.retrieveReportsForFacility("p-id");
+        ResponseEntity<List<EmissionsReportDto>> result=emissionsReportApi.retrieveReportsForFacility(1234L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(emissionsReportDtoList, result.getBody());
     }
 
     @Test
     public void retrieveCurrentReportForFacility_Should_ReturnCurrentEmissionsReportWithStatusOk_When_ValidFacilityProgramIdPassed() {
-        ResponseEntity<EmissionsReportDto> result=emissionsReportApi.retrieveCurrentReportForFacility("p-id");
+        ResponseEntity<EmissionsReportDto> result=emissionsReportApi.retrieveCurrentReportForFacility(1234L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(emissionsReportDto, result.getBody());
     }

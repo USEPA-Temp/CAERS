@@ -78,7 +78,7 @@ export class ReportSummaryComponent implements OnInit {
                                     this.userRole = user.role;
                                     if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
                                         initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
-                                            this.facilitySite.emissionsReport.id, this.facilitySite.eisProgramId, this.toastr,
+                                            this.facilitySite.emissionsReport.id, this.facilitySite.emissionsReport.masterFacilityRecordId, this.toastr,
                                             this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted)
                                     }
                             });
@@ -110,7 +110,7 @@ export class ReportSummaryComponent implements OnInit {
 
         const reportId = this.facilitySite.emissionsReport.id;
 
-        this.router.navigateByUrl(`/facility/${this.facilitySite.eisProgramId}/report/${reportId}/validation`);
+        this.router.navigateByUrl(`/facility/${this.facilitySite.emissionsReport.masterFacilityRecordId}/report/${reportId}/validation`);
     }
 
     reopenReport() {
