@@ -138,7 +138,7 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
         Long mfrId = processRepo.retrieveMasterFacilityRecordIdById(id).orElse(null);
 
      // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findByMasterFacilityRecordIdAndYear(mfrId,
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
                 process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
 
         // check if the emissions process was reported last year
