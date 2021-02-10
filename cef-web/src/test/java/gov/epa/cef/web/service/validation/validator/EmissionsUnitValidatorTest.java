@@ -61,9 +61,15 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
 		scc2.setCode("10200301");
 		scc2.setFuelUseRequired(false);
 		sccList.add(scc2);
+		
+		PointSourceSccCode scc3 = new PointSourceSccCode();
+		scc3.setCode("30503506");
+		scc3.setFuelUseRequired(false);
+		sccList.add(scc3);
 
     	when(sccRepo.findById("10200302")).thenReturn(Optional.of(scc1));
     	when(sccRepo.findById("10200301")).thenReturn(Optional.of(scc2));
+    	when(sccRepo.findById("30503506")).thenReturn(Optional.of(scc3));
     }
 
     @Test
@@ -290,7 +296,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertNull(cefContext.result.getErrors());
     }
 
-//    @Test
+    @Test
     public void duplicateProcessIdentifierFailTest() {
     	
     	CefValidatorContext cefContext = createContext();
@@ -304,7 +310,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     	ep1.setEmissionsUnit(testData);
     	ep2.setEmissionsUnit(testData);
     	ep1.setSccCode("30503506");
-    	ep2.setSccCode("30503505");
+    	ep2.setSccCode("10200301");
     	testData.getEmissionsProcesses().add(ep1);
     	testData.getEmissionsProcesses().add(ep2);
     	
@@ -512,7 +518,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
 		rperiod1.setHeatContentValue(BigDecimal.valueOf(100));
         
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PERIOD_FUEL_USE_VALUES.value()) && errorMap.get(ValidationField.PERIOD_FUEL_USE_VALUES.value()).size() == 1);
@@ -572,7 +578,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         testData.getEmissionsProcesses().add(ep);
         
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PERIOD_HEAT_CONTENT_VALUES.value()) && errorMap.get(ValidationField.PERIOD_HEAT_CONTENT_VALUES.value()).size() == 1);
