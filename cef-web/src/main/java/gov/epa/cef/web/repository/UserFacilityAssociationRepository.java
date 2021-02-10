@@ -26,8 +26,11 @@ public interface UserFacilityAssociationRepository extends CrudRepository<UserFa
     @Query("select ufa from UserFacilityAssociation ufa join ufa.masterFacilityRecord mfr join mfr.programSystemCode psc where psc.code = :code and ufa.approved = :approved")
     List<UserFacilityAssociation> findByProgramSystemCodeAndApproved(@Param("code") String code, @Param("approved") boolean approved);
 
-    @Cacheable(value = CacheName.UserMasterFacilityIds)
     @Query("select mfr.eisProgramId from UserFacilityAssociation ufa join ufa.masterFacilityRecord mfr where ufa.userRoleId = :userRoleId and ufa.approved = true")
-    List<String> retrieveMasterFacilityRecordIds(@Param("userRoleId") Long userRoleId);
+    List<String> retrieveMasterFacilityRecordProgramIds(@Param("userRoleId") Long userRoleId);
+
+    @Cacheable(value = CacheName.UserMasterFacilityIds)
+    @Query("select mfr.id from UserFacilityAssociation ufa join ufa.masterFacilityRecord mfr where ufa.userRoleId = :userRoleId and ufa.approved = true")
+    List<Long> retrieveMasterFacilityRecordIds(@Param("userRoleId") Long userRoleId);
 
 }

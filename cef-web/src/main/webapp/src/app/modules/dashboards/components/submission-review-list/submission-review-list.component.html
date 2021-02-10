@@ -26,7 +26,7 @@
         <td>
           <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)" [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'summary'">Summary</button>
           <button class="btn btn-primary btn-sm mr-1" 
-                [routerLink]="['/facility', submission.eisProgramId, 'report', submission.emissionsReportId, 'summary']"
+                [routerLink]="['/facility', submission.masterFacilityId, 'report', submission.emissionsReportId, 'summary']"
                 [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>
           <button class="btn btn-primary btn-sm" 
                 (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId, submission.reportStatus)"

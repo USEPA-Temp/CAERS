@@ -8,22 +8,22 @@ import { MasterFacilityRecordService } from 'src/app/core/services/master-facili
 })
 export class FacilityContextService {
   private facility$: Observable<MasterFacilityRecord>;
-  private programId: string;
+  private recordId: number;
 
   constructor(private mfrService: MasterFacilityRecordService) {
   }
 
-  getFacility(programId: string): Observable<MasterFacilityRecord> {
-    if (this.programId === programId) {
+  getFacility(recordId: number): Observable<MasterFacilityRecord> {
+    if (this.recordId === recordId) {
       return this.facility$;
     } else {
-      this.programId = programId;
+      this.recordId = recordId;
       this.fetchFacility();
       return this.facility$;
     }
   }
 
   private fetchFacility() {
-    this.facility$ = this.mfrService.getRecordByEisProgramId(this.programId);
+    this.facility$ = this.mfrService.getRecord(this.recordId);
   }
 }

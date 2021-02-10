@@ -54,7 +54,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             .subscribe((data: { facility: MasterFacilityRecord }) => {
                 this.facility = data.facility;
                 if (this.facility) {
-                    this.reportService.getFacilityReports(this.facility.eisProgramId)
+                    this.reportService.getFacilityReports(this.facility.id)
                     .subscribe(reports => {this.reports = reports.sort((a, b) => b.year - a.year);
                     });
                 }
@@ -97,7 +97,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalWindow.componentInstance.message = 'Please wait while we generate your new report.';
 
         const reportingYear = new Date().getFullYear() - 1;
-        this.reportService.createReportFromPreviousCopy(this.facility.eisProgramId, reportingYear)
+        this.reportService.createReportFromPreviousCopy(this.facility.id, reportingYear)
                 .subscribe(reportResp => {
                     if (reportResp.status === 204) {
                         // 204 No Content
@@ -107,7 +107,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                         this.lookupService.retrieveProgramSystemCodeByDescription(this.facility.programSystemCode?.description)
                         .subscribe(result => {
                             this.facilitySite.programSystemCode = result;
-                            this.reportService.createReportFromScratch(this.facility.eisProgramId, reportingYear)
+                            this.reportService.createReportFromScratch(this.facility.id, reportingYear)
                             .subscribe(reportResp => {
                                 modalWindow.dismiss();
                                 this.reportCompleted(reportResp.body);
@@ -130,33 +130,8 @@ export class EmissionsReportingDashboardComponent implements OnInit {
      */
     reportCompleted(newReport: EmissionsReport) {
 
-        this.router.navigateByUrl(`/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
+        this.router.navigateByUrl(`/facility/${newReport.masterFacilityRecordId}/report/${newReport.id}/summary`);
     }
-
-    // copyFacilitySiteFromCdxModel() {
-    //           Object.assign(this.facilitySite, this.facility);
-    //           this.facilitySite.emissionsReport = this.emissionsReport;
-    //           this.facilitySite.name = this.facility.name;
-    //           this.operatingFacilityStatusValues.forEach(opStatus => {
-    //               if (opStatus.code === OperatingStatus.OPERATING) {
-    //                   this.facilitySite.operatingStatusCode = opStatus;
-    //               }
-    //           });
-    //           this.facilitySite.streetAddress = this.facility.address;
-    //           this.facilitySite.stateCode = new FipsStateCode();
-    //           this.facilitySite.stateCode.uspsCode = this.facility.state;
-    //           this.facilitySite.statusYear = new Date().getFullYear();
-    //           this.facilitySite.frsFacilityId = this.facility.epaRegistryId;
-    //           this.facilitySite.postalCode = this.facility.zipCode;
-    //           this.facilitySite.mailingStreetAddress = this.facility.address;
-    //           this.facilitySite.mailingStateCode = new FipsStateCode();
-    //           this.facilitySite.mailingStateCode.uspsCode = this.facility.state;
-    //           this.facilitySite.mailingCity = this.facility.city;
-    //           this.facilitySite.mailingPostalCode = this.facility.zipCode;
-    //           this.facilitySite.altSiteIdentifier = this.facility.stateFacilityId;
-    //           this.facilitySite.eisProgramId = this.facility.programId;
-    // }
-
 
     onFailedToCreateCloseClick() {
 
@@ -170,7 +145,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             .subscribe((data: { facility: MasterFacilityRecord }) => {
                 this.facility = data.facility;
                 if (this.facility) {
-                    this.reportService.getFacilityReports(this.facility.eisProgramId)
+                    this.reportService.getFacilityReports(this.facility.id)
                     .subscribe(reports => {
                         this.reports = reports.sort((a, b) => b.year - a.year);
                     });
@@ -194,7 +169,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     downloadExcelTemplate(report: EmissionsReport) {
 
         let reportFacility: FacilitySite;
-        this.facilitySiteService.retrieveForReport(report.eisProgramId, report.id)
+        this.facilitySiteService.retrieveForReport(report.id)
         .subscribe(result => {
             reportFacility = result;
         });
@@ -228,7 +203,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
     resetReport(reportIds: number[], report) {
         this.reportService.resetReports(reportIds).subscribe(result => {
-            this.router.navigate(['/facility/' + report.eisProgramId + '/report/' + report.id + '/summary']);
+            this.router.navigate(['/facility/' + report.masterFacilityRecordId + '/report/' + report.id + '/summary']);
         });
 
     }

@@ -106,13 +106,13 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         List<EmissionsReport> emptyEmissionsReportList = new ArrayList<>();
         when(erRepo.findById(1L)).thenReturn(Optional.of(emissionsReport));
         when(erRepo.findById(2L)).thenReturn(Optional.empty());
-        when(erRepo.findByEisProgramId("XXXX")).thenReturn(emissionsReportList);
-        when(erRepo.findByEisProgramId("YYYY")).thenReturn(emptyReportList);
-        when(erRepo.findByEisProgramId("XXXX", new Sort(Sort.Direction.DESC, "year")))
+        when(erRepo.findByMasterFacilityRecordId(1L)).thenReturn(emissionsReportList);
+        when(erRepo.findByMasterFacilityRecordId(2L)).thenReturn(emptyReportList);
+        when(erRepo.findByMasterFacilityRecordId(1L, new Sort(Sort.Direction.DESC, "year")))
             .thenReturn(emissionsReportList);
-        when(erRepo.findByEisProgramId("ABC", new Sort(Sort.Direction.DESC, "year")))
+        when(erRepo.findByMasterFacilityRecordId(3L, new Sort(Sort.Direction.DESC, "year")))
             .thenReturn(previousEmissionsReportList);
-        when(erRepo.findByEisProgramId("DEF", new Sort(Sort.Direction.DESC, "year")))
+        when(erRepo.findByMasterFacilityRecordId(4L, new Sort(Sort.Direction.DESC, "year")))
             .thenReturn(emptyEmissionsReportList);
 
         when(erRepo.save(any())).then(AdditionalAnswers.returnsFirstArg());
@@ -156,7 +156,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void findByFacilityId_Should_Return_ReportList_WhenReportExist() {
-        Collection<EmissionsReportDto> emissionsReportList = emissionsReportServiceImpl.findByFacilityEisProgramId("XXXX");
+        Collection<EmissionsReportDto> emissionsReportList = emissionsReportServiceImpl.findByMasterFacilityRecordId(1L);
         assertEquals(emissionsReportDtoList, emissionsReportList);
     }
 
@@ -175,13 +175,13 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void findByFacilityId_Should_Return_Empty_WhenReportsDoNotExist() {
-        Collection<EmissionsReportDto> emissionsReportList = emissionsReportServiceImpl.findByFacilityEisProgramId("YYYY");
+        Collection<EmissionsReportDto> emissionsReportList = emissionsReportServiceImpl.findByMasterFacilityRecordId(2L);
         assertEquals(0, emissionsReportList.size());
     }
 
     @Test
     public void findMostRecentByFacilityEisProgramId_Should_ReturnTheLatestEmissionsReportForAFacility_WhenValidFacilityEisProgramIdPassed() {
-        EmissionsReportDto emissionsReport = emissionsReportServiceImpl.findMostRecentByFacilityEisProgramId("XXXX");
+        EmissionsReportDto emissionsReport = emissionsReportServiceImpl.findMostRecentByMasterFacilityRecordId(1L);
         assertNotEquals(null, emissionsReport);
     }
 
@@ -189,7 +189,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() {
     	EmissionsReport originalEmissionsReport = createHydratedEmissionsReport();
     	EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
-    	    "ABC", (short) 2020);
+    	    3L, (short) 2020);
     	assertEquals(ReportStatus.IN_PROGRESS.toString(), emissionsReportCopy.getStatus());
     	assertEquals(ValidationStatus.UNVALIDATED.toString(), emissionsReportCopy.getValidationStatus());
     	assertEquals("2020", emissionsReportCopy.getYear().toString());
@@ -199,7 +199,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
         EmissionsReportDto nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
-            "DEF", (short) 2020);
+            4L, (short) 2020);
 
         assertNull(nullEmissionsReportCopy);
     }

@@ -13,10 +13,9 @@ export class FacilitySiteResolverService implements Resolve<FacilitySite> {
   constructor(private facilitySiteContext: FacilitySiteContextService, private router: Router) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<FacilitySite> | Observable<never> {
-    const programId = route.paramMap.get('facilityId');
     const reportId = +route.paramMap.get('reportId');
 
-    return this.facilitySiteContext.getFacilitySite(programId, reportId).pipe(
+    return this.facilitySiteContext.getFacilitySite(reportId).pipe(
       take(1),
       mergeMap(facilitySite => {
         if (facilitySite) {

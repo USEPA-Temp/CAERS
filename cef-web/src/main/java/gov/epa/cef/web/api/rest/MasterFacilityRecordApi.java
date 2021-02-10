@@ -2,6 +2,7 @@ package gov.epa.cef.web.api.rest;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
@@ -45,15 +47,8 @@ public class MasterFacilityRecordApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/eisProgramId/{eisProgramId}")
-    public ResponseEntity<MasterFacilityRecordDto> retrieveRecordByEisProgramId(@NotNull @PathVariable String eisProgramId) {
-
-        MasterFacilityRecordDto result = this.mfrService.findByEisProgramId(eisProgramId);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @GetMapping(value = "/program/{programSystemCode}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForProgram(
         @NotNull @PathVariable String programSystemCode) {
 
@@ -73,6 +68,7 @@ public class MasterFacilityRecordApi {
     }
 
     @GetMapping(value = "/program/my")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentProgram() {
 
 //        this.securityService.facilityEnforcer().enforceProgramId(programSystemCode);

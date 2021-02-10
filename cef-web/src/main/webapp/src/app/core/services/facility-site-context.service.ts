@@ -8,16 +8,14 @@ import { Observable } from 'rxjs';
 })
 export class FacilitySiteContextService {
   private facilitySite$: Observable<FacilitySite>;
-  private programId: string;
   private reportId: number;
 
   constructor(private facilitySiteService: FacilitySiteService) { }
 
-  getFacilitySite(programId: string, reportId: number): Observable<FacilitySite> {
-    if (this.programId === programId && this.reportId === reportId) {
+  getFacilitySite(reportId: number): Observable<FacilitySite> {
+    if (this.reportId === reportId) {
       return this.facilitySite$;
     } else {
-      this.programId = programId;
       this.reportId = reportId;
       this.fetchFacilitySite();
       return this.facilitySite$;
@@ -25,7 +23,7 @@ export class FacilitySiteContextService {
   }
 
   private fetchFacilitySite() {
-    this.facilitySite$ = this.facilitySiteService.retrieveForReport(this.programId, this.reportId);
+    this.facilitySite$ = this.facilitySiteService.retrieveForReport(this.reportId);
   }
 
 }

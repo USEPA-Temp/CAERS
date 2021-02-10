@@ -17,7 +17,7 @@ public class ReviewerFacilityAccessEnforcerImpl implements FacilityAccessEnforce
     }
 
     @Override
-    public Collection<String> getAuthorizedProgramIds() {
+    public Collection<Long> getAuthorizedMasterIds() {
 
         return null;
     }
@@ -33,12 +33,12 @@ public class ReviewerFacilityAccessEnforcerImpl implements FacilityAccessEnforce
     }
 
     @Override
-    public void enforceProgramId(String id) {
-        //Reviewer should be able to access everything
+    public void enforceMasterId(Long id) {
+      //Reviewer should be able to access everything
     }
 
     @Override
-    public void enforceProgramIds(Collection<String> ids) {
-        //Reviewer should be able to access everything
+    public void enforceMasterIds(Collection<Long> ids) {
+      //Reviewer should be able to access everything
     }
 }

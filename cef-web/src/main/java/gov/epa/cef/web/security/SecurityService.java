@@ -102,7 +102,7 @@ public class SecurityService {
             return new ReviewerFacilityAccessEnforcerImpl();
         }
 
-        return new FacilityAccessEnforcerImpl(this.programIdRepoLocator, getCurrentUserFacilityProgramIds());
+        return new FacilityAccessEnforcerImpl(this.programIdRepoLocator, getCurrentUserMasterFacilityIds());
     }
 
     public ApplicationUser getCurrentApplicationUser() {
@@ -204,7 +204,7 @@ public class SecurityService {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities();
     }
 
-    private List<String> getCurrentUserFacilityProgramIds() {
+    private List<Long> getCurrentUserMasterFacilityIds() {
 
         return this.ufaRepo.retrieveMasterFacilityRecordIds(getCurrentApplicationUser().getUserRoleId());
     }
@@ -215,7 +215,7 @@ public class SecurityService {
         public GrantedAuthority apply(MasterFacilityRecord mfr) {
 
             return new SimpleGrantedAuthority(
-                String.format("%s%s", FACILITY_ROLE_PREFIX, mfr.getEisProgramId()));
+                String.format("%s%d", FACILITY_ROLE_PREFIX, mfr.getId()));
         }
     }
 }

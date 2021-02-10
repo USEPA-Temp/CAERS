@@ -13,7 +13,7 @@ export class FacilityResolverService implements Resolve<MasterFacilityRecord> {
   constructor(private facilityContext: FacilityContextService, private router: Router) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<MasterFacilityRecord> | Observable<never> {
-    const facilityId = route.paramMap.get('facilityId');
+    const facilityId = +route.paramMap.get('facilityId');
 
     return this.facilityContext.getFacility(facilityId).pipe(
       take(1),

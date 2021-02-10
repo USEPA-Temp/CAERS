@@ -125,7 +125,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		originalEmissionsReport = reportRepo.save(originalEmissionsReport);
 
 		// copy report
-		EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy("ABC", (short) 2020);
+		EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(9999991L, (short) 2020);
 
 		assertEquals(ReportStatus.IN_PROGRESS.toString(), emissionsReportCopy.getStatus());
 		assertEquals(ValidationStatus.UNVALIDATED.toString(), emissionsReportCopy.getValidationStatus());

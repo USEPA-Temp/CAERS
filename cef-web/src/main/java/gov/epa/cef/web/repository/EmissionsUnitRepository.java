@@ -20,14 +20,14 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
     List<EmissionsUnit> findByFacilitySiteIdOrderByUnitIdentifier(Long facilitySiteId);
 
     /**
-     * Find Emissions Units with the specified identifier, EIS program id, and year
+     * Find Emissions Units with the specified identifier, master facility record id, and year
      * @param identifier
-     * @param eisProgramId
+     * @param mfrId
      * @param year
      * @return
      */
-    @Query("select eu from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where eu.unitIdentifier = :identifier and fs.eisProgramId = :eisProgramId and r.year = :year")
-    List<EmissionsUnit> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
+    @Query("select eu from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where eu.unitIdentifier = :identifier and mfr.id = :mfrId and r.year = :year")
+    List<EmissionsUnit> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("mfrId") Long mfrId, @Param("year") Short year);
 
     /**
      *
@@ -35,8 +35,12 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
      * @return EIS Program ID
      */
     @Cacheable(value = CacheName.UnitProgramIds)
-    @Query("select fs.eisProgramId from EmissionsUnit eu join eu.facilitySite fs where eu.id = :id")
+    @Query("select mfr.eisProgramId from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where eu.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    @Cacheable(value = CacheName.UnitMasterIds)
+    @Query("select mfr.id from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where eu.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for an Emissions Unit 

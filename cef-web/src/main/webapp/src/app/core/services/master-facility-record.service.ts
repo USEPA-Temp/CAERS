@@ -18,11 +18,6 @@ export class MasterFacilityRecordService {
         return this.http.get<MasterFacilityRecord>(url);
     }
 
-    getRecordByEisProgramId(eisProgramId: string): Observable<MasterFacilityRecord> {
-        const url = `${this.baseUrl}/eisProgramId/${eisProgramId}`;
-        return this.http.get<MasterFacilityRecord>(url);
-    }
-
     getProgramRecords(programCode: string): Observable<MasterFacilityRecord[]> {
         const url = `${this.baseUrl}/program/${programCode}`;
         return this.http.get<MasterFacilityRecord[]>(url);

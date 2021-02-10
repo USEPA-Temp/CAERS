@@ -168,7 +168,7 @@ export class ReportBulkUploadComponent implements OnInit {
                 const newReport = event.body;
 
                 return this.router.navigateByUrl(
-                    `/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
+                    `/facility/${newReport.masterFacilityRecordId}/report/${newReport.id}/summary`);
 
             default:
 

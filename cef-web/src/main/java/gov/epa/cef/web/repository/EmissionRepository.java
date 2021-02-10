@@ -57,8 +57,16 @@ public interface EmissionRepository extends CrudRepository<Emission, Long>, Prog
      * @return EIS Program ID
      */
     @Cacheable(value = CacheName.EmissionProgramIds)
-    @Query("select fs.eisProgramId from Emission e join e.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs where e.id = :id")
+    @Query("select mfr.eisProgramId "
+            + "from Emission e join e.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs "
+            + "join fs.emissionsReport r join r.masterFacilityRecord mfr where e.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    @Cacheable(value = CacheName.EmissionMasterIds)
+    @Query("select mfr.id "
+            + "from Emission e join e.reportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs "
+            + "join fs.emissionsReport r join r.masterFacilityRecord mfr where e.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
     * Retrieve Emissions Report id for an Emission

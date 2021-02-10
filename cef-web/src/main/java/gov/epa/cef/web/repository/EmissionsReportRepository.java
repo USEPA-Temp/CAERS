@@ -40,6 +40,13 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @return
      */
     List<EmissionsReport> findByEisProgramId(String eisProgramId);
+    
+    /**
+     * Find reports for a given masterFacilityRecordId
+     * @param id
+     * @return
+     */
+    List<EmissionsReport> findByMasterFacilityRecordId(Long id);
 
     /**
      * Find reports for a given eisProgramId  with the specified order
@@ -47,6 +54,8 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @return
      */
     List<EmissionsReport> findByEisProgramId(String eisProgramId, Sort sort);
+
+    List<EmissionsReport> findByMasterFacilityRecordId(Long id, Sort sort);
 
 
     
@@ -61,19 +70,19 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
 
     /**
      *
-     * @param eisProgramId
+     * @param masterFacilityRecordId
      * @param year
      * @return
      */
-    Optional<EmissionsReport> findByEisProgramIdAndYear(@NotBlank String eisProgramId, @NotNull Short year);
+    Optional<EmissionsReport> findByMasterFacilityRecordIdAndYear(@NotNull Long masterFacilityRecordId, @NotNull Short year);
 
     /**
-     * Find the most recent report for the specified program id before the specified year
-     * @param eisProgramId
+     * Find the most recent report for the specified master facility record id before the specified year
+     * @param masterFacilityRecordId
      * @param year
      * @return
      */
-    Optional<EmissionsReport> findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(@NotBlank String eisProgramId, @NotNull Short year);
+    Optional<EmissionsReport> findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(@NotNull Long masterFacilityRecordId, @NotNull Short year);
 
 
     @Query("select r from EmissionsReport r where r.programSystemCode.code = :#{#crit.programSystemCode} and r.year = :#{#crit.reportingYear} and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED")
@@ -94,6 +103,10 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @return EIS Program ID
      */
     @Cacheable(value = CacheName.ReportProgramIds)
-    @Query("select r.eisProgramId from EmissionsReport r where r.id = :id")
+    @Query("select mfr.eisProgramId from EmissionsReport r join r.masterFacilityRecord mfr where r.id = :id")
     Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+    @Cacheable(value = CacheName.ReportMasterIds)
+    @Query("select mfr.id from EmissionsReport r join r.masterFacilityRecord mfr where r.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 }

@@ -21,7 +21,6 @@ export class CreateEmissionsUnitComponent implements OnInit {
   private infoComponent: EditEmissionUnitInfoPanelComponent;
 
   facilitySiteId: number;
-  eisProgramId: string;
   reportId: number;
 
   constructor(private emissionUnitService: EmissionUnitService,
@@ -33,14 +32,10 @@ export class CreateEmissionsUnitComponent implements OnInit {
   ngOnInit() {
       this.route.paramMap
       .subscribe(map => {
-        this.eisProgramId = map.get('facilityId');
-      });
-      this.route.paramMap
-      .subscribe(map => {
         this.reportId = parseInt(map.get('reportId'));
       });
 
-      this.facilitySiteService.retrieveForReport(this.eisProgramId, this.reportId)
+      this.facilitySiteService.retrieveForReport(this.reportId)
       .subscribe(result => {
         this.facilitySiteId = result.id;
       });
