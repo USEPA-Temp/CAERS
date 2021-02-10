@@ -52,6 +52,7 @@ public interface BulkUploadMapper {
     @Mapping(target = "reportingPeriods", ignore = true)
     @Mapping(target = "emissions", ignore = true)
     @Mapping(source="programSystemCode.code", target="programSystemCode")
+    @Mapping(source="masterFacilityRecord.id", target="masterFacilityRecordId")
     EmissionsReportBulkUploadDto emissionsReportToDto(EmissionsReport source);
 
     @Mapping(source="countyCode.countyCode", target="countyCode")
@@ -64,6 +65,7 @@ public interface BulkUploadMapper {
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
     @Mapping(source="programSystemCode.code", target="programSystemCode")
     @Mapping(source="tribalCode.code", target="tribalCode")
+    @Mapping(source="emissionsReport.masterFacilityRecord.id", target="masterFacilityRecordId")
     FacilitySiteBulkUploadDto facilitySiteToDto(FacilitySite source);
 
     List<FacilitySiteBulkUploadDto> facilitySiteToDtoList(List<FacilitySite> source);

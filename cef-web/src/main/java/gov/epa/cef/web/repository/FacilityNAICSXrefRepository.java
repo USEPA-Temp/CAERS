@@ -21,15 +21,6 @@ public interface FacilityNAICSXrefRepository extends CrudRepository<FacilityNAIC
      */
     List<FacilityNAICSXref> findByFacilitySiteId(Long facilitySiteId);
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.FacilityNAICSProgramIds)
-    @Query("select mfr.eisProgramId from FacilityNAICSXref fn join fn.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where fn.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
-
     @Cacheable(value = CacheName.FacilityNAICSMasterIds)
     @Query("select mfr.id from FacilityNAICSXref fn join fn.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where fn.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);

@@ -18,6 +18,7 @@ import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -204,16 +205,16 @@ public class BulkReportValidator {
 
             String blank = ":BLANK:";
 
-            if (Strings.emptyToNull(report.getFrsFacilityId()) != null && report.getFrsFacilityId().equals(facilitySite.getFrsFacilityId()) == false) {
+            if (report.getMasterFacilityRecordId().equals(facilitySite.getMasterFacilityRecordId()) == false) {
 
-                String val = MoreObjects.firstNonNull(Strings.emptyToNull(facilitySite.getFrsFacilityId()), blank);
-                String msg = String.format("The FRS Facility ID '%s' indicated on the Facility Information tab does not match the FRS id '%s' for the facility for which you are attempting to upload a CAERS report.",
+                String val = Objects.toString(facilitySite.getMasterFacilityRecordId(), blank);
+                String msg = String.format("The Master Facility Record ID '%s' indicated on the Facility Information tab does not match the MFR id '%s' for the facility for which you are attempting to upload a CAERS report.",
                     val, report.getFrsFacilityId());
 
                 violations.add(new WorksheetError(facilitySite.getSheetName(), facilitySite.getRow(), msg));
             }
 
-            if (report.getEisProgramId().equals(facilitySite.getEisProgramId()) == false) {
+            if (Strings.emptyToNull(report.getEisProgramId()) != null && report.getEisProgramId().equals(facilitySite.getEisProgramId()) == false) {
 
                 String val = MoreObjects.firstNonNull(Strings.emptyToNull(facilitySite.getEisProgramId()), blank);
                 String msg = String.format("The EIS Program ID '%s' indicated on the Facility Information tab does not match the EIS Program ID '%s' for the facility for which you are attempting to upload a CAERS report.",

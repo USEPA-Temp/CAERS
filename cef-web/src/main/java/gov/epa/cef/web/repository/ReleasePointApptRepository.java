@@ -19,15 +19,6 @@ public interface ReleasePointApptRepository extends CrudRepository<ReleasePointA
      * @return
      */
     List<ReleasePointAppt> findByEmissionsProcessId(Long emissionsProcessId);
-	
-	/**
-    *
-    * @param id
-    * @return EIS Program ID
-    */
-	@Cacheable(value = CacheName.ReleasePointApptProgramIds)
-	@Query("select mfr.eisProgramId from ReleasePointAppt rpa join rpa.releasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where rpa.id = :id")
-	Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
 
     @Cacheable(value = CacheName.ReleasePointApptMasterIds)
     @Query("select mfr.id from ReleasePointAppt rpa join rpa.releasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where rpa.id = :id")

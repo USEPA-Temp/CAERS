@@ -309,7 +309,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
         for (FacilitySiteBulkUploadDto dto : dtos) {
             Row row = sheet.getRow(currentRow);
 
-            row.getCell(2).setCellValue(dto.getFrsFacilityId());
+            row.getCell(2).setCellValue(dto.getMasterFacilityRecordId());
             row.getCell(3).setCellValue(dto.getAltSiteIdentifier());
             row.getCell(4).setCellValue(dto.getFacilityCategoryCode());
 //                row.getCell(5).setCellValue(dto.getFacilitySourceTypeCode());

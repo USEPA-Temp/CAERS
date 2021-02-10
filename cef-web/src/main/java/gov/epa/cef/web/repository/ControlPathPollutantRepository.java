@@ -20,15 +20,6 @@ public interface ControlPathPollutantRepository extends CrudRepository<ControlPa
      */
     List<ControlPathPollutant> findByControlPathId(Long controlPathId);
 
-    /**
-    *
-    * @param id
-    * @return EIS Program ID
-    */
-   @Cacheable(value = CacheName.ControlPathPollutantProgramIds)
-   @Query("select mfr.eisProgramId from ControlPathPollutant cpp join cpp.controlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where cpp.id = :id")
-   Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
-   
    @Cacheable(value = CacheName.ControlPathPollutantMasterIds)
    @Query("select mfr.id from ControlPathPollutant cpp join cpp.controlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where cpp.id = :id")
    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);

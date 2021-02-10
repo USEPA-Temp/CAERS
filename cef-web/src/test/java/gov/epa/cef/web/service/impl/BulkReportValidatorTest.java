@@ -18,19 +18,19 @@ public class BulkReportValidatorTest {
 
         String eis1 = "EISProgramId001";
         String eis2 = "EISProgramId002";
-        String frs1 = "FRSFacilityId001";
-        String frs2 = "FRSFacilityId002";
+        Long mfr1 = 1L;
+        Long mfr2 = 2L;
         String alt1 = "AltSiteId001";
         String alt2 = "AltSiteId002";
 
         EmissionsReportBulkUploadDto report = new EmissionsReportBulkUploadDto();
         report.setEisProgramId(eis1);
-        report.setFrsFacilityId(frs1);
+        report.setMasterFacilityRecordId(mfr1);
         report.setAltSiteIdentifier(alt1);
 
         FacilitySiteBulkUploadDto facilitySite = new FacilitySiteBulkUploadDto();
         facilitySite.setEisProgramId(eis2);
-        facilitySite.setFrsFacilityId(frs2);
+        facilitySite.setMasterFacilityRecordId(mfr2);
         facilitySite.setAltSiteIdentifier(alt2);
 
         List<WorksheetError> violations = new ArrayList<>();
@@ -54,7 +54,7 @@ public class BulkReportValidatorTest {
         // eis bad
         violations.clear();
         facilitySite.setEisProgramId(eis2);
-        facilitySite.setFrsFacilityId(frs1);
+        facilitySite.setMasterFacilityRecordId(mfr1);
         facilitySite.setAltSiteIdentifier(alt1);
         facilityIdValidator.accept(facilitySite);
         assertEquals(1, violations.size());
@@ -62,7 +62,7 @@ public class BulkReportValidatorTest {
         // none bad
         violations.clear();
         facilitySite.setEisProgramId(eis1);
-        facilitySite.setFrsFacilityId(frs1);
+        facilitySite.setMasterFacilityRecordId(mfr1);
         facilitySite.setAltSiteIdentifier(alt1);
         facilityIdValidator.accept(facilitySite);
         assertTrue(violations.isEmpty());

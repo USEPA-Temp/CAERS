@@ -29,15 +29,6 @@ public interface EmissionsProcessRepository extends CrudRepository<EmissionsProc
     List<EmissionsProcess> retrieveByIdentifierParentFacilityYear(@Param("identifier") String identifier, @Param("parentIdentifier") String parentIdentifier, 
                                                                       @Param("mfrId") Long mfrId, @Param("year") Short year);
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.ProcessProgramIds)
-    @Query("select mfr.eisProgramId from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where p.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
-
     @Cacheable(value = CacheName.ProcessMasterIds)
     @Query("select mfr.id from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where p.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
