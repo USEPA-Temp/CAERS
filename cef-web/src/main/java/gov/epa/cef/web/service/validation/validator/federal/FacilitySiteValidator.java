@@ -63,13 +63,6 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
 
-        if (Strings.emptyToNull(facilitySite.getEisProgramId()) == null) {
-            // prevented by db constraints
-            result = false;
-            context.addFederalError(
-                    ValidationField.FACILITY_EIS_ID.value(), "facilitysite.eisProgramId.required");
-        }
-
         // If facility operation status is not operating, status year is required
         if (!STATUS_OPERATING.contentEquals(facilitySite.getOperatingStatusCode().getCode()) && facilitySite.getStatusYear() == null) {
 
