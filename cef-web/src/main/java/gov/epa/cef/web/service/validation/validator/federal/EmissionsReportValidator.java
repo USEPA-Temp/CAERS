@@ -80,20 +80,6 @@ public class EmissionsReportValidator
             context.addFederalError(ValidationField.REPORT_PROGRAM_SYSTEM_CODE.value(), "report.programSystemCode.required");
         }
 
-        if (Strings.emptyToNull(report.getFrsFacilityId()) == null) {
-
-            // prevented by db constraints
-            valid = false;
-            context.addFederalError(ValidationField.REPORT_FRS_ID.value(), "report.frsFacilityId.required");
-        }
-
-        if (Strings.emptyToNull(report.getEisProgramId()) == null) {
-
-            // prevented by db constraints
-            valid = false;
-            context.addFederalError(ValidationField.REPORT_EIS_ID.value(), "report.eisProgramId.required");
-        }
-        
 	        List<Emission> emissionsList = emissionRepo.findAllByReportId(report.getId()).stream()
 		        		.filter(e -> (e.getEmissionsCalcMethodCode().getTotalDirectEntry() == true || e.getTotalManualEntry() == true))
 		                .collect(Collectors.toList());

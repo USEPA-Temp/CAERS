@@ -52,8 +52,6 @@ public class MasterFacilityRecordApi {
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForProgram(
         @NotNull @PathVariable String programSystemCode) {
 
-//        this.securityService.facilityEnforcer().enforceProgramId(programSystemCode);
-
         List<MasterFacilityRecordDto> result =
             this.mfrService.findByProgramSystemCode(programSystemCode);
 
@@ -70,8 +68,6 @@ public class MasterFacilityRecordApi {
     @GetMapping(value = "/program/my")
     @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentProgram() {
-
-//        this.securityService.facilityEnforcer().enforceProgramId(programSystemCode);
 
         List<MasterFacilityRecordDto> result =
             this.mfrService.findByProgramSystemCode(this.securityService.getCurrentProgramSystemCode());
