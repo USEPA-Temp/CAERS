@@ -305,7 +305,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         opStatCode.setCode("OP");
     	EmissionsProcess ep1 = new EmissionsProcess();
     	EmissionsProcess ep2 = new EmissionsProcess();
-    	ep1.setEmissionsProcessIdentifier("ABC");
+    	ep1.setEmissionsProcessIdentifier("AbC  ");
     	ep2.setEmissionsProcessIdentifier("ABC");
     	ep1.setEmissionsUnit(testData);
     	ep2.setEmissionsUnit(testData);

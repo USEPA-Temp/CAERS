@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportingPeriod;
@@ -110,7 +111,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         if (emissionsUnit != null && emissionsUnit.getFacilitySite() != null && emissionsUnit.getFacilitySite().getEmissionsUnits() != null) {
 	        Map<Object, List<EmissionsUnit>> euMap = emissionsUnit.getFacilitySite().getEmissionsUnits().stream()
 	                .filter(eu -> (eu.getUnitIdentifier() != null))
-	                .collect(Collectors.groupingBy(feu -> feu.getUnitIdentifier()));
+	                .collect(Collectors.groupingBy(feu -> feu.getUnitIdentifier().toLowerCase().trim()));
 	        
 	        
 	        for (List<EmissionsUnit> euList : euMap.values()) {
@@ -189,16 +190,16 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 					.collect(Collectors.groupingBy(EmissionsProcess::getSccCode));
 	        
 	        List<EmissionsProcess> duplicateProcessAndFuelDataList = new ArrayList<EmissionsProcess>();
-	        List<EmissionsProcess> notDuplicteProcessList = new ArrayList<EmissionsProcess>();
+	        List<EmissionsProcess> notDuplicateProcessList = new ArrayList<EmissionsProcess>();
 	        List<EmissionsProcess> totalDuplicateProcesses = new ArrayList<EmissionsProcess>();
 	        Boolean fuelUseRequired = null;
 	        
 	        if (sccProcessMap.size() > 0) {
 				for (List<EmissionsProcess> pList : sccProcessMap.values()) {
 					duplicateProcessAndFuelDataList.clear();
-					notDuplicteProcessList.clear();
+					notDuplicateProcessList.clear();
 					totalDuplicateProcesses.clear();
-					fuelUseRequired = sccRepo.findById(pList.get(0).getSccCode()).orElse(null).getFuelUseRequired();// ? pList.get(0).getSccCode() : null;
+					fuelUseRequired = sccRepo.findById(pList.get(0).getSccCode()).orElse(null).getFuelUseRequired();
 					
 					// checks processes with the same SCC
 					if (pList.size() > 1) {
@@ -206,45 +207,40 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 							for (int j = i+1; j < pList.size(); j++) {
 								
 							  // check if process details are the same
-							  List<Boolean> sameProcessDetails = new ArrayList<Boolean>(); // process, reporting period type, rp appt details
-							  List<Boolean> sameOpDetails = new ArrayList<Boolean>();
+							  Boolean diffProcessDetails = false; // process, reporting period type, rp appt details
+							  Boolean diffOpDetails = false;
 							  Boolean sameRpOpType = null;
 							  
 							  // compare process info
-							  sameProcessDetails.add(pList.get(i).getOperatingStatusCode().equals(pList.get(j).getOperatingStatusCode()));
-							  sameProcessDetails.add(pList.get(i).getStatusYear().equals(pList.get(j).getStatusYear()));
+							  diffProcessDetails = diffProcessDetails || (!pList.get(i).getOperatingStatusCode().equals(pList.get(j).getOperatingStatusCode()));
+							  diffProcessDetails = diffProcessDetails || (!pList.get(i).getStatusYear().equals(pList.get(j).getStatusYear()));
 							  
+							  // TODO: update to compare processes with multiple reporting periods with the same operating type
 							  // compare reporting period and operating details if reporting period exists
 							  if (pList.get(i).getReportingPeriods().size() > 0 && pList.get(j).getReportingPeriods().size() > 0) {
+								  OperatingDetail processA = pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0);
+								  OperatingDetail processB = pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0);
+								  
 								  // compare operating details
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getActualHoursPerPeriod()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getActualHoursPerPeriod()));
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getAvgWeeksPerPeriod()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getAvgWeeksPerPeriod()));
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getAvgDaysPerWeek()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getAvgDaysPerWeek()));
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getAvgHoursPerDay()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getAvgHoursPerDay()));
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentFall()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentFall()));
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentSpring()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentSpring()));
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentSummer()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentSummer()));
-								  sameOpDetails.add(pList.get(i).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentWinter()
-										  .equals(pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0).getPercentWinter()));
+								  diffOpDetails = diffOpDetails || (!processA.getActualHoursPerPeriod().equals(processB.getActualHoursPerPeriod()));
+								  diffOpDetails = diffOpDetails || (!processA.getAvgWeeksPerPeriod().equals(processB.getAvgWeeksPerPeriod()));
+								  diffOpDetails = diffOpDetails || (!processA.getAvgDaysPerWeek().equals(processB.getAvgDaysPerWeek()));
+								  diffOpDetails = diffOpDetails || (!processA.getAvgHoursPerDay().equals(processB.getAvgHoursPerDay()));
+								  diffOpDetails = diffOpDetails || (!processA.getPercentFall().equals(processB.getPercentFall()));
+								  diffOpDetails = diffOpDetails || (!processA.getPercentSpring().equals(processB.getPercentSpring()));
+								  diffOpDetails = diffOpDetails || (!processA.getPercentSummer().equals(processB.getPercentSummer()));
+								  diffOpDetails = diffOpDetails || (!processA.getPercentWinter().equals(processB.getPercentWinter()));
 								  
 								  // compare reporting period
-								  sameProcessDetails.add(pList.get(i).getReportingPeriods().get(0).getReportingPeriodTypeCode()
+								  diffProcessDetails =  diffProcessDetails || (!pList.get(i).getReportingPeriods().get(0).getReportingPeriodTypeCode()
 										  .equals(pList.get(j).getReportingPeriods().get(0).getReportingPeriodTypeCode()));
 								  sameRpOpType = (pList.get(i).getReportingPeriods().get(0).getEmissionsOperatingTypeCode()
 										  .equals(pList.get(j).getReportingPeriods().get(0).getEmissionsOperatingTypeCode()));
 								  
-							  } else if ((pList.get(i).getReportingPeriods().size() > 0 && pList.get(j).getReportingPeriods().size() == 0)
-									  || pList.get(i).getReportingPeriods().size() == 0 && pList.get(j).getReportingPeriods().size() > 0) {
-								  sameProcessDetails.add(false);
 							  } else {
-								  sameProcessDetails.add(true);
+							  // process details do not match if reporting period list sizes are not equal
+							  diffProcessDetails = diffProcessDetails || ((pList.get(i).getReportingPeriods().size() > 0 && pList.get(j).getReportingPeriods().size() == 0)
+									  || pList.get(i).getReportingPeriods().size() == 0 && pList.get(j).getReportingPeriods().size() > 0); 
 							  }
 							  
 							  // compare release point apportionments 
@@ -263,16 +259,12 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 											  }
 										  }
 									  }
-									  if (sameRpAppt == 0) {
-										  sameProcessDetails.add(true);
-									  } else {
-										  sameProcessDetails.add(false);
-									  }
-								  } else {
-									  sameProcessDetails.add(true);
+									  // sameRpAppt should be 0 if all release point appt details match
+									  diffProcessDetails = diffProcessDetails || (sameRpAppt != 0);
 								  }
 							  } else {
-								  sameProcessDetails.add(false);
+								  // release point appt details do not match if total size of list are not equal
+								  diffProcessDetails = diffProcessDetails || (pList.get(i).getReleasePointAppts().size() != sameRpAppt);
 							  }
 							  
 							  // TODO: compare pollutants
@@ -280,16 +272,16 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 							  
 							  // processes considered duplicates
 							  // same process details	same operating details	same reporting period op type
-							  // TRUE					TRUE					TRUE			CHECK FUEL
+							  // TRUE					TRUE					TRUE			CHECK DUPLICATE FUEL
 							  // processes considered not duplicates
-							  // FALSE					FALSE/TRUE				TRUE			CHECK WARNING
-							  // TRUE					FALSE					TRUE			CHECK WARNING
+							  // FALSE					FALSE/TRUE				TRUE			CHECK WARNING DUPLICATE
+							  // TRUE					FALSE					TRUE			CHECK WARNING DUPLICATE
 							  // TRUE					FALSE/TRUE				FALSE			NONE
 							  // FALSE					FALSE/TRUE				FALSE			NONE
 							  // note: any time the reporting period operating type is different the process is not a duplicate process
 							  
 							  // processes are the same if all the details are the same 
-							  if (!sameProcessDetails.contains(false) && !sameOpDetails.contains(false) && sameRpOpType == true){
+							  if (diffProcessDetails == false && diffOpDetails == false && sameRpOpType == true) {
 								  
 								  // add process to list if fuel data exists
 								  if (checkFuelFields(pList.get(i).getReportingPeriods().get(0)) && !duplicateProcessAndFuelDataList.contains(pList.get(i))) {
@@ -309,14 +301,14 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 							  
 							  // process has same SCC and process details are different and reporting operating types are the same
 							  // if reporting period operating types are the same, operating details are different, and operating type is the same
-							  if ((sameProcessDetails.contains(false) && sameRpOpType == true)
-									  || (!sameProcessDetails.contains(false) && sameOpDetails.contains(false) && sameRpOpType == true)) {
+							  if ((diffProcessDetails == true && sameRpOpType == true)
+									  || (diffProcessDetails == false && diffOpDetails == true && sameRpOpType == true)) {
 								 
-								  if (!notDuplicteProcessList.contains(pList.get(i).getEmissionsProcessIdentifier())) {
-									  notDuplicteProcessList.add(pList.get(i));
+								  if (!notDuplicateProcessList.contains(pList.get(i).getEmissionsProcessIdentifier())) {
+									  notDuplicateProcessList.add(pList.get(i));
 								  }
-								  if (!notDuplicteProcessList.contains(pList.get(j).getEmissionsProcessIdentifier())) {
-									  notDuplicteProcessList.add(pList.get(j));
+								  if (!notDuplicateProcessList.contains(pList.get(j).getEmissionsProcessIdentifier())) {
+									  notDuplicateProcessList.add(pList.get(j));
 								  }
 								  
 								  // check fuel use values for non duplicated process if reporting period exists
@@ -325,15 +317,15 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 								  }
 							  }
 							  
-							  // if operating types are different, processes are duplicate. check fuel use
+							  // if operating types are different, processes are not duplicate. check fuel use
 							  if (sameRpOpType == false) {
 								  result = checkFuelData(validatorContext, pList.get(i));
 							  }
 							}
 						}
 						
-					// check fuel use conditions if there is only one process with 
-					} else if (pList.get(0).getReportingPeriods().size() == 1) {
+					// check fuel use conditions if process scc has only one process
+					} else if (pList.size() == 1 && pList.get(0).getReportingPeriods().size() > 0) {
 							result = checkFuelData(validatorContext, pList.get(0));
 					}
 					
@@ -351,14 +343,14 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 					}
 					
 					// warn if there are multiple processes for a given SCC 
-					if (notDuplicteProcessList.size() > 0) {
+					if (notDuplicateProcessList.size() > 0) {
 						
 						result = false;
 						context.addFederalWarning(
 								ValidationField.EMISSIONS_UNIT_PROCESS.value(),
 								"emissionsUnit.emissionsProcess.sccDuplicate.notDupProcessWarning",
 								createValidationDetails(emissionsUnit),
-								notDuplicteProcessList.get(0).getSccCode());
+								notDuplicateProcessList.get(0).getSccCode());
 					}
 					
 					// check fuel use conditions if only one process of a given SCC has fuel data
@@ -372,7 +364,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         // Process identifier must be unique within unit
         Map<Object, List<EmissionsProcess>> epMap = emissionsUnit.getEmissionsProcesses().stream()
             .filter(ep -> ep.getEmissionsProcessIdentifier() != null)
-            .collect(Collectors.groupingBy(eu -> eu.getEmissionsProcessIdentifier().toLowerCase()));
+            .collect(Collectors.groupingBy(eu -> eu.getEmissionsProcessIdentifier().toLowerCase().trim()));
         
         for (List<EmissionsProcess> epList : epMap.values()) {
         	
@@ -391,11 +383,14 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         return result;
     }
     
+    // checks duplicate process for any of the fuel data fields exist
     private boolean checkFuelFields(ReportingPeriod period) {
     	return ((period.getFuelUseValue() != null || period.getFuelUseUom() != null || period.getFuelUseMaterialCode() != null
     			|| period.getFuelUseUom() != null || period.getFuelUseMaterialCode() != null || period.getFuelUseValue() != null
     			|| period.getHeatContentValue() != null || period.getHeatContentUom() != null || period.getHeatContentUom() != null || period.getHeatContentValue() != null));
     }
+    
+    // Fuel Use Input Checks
     private boolean checkFuelData(ValidatorContext validatorContext, EmissionsProcess process) {
     	CefValidatorContext context = getCefValidatorContext(validatorContext);
         boolean result = true;
@@ -403,6 +398,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
     	ReportingPeriod period = process.getReportingPeriods().get(0);
     	
     	if (isFuelUsePointSourceSccCode.getFuelUseRequired()) {
+    		// Fuel Material, Fuel Value, and Fuel UoM when the Process SCC requires fuel use
     		if (period.getFuelUseValue() == null || period.getFuelUseUom() == null || period.getFuelUseMaterialCode() == null) {
     			
     				result = false;
@@ -413,6 +409,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 		            		process.getSccCode());
 		    }
     		
+    		// Heat Content Value and Heat Content UoM when the Process SCC requires fuel use
     		if (period.getHeatContentUom() == null || period.getHeatContentValue() == null) {
     			
     				result = false;
@@ -423,7 +420,9 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 		            		process.getSccCode());
 		     }
     		
+    	// when Process SCC does not require fuel use
     	} else {
+    		// warning is generated that all fuel use fields must be reported for any to be submitted with the report.
     		if ((period.getFuelUseValue() != null || period.getFuelUseUom() != null || period.getFuelUseMaterialCode() != null ) &&
 	        	(period.getFuelUseUom() == null || period.getFuelUseMaterialCode() == null || period.getFuelUseValue() == null)) {
     			
@@ -435,6 +434,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 		            
 	        }
     		
+    		// warning is generated that all Heat Content fields must be reported for any to be submitted with the report.
     		if ((period.getHeatContentValue() != null || period.getHeatContentUom() != null) &&
 		        	(period.getHeatContentUom() == null || period.getHeatContentValue() == null)) {
     			
