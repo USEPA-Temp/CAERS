@@ -183,9 +183,9 @@
                 = (Pi * (Stack Diameter /2) ^ 2) * Velocity (assuming a circular stack).
             </div>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidComputedVelocity">
-                The calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}}, calculated using
-                the formula: Exit Gas Velocity = {{ stackVelocityFormula }}
-                Exit Gas Velocity must be between {{minVelocity}} and {{maxVelocity}} {{calculatedVelocityUom}}.
+                Calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}},
+                If Stack Length/Stack Width are reported, calculated exit gas velocity must be {{minVelocity}}-{{maxVelocity}} {{calculatedVelocityUom}}
+                using the formula: Exit Gas Velocity = {{ stackVelocityFormula }}
             </div>
         </div>
     </div>
