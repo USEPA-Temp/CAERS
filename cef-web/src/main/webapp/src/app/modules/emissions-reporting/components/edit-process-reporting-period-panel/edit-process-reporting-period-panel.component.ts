@@ -55,6 +55,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   fuelUseUomValues: UnitMeasureCode[];
   heatContentUomValues: UnitMeasureCode[];
   showFuelDataCopyMessage = false;
+  sccFuelUsefieldsWarning = null;
 
   constructor(
     private lookupService: LookupService,
@@ -86,7 +87,6 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
     this.lookupService.retrieveReportingPeriod()
     .subscribe(result => {
-      // this.reportingPeriodValues = result;
       const annual = result.find(period => period.code === 'A');
       this.reportingPeriodValues.push(annual);
       this.reportingPeriodForm.get('reportingPeriodTypeCode').patchValue(annual);
@@ -162,8 +162,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       const fuelMaterial = control.get('fuelUseMaterialCode').value;
       const fuelUom = control.get('fuelUseUom').value;
 
-      if (this.isFuelUseScc && (!fuelValue || !fuelMaterial || !fuelUom)) {
-        return {sccFuelUsefields: true};
+      if (this.isFuelUseScc) {
+        this.sccFuelUsefieldsWarning = 'Fuel data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Fuel data for one of these Processes.';
       }
 
       if (!this.isFuelUseScc && (fuelValue || fuelMaterial || fuelUom)
@@ -178,7 +178,6 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       const fuelMaterial = this.reportingPeriodForm.get('fuelUseMaterialCode').value;
       const fuelValue = this.reportingPeriodForm.get('fuelUseValue').value;
       const fuelUom = this.reportingPeriodForm.get('fuelUseUom').value
-      console.log(fuelMaterial, fuelValue, fuelUom)
 
       this.reportingPeriodForm.get('calculationMaterialCode').patchValue(fuelMaterial);
       this.reportingPeriodForm.get('calculationParameterValue').patchValue(fuelValue);

@@ -56,6 +56,7 @@ public enum ValidationField {
     PERIOD_CALC_TYPE_CODE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterTypeCode"),
     PERIOD_CALC_UOM("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterUom"),
     PERIOD_FUEL_USE_VALUES("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.fuelUseValues"),
+    PERIOD_DUP_SCC_FUEL_USE("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.duplicateSccFuelUse"),
     PERIOD_HEAT_CONTENT_VALUES("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.heatContentValues"),
     PERIOD_EMISSION("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission"),
     DETAIL_AVG_HR_PER_DAY("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.operatingDetail.avgHoursPerDay"),
