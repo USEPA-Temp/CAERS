@@ -102,11 +102,6 @@
 
     <div class="row pb-2 pt-2">
 
-        <div class="col-sm-6" *ngIf="showFuelDataCopyMessage">
-            <div class="validation-warning" style="padding-left: 10px; vertical-align: text-bottom;">
-                Fuel data copied to Throughput data fields will be used to calculate total emissions for these pollutants.
-            </div>
-        </div>
         <div class="col-sm-6" *ngIf="reportingPeriodForm.getError('fuelUsefields')">
             <div class="validation-message" style="padding-left: 10px;">
                 Fuel Material, Fuel Value, and Fuel UoM are optional fields. However, all, or none, must contain values in order to save.
