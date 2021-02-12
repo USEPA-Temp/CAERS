@@ -7,6 +7,7 @@ import {FormUtilsService} from 'src/app/core/services/form-utils.service';
 import {UnitMeasureCode} from 'src/app/shared/models/unit-measure-code';
 import {legacyUomValidator} from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 import {SharedService} from 'src/app/core/services/shared.service';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'app-edit-process-reporting-period-panel',
@@ -56,13 +57,14 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     denominatorUomValues: UnitMeasureCode[];
     fuelUseUomValues: UnitMeasureCode[];
     heatContentUomValues: UnitMeasureCode[];
-    showFuelDataCopyMessage = false;
+
     sccFuelUsefieldsWarning = null;
 
     constructor(
         private lookupService: LookupService,
         public formUtils: FormUtilsService,
         private sharedService: SharedService,
+        private toastr: ToastrService,
         private fb: FormBuilder) {
     }
 
@@ -185,10 +187,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
         this.reportingPeriodForm.get('calculationMaterialCode').patchValue(fuelMaterial);
         this.reportingPeriodForm.get('calculationParameterValue').patchValue(fuelValue);
         this.reportingPeriodForm.get('calculationParameterUom').patchValue(fuelUom);
-        this.showFuelDataCopyMessage = true;
-        setTimeout(() => {
-            this.showFuelDataCopyMessage = false;
-        }, 6000);
+        const message = 'Fuel data copied to Throughput data fields will be used to calculate total emissions for these pollutants.';
+        this.toastr.success(message);
 
     }
 
