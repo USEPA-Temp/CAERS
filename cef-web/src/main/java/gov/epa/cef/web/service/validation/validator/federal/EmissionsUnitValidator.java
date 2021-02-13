@@ -189,16 +189,17 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        		.filter(ep -> ep.getSccCode() != null)
 					.collect(Collectors.groupingBy(EmissionsProcess::getSccCode));
 	        
+	        List<EmissionsProcess> allDuplicateProcesses = new ArrayList<EmissionsProcess>();
 	        List<EmissionsProcess> duplicateProcessAndFuelDataList = new ArrayList<EmissionsProcess>();
 	        List<EmissionsProcess> notDuplicateProcessList = new ArrayList<EmissionsProcess>();
-	        List<EmissionsProcess> totalDuplicateProcesses = new ArrayList<EmissionsProcess>();
+	        
 	        Boolean fuelUseRequired = null;
 	        
 	        if (sccProcessMap.size() > 0) {
 				for (List<EmissionsProcess> pList : sccProcessMap.values()) {
 					duplicateProcessAndFuelDataList.clear();
 					notDuplicateProcessList.clear();
-					totalDuplicateProcesses.clear();
+					allDuplicateProcesses.clear();
 					fuelUseRequired = sccRepo.findById(pList.get(0).getSccCode()).orElse(null).getFuelUseRequired();
 					
 					// checks processes with the same SCC
@@ -291,11 +292,11 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 									  duplicateProcessAndFuelDataList.add(pList.get(j));
 								  }
 								  
-								  if (!totalDuplicateProcesses.contains(pList.get(i))) {
-									  totalDuplicateProcesses.add(pList.get(i));
+								  if (!allDuplicateProcesses.contains(pList.get(i))) {
+									  allDuplicateProcesses.add(pList.get(i));
 								  }
-								  if (!totalDuplicateProcesses.contains(pList.get(j))) {
-									  totalDuplicateProcesses.add(pList.get(j));
+								  if (!allDuplicateProcesses.contains(pList.get(j))) {
+									  allDuplicateProcesses.add(pList.get(j));
 								  }
 							  }
 							  
@@ -303,37 +304,37 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 							  // if reporting period operating types are the same, operating details are different, and operating type is the same
 							  if ((diffProcessDetails == true && sameRpOpType == true)
 									  || (diffProcessDetails == false && diffOpDetails == true && sameRpOpType == true)) {
-								 
-								  if (!notDuplicateProcessList.contains(pList.get(i).getEmissionsProcessIdentifier())) {
+								  
+								  if (!notDuplicateProcessList.contains(pList.get(i))) {
 									  notDuplicateProcessList.add(pList.get(i));
 								  }
-								  if (!notDuplicateProcessList.contains(pList.get(j).getEmissionsProcessIdentifier())) {
+								  if (!notDuplicateProcessList.contains(pList.get(j))) {
 									  notDuplicateProcessList.add(pList.get(j));
 								  }
 								  
-								  // check fuel use values for non duplicated process if reporting period exists
-								  if (pList.get(i).getReportingPeriods().size() > 0) {
-									  result = checkFuelData(validatorContext, pList.get(i));
-								  }
 							  }
-							  
-							  // if operating types are different, processes are not duplicate. check fuel use
-							  if (sameRpOpType == false) {
-								  result = checkFuelData(validatorContext, pList.get(i));
-							  }
+							}
+							// check fuel use values for non duplicated processes if reporting period exists
+							if (!allDuplicateProcesses.contains(pList.get(i)) && pList.get(i).getReportingPeriods().size() > 0) {
+								result = checkFuelData(validatorContext, pList.get(i));
 							}
 						}
 						
 					// check fuel use conditions if process scc has only one process
 					} else if (pList.size() == 1 && pList.get(0).getReportingPeriods().size() > 0) {
-							result = checkFuelData(validatorContext, pList.get(0));
+						result = checkFuelData(validatorContext, pList.get(0));
 					}
 					
-					// one process for a given SCC code can have fuel use data
-					// and if all processes for a given SCC code do not have fuel use data
-					if ((duplicateProcessAndFuelDataList.size() > 1 && fuelUseRequired == true)
-							|| (duplicateProcessAndFuelDataList.size() == 0 && totalDuplicateProcesses.size() > 1 && fuelUseRequired == true)) {
-						
+					// check fuel use conditions for duplicate process only if one of the processes of a given SCC has fuel data
+					if (duplicateProcessAndFuelDataList.size() == 1) {
+						result = checkFuelData(validatorContext, duplicateProcessAndFuelDataList.get(0));
+					}
+					
+					// only one process for a given SCC code can have fuel use data
+					// and if all processes for a given SCC code do not have fuel use data and fuel use is required
+					if ((duplicateProcessAndFuelDataList.size() > 1)
+							|| (duplicateProcessAndFuelDataList.size() == 0 && allDuplicateProcesses.size() > 1 && fuelUseRequired == true)) {
+
 						result = false;
 						context.addFederalError(
 								ValidationField.PERIOD_DUP_SCC_FUEL_USE.value(),
@@ -353,10 +354,6 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 								notDuplicateProcessList.get(0).getSccCode());
 					}
 					
-					// check fuel use conditions if only one process of a given SCC has fuel data
-					if (duplicateProcessAndFuelDataList.size() == 1) {
-						result = checkFuelData(validatorContext, duplicateProcessAndFuelDataList.get(0));
-					}
 				}
 	        }
         }
@@ -398,6 +395,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
     	ReportingPeriod period = process.getReportingPeriods().get(0);
     	
     	if (isFuelUsePointSourceSccCode.getFuelUseRequired()) {
+    		
     		// Fuel Material, Fuel Value, and Fuel UoM when the Process SCC requires fuel use
     		if (period.getFuelUseValue() == null || period.getFuelUseUom() == null || period.getFuelUseMaterialCode() == null) {
     			
