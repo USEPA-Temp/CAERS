@@ -33,6 +33,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     @Input() year: number;
     releasePointIdentifiers: string[] = [];
     readonly fugitiveType = 'Fugitive';
+    readonly circleAreaFormula: string = '(Pi * (Stack Diameter /2) ^ 2) for a circular stack';
+    readonly rectangleAreaFormula: string = '(Stack Length * Stack Width) for a rectangular stack';
+    readonly circularDimension: string = 'Stack Diameter is';
+    readonly rectangularDimension: string = 'Stack Length/Stack Width are';
     facilitySite: FacilitySite;
     releaseType: string;
     eisProgramId: string;
@@ -45,6 +49,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     calculatedFlowRate: string;
     calculatedFlowRateUom: string;
     calculatedVelocityUom: string;
+    stackDimension: string;
+    stackAreaDescription: string;
     minVelocity: number;
     maxVelocity: number;
     coordinateTolerance: EisLatLongToleranceLookup;
@@ -608,7 +614,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     exitFlowConsistencyCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
             if (this.releaseType !== this.fugitiveType) {
-                const diameter = control.get('stackDiameter'); // ft
+                const diameter: number = control.get('stackDiameter')?.value; // ft
+                const length: number = control.get('stackLength')?.value; // ft
+                const width: number = control.get('stackWidth')?.value; // ft
                 const exitVelocity = control.get('exitGasVelocity'); // fps/fpm
                 const exitFlowRate = control.get('exitGasFlowRate'); // acfs/acfm
                 const velocityUomFPS = "FPS";
@@ -618,11 +626,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 let actualFlowRate;
                 this.calculatedFlowRateUom = flowUomACFS;
 
-                if ((diameter !== null && diameter.value > 0)
-                    && (exitVelocity !== null && exitVelocity.value > 0)
-                    && (exitFlowRate !== null && exitFlowRate.value > 0)) {
+                if (exitFlowRate.value && exitVelocity.value && (diameter || (length && width))) {
+                    const isDiameter = !!diameter;
+                    this.stackAreaDescription = isDiameter ? this.circleAreaFormula : this.rectangleAreaFormula;
+                    this.stackDimension = isDiameter ? this.circularDimension : this.rectangularDimension;
 
-                    const computedArea = ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))); // sf
+                    const computedArea: number = isDiameter ? ((Math.PI) * (Math.pow((diameter / 2.0), 2))) : width * length; // sf
                     const calculatedFlowRate = (computedArea * exitVelocity.value); // cfs/cfm
                     actualFlowRate = exitFlowRate.value;
 

@@ -16,7 +16,6 @@ import gov.epa.cef.web.util.ConstantUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,8 +36,10 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     private static final String FLOW_RATE_UOM_ACFS = "ACFS";
     private static final String FLOW_RATE_UOM_ACFM = "ACFM";
     private static final String UOM_FT = "FT";
-    private static final String DIAMETER_FORMULA  = ": Exit Gas Velocity = Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).";
-    private static final String LENGTH_WIDTH_FORMULA = ": Exit Gas Velocity = Flow Rate / (Stack Length * Stack Width) (assuming a rectangular stack).";
+    private static final String DIAMETER_FORMULA = "(Pi * (Stack Diameter /2) ^ 2) for circular stacks";
+    private static final String LENGTH_WIDTH_FORMULA = "(Stack Length * Stack Width) for rectangular stacks";
+    private static final String STACK_DIAMETER = "Stack Diameter";
+    private static final String STACK_LENGTH_WIDTH = "Stack Length/Stack Width";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, ReleasePoint releasePoint) {
@@ -114,6 +115,15 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     	                    "releasePoint.stack.heightRange",
     	                    createValidationDetails(releasePoint));
     	        }
+    	        
+    	        // Stack dimensions must be in FT
+    	        if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackHeight(), releasePoint.getStackHeightUomCode(), "Stack Height")) {
+    	        	result = false;
+            	}
+
+    	        if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackDiameter(), releasePoint.getStackDiameterUomCode(), "Stack Diameter")) {
+            		result = false;
+            	}
 
     	        // Stack Diameter or stack length/width is required
     	        if (releasePoint.getStackDiameter() == null && ( releasePoint.getStackWidth() == null || releasePoint.getStackLength() == null)) {
@@ -124,137 +134,134 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                         "releasePoint.stack.diameterOrLengthWidth",
                         createValidationDetails(releasePoint));
 
-    	            // Only stack diameter or width/length allowed
+    	        // Only stack diameter or width/length allowed
     	        } else if (releasePoint.getStackDiameter() != null && (releasePoint.getStackLength() != null || releasePoint.getStackWidth() != null)) {
-    	            result = false;
+    	            
+    	        	result = false;
     	            context.addFederalError(
     	                ValidationField.RP_STACK.value(),
                         "releasePoint.stack.noDiameterAndLengthWidth",
                         createValidationDetails(releasePoint)
                     );
 
-                }
+    	        // Check value ranges when a stack diameter OR width/length is reported.
+                } else {
+                	// Check Stack Diameter range
+        	        if (releasePoint.getStackDiameter() != null && (releasePoint.getStackDiameter() < 0.001 || releasePoint.getStackDiameter() > 300)) {
 
+        	            result = false;
+        	            context.addFederalError(
+        	            		ValidationField.RP_STACK.value(),
+        	            		"releasePoint.stack.diameterRange",
+        	            		createValidationDetails(releasePoint));
+        	        }
 
-    	        // Stack Diameter range
-    	        if (releasePoint.getStackDiameter() != null && (releasePoint.getStackDiameter() < 0.001 || releasePoint.getStackDiameter() > 300)) {
+        	        // Calculation check, Stack Diameter must be less than Stack Height
+        	        if (releasePoint.getStackDiameter() != null
+        	        	&& releasePoint.getStackHeight() != null
+        	        	&& (releasePoint.getStackDiameter() >= releasePoint.getStackHeight())) {
 
-    	            result = false;
-    	            context.addFederalError(
-    	            		ValidationField.RP_STACK.value(),
-    	            		"releasePoint.stack.diameterRange",
-    	            		createValidationDetails(releasePoint));
-    	        }
-
-    	        // Stack dimensions must be in FT
-    	        if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackHeight(), releasePoint.getStackHeightUomCode(), "Stack Height")) {
-    	        	result = false;
-            	}
-
-    	        if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackDiameter(), releasePoint.getStackDiameterUomCode(), "Stack Diameter")) {
-            		result = false;
-            	}
-
-    	        // Calculation check, Stack Diameter must be less than Stack Height
-    	        if (releasePoint.getStackDiameter() != null
-    	        	&& releasePoint.getStackHeight() != null
-    	        	&& (releasePoint.getStackDiameter() >= releasePoint.getStackHeight())) {
-
-    	        	result = false;
-    	        	context.addFederalWarning(
-    	        			ValidationField.RP_STACK_WARNING.value(),
-    	        			"releasePoint.stackWarning.diameterCheck.height",
-    	        			createValidationDetails(releasePoint));
-    	        }
-
-    	        // Check exit gas velocity if exit gas flow rate and stack diameter are submitted.
-    	        if ((releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
-    	        	&& ((releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)
-                    || (releasePoint.getStackWidth() != null && releasePoint.getStackWidth() > 0 && releasePoint.getStackLength() != null && releasePoint.getStackLength() > 0)
-                    )) {
-
-    	        	BigDecimal minVelocity = BigDecimal.valueOf(0.001);
-    	        	BigDecimal maxVelocity = BigDecimal.valueOf(1500.0);
-    	        	BigDecimal calcVelocity = new BigDecimal(0);
-    	        	double inputFlowRate = releasePoint.getExitGasFlowRate();
+        	        	result = false;
+        	        	context.addFederalWarning(
+        	        			ValidationField.RP_STACK_WARNING.value(),
+        	        			"releasePoint.stackWarning.diameterCheck.height",
+        	        			createValidationDetails(releasePoint));
+        	        }
+        	        
+                	if ((releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)
+                        || (releasePoint.getStackWidth() != null && releasePoint.getStackWidth() > 0 
+                        && releasePoint.getStackLength() != null && releasePoint.getStackLength() > 0)) {
+    	        	
+    	        	// Determine stack area based on stack dimensions
     	        	Double inputDiameter = null;
     	        	boolean isDiameter = releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0;
     	        	String formula = isDiameter ? DIAMETER_FORMULA : LENGTH_WIDTH_FORMULA;
+    	        	String dimension = isDiameter ? STACK_DIAMETER : STACK_LENGTH_WIDTH;
 
-    	        	if (isDiameter)
+    	        	if (isDiameter) {
     	        	    inputDiameter = releasePoint.getStackDiameter();
-
-    	        	String uom= VELOCITY_UOM_FPS;
-
+    	        	}
     	        	double calcArea = isDiameter ? (Math.PI)*(Math.pow((inputDiameter/2), 2)) : ( releasePoint.getStackWidth() * releasePoint.getStackLength());
-    	        	calcVelocity = BigDecimal.valueOf(inputFlowRate/calcArea).setScale(3, RoundingMode.HALF_UP);
-
-    	        	if (releasePoint.getExitGasFlowUomCode() != null && !FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
-    	        		minVelocity = BigDecimal.valueOf(0.060);
-    	        		maxVelocity = new BigDecimal(90000);
-    	        		uom = VELOCITY_UOM_FPM;
-    	        	}
-
-    	        	if (calcVelocity.compareTo(maxVelocity.setScale(3, RoundingMode.HALF_UP)) == 1 || calcVelocity.compareTo(minVelocity.setScale(3, RoundingMode.HALF_UP)) == -1) {
-
-                        result = false;
-    	        		context.addFederalError(
-    	        				ValidationField.RP_GAS_VELOCITY.value(),
-    	        				"releasePoint.exitGasVelocity.range",
-    	        				createValidationDetails(releasePoint),
-    	        				calcVelocity.toString(),
-    	        				uom,
-    	        				formula,
-    	        				minVelocity,
-    	        				maxVelocity,
-    	        				uom);
-    	        	}
-    	        }
-
-    	        // Check exit gas flow rate if exit gas flow rate, exit gas velocity, and stack diameter are submitted.
-    	        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocity() > 0)
-    	        	&& (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)
-    	        	&& (releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)) {
-
-    	        	BigDecimal inputFlowRate = new BigDecimal(releasePoint.getExitGasFlowRate());
-    	        	double inputVelocity = releasePoint.getExitGasVelocity();
-    	        	double inputDiameter = releasePoint.getStackDiameter();
-
-    	        	double calcArea = (Math.PI)*(Math.pow((inputDiameter/2), 2));
-    	        	double calcFlowRate = (inputVelocity*calcArea);
-    	        	BigDecimal lowerLimitFlowRate = new BigDecimal(0);
-    	        	BigDecimal upperLimitFlowRate = new BigDecimal(0);
-    	        	String uom= FLOW_RATE_UOM_ACFS;
-
-    	        	if (releasePoint.getExitGasVelocityUomCode() != null && !VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
-    	        		uom= FLOW_RATE_UOM_ACFM;
-    	        	}
-
-    	        	// set actual flow rate UoM to compare to computed flow rate
-    	        	if (releasePoint.getExitGasFlowUomCode() != null) {
-    	        		if (!FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFS.contentEquals(uom)) {
-    		        		inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate()/60));
-    		        	} else if (!FLOW_RATE_UOM_ACFM.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFM.contentEquals(uom)) {
-    		        		inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate()*60));
-    		        	}
-    	        	}
-
-    	        	lowerLimitFlowRate = BigDecimal.valueOf(0.95*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
-    	        	upperLimitFlowRate = BigDecimal.valueOf(1.05*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
-
-    	        	if (!((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).equals(BigDecimal.valueOf(0.00000001).setScale(8, RoundingMode.HALF_UP)))
-    		        	&& (((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).compareTo(upperLimitFlowRate) == 1)
-    		        	|| ((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).compareTo(lowerLimitFlowRate) == -1))) {
-
-    	        		result = false;
-    	        		context.addFederalError(
-    	        				ValidationField.RP_GAS_FLOW.value(),
-    	        				"releasePoint.exitGasFlowRate.range",
-    	        				createValidationDetails(releasePoint),
-    	        				BigDecimal.valueOf(calcFlowRate).setScale(8, RoundingMode.HALF_UP).toString(),
-    	        				uom);
-    	        	}
+    	        	
+	    	        // Check exit gas velocity if exit gas flow rate and stack diameter are submitted.
+	    	        if (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0) {
+	
+	    	        	BigDecimal minVelocity = BigDecimal.valueOf(0.001);
+	    	        	BigDecimal maxVelocity = BigDecimal.valueOf(1500.0);
+	    	        	BigDecimal calcVelocity = new BigDecimal(0);
+	    	        	double inputFlowRate = releasePoint.getExitGasFlowRate();
+	
+	    	        	String uom= VELOCITY_UOM_FPS;
+	
+	    	        	calcVelocity = BigDecimal.valueOf(inputFlowRate/calcArea).setScale(3, RoundingMode.HALF_UP);
+	
+	    	        	if (releasePoint.getExitGasFlowUomCode() != null && !FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
+	    	        		minVelocity = BigDecimal.valueOf(0.060);
+	    	        		maxVelocity = new BigDecimal(90000);
+	    	        		uom = VELOCITY_UOM_FPM;
+	    	        	}
+	
+	    	        	if (calcVelocity.compareTo(maxVelocity.setScale(3, RoundingMode.HALF_UP)) == 1 || calcVelocity.compareTo(minVelocity.setScale(3, RoundingMode.HALF_UP)) == -1) {
+	
+	                        result = false;
+	    	        		context.addFederalError(
+	    	        				ValidationField.RP_GAS_VELOCITY.value(),
+	    	        				"releasePoint.exitGasVelocity.range",
+	    	        				createValidationDetails(releasePoint),
+	    	        				calcVelocity.toString(),
+	    	        				uom,
+	    	        				formula,
+	    	        				minVelocity,
+	    	        				maxVelocity,
+	    	        				uom);
+	    	        	}
+	    	        }
+	
+	    	        // Check exit gas flow rate if exit gas flow rate, exit gas velocity, and stack diameter are submitted.
+	    	        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocity() > 0)
+	    	        	&& (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)) {
+	
+	    	        	BigDecimal inputFlowRate = new BigDecimal(releasePoint.getExitGasFlowRate());
+	    	        	double inputVelocity = releasePoint.getExitGasVelocity();
+	
+	    	        	double calcFlowRate = (inputVelocity*calcArea);
+	    	        	BigDecimal lowerLimitFlowRate = new BigDecimal(0);
+	    	        	BigDecimal upperLimitFlowRate = new BigDecimal(0);
+	    	        	String uom= FLOW_RATE_UOM_ACFS;
+	
+	    	        	if (releasePoint.getExitGasVelocityUomCode() != null && !VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
+	    	        		uom= FLOW_RATE_UOM_ACFM;
+	    	        	}
+	
+	    	        	// set actual flow rate UoM to compare to computed flow rate
+	    	        	if (releasePoint.getExitGasFlowUomCode() != null) {
+	    	        		if (!FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFS.contentEquals(uom)) {
+	    		        		inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate()/60));
+	    		        	} else if (!FLOW_RATE_UOM_ACFM.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFM.contentEquals(uom)) {
+	    		        		inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate()*60));
+	    		        	}
+	    	        	}
+	
+	    	        	lowerLimitFlowRate = BigDecimal.valueOf(0.95*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
+	    	        	upperLimitFlowRate = BigDecimal.valueOf(1.05*calcFlowRate).setScale(8, RoundingMode.HALF_UP);
+	
+	    	        	if (!((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).equals(BigDecimal.valueOf(0.00000001).setScale(8, RoundingMode.HALF_UP)))
+	    		        	&& (((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).compareTo(upperLimitFlowRate) == 1)
+	    		        	|| ((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).compareTo(lowerLimitFlowRate) == -1))) {
+	
+	    	        		result = false;
+	    	        		context.addFederalError(
+	    	        				ValidationField.RP_GAS_FLOW.value(),
+	    	        				"releasePoint.exitGasFlowRate.range",
+	    	        				createValidationDetails(releasePoint),
+	    	        				BigDecimal.valueOf(calcFlowRate).setScale(8, RoundingMode.HALF_UP).toString(),
+	    	        				uom,
+	    	        				dimension,
+	    	        				formula);
+	    	        	}
+	            	}
             	}
+            }
             }
 
             // FUGITIVE RELEASE POINT CHECKS
