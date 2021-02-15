@@ -103,7 +103,7 @@
     <div class="row pb-2 pt-2">
         <div class="col-sm-12" *ngIf="reportingPeriodForm.errors?.fuelUsefields">
             <div class="validation-message" style="padding-left: 10px;">
-                Fuel Material, Fuel Value, and Fuel UoM fields must contain values, or none, in order to save.
+                If Fuel data is being reported then all fields must contain inputs in order to save.
             </div>
         </div>
         <div class="col-sm-12" *ngIf="showFuelDataCopyMessage">
@@ -147,7 +147,7 @@
     <div class="row pb-1 justify-content-end" *ngIf="reportingPeriodForm.errors?.heatContentInvalid">
         <div class="col-sm-8">
             <div class="validation-message" style="padding-left: 10px;">
-                Heat Content Value and Heat Content UoM fields must contain values, or none, in order to save.
+                If Heat Content data is being reported then both fields must contain inputs in order to save.
             </div>
         </div>
     </div>

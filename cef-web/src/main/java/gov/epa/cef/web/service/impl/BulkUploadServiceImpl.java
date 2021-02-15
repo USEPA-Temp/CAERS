@@ -717,8 +717,16 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (bulkEmissionsReport.getValidationStatus() != null) {
             emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));
         }
-        emissionsReport.setMasterFacilityRecord(mfrRepo.findById(bulkEmissionsReport.getMasterFacilityRecordId())
-                .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getMasterFacilityRecordId())));
+
+        // if there isn't a mfrId, but there is an EIS ID lookup using EIS instead
+        // this cannot occur for excel upload since they will fail validation but is required for JSON uploads
+        if (bulkEmissionsReport.getMasterFacilityRecordId() == null && bulkEmissionsReport.getEisProgramId() != null) {
+            emissionsReport.setMasterFacilityRecord(mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId())
+                    .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getEisProgramId())));
+        } else {
+            emissionsReport.setMasterFacilityRecord(mfrRepo.findById(bulkEmissionsReport.getMasterFacilityRecordId())
+                    .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getMasterFacilityRecordId())));
+        }
 
         return emissionsReport;
     }
