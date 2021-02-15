@@ -50,6 +50,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     coordinateTolerance: EisLatLongToleranceLookup;
     tolerance: number;
     stackVelocityFormula: string;
+    stackVelocityDimensions: string;
 
     releasePointForm = this.fb.group({
         releasePointIdentifier: ['', [
@@ -538,9 +539,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
                 if (flowRate.value && exitGasFlowUom.value && (diameter.value || (length && width))) {
                     const isDiameter = !!diameter.value;
-                    const dFormula: string = 'Flow Rate / (Pi * (Stack Diameter /2) ^ 2) (assuming a circular stack).';
-                    const lwFormula: string = 'Exit Gas Flow Rate/(Stack Length * Stack Width) (assuming a rectangular stack).';
+                    const dFormula: string = 'Flow Rate / (Pi * (Stack Diameter /2) ^ 2) for circular stacks.';
+                    const lwFormula: string = 'Exit Gas Flow Rate/(Stack Length * Stack Width) for rectangular stacks.';
                     this.stackVelocityFormula = isDiameter ? dFormula : lwFormula;
+                    this.stackVelocityDimensions = isDiameter ? 'Diameter is' : 'Stack Length/Stack Width are';
                     const computedArea: number = isDiameter ? ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))) : width * length;
                     calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
 

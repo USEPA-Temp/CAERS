@@ -184,7 +184,7 @@
             </div>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidComputedVelocity">
                 Calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}},
-                If Stack Length/Stack Width are reported, calculated exit gas velocity must be {{minVelocity}}-{{maxVelocity}} {{calculatedVelocityUom}}
+                If Stack {{stackVelocityDimensions}} reported, calculated exit gas velocity must be {{minVelocity}}-{{maxVelocity}} {{calculatedVelocityUom}}
                 using the formula: Exit Gas Velocity = {{ stackVelocityFormula }}
             </div>
         </div>
