@@ -101,10 +101,14 @@
     </div>
 
     <div class="row pb-2 pt-2">
-
-        <div class="col-sm-6" *ngIf="reportingPeriodForm.getError('fuelUsefields')">
+        <div class="col-sm-12" *ngIf="reportingPeriodForm.errors?.fuelUsefields">
             <div class="validation-message" style="padding-left: 10px;">
-                Fuel Material, Fuel Value, and Fuel UoM are optional fields. However, all, or none, must contain values in order to save.
+                If Fuel data is being reported then all fields must contain inputs in order to save.
+            </div>
+        </div>
+        <div class="col-sm-12" *ngIf="showFuelDataCopyMessage">
+            <div class="validation-warning" style="padding-left: 10px; vertical-align: text-bottom;">
+                Fuel data copied to Throughput data fields will be used to calculate total emissions for these pollutants.
             </div>
         </div>
         <div class="col-sm-12" *ngIf="sccFuelUsefieldsWarning">
@@ -113,7 +117,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="row pb-1">
         <div class="col-sm-4" style="float: left;">
@@ -144,18 +147,17 @@
     <div class="row pb-1 justify-content-end" *ngIf="reportingPeriodForm.errors?.heatContentInvalid">
         <div class="col-sm-8">
             <div class="validation-message" style="padding-left: 10px;">
-                Heat Content Value and Heat Content UoM are optional fields. However, both, or neither, must contain values in order to save.
+                If Heat Content data is being reported then both fields must contain inputs in order to save.
             </div>
         </div>
     </div>
-    <div class="row pb-1 justify-content-end" *ngIf="reportingPeriodForm.errors?.sccHeatContentfields">
+    <div class="row pb-1 justify-content-end" *ngIf="sccHeatContentfieldsWarning">
         <div class="col-sm-8">
-            <div class="validation-message" style="padding-left: 10px;">
-                Heat Content data for the Process SCC is required.
+            <div class="validation-warning" style="padding-left: 10px;">
+                {{sccHeatContentfieldsWarning}}
             </div>
         </div>
     </div>
-
     <div class="row pb-1">
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>

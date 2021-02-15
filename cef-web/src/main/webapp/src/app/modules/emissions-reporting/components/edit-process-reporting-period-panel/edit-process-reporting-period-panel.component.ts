@@ -7,7 +7,9 @@ import {FormUtilsService} from 'src/app/core/services/form-utils.service';
 import {UnitMeasureCode} from 'src/app/shared/models/unit-measure-code';
 import {legacyUomValidator} from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 import {SharedService} from 'src/app/core/services/shared.service';
-import {ToastrService} from "ngx-toastr";
+import {ToastrService} from 'ngx-toastr';
+import { Process } from 'src/app/shared/models/process';
+import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
     selector: 'app-edit-process-reporting-period-panel',
@@ -15,60 +17,58 @@ import {ToastrService} from "ngx-toastr";
     styleUrls: ['./edit-process-reporting-period-panel.component.scss']
 })
 export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChanges {
-    @Input() reportingPeriod: ReportingPeriod;
-    @Input() sccCode: string;
-    isFuelUseScc = false;
-    reportingPeriodForm = this.fb.group({
-        reportingPeriodTypeCode: [{code: 'A'}, Validators.required],
-        emissionsOperatingTypeCode: [null, Validators.required],
-        calculationParameterTypeCode: [null, Validators.required],
-        calculationParameterValue: ['', [
-            Validators.required,
-            Validators.min(0),
-            Validators.pattern('^[0-9]*\\.?[0-9]+$')
-        ]],
-        calculationParameterUom: [null, [Validators.required, legacyUomValidator()]],
-        calculationMaterialCode: [null, Validators.required],
-        fuelUseValue: ['', [
-            Validators.min(0),
-            Validators.pattern('^[0-9]*\\.?[0-9]+$')
-        ]],
-        fuelUseUom: [null, [legacyUomValidator()]],
-        fuelUseMaterialCode: [null],
-        heatContentValue: ['', [
-            Validators.min(0),
-            Validators.pattern('^[0-9]*\\.?[0-9]+$')
-        ]],
-        heatContentUom: [null, [legacyUomValidator()]],
-        comments: [null, Validators.maxLength(400)]
-    }, {
-        validators: [
-            this.checkFuelUseFields(),
-            this.checkHeatCapacityUom()
-        ]
-    });
+  @Input() reportingPeriod: ReportingPeriod;
+  @Input() process: Process;
+  isFuelUseScc = false;
+  reportingPeriodForm = this.fb.group({
+    reportingPeriodTypeCode: [{code: 'A'}, Validators.required],
+    emissionsOperatingTypeCode: [null, Validators.required],
+    calculationParameterTypeCode: [null, Validators.required],
+    calculationParameterValue: ['', [
+      Validators.required,
+      Validators.min(0),
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+    ]],
+    calculationParameterUom: [null, [Validators.required, legacyUomValidator()]],
+    calculationMaterialCode: [null, Validators.required],
+    fuelUseValue: ['', [
+      Validators.min(0),
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+    ]],
+    fuelUseUom: [null, [legacyUomValidator()]],
+    fuelUseMaterialCode: [null],
+    heatContentValue: ['', [
+      Validators.min(0),
+      Validators.pattern('^[0-9]*\\.?[0-9]+$')
+    ]],
+    heatContentUom: [null, [legacyUomValidator()]],
+    comments: [null, Validators.maxLength(400)]
+  }, { validators: [
+    this.checkFuelUseFields(),
+    this.checkHeatCapacityUom()
+  ]});
 
-    materialValues: BaseCodeLookup[];
-    fuelUseMaterialValues: BaseCodeLookup[];
-    parameterTypeValues: BaseCodeLookup[];
-    operatingStatusValues: BaseCodeLookup[];
-    reportingPeriodValues: BaseCodeLookup[] = [];
-    uomValues: UnitMeasureCode[];
-    denominatorUomValues: UnitMeasureCode[];
-    fuelUseUomValues: UnitMeasureCode[];
-    heatContentUomValues: UnitMeasureCode[];
+  materialValues: BaseCodeLookup[];
+  fuelUseMaterialValues: BaseCodeLookup[];
+  parameterTypeValues: BaseCodeLookup[];
+  operatingStatusValues: BaseCodeLookup[];
+  reportingPeriodValues: BaseCodeLookup[] = [];
+  uomValues: UnitMeasureCode[];
+  denominatorUomValues: UnitMeasureCode[];
+  fuelUseUomValues: UnitMeasureCode[];
+  heatContentUomValues: UnitMeasureCode[];
+  showFuelDataCopyMessage = false;
+  sccFuelUsefieldsWarning = null;
+  sccHeatContentfieldsWarning = null;
 
-    sccFuelUsefieldsWarning = null;
+  constructor(
+    private lookupService: LookupService,
+    public formUtils: FormUtilsService,
+    private sharedService: SharedService,
+    private toastr: ToastrService,
+    private fb: FormBuilder) { }
 
-    constructor(
-        private lookupService: LookupService,
-        public formUtils: FormUtilsService,
-        private sharedService: SharedService,
-        private toastr: ToastrService,
-        private fb: FormBuilder) {
-    }
-
-    ngOnInit() {
+  ngOnInit() {
 
         this.lookupService.retrieveCalcMaterial()
             .subscribe(result => {
@@ -109,8 +109,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
                 this.heatContentUomValues = this.fuelUseUomValues.filter(val => val.heatContentUom);
             });
 
-        if (this.sccCode) {
-            this.getPointSourceScc(this.sccCode);
+        if (this.process.sccCode) {
+            this.getPointSourceScc(this.process.sccCode);
         }
 
         this.sharedService.processSccChangeEmitted$.subscribe(scc => {
@@ -135,47 +135,47 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
     getPointSourceScc(processScc: string) {
         this.lookupService.retrievePointSourceSccCode(processScc)
-            .subscribe(result => {
-                if (result && result.fuelUseRequired) {
-                    this.isFuelUseScc = true;
-                    this.reportingPeriodForm.get('fuelUseValue').updateValueAndValidity();
-                } else {
-                    this.isFuelUseScc = false;
-                }
+        .subscribe(result => {
+            if (result && result.fuelUseRequired) {
+            this.isFuelUseScc = true;
+            this.reportingPeriodForm.get('fuelUseValue').updateValueAndValidity();
+            if (this.process.operatingStatusCode.code !== OperatingStatus.OPERATING) {
+                this.sccFuelUsefieldsWarning = 'Fuel data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Fuel data for one of these Processes.';
+                this.sccHeatContentfieldsWarning = 'Heat Content data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Heat Content data for one of these Processes.';
+            }
+            } else {
+            this.isFuelUseScc = false;
+            this.sccFuelUsefieldsWarning = null;
+            this.sccHeatContentfieldsWarning = null;
+            }
 
-            });
+        });
     }
 
     checkHeatCapacityUom(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
-            const heatContentValue = control.get('heatContentValue').value;
-            const heatContentUom = control.get('heatContentUom').value;
+        const heatContentValue = control.get('heatContentValue').value;
+        const heatContentUom = control.get('heatContentUom').value;
 
-            if (this.isFuelUseScc && (!heatContentValue || !heatContentUom)) {
-                return {sccHeatContentfields: true};
-            }
-            if (!this.isFuelUseScc && ((heatContentValue && !heatContentUom) || (!heatContentValue && heatContentUom))) {
-                return {heatContentInvalid: true};
-            }
-            return null;
+        if ((heatContentUom || (heatContentValue !== null && heatContentValue !== ''))
+            && (heatContentValue === '' || heatContentValue === null || !heatContentUom)) {
+            return {heatContentInvalid: true};
+        }
+        return null;
         };
     }
 
     checkFuelUseFields(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
-            const fuelValue = control.get('fuelUseValue').value;
-            const fuelMaterial = control.get('fuelUseMaterialCode').value;
-            const fuelUom = control.get('fuelUseUom').value;
+        const fuelValue = control.get('fuelUseValue').value;
+        const fuelMaterial = control.get('fuelUseMaterialCode').value;
+        const fuelUom = control.get('fuelUseUom').value;
 
-            if (this.isFuelUseScc) {
-                this.sccFuelUsefieldsWarning = 'Fuel data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Fuel data for one of these Processes.';
-            }
-
-            if (!this.isFuelUseScc && (fuelValue || fuelMaterial || fuelUom)
-                && (fuelValue === null || fuelValue === '' || !fuelMaterial || !fuelUom)) {
-                return {fuelUsefields: true};
-            }
-            return null;
+        if ((fuelValue || fuelMaterial || fuelUom)
+            && (fuelValue === null || fuelValue === '' || !fuelMaterial || !fuelUom)) {
+            return {fuelUsefields: true};
+        }
+        return null;
         };
     }
 
@@ -189,16 +189,14 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
         this.reportingPeriodForm.get('calculationParameterUom').patchValue(fuelUom);
         const message = 'Fuel data copied to Throughput data fields will be used to calculate total emissions for these pollutants.';
         this.toastr.success(message);
-
     }
 
-    isFuelUseDirty = (): boolean => {
+    isFuelUseDirty = ():boolean => {
         const fuelMaterial = this.reportingPeriodForm.get('fuelUseMaterialCode');
         const fuelValue = this.reportingPeriodForm.get('fuelUseValue');
         const fuelUom = this.reportingPeriodForm.get('fuelUseUom');
 
         return fuelMaterial.dirty && fuelValue.dirty && fuelUom.dirty;
-
     }
 
 }

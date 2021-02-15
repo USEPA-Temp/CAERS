@@ -160,7 +160,7 @@
                     </div>
 
                         <div *ngIf="editPeriod">
-                            <app-edit-process-reporting-period-panel [reportingPeriod]="period" [sccCode]="process.sccCode"></app-edit-process-reporting-period-panel>
+                            <app-edit-process-reporting-period-panel [reportingPeriod]="period" [process]="process"></app-edit-process-reporting-period-panel>
                             <div class="float-right pb-3 pr-3" *ngIf="reportingPeriodComponent">
                                 <button type="button" class="btn btn-primary mr-2" (click)="setEditPeriod(false)">Cancel</button>
                                 <button type="submit" class="btn btn-success" (click)="updateReportingPeriod(period)">Save</button>

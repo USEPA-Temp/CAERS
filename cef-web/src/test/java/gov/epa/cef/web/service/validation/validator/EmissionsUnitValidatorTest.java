@@ -305,6 +305,8 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         opStatCode.setCode("OP");
     	EmissionsProcess ep1 = new EmissionsProcess();
     	EmissionsProcess ep2 = new EmissionsProcess();
+    	ep1.setOperatingStatusCode(opStatCode);
+    	ep2.setOperatingStatusCode(opStatCode);
     	ep1.setEmissionsProcessIdentifier("AbC  ");
     	ep2.setEmissionsProcessIdentifier("ABC");
     	ep1.setEmissionsUnit(testData);
@@ -502,6 +504,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         
         rperiod1 = new ReportingPeriod();
         ep1 = new EmissionsProcess();
+        ep1.setOperatingStatusCode(opStatCode);
         ep1.setSccCode("10200302"); // required
         ep1.getReportingPeriods().add(rperiod1);
         ep1.setEmissionsProcessIdentifier("Boiler 001");
