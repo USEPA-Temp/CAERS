@@ -1087,11 +1087,10 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         testData.setStackDiameter(null);
-        testData.setExitGasFlowRate(9.0);
+        testData.setExitGasFlowRate(2.0);
         testData.setStackLength(23.0);
         testData.setStackWidth(8.5);
-
-
+        
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }

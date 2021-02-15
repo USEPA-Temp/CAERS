@@ -177,15 +177,10 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidFlowRate">
-                Exit Gas Flow Rate must be within 5% of calculated Exit Gas Flow
-                Rate {{calculatedFlowRate}} {{calculatedFlowRateUom}}, calculated using the formula: Exit Gas Flow Rate
-                = (Pi * (Stack Diameter /2) ^ 2) * Velocity (assuming a circular stack).
-            </div>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidComputedVelocity">
-                Calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}},
-                If Stack {{stackVelocityDimensions}} reported, calculated exit gas velocity must be {{minVelocity}}-{{maxVelocity}} {{calculatedVelocityUom}}
-                using the formula: Exit Gas Velocity = {{ stackVelocityFormula }}
+                Calculated Exit Gas Velocity is {{calculatedVelocity}} {{calculatedVelocityUom}}.
+                If {{stackVelocityDimensions}} reported, calculated exit gas velocity must be {{minVelocity}}-{{maxVelocity}} {{calculatedVelocityUom}}
+                using the formula: Exit Gas Velocity = Exit Gas Flow Rate / {{stackVelocityFormula}}
             </div>
         </div>
     </div>
@@ -220,6 +215,17 @@
             <app-validation-message [control]="releasePointForm.get('exitGasFlowUomCode')"></app-validation-message>
             <div class="validation-message" *ngIf="releasePointForm.errors?.invalidExitGasFlowUomCode">
                 Exit Gas Flow Rate and Exit Gas Flow Rate UoM must both be reported for either to be accepted.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="validation-message" *ngIf="releasePointForm.errors?.invalidFlowRate">
+                Calculated exit gas flow rate is {{calculatedFlowRate}} {{calculatedFlowRateUom}}.
+                If {{stackDimension}} reported, Exit Gas Flow Rate reported must be within 
+                5% of calculated exit gas flow rate using the formula Exit Gas Flow Rate = 
+                Exit Gas Velocity * {{stackAreaDescription}}.
             </div>
         </div>
     </div>
