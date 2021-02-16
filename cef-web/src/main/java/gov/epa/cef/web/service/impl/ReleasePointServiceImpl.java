@@ -105,14 +105,16 @@ public class ReleasePointServiceImpl implements ReleasePointService {
                 .findById(releasePointId)
                 .orElse(null);
 
+        Long mfrId = releasePointRepo.retrieveMasterFacilityRecordIdById(releasePointId).orElse(null);
+
         // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(rp.getFacilitySite().getEisProgramId(),
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
                 rp.getFacilitySite().getEmissionsReport().getYear());
 
         // check if the release point was reported last year
         if (lastReport.isPresent()) {
             releasePointRepo.retrieveByIdentifierFacilityYear(rp.getReleasePointIdentifier(), 
-                    rp.getFacilitySite().getEisProgramId(), 
+                    mfrId, 
                     lastReport.get().getYear())
                     .stream().findFirst().ifPresent(oldRp -> {
                         throw new AppValidationException("This Release Point has been submitted on previous years' facility reports, so it cannot be deleted. "

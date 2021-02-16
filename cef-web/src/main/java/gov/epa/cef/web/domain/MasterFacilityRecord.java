@@ -35,7 +35,7 @@ public class MasterFacilityRecord extends BaseAuditEntity {
     @Column(name = "eis_program_id", length = 22)
     private String eisProgramId;
 
-    @Column(name = "agency_facility_id", length = 30)
+    @Column(name = "agency_facility_id", nullable = false, length = 30)
     private String agencyFacilityId;
 
     @Column(name = "name", nullable = false, length = 80)

@@ -19,6 +19,9 @@ public class UserFacilityAssociation extends BaseAuditEntity {
     @JoinColumn(name = "master_facility_id", nullable = false)
     private MasterFacilityRecord masterFacilityRecord;
 
+    @Column(name = "cdx_user_id", nullable = false)
+    protected String cdxUserId;
+
     @Column(name = "user_role_id", nullable = false)
     private Long userRoleId;
 
@@ -31,6 +34,14 @@ public class UserFacilityAssociation extends BaseAuditEntity {
 
     public void setMasterFacilityRecord(MasterFacilityRecord masterFacilityRecord) {
         this.masterFacilityRecord = masterFacilityRecord;
+    }
+
+    public String getCdxUserId() {
+        return cdxUserId;
+    }
+
+    public void setCdxUserId(String cdxUserId) {
+        this.cdxUserId = cdxUserId;
     }
 
     public Long getUserRoleId() {

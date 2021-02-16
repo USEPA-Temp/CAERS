@@ -25,6 +25,9 @@ public class ControlPath extends BaseAuditEntity {
     
     @Column(name = "path_id", nullable = false, length = 20)
     private String pathId;
+    
+    @Column(name = "percent_control", precision = 6, scale = 3)
+    private Double percentControl;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
     private List<ControlAssignment> assignments = new ArrayList<>();
@@ -38,6 +41,9 @@ public class ControlPath extends BaseAuditEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
     private List<ReleasePointAppt> releasePointAppts = new ArrayList<>();
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "controlPath")
+    private List<ControlPathPollutant> pollutants = new ArrayList<>();
 
 
     /**
@@ -55,6 +61,10 @@ public class ControlPath extends BaseAuditEntity {
     	this.facilitySite = facilitySite;
     	this.description = originalControlPath.getDescription();
     	this.pathId = originalControlPath.getPathId();
+    	this.percentControl = originalControlPath.getPercentControl();
+    	for (ControlPathPollutant pollutant : originalControlPath.getPollutants()) {
+    		this.pollutants.add(new ControlPathPollutant(this, pollutant));
+    	}
 //    	this.assignments = new HashSet<ControlAssignment>();
     }
 
@@ -72,6 +82,14 @@ public class ControlPath extends BaseAuditEntity {
 
     public void setPathId(String pathId) {
         this.pathId = pathId;
+    }
+    
+    public Double getPercentControl() {
+        return percentControl;
+    }
+
+    public void setPercentControl(Double percentControl) {
+        this.percentControl = percentControl;
     }
 
     public List<ControlAssignment> getAssignments() {
@@ -117,6 +135,18 @@ public class ControlPath extends BaseAuditEntity {
             this.releasePointAppts.addAll(releasePointAppts);
         }
     }
+    
+    public List<ControlPathPollutant> getPollutants() {
+        return pollutants;
+    }
+    
+    public void setPollutants(List<ControlPathPollutant> pollutants) {
+
+        this.pollutants.clear();
+        if (pollutants != null) {
+            this.pollutants.addAll(pollutants);
+        }
+    }
 
 
     /***
@@ -129,6 +159,10 @@ public class ControlPath extends BaseAuditEntity {
         for (ControlAssignment controlAssignment : this.assignments) {
             controlAssignment.clearId();
         }
+        
+        for (ControlPathPollutant pollutant : this.pollutants) {
+    		pollutant.clearId();
+    	}
     }
 
 }

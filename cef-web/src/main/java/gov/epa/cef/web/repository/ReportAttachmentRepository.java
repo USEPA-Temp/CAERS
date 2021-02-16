@@ -20,14 +20,9 @@ public interface ReportAttachmentRepository extends CrudRepository<ReportAttachm
    */
 	@Query("select ra from ReportAttachment ra join ra.emissionsReport r where r.id = :reportId")	
 	List<ReportAttachment> findAllByReportId(@Param("reportId") Long reportId);
-		
-	/**
-    *
-    * @param id
-    * @return EIS Program ID
-    */
-   @Query("select r.eisProgramId from ReportAttachment ra join ra.emissionsReport r where ra.id = :id")
-   Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+
+   @Query("select mfr.id from ReportAttachment ra join ra.emissionsReport r join r.masterFacilityRecord mfr where ra.id = :id")
+   Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
    
    
    /**

@@ -4,17 +4,33 @@
 			<fa-icon class="mt-2 ml-2" title="An identifier for the path, given by the facility." [icon]="['fas', 'question-circle']"></fa-icon>
 			<label for="controlPathIdInput" class="ml-1 col-form-label"><strong>Path ID:</strong></label>
 		</div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <input class="form-control" maxlength="20" id="controlPathIdInput" formControlName="pathId">
             <app-validation-message [control]="controlPathForm.get('pathId')"></app-validation-message>
-		</div>
+        </div>
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="An estimate of the portion of the reporting period's activity for which the overall control system or approach (including both capture and control measures) were operating as designed (regardless of whether the control measure is due to rule or voluntary)." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="percentControlInput" class="ml-1 col-form-label"><strong>Percent Control Effectiveness:</strong></label>
+        </div>       
+        <div class="col-sm-3">
+            <input type="text" class="form-control" maxlength="7" id="percentControlInput" formControlName="percentControl">
+            <app-validation-message [control]="controlPathForm.get('percentControl')"></app-validation-message>
+        </div>
 	</div>
+    <div class="row pb-1">
+        <div class="col-sm-2" aria-hidden="true"></div>
+        <div class="col-sm-3" *ngIf="controlPathForm.errors?.duplicatePathId">
+            <div class="validation-message" >
+                The Path Identifier must be unique within a facility.
+            </div>
+        </div>
+    </div>
 	<div class="row pb-1">
 		<div class="col-sm-2">
 			<fa-icon class="mt-2 ml-2" title="A text description of the path." [icon]="['fas', 'question-circle']"></fa-icon>
 			<label for="descriptionInput" class="ml-1 col-form-label"><strong>Path Description:</strong></label>
 		</div>
-        <div class="col-sm-6">
+        <div class="col-sm-9">
             <textarea rows="3" class="form-control" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
             <app-validation-message [control]="controlPathForm.get('description')"></app-validation-message>
 		</div>

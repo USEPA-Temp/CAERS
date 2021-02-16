@@ -19,14 +19,9 @@ public interface ControlRepository extends CrudRepository<Control, Long>, Progra
      */
     List<Control> findByFacilitySiteIdOrderByIdentifier(Long facilitySiteId);
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.ControlProgramIds)
-    @Query("select fs.eisProgramId from Control c join c.facilitySite fs where c.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+    @Cacheable(value = CacheName.ControlMasterIds)
+    @Query("select mfr.id from Control c join c.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where c.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for a Control

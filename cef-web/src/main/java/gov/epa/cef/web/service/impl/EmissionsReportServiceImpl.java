@@ -123,8 +123,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
     @Override
-    public List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId) {
-        return findByFacilityEisProgramId(facilityEisProgramId, false);
+    public List<EmissionsReportDto> findByMasterFacilityRecordId(Long masterFacilityRecordId) {
+        return findByMasterFacilityRecordId(masterFacilityRecordId, false);
     }
 
 
@@ -132,10 +132,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
      */
     @Override
-    public List<EmissionsReportDto> findByFacilityEisProgramId(String facilityEisProgramId, boolean addReportForCurrentYear) {
-        List<EmissionsReport> emissionReports= erRepo.findByEisProgramId(facilityEisProgramId);
+    public List<EmissionsReportDto> findByMasterFacilityRecordId(Long masterFacilityRecordId, boolean addReportForCurrentYear) {
+        List<EmissionsReport> emissionReports= erRepo.findByMasterFacilityRecordId(masterFacilityRecordId);
         if (addReportForCurrentYear) {
-        	addCurrentYear(emissionReports, facilityEisProgramId);
+        	addCurrentYear(emissionReports, masterFacilityRecordId);
         }
 
         List<EmissionsReportDto> dtoList = emissionsReportMapper.toDtoList(emissionReports);
@@ -161,18 +161,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     }
 
     @Override
-    public Optional<EmissionsReport> retrieveByEisProgramIdAndYear(@NotBlank String facilityEisProgramId, int year) {
+    public Optional<EmissionsReport> retrieveByMasterFacilityRecordIdAndYear(@NotBlank Long masterFacilityRecordId, int year) {
 
-        return erRepo.findByEisProgramIdAndYear(facilityEisProgramId, Integer.valueOf(year).shortValue());
+        return erRepo.findByMasterFacilityRecordIdAndYear(masterFacilityRecordId, Integer.valueOf(year).shortValue());
     }
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findMostRecentByFacility(java.lang.String)
      */
     @Override
-    public EmissionsReportDto findMostRecentByFacilityEisProgramId(String facilityEisProgramId) {
+    public EmissionsReportDto findMostRecentByMasterFacilityRecordId(Long masterFacilityRecordId) {
 
-        return findMostRecentEmissionsReport(facilityEisProgramId)
+        return findMostRecentEmissionsReport(masterFacilityRecordId)
             .map(emissionsReport -> emissionsReportMapper.toDto(emissionsReport))
             .orElse(null);
     }
@@ -230,8 +230,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     @Override
-    public EmissionsReportDto createEmissionReportCopy(String facilityEisProgramId, short reportYear) {
-        return findMostRecentEmissionsReport(facilityEisProgramId)
+    public EmissionsReportDto createEmissionReportCopy(Long masterFacilityRecordId, short reportYear) {
+        return findMostRecentEmissionsReport(masterFacilityRecordId)
             .map(mostRecentReport -> {
                 EmissionsReport cloneReport = new EmissionsReport(mostRecentReport);
                 cloneReport.setYear(reportYear);
@@ -281,17 +281,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
 
-        // TODO: remove once MFR is fully implemented
-        // creates an MFR if one doesn't already exist, should be removed once associations are managed locally
-        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId()).orElseGet(() -> {
-            return this.mfrRepo.save(this.mfrService.transformFacilitySite(reportDto.getFacilitySite()));
-        });
-        // TODO: uncomment when MFR is fully implemented
-//        MasterFacilityRecord mfr = this.mfrRepo.findByEisProgramId(reportDto.getEisProgramId())
-//           .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getEisProgramId())));
+        MasterFacilityRecord mfr = this.mfrRepo.findById(reportDto.getMasterFacilityRecordId())
+           .orElseThrow(() -> new NotExistException("Master Facility Record", reportDto.getMasterFacilityRecordId()));
 
         EmissionsReport newReport = new EmissionsReport();
-        newReport.setEisProgramId(reportDto.getEisProgramId());
+        newReport.setEisProgramId(mfr.getEisProgramId());
         newReport.setMasterFacilityRecord(mfr);
         newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);
@@ -337,9 +331,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @param facilityEisProgramId
      * @return The EmissionsReport model object
      */
-    private Optional<EmissionsReport> findMostRecentEmissionsReport(String facilityEisProgramId) {
+    private Optional<EmissionsReport> findMostRecentEmissionsReport(Long masterFacilityRecordId) {
 
-        return erRepo.findByEisProgramId(facilityEisProgramId, new Sort(Sort.Direction.DESC, "year"))
+        return erRepo.findByMasterFacilityRecordId(masterFacilityRecordId, new Sort(Sort.Direction.DESC, "year"))
             .stream().findFirst();
     }
 
@@ -443,7 +437,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * Add an emissions report to the list if one does not exist for the current year
      * @param emissionReports
      */
-	private void addCurrentYear(List<EmissionsReport> emissionReports, String facilityEisProgramId) {
+	private void addCurrentYear(List<EmissionsReport> emissionReports, Long masterFacilityRecordId) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
@@ -454,10 +448,13 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         if (!reportYearExists(currentReportingYear, emissionReports)) {
 	        EmissionsReport newReport = new EmissionsReport();
-	        newReport.setEisProgramId(facilityEisProgramId);
 	        newReport.setStatus(ReportStatus.NEW);
 	        newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
 	        newReport.setYear(currentReportingYear);
+
+	        MasterFacilityRecord mfr = new MasterFacilityRecord();
+	        mfr.setId(masterFacilityRecordId);
+	        newReport.setMasterFacilityRecord(mfr);
 
 	        emissionReports.add(newReport);
         }

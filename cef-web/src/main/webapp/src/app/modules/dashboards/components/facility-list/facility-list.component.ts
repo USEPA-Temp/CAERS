@@ -1,5 +1,5 @@
-import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { Component, OnInit, Input } from '@angular/core';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 @Component({
   selector: 'app-facility-list',
@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./facility-list.component.scss']
 })
 export class FacilityListComponent implements OnInit {
-  @Input() facilities: CdxFacility[];
+  @Input() facilities: MasterFacilityRecord[];
 
   constructor() { }
 

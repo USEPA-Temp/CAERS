@@ -2,6 +2,7 @@ package gov.epa.cef.web.api.rest;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
@@ -46,10 +48,9 @@ public class MasterFacilityRecordApi {
     }
 
     @GetMapping(value = "/program/{programSystemCode}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForProgram(
         @NotNull @PathVariable String programSystemCode) {
-
-//        this.securityService.facilityEnforcer().enforceProgramId(programSystemCode);
 
         List<MasterFacilityRecordDto> result =
             this.mfrService.findByProgramSystemCode(programSystemCode);
@@ -64,17 +65,16 @@ public class MasterFacilityRecordApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/my")
-    public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentUser() {
-
-//        this.securityService.facilityEnforcer().enforceProgramId(programSystemCode);
+    @GetMapping(value = "/program/my")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentProgram() {
 
         List<MasterFacilityRecordDto> result =
             this.mfrService.findByProgramSystemCode(this.securityService.getCurrentProgramSystemCode());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     /**
      * Update an existing master facility record
      * @param masterFacilityRecordId

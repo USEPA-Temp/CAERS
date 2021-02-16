@@ -13,12 +13,11 @@ import java.util.Optional;
 public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Long>, ProgramIdRetriever, ReportIdRetriever {
 
     /**
-     * Retrieve facilities by eis program and emissions report
-     * @param eisProgramId
+     * Retrieve facilities by emissions report
      * @param emissionsReportId
      * @return
      */
-    List<FacilitySite> findByEisProgramIdAndEmissionsReportId(String eisProgramId, Long emissionsReportId);
+    List<FacilitySite> findByEmissionsReportId(Long emissionsReportId);
 
     /***
      * Retrieve the common form facilities based on a given state code
@@ -27,14 +26,9 @@ public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Lon
      */
     List<FacilitySite> findByStateCode(String stateCode);
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Cacheable(value = CacheName.FacilityProgramIds)
-    @Query("select fs.eisProgramId from FacilitySite fs where fs.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+    @Cacheable(value = CacheName.FacilityMasterIds)
+    @Query("select mfr.id from FacilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where fs.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for a Facility Site

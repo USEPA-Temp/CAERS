@@ -260,7 +260,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	        	EmissionsReport currentReport = emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport();
 	        		
 	        		// find previous report
-	        		List<EmissionsReport> erList = reportRepo.findByEisProgramId(currentReport.getEisProgramId()).stream()
+	        		List<EmissionsReport> erList = reportRepo.findByMasterFacilityRecordId(currentReport.getMasterFacilityRecord().getId()).stream()
 	        				.filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
 	        				.sorted(Comparator.comparing(EmissionsReport::getYear))
 	        				.collect(Collectors.toList());
@@ -271,7 +271,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	        			
 	        			List<EmissionsProcess> previousProcesses = processRepo.retrieveByIdentifierParentFacilityYear(emissionsProcess.getEmissionsProcessIdentifier(), 
 	        			        emissionsProcess.getEmissionsUnit().getUnitIdentifier(), 
-	        			        currentReport.getEisProgramId(), 
+	        			        currentReport.getMasterFacilityRecord().getId(), 
 	        			        previousReportYr);
 	
 	        			if (!previousProcesses.isEmpty()) {

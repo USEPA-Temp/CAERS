@@ -11,8 +11,10 @@ public class ControlPathDto implements Serializable {
     private Long id;
     private String description;
     private String pathId;
+    private Double percentControl;
     private List<ControlAssignmentDto> assignments;
     private Long facilitySiteId;
+    private List<ControlPathPollutantDto> pollutants;
 
     public Long getId() {
         return id;
@@ -46,6 +48,14 @@ public class ControlPathDto implements Serializable {
 		this.pathId = pathId;
 	}
 	
+	public Double getPercentControl() {
+        return percentControl;
+    }
+
+    public void setPercentControl(Double percentControl) {
+        this.percentControl = percentControl;
+    }
+	
     public ControlPathDto withId(Long id) {
         setId(id);
         return this;
@@ -57,6 +67,14 @@ public class ControlPathDto implements Serializable {
 
 	public void setFacilitySiteId(Long facilitySiteId) {
 		this.facilitySiteId = facilitySiteId;
+	}
+	
+	public List<ControlPathPollutantDto> getPollutants() {
+		return pollutants;
+	}
+
+	public void setPollutants(List<ControlPathPollutantDto> pollutants) {
+		this.pollutants = pollutants;
 	}
 
 }

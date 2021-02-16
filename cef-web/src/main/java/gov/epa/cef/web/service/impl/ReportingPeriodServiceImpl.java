@@ -209,8 +209,8 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
         if (!entities.isEmpty()) {
             // find the last year reported
-            Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(
-                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEisProgramId(),
+            Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getId(),
                     entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
 
             if (lastReport.isPresent()) {
@@ -218,7 +218,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
                     List<ReportingPeriod> oldEntities = repo.retrieveByTypeIdentifierParentFacilityYear(dto.getReportingPeriodTypeCode().getCode(),
                             dto.getEmissionsProcessIdentifier(),
                             dto.getUnitIdentifier(), 
-                            lastReport.get().getEisProgramId(), 
+                            lastReport.get().getMasterFacilityRecord().getId(), 
                             lastReport.get().getYear());
                     if (!oldEntities.isEmpty()) {
                         dto.setPreviousCalculationParameterValue(oldEntities.get(0).getCalculationParameterValue());

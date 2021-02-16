@@ -10,9 +10,10 @@ public enum WorksheetName {
     ReleasePointAppt("Apportionment"),
     OperatingDetail("Operating Details"),
     ControlPath("Control Paths"),
-    Control("Controls"),
+    Control("Control Devices"),
     ControlAssignment("Control Assignments"),
-    ControlPollutant("Control Pollutants"),
+    ControlPollutant("Control Device Pollutants"),
+    ControlPathPollutant("Control Path Pollutants"),
     FacilitySiteContact("Facility Contacts"),
     FacilityNaics("NAICS"),
     EmissionFormulaVariable("Emission Formula Variables");

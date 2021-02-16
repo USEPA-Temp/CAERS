@@ -8,13 +8,21 @@ import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import java.util.List;
 
 public interface MasterFacilityRecordService {
-    
+
     /**
      * Find a master facility record by id
      * @param ID for a master facility record
      * @return
      */
     MasterFacilityRecordDto findById(Long id);
+
+
+    /**
+     * Find a master facility record by eisProgramId
+     * @param eisProgramId
+     * @return
+     */
+    MasterFacilityRecordDto findByEisProgramId(String eisProgramId);
 
 
     /**
@@ -26,7 +34,7 @@ public interface MasterFacilityRecordService {
 
 
     /**
-     * Convert a facility site record to a master facilty record
+     * Convert a facility site record to a master facility record
      * @param facilitySiteDto
      * @return
      */

@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.mapper;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
@@ -19,6 +20,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
@@ -50,6 +52,7 @@ public interface BulkUploadMapper {
     @Mapping(target = "reportingPeriods", ignore = true)
     @Mapping(target = "emissions", ignore = true)
     @Mapping(source="programSystemCode.code", target="programSystemCode")
+    @Mapping(source="masterFacilityRecord.id", target="masterFacilityRecordId")
     EmissionsReportBulkUploadDto emissionsReportToDto(EmissionsReport source);
 
     @Mapping(source="countyCode.countyCode", target="countyCode")
@@ -62,6 +65,7 @@ public interface BulkUploadMapper {
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
     @Mapping(source="programSystemCode.code", target="programSystemCode")
     @Mapping(source="tribalCode.code", target="tribalCode")
+    @Mapping(source="emissionsReport.masterFacilityRecord.id", target="masterFacilityRecordId")
     FacilitySiteBulkUploadDto facilitySiteToDto(FacilitySite source);
 
     List<FacilitySiteBulkUploadDto> facilitySiteToDtoList(List<FacilitySite> source);
@@ -186,6 +190,18 @@ public interface BulkUploadMapper {
     ControlPathBulkUploadDto controlPathToDto(ControlPath source);
 
     List<ControlPathBulkUploadDto> controlPathToDtoList(List<ControlPath> source);
+    
+    @Mapping(target="id", ignore = true)
+    @Mapping(target="controlPath", ignore = true)
+    @Mapping(target="pollutant", ignore = true)
+    ControlPathPollutant controlPathPollutantFromDto(ControlPathPollutantBulkUploadDto source);
+
+    @Mapping(source="controlPath.id", target="controlPathId")
+    @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
+    ControlPathPollutantBulkUploadDto controlPollutantToDto(ControlPathPollutant source);
+
+    List<ControlPathPollutantBulkUploadDto> controlPathPollutantToDtoList(List<ControlPathPollutant> source);
+
 
     @Mapping(target="id", ignore = true)
     @Mapping(target="facilitySite", ignore = true)

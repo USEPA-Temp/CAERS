@@ -27,6 +27,6 @@ export class ExternalSccService {
         .set('facetQualifier[]', 'exact')
         .set('facetMatchType[]', 'whole_phrase');
 
-    return this.http.jsonp<SccCode[]>(this.baseUrl + '?' + searchTermParams.toString() + '&' + pointOnlyParams.toString(), 'callback');
+    return this.http.get<SccCode[]>(this.baseUrl + '?' + searchTermParams.toString() + '&' + pointOnlyParams.toString());
   }
 }

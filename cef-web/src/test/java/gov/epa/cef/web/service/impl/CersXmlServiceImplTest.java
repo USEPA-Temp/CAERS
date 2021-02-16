@@ -135,7 +135,7 @@ public class CersXmlServiceImplTest {
     public void noFacilitySiteAffiliationTest() throws Exception {
 
         CERSDataType cersData =
-            createCersDataType("json/cersXmlServiceImpl/cef-916.json", "110007356994");
+            createCersDataType("json/cersXmlServiceImpl/cef-916.json", "12687411");
 
         cersData.getFacilitySite().forEach(facilitySiteDataType -> {
 
@@ -159,7 +159,7 @@ public class CersXmlServiceImplTest {
     public void noEmptyProcessControlApproach() throws Exception {
 
         CERSDataType cersData =
-            createCersDataType("json/cersXmlServiceImpl/cef-916.json", "110007356994");
+            createCersDataType("json/cersXmlServiceImpl/cef-916.json", "12687411");
 
         cersData.getFacilitySite().forEach(facilitySiteDataType -> {
 
@@ -190,15 +190,15 @@ public class CersXmlServiceImplTest {
         }
     }
 
-    private CERSDataType createCersDataType(String filename, String frsId) throws IOException {
+    private CERSDataType createCersDataType(String filename, String eisId) throws IOException {
 
         EmissionsReport emissionsReport = createEmissionsReport(filename);
 
-        assertEquals(frsId, emissionsReport.getFrsFacilityId());
+        assertEquals(eisId, emissionsReport.getEisProgramId());
 
         FacilitySite facilitySite = emissionsReport.getFacilitySites().get(0);
 
-        assertEquals(frsId, facilitySite.getFrsFacilityId());
+        assertEquals(eisId, facilitySite.getEisProgramId());
 
         UserService userService = mock(UserService.class);
         when(userService.getCurrentUser()).then(invocation ->
@@ -233,7 +233,7 @@ public class CersXmlServiceImplTest {
 
         dto.setProgramSystemCode("GADNR");
         dto.setEisProgramId(facilitySite.getEisProgramId());
-        dto.setFrsFacilityId(facilitySite.getFrsFacilityId());
+        dto.setMasterFacilityRecordId(facilitySite.getMasterFacilityRecordId());
         dto.setAltSiteIdentifier(facilitySite.getStateCode());
         dto.setYear(Short.valueOf("2019"));
         dto.setStatus(ReportStatus.IN_PROGRESS.name());
@@ -315,7 +315,7 @@ public class CersXmlServiceImplTest {
         when(this.emissionsOperatingTypeCodeRepo.findById(any())).thenReturn(Optional.empty());
         when(this.facilityCategoryRepo.findById(any())).thenReturn(Optional.empty());
         when(this.facilitySourceTypeRepo.findById(any())).thenReturn(Optional.empty());
-        when(this.mfrRepo.findByEisProgramId(any())).thenReturn(Optional.of(new MasterFacilityRecord()));
+        when(this.mfrRepo.findById(any())).thenReturn(Optional.of(new MasterFacilityRecord()));
         when(this.naicsCodeRepo.findById(any())).thenReturn(Optional.empty());
         when(this.operatingStatusRepo.findById(any())).then(invocation -> {
 

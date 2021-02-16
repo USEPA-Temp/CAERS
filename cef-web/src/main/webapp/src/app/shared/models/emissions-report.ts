@@ -5,6 +5,7 @@ export class EmissionsReport {
   id: number;
   facilityId: string;
   eisProgramId: string;
+  masterFacilityRecordId: number;
   status: string;
   programSystemCode: BaseCodeLookup;
   validationStatus: string;

@@ -41,7 +41,7 @@ export class MasterFacilitySearchComponent implements OnInit {
 
     this.ufaService.getMyAssociations()
     .subscribe(result => {
-      this.myFacilityIds = result.map(a => a.masterFacilityRecordId);
+      this.myFacilityIds = result.map(a => a.masterFacilityRecord.id);
     });
 
     this.mfrService.getProgramSystemCodes()

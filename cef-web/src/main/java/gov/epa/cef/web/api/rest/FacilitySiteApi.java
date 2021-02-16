@@ -1,5 +1,6 @@
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 
 import gov.epa.cef.web.repository.FacilitySiteRepository;
@@ -74,18 +75,17 @@ public class FacilitySiteApi {
     }
 
     /**
-     * Retrieve a facility site by eis program ID and report ID
+     * Retrieve a facility site by report ID
      * @param reportId
-     * @param eisProgramId
      * @return
      */
-    @GetMapping(value = "/report/{reportId}/facility/{eisProgramId}")
-    public ResponseEntity<FacilitySiteDto> retrieveFacilitySiteByProgramIdAndReportId(
-        @NotNull @PathVariable Long reportId, @NotNull @PathVariable String eisProgramId) {
+    @GetMapping(value = "/report/{reportId}")
+    public ResponseEntity<FacilitySiteDto> retrieveFacilitySiteByReportId(
+        @NotNull @PathVariable Long reportId) {
 
-        this.securityService.facilityEnforcer().enforceProgramId(eisProgramId);
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
-        FacilitySiteDto result = facilityService.findByEisProgramIdAndReportId(eisProgramId, reportId);
+        FacilitySiteDto result = facilityService.findByReportId(reportId);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

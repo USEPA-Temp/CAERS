@@ -41,7 +41,7 @@ public class FacilitySiteApiTest extends BaseApiTest {
     public void init() {
         facilitSiteDto=new FacilitySiteDto();
         when(facilityService.findById(123L)).thenReturn(facilitSiteDto);
-        when(facilityService.findByEisProgramIdAndReportId("p-id", 1L)).thenReturn(facilitSiteDto);
+        when(facilityService.findByReportId(1L)).thenReturn(facilitSiteDto);
 
         when(securityService.facilityEnforcer()).thenReturn(facilityAccessEnforcer);
     }
@@ -55,7 +55,7 @@ public class FacilitySiteApiTest extends BaseApiTest {
 
     @Test
     public void retrieveFacilitySiteByProgramIdAndReportId_Should_ReturnFacilitySiteDto_When_ValidProgramIdAndReportIdPassed() {
-        ResponseEntity<FacilitySiteDto> result=facilitySiteApi.retrieveFacilitySiteByProgramIdAndReportId(1L, "p-id");
+        ResponseEntity<FacilitySiteDto> result=facilitySiteApi.retrieveFacilitySiteByReportId(1L);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(facilitSiteDto, result.getBody());
 

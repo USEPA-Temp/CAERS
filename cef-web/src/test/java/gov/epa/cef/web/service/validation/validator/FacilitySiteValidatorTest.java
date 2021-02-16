@@ -49,20 +49,6 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
-    public void nullEisProgramIdTest() {
-
-        CefValidatorContext cefContext = createContext();
-        FacilitySite testData = createBaseFacilitySite();
-        testData.setEisProgramId(null);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.FACILITY_EIS_ID.value()) && errorMap.get(ValidationField.FACILITY_EIS_ID.value()).size() == 1);
-    }
-    
-    @Test
     public void facilityContactPhonePassTest() {
 
         CefValidatorContext cefContext = createContext();

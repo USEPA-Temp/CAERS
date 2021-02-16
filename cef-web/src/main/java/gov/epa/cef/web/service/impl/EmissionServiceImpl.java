@@ -182,8 +182,8 @@ public class EmissionServiceImpl implements EmissionService {
 
         if (!entities.isEmpty()) {
             // find the last year reported
-            Optional<EmissionsReport> lastReport = emissionsReportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(
-                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEisProgramId(),
+            Optional<EmissionsReport> lastReport = emissionsReportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getId(),
                     entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
 
             if (lastReport.isPresent()) {
@@ -224,8 +224,8 @@ public class EmissionServiceImpl implements EmissionService {
 
         if (!entities.isEmpty()) {
             // find the last year reported
-            EmissionsReport lastReport = emissionsReportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(
-                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEisProgramId(),
+            EmissionsReport lastReport = emissionsReportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(
+                    entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getId(),
                     entities.get(0).getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear()).orElse(null);
 
             List<EmissionBulkEntryHolderDto> result = entities.stream().map(rp -> {

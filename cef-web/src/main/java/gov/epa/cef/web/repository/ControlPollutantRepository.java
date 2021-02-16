@@ -20,14 +20,9 @@ public interface ControlPollutantRepository extends CrudRepository<ControlPollut
      */
     List<ControlPollutant> findByControlId(Long controlId);
 
-    /**
-    *
-    * @param id
-    * @return EIS Program ID
-    */
-   @Cacheable(value = CacheName.ControlPollutantProgramIds)
-   @Query("select fs.eisProgramId from ControlPollutant cp join cp.control c join c.facilitySite fs where cp.id = :id")
-   Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+   @Cacheable(value = CacheName.ControlPollutantMasterIds)
+   @Query("select mfr.id from ControlPollutant cp join cp.control c join c.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where cp.id = :id")
+   Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
    
    /**
     * Retrieve Emissions Report id for a Control Pollutant

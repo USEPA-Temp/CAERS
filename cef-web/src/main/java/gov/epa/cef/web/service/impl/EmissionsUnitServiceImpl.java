@@ -63,14 +63,16 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
                 .findById(unitId)
                 .orElse(null);
 
+        Long mfrId = unitRepo.retrieveMasterFacilityRecordIdById(unitId).orElse(null);
+
         // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(emissionsUnit.getFacilitySite().getEisProgramId(),
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
                 emissionsUnit.getFacilitySite().getEmissionsReport().getYear());
 
         // check if the emissions unit was reported last year
         if (lastReport.isPresent()) {
             unitRepo.retrieveByIdentifierFacilityYear(emissionsUnit.getUnitIdentifier(),
-                    emissionsUnit.getFacilitySite().getEisProgramId(),
+                    mfrId,
                     lastReport.get().getYear())
                     .stream().findFirst().ifPresent(oldUnit -> {
                         throw new AppValidationException("This Unit has been submitted on previous years' facility reports, so it cannot be deleted. "

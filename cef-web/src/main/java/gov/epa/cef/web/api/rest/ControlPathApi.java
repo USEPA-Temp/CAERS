@@ -1,6 +1,7 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
+import gov.epa.cef.web.repository.ControlPathPollutantRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
@@ -10,6 +11,8 @@ import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
+import gov.epa.cef.web.service.dto.ControlPathPollutantDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -255,5 +258,50 @@ public class ControlPathApi {
     		ControlAssignmentDto result = controlPathService.updateAssignment(dto.withId(controlPathAssignmentId));
 
     		return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Create a Control Path Pollutant
+     * @param dto
+     * @return
+     */
+    @PostMapping(value = "/pollutant/")
+    public ResponseEntity<ControlPathPollutantDto> createControlPathPollutant(@NotNull @RequestBody ControlPathPollutantDto dto) {
+    	
+    	this.securityService.facilityEnforcer().enforceFacilitySite(dto.getFacilitySiteId());
+    	
+    	ControlPathPollutantDto result = controlPathService.createPollutant(dto);
+    	
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Update a Control Path Pollutant by id
+     * @param controlPathPollutantId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/pollutant/{controlPathPollutantId}")
+    public ResponseEntity<ControlPathPollutantDto> updateControlPathPollutant(
+    		@NotNull @PathVariable Long controlPathPollutantId, @NotNull @RequestBody ControlPathPollutantDto dto) {
+    	
+        	this.securityService.facilityEnforcer().enforceEntity(controlPathPollutantId, ControlPathPollutantRepository.class);
+    	
+    		ControlPathPollutantDto result = controlPathService.updateControlPathPollutant(dto.withId(controlPathPollutantId));
+    		
+    		return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete a Control Path Pollutant for given id
+     * @param controlPathPollutantId
+     * @return
+     */
+    @DeleteMapping(value = "/pollutant/{controlPathPollutantId}")
+    public void deleteControlPathPollutant(@NotNull @PathVariable Long controlPathPollutantId) {
+    	
+    	this.securityService.facilityEnforcer().enforceEntity(controlPathPollutantId, ControlPathPollutantRepository.class);
+    	
+    	controlPathService.deleteControlPathPollutant(controlPathPollutantId);
     }
 }

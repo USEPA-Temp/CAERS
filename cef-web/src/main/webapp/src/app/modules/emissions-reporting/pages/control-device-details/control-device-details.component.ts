@@ -73,6 +73,13 @@ export class ControlDeviceDetailsComponent implements OnInit {
     this.editInfo = value;
   }
 
+  transformDate(value): Date {
+    if (value) {
+        return new Date(value.year, value.month - 1, value.day);
+    }
+    return null;
+  }
+
   updateControl() {
     if (!this.controlComponent.controlDeviceForm.valid) {
       this.controlComponent.controlDeviceForm.markAllAsTouched();
@@ -81,6 +88,9 @@ export class ControlDeviceDetailsComponent implements OnInit {
 
       Object.assign(updatedControl, this.controlComponent.controlDeviceForm.value);
       updatedControl.id = this.control.id;
+      updatedControl.startDate = this.transformDate(updatedControl.startDate);
+      updatedControl.upgradeDate = this.transformDate(updatedControl.upgradeDate);
+      updatedControl.endDate = this.transformDate(updatedControl.endDate);
 
       this.controlService.update(updatedControl)
       .subscribe(result => {

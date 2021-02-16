@@ -172,7 +172,6 @@ public class EmissionsReportValidationServiceImplTest {
         controlPath.setId(1L);
         Control control = new Control(); 
         control.setIdentifier("control_Identifier");
-        control.setPercentCapture(50.0);
         control.setPercentControl(50.0);
         control.setFacilitySite(facilitySite);
         controlPath.setFacilitySite(facilitySite);
@@ -217,8 +216,8 @@ public class EmissionsReportValidationServiceImplTest {
             .collect(Collectors.toMap(ValidationError::getField, re -> re));
 
         logger.debug("Failures {}", String.join(", ", federalErrors.keySet()));
-        assertTrue(federalErrors.containsKey("report.eisProgramId"));
-        assertTrue(federalErrors.containsKey("report.facilitySite.eisProgramId"));
+        assertTrue(federalErrors.containsKey("report.programSystemCode"));
+        assertTrue(federalErrors.containsKey("report.facilitySite.countyCode"));
         assertTrue(federalErrors.containsKey("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.calculationParameterValue"));
         assertTrue(federalErrors.containsKey("report.facilitySite.emissionsUnit.emissionsProcess.reportingPeriod.emission.emissionsCalcMethodCode"));
     }

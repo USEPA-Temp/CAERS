@@ -7,7 +7,7 @@
         <p>
             Search for a Combined Air Emissions Reporting System upload file that
             you would like to use for the
-            {{reportingYear}} Emissions Report for {{facility.facilityName | stripPeriodEnding}}.
+            {{reportingYear}} Emissions Report for {{facility.name | stripPeriodEnding}}.
             Please be aware that uploading a new report will remove any existing inventory data
             for this reporting year and replace it with the file contents.
         </p>
@@ -85,7 +85,7 @@
         <div class="d-flex flex-row justify-content-end">
             <a href="javascript:void(0);"
                class="btn btn-primary mr-2"
-               [routerLink]="['/facility', facility.programId, 'report']">
+               [routerLink]="['/facility', facility.id, 'report']">
                 <span>Cancel</span>
             </a>
             <button type="button" class="btn btn-success"

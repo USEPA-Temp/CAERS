@@ -14,8 +14,8 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @NotNull(message = "Facility Site ID is required.")
     private Long id;
 
-    @Size(max = 22, message = "FRS Facility ID can not exceed {max} chars; found '${validatedValue}'.")
-    private String frsFacilityId;
+    @NotNull(message = "Master Facility Record ID is required.")
+    private Long masterFacilityRecordId;
 
     @Size(max = 30, message = "Alternate Site Identifier can not exceed {max} chars; found '${validatedValue}'.")
     private String altSiteIdentifier;
@@ -125,6 +125,13 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.id = id;
     }
 
+    public Long getMasterFacilityRecordId() {
+        return masterFacilityRecordId;
+    }
+    public void setMasterFacilityRecordId(Long masterFacilityRecordId) {
+        this.masterFacilityRecordId = masterFacilityRecordId;
+    }
+
     public String getFacilityCategoryCode() {
         return facilityCategoryCode;
     }
@@ -158,13 +165,6 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     }
     public void setTribalCode(String tribalCode) {
         this.tribalCode = tribalCode;
-    }
-
-    public String getFrsFacilityId() {
-        return frsFacilityId;
-    }
-    public void setFrsFacilityId(String frsFacilityId) {
-        this.frsFacilityId = frsFacilityId;
     }
 
     public String getEisProgramId() {

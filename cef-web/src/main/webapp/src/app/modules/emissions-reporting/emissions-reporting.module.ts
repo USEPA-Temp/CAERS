@@ -8,7 +8,7 @@ import { EmissionsReportingDashboardComponent } from 'src/app/modules/emissions-
 import { EmissionsReportingComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting/emissions-reporting.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionUnitDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emission-unit-dashboard/emission-unit-dashboard.component';
-import {FaConfig, FaIconLibrary, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { FaConfig, FaIconLibrary, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { StepProgressComponent } from 'src/app/modules/emissions-reporting/components/step-progress/step-progress.component';
 
 
@@ -25,6 +25,7 @@ import { ReleasePointApptTableComponent } from 'src/app/modules/emissions-report
 import { ControlDeviceDetailsComponent } from 'src/app/modules/emissions-reporting/pages/control-device-details/control-device-details.component';
 import { ControlAssignmentTableComponent } from 'src/app/modules/emissions-reporting/components/control-assignment-table/control-assignment-table.component';
 import { ControlPollutantTableComponent } from 'src/app/modules/emissions-reporting/components/control-pollutant-table/control-pollutant-table.component';
+import { ControlPathPollutantTableComponent } from 'src/app/modules/emissions-reporting/components/control-path-pollutant-table/control-path-pollutant-table.component';
 import { InventoryControlTableComponent } from 'src/app/modules/emissions-reporting/components/inventory-control-table/inventory-control-table.component';
 import { ControlPathPanelComponent } from 'src/app/modules/emissions-reporting/components/control-path-panel/control-path-panel.component';
 import { EmissionsUnitsSummaryComponent } from 'src/app/modules/emissions-reporting/pages/emissions-units-summary/emissions-units-summary.component';
@@ -88,6 +89,7 @@ import {faBan, faPlus, faQuestionCircle, fas, faUserCircle} from "@fortawesome/f
     ControlDeviceDetailsComponent,
     ControlAssignmentTableComponent,
     ControlPollutantTableComponent,
+    ControlPathPollutantTableComponent,
     InventoryControlTableComponent,
     ControlPathPanelComponent,
     EmissionsUnitsSummaryComponent,

@@ -135,15 +135,17 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
                 .findById(id)
                 .orElse(null);
 
+        Long mfrId = processRepo.retrieveMasterFacilityRecordIdById(id).orElse(null);
+
      // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc(process.getEmissionsUnit().getFacilitySite().getEisProgramId(),
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
                 process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
 
         // check if the emissions process was reported last year
         if (lastReport.isPresent()) {
             processRepo.retrieveByIdentifierParentFacilityYear(process.getEmissionsProcessIdentifier(),
                     process.getEmissionsUnit().getUnitIdentifier(), 
-                    process.getEmissionsUnit().getFacilitySite().getEisProgramId(), 
+                    mfrId, 
                     lastReport.get().getYear())
                     .stream().findFirst().ifPresent(oldUnit -> {
                         throw new AppValidationException("This Process has been submitted on previous years' facility reports, so it cannot be deleted. "

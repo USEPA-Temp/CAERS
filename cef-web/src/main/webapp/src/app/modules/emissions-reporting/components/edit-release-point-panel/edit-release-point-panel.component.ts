@@ -14,7 +14,7 @@ import {ReleasePointService} from 'src/app/core/services/release-point.service';
 import {InventoryYearCodeLookup} from 'src/app/shared/models/inventory-year-code-lookup';
 import {legacyItemValidator} from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
-import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
+import {VariableValidationType} from 'src/app/shared/enums/variable-validation-type';
 
 @Component({
     selector: 'app-edit-release-point-panel',
@@ -33,6 +33,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     @Input() year: number;
     releasePointIdentifiers: string[] = [];
     readonly fugitiveType = 'Fugitive';
+    readonly circleAreaFormula: string = '(Pi * (Stack Diameter /2) ^ 2) for a circular stack';
+    readonly rectangleAreaFormula: string = '(Stack Length * Stack Width) for a rectangular stack';
+    readonly circularDimension: string = 'Stack Diameter is';
+    readonly rectangularDimension: string = 'Stack Length/Stack Width are';
     facilitySite: FacilitySite;
     releaseType: string;
     eisProgramId: string;
@@ -45,10 +49,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     calculatedFlowRate: string;
     calculatedFlowRateUom: string;
     calculatedVelocityUom: string;
+    stackDimension: string;
+    stackAreaDescription: string;
     minVelocity: number;
     maxVelocity: number;
     coordinateTolerance: EisLatLongToleranceLookup;
     tolerance: number;
+    stackVelocityFormula: string;
+    stackVelocityDimensions: string;
 
     releasePointForm = this.fb.group({
         releasePointIdentifier: ['', [
@@ -157,7 +165,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.exitGasVelocityUomCheck(),
             this.releasePointIdentifierCheck(),
             this.latLongRequiredCheck(),
-            this.stackDiameterOrStackWidthAndLength()
+            this.stackDiameterOrStackWidthAndLength(),
         ]
     });
 
@@ -493,6 +501,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         };
     }
 
+
     // QA Check - exit gas flow rate and uom must be submitted together
     exitGasFlowUomCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
@@ -526,30 +535,32 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 const flowRate = control.get('exitGasFlowRate'); // acfs/acfm
                 const velocity = control.get('exitGasVelocity'); // fps/fps
                 const diameter = control.get('stackDiameter'); // ft
+                const exitGasFlowUom = control.get('exitGasFlowUomCode');
+                const length: number = control.get('stackLength')?.value;
+                const width: number = control.get('stackWidth')?.value;
                 let calculatedVelocity;
                 this.calculatedVelocityUom = 'FPS';
                 let minVelocity = 0.001; // fps
                 let maxVelocity = 1500; // fps
 
-                if ((diameter !== null && diameter.value > 0)
-                    && (flowRate !== null && flowRate.value > 0)) {
-                    const computedArea = ((Math.PI) * (Math.pow((diameter.value / 2.0), 2)));
+                if (flowRate.value && exitGasFlowUom.value && (diameter.value || (length && width))) {
+                    const isDiameter = !!diameter.value;
+                    this.stackVelocityFormula = isDiameter ? this.circleAreaFormula : this.rectangleAreaFormula;
+                    this.stackVelocityDimensions = isDiameter ? this.circularDimension : this.rectangularDimension;
+                    const computedArea: number = isDiameter ? ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))) : width * length;
+                    calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
 
-                    if (control.get('exitGasFlowUomCode').value !== null) {
-                        calculatedVelocity = (Math.round((flowRate.value / computedArea) * 1000)) / 1000;
-
-                        if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
-                            minVelocity = 0.060; // fpm
-                            maxVelocity = 90000; // fpm
-                            this.calculatedVelocityUom = 'FPM';
-                        }
+                    if ((control.get('exitGasFlowUomCode').value.code !== 'ACFS')) {
+                        minVelocity = 0.060; // fpm
+                        maxVelocity = 90000; // fpm
+                        this.calculatedVelocityUom = 'FPM';
                     }
 
                     if (calculatedVelocity > maxVelocity || calculatedVelocity < minVelocity) {
                         this.calculatedVelocity = calculatedVelocity.toString();
                         this.minVelocity = minVelocity;
                         this.maxVelocity = maxVelocity;
-                        return {invalidComputedVelocity: true};
+                        return { invalidComputedVelocity: true };
                     }
                 }
                 return null;
@@ -603,7 +614,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     exitFlowConsistencyCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
             if (this.releaseType !== this.fugitiveType) {
-                const diameter = control.get('stackDiameter'); // ft
+                const diameter: number = control.get('stackDiameter')?.value; // ft
+                const length: number = control.get('stackLength')?.value; // ft
+                const width: number = control.get('stackWidth')?.value; // ft
                 const exitVelocity = control.get('exitGasVelocity'); // fps/fpm
                 const exitFlowRate = control.get('exitGasFlowRate'); // acfs/acfm
                 const velocityUomFPS = "FPS";
@@ -613,11 +626,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 let actualFlowRate;
                 this.calculatedFlowRateUom = flowUomACFS;
 
-                if ((diameter !== null && diameter.value > 0)
-                    && (exitVelocity !== null && exitVelocity.value > 0)
-                    && (exitFlowRate !== null && exitFlowRate.value > 0)) {
+                if (exitFlowRate.value && exitVelocity.value && (diameter || (length && width))) {
+                    const isDiameter = !!diameter;
+                    this.stackAreaDescription = isDiameter ? this.circleAreaFormula : this.rectangleAreaFormula;
+                    this.stackDimension = isDiameter ? this.circularDimension : this.rectangularDimension;
 
-                    const computedArea = ((Math.PI) * (Math.pow((diameter.value / 2.0), 2))); // sf
+                    const computedArea: number = isDiameter ? ((Math.PI) * (Math.pow((diameter / 2.0), 2))) : width * length; // sf
                     const calculatedFlowRate = (computedArea * exitVelocity.value); // cfs/cfm
                     actualFlowRate = exitFlowRate.value;
 

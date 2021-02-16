@@ -1,8 +1,10 @@
 package gov.epa.cef.web.repository;
 
+import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,13 +36,8 @@ public interface MasterFacilityRecordRepository extends JpaRepository<MasterFaci
     @Query("select distinct programSystemCode FROM MasterFacilityRecord")
     List<BaseLookupEntity> findDistinctProgramSystems();
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-//    @Cacheable(value = CacheName.FacilityProgramIds)
-    @Query("select mfr.eisProgramId from MasterFacilityRecord mfr where mfr.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+    @Cacheable(value = CacheName.MasterFacilityMasterIds)
+    @Query("select mfr.id from MasterFacilityRecord mfr where mfr.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
 }

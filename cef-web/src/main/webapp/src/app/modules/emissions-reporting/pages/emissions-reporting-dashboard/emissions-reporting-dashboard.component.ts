@@ -1,5 +1,4 @@
 import { EmissionsReport } from 'src/app/shared/models/emissions-report';
-import { CdxFacility } from 'src/app/shared/models/cdx-facility';
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +15,7 @@ import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FileDownloadService } from 'src/app/core/services/file-download.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -23,7 +23,7 @@ import { OperatingStatus } from 'src/app/shared/enums/operating-status';
     styleUrls: ['./emissions-reporting-dashboard.component.scss']
 })
 export class EmissionsReportingDashboardComponent implements OnInit {
-    facility: CdxFacility;
+    facility: MasterFacilityRecord;
     facilitySite: FacilitySite;
     reports: EmissionsReport[];
     emissionsReport: EmissionsReport;
@@ -51,10 +51,10 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     ngOnInit() {
 
         this.route.data
-            .subscribe((data: { facility: CdxFacility }) => {
+            .subscribe((data: { facility: MasterFacilityRecord }) => {
                 this.facility = data.facility;
                 if (this.facility) {
-                    this.reportService.getFacilityReports(this.facility.programId)
+                    this.reportService.getFacilityReports(this.facility.id)
                     .subscribe(reports => {this.reports = reports.sort((a, b) => b.year - a.year);
                     });
                 }
@@ -97,17 +97,17 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalWindow.componentInstance.message = 'Please wait while we generate your new report.';
 
         const reportingYear = new Date().getFullYear() - 1;
-        this.reportService.createReportFromPreviousCopy(this.facility.programId, reportingYear)
+        this.reportService.createReportFromPreviousCopy(this.facility.id, reportingYear)
                 .subscribe(reportResp => {
                     if (reportResp.status === 204) {
                         // 204 No Content
                         // no previous report
 
-                        this.copyFacilitySiteFromCdxModel();
-                        this.lookupService.retrieveProgramSystemCodeByDescription(this.facility.responsibleAgency)
+                        // this.copyFacilitySiteFromCdxModel();
+                        this.lookupService.retrieveProgramSystemCodeByDescription(this.facility.programSystemCode?.description)
                         .subscribe(result => {
                             this.facilitySite.programSystemCode = result;
-                            this.reportService.createReportFromScratch(this.facility, reportingYear, this.facilitySite)
+                            this.reportService.createReportFromScratch(this.facility.id, reportingYear)
                             .subscribe(reportResp => {
                                 modalWindow.dismiss();
                                 this.reportCompleted(reportResp.body);
@@ -130,33 +130,8 @@ export class EmissionsReportingDashboardComponent implements OnInit {
      */
     reportCompleted(newReport: EmissionsReport) {
 
-        this.router.navigateByUrl(`/facility/${newReport.eisProgramId}/report/${newReport.id}/summary`);
+        this.router.navigateByUrl(`/facility/${newReport.masterFacilityRecordId}/report/${newReport.id}/summary`);
     }
-
-    copyFacilitySiteFromCdxModel() {
-              Object.assign(this.facilitySite, this.facility);
-              this.facilitySite.emissionsReport = this.emissionsReport;
-              this.facilitySite.name = this.facility.facilityName;
-              this.operatingFacilityStatusValues.forEach(opStatus => {
-                  if (opStatus.code === OperatingStatus.OPERATING) {
-                      this.facilitySite.operatingStatusCode = opStatus;
-                  }
-              });
-              this.facilitySite.streetAddress = this.facility.address;
-              this.facilitySite.stateCode = new FipsStateCode();
-              this.facilitySite.stateCode.uspsCode = this.facility.state;
-              this.facilitySite.statusYear = new Date().getFullYear();
-              this.facilitySite.frsFacilityId = this.facility.epaRegistryId;
-              this.facilitySite.postalCode = this.facility.zipCode;
-              this.facilitySite.mailingStreetAddress = this.facility.address;
-              this.facilitySite.mailingStateCode = new FipsStateCode();
-              this.facilitySite.mailingStateCode.uspsCode = this.facility.state;
-              this.facilitySite.mailingCity = this.facility.city;
-              this.facilitySite.mailingPostalCode = this.facility.zipCode;
-              this.facilitySite.altSiteIdentifier = this.facility.stateFacilityId;
-              this.facilitySite.eisProgramId = this.facility.programId;
-    }
-
 
     onFailedToCreateCloseClick() {
 
@@ -167,10 +142,10 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
         this.reportService.delete(reportId).subscribe(() => {
             this.route.data
-            .subscribe((data: { facility: CdxFacility }) => {
+            .subscribe((data: { facility: MasterFacilityRecord }) => {
                 this.facility = data.facility;
                 if (this.facility) {
-                    this.reportService.getFacilityReports(this.facility.programId)
+                    this.reportService.getFacilityReports(this.facility.id)
                     .subscribe(reports => {
                         this.reports = reports.sort((a, b) => b.year - a.year);
                     });
@@ -194,7 +169,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     downloadExcelTemplate(report: EmissionsReport) {
 
         let reportFacility: FacilitySite;
-        this.facilitySiteService.retrieveForReport(report.eisProgramId, report.id)
+        this.facilitySiteService.retrieveForReport(report.id)
         .subscribe(result => {
             reportFacility = result;
         });
@@ -209,14 +184,14 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         this.reportService.downloadExcelExport(report.id)
         .subscribe(file => {
             modalWindow.dismiss();
-            this.fileDownloadService.downloadFile(file, `${reportFacility.altSiteIdentifier}-${this.facility.facilityName}-${report.year}.xlsx`);
+            this.fileDownloadService.downloadFile(file, `${reportFacility.altSiteIdentifier}-${this.facility.name}-${report.year}.xlsx`);
             error => console.error(error);
         });
     }
 
     reopenReport(report) {
         const modalMessage = `Do you wish to reopen the ${report.year} report for
-        ${this.facility.facilityName}? This will reset the status of the report to "In progress" and you
+        ${this.facility.name}? This will reset the status of the report to "In progress" and you
         will need to resubmit the report to the S/L/T authority for review.`;
         const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
         modalRef.componentInstance.message = modalMessage;
@@ -228,7 +203,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
 
     resetReport(reportIds: number[], report) {
         this.reportService.resetReports(reportIds).subscribe(result => {
-            this.router.navigate(['/facility/' + report.eisProgramId + '/report/' + report.id + '/summary']);
+            this.router.navigate(['/facility/' + report.masterFacilityRecordId + '/report/' + report.id + '/summary']);
         });
 
     }

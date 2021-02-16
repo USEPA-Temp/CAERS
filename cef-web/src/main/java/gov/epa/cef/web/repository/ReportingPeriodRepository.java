@@ -28,31 +28,25 @@ public interface ReportingPeriodRepository extends CrudRepository<ReportingPerio
     List<ReportingPeriod> findByFacilitySiteId(Long facilitySiteId);
 
     /**
-     * Find Reporting Period with the specified type, process identifier, unit identifier, EIS program id, and year.
+     * Find Reporting Period with the specified type, process identifier, unit identifier, master facility record id, and year.
      * This combination should be unique and can be used to find a specific Reporting Period for a specific year
      * @param typeCode
      * @param processIdentifier
      * @param unitIdentifier
-     * @param eisProgramId
+     * @param mfrId
      * @param year
      * @return
      */
-    @Query("select rp from ReportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r "
+    @Query("select rp from ReportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr "
             + "where rp.reportingPeriodTypeCode.code = :typeCode and ep.emissionsProcessIdentifier = :processIdentifier and eu.unitIdentifier = :unitIdentifier "
-            + "and fs.eisProgramId = :eisProgramId and r.year = :year")
+            + "and mfr.id = :mfrId and r.year = :year")
     List<ReportingPeriod> retrieveByTypeIdentifierParentFacilityYear(@Param("typeCode") String typeCode,
             @Param("processIdentifier") String processIdentifier, @Param("unitIdentifier") String unitIdentifier,
-            @Param("eisProgramId") String eisProgramId, @Param("year") Short year);
+            @Param("mfrId") Long mfrId, @Param("year") Short year);
 
-    /**
-     *
-     * @param id
-     * @return EIS Program ID
-     */
-    @Override
-    @Cacheable(value = CacheName.ReportingPeriodProgramIds)
-    @Query("select fs.eisProgramId from ReportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs where rp.id = :id")
-    Optional<String> retrieveEisProgramIdById(@Param("id") Long id);
+    @Cacheable(value = CacheName.ReportingPeriodMasterIds)
+    @Query("select mfr.id from ReportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where rp.id = :id")
+    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
 
     /**
      * Retrieve Emissions Report id for a Reporting Period

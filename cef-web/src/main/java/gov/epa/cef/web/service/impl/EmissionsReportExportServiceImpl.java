@@ -36,6 +36,7 @@ import com.google.common.io.Resources;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
@@ -55,6 +56,7 @@ import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
@@ -152,6 +154,9 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
         List<ControlPollutant> controlPollutants = controls.stream()
             .flatMap(c -> c.getPollutants().stream())
             .collect(Collectors.toList());
+        List<ControlPathPollutant> controlPathPollutants = controlPaths.stream()
+                .flatMap(c -> c.getPollutants().stream())
+                .collect(Collectors.toList());
         List<FacilityNAICSXref> facilityNacis = facilitySites.stream()
             .flatMap(fn -> fn.getFacilityNAICS().stream())
             .collect(Collectors.toList());
@@ -202,6 +207,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
         reportDto.setControls(uploadMapper.controlToDtoList(controls));
         reportDto.setControlAssignments(uploadMapper.controlAssignmentToDtoList(controlAssignments));
         reportDto.setControlPollutants(uploadMapper.controlPollutantToDtoList(controlPollutants));
+        reportDto.setControlPathPollutants(uploadMapper.controlPathPollutantToDtoList(controlPathPollutants));
         reportDto.setFacilityNAICS(uploadMapper.faciliytNAICSToDtoList(facilityNacis));
         reportDto.setFacilityContacts(uploadMapper.facilitySiteContactToDtoList(facilityContacts));
 
@@ -267,6 +273,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
             generateControlPathsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPath.sheetName()), uploadDto.getControlPaths());
             generateControlAssignmentsExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlAssignment.sheetName()), uploadDto.getControlAssignments(), controlMap, pathMap);
             generateControlPollutantExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPollutant.sheetName()), uploadDto.getControlPollutants(), controlMap);
+            generateControlPathPollutantExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ControlPathPollutant.sheetName()), uploadDto.getControlPathPollutants(), pathMap);
             generateApportionmentExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReleasePointAppt.sheetName()), uploadDto.getReleasePointAppts(), rpMap, epMap, pathMap);
             generateReportingPeriodExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.ReportingPeriod.sheetName()), uploadDto.getReportingPeriods(), epMap);
             generateOperatingDetailExcelSheet(wb, formulaEvaluator, wb.getSheet(WorksheetName.OperatingDetail.sheetName()), uploadDto.getOperatingDetails(), periodMap);
@@ -302,7 +309,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
         for (FacilitySiteBulkUploadDto dto : dtos) {
             Row row = sheet.getRow(currentRow);
 
-            row.getCell(2).setCellValue(dto.getFrsFacilityId());
+            row.getCell(2).setCellValue(dto.getMasterFacilityRecordId());
             row.getCell(3).setCellValue(dto.getAltSiteIdentifier());
             row.getCell(4).setCellValue(dto.getFacilityCategoryCode());
 //                row.getCell(5).setCellValue(dto.getFacilitySourceTypeCode());
@@ -599,19 +606,23 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
 
             row.getCell(2).setCellValue(dto.getIdentifier());
             row.getCell(4).setCellValue(dto.getDescription());
-            setCellNumberValue(row.getCell(5), dto.getPercentCapture());
-            setCellNumberValue(row.getCell(6), dto.getPercentControl());
+            setCellNumberValue(row.getCell(5), dto.getPercentControl());
             if (dto.getOperatingStatusCode() != null) {
-                row.getCell(7).setCellValue(dto.getOperatingStatusCode());
-                row.getCell(8).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
-                formulaEvaluator.evaluateInCell(row.getCell(8));
+                row.getCell(6).setCellValue(dto.getOperatingStatusCode());
+                row.getCell(7).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(7));
             }
             if (dto.getControlMeasureCode() != null) {
-                row.getCell(9).setCellValue(dto.getControlMeasureCode());
-                row.getCell(10).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
-                formulaEvaluator.evaluateInCell(row.getCell(10));
+                row.getCell(8).setCellValue(dto.getControlMeasureCode());
+                row.getCell(9).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(9));
             }
-            row.getCell(11).setCellValue(dto.getComments());
+            setCellNumberValue(row.getCell(10), dto.getNumberOperatingMonths());
+            row.getCell(11).setCellValue(dto.getStartDate());
+            row.getCell(12).setCellValue(dto.getUpgradeDate());
+            row.getCell(13).setCellValue(dto.getEndDate());
+            row.getCell(14).setCellValue(dto.getUpgradeDescription());
+            row.getCell(15).setCellValue(dto.getComments());
 
             currentRow++;
 
@@ -637,10 +648,44 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
 
             row.getCell(2).setCellValue(dto.getPathId());
             row.getCell(3).setCellValue(dto.getDescription());
+            setCellNumberValue(row.getCell(5), dto.getPercentControl());
 
             currentRow++;
 
             dto.setRow(currentRow);
+
+        }
+
+    }
+    
+    /**
+     * Map control path pollutants into the control path pollutant excel sheet
+     * @param wb
+     * @param formulaEvaluator
+     * @param sheet
+     * @param dtos
+     */
+    private void generateControlPathPollutantExcelSheet(Workbook wb, FormulaEvaluator formulaEvaluator, Sheet sheet,
+            List<ControlPathPollutantBulkUploadDto> dtos, Map<Long, ControlPathBulkUploadDto> controlMap) {
+
+        int currentRow = EXCEL_MAPPING_HEADER_ROWS;
+
+        for (ControlPathPollutantBulkUploadDto dto : dtos) {
+            Row row = sheet.getRow(currentRow);
+
+            if (dto.getControlPathId() != null) {
+                row.getCell(2).setCellValue(controlMap.get(dto.getControlPathId()).getRow());
+                row.getCell(3).setCellValue(controlMap.get(dto.getControlPathId()).getPathId());
+            }
+            if (dto.getPollutantCode() != null) {
+                row.getCell(4).setCellValue(dto.getPollutantCode());
+                // check if the code is a number or not when looking it up
+                row.getCell(5).setCellFormula(generateLookupFormula(wb, "Pollutant", dto.getPollutantCode(), !NumberUtils.isCreatable(dto.getPollutantCode())));
+                formulaEvaluator.evaluateInCell(row.getCell(5));
+            }
+            setCellNumberValue(row.getCell(6), dto.getPercentReduction());
+
+            currentRow++;
 
         }
 

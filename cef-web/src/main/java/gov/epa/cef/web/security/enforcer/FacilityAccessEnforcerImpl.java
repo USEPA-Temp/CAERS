@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 
 public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
 
-    private final Collection<String> authorizedProgramIds;
+    private final Collection<Long> authorizedMasterIds;
 
     private final ProgramIdRepoLocator repoLocator;
 
     public FacilityAccessEnforcerImpl(ProgramIdRepoLocator repoLocator,
-                                      Collection<String> authorizedProgramIds) {
+                                      Collection<Long> authorizedMasterIds) {
 
         this.repoLocator = repoLocator;
-        this.authorizedProgramIds = authorizedProgramIds;
+        this.authorizedMasterIds = authorizedMasterIds;
     }
 
     @Override
@@ -28,10 +28,10 @@ public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
 
         ProgramIdRetriever repo = repoLocator.getProgramIdRepository(repoClazz);
 
-        enforceProgramIds(ids.stream()
+        enforceMasterIds(ids.stream()
             .map(id -> {
 
-                return repo.retrieveEisProgramIdById(id)
+                return repo.retrieveMasterFacilityRecordIdById(id)
                     .orElseThrow(() -> {
 
                         String entity = repoClazz.getSimpleName().replace("Repository", "");
@@ -62,22 +62,23 @@ public class FacilityAccessEnforcerImpl implements FacilityAccessEnforcer {
     }
 
     @Override
-    public void enforceProgramId(String id) {
+    public void enforceMasterId(Long id) {
 
-        enforceProgramIds(Collections.singletonList(id));
+        enforceMasterIds(Collections.singletonList(id));
     }
 
     @Override
-    public Collection<String> getAuthorizedProgramIds() {
+    public Collection<Long> getAuthorizedMasterIds() {
 
-        return Collections.unmodifiableCollection(this.authorizedProgramIds);
+        return Collections.unmodifiableCollection(this.authorizedMasterIds);
     }
 
     @Override
-    public void enforceProgramIds(Collection<String> ids) {
+    public void enforceMasterIds(Collection<Long> ids) {
 
         Collection<String> unauthorized = ids.stream()
-            .filter(p -> this.authorizedProgramIds.contains(p) == false)
+            .filter(p -> this.authorizedMasterIds.contains(p) == false)
+            .map(p -> p.toString())
             .collect(Collectors.toList());
 
         if (unauthorized.size() > 0) {

@@ -134,7 +134,6 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
         control.setFacilitySite(facilitySite);
         control.setOperatingStatusCode(operatingStatusCode);
         control.setIdentifier("Control 001");
-        control.setPercentCapture(50d);
         control.setPercentControl(50d);
         control.setControlMeasureCode(controlMeasureCode);
         control.setCreatedBy("JUNIT-TEST");

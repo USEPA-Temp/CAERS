@@ -1,14 +1,17 @@
 <div>
   <div class="row small">
-    <strong>Agency ID: {{facility.stateFacilityId}}</strong>
+    <strong>Agency ID: {{facility.agencyFacilityId}}</strong>
   </div>
   <div class="row small">
-    <strong>{{facility.facilityName}}</strong>
+    <strong>{{facility.name}}</strong>
   </div>
   <div class="row small">
-    <span>{{facility.address}}</span>
+    <span>{{facility.streetAddress}}</span>
   </div>
   <div class="row small">
-    <span>{{facility.city}}, {{facility.state}} {{facility.zipCode}}</span>
+    <span>{{facility.city}}, {{facility.stateCode?.uspsCode}} {{facility.postalCode}}</span>
+  </div>
+  <div class="row small">
+    <strong>Agency: {{facility.programSystemCode?.code}}</strong>
   </div>
 </div>

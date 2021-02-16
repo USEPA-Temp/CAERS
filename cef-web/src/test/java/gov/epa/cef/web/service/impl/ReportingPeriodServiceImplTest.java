@@ -4,6 +4,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
@@ -66,13 +67,18 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
     @Before
     public void init(){
 
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(1L);
+
         report2019 = new EmissionsReport();
         report2019.setYear(new Short("2019"));
         report2019.setEisProgramId("1");
+        report2019.setMasterFacilityRecord(mfr);
 
         report2018 = new EmissionsReport();
         report2018.setYear(new Short("2018"));
         report2018.setEisProgramId("1");
+        report2018.setMasterFacilityRecord(mfr);
 
         CodeLookupDto code = new CodeLookupDto();
         code.setCode("A");
@@ -106,10 +112,10 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
         when(reportingPeriodRepo.findByEmissionsProcessId(1L)).thenReturn(reportingPeriodList);
         when(reportingPeriodRepo.findByFacilitySiteId(1L)).thenReturn(reportingPeriodList);
         when(reportingPeriodRepo.findByEmissionsProcessId(2L)).thenReturn(emptyReportingPeriodList);
-        when(reportingPeriodRepo.retrieveByTypeIdentifierParentFacilityYear("A", "1", "1", "1", new Short("2018"))).thenReturn(reportingPeriodList);
+        when(reportingPeriodRepo.retrieveByTypeIdentifierParentFacilityYear("A", "1", "1", 1L, new Short("2018"))).thenReturn(reportingPeriodList);
         when(reportingPeriodRepo.save(reportingPeriod)).thenReturn(reportingPeriod);
 
-        when(reportRepo.findFirstByEisProgramIdAndYearLessThanOrderByYearDesc("1", new Short("2019"))).thenReturn(Optional.of(report2018));
+        when(reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(1L, new Short("2019"))).thenReturn(Optional.of(report2018));
 
         reportingPeriodDto = new ReportingPeriodDto();
         reportingPeriodDto.setId(1L);

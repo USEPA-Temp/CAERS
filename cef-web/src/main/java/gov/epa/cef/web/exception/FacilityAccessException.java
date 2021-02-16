@@ -8,9 +8,9 @@ import java.util.Collection;
 @ResponseStatus(value = HttpStatus.FORBIDDEN)
 public class FacilityAccessException extends ApplicationException {
 
-    public FacilityAccessException(Collection<String> programIds) {
+    public FacilityAccessException(Collection<String> masterIds) {
 
         super(ApplicationErrorCode.E_AUTHORIZATION,
-            String.format("Access to Facility Program ID(s) [%s] is denied.", String.join(", ", programIds)));
+            String.format("Access to Master Facility ID(s) [%s] is denied.", String.join(", ", masterIds)));
     }
 }

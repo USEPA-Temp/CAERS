@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CdxFacility } from 'src/app/shared/models/cdx-facility';
-import { CdxFacilityService } from 'src/app/core/services/cdx-facility.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
+import { UserFacilityAssociationService } from 'src/app/core/services/user-facility-association.service';
 
 @Component({
   selector: 'app-facility-dashboard',
@@ -9,9 +9,9 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
   styleUrls: ['./facility-dashboard.component.scss']
 })
 export class FacilityDashboardComponent implements OnInit {
-  facilities: CdxFacility[] = [];
+  facilities: MasterFacilityRecord[] = [];
 
-  constructor(private cdxFacilityService: CdxFacilityService, private userContext: UserContextService) { }
+  constructor( private ufaService: UserFacilityAssociationService, private userContext: UserContextService) { }
 
   ngOnInit() {
     this.getFacilities();
@@ -19,10 +19,12 @@ export class FacilityDashboardComponent implements OnInit {
   }
 
   getFacilities(): void {
-    this.cdxFacilityService.getMyFacilities()
-    .subscribe(facilities =>
-      this.facilities = facilities.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1)
-      );
+    this.ufaService.getMyAssociations()
+    .subscribe(associations => {
+      this.facilities = associations.filter(a => a.approved)
+                                    .map(a => a.masterFacilityRecord)
+                                    .sort((a, b) => (a.name > b.name) ? 1 : -1);
+    });
   }
 
 }

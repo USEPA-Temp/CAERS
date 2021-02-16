@@ -45,6 +45,13 @@ export class CreateControlDeviceComponent implements OnInit {
     return this.controlDeviceComponent.controlDeviceForm.valid;
   }
 
+  transformDate(value): Date {
+    if (value) {
+        return new Date(value.year, value.month - 1, value.day);
+    }
+    return null;
+  }
+
   onSubmit() {
 
     if (!this.isValid()) {
@@ -55,6 +62,9 @@ export class CreateControlDeviceComponent implements OnInit {
       Object.assign(saveControlDevice, this.controlDeviceComponent.controlDeviceForm.value);
       saveControlDevice.facilitySiteId = this.facilitySite.id;
       saveControlDevice.identifier = this.controlDeviceComponent.controlDeviceForm.controls.identifier.value.trim();
+      saveControlDevice.startDate = this.transformDate(saveControlDevice.startDate);
+      saveControlDevice.upgradeDate = this.transformDate(saveControlDevice.upgradeDate);
+      saveControlDevice.endDate = this.transformDate(saveControlDevice.endDate);
 
       this.controlService.create(saveControlDevice)
         .subscribe(() => {

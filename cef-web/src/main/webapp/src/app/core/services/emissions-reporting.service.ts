@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {ValidationResult} from 'src/app/shared/models/validation-result';
 import {FacilitySite} from 'src/app/shared/models/facility-site';
 import {CdxFacility} from '../../shared/models/cdx-facility';
+import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class EmissionsReportingService {
     }
 
     /** GET reports for specified facility from the server */
-    getFacilityReports(facilityId: string): Observable<EmissionsReport[]> {
+    getFacilityReports(facilityId: number): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/facility/${facilityId}`;
         return this.http.get<EmissionsReport[]>(url);
     }
@@ -57,11 +58,11 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a report for the current year from most previous copy */
-    createReportFromPreviousCopy(eisFacilityId: string, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
-        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
+    createReportFromPreviousCopy(masterFacilityRecordId: number, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
+        const url = `${this.baseUrl}/facility/${masterFacilityRecordId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
-            eisProgramId: eisFacilityId,
+            masterFacilityRecordId,
             source: 'previous'
         }, {
             observe: 'response'
@@ -69,37 +70,34 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a report for the current year from scratch */
-    createReportFromScratch(facility: CdxFacility,
-                            reportYear: number,
-                            facilitySite: FacilitySite): Observable<HttpResponse<EmissionsReport>> {
+    createReportFromScratch(masterFacilityRecordId: number,
+                            reportYear: number): Observable<HttpResponse<EmissionsReport>> {
 
-        const url = `${this.baseUrl}/facility/${facility.programId}`;
+        const url = `${this.baseUrl}/facility/${masterFacilityRecordId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
-            eisProgramId: facility.programId,
-            frsFacilityId: facility.epaRegistryId,
-            stateFacilityId: facility.stateFacilityId,
-            source: 'fromScratch',
-            facilitySite
+            masterFacilityRecordId,
+            source: 'fromScratch'
         }, {
             observe: 'response'
         });
     }
 
     /** POST request to the server to create a report for the current year from uploaded workbook */
-    createReportFromUpload(facility: CdxFacility,
+    createReportFromUpload(facility: MasterFacilityRecord,
                            reportYear: number,
                            workbook: File): Observable<HttpEvent<EmissionsReport>> {
 
-        const url = `${this.baseUrl}/facility/${facility.programId}`;
+        const url = `${this.baseUrl}/facility/${facility.id}`;
 
         const formData = new FormData();
         formData.append('workbook', workbook);
         formData.append('metadata', new Blob([JSON.stringify({
             year: reportYear,
-            eisProgramId: facility.programId,
-            frsFacilityId: facility.epaRegistryId,
-            stateFacilityId: facility.stateFacilityId,
+            masterFacilityRecordId: facility.id,
+            eisProgramId: facility.eisProgramId,
+            stateFacilityId: facility.agencyFacilityId,
+            programSystemCode: facility.programSystemCode.code,
             source: 'fromScratch'
         })], {
             type: 'application/json'
@@ -108,17 +106,6 @@ export class EmissionsReportingService {
         return this.http.post<EmissionsReport>(url, formData, {
             observe: 'events',
             reportProgress: true
-        });
-    }
-
-    /** POST request to the server to create a report for the current year from FRS data */
-    createReportFromFrs(eisFacilityId: string, reportYear: number): Observable<EmissionsReport> {
-
-        const url = `${this.baseUrl}/facility/${eisFacilityId}`;
-        return this.http.post<EmissionsReport>(url, {
-            year: reportYear,
-            eisProgramId: eisFacilityId,
-            source: 'frs'
         });
     }
 

@@ -21,12 +21,11 @@ public interface FacilitySiteService {
     FacilitySiteDto findById(Long id);
 
     /**
-     * Retrieve facility by EIS program id and emissions report
-     * @param eisProgramId
+     * Retrieve facility by emissions report
      * @param emissionsReportId
      * @return
      */
-    FacilitySiteDto findByEisProgramIdAndReportId(String eisProgramId, Long emissionsReportId);
+    FacilitySiteDto findByReportId(Long emissionsReportId);
 
     /**
      * Update facility information

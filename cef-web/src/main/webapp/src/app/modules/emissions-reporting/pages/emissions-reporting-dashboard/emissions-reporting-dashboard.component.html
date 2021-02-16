@@ -7,54 +7,54 @@
 			<div class="d-flex flex-row justify-content-between">
 				<div>{{report.year}} Report</div>
 
-				<div class="pipe-list">
-                    <a [routerLink]="['/facility', report.eisProgramId, 'report', 'upload', report.year]"
-					   class="text-dark font-weight-bold pipe-item"
+				<div class="button-list-horizontal">
+                    <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', 'upload', report.year]"
+					   class="btn btn-primary"
 					   [attr.aria-label]="'upload'+ report.year +'report'"
                        *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'VALIDATED'])">
                         <span>Upload Report</span>
                     </a>
 
                     <a href="javascript:void(0);"
-					   class="text-dark font-weight-bold pipe-item"
+					   class="btn btn-primary"
 					   [attr.aria-label]="'create new'+ report.year +'report'"
 						(click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
 
-					<a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
-						class="text-dark font-weight-bold pipe-item"
+					<a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
+						class="btn btn-primary"
 						[attr.aria-label]="'continue'+ report.year +'report'"
 						*ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
 
-					<a href="#" class="text-dark font-weight-bold pipe-item"
+					<a href="#" class="btn btn-primary"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>
 
-                    <a [routerLink]="['/facility', report.eisProgramId, 'report', report.id, 'summary']"
-					   class="text-dark font-weight-bold pipe-item"
+                    <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
+					   class="btn btn-primary"
 					   [attr.aria-label]="'view'+ report.year +'report'"
                        *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 
 					<a [routerLink]="['.']"
 						*ngIf="excelExportEnabled && report.status !== 'NEW'"
-						class="text-dark font-weight-bold pipe-item"
+						class="btn btn-primary"
 						[attr.aria-label]="'download '+ report.year +' report template'"
 						(click)="downloadExcelTemplate(report)">Download as Template</a>
 
 					<a [routerLink]="['.']"
-						class="text-dark font-weight-bold pipe-item"
+						class="btn btn-primary"
 						[attr.aria-label]="'reopen'+ report.year +'report'"
 						(click)="reopenReport(report)"
 						*ngIf="isOneOf(report.status, ['SUBMITTED'])">Reopen Report</a>
 
-					<a href="#" class="text-dark font-weight-bold pipe-item"
+					<a href="#" class="btn btn-primary"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Certify</a>
 
-					<a href="#" class="text-dark font-weight-bold pipe-item"
+					<a href="#" class="btn btn-primary"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Return to Preparer</a>
 
-					<a href="#" class="text-dark font-weight-bold pipe-item"
+					<a href="#" class="btn btn-primary"
 						*ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
 
-					<a href="#" class="text-dark font-weight-bold pipe-item"
+					<a href="#" class="btn btn-primary"
 						[attr.aria-label]="'delete'+ report.year +'report'"
 						*ngIf="report.status !== 'NEW'"
 						[routerLink]="['.']" (click)="openDeleteModal(report.eisProgramId, report.id, report.year)">Delete</a>

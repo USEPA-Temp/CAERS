@@ -122,34 +122,6 @@ public class EmissionsReportValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void nullFrsFacilityIdTest() {
-
-        CefValidatorContext cefContext = createContext();
-        EmissionsReport testData = createBaseReport();
-        testData.setFrsFacilityId(null);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.REPORT_FRS_ID.value()) && errorMap.get(ValidationField.REPORT_FRS_ID.value()).size() == 1);
-    }
-
-    @Test
-    public void nullEisProgramIdTest() {
-
-        CefValidatorContext cefContext = createContext();
-        EmissionsReport testData = createBaseReport();
-        testData.setEisProgramId(null);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.REPORT_EIS_ID.value()) && errorMap.get(ValidationField.REPORT_EIS_ID.value()).size() == 1);
-    }
-    
-    @Test
     public void totalManualEntryOrTotalDirectEntryRequireAttachmentFailTest() {
 
         CefValidatorContext cefContext = createContext();

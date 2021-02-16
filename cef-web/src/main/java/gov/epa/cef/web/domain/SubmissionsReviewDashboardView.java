@@ -25,6 +25,9 @@ public class SubmissionsReviewDashboardView implements Serializable{
     @Column(name = "emissions_report_id", unique = true, nullable = false)
     private Long emissionsReportId;
     
+    @Column(name = "master_facility_id", nullable = false)
+    private Long masterFacilityId;
+    
     @Column(name = "eis_program_id", nullable = false, length = 22)
     private String eisProgramId;
     
@@ -61,6 +64,12 @@ public class SubmissionsReviewDashboardView implements Serializable{
     }
     public void setEmissionsReportId(Long emissionsReportId) {
         this.emissionsReportId = emissionsReportId;
+    }
+    public Long getMasterFacilityId() {
+        return masterFacilityId;
+    }
+    public void setMasterFacilityId(Long masterFacilityId) {
+        this.masterFacilityId = masterFacilityId;
     }
     public String getEisProgramId() {
         return eisProgramId;
