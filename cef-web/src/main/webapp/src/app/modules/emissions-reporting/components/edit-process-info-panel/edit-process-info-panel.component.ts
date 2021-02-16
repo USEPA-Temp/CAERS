@@ -141,6 +141,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
   onChange(newValue) {
     if (newValue) {
       this.processForm.controls.statusYear.reset();
+
+      this.sharedService.emitProcessOpStatusChange(this.processForm.get('operatingStatusCode').value.code);
     }
     this.processForm.controls.description.updateValueAndValidity();
     this.processForm.controls.sccDescription.updateValueAndValidity();
