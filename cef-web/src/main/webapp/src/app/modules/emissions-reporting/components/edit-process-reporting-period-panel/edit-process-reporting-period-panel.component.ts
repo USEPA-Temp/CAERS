@@ -109,7 +109,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
                 this.heatContentUomValues = this.fuelUseUomValues.filter(val => val.heatContentUom);
             });
 
-        if (this.process.sccCode) {
+        if (this.process && this.process.sccCode) {
             this.getPointSourceScc(this.process.sccCode);
         }
 
