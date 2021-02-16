@@ -205,7 +205,6 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 				// checks processes with the same SCC
 				if (pList.size() > 1) {
 					for (int i = 0; i < pList.size()-1; i++) {
-						System.out.println(pList.get(i).getSccCode() + " " + pList.get(i).getOperatingStatusCode().getCode() + " "+fuelUseRequired);
 						for (int j = i+1; j < pList.size(); j++) {
 							
 						  // check if process details are the same
@@ -285,10 +284,9 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 						  if (diffProcessDetails == false && diffOpDetails == false && sameRpOpType == true) {
 							  
 							  // add process to list if fuel data exists
-							  if (checkFuelFields(pList.get(i).getReportingPeriods().get(0)) && !duplicateProcessAndFuelDataList.contains(pList.get(i))) {
+							  if (checkFuelFields(pList.get(i).getReportingPeriods().get(0)) && !duplicateProcessAndFuelDataList.contains(pList.get(i))
+									  && checkFuelFields(pList.get(j).getReportingPeriods().get(0)) && !duplicateProcessAndFuelDataList.contains(pList.get(j))) {
 								  duplicateProcessAndFuelDataList.add(pList.get(i));
-							  }
-							  if (checkFuelFields(pList.get(j).getReportingPeriods().get(0)) && !duplicateProcessAndFuelDataList.contains(pList.get(j))) {
 								  duplicateProcessAndFuelDataList.add(pList.get(j));
 							  }
 							  
@@ -301,7 +299,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 						  }
 						  
 						  // process has same SCC and process details are different and reporting operating types are the same
-						  // if reporting period operating types are the same, operating details are different, and operating type is the same
+						  // if reporting period operating types are the same, operating details are different, and process details are the same
 						  if ((diffProcessDetails == true && sameRpOpType == true)
 								  || (diffProcessDetails == false && diffOpDetails == true && sameRpOpType == true)) {
 							  
