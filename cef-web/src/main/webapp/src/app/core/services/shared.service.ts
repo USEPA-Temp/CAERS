@@ -19,6 +19,7 @@ export class SharedService {
   private emitHideBoolSource = new Subject<any>();
   private emitReportIdSource = new Subject<any>();
   private emitProcessSccSource = new Subject<any>();
+  private emitProcessOpStatus = new Subject<any>();
   constructor(private toastr: ToastrService) { }
 
   // Observable string streams
@@ -29,6 +30,7 @@ export class SharedService {
   hideBoolChangeEmitted$ = this.emitHideBoolSource.asObservable();
   reportIdChangeEmitted$ = this.emitReportIdSource.asObservable();
   processSccChangeEmitted$ = this.emitProcessSccSource.asObservable();
+  processOpStatusChangeEmitted$ = this.emitProcessOpStatus.asObservable();
 
   // Service message commands
   emitChange(change: any) {
@@ -57,6 +59,10 @@ export class SharedService {
 
   emitProcessSccChange(change: any) {
     this.emitProcessSccSource.next(change);
+  }
+
+  emitProcessOpStatusChange(change: any) {
+    this.emitProcessOpStatus.next(change);
   }
 
   updateReportStatusAndEmit(route: ActivatedRoute) {

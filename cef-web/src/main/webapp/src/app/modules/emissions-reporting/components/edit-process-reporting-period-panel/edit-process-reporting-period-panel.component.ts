@@ -8,7 +8,6 @@ import {UnitMeasureCode} from 'src/app/shared/models/unit-measure-code';
 import {legacyUomValidator} from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 import {SharedService} from 'src/app/core/services/shared.service';
 import {ToastrService} from 'ngx-toastr';
-import { Process } from 'src/app/shared/models/process';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 
 @Component({
@@ -18,7 +17,8 @@ import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 })
 export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChanges {
   @Input() reportingPeriod: ReportingPeriod;
-  @Input() process: Process;
+  @Input() sccCode: string;
+  @Input() processOpStatus: string;
   isFuelUseScc = false;
   reportingPeriodForm = this.fb.group({
     reportingPeriodTypeCode: [{code: 'A'}, Validators.required],
@@ -109,13 +109,20 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
                 this.heatContentUomValues = this.fuelUseUomValues.filter(val => val.heatContentUom);
             });
 
-        if (this.process.sccCode) {
-            this.getPointSourceScc(this.process.sccCode);
+        if (this.sccCode) {
+            this.getPointSourceScc(this.sccCode);
         }
 
         this.sharedService.processSccChangeEmitted$.subscribe(scc => {
             if (scc) {
                 this.getPointSourceScc(scc);
+            }
+        });
+
+        this.sharedService.processOpStatusChangeEmitted$.subscribe(opStatus => {
+            if (opStatus) {
+                this.processOpStatus = opStatus;
+                this.disableWarning(this.processOpStatus);
             }
         });
 
@@ -137,19 +144,23 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
         this.lookupService.retrievePointSourceSccCode(processScc)
         .subscribe(result => {
             if (result && result.fuelUseRequired) {
-            this.isFuelUseScc = true;
-            this.reportingPeriodForm.get('fuelUseValue').updateValueAndValidity();
-            if (this.process.operatingStatusCode.code !== OperatingStatus.OPERATING) {
-                this.sccFuelUsefieldsWarning = 'Fuel data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Fuel data for one of these Processes.';
-                this.sccHeatContentfieldsWarning = 'Heat Content data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Heat Content data for one of these Processes.';
-            }
+                this.isFuelUseScc = true;
+                this.reportingPeriodForm.get('fuelUseValue').updateValueAndValidity();
             } else {
-            this.isFuelUseScc = false;
-            this.sccFuelUsefieldsWarning = null;
-            this.sccHeatContentfieldsWarning = null;
+                this.isFuelUseScc = false;
             }
-
+            this.disableWarning(this.processOpStatus);
         });
+    }
+
+    disableWarning(opStatus: string) {
+        if (this.isFuelUseScc && opStatus === OperatingStatus.OPERATING) {
+            this.sccFuelUsefieldsWarning = 'Fuel data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Fuel data for one of these Processes.';
+            this.sccHeatContentfieldsWarning = 'Heat Content data for this Process SCC must be reported. If this is a duplicate process for an Alternative Throughput, only report Heat Content data for one of these Processes.';
+        } else {
+            this.sccFuelUsefieldsWarning = false;
+            this.sccHeatContentfieldsWarning = false;
+        }
     }
 
     checkHeatCapacityUom(): ValidatorFn {
