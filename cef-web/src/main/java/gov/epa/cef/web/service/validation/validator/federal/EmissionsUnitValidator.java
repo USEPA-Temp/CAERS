@@ -1,9 +1,11 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
+import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.PointSourceSccCode;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
@@ -194,6 +196,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         List<EmissionsProcess> duplicateProcessNoFuelDataList = new ArrayList<EmissionsProcess>();
         List<EmissionsProcess> duplicateProcessSingleFuelList = new ArrayList<EmissionsProcess>();
         List<EmissionsProcess> notDuplicateProcessList = new ArrayList<EmissionsProcess>();
+        List<Pollutant> duplicateProcessDuplicateEmissionsList = new ArrayList<Pollutant>();
         
         Boolean fuelUseRequired = null;
         
@@ -204,6 +207,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 				duplicateProcessSingleFuelList.clear();
 				notDuplicateProcessList.clear();
 				allDuplicateProcesses.clear();
+				duplicateProcessDuplicateEmissionsList.clear();
 				fuelUseRequired = sccRepo.findById(pList.get(0).getSccCode()).orElse(null).getFuelUseRequired();
 				
 				// checks processes with the same SCC
@@ -271,9 +275,6 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 							  diffProcessDetails = diffProcessDetails || (pList.get(i).getReleasePointAppts().size() != sameRpAppt);
 						  }
 						  
-						  // TODO: compare pollutants
-						  // duplicate processes cannot have same pollutants
-						  
 						  // processes considered duplicates
 						  // same process details	same operating details	same reporting period op type
 						  // TRUE					TRUE					TRUE			CHECK DUPLICATE FUEL
@@ -314,6 +315,22 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 							  }
 							  if (!allDuplicateProcesses.contains(pList.get(j))) {
 								  allDuplicateProcesses.add(pList.get(j));
+							  }
+							  
+							  // duplicate processes cannot have same pollutants
+							  // one error message per duplicated emission
+							  List <Emission> processA_emissions = pList.get(i).getReportingPeriods().get(0).getEmissions();
+							  List <Emission> processB_emissions = pList.get(j).getReportingPeriods().get(0).getEmissions();
+							  if (processA_emissions.size() > 0 && processB_emissions.size() > 0) {
+								  for (Emission eA: processA_emissions) {
+									  for (Emission eB: processB_emissions) {
+										  if (eA.getPollutant().getPollutantCode().equals(eB.getPollutant().getPollutantCode())) {
+											  if (!duplicateProcessDuplicateEmissionsList.contains(eA.getPollutant())) {
+												  duplicateProcessDuplicateEmissionsList.add(eA.getPollutant());  
+											  }
+										  }
+									  }
+								  }
 							  }
 						  }
 						  
@@ -363,6 +380,20 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 							"emissionsUnit.emissionsProcess.sccDuplicate.fuelUseData",
 							createValidationDetails(emissionsUnit),
 							pList.get(0).getSccCode());
+				}
+				
+				// error generated for each duplicate pollutant of duplicated process
+				if (duplicateProcessDuplicateEmissionsList.size() > 0) {
+					for (Pollutant e: duplicateProcessDuplicateEmissionsList) {
+						
+						result = false;
+						context.addFederalError(
+								ValidationField.EMISSIONS_UNIT_PROCESS.value(),
+								"emissionsUnit.emissionsProcess.sccDuplicate.duplicatePollutant",
+								createValidationDetails(emissionsUnit),
+								pList.get(0).getSccCode(),
+								e.getPollutantName());
+					}
 				}
 				
 				// warning generated if there are multiple processes for a given SCC 
