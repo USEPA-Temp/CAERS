@@ -6,7 +6,7 @@
                     <strong>Process Information</strong>
                 </div>
                 <div class="card-body">
-                    <app-edit-process-info-panel [emissionsUnit]="emissionsUnit"></app-edit-process-info-panel>
+                    <app-edit-process-info-panel [emissionsUnit]="emissionsUnit" [process]="originalProcess"></app-edit-process-info-panel>
                 </div>
             </div>
             
@@ -20,7 +20,7 @@
                     <strong>Operating Details</strong>
                 </div>
                 <div class="card-body">
-                    <app-edit-process-operating-detail-panel></app-edit-process-operating-detail-panel>
+                    <app-edit-process-operating-detail-panel [operatingDetails]="originalDetails"></app-edit-process-operating-detail-panel>
                 </div>
             </div>
             
@@ -34,7 +34,7 @@
                     <strong>Reporting Period</strong>
                 </div>
                 <div class="card-body">
-                    <app-edit-process-reporting-period-panel></app-edit-process-reporting-period-panel>
+                    <app-edit-process-reporting-period-panel [reportingPeriod]="originalPeriod"></app-edit-process-reporting-period-panel>
                 </div>
             </div>
             
@@ -42,7 +42,7 @@
     </div>
 
     <div class="float-right pb-3 pr-3">
-        <button type="button" class="btn btn-primary mr-2" routerLink="../..">Cancel</button>
+        <button type="button" class="btn btn-primary mr-2" (click)="onCancel()">Cancel</button>
         <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
     </div>
 

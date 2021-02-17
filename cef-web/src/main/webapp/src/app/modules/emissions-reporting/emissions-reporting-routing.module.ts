@@ -89,6 +89,10 @@ const reportRoutes: Routes = [
             component: ControlPathsSummaryComponent,
             data: { title: 'Control Paths Summary', breadcrumb: emissionsReportBreadcrumb}
           }, {
+            path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId/process/create/:processId`,
+            component: CreateEmissionsProcessComponent,
+            data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
+          }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId/process/create`,
             component: CreateEmissionsProcessComponent,
             data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
