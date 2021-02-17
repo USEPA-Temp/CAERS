@@ -80,6 +80,11 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
             });
         });
 
+        process.getReleasePointAppts().forEach(appt -> {
+            appt.clearId();
+            appt.setEmissionsProcess(process);
+        });
+
         EmissionsProcessDto result = emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(processRepo.save(process));
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionsProcessRepository.class);
         return result;

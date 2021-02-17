@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { Process } from 'src/app/shared/models/process';
 import { SharedService } from 'src/app/core/services/shared.service';
@@ -19,6 +19,9 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -60,6 +63,8 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     private controlPathService: ControlPathService,
     private userContextService: UserContextService,
     private route: ActivatedRoute,
+    private router: Router,
+    private modalService: NgbModal,
     private toastr: ToastrService,
     private sharedService: SharedService) { }
 
@@ -120,6 +125,22 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
   setCreatePeriod(value: boolean) {
     this.createPeriod = value;
+  }
+
+  openCopyModal() {
+    const modalMessage = `You are about to be re-directed to enter an alternative throughput for this process.
+        A copy of the process will be automatically generated and prepopulated with the other process information.
+        Do you wish to continue?`;
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.continue.subscribe(() => {
+        this.copyProcess();
+    });
+  }
+
+  copyProcess() {
+    this.router.navigate(
+      [BaseReportUrl.EMISSIONS_UNIT, this.emissionsUnit.id, 'process', 'create', this.process.id], { relativeTo: this.route.parent });
   }
 
   updateProcess() {

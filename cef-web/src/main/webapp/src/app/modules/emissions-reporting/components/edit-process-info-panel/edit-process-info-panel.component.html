@@ -12,7 +12,7 @@
             <label for="processIdentifierInput" class="ml-1 col-form-label"><strong>Process ID:</strong></label>
         </div>
         <div class="col-sm-4">
-            <input [readonly]="process" type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier" maxlength="20">
+            <input [readonly]="process?.id" type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier" maxlength="20">
             <app-validation-message [control]="processForm.get('emissionsProcessIdentifier')"></app-validation-message>
         </div>
         <div class="col-sm-2">
