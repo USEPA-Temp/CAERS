@@ -730,7 +730,6 @@ public class EmissionValidatorTest extends BaseValidatorTest {
    
    @Test
    public void emissionIsTotalManualEntryAndNoEFDescription_PassTest() {
-	   System.out.print("hi mom");
 	   CefValidatorContext cefContext = createContext();
 	   Emission testData = createBaseEmission(true);
 	   testData.setEmissionsFactorText(null);
