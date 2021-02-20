@@ -11,4 +11,5 @@ export class UnitMeasureCode implements BaseCodeLookup {
   unitDesignCapacity: boolean;
   heatContentUom: boolean;
   legacy: boolean;
+  fuelUseType: string;
 }

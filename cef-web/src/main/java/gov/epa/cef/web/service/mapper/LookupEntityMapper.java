@@ -12,6 +12,7 @@ import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
+import gov.epa.cef.web.domain.FuelUseSccCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
@@ -32,6 +33,7 @@ import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.FuelUseSccCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
@@ -96,7 +98,9 @@ public abstract class LookupEntityMapper {
     public abstract List<AircraftEngineTypeCodeDto> aircraftEngCodeToDtoList(List<AircraftEngineTypeCode> source);
 
     public abstract PointSourceSccCodeDto pointSourceSccCodeToDto(PointSourceSccCode source);
-
+    
+    public abstract FuelUseSccCodeDto fuelUseSccCodeToDto(FuelUseSccCode source);
+    
     public abstract EisLatLongToleranceLookupDto EisLatLongToleranceLookupToDto(EisLatLongToleranceLookup source);
 
     public abstract CodeLookupDto facilitySourceTypeCodeToDto(FacilitySourceTypeCode source);
