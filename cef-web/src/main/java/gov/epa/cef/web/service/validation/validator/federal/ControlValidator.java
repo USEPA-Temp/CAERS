@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -20,22 +21,22 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
 @Component
 public class ControlValidator extends BaseValidator<Control> {
-	
-	@Override
-  public boolean validate(ValidatorContext validatorContext, Control control) {
-		
-		boolean result = true;
-		
-		CefValidatorContext context = getCefValidatorContext(validatorContext);
-		
+
+    @Override
+    public boolean validate(ValidatorContext validatorContext, Control control) {
+
+        boolean result = true;
+
+        CefValidatorContext context = getCefValidatorContext(validatorContext);
+
 
 		Map<Object, List<Control>> cMap = control.getFacilitySite().getControls().stream()
         .filter(controls -> (controls.getIdentifier() != null))
-        .collect(Collectors.groupingBy(c -> c.getIdentifier()));
-		
+        .collect(Collectors.groupingBy(c -> c.getIdentifier().trim().toLowerCase()));
+
 		for (List<Control> cList: cMap.values()) {
 			if (cList.size() > 1 && cList.get(0).getIdentifier().contentEquals(control.getIdentifier())) {
-			
+
 				result = false;
 				context.addFederalError(
 	  			ValidationField.CONTROL_IDENTIFIER.value(),
@@ -44,105 +45,105 @@ public class ControlValidator extends BaseValidator<Control> {
 			}
 		}
 
-		if (control.getControlMeasureCode() != null && control.getControlMeasureCode().getLastInventoryYear() != null
-                && control.getControlMeasureCode().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
+        if (control.getControlMeasureCode() != null && control.getControlMeasureCode().getLastInventoryYear() != null
+            && control.getControlMeasureCode().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
 
             result = false;
             if (Strings.emptyToNull(control.getControlMeasureCode().getMapTo()) != null) {
 
                 context.addFederalError(
-                        ValidationField.CONTROL_MEASURE_CODE.value(),
-                        "control.controlMeasureCode.legacy.map", 
-                        createValidationDetails(control),
-                        control.getControlMeasureCode().getDescription(),
-                        control.getControlMeasureCode().getMapTo());
+                    ValidationField.CONTROL_MEASURE_CODE.value(),
+                    "control.controlMeasureCode.legacy.map",
+                    createValidationDetails(control),
+                    control.getControlMeasureCode().getDescription(),
+                    control.getControlMeasureCode().getMapTo());
             } else {
 
                 context.addFederalError(
-                        ValidationField.CONTROL_MEASURE_CODE.value(),
-                        "control.controlMeasureCode.legacy", 
-                        createValidationDetails(control),
-                        control.getControlMeasureCode().getDescription());
+                    ValidationField.CONTROL_MEASURE_CODE.value(),
+                    "control.controlMeasureCode.legacy",
+                    createValidationDetails(control),
+                    control.getControlMeasureCode().getDescription());
             }
 
         }
 
         if (control.getPercentControl() != null && (control.getPercentControl() < 1 || control.getPercentControl() > 100)) {
-            
+
             result = false;
             context.addFederalError(
-            ValidationField.CONTROL_PERCENT_CONTROL.value(),
-            "control.percentControl.range",
-            createValidationDetails(control));
+                ValidationField.CONTROL_PERCENT_CONTROL.value(),
+                "control.percentControl.range",
+                createValidationDetails(control));
         }
 
-		for  (ControlPollutant cp: control.getPollutants()) {
+        for (ControlPollutant cp : control.getPollutants()) {
 
-		    if (cp.getPollutant().getLastInventoryYear() != null && cp.getPollutant().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
+            if (cp.getPollutant().getLastInventoryYear() != null && cp.getPollutant().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
 
                 result = false;
                 context.addFederalError(
-                ValidationField.CONTROL_POLLUTANT.value(),
-                "control.controlPollutant.legacy",
-                createValidationDetails(control),
-                cp.getPollutant().getPollutantName());
+                    ValidationField.CONTROL_POLLUTANT.value(),
+                    "control.controlPollutant.legacy",
+                    createValidationDetails(control),
+                    cp.getPollutant().getPollutantName());
             }
 
-			if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.9) {
-				
-				result = false;
-				context.addFederalError(
-	  			ValidationField.CONTROL_POLLUTANT.value(),
-	  			"control.controlPollutant.range",
-	  			createValidationDetails(control),
-	  			cp.getPollutant().getPollutantName());
-			}
-		}
+            if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.9) {
 
-		Map<Object, List<ControlPollutant>> cpMap = control.getPollutants().stream()
-				.filter(cp -> cp.getPollutant() != null)
-				.collect(Collectors.groupingBy(p -> p.getPollutant().getPollutantName()));
-		
-		for (List<ControlPollutant> pList: cpMap.values()) {
-			if (pList.size() > 1) {
-				
-				result = false;
-				context.addFederalError(
-						ValidationField.CONTROL_POLLUTANT.value(),
-		  			"control.controlPollutant.duplicate",
-		  			createValidationDetails(control),
-		  			pList.get(0).getPollutant().getPollutantName());
-					
-			}
-		}
-		
-		if (control.getAssignments().isEmpty()) {
-			
-			result = false;
-			context.addFederalWarning(
-					ValidationField.CONTROL_PATH_WARNING.value(),
-					"control.pathWarning.notAssigned",
-					createValidationDetails(control));
-		}
-		
-		if (control.getPollutants().isEmpty()) {
-			
-			result = false;
-			context.addFederalError(
-					ValidationField.CONTROL_POLLUTANT.value(),
-					"control.controlPollutant.required",
-					createValidationDetails(control));
-		}
-		
-		return result;
-	}
-		
-	private ValidationDetailDto createValidationDetails(Control source) {
+                result = false;
+                context.addFederalError(
+                    ValidationField.CONTROL_POLLUTANT.value(),
+                    "control.controlPollutant.range",
+                    createValidationDetails(control),
+                    cp.getPollutant().getPollutantName());
+            }
+        }
 
-    String description = MessageFormat.format("Control: {0}", source.getIdentifier());
+        Map<Object, List<ControlPollutant>> cpMap = control.getPollutants().stream()
+            .filter(cp -> cp.getPollutant() != null)
+            .collect(Collectors.groupingBy(p -> p.getPollutant().getPollutantName()));
 
-    ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getIdentifier(), EntityType.CONTROL, description);
-    return dto;
-	}
+        for (List<ControlPollutant> pList : cpMap.values()) {
+            if (pList.size() > 1) {
+
+                result = false;
+                context.addFederalError(
+                    ValidationField.CONTROL_POLLUTANT.value(),
+                    "control.controlPollutant.duplicate",
+                    createValidationDetails(control),
+                    pList.get(0).getPollutant().getPollutantName());
+
+            }
+        }
+
+        if (control.getAssignments().isEmpty()) {
+
+            result = false;
+            context.addFederalWarning(
+                ValidationField.CONTROL_PATH_WARNING.value(),
+                "control.pathWarning.notAssigned",
+                createValidationDetails(control));
+        }
+
+        if (control.getPollutants().isEmpty()) {
+
+            result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_POLLUTANT.value(),
+                "control.controlPollutant.required",
+                createValidationDetails(control));
+        }
+
+        return result;
+    }
+
+    private ValidationDetailDto createValidationDetails(Control source) {
+
+        String description = MessageFormat.format("Control: {0}", source.getIdentifier());
+
+        ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getIdentifier(), EntityType.CONTROL, description);
+        return dto;
+    }
 
 }
