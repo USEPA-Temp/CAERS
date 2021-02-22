@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import gov.epa.cef.web.exception.BulkReportValidationException;
 import gov.epa.cef.web.service.dto.bulkUpload.BaseWorksheetDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
@@ -39,6 +40,8 @@ public class BulkReportValidator {
         WorksheetDtoValidator worksheetValidator = new WorksheetDtoValidator(this.validator, violations);
 
         Consumer<FacilitySiteBulkUploadDto> siteIdCheck = new FacilityIdValidator(report, violations);
+        Consumer<ControlBulkUploadDto> controlCheck = new ControlValidator(violations);
+        Consumer<ControlPathBulkUploadDto> controlPathCheck = new ControlPathValidator(violations);
         Consumer<List <ControlAssignmentBulkUploadDto>> loopCheck = new ControlAssignmentLoopValidator(report, violations);
         Consumer<ControlAssignmentBulkUploadDto> controlAssignmentCheck = new ControlAssignmentValidator(violations);
 
@@ -51,8 +54,8 @@ public class BulkReportValidator {
         report.getOperatingDetails().forEach(worksheetValidator);
         report.getEmissions().forEach(worksheetValidator);
         report.getEmissionFormulaVariables().forEach(worksheetValidator);
-        report.getControlPaths().forEach(worksheetValidator);
-        report.getControls().forEach(worksheetValidator);
+        report.getControlPaths().forEach(controlPathCheck.andThen(worksheetValidator));
+        report.getControls().forEach(controlCheck.andThen(worksheetValidator));
         loopCheck.accept(report.getControlAssignments());
         report.getControlAssignments().forEach(controlAssignmentCheck.andThen(worksheetValidator));
         report.getControlPollutants().forEach(worksheetValidator);
@@ -64,6 +67,48 @@ public class BulkReportValidator {
 
             throw new BulkReportValidationException(violations);
         }
+    }
+    
+    static class ControlValidator implements Consumer<ControlBulkUploadDto> {
+    	
+    	private final List<WorksheetError> violations;
+    	
+    	public ControlValidator(List<WorksheetError> violations) {
+            this.violations = violations;
+        }
+    	
+    	List<String> checkedControlIdentifierList = new ArrayList<String>();
+    	
+    	public void accept(ControlBulkUploadDto control) {
+
+            if (control.getIdentifier() != null && !checkedControlIdentifierList.contains(control.getIdentifier())) {
+            	checkedControlIdentifierList.add(control.getIdentifier());
+            } else {
+            	String msg = String.format("Control Identifier "+control.getIdentifier()+" must be unique within the facility.");
+                violations.add(new WorksheetError(control.getSheetName(), control.getRow(), msg));
+            }
+    	}
+    }
+    
+static class ControlPathValidator implements Consumer<ControlPathBulkUploadDto> {
+    	
+    	private final List<WorksheetError> violations;
+    	
+    	public ControlPathValidator(List<WorksheetError> violations) {
+            this.violations = violations;
+        }
+    	
+    	List<String> checkedControlPathIdentifierList = new ArrayList<String>();
+    	
+    	public void accept(ControlPathBulkUploadDto controlPath) {
+
+            if (controlPath.getPathId() != null && !checkedControlPathIdentifierList.contains(controlPath.getPathId())) {
+            	checkedControlPathIdentifierList.add(controlPath.getPathId());
+            } else {
+            	String msg = String.format("Control Path Identifier "+controlPath.getPathId()+" must be unique within the facility.");
+                violations.add(new WorksheetError(controlPath.getSheetName(), controlPath.getRow(), msg));
+            }
+    	}
     }
     
     static class ControlAssignmentLoopValidator implements Consumer<List <ControlAssignmentBulkUploadDto>> {
