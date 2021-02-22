@@ -88,7 +88,7 @@ public class BulkReportValidator {
     	
     	public void accept(EmissionsUnitBulkUploadDto unit) {
 
-            if (unit.getUnitIdentifier() != null && unit.getUnitIdentifier().trim().toLowerCase() != null && !checkedUnitIdentifierList.contains(unit.getUnitIdentifier())) {
+            if (unit.getUnitIdentifier() != null && !checkedUnitIdentifierList.contains(unit.getUnitIdentifier().trim().toLowerCase())) {
             	checkedUnitIdentifierList.add(unit.getUnitIdentifier().trim().toLowerCase());
             } else {
             	String msg = String.format("Emissions Unit Identifier '%s' must be unique within the facility.", unit.getUnitIdentifier());
@@ -141,7 +141,7 @@ public class BulkReportValidator {
     	
     	public void accept(ReleasePointBulkUploadDto releasePoint) {
 
-            if (releasePoint.getReleasePointIdentifier() != null && releasePoint.getReleasePointIdentifier().trim().toLowerCase() != null && !checkedUnitIdentifierList.contains(releasePoint.getReleasePointIdentifier())) {
+            if (releasePoint.getReleasePointIdentifier() != null && !checkedUnitIdentifierList.contains(releasePoint.getReleasePointIdentifier().trim().toLowerCase())) {
             	checkedUnitIdentifierList.add(releasePoint.getReleasePointIdentifier().trim().toLowerCase());
             } else {
             	String msg = String.format("Release Point Identifier '%s' must be unique within the facility.", releasePoint.getReleasePointIdentifier());
@@ -162,7 +162,7 @@ public class BulkReportValidator {
     	
     	public void accept(ControlBulkUploadDto control) {
 
-            if (control.getIdentifier() != null && control.getIdentifier().trim().toLowerCase() != null && !checkedControlIdentifierList.contains(control.getIdentifier())) {
+            if (control.getIdentifier() != null && !checkedControlIdentifierList.contains(control.getIdentifier().trim().toLowerCase())) {
             	checkedControlIdentifierList.add(control.getIdentifier().trim().toLowerCase());
             } else {
             	String msg = String.format("Control Identifier '%s' must be unique within the facility.", control.getIdentifier());
@@ -183,7 +183,7 @@ public class BulkReportValidator {
     	
     	public void accept(ControlPathBulkUploadDto controlPath) {
 
-            if (controlPath.getPathId() != null && controlPath.getPathId().trim().toLowerCase() != null && !checkedControlPathIdentifierList.contains(controlPath.getPathId())) {
+            if (controlPath.getPathId() != null && !checkedControlPathIdentifierList.contains(controlPath.getPathId().trim().toLowerCase())) {
             	checkedControlPathIdentifierList.add(controlPath.getPathId().trim().toLowerCase());
             } else {
             	String msg = String.format("Control Path Identifier '%s' must be unique within the facility.", controlPath.getPathId());
