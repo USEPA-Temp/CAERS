@@ -40,6 +40,9 @@ public class UnitMeasureCode extends BaseLookupEntity {
     @Column(name = "fuel_use_uom", nullable = false)
     private Boolean fuelUseUom;
     
+    @Column(name = "fuel_use_type", nullable = false)
+    private String fuelUseType;
+    
     @Column(name = "heat_content_uom", nullable = false)
     private Boolean heatContentUom;
 
@@ -109,5 +112,13 @@ public class UnitMeasureCode extends BaseLookupEntity {
     public void setLegacy(Boolean legacy) {
         this.legacy = legacy;
     }
+
+	public String getFuelUseType() {
+		return fuelUseType;
+	}
+
+	public void setFuelUseType(String fuelUseType) {
+		this.fuelUseType = fuelUseType;
+	}
 
 }

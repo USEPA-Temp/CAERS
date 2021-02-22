@@ -9,6 +9,7 @@ import {legacyUomValidator} from 'src/app/modules/shared/directives/legacy-uom-v
 import {SharedService} from 'src/app/core/services/shared.service';
 import {ToastrService} from 'ngx-toastr';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
+import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
 
 @Component({
     selector: 'app-edit-process-reporting-period-panel',
@@ -35,13 +36,13 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       Validators.min(0),
       Validators.pattern('^[0-9]*\\.?[0-9]+$')
     ]],
-    fuelUseUom: [null, [legacyUomValidator()]],
+    fuelUseUom: [null, [legacyUomValidator(), legacyUomValidator()]],
     fuelUseMaterialCode: [null],
     heatContentValue: ['', [
       Validators.min(0),
       Validators.pattern('^[0-9]*\\.?[0-9]+$')
     ]],
-    heatContentUom: [null, [legacyUomValidator()]],
+    heatContentUom: [null, [legacyUomValidator(), legacyUomValidator()]],
     comments: [null, Validators.maxLength(400)]
   }, { validators: [
     this.checkFuelUseFields(),
@@ -50,16 +51,21 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
   materialValues: BaseCodeLookup[];
   fuelUseMaterialValues: BaseCodeLookup[];
+  sccFuelUse: FuelUseSccCode;
+  sccFuelUseMaterialValue: BaseCodeLookup;
   parameterTypeValues: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
   reportingPeriodValues: BaseCodeLookup[] = [];
   uomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
   fuelUseUomValues: UnitMeasureCode[];
+  sccFuelUseUomValues: UnitMeasureCode[];
   heatContentUomValues: UnitMeasureCode[];
   showFuelDataCopyMessage = false;
   sccFuelUsefieldsWarning = null;
   sccHeatContentfieldsWarning = null;
+  fuelMaterialInvalid = null;
+  fuelUomInvalid = null;
 
   constructor(
     private lookupService: LookupService,
@@ -126,6 +132,15 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
             }
         });
 
+        this.reportingPeriodForm.get('fuelUseMaterialCode').valueChanges
+        .subscribe(value => {
+            this.checkSccFuelMaterialUom();
+        });
+
+        this.reportingPeriodForm.get('fuelUseUom').valueChanges
+        .subscribe(value => {
+            this.checkSccFuelMaterialUom();
+        });
     }
 
     ngOnChanges() {
@@ -146,11 +161,30 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
             if (result && result.fuelUseRequired) {
                 this.isFuelUseScc = true;
                 this.reportingPeriodForm.get('fuelUseValue').updateValueAndValidity();
+                this.lookupService.retrieveSccFuelUseMaterial(processScc)
+                    .subscribe(values => {
+                        this.sccFuelUse = values;
+                        this.sccFuelUseMaterialValue = values.calculationMaterialCode;
+                        this.sccFuelUseUomValues = this.fuelUseUomValues.filter(
+                            val => (this.sccFuelUse.fuelUseTypes.split(',')).includes(val.fuelUseType));
+                        this.checkSccFuelMaterialUom();
+                    });
+
             } else {
                 this.isFuelUseScc = false;
             }
             this.disableWarning(this.processOpStatus);
         });
+    }
+
+    checkSccFuelMaterialUom() {
+        const materialMessage = 'Please select a valid Fuel Material for the Process SCC.';
+        const uomMessage = 'Please select a valid Fuel UoM for the reported Fuel Material.';
+
+        if (this.isFuelUseScc && this.processOpStatus === OperatingStatus.OPERATING) {
+            this.fuelMaterialInvalid = this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code !== this.sccFuelUseMaterialValue.code ? materialMessage : null;
+            this.fuelUomInvalid = this.sccFuelUseUomValues?.includes(this.reportingPeriodForm.get('fuelUseUom').value) ? null : uomMessage;
+        }
     }
 
     disableWarning(opStatus: string) {
@@ -193,7 +227,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     copyFuelDataToThroughput() {
         const fuelMaterial = this.reportingPeriodForm.get('fuelUseMaterialCode').value;
         const fuelValue = this.reportingPeriodForm.get('fuelUseValue').value;
-        const fuelUom = this.reportingPeriodForm.get('fuelUseUom').value
+        const fuelUom = this.reportingPeriodForm.get('fuelUseUom').value;
 
         this.reportingPeriodForm.get('calculationMaterialCode').patchValue(fuelMaterial);
         this.reportingPeriodForm.get('calculationParameterValue').patchValue(fuelValue);

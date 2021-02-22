@@ -50,6 +50,7 @@ DROP TABLE IF EXISTS facility_source_type_code;
 DROP TABLE IF EXISTS fips_country_code;
 DROP TABLE IF EXISTS fips_county;
 DROP TABLE IF EXISTS fips_state_code;
+DROP TABLE IF EXISTS fuel_use_scc;
 DROP TABLE IF EXISTS geographic_reference_point_code;
 DROP TABLE IF EXISTS geometric_type_code;
 DROP TABLE IF EXISTS hap_facility_category_code;
