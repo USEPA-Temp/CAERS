@@ -90,7 +90,7 @@ public class BulkReportValidator {
     	}
     }
     
-static class ControlPathValidator implements Consumer<ControlPathBulkUploadDto> {
+    static class ControlPathValidator implements Consumer<ControlPathBulkUploadDto> {
     	
     	private final List<WorksheetError> violations;
     	
