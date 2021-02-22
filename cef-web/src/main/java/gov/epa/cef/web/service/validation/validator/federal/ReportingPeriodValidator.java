@@ -260,30 +260,32 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 		        if (scc.getFuelUseRequired()) {
 		        	FuelUseSccCode fuelSccMaterial = fuelUseSccCodeRepo.findByScc(scc.getCode()).orElse(null);
 		        	
-		        	if (period.getFuelUseMaterialCode() != null && !fuelSccMaterial.getCalculationMaterialCode().getCode().contentEquals(period.getFuelUseMaterialCode().getCode())) {
-		        		
-		                valid = false;
-		                context.addFederalError(
-		                        ValidationField.PERIOD_SCC_FUEL_MATERIAL.value(),
-		                        "reportingPeriod.fuelUseMaterial.required", 
-		                        createValidationDetails(period),
-		                        period.getFuelUseMaterialCode().getDescription(),
-		                        scc.getCode());
-		            }
-			        
-			        // if SCC requires fuel use, check fuel uom for selected fuel material
-			        String[] fuelState = fuelSccMaterial.getFuelUseTypes().split(",");
-			        
-			        if (period.getFuelUseUom() != null && period.getFuelUseUom().getFuelUseType() != null && !Arrays.asList(fuelState).contains(period.getFuelUseUom().getFuelUseType())) {
-			        	
-		                valid = false;
-		                context.addFederalError(
-		                        ValidationField.PERIOD_SCC_FUEL_MATERIAL.value(),
-		                        "reportingPeriod.fuelUseMaterial.uom", 
-		                        createValidationDetails(period),
-		                        period.getFuelUseUom().getDescription(),
-		                        period.getFuelUseMaterialCode().getDescription());
-		            }
+		        	if (fuelSccMaterial != null) {
+			        	if (period.getFuelUseMaterialCode() != null && !fuelSccMaterial.getCalculationMaterialCode().getCode().contentEquals(period.getFuelUseMaterialCode().getCode())) {
+			        		
+			                valid = false;
+			                context.addFederalError(
+			                        ValidationField.PERIOD_SCC_FUEL_MATERIAL.value(),
+			                        "reportingPeriod.fuelUseMaterial.required", 
+			                        createValidationDetails(period),
+			                        period.getFuelUseMaterialCode().getDescription(),
+			                        scc.getCode());
+			            }
+				        
+				        // if SCC requires fuel use, check fuel uom for selected fuel material
+				        String[] fuelState = fuelSccMaterial.getFuelUseTypes().split(",");
+				        
+				        if (period.getFuelUseUom() != null && period.getFuelUseUom().getFuelUseType() != null && !Arrays.asList(fuelState).contains(period.getFuelUseUom().getFuelUseType())) {
+				        	
+			                valid = false;
+			                context.addFederalError(
+			                        ValidationField.PERIOD_SCC_FUEL_MATERIAL.value(),
+			                        "reportingPeriod.fuelUseMaterial.uom", 
+			                        createValidationDetails(period),
+			                        period.getFuelUseUom().getDescription(),
+			                        period.getFuelUseMaterialCode().getDescription());
+			            }
+		        	}
 		        }
 	        }
 	        

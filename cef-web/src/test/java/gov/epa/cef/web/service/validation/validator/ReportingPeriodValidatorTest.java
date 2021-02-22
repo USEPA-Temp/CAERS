@@ -59,29 +59,22 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 		sccList.add(scc1);
 		
 		PointSourceSccCode scc2 = new PointSourceSccCode();
-		scc2.setCode("10200301");
+		scc2.setCode("10200303");
 		scc2.setFuelUseRequired(false);
 		sccList.add(scc2);
-		
-		PointSourceSccCode scc3 = new PointSourceSccCode();
-		scc3.setCode("10200303");
-		scc3.setFuelUseRequired(false);
-		sccList.add(scc3);
 		
 		FuelUseSccCode fuelScc = new FuelUseSccCode();
 		CalculationMaterialCode cmc = new CalculationMaterialCode();
 		cmc.setCode("100");
 		cmc.setFuelUseMaterial(true);
-		fuelScc.setSccCode(scc3);
+		fuelScc.setSccCode(scc2);
 		fuelScc.setCalculationMaterialCode(cmc);
 		fuelScc.setFuelUseTypes("energy,liquid");
 		
-		when(fuelUseSccCodeRepo.findByScc("10200301")).thenReturn(Optional.of(fuelScc));
 		when(fuelUseSccCodeRepo.findByScc("10200302")).thenReturn(Optional.of(fuelScc));
 		when(fuelUseSccCodeRepo.findByScc("10200303")).thenReturn(null);
     	when(sccRepo.findById("10200302")).thenReturn(Optional.of(scc1));
-    	when(sccRepo.findById("10200301")).thenReturn(Optional.of(scc2));
-    	when(sccRepo.findById("10200303")).thenReturn(Optional.of(scc3));
+    	when(sccRepo.findById("10200303")).thenReturn(Optional.of(scc2));
     }
 	
 	@Test
@@ -202,6 +195,18 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PERIOD_FUEL_UOM.value()) && errorMap.get(ValidationField.PERIOD_FUEL_UOM.value()).size() == 1);
+	}
+	
+	// There should be no errors when fuel use is NOT required for selected SCC.
+	@Test
+	public void sccFuelMaterial_PassTest() {
+		CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        
+        testData.getEmissionsProcess().setSccCode("10200303");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 	}
 	
 	// There should be one error when the selected fuel material does not match the 
