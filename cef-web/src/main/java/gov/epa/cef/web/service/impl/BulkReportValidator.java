@@ -8,8 +8,11 @@ import gov.epa.cef.web.service.dto.bulkUpload.BaseWorksheetDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -40,15 +44,18 @@ public class BulkReportValidator {
         WorksheetDtoValidator worksheetValidator = new WorksheetDtoValidator(this.validator, violations);
 
         Consumer<FacilitySiteBulkUploadDto> siteIdCheck = new FacilityIdValidator(report, violations);
+        Consumer<EmissionsUnitBulkUploadDto> emissionsUnitCheck = new EmissionsUnitValidator(violations);
+        Consumer<EmissionsProcessBulkUploadDto> emissionsProcessCheck = new EmissionsProcessValidator(violations);
+        Consumer<ReleasePointBulkUploadDto> releasePointCheck = new ReleasePointValidator(violations);
         Consumer<ControlBulkUploadDto> controlCheck = new ControlValidator(violations);
         Consumer<ControlPathBulkUploadDto> controlPathCheck = new ControlPathValidator(violations);
         Consumer<List <ControlAssignmentBulkUploadDto>> loopCheck = new ControlAssignmentLoopValidator(report, violations);
         Consumer<ControlAssignmentBulkUploadDto> controlAssignmentCheck = new ControlAssignmentValidator(violations);
 
         report.getFacilitySites().forEach(siteIdCheck.andThen(worksheetValidator));
-        report.getEmissionsUnits().forEach(worksheetValidator);
-        report.getEmissionsProcesses().forEach(worksheetValidator);
-        report.getReleasePoints().forEach(worksheetValidator);
+        report.getEmissionsUnits().forEach(emissionsUnitCheck.andThen(worksheetValidator));
+        report.getEmissionsProcesses().forEach(emissionsProcessCheck.andThen(worksheetValidator));
+        report.getReleasePoints().forEach(releasePointCheck.andThen(worksheetValidator));
         report.getReleasePointAppts().forEach(worksheetValidator);
         report.getReportingPeriods().forEach(worksheetValidator);
         report.getOperatingDetails().forEach(worksheetValidator);
@@ -69,6 +76,80 @@ public class BulkReportValidator {
         }
     }
     
+    static class EmissionsUnitValidator implements Consumer<EmissionsUnitBulkUploadDto> {
+    	
+    	private final List<WorksheetError> violations;
+    	
+    	public EmissionsUnitValidator(List<WorksheetError> violations) {
+            this.violations = violations;
+        }
+    	
+    	List<String> checkedUnitIdentifierList = new ArrayList<String>();
+    	
+    	public void accept(EmissionsUnitBulkUploadDto unit) {
+
+            if (unit.getUnitIdentifier() != null && unit.getUnitIdentifier().trim().toLowerCase() != null && !checkedUnitIdentifierList.contains(unit.getUnitIdentifier())) {
+            	checkedUnitIdentifierList.add(unit.getUnitIdentifier().trim().toLowerCase());
+            } else {
+            	String msg = String.format("Emissions Unit Identifier '%s' must be unique within the facility.", unit.getUnitIdentifier());
+                violations.add(new WorksheetError(unit.getSheetName(), unit.getRow(), msg));
+            }
+    	}
+    }
+    
+    static class EmissionsProcessValidator implements Consumer<EmissionsProcessBulkUploadDto> {
+    	
+    	private final List<WorksheetError> violations;
+    	
+    	public EmissionsProcessValidator(List<WorksheetError> violations) {
+            this.violations = violations;
+        }
+    	
+    	HashMap<Long, List<String>> checkUnitIdentifierList = new HashMap<Long, List<String>>();
+    	
+    	public void accept(EmissionsProcessBulkUploadDto process) {
+    		
+    		if (process.getEmissionsUnitId() != null && process.getEmissionsProcessIdentifier() != null) {
+
+	            if (checkUnitIdentifierList.isEmpty() || !checkUnitIdentifierList.containsKey(process.getEmissionsUnitId())) {
+	            	
+	            	List<String> processList = new ArrayList<>();
+	            	processList.add(process.getEmissionsProcessIdentifier().trim().toLowerCase());
+	            	checkUnitIdentifierList.put(process.getEmissionsUnitId(), processList);
+	            	
+	            } else {
+	            	List<String> processList = checkUnitIdentifierList.get(process.getEmissionsUnitId());
+	            	
+	            	if (processList.contains(process.getEmissionsProcessIdentifier().trim().toLowerCase())) {
+	            		String msg = String.format("Emissions Process Identifier '%s' must be unique within an Emissions Unit.", process.getEmissionsProcessIdentifier());
+	                  violations.add(new WorksheetError(process.getSheetName(), process.getRow(), msg));
+	            	}
+	            } 
+    		}
+    	}
+    }
+    
+    static class ReleasePointValidator implements Consumer<ReleasePointBulkUploadDto> {
+    	
+    	private final List<WorksheetError> violations;
+    	
+    	public ReleasePointValidator(List<WorksheetError> violations) {
+            this.violations = violations;
+        }
+    	
+    	List<String> checkedUnitIdentifierList = new ArrayList<String>();
+    	
+    	public void accept(ReleasePointBulkUploadDto releasePoint) {
+
+            if (releasePoint.getReleasePointIdentifier() != null && releasePoint.getReleasePointIdentifier().trim().toLowerCase() != null && !checkedUnitIdentifierList.contains(releasePoint.getReleasePointIdentifier())) {
+            	checkedUnitIdentifierList.add(releasePoint.getReleasePointIdentifier().trim().toLowerCase());
+            } else {
+            	String msg = String.format("Release Point Identifier '%s' must be unique within the facility.", releasePoint.getReleasePointIdentifier());
+                violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
+            }
+    	}
+    }
+    
     static class ControlValidator implements Consumer<ControlBulkUploadDto> {
     	
     	private final List<WorksheetError> violations;
@@ -81,10 +162,10 @@ public class BulkReportValidator {
     	
     	public void accept(ControlBulkUploadDto control) {
 
-            if (control.getIdentifier() != null && !checkedControlIdentifierList.contains(control.getIdentifier())) {
-            	checkedControlIdentifierList.add(control.getIdentifier());
+            if (control.getIdentifier() != null && control.getIdentifier().trim().toLowerCase() != null && !checkedControlIdentifierList.contains(control.getIdentifier())) {
+            	checkedControlIdentifierList.add(control.getIdentifier().trim().toLowerCase());
             } else {
-            	String msg = String.format("Control Identifier "+control.getIdentifier()+" must be unique within the facility.");
+            	String msg = String.format("Control Identifier '%s' must be unique within the facility.", control.getIdentifier());
                 violations.add(new WorksheetError(control.getSheetName(), control.getRow(), msg));
             }
     	}
@@ -102,10 +183,10 @@ public class BulkReportValidator {
     	
     	public void accept(ControlPathBulkUploadDto controlPath) {
 
-            if (controlPath.getPathId() != null && !checkedControlPathIdentifierList.contains(controlPath.getPathId())) {
-            	checkedControlPathIdentifierList.add(controlPath.getPathId());
+            if (controlPath.getPathId() != null && controlPath.getPathId().trim().toLowerCase() != null && !checkedControlPathIdentifierList.contains(controlPath.getPathId())) {
+            	checkedControlPathIdentifierList.add(controlPath.getPathId().trim().toLowerCase());
             } else {
-            	String msg = String.format("Control Path Identifier "+controlPath.getPathId()+" must be unique within the facility.");
+            	String msg = String.format("Control Path Identifier '%s' must be unique within the facility.", controlPath.getPathId());
                 violations.add(new WorksheetError(controlPath.getSheetName(), controlPath.getRow(), msg));
             }
     	}
