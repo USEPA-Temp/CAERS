@@ -128,12 +128,11 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   }
 
   openCopyModal() {
-    const modalMessage = `You are about to be re-directed to enter an alternative throughput for this process.
-                          A copy of the process will be automatically generated and prepopulated with the current process information.
-                          Are you sure you wish to continue?`;
+    const modalMessage = `You are about to be redirected to enter an alternative throughput for process "${this.process?.emissionsProcessIdentifier}" of
+                          emissions unit "${this.emissionsUnit?.unitIdentifier}". A copy of this process will be automatically generated and
+                          pre-populated with the current process information. Are you sure you wish to continue?`;
     const modalRef = this.modalService.open(ConfirmationDialogComponent);
     modalRef.componentInstance.message = modalMessage;
-    modalRef.componentInstance.title = 'Attention';
     modalRef.componentInstance.continue.subscribe(() => {
         this.copyProcess();
     });
