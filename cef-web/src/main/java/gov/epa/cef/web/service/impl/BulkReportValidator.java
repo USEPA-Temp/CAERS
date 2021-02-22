@@ -121,7 +121,7 @@ public class BulkReportValidator {
 	            	List<String> processList = checkUnitIdentifierList.get(process.getEmissionsUnitId());
 	            	
 	            	if (processList.contains(process.getEmissionsProcessIdentifier().trim().toLowerCase())) {
-	            		String msg = String.format("Emissions Process Identifier '%s' must be unique within an Emissions Unit.", process.getEmissionsProcessIdentifier());
+	            		String msg = String.format("Emissions Process Identifier '%s' must be unique within the Emissions Unit.", process.getEmissionsProcessIdentifier());
 	                  violations.add(new WorksheetError(process.getSheetName(), process.getRow(), msg));
 	            	}
 	            } 
