@@ -170,12 +170,11 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
             if (this.emissionUnitIdentifiers) {
                 if (emissionId.trim() === '') {
                     control.get('unitIdentifier').setErrors({required: true});
-                } else {
+                }
 
-                    for (const id of this.emissionUnitIdentifiers) {
-                        if (id.trim().toLowerCase() === emissionId.trim().toLowerCase()) {
-                            return {duplicateEmissionUnitIdentifier: true};
-                        }
+                for (const id of this.emissionUnitIdentifiers) {
+                    if (id.trim().toLowerCase() === emissionId.trim().toLowerCase()) {
+                        return {duplicateEmissionUnitIdentifier: true};
                     }
                 }
             }
