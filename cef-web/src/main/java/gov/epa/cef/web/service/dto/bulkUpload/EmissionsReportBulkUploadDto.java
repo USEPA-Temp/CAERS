@@ -34,6 +34,7 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     private List<ControlPathPollutantBulkUploadDto> controlPathPollutants = new ArrayList<>();
     private List<FacilityNAICSBulkUploadDto> facilityNAICS = new ArrayList<>();
     private List<FacilitySiteContactBulkUploadDto> facilityContacts = new ArrayList<>();
+    private List<VersionBulkUploadDto> versions = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -208,6 +209,12 @@ public class EmissionsReportBulkUploadDto implements IWorkbookAware, Serializabl
     }
     public void setFacilityContacts(List<FacilitySiteContactBulkUploadDto> facilityContacts) {
     	this.facilityContacts = facilityContacts;
+    }
+    public List<VersionBulkUploadDto> getVersions() {
+        return versions;
+    }
+    public void setVersions(List<VersionBulkUploadDto> versions) {
+        this.versions = versions;
     }
 
 }
