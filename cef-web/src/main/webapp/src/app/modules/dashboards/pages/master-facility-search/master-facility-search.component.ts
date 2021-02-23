@@ -62,7 +62,6 @@ export class MasterFacilitySearchComponent implements OnInit {
 
       const criteria = new MasterFacilityRecord();
       Object.assign(criteria, this.searchForm.value);
-      console.log(criteria);
 
       this.mfrService.search(criteria)
       .subscribe(result => {
