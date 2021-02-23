@@ -91,7 +91,7 @@ public class BulkReportValidator {
             if (unit.getUnitIdentifier() != null && !checkedUnitIdentifierList.contains(unit.getUnitIdentifier().trim().toLowerCase())) {
             	checkedUnitIdentifierList.add(unit.getUnitIdentifier().trim().toLowerCase());
             } else {
-            	String msg = String.format("Emissions Unit Identifier '%s' must be unique within the facility.", unit.getUnitIdentifier());
+            	String msg = String.format("Unit ID '%s' already exists within the facility. Duplicates are not allowed.", unit.getUnitIdentifier());
                 violations.add(new WorksheetError(unit.getSheetName(), unit.getRow(), msg));
             }
     	}
@@ -121,7 +121,7 @@ public class BulkReportValidator {
 	            	List<String> processList = checkUnitIdentifierList.get(process.getEmissionsUnitId());
 	            	
 	            	if (processList.contains(process.getEmissionsProcessIdentifier().trim().toLowerCase())) {
-	            		String msg = String.format("Emissions Process Identifier '%s' must be unique within the Emissions Unit.", process.getEmissionsProcessIdentifier());
+	            		String msg = String.format("Process ID '%s' already exists for the emissions unit. Duplicates are not allowed.", process.getEmissionsProcessIdentifier());
 	                  violations.add(new WorksheetError(process.getSheetName(), process.getRow(), msg));
 	            	}
 	            } 
@@ -144,7 +144,7 @@ public class BulkReportValidator {
             if (releasePoint.getReleasePointIdentifier() != null && !checkedUnitIdentifierList.contains(releasePoint.getReleasePointIdentifier().trim().toLowerCase())) {
             	checkedUnitIdentifierList.add(releasePoint.getReleasePointIdentifier().trim().toLowerCase());
             } else {
-            	String msg = String.format("Release Point Identifier '%s' must be unique within the facility.", releasePoint.getReleasePointIdentifier());
+            	String msg = String.format("Release Point ID '%s' already exists within the facility. Duplicates are not allowed.", releasePoint.getReleasePointIdentifier());
                 violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
             }
     	}
@@ -165,7 +165,7 @@ public class BulkReportValidator {
             if (control.getIdentifier() != null && !checkedControlIdentifierList.contains(control.getIdentifier().trim().toLowerCase())) {
             	checkedControlIdentifierList.add(control.getIdentifier().trim().toLowerCase());
             } else {
-            	String msg = String.format("Control Identifier '%s' must be unique within the facility.", control.getIdentifier());
+            	String msg = String.format("Control ID '%s' already exists within the facility. Duplicates are not allowed.", control.getIdentifier());
                 violations.add(new WorksheetError(control.getSheetName(), control.getRow(), msg));
             }
     	}
@@ -186,7 +186,7 @@ public class BulkReportValidator {
             if (controlPath.getPathId() != null && !checkedControlPathIdentifierList.contains(controlPath.getPathId().trim().toLowerCase())) {
             	checkedControlPathIdentifierList.add(controlPath.getPathId().trim().toLowerCase());
             } else {
-            	String msg = String.format("Control Path Identifier '%s' must be unique within the facility.", controlPath.getPathId());
+            	String msg = String.format("Path ID '%s' already exists within the facility. Duplicates are not allowed.", controlPath.getPathId());
                 violations.add(new WorksheetError(controlPath.getSheetName(), controlPath.getRow(), msg));
             }
     	}
