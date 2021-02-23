@@ -13,6 +13,7 @@ import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tol
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
+import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,11 @@ export class LookupService {
   retrieveFuelUseMaterial(): Observable<BaseCodeLookup[]> {
     const url = `${this.baseUrl}/fuelUse/material`;
     return this.http.get<BaseCodeLookup[]>(url);
+  }
+
+  retrieveSccFuelUseMaterial(scc: string): Observable<FuelUseSccCode> {
+    const url = `${this.baseUrl}/fuelUse/material/${scc}`;
+    return this.http.get<FuelUseSccCode>(url);
   }
 
   retrieveCalcMethod(): Observable<CalculationMethodCode[]> {

@@ -72,12 +72,19 @@
             <fa-icon class="mt-2" title="Code for fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpMaterialSelect" class="ml-1 col-form-label"><strong>Fuel Material:</strong></label>
         </div>
-        <div class="col-sm-2">
-            <select type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
+        <div class="col-sm-2" >
+            <select *ngIf="isFuelUseScc" type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="sccFuelUseMaterialValue">{{sccFuelUseMaterialValue?.description}}</option>
+            </select>
+            <select *ngIf="!isFuelUseScc" type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of fuelUseMaterialValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.fuelUseMaterialCode"></app-validation-message>
+            <div *ngIf="fuelMaterialInvalid" class="validation-message" style="padding-left: 10px;">
+                {{fuelMaterialInvalid}}
+            </div>
         </div>
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Fuel use of the process for a given time period." [icon]="['fas', 'question-circle']"></fa-icon>
@@ -92,11 +99,18 @@
             <label for="rpFuelUomSelect" class="ml-1 col-form-label"><strong>Fuel UoM:</strong></label>
         </div>
         <div class="col-sm-2">
-            <select type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
+            <select *ngIf="isFuelUseScc" type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of sccFuelUseUomValues" [ngValue]="opt">{{opt.code}}</option>
+            </select>
+            <select *ngIf="!isFuelUseScc" type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of fuelUseUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.fuelUseUom"></app-validation-message>
+            <div *ngIf="fuelUomInvalid" class="validation-message" style="padding-left: 10px;">
+                {{fuelUomInvalid}}
+            </div>
         </div>
     </div>
 

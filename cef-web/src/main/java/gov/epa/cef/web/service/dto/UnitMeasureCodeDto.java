@@ -14,6 +14,8 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
     
     private Boolean fuelUseUom;
     
+    private String fuelUseType;
+    
     private Boolean heatContentUom;
 
     private Boolean legacy;
@@ -74,4 +76,12 @@ public class UnitMeasureCodeDto extends CodeLookupDto {
         this.legacy = legacy;
     }
 
+	public String getFuelUseType() {
+		return fuelUseType;
+	}
+
+	public void setFuelUseType(String fuelUseType) {
+		this.fuelUseType = fuelUseType;
+	}
+    
 }
