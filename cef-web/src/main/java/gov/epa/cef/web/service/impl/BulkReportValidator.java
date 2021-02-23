@@ -14,6 +14,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
+import gov.epa.cef.web.service.dto.bulkUpload.WorksheetName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,8 +31,10 @@ import java.util.function.Consumer;
 @Component
 public class BulkReportValidator {
 
+    static final String SPREADSHEET_MAJOR_VERSION = "2";
+
     private final Validator validator;
-    
+
     @Autowired
     BulkReportValidator(Validator validator) {
 
@@ -41,6 +44,16 @@ public class BulkReportValidator {
     public void validate(EmissionsReportBulkUploadDto report) {
 
         List<WorksheetError> violations = new ArrayList<>();
+
+        String regex = String.format("^%s(\\.\\d+)?$", SPREADSHEET_MAJOR_VERSION);
+
+        if (report.getVersions().isEmpty() || !report.getVersions().get(0).getVersion().matches(regex)) {
+
+            String msg = "This spreadsheet is out of date. Please download the most recent version of the spreadsheet.";
+            violations.add(new WorksheetError(WorksheetName.Version.toString(), -1, msg));
+            throw new BulkReportValidationException(violations);
+        }
+
         WorksheetDtoValidator worksheetValidator = new WorksheetDtoValidator(this.validator, violations);
 
         Consumer<FacilitySiteBulkUploadDto> siteIdCheck = new FacilityIdValidator(report, violations);
