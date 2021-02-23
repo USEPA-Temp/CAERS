@@ -131,7 +131,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         return (control: FormGroup): ValidationErrors | null => {
             const controlId: string = control.get('identifier').value;
             if (this.controlIdentifiers) {
-                if (!control.get('identifier').value || control.get('identifier').value.trim() === '') {
+                if (!controlId || controlId.trim() === '') {
                     control.get('identifier').setErrors({required: true});
                 }
 

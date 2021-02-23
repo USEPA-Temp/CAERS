@@ -745,8 +745,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     releasePointIdentifierCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
             const rpId: string = control.get('releasePointIdentifier').value;
-            if (this.releasePointIdentifiers && control.get('releasePointIdentifier').value !== null) {
-                if (control.get('releasePointIdentifier').value.trim() === '') {
+            if (this.releasePointIdentifiers && rpId !== null) {
+                if (rpId.trim() === '') {
                     control.get('releasePointIdentifier').setErrors({required: true});
                 }
 

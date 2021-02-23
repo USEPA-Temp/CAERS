@@ -18,7 +18,10 @@ import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.util.ConstantUtils;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,12 +113,12 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
         if (emissionsUnit != null && emissionsUnit.getFacilitySite() != null && emissionsUnit.getFacilitySite().getEmissionsUnits() != null) {
 	        Map<Object, List<EmissionsUnit>> euMap = emissionsUnit.getFacilitySite().getEmissionsUnits().stream()
 	                .filter(eu -> (eu.getUnitIdentifier() != null))
-	                .collect(Collectors.groupingBy(feu -> feu.getUnitIdentifier().toLowerCase().trim()));
+	                .collect(Collectors.groupingBy(feu -> feu.getUnitIdentifier().trim().toLowerCase()));
 
 
 	        for (List<EmissionsUnit> euList : euMap.values()) {
 
-	        	if (euList.size() > 1 && euList.get(0).getUnitIdentifier().contentEquals(emissionsUnit.getUnitIdentifier())) {
+	        	if (euList.size() > 1 && euList.get(0).getUnitIdentifier().trim().toLowerCase().contentEquals(emissionsUnit.getUnitIdentifier().trim().toLowerCase())) {
 
 	        		result = false;
 	          	context.addFederalError(

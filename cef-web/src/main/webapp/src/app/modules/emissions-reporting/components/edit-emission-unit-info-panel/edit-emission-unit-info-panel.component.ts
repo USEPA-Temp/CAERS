@@ -168,8 +168,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         return (control: FormGroup): ValidationErrors | null => {
             const emissionId: string = control.get('unitIdentifier').value;
             if (this.emissionUnitIdentifiers) {
-                if (control.get('unitIdentifier').value.trim() === '') {
+                if (emissionId.trim() === '') {
                     control.get('unitIdentifier').setErrors({required: true});
+                } else {
 
                     for (const id of this.emissionUnitIdentifiers) {
                         if (id.trim().toLowerCase() === emissionId.trim().toLowerCase()) {

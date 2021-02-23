@@ -35,7 +35,7 @@ public class ControlValidator extends BaseValidator<Control> {
         .collect(Collectors.groupingBy(c -> c.getIdentifier().trim().toLowerCase()));
 
 		for (List<Control> cList: cMap.values()) {
-			if (cList.size() > 1 && cList.get(0).getIdentifier().contentEquals(control.getIdentifier())) {
+			if (cList.size() > 1 && cList.get(0).getIdentifier().trim().toLowerCase().contentEquals(control.getIdentifier().trim().toLowerCase())) {
 
 				result = false;
 				context.addFederalError(
