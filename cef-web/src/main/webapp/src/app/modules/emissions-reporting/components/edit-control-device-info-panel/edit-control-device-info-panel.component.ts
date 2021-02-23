@@ -133,11 +133,12 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
             if (this.controlIdentifiers) {
                 if (!controlId || controlId.trim() === '') {
                     control.get('identifier').setErrors({required: true});
-                }
+                } else {
 
-                for (const id of this.controlIdentifiers) {
-                    if (id.trim().toLowerCase() === controlId.trim().toLowerCase()) {
-                        return {duplicateControlIdentifier: true};
+                    for (const id of this.controlIdentifiers) {
+                        if (id.trim().toLowerCase() === controlId.trim().toLowerCase()) {
+                            return {duplicateControlIdentifier: true};
+                        }
                     }
                 }
 

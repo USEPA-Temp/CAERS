@@ -745,14 +745,15 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     releasePointIdentifierCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
             const rpId: string = control.get('releasePointIdentifier').value;
-            if (this.releasePointIdentifiers && rpId !== null) {
-                if (rpId.trim() === '') {
+            if (this.releasePointIdentifiers) {
+                if (!rpId || rpId.trim() === '') {
                     control.get('releasePointIdentifier').setErrors({required: true});
-                }
+                } else {
 
-                for (const id of this.releasePointIdentifiers) {
-                    if (id.trim().toLowerCase() === rpId.trim().toLowerCase()) {
-                        return {duplicateReleasePointIdentifier: true};
+                    for (const id of this.releasePointIdentifiers) {
+                        if (id.trim().toLowerCase() === rpId.trim().toLowerCase()) {
+                            return {duplicateReleasePointIdentifier: true};
+                        }
                     }
                 }
             }

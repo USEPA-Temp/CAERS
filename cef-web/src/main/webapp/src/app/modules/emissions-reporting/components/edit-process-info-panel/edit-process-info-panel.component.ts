@@ -283,14 +283,15 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     checkProcessIdentifier(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
             const procId: string = control.get('emissionsProcessIdentifier').value;
-            if (this.emissionsProcessIdentifiers && procId) {
-                if (procId.trim() === '') {
+            if (this.emissionsProcessIdentifiers) {
+                if (!procId || procId.trim() === '') {
                     control.get('emissionsProcessIdentifier').setErrors({required: true});
-                }
+                } else {
 
-                for (const id of this.emissionsProcessIdentifiers) {
-                    if (id.trim().toLowerCase() === procId.trim().toLowerCase()) {
-                        return {invalidDuplicateProcessIdetifier: true};
+                    for (const id of this.emissionsProcessIdentifiers) {
+                        if (id.trim().toLowerCase() === procId.trim().toLowerCase()) {
+                            return {invalidDuplicateProcessIdetifier: true};
+                        }
                     }
                 }
             }
