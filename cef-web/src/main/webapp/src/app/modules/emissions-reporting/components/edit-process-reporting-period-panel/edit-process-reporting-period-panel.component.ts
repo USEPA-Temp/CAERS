@@ -177,14 +177,34 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
         });
     }
 
+    // no error is shown when fuel use material is null or when fuel use material matches allowable materials
+    // value can be null to allow duplicate process with scc that requires fuel use data to save
     checkSccFuelMaterialUom() {
         const materialMessage = 'Please select a valid Fuel Material for the Process SCC.';
-        const uomMessage = 'Please select a valid Fuel UoM for the reported Fuel Material.';
 
         if (this.isFuelUseScc && this.processOpStatus === OperatingStatus.OPERATING) {
-            this.fuelMaterialInvalid = this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code !== this.sccFuelUseMaterialValue.code ? materialMessage : null;
-            this.fuelUomInvalid = this.sccFuelUseUomValues?.includes(this.reportingPeriodForm.get('fuelUseUom').value) ? null : uomMessage;
+            this.fuelMaterialInvalid =
+                this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code !== this.sccFuelUseMaterialValue.code
+                && this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code != null ? materialMessage : null;
+            this.fuelUomInvalid = this.checkSccUom();
         }
+    }
+
+    // no error is shown when fuel use uom is null or when fuel use uom matches allowable uoms
+    // value can be null to allow duplicate process with scc that requires fuel use data to save
+    checkSccUom(){
+        const uomMessage = 'Please select a valid Fuel UoM for the reported Fuel Material.';
+        let match = false;
+        if (this.reportingPeriodForm.get('fuelUseUom').value === null) {
+            match = true;
+        } else {
+            this.sccFuelUseUomValues.forEach(element => {
+                if (element.code === this.reportingPeriodForm.get('fuelUseUom').value.code) {
+                        match = true;
+                }
+            });
+        }
+        return match ? null : uomMessage;
     }
 
     disableWarning(opStatus: string) {
