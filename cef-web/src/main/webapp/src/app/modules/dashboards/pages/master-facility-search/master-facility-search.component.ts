@@ -17,7 +17,6 @@ export class MasterFacilitySearchComponent implements OnInit {
 
   searchForm = this.fb.group({
     name: [''],
-    eisProgramId: [''],
     city: [''],
     stateCode: [null],
     postalCode: [''],
