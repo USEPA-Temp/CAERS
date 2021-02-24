@@ -206,6 +206,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 this.fugitiveHeightUomCode.patchValue(ftUom)
                 this.stackDiameterUomCode.patchValue(ftUom);
                 this.stackHeightUomCode.patchValue(ftUom);
+                this.fenceLineUomCode.patchValue(ftUom);
                 this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
                 this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
             });
@@ -267,6 +268,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     get stackHeightUomCode() {
         return this.releasePointForm.get('stackHeightUomCode')
+    }
+
+    get fenceLineUomCode() {
+        return this.releasePointForm.get('fenceLineUomCode')
     }
 
     get fugitiveWidth() {
