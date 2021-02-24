@@ -64,8 +64,6 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   showFuelDataCopyMessage = false;
   sccFuelUsefieldsWarning = null;
   sccHeatContentfieldsWarning = null;
-  fuelMaterialInvalid = null;
-  fuelUomInvalid = null;
 
   constructor(
     private lookupService: LookupService,
@@ -177,23 +175,19 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
         });
     }
 
-    // no error is shown when fuel use material is null or when fuel use material matches allowable materials
-    // value can be null to allow duplicate process with scc that requires fuel use data to save
+    // fuel material is set to null when the fuel use material does not match the allowable materials
     checkSccFuelMaterialUom() {
-        const materialMessage = 'Please select a valid Fuel Material for the Process SCC.';
-
         if (this.isFuelUseScc && this.processOpStatus === OperatingStatus.OPERATING) {
-            this.fuelMaterialInvalid =
-                this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code !== this.sccFuelUseMaterialValue.code
-                && this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code != null ? materialMessage : null;
-            this.fuelUomInvalid = this.checkSccUom();
+            this.reportingPeriodForm.get('fuelUseMaterialCode').value === null
+            || this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code === this.sccFuelUseMaterialValue.code
+            ? null : this.reportingPeriodForm.get('fuelUseMaterialCode').patchValue(null);
+
+            this.checkSccUom();
         }
     }
 
-    // no error is shown when fuel use uom is null or when fuel use uom matches allowable uoms
-    // value can be null to allow duplicate process with scc that requires fuel use data to save
+    // fuel use uom is set to null when the uom does not match any in the list of allowable fuel use uoms
     checkSccUom(){
-        const uomMessage = 'Please select a valid Fuel UoM for the reported Fuel Material.';
         let match = false;
         if (this.reportingPeriodForm.get('fuelUseUom').value === null) {
             match = true;
@@ -204,7 +198,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
                 }
             });
         }
-        return match ? null : uomMessage;
+        match ? null : this.reportingPeriodForm.get('fuelUseUom').patchValue(null);
     }
 
     disableWarning(opStatus: string) {

@@ -82,9 +82,6 @@
                 <option *ngFor="let opt of fuelUseMaterialValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.fuelUseMaterialCode"></app-validation-message>
-            <div *ngIf="fuelMaterialInvalid" class="validation-message" style="padding-left: 10px;">
-                {{fuelMaterialInvalid}}
-            </div>
         </div>
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Fuel use of the process for a given time period." [icon]="['fas', 'question-circle']"></fa-icon>
@@ -108,9 +105,6 @@
                 <option *ngFor="let opt of fuelUseUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
             <app-validation-message [control]="reportingPeriodForm.controls.fuelUseUom"></app-validation-message>
-            <div *ngIf="fuelUomInvalid" class="validation-message" style="padding-left: 10px;">
-                {{fuelUomInvalid}}
-            </div>
         </div>
     </div>
 
