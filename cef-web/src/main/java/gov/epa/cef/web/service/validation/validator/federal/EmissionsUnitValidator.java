@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,7 +223,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                             Boolean sameRpOpType = null;
 
                             // compare process info
-                            diffProcessDetails = diffProcessDetails || (!pList.get(i).getStatusYear().equals(pList.get(j).getStatusYear()));
+                            diffProcessDetails = diffProcessDetails || (!Objects.equals(pList.get(i).getStatusYear(), pList.get(j).getStatusYear()));
 
                             // TODO: update to compare processes with multiple reporting periods with the same operating type
                             // compare reporting period and operating details if reporting period exists
@@ -231,20 +232,20 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                                 OperatingDetail processB = pList.get(j).getReportingPeriods().get(0).getOperatingDetails().get(0);
 
                                 // compare operating details
-                                diffOpDetails = diffOpDetails || (!processA.getActualHoursPerPeriod().equals(processB.getActualHoursPerPeriod()));
-                                diffOpDetails = diffOpDetails || (!processA.getAvgWeeksPerPeriod().equals(processB.getAvgWeeksPerPeriod()));
-                                diffOpDetails = diffOpDetails || (!processA.getAvgDaysPerWeek().equals(processB.getAvgDaysPerWeek()));
-                                diffOpDetails = diffOpDetails || (!processA.getAvgHoursPerDay().equals(processB.getAvgHoursPerDay()));
-                                diffOpDetails = diffOpDetails || (!processA.getPercentFall().equals(processB.getPercentFall()));
-                                diffOpDetails = diffOpDetails || (!processA.getPercentSpring().equals(processB.getPercentSpring()));
-                                diffOpDetails = diffOpDetails || (!processA.getPercentSummer().equals(processB.getPercentSummer()));
-                                diffOpDetails = diffOpDetails || (!processA.getPercentWinter().equals(processB.getPercentWinter()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getActualHoursPerPeriod(), processB.getActualHoursPerPeriod()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getAvgWeeksPerPeriod(), processB.getAvgWeeksPerPeriod()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getAvgDaysPerWeek(), processB.getAvgDaysPerWeek()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getAvgHoursPerDay(), processB.getAvgHoursPerDay()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getPercentFall(), processB.getPercentFall()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getPercentSpring(), processB.getPercentSpring()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getPercentSummer(), processB.getPercentSummer()));
+                                diffOpDetails = diffOpDetails || (!Objects.equals(processA.getPercentWinter(), processB.getPercentWinter()));
 
                                 // compare reporting period
-                                diffProcessDetails = diffProcessDetails || (!pList.get(i).getReportingPeriods().get(0).getReportingPeriodTypeCode()
-                                    .equals(pList.get(j).getReportingPeriods().get(0).getReportingPeriodTypeCode()));
-                                sameRpOpType = (pList.get(i).getReportingPeriods().get(0).getEmissionsOperatingTypeCode()
-                                    .equals(pList.get(j).getReportingPeriods().get(0).getEmissionsOperatingTypeCode()));
+                                diffProcessDetails = diffProcessDetails || (!Objects.equals(pList.get(i).getReportingPeriods().get(0).getReportingPeriodTypeCode(),
+                                    pList.get(j).getReportingPeriods().get(0).getReportingPeriodTypeCode()));
+                                sameRpOpType = Objects.equals(pList.get(i).getReportingPeriods().get(0).getEmissionsOperatingTypeCode(),
+                                    pList.get(j).getReportingPeriods().get(0).getEmissionsOperatingTypeCode());
 
                             } else {
                                 // process details do not match if reporting period list sizes are not equal
