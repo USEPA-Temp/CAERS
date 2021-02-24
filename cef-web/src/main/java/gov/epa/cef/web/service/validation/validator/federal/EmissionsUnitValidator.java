@@ -218,9 +218,9 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                         for (int j = i + 1; j < pList.size(); j++) {
 
                             // check if process details are the same
-                            Boolean diffProcessDetails = false; // process, reporting period type, rp appt details
-                            Boolean diffOpDetails = false;
-                            Boolean sameRpOpType = null;
+                            boolean diffProcessDetails = false; // process, reporting period type, rp appt details
+                            boolean diffOpDetails = false;
+                            boolean sameRpOpType = false;
 
                             // compare process info
                             diffProcessDetails = diffProcessDetails || (!Objects.equals(pList.get(i).getStatusYear(), pList.get(j).getStatusYear()));
