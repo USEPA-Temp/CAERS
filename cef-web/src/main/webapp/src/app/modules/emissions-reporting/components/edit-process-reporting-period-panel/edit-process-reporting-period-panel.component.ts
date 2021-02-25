@@ -111,11 +111,12 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
             .subscribe(result => {
                 this.fuelUseUomValues = result;
                 this.heatContentUomValues = this.fuelUseUomValues.filter(val => val.heatContentUom);
+
+                if (this.sccCode) {
+                    this.getPointSourceScc(this.sccCode);
+                }
             });
 
-        if (this.sccCode) {
-            this.getPointSourceScc(this.sccCode);
-        }
 
         this.sharedService.processSccChangeEmitted$.subscribe(scc => {
             if (scc) {
