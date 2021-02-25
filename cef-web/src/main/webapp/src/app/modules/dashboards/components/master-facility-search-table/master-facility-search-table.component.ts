@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserFacilityAssociationService } from 'src/app/core/services/user-facility-association.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { UserFacilityAssociation } from 'src/app/shared/models/user-facility-association';
 
 @Component({
   selector: 'app-master-facility-search-table',
@@ -15,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MasterFacilitySearchTableComponent extends BaseSortableTable implements OnInit, OnChanges {
   @Input() tableData: MasterFacilityRecord[];
+  @Output() accessRequested = new EventEmitter<UserFacilityAssociation>();
 
   filteredItems: MasterFacilityRecord[] = [];
   filter = new FormControl('');
@@ -77,8 +79,9 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
 
   requestAccess(facility: MasterFacilityRecord) {
     this.userFacilityAssociationService.createAssociationRequest(facility)
-    .subscribe(() => {
+    .subscribe(result => {
       this.toastr.success('', `Access requested for ${facility.name}`);
+      this.accessRequested.emit(result);
       this.tableData.splice(this.tableData.indexOf(facility), 1);
       this.filteredItems = this.search(this.filter.value);
       this.selectedFacility = null;

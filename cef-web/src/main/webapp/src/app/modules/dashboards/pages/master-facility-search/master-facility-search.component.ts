@@ -71,4 +71,9 @@ export class MasterFacilitySearchComponent implements OnInit {
     }
   }
 
+  onAccessRequested(ufa: UserFacilityAssociation) {
+
+    this.myFacilityIds.push(ufa.masterFacilityRecord.id);
+  }
+
 }
