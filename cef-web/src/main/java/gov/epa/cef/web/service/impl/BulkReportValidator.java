@@ -165,6 +165,7 @@ public class BulkReportValidator {
             } else {
                 List<String> typeList = processPeriodMap.get(item.getEmissionsProcessId());
 
+                // the following line can be used when we begin to allow multiple reporting periods, as long as they're different types
 //                if (typeList != null && typeList.contains(item.getReportingPeriodTypeCode())) {
                 if (typeList != null && !typeList.isEmpty()) {
                     String msg = String.format("There is more than one Reporting Period reported for the emissions process. Only one Reporting Period per process is allowed.");
