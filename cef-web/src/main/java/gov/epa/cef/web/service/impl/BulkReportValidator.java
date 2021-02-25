@@ -13,6 +13,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetName;
 
@@ -59,6 +60,7 @@ public class BulkReportValidator {
         Consumer<FacilitySiteBulkUploadDto> siteIdCheck = new FacilityIdValidator(report, violations);
         Consumer<EmissionsUnitBulkUploadDto> emissionsUnitCheck = new EmissionsUnitValidator(violations);
         Consumer<EmissionsProcessBulkUploadDto> emissionsProcessCheck = new EmissionsProcessValidator(violations);
+        Consumer<ReportingPeriodBulkUploadDto> reportingPeriodCheck = new ReportingPeriodValidator(violations);
         Consumer<ReleasePointBulkUploadDto> releasePointCheck = new ReleasePointValidator(violations);
         Consumer<ControlBulkUploadDto> controlCheck = new ControlValidator(violations);
         Consumer<ControlPathBulkUploadDto> controlPathCheck = new ControlPathValidator(violations);
@@ -70,7 +72,7 @@ public class BulkReportValidator {
         report.getEmissionsProcesses().forEach(emissionsProcessCheck.andThen(worksheetValidator));
         report.getReleasePoints().forEach(releasePointCheck.andThen(worksheetValidator));
         report.getReleasePointAppts().forEach(worksheetValidator);
-        report.getReportingPeriods().forEach(worksheetValidator);
+        report.getReportingPeriods().forEach(reportingPeriodCheck.andThen(worksheetValidator));
         report.getOperatingDetails().forEach(worksheetValidator);
         report.getEmissions().forEach(worksheetValidator);
         report.getEmissionFormulaVariables().forEach(worksheetValidator);
@@ -141,7 +143,37 @@ public class BulkReportValidator {
     		}
     	}
     }
-    
+
+    static class ReportingPeriodValidator implements Consumer<ReportingPeriodBulkUploadDto> {
+
+        private final List<WorksheetError> violations;
+
+        public ReportingPeriodValidator(List<WorksheetError> violations) {
+            this.violations = violations;
+        }
+
+        HashMap<Long, List<String>> processPeriodMap = new HashMap<Long, List<String>>();
+
+        public void accept(ReportingPeriodBulkUploadDto item) {
+
+            if (item.getEmissionsProcessId() != null && !processPeriodMap.containsKey(item.getEmissionsProcessId())) {
+
+                List<String> typeList = new ArrayList<>();
+                typeList.add(item.getReportingPeriodTypeCode());
+                processPeriodMap.put(item.getEmissionsProcessId(), typeList);
+
+            } else {
+                List<String> typeList = processPeriodMap.get(item.getEmissionsProcessId());
+
+//                if (typeList != null && typeList.contains(item.getReportingPeriodTypeCode())) {
+                if (typeList != null && !typeList.isEmpty()) {
+                    String msg = String.format("There is more than one Reporting Period reported for the emissions process. Only one Reporting Period per process is allowed.");
+                    violations.add(new WorksheetError(item.getSheetName(), item.getRow(), msg));
+                }
+            }
+        }
+    }
+
     static class ReleasePointValidator implements Consumer<ReleasePointBulkUploadDto> {
     	
     	private final List<WorksheetError> violations;
@@ -344,11 +376,11 @@ public class BulkReportValidator {
 
             String blank = ":BLANK:";
 
-            if (report.getMasterFacilityRecordId().equals(facilitySite.getMasterFacilityRecordId()) == false) {
+            if (report.getProgramSystemCode().equals(facilitySite.getProgramSystemCode()) == false) {
 
-                String val = Objects.toString(facilitySite.getMasterFacilityRecordId(), blank);
-                String msg = String.format("The Master Facility Record ID '%s' indicated on the Facility Information tab does not match the MFR id '%s' for the facility for which you are attempting to upload a CAERS report.",
-                    val, report.getFrsFacilityId());
+                String val = Objects.toString(facilitySite.getProgramSystemCode(), blank);
+                String msg = String.format("The Program System Code '%s' indicated on the Facility Information tab does not match the Program System Code '%s' for the facility for which you are attempting to upload a CAERS report.",
+                    val, report.getProgramSystemCode());
 
                 violations.add(new WorksheetError(facilitySite.getSheetName(), facilitySite.getRow(), msg));
             }
