@@ -309,49 +309,48 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
         for (FacilitySiteBulkUploadDto dto : dtos) {
             Row row = sheet.getRow(currentRow);
 
-            row.getCell(2).setCellValue(dto.getMasterFacilityRecordId());
-            row.getCell(3).setCellValue(dto.getAltSiteIdentifier());
-            row.getCell(4).setCellValue(dto.getFacilityCategoryCode());
-//                row.getCell(5).setCellValue(dto.getFacilitySourceTypeCode());
+            row.getCell(2).setCellValue(dto.getAltSiteIdentifier());
+            row.getCell(3).setCellValue(dto.getFacilityCategoryCode());
+//                row.getCell(4).setCellValue(dto.getFacilitySourceTypeCode());
             if (dto.getFacilitySourceTypeCode() != null) {
                 // find the display name using the code in an excel lookup similar to how the code is found for the dropdown
                 // generates a lookup formula then evaluates it to get the correct value using evaluateInCell so that the formula is removed afterwards
-                row.getCell(6).setCellFormula(generateLookupFormula(wb, "FacilitySourceTypeCode", dto.getFacilitySourceTypeCode(), false));
-                formulaEvaluator.evaluateInCell(row.getCell(6));
+                row.getCell(5).setCellFormula(generateLookupFormula(wb, "FacilitySourceTypeCode", dto.getFacilitySourceTypeCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(5));
             }
-            row.getCell(7).setCellValue(dto.getName());
-            row.getCell(8).setCellValue(dto.getDescription());
-//                row.getCell(9).setCellValue(dto.getOperatingStatusCode());
+            row.getCell(6).setCellValue(dto.getName());
+            row.getCell(7).setCellValue(dto.getDescription());
+//                row.getCell(8).setCellValue(dto.getOperatingStatusCode());
             if (dto.getOperatingStatusCode() != null) {
-                row.getCell(10).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
-                formulaEvaluator.evaluateInCell(row.getCell(10));
+                row.getCell(9).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(9));
             }
-            setCellNumberValue(row.getCell(11), dto.getStatusYear());
-//                row.getCell(12).setCellValue(dto.getProgramSystemCode());
+            setCellNumberValue(row.getCell(10), dto.getStatusYear());
+//                row.getCell(11).setCellValue(dto.getProgramSystemCode());
             if (dto.getProgramSystemCode() != null) {
-                row.getCell(13).setCellFormula(generateLookupFormula(wb, "ProgramSystemCode", dto.getProgramSystemCode(), true));
-                formulaEvaluator.evaluateInCell(row.getCell(13));
+                row.getCell(12).setCellFormula(generateLookupFormula(wb, "ProgramSystemCode", dto.getProgramSystemCode(), true));
+                formulaEvaluator.evaluateInCell(row.getCell(12));
             }
-            row.getCell(14).setCellValue(dto.getStreetAddress());
-            row.getCell(15).setCellValue(dto.getCity());
-            row.getCell(16).setCellValue(dto.getStateFipsCode());
-            row.getCell(17).setCellValue(dto.getStateCode());
-            row.getCell(18).setCellValue(dto.getCountyCode());
-            row.getCell(19).setCellValue(String.format("%s (%s)", dto.getCounty(), dto.getStateCode()));
-//                row.getCell(20).setCellValue(dto.getCountryCode());
-            row.getCell(21).setCellValue(dto.getPostalCode());
-            setCellNumberValue(row.getCell(22), dto.getLatitude());
-            setCellNumberValue(row.getCell(23), dto.getLongitude());
-            row.getCell(24).setCellValue(dto.getMailingStreetAddress());
-            row.getCell(25).setCellValue(dto.getMailingCity());
-            row.getCell(26).setCellValue(dto.getMailingStateCode());
-            row.getCell(27).setCellValue(dto.getMailingPostalCode());
-//                row.getCell(28).setCellValue(dto.getMailingCountryCode());
-            row.getCell(29).setCellValue(dto.getEisProgramId());
-//                row.getCell(30).setCellValue(dto.getTribalCode());
+            row.getCell(13).setCellValue(dto.getStreetAddress());
+            row.getCell(14).setCellValue(dto.getCity());
+            row.getCell(15).setCellValue(dto.getStateFipsCode());
+            row.getCell(16).setCellValue(dto.getStateCode());
+            row.getCell(17).setCellValue(dto.getCountyCode());
+            row.getCell(18).setCellValue(String.format("%s (%s)", dto.getCounty(), dto.getStateCode()));
+//                row.getCell(19).setCellValue(dto.getCountryCode());
+            row.getCell(20).setCellValue(dto.getPostalCode());
+            setCellNumberValue(row.getCell(21), dto.getLatitude());
+            setCellNumberValue(row.getCell(22), dto.getLongitude());
+            row.getCell(23).setCellValue(dto.getMailingStreetAddress());
+            row.getCell(24).setCellValue(dto.getMailingCity());
+            row.getCell(25).setCellValue(dto.getMailingStateCode());
+            row.getCell(26).setCellValue(dto.getMailingPostalCode());
+//                row.getCell(27).setCellValue(dto.getMailingCountryCode());
+            row.getCell(28).setCellValue(dto.getEisProgramId());
+//                row.getCell(29).setCellValue(dto.getTribalCode());
             if (dto.getTribalCode() != null) {
-                row.getCell(31).setCellFormula(generateLookupFormula(wb, "TribalCode", dto.getTribalCode(), false));
-                formulaEvaluator.evaluateInCell(row.getCell(31));
+                row.getCell(30).setCellFormula(generateLookupFormula(wb, "TribalCode", dto.getTribalCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(30));
             }
 
             currentRow++;
