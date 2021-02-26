@@ -30,6 +30,8 @@ public interface MasterFacilityRecordRepository extends JpaRepository<MasterFaci
 
     List<MasterFacilityRecord> findByProgramSystemCodeCode(String programSystemCode);
 
+    List<MasterFacilityRecord> findByProgramSystemCodeCodeAndAgencyFacilityId(String programSystemCode, String agencyFacilityId);
+
     /**
      * Retrieve program system codes currently in use; sort does not work on this query
      */

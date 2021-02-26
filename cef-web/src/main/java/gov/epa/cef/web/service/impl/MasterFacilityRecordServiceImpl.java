@@ -115,4 +115,21 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     	return result;
     }
 
+
+
+    public MasterFacilityRecordDto create(MasterFacilityRecordDto dto) {
+    	MasterFacilityRecord masterFacilityRecord = new MasterFacilityRecord();
+        mapper.updateFromDto(dto, masterFacilityRecord);
+        MasterFacilityRecord updatedMasterFacilityRecord = mfrRepo.save(masterFacilityRecord);
+
+    	MasterFacilityRecordDto result = mapper.toDto(updatedMasterFacilityRecord);
+
+    	return result;
+    }
+
+
+    public Boolean isDuplicateAgencyId(String agencyFacilityId, String programSystemCode) {
+        List<MasterFacilityRecord> mfr = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityId(programSystemCode, agencyFacilityId);
+        return Boolean.valueOf(mfr.size() > 0);
+    }
 }
