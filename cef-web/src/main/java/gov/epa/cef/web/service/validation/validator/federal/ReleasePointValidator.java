@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
+import com.google.common.base.Strings;
 
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -619,7 +620,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             releasePointCoordinate = (new BigDecimal(rpCoordinate)).setScale(6, RoundingMode.HALF_UP);
         }
 
-        if (latLongToleranceRepo.findById(facilityEisId).orElse(null) == null) {
+        if (Strings.emptyToNull(facilityEisId) == null || latLongToleranceRepo.findById(facilityEisId).orElse(null) == null) {
             maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
             minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
         } else {
