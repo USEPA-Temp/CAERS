@@ -129,7 +129,7 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
 
 
     public Boolean isDuplicateAgencyId(String agencyFacilityId, String programSystemCode) {
-        List<MasterFacilityRecord> mfr = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityIdIgnoreCase(programSystemCode, agencyFacilityId);
+        List<MasterFacilityRecord> mfr = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityIdIgnoreCase(programSystemCode.trim(), agencyFacilityId.trim());
         return Boolean.valueOf(mfr.size() > 0);
     }
 }
