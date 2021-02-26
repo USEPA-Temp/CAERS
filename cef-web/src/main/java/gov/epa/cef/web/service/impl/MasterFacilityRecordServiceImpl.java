@@ -118,8 +118,8 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
 
 
     public MasterFacilityRecordDto create(MasterFacilityRecordDto dto) {
-    	MasterFacilityRecord masterFacilityRecord = new MasterFacilityRecord();
-        mapper.updateFromDto(dto, masterFacilityRecord);
+    	MasterFacilityRecord masterFacilityRecord = mapper.fromDto(dto);
+        
         MasterFacilityRecord updatedMasterFacilityRecord = mfrRepo.save(masterFacilityRecord);
 
     	MasterFacilityRecordDto result = mapper.toDto(updatedMasterFacilityRecord);
@@ -129,7 +129,7 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
 
 
     public Boolean isDuplicateAgencyId(String agencyFacilityId, String programSystemCode) {
-        List<MasterFacilityRecord> mfr = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityId(programSystemCode, agencyFacilityId);
+        List<MasterFacilityRecord> mfr = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityIdIgnoreCase(programSystemCode, agencyFacilityId);
         return Boolean.valueOf(mfr.size() > 0);
     }
 }

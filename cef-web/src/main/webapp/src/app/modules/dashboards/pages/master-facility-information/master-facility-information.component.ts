@@ -98,11 +98,11 @@ export class MasterFacilityInformationComponent implements OnInit {
   }
 
   addMasterFacilityRecord() {
-      this.setEditInfo(false);
-      this.setAddFacility(true);
       const emptyMfr: MasterFacilityRecord = new MasterFacilityRecord();
       emptyMfr.agencyFacilityId = '';
       this.selectedFacility = emptyMfr;
+      this.setEditInfo(false);
+      this.setAddFacility(true);
   }
 
 
