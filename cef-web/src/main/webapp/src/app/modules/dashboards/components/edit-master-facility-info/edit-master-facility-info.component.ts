@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
+import { MasterFacilityRecordService } from 'src/app/core/services/master-facility-record.service';
 
 
 @Component({
@@ -19,6 +20,8 @@ import { numberValidator } from 'src/app/modules/shared/directives/number-valida
 })
 export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
   @Input() facility: MasterFacilityRecord;
+  @Input() addFacility: boolean;
+  @Input() programSystemCode: BaseCodeLookup;
 
   facilityOperatingStatusValues: BaseCodeLookup[];
   tribalCodeValues: BaseCodeLookup[];
@@ -27,7 +30,7 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
   counties: FipsCounty[];
 
   facilitySiteForm = this.fb.group({
-    agencyFacilityId: '',
+    agencyFacilityId: ['', Validators.required],
     name: ['', [
         Validators.maxLength(80),
         Validators.required]],
@@ -67,13 +70,19 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
     mailingPostalCode: ['', Validators.pattern('^\\d{5}(-\\d{4})?$')],
     countyCode: [null, Validators.required],
     description: ['', Validators.maxLength(100)]
-  }, {validators: this.mailingAddressValidator()});
+  }, {
+      validators: [
+          this.mailingAddressValidator(),
+          this.duplicateAgencyIdCheck()
+      ]
+  });
 
   constructor(
     public formUtils: FormUtilsService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private lookupService: LookupService) { }
+    private lookupService: LookupService,
+    private mfrService: MasterFacilityRecordService) { }
 
   ngOnInit(): void {
 
@@ -140,6 +149,27 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
       }}
       return null;
     };
+  }
+
+
+  duplicateAgencyIdCheck() : ValidatorFn {   
+    return (control: FormGroup): ValidationErrors | null => {
+
+        const agencyFacilityId = control.get('agencyFacilityId');
+        if (this.addFacility && agencyFacilityId.value != '' && agencyFacilityId.value != null) {
+            this.mfrService.isDuplicateAgencyId(agencyFacilityId.value, this.programSystemCode.code)
+                .subscribe(result => {
+                    setTimeout(() => {
+                        if (result) {
+                            control.get('agencyFacilityId').markAsTouched();
+                            control.get('agencyFacilityId').setErrors({duplicateAgencyId: true});
+                        }
+                    }, 1000);
+                });
+            return null;
+        }
+
+    }
   }
 
 }
