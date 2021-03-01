@@ -24,12 +24,14 @@ import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.FuelUseSccCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.repository.FuelUseSccCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -44,6 +46,9 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 	@Mock
 	private PointSourceSccCodeRepository sccRepo;
 	
+	@Mock
+	private FuelUseSccCodeRepository fuelUseSccCodeRepo;
+	
 	@Before
     public void init(){
 
@@ -54,12 +59,22 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 		sccList.add(scc1);
 		
 		PointSourceSccCode scc2 = new PointSourceSccCode();
-		scc2.setCode("10200301");
+		scc2.setCode("10200303");
 		scc2.setFuelUseRequired(false);
 		sccList.add(scc2);
-
+		
+		FuelUseSccCode fuelScc = new FuelUseSccCode();
+		CalculationMaterialCode cmc = new CalculationMaterialCode();
+		cmc.setCode("100");
+		cmc.setFuelUseMaterial(true);
+		fuelScc.setSccCode(scc2);
+		fuelScc.setCalculationMaterialCode(cmc);
+		fuelScc.setFuelUseTypes("energy,liquid");
+		
+		when(fuelUseSccCodeRepo.findByScc("10200302")).thenReturn(Optional.of(fuelScc));
+		when(fuelUseSccCodeRepo.findByScc("10200303")).thenReturn(null);
     	when(sccRepo.findById("10200302")).thenReturn(Optional.of(scc1));
-    	when(sccRepo.findById("10200301")).thenReturn(Optional.of(scc2));
+    	when(sccRepo.findById("10200303")).thenReturn(Optional.of(scc2));
     }
 	
 	@Test
@@ -161,6 +176,84 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.PERIOD_CALC_UOM.value()) && errorMap.get(ValidationField.PERIOD_CALC_UOM.value()).size() == 1);
+	}
+	
+	// There should be one error when the Fuel Use UoM is legacy
+	@Test
+	public void legacyFuelUom_FailTest() {
+		CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        
+        testData.getEmissionsProcess().setSccCode("10200303");
+        UnitMeasureCode uom = new UnitMeasureCode();
+		uom.setCode("BTU/HR");
+		uom.setLegacy(true);
+		testData.setFuelUseUom(uom);
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PERIOD_FUEL_UOM.value()) && errorMap.get(ValidationField.PERIOD_FUEL_UOM.value()).size() == 1);
+	}
+	
+	// There should be no errors when fuel use is NOT required for selected SCC.
+	@Test
+	public void sccFuelMaterial_PassTest() {
+		CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        
+        testData.getEmissionsProcess().setSccCode("10200303");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+	}
+	
+	// There should be one error when the selected fuel material does not match the 
+	// fuel material for the selected SCC that requires fuel data
+	@Test
+	public void sccFuelMaterial_FailTest() {
+		CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        
+        testData.getEmissionsProcess().setSccCode("10200302");
+        UnitMeasureCode uom = new UnitMeasureCode();
+		uom.setCode("TON");
+		uom.setLegacy(false);
+		CalculationMaterialCode cmc = new CalculationMaterialCode();
+		cmc.setCode("226");
+		testData.setFuelUseUom(uom);
+		testData.setFuelUseMaterialCode(cmc);
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PERIOD_SCC_FUEL_MATERIAL.value()) && errorMap.get(ValidationField.PERIOD_SCC_FUEL_MATERIAL.value()).size() == 1);
+	}
+	
+	// There should be one error when the selected fuel uom is not one of the 
+	// uom for the selected SCC that requires fuel data
+	@Test
+	public void sccFuelUom_FailTest() {
+		CefValidatorContext cefContext = createContext();
+        ReportingPeriod testData = createBaseReportingPeriod();
+        
+        testData.getEmissionsProcess().setSccCode("10200302");
+        UnitMeasureCode uom = new UnitMeasureCode();
+		uom.setCode("TON");
+		uom.setLegacy(false);
+		uom.setFuelUseType("solid");
+		CalculationMaterialCode cmc = new CalculationMaterialCode();
+		cmc.setCode("100");
+		testData.setFuelUseUom(uom);
+		testData.setFuelUseMaterialCode(cmc);
+		
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PERIOD_SCC_FUEL_MATERIAL.value()) && errorMap.get(ValidationField.PERIOD_SCC_FUEL_MATERIAL.value()).size() == 1);
 	}
 	
 	@Test
@@ -379,6 +472,7 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 		ReportingPeriod result = new ReportingPeriod();
 		result.setEmissionsProcess(new EmissionsProcess());
 		result.getEmissionsProcess().setOperatingStatusCode(opStatCode);
+		result.getEmissionsProcess().setSccCode("10200303");
 		result.setId(1L);
 		ReportingPeriodCode rpc = new ReportingPeriodCode();
 		rpc.setCode("A");

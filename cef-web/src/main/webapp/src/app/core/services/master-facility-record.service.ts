@@ -42,4 +42,19 @@ export class MasterFacilityRecordService {
         const url = `${this.baseUrl}/${masterFacility.id}`;
         return this.http.put<MasterFacilityRecord>(url, masterFacility);
     }
+
+    add(masterFacility: MasterFacilityRecord): Observable<MasterFacilityRecord> {
+        const url = `${this.baseUrl}/create`;
+        return this.http.post<MasterFacilityRecord>(url, masterFacility);
+    }
+
+    isDuplicateAgencyId(agencyFacilityId: string, psc: string) : Observable<boolean> {
+        const url = `${this.baseUrl}/isDuplicateAgencyId/${agencyFacilityId}/${psc}`;
+        return this.http.get<boolean>(url);
+    }
+
+    getUserProgramSystemCode() : Observable<BaseCodeLookup> {
+        const url = `${this.baseUrl}/userProgramSystemCode`;
+        return this.http.get<BaseCodeLookup>(url);
+    }
 }

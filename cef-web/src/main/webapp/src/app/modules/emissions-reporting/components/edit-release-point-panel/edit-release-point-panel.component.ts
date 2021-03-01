@@ -206,6 +206,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 this.fugitiveHeightUomCode.patchValue(ftUom)
                 this.stackDiameterUomCode.patchValue(ftUom);
                 this.stackHeightUomCode.patchValue(ftUom);
+                this.fenceLineUomCode.patchValue(ftUom);
                 this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
                 this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
             });
@@ -267,6 +268,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     get stackHeightUomCode() {
         return this.releasePointForm.get('stackHeightUomCode')
+    }
+
+    get fenceLineUomCode() {
+        return this.releasePointForm.get('fenceLineUomCode')
     }
 
     get fugitiveWidth() {
@@ -560,7 +565,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                         this.calculatedVelocity = calculatedVelocity.toString();
                         this.minVelocity = minVelocity;
                         this.maxVelocity = maxVelocity;
-                        return { invalidComputedVelocity: true };
+                        return {invalidComputedVelocity: true};
                     }
                 }
                 return null;
@@ -744,11 +749,17 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     // QA Check - identifier must be unique
     releasePointIdentifierCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
-            if (this.releasePointIdentifiers && control.get('releasePointIdentifier').value !== null) {
-                if (control.get('releasePointIdentifier').value.trim() === '') {
+            const rpId: string = control.get('releasePointIdentifier').value;
+            if (this.releasePointIdentifiers) {
+                if (!rpId || rpId.trim() === '') {
                     control.get('releasePointIdentifier').setErrors({required: true});
-                } else if (this.releasePointIdentifiers.includes(control.get('releasePointIdentifier').value.trim())) {
-                    return {duplicateReleasePointIdentifier: true};
+                } else {
+
+                    for (const id of this.releasePointIdentifiers) {
+                        if (id.trim().toLowerCase() === rpId.trim().toLowerCase()) {
+                            return {duplicateReleasePointIdentifier: true};
+                        }
+                    }
                 }
             }
             return null;

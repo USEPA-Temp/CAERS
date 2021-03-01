@@ -17,7 +17,6 @@ export class MasterFacilitySearchComponent implements OnInit {
 
   searchForm = this.fb.group({
     name: [''],
-    eisProgramId: [''],
     city: [''],
     stateCode: [null],
     postalCode: [''],
@@ -70,6 +69,11 @@ export class MasterFacilitySearchComponent implements OnInit {
         this.searchResults = result.filter(f => !this.myFacilityIds.includes(f.id));
       });
     }
+  }
+
+  onAccessRequested(ufa: UserFacilityAssociation) {
+
+    this.myFacilityIds.push(ufa.masterFacilityRecord.id);
   }
 
 }

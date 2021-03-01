@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import gov.epa.cef.web.service.MasterFacilityRecordService;
+import gov.epa.cef.web.service.LookupService;
 
 @RestController
 @RequestMapping("/api/masterFacility")
@@ -31,12 +33,16 @@ public class MasterFacilityRecordApi {
 
     private final SecurityService securityService;
 
+    private final LookupService lookupService;
+
     @Autowired
     MasterFacilityRecordApi(SecurityService securityService,
-            MasterFacilityRecordService mfrService) {
+            MasterFacilityRecordService mfrService,
+            LookupService lookupService) {
 
         this.securityService = securityService;
         this.mfrService = mfrService;
+        this.lookupService = lookupService;
     }
 
     @GetMapping(value = "/{id}")
@@ -92,12 +98,40 @@ public class MasterFacilityRecordApi {
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /**
+     * Create a new master facility record
+     * @param dto
+     * @return
+     */
+    @PostMapping(value = "/create")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public ResponseEntity<MasterFacilityRecordDto> createMasterFacilityRecord(@NotNull @RequestBody MasterFacilityRecordDto dto) {
+
+    	MasterFacilityRecordDto result = mfrService.create(dto);
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
     @GetMapping(value = "/programSystemCodes")
     public ResponseEntity<List<CodeLookupDto>> retrieveProgramSystemCodes() {
 
         List<CodeLookupDto> result = this.mfrService.findDistinctProgramSystems();
+        return new ResponseEntity<>(result, HttpStatus.OK);
 
+    }
+
+
+    @GetMapping(value = "/userProgramSystemCode")
+    public ResponseEntity<ProgramSystemCode> retrieveProgramSystemCodeForCurrentUser() {
+        ProgramSystemCode result = this.lookupService.retrieveProgramSystemTypeCodeEntityByCode(this.securityService.getCurrentProgramSystemCode());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/isDuplicateAgencyId/{agencyFacilityId}/{programSystemCode}")
+    public ResponseEntity<Boolean> isDuplicateAgencyId(@NotNull @PathVariable String agencyFacilityId, @NotNull @PathVariable String programSystemCode) {
+
+        Boolean result = this.mfrService.isDuplicateAgencyId(agencyFacilityId, programSystemCode);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

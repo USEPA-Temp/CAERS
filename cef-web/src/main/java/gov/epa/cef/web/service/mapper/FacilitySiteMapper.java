@@ -12,6 +12,7 @@ import gov.epa.cef.web.service.dto.FacilitySiteDto;
 @Mapper(componentModel = "spring", uses = {FacilityNAICSMapper.class, LookupEntityMapper.class})
 public interface FacilitySiteMapper {
 
+    @Mapping(source="emissionsReport.masterFacilityRecord.id", target="emissionsReport.masterFacilityRecordId")
     FacilitySiteDto toDto(FacilitySite facility);
 
     List<FacilitySiteDto> toDtoList(List<FacilitySite> facilitySites);

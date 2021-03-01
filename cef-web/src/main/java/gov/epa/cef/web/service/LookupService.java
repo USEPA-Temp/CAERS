@@ -20,6 +20,7 @@ import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
+import gov.epa.cef.web.service.dto.FuelUseSccCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
@@ -349,5 +350,12 @@ public interface LookupService {
      * @return
      */
     List<CodeLookupDto> retrieveCurrentFacilitySourceTypeCodes(Integer year);
+    
+    /**
+     * Retrieve fuel use material codes by scc code
+     * @param code
+     * @return
+     */
+    FuelUseSccCodeDto retrieveFuelUseMaterialCodesByScc(String code);
     
 }

@@ -4,23 +4,24 @@
 
   <div class="row">
     <div class="col-4">
+      <button type="submit" class="btn btn-success" (click)="addMasterFacilityRecord()">Add New Facility</button>
       <app-master-facility-table [tableData]="records" (facilitySelected)="onFacilitySelected($event)"></app-master-facility-table>
     </div>
     <div class="col-8">
       <div class="card mb-3" *ngIf="selectedFacility">
         <div class="card-header text-center">
-            <strong>Facility Details</strong>
-            <div class="float-right" *ngIf="!editInfo">
+            <strong *ngIf="addFacility">New </strong><strong>Facility Details</strong>
+            <div class="float-right" *ngIf="!editInfo && !addFacility">
                 <button type="button" class="btn btn-success" aria-label="edit facility details" (click)="onEditClick(selectedFacility)">Edit</button>
             </div>
         </div>
-        <div class="card-body" *ngIf="!editInfo">
+        <div class="card-body" *ngIf="!editInfo && !addFacility">
           <app-master-facility-info [facility]="selectedFacility"></app-master-facility-info>
         </div>
-        <div class="card-body" *ngIf="editInfo">
-            <app-edit-master-facility-info [facility]="selectedFacility"></app-edit-master-facility-info>
+        <div class="card-body" *ngIf="editInfo || addFacility">
+            <app-edit-master-facility-info [facility]="selectedFacility" [addFacility]="addFacility" [programSystemCode]="programSystemCode"></app-edit-master-facility-info>
             <div class="float-right pb-3 pr-3" *ngIf="selectedFacility">
-                <button type="button" class="btn btn-primary mr-2" (click)="setEditInfo(false)">Cancel</button>
+                <button type="button" class="btn btn-primary mr-2" (click)="onCancelEdit()">Cancel</button>
                 <button type="submit" class="btn btn-success" (click)="updateMasterFacilityRecord()">Save</button>
             </div>
         </div>

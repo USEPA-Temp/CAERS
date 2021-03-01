@@ -221,7 +221,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        	}
 	        }
 
-	        if (emission.getEmissionsCalcMethodCode() != null && !emission.getEmissionsCalcMethodCode().getTotalDirectEntry()) {
+	        if (emission.getEmissionsCalcMethodCode() != null && !emission.getEmissionsCalcMethodCode().getTotalDirectEntry() && !emission.getTotalManualEntry()) {
 	        	if (Strings.emptyToNull(emission.getEmissionsFactorText()) == null) {
 	        		valid = false;
 	        		context.addFederalError(

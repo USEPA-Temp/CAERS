@@ -723,8 +723,19 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        assertFalse(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+       
        errorMap = mapErrors(cefContext.result.getErrors());
        assertTrue(errorMap.containsKey(ValidationField.EMISSION_EF_TEXT.value()) && errorMap.get(ValidationField.EMISSION_EF_TEXT.value()).size() == 1);
+   }
+   
+   @Test
+   public void emissionIsTotalManualEntryAndNoEFDescription_PassTest() {
+	   CefValidatorContext cefContext = createContext();
+	   Emission testData = createBaseEmission(true);
+	   testData.setEmissionsFactorText(null);
+	   testData.setTotalManualEntry(true);
+	   assertTrue(this.validator.validate(cefContext, testData));
+	   assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
    }
 
    @Test

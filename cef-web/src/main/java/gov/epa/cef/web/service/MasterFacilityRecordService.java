@@ -50,6 +50,14 @@ public interface MasterFacilityRecordService {
 
 
     /**
+     * Create a new masterFacilityRecord
+     * @param masterFacilityRecordDto
+     * @return
+     */
+    MasterFacilityRecordDto create(MasterFacilityRecordDto dto);
+
+    
+    /**
      * 
      * @param 
      * @return
@@ -63,4 +71,13 @@ public interface MasterFacilityRecordService {
      * @return
      */
     List<CodeLookupDto> findDistinctProgramSystems();
+
+
+    /**
+     * 
+     * @param agencyFacilityId
+     * @param programSystemCode
+     * @return
+     */
+    Boolean isDuplicateAgencyId(String agencyFacilityId, String programSystemCode);
 }

@@ -101,7 +101,7 @@
         <div class="row" *ngIf="searchResults">
           <div class="col-12">
             <hr>
-            <app-master-facility-search-table [tableData]="searchResults"></app-master-facility-search-table>
+            <app-master-facility-search-table [tableData]="searchResults" (accessRequested)="onAccessRequested($event)"></app-master-facility-search-table>
           </div>
         </div>
       </div>

@@ -72,8 +72,12 @@
             <fa-icon class="mt-2" title="Code for fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpMaterialSelect" class="ml-1 col-form-label"><strong>Fuel Material:</strong></label>
         </div>
-        <div class="col-sm-2">
-            <select type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
+        <div class="col-sm-2" >
+            <select *ngIf="isFuelUseScc" type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="sccFuelUseMaterialValue">{{sccFuelUseMaterialValue?.description}}</option>
+            </select>
+            <select *ngIf="!isFuelUseScc" type="text" class="form-control" id="rpFuelMaterialSelect" formControlName="fuelUseMaterialCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of fuelUseMaterialValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
@@ -92,7 +96,11 @@
             <label for="rpFuelUomSelect" class="ml-1 col-form-label"><strong>Fuel UoM:</strong></label>
         </div>
         <div class="col-sm-2">
-            <select type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
+            <select *ngIf="isFuelUseScc" type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let opt of sccFuelUseUomValues" [ngValue]="opt">{{opt.code}}</option>
+            </select>
+            <select *ngIf="!isFuelUseScc" type="text" class="form-control" id="rpFuelUomSelect" formControlName="fuelUseUom" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of fuelUseUomValues" [ngValue]="opt">{{opt.code}}</option>
             </select>
@@ -119,8 +127,8 @@
     </div>
 
     <div class="row pb-1">
-        <div class="col-sm-4" style="float: left;">
-            <button class="btn btn-success" (click)="copyFuelDataToThroughput()">Copy Fuel Data to Throughput Data Fields</button>
+        <div class="col-sm-4 float-left">
+            <button type="button" class="btn btn-success" (click)="copyFuelDataToThroughput()">Copy Fuel Data to Throughput Data Fields</button>
         </div>
 
         <div class="col-sm-2">

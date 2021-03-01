@@ -14,7 +14,6 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @NotNull(message = "Facility Site ID is required.")
     private Long id;
 
-    @NotNull(message = "Master Facility Record ID is required.")
     private Long masterFacilityRecordId;
 
     @Size(max = 30, message = "Alternate Site Identifier can not exceed {max} chars; found '${validatedValue}'.")

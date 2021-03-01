@@ -11,6 +11,8 @@ import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissi
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
+import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 
 @Component({
   selector: 'app-create-emissions-process',
@@ -19,6 +21,10 @@ import { SharedService } from 'src/app/core/services/shared.service';
 })
 export class CreateEmissionsProcessComponent implements OnInit {
   emissionsUnit: EmissionUnit;
+  originalProcess: Process;
+  originalPeriod: ReportingPeriod;
+  originalDetails: OperatingDetail;
+  originalId: number;
 
   @ViewChild(EditProcessInfoPanelComponent, { static: true })
   private infoComponent: EditProcessInfoPanelComponent;
@@ -32,6 +38,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
   constructor(
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
+    private reportingPeriodService: ReportingPeriodService,
     private route: ActivatedRoute,
     private router: Router,
     private sharedService: SharedService,
@@ -41,10 +48,35 @@ export class CreateEmissionsProcessComponent implements OnInit {
 
     this.route.paramMap
       .subscribe(map => {
+
         this.emissionUnitService.retrieve(+map.get('unitId'))
         .subscribe(unit => {
           this.emissionsUnit = unit;
         });
+
+        if (map.get('processId')) {
+          this.processService.retrieve(+map.get('processId'))
+          .subscribe(result => {
+
+            this.reportingPeriodService.retrieveForEmissionsProcess(result.id)
+            .subscribe(rp => {
+              const period = new ReportingPeriod();
+              // these are the only values we want copied to the new RP
+              Object.assign(period, {reportingPeriodTypeCode: rp[0].reportingPeriodTypeCode, emissionsOperatingTypeCode: rp[0].emissionsOperatingTypeCode});
+              this.originalPeriod = period;
+              this.originalDetails = rp[0].operatingDetails[0];
+            });
+
+            this.originalId = result.id;
+
+            // remove fields we don't want copied and null out id so identifier field will be unlocked
+            result.id = null;
+            result.emissionsProcessIdentifier = null;
+            result.comments = null;
+            this.originalProcess = result;
+          });
+        }
+
     });
 
     this.route.data
@@ -91,14 +123,38 @@ export class CreateEmissionsProcessComponent implements OnInit {
 
       // console.log(JSON.stringify(process));
 
-      this.processService.create(process)
-      .subscribe(result => {
-        // console.log(result);
-        this.sharedService.updateReportStatusAndEmit(this.route);
-        this.router.navigate(['../..'], { relativeTo: this.route });
-      });
+      if (this.originalProcess) {
+
+        process.releasePointAppts = this.originalProcess.releasePointAppts;
+
+        this.processService.create(process)
+        .subscribe(result => {
+
+          this.sharedService.updateReportStatusAndEmit(this.route);
+          this.router.navigate(['../../..'], { relativeTo: this.route });
+        });
+
+      } else {
+
+        this.processService.create(process)
+        .subscribe(result => {
+          // console.log(result);
+          this.sharedService.updateReportStatusAndEmit(this.route);
+          this.router.navigate(['../..'], { relativeTo: this.route });
+        });
+      }
     }
 
+  }
+
+  onCancel() {
+
+    if (this.originalProcess) {
+      // this.router.navigate([BaseReportUrl.EMISSIONS_PROCESS, this.originalId], { relativeTo: this.route.parent });
+      this.router.navigate(['../../..'], { relativeTo: this.route });
+    } else {
+      this.router.navigate(['../..'], { relativeTo: this.route });
+    }
   }
 
 }

@@ -9,6 +9,7 @@ import {legacyUomValidator} from 'src/app/modules/shared/directives/legacy-uom-v
 import {SharedService} from 'src/app/core/services/shared.service';
 import {ToastrService} from 'ngx-toastr';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
+import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
 
 @Component({
     selector: 'app-edit-process-reporting-period-panel',
@@ -35,13 +36,13 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
       Validators.min(0),
       Validators.pattern('^[0-9]*\\.?[0-9]+$')
     ]],
-    fuelUseUom: [null, [legacyUomValidator()]],
+    fuelUseUom: [null, [legacyUomValidator(), legacyUomValidator()]],
     fuelUseMaterialCode: [null],
     heatContentValue: ['', [
       Validators.min(0),
       Validators.pattern('^[0-9]*\\.?[0-9]+$')
     ]],
-    heatContentUom: [null, [legacyUomValidator()]],
+    heatContentUom: [null, [legacyUomValidator(), legacyUomValidator()]],
     comments: [null, Validators.maxLength(400)]
   }, { validators: [
     this.checkFuelUseFields(),
@@ -50,12 +51,15 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
   materialValues: BaseCodeLookup[];
   fuelUseMaterialValues: BaseCodeLookup[];
+  sccFuelUse: FuelUseSccCode;
+  sccFuelUseMaterialValue: BaseCodeLookup;
   parameterTypeValues: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
   reportingPeriodValues: BaseCodeLookup[] = [];
   uomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
   fuelUseUomValues: UnitMeasureCode[];
+  sccFuelUseUomValues: UnitMeasureCode[];
   heatContentUomValues: UnitMeasureCode[];
   showFuelDataCopyMessage = false;
   sccFuelUsefieldsWarning = null;
@@ -107,11 +111,12 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
             .subscribe(result => {
                 this.fuelUseUomValues = result;
                 this.heatContentUomValues = this.fuelUseUomValues.filter(val => val.heatContentUom);
+
+                if (this.sccCode) {
+                    this.getPointSourceScc(this.sccCode);
+                }
             });
 
-        if (this.sccCode) {
-            this.getPointSourceScc(this.sccCode);
-        }
 
         this.sharedService.processSccChangeEmitted$.subscribe(scc => {
             if (scc) {
@@ -126,6 +131,15 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
             }
         });
 
+        this.reportingPeriodForm.get('fuelUseMaterialCode').valueChanges
+        .subscribe(value => {
+            this.checkSccFuelMaterialUom();
+        });
+
+        this.reportingPeriodForm.get('fuelUseUom').valueChanges
+        .subscribe(value => {
+            this.checkSccFuelMaterialUom();
+        });
     }
 
     ngOnChanges() {
@@ -146,11 +160,46 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
             if (result && result.fuelUseRequired) {
                 this.isFuelUseScc = true;
                 this.reportingPeriodForm.get('fuelUseValue').updateValueAndValidity();
+                this.lookupService.retrieveSccFuelUseMaterial(processScc)
+                    .subscribe(values => {
+                        this.sccFuelUse = values;
+                        this.sccFuelUseMaterialValue = values.calculationMaterialCode;
+                        this.sccFuelUseUomValues = this.fuelUseUomValues.filter(
+                            val => (this.sccFuelUse.fuelUseTypes.split(',')).includes(val.fuelUseType));
+                        this.checkSccFuelMaterialUom();
+                    });
+
             } else {
                 this.isFuelUseScc = false;
             }
             this.disableWarning(this.processOpStatus);
         });
+    }
+
+    // fuel material is set to null when the fuel use material does not match the allowable materials
+    checkSccFuelMaterialUom() {
+        if (this.isFuelUseScc && this.processOpStatus === OperatingStatus.OPERATING) {
+            this.reportingPeriodForm.get('fuelUseMaterialCode').value === null
+            || this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code === this.sccFuelUseMaterialValue.code
+            ? null : this.reportingPeriodForm.get('fuelUseMaterialCode').patchValue(null);
+
+            this.checkSccUom();
+        }
+    }
+
+    // fuel use uom is set to null when the uom does not match any in the list of allowable fuel use uoms
+    checkSccUom(){
+        let match = false;
+        if (this.reportingPeriodForm.get('fuelUseUom').value === null) {
+            match = true;
+        } else {
+            this.sccFuelUseUomValues.forEach(element => {
+                if (element.code === this.reportingPeriodForm.get('fuelUseUom').value.code) {
+                        match = true;
+                }
+            });
+        }
+        match ? null : this.reportingPeriodForm.get('fuelUseUom').patchValue(null);
     }
 
     disableWarning(opStatus: string) {
@@ -193,7 +242,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     copyFuelDataToThroughput() {
         const fuelMaterial = this.reportingPeriodForm.get('fuelUseMaterialCode').value;
         const fuelValue = this.reportingPeriodForm.get('fuelUseValue').value;
-        const fuelUom = this.reportingPeriodForm.get('fuelUseUom').value
+        const fuelUom = this.reportingPeriodForm.get('fuelUseUom').value;
 
         this.reportingPeriodForm.get('calculationMaterialCode').patchValue(fuelMaterial);
         this.reportingPeriodForm.get('calculationParameterValue').patchValue(fuelValue);
