@@ -54,10 +54,10 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     private String fuelUseMaterialCode;
     
     @Pattern(regexp = PositiveDecimalPattern,
-        message = "Heat Content Value is not in expected numeric format; found '${validatedValue}'.")
+        message = "Heat Content Ratio is not in expected numeric format; found '${validatedValue}'.")
     private String heatContentValue;
 
-    @Size(max = 20, message = "Heat Content Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    @Size(max = 20, message = "Heat Content Ratio Numerator can not exceed {max} chars; found '${validatedValue}'.")
     private String heatContentUom;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
