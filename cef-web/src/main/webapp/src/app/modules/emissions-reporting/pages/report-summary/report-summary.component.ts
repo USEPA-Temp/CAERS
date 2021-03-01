@@ -72,14 +72,14 @@ export class ReportSummaryComponent implements OnInit {
                     this.propertyService.retrieveUserFeedbackEnabled()
                     .subscribe(result => {
                         this.feedbackEnabled = result;
-                            this.userService.getCurrentUserNaasToken()
+                        this.userService.getCurrentUserNaasToken()
                             .subscribe(userToken => {
                                 this.userContextService.getUser().subscribe( user => {
                                     this.userRole = user.role;
                                     if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
                                         initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                             this.facilitySite.emissionsReport.id, this.facilitySite.emissionsReport.masterFacilityRecordId, this.toastr,
-                                            this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted)
+                                            this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted);
                                     }
                             });
                         });
@@ -108,9 +108,7 @@ export class ReportSummaryComponent implements OnInit {
      */
     validateReport() {
 
-        const reportId = this.facilitySite.emissionsReport.id;
-
-        this.router.navigateByUrl(`/facility/${this.facilitySite.emissionsReport.masterFacilityRecordId}/report/${reportId}/validation`);
+        this.router.navigate(['..', 'validation'], { relativeTo: this.route });
     }
 
     reopenReport() {
@@ -133,7 +131,7 @@ export class ReportSummaryComponent implements OnInit {
 
     downloadReport(emissionsReportId: number, facilitySiteId: number, altFacilityIdentifier: number) {
         this.reportService.retrieveReportDownloadDto(emissionsReportId, facilitySiteId).subscribe(reportDownloadDto => {
-            if ((this.facilitySite.emissionsReport.status==='APPROVED') ||(this.facilitySite.emissionsReport.status==='SUBMITTED')) {
+            if ((this.facilitySite.emissionsReport.status === 'APPROVED') || (this.facilitySite.emissionsReport.status === 'SUBMITTED')) {
                 this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityIdentifier + '_' +
                 this.facilitySite.emissionsReport.year + '_' + 'Emissions_Report' + '_Final_Submission');
             } else {
