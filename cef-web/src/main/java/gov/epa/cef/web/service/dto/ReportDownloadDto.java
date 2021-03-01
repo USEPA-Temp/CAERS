@@ -39,8 +39,8 @@ public class ReportDownloadDto implements Serializable{
 	private String fuelMaterial;
 	private String fuelUom;
 	private BigDecimal fuelValue;
-	private String heatContentUom;
-	private BigDecimal heatContentValue;
+	private String heatContentRatioNumerator;
+	private BigDecimal heatContentRatio;
     private String lastModifiedBy;
 	private String lastModifiedDate;
 	private String calculationComment;
@@ -209,17 +209,17 @@ public class ReportDownloadDto implements Serializable{
 	public void setFuelValue(BigDecimal fuelValue) {
 		this.fuelValue = fuelValue;
 	}
-	public String getHeatContentUom() {
-		return heatContentUom;
+	public String getHeatContentRatioNumerator() {
+		return heatContentRatioNumerator;
 	}
-	public void setHeatContentUom(String heatContentUom) {
-		this.heatContentUom = heatContentUom;
+	public void setHeatContentRatioNumerator(String heatContentUom) {
+		this.heatContentRatioNumerator = heatContentUom;
 	}
-	public BigDecimal getHeatContentValue() {
-		return heatContentValue;
+	public BigDecimal getHeatContentRatio() {
+		return heatContentRatio;
 	}
-	public void setHeatContentValue(BigDecimal heatContentValue) {
-		this.heatContentValue = heatContentValue;
+	public void setHeatContentRatio(BigDecimal heatContentValue) {
+		this.heatContentRatio = heatContentValue;
 	}
 
 }

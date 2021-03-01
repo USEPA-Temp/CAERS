@@ -87,11 +87,11 @@ public class ReportDownloadView extends BaseEntity{
     @Column(name = "fuel_material", length = 200)
     private String fuelMaterial;
 
-	@Column(name = "heat_content_value")
-    private BigDecimal heatContentValue;
+	@Column(name = "heat_content_ratio")
+    private BigDecimal heatContentRatio;
     
-    @Column(name = "heat_content_uom", length = 20)
-    private String heatContentUom;
+    @Column(name = "heat_content_ratio_numerator", length = 20)
+    private String heatContentRatioNumerator;
 
 	@Column(name = "total_emissions")
     private BigDecimal totalEmissions;
@@ -319,19 +319,19 @@ public class ReportDownloadView extends BaseEntity{
 		this.fuelMaterial = fuelMaterial;
 	}
 
-	public BigDecimal getHeatContentValue() {
-		return heatContentValue;
+	public BigDecimal getHeatContentRatio() {
+		return heatContentRatio;
 	}
 
-	public void setHeatContentValue(BigDecimal heatContentValue) {
-		this.heatContentValue = heatContentValue;
+	public void setHeatContentRatio(BigDecimal heatContentValue) {
+		this.heatContentRatio = heatContentValue;
 	}
 
-	public String getHeatContentUom() {
-		return heatContentUom;
+	public String getHeatContentRatioNumerator() {
+		return heatContentRatioNumerator;
 	}
 
-	public void setHeatContentUom(String heatContentUom) {
-		this.heatContentUom = heatContentUom;
+	public void setHeatContentRatioNumerator(String heatContentUom) {
+		this.heatContentRatioNumerator = heatContentUom;
 	}
 }
