@@ -11,6 +11,8 @@ import {map} from "rxjs/operators";
 })
 export class ReviewerNavComponent implements OnInit {
 
+   isCollapsed = true;
+
    user: User;
 
    constructor(private userContext: UserContextService,
