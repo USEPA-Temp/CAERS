@@ -12,6 +12,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
@@ -25,9 +26,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Component
 public class BulkReportValidator {
@@ -60,7 +63,7 @@ public class BulkReportValidator {
         Consumer<FacilitySiteBulkUploadDto> siteIdCheck = new FacilityIdValidator(report, violations);
         Consumer<EmissionsUnitBulkUploadDto> emissionsUnitCheck = new EmissionsUnitValidator(violations);
         Consumer<EmissionsProcessBulkUploadDto> emissionsProcessCheck = new EmissionsProcessValidator(violations);
-        Consumer<ReportingPeriodBulkUploadDto> reportingPeriodCheck = new ReportingPeriodValidator(violations);
+        Consumer<ReportingPeriodBulkUploadDto> reportingPeriodCheck = new ReportingPeriodValidator(report, violations);
         Consumer<ReleasePointBulkUploadDto> releasePointCheck = new ReleasePointValidator(violations);
         Consumer<ControlBulkUploadDto> controlCheck = new ControlValidator(violations);
         Consumer<ControlPathBulkUploadDto> controlPathCheck = new ControlPathValidator(violations);
@@ -146,10 +149,18 @@ public class BulkReportValidator {
 
     static class ReportingPeriodValidator implements Consumer<ReportingPeriodBulkUploadDto> {
 
+        private final EmissionsReportBulkUploadDto report;
+
         private final List<WorksheetError> violations;
 
-        public ReportingPeriodValidator(List<WorksheetError> violations) {
+        private final Map<Long, List<OperatingDetailBulkUploadDto>> detailMap;
+
+        public ReportingPeriodValidator(EmissionsReportBulkUploadDto report, List<WorksheetError> violations) {
+
+            this.report = report;
             this.violations = violations;
+
+            this.detailMap = this.report.getOperatingDetails().stream().collect(Collectors.groupingBy(OperatingDetailBulkUploadDto::getReportingPeriodId));
         }
 
         HashMap<Long, List<String>> processPeriodMap = new HashMap<Long, List<String>>();
@@ -168,9 +179,21 @@ public class BulkReportValidator {
                 // the following line can be used when we begin to allow multiple reporting periods, as long as they're different types
 //                if (typeList != null && typeList.contains(item.getReportingPeriodTypeCode())) {
                 if (typeList != null && !typeList.isEmpty()) {
-                    String msg = String.format("There is more than one Reporting Period reported for the emissions process. Only one Reporting Period per process is allowed.");
+                    String msg = "There is more than one Reporting Period reported for the emissions process. Only one Reporting Period per process is allowed.";
                     violations.add(new WorksheetError(item.getSheetName(), item.getRow(), msg));
                 }
+            }
+
+            // check to make sure there is exactly 1 operating details per reporting period
+            if (!detailMap.containsKey(item.getId())) {
+                String msg = "Reporting Period does not have associated operating details on the \"Operating Details\" tab.";
+                violations.add(new WorksheetError(item.getSheetName(), item.getRow(), msg));
+            } else if (detailMap.get(item.getId()).size() > 1) {
+                List<OperatingDetailBulkUploadDto> details = detailMap.get(item.getId());
+                String msg = String.format("There is more than one Operating Details reported for the reporting period on rows %s. "
+                        + "Only one Operating Details per period is allowed.",
+                        details.stream().map(OperatingDetailBulkUploadDto::getRow).collect(Collectors.toList()).toString());
+                violations.add(new WorksheetError(details.get(0).getSheetName(), details.get(0).getRow(), msg));
             }
         }
     }
