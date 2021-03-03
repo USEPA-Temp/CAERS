@@ -106,6 +106,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         ];
 
         this.checkAircraftSCC();
+
+        this.processForm.get('sccCode').valueChanges
+        .subscribe(value => {
+            this.sharedService.emitProcessSccChange(value);
+        })
     }
 
     ngAfterContentChecked() {
@@ -163,7 +168,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
                 this.processForm.get('sccCode').setValue(modalScc.code);
                 this.processForm.get('sccDescription').setValue(modalScc.description);
                 this.checkAircraftSCC();
-                this.sharedService.emitProcessSccChange(modalScc.code);
             }
         }, () => {
             // needed for dismissing without errors

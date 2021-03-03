@@ -132,16 +132,16 @@
         </div>
 
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="Heat content value of Fuel Material" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="rpHeatContentValueInput" class="ml-1 col-form-label"><strong>Heat Content Value:</strong></label>
+            <fa-icon class="mt-2" title="The heat content of the fuel, use the default or enter your own." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpHeatContentValueInput" class="ml-1 col-form-label"><strong>Heat Content Ratio:</strong></label>
         </div>
         <div class="col-sm-2">
             <input type="text" class="form-control" id="rpHeatContentValueInput" formControlName="heatContentValue" >
             <app-validation-message [control]="reportingPeriodForm.controls.heatContentValue"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="Code for the unit of measure for heat content value." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="rpHeatContentUomSelect" class="ml-1 col-form-label"><strong>Heat Content UoM:</strong></label>
+            <fa-icon class="mt-2" title="Unit of measure for the heat content conversion ratio. E.g. E6BTU for 124.93 Million BTU per short ton." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="rpHeatContentUomSelect" class="ml-1 d-inline col-form-label"><strong>Heat Content Ratio Numerator:</strong></label>
         </div>
         <div class="col-sm-2">
             <select type="text" class="form-control" id="rpHeatContentUomSelect" formControlName="heatContentUom" [compareWith]="formUtils.compareCode">
