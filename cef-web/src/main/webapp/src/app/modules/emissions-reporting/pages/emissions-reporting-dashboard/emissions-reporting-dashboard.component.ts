@@ -179,14 +179,36 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             size: 'lg'
         });
 
-        modalWindow.componentInstance.message = 'Please wait while we generate the Excel Template for this report.';
+        modalWindow.componentInstance.message = 'Please wait while we generate the Excel Template for this report. This may take a few minutes.';
 
         this.reportService.downloadExcelExport(report.id)
         .subscribe(file => {
             modalWindow.dismiss();
-            this.fileDownloadService.downloadFile(file, `${reportFacility.altSiteIdentifier}-${this.facility.name}-${report.year}.xlsx`);
-            error => console.error(error);
+
+            // when being run on tomcat this call will return success with an empty body
+            // instead of an error when the call times out
+            if (file.size > 0) {
+                this.fileDownloadService.downloadFile(file, `${reportFacility.altSiteIdentifier}-${this.facility.name}-${report.year}.xlsx`);
+            } else {
+                this.openDownloadFailure();
+            }
+
+        }, error => {
+            modalWindow.dismiss();
+            this.openDownloadFailure();
+            console.log(error);
         });
+    }
+
+    openDownloadFailure() {
+
+        const modalMessage = `The Excel Template for this report could not be generated due to a large number of users 
+                              attempting to download Excel Templates in the system. Please try again in a few minutes.`;
+
+        const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'lg' });
+        modalRef.componentInstance.title = 'Template Download Failed';
+        modalRef.componentInstance.message = modalMessage;
+        modalRef.componentInstance.singleButton = true;
     }
 
     reopenReport(report) {

@@ -125,7 +125,7 @@ export class EmissionsReportingService {
     }
 
     /** GET download excel template for specified report */
-    downloadExcelExport(reportId: number): Observable<any> {
+    downloadExcelExport(reportId: number): Observable<Blob> {
         const url = `${this.baseUrl}/export/${reportId}/excel`;
         return this.http.get(url, { responseType: 'blob' });
     }
