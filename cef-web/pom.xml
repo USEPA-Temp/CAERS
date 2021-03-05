@@ -481,9 +481,28 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <schemaDirectory>src/main/resources/schema/CERS</schemaDirectory>
+                            <schemaDirectory>src/main/resources/schema/CERS/1</schemaDirectory>
                             <generateDirectory>${project.build.directory}/generated-sources/xjc/cers_1_2</generateDirectory>
                             <generatePackage>net.exchangenetwork.schema.cer._1._2</generatePackage>
+                            <extension>true</extension>
+                            <verbose>false</verbose>
+                            <debug>false</debug>
+                            <strict>true</strict>
+                            <forceRegenerate>false</forceRegenerate>
+                            <schemaLanguage>XMLSCHEMA</schemaLanguage>
+                            <removeOldOutput>true</removeOldOutput>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cers_2_0</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <schemaDirectory>src/main/resources/schema/CERS/2</schemaDirectory>
+                            <generateDirectory>${project.build.directory}/generated-sources/xjc/cers_2_0</generateDirectory>
+                            <generatePackage>net.exchangenetwork.schema.cer._2._0</generatePackage>
                             <extension>true</extension>
                             <verbose>false</verbose>
                             <debug>false</debug>
@@ -536,6 +555,7 @@
                         <configuration>
                             <sources>
                                 <source>${project.build.directory}/generated-sources/xjc/cers_1_2</source>
+                                <source>${project.build.directory}/generated-sources/xjc/cers_2_0</source>
                             </sources>
                         </configuration>
                     </execution>
