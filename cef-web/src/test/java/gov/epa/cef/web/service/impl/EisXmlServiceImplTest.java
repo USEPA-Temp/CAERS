@@ -64,7 +64,7 @@ public class EisXmlServiceImplTest {
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-            String schemaLocation = "schema/CERS/index.xsd";
+            String schemaLocation = "schema/CERS/1/index.xsd";
             URL schemaUrl = Resources.getResource(schemaLocation);
             if (schemaUrl == null) {
                 String msg = String.format("XSD is missing; not found on classpath at %s.", schemaLocation);
