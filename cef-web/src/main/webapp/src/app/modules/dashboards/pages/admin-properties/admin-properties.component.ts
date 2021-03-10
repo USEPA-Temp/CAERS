@@ -47,7 +47,7 @@ export class AdminPropertiesComponent implements OnInit {
   private setMigrationFeature() {
     this.migrationFeature = this.properties
                             .find(p => p.name.toLowerCase() === 'feature.cdx-association-migration.enabled')
-                            .value?.toLowerCase() === 'true';
+                            ?.value?.toLowerCase() === 'true';
   }
 
   openTestEmailModal() {
@@ -76,6 +76,8 @@ export class AdminPropertiesComponent implements OnInit {
       if (reportId) {
         this.recalculateEmissionTons(reportId);
       }
+    }, () => {
+      // needed for dismissing without errors
     });
   }
 
