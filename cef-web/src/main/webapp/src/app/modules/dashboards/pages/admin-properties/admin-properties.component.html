@@ -1,27 +1,55 @@
 <div *ngIf="properties">
-  <form [formGroup]="propertyForm">
-    <div class="row pb-2" *ngFor="let prop of properties">
-      <div class="col-sm-6 col-lg-3">
-        <label for="{{prop.name + 'Input'}}" class="ml-1 col-form-label">
-          <strong>{{prop.name}}:</strong>
-        </label>
-      </div>
-      <div class="col-sm-6 col-lg-3">
-        <input type="text" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name">
-        <app-validation-message [control]="propertyForm.get([prop.name])"></app-validation-message>
-      </div>
-    </div>
 
-    <div class="float-right mb-3">
-      <button type="button" class="btn btn-success mr-2" (click)="openMigrateUserAssociationsModal()" [disabled]="migrating" *ngIf="migrationFeature">
-        Migrate User Associations
-        <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="migrating">
-          <span class="sr-only">Migrating...</span>
-        </div>
-      </button>
-      <button type="button" class="btn btn-success mr-2" (click)="openRecalculateEmissionTonsModal()">Recalculate Emission Tons</button>
-      <button type="button" class="btn btn-success mr-2" (click)="openTestEmailModal()">Send test email</button>
-      <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>
+  <div class="card mb-3">
+    <div class="card-header text-center">
+      <strong>Admin Properties</strong>
     </div>
-  </form>
+    <div class="card-body">
+      <form [formGroup]="propertyForm">
+        <div class="row pb-2" *ngFor="let prop of properties">
+          <div class="col-sm-6 col-lg-3">
+            <label for="{{prop.name + 'Input'}}" class="ml-1 col-form-label">
+              <strong>{{prop.name}}:</strong>
+            </label>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <input type="text" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name">
+            <app-validation-message [control]="propertyForm.get([prop.name])"></app-validation-message>
+          </div>
+        </div>
+
+        <div class="float-right mb-3">
+          
+          <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header text-center">
+      <strong>Admin Functions</strong>
+    </div>
+    <div class="card-body">
+
+      <div class="row pb-3" *ngIf="migrationFeature">
+        <button type="button" class="btn btn-success mr-2" (click)="openMigrateUserAssociationsModal()" [disabled]="migrating">
+          Migrate User Associations
+          <div class="spinner-border spinner-border-sm text-light" role="status" *ngIf="migrating">
+            <span class="sr-only">Migrating...</span>
+          </div>
+        </button>
+        Migrate user facility associations from CDX into CAER. This will only work if there are not any existing associations and should not be used in any production environments.
+      </div>
+      <div class="row pb-3">
+        <button type="button" class="btn btn-success mr-2" (click)="openRecalculateEmissionTonsModal()">Recalculate Emission Tons</button>
+        Recalculate the emissions in tons for a specific report.
+      </div>
+      <div class="row pb-3">
+        <button type="button" class="btn btn-success mr-2" (click)="openTestEmailModal()">Send test email</button>
+        Send a test email to the addresses listed as admin emails.
+      </div>
+
+    </div>
+  </div>
 </div>
