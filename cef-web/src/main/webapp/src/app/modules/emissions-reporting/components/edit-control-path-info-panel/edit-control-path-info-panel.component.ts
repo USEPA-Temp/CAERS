@@ -40,7 +40,7 @@ export class EditControlPathInfoPanelComponent implements OnInit {
 
               // if a control path is being edited then filter that pathId out the list so the validator check doesnt identify it as a duplicate
               if (this.controlPath) {
-                this.pathIds = this.pathIds.filter(identifer => identifer.toString() !== this.controlPath.pathId);
+                this.pathIds = this.pathIds.filter(identifer => identifer.toString().toLowerCase().trim() !== this.controlPath.pathId.toLowerCase().trim());
               }
           });
       });
