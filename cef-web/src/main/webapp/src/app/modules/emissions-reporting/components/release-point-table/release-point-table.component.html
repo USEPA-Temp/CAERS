@@ -4,7 +4,7 @@
     <thead>
     <tr>
       <th scope="col" sortable="releasePointIdentifier" (sort)="onSort($event)">Release Point ID</th>
-      <th scope="col" sortable="typeCode" (sort)="onSort($event)">Release Point Type</th>
+      <th scope="col" sortable="typeCode.description" (sort)="onSort($event)">Release Point Type</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Release Point Description</th>
       <th scope="col" sortable="operatingStatusCode.description" (sort)="onSort($event)">Operating Status</th>
       <ng-container *ngIf="!readOnlyMode">
