@@ -1,7 +1,10 @@
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.exception.AppValidationException;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.util.DateUtils;
 import gov.epa.cef.web.util.SLTConfigHelper;
@@ -45,16 +48,28 @@ public class EisXmlServiceImpl {
 
     private final SLTConfigHelper sltConfigHelper;
 
+    private final CefConfig cefConfig;
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    EisXmlServiceImpl(CersXmlServiceImpl cersXmlService, SLTConfigHelper sltConfigHelper) {
+    EisXmlServiceImpl(CersXmlServiceImpl cersXmlService, SLTConfigHelper sltConfigHelper, CefConfig cefConfig) {
 
         this.cersXmlService = cersXmlService;
         this.sltConfigHelper = sltConfigHelper;
+        this.cefConfig = cefConfig;
     }
 
     public ExchangeNetworkDocumentType generateEisDocument(EisHeaderDto eisHeader) {
+
+        if (cefConfig.getFeatureCersV2Enabled()) {
+            throw new ApplicationException(ApplicationErrorCode.E_INTERNAL_ERROR, "Cers V2 is not yet implemented.");
+        } else {
+            return generateEisDocumentV1_2(eisHeader);
+        }
+    }
+
+    private ExchangeNetworkDocumentType generateEisDocumentV1_2(EisHeaderDto eisHeader) {
 
         SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(eisHeader.getProgramSystemCode());
 

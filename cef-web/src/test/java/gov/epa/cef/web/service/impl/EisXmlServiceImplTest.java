@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import com.google.common.io.Resources;
 
+import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.config.TestCategories;
 import gov.epa.cef.web.config.mock.MockSLTConfig;
@@ -64,7 +65,7 @@ public class EisXmlServiceImplTest {
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-            String schemaLocation = "schema/CERS/index.xsd";
+            String schemaLocation = "schema/CERS/1/index.xsd";
             URL schemaUrl = Resources.getResource(schemaLocation);
             if (schemaUrl == null) {
                 String msg = String.format("XSD is missing; not found on classpath at %s.", schemaLocation);
@@ -92,7 +93,10 @@ public class EisXmlServiceImplTest {
         SLTConfigHelper sltConfigHelper = mock(SLTConfigHelper.class);
         when(sltConfigHelper.getCurrentSLTConfig("GADNR")).thenReturn(gaConfig);
 
-        this.eisXmlService = new EisXmlServiceImpl(cersXmlService, sltConfigHelper);
+        CefConfig cefConfig = mock(CefConfig.class);
+        when(cefConfig.getFeatureCersV2Enabled()).thenReturn(false);
+
+        this.eisXmlService = new EisXmlServiceImpl(cersXmlService, sltConfigHelper, cefConfig);
     }
 
     @Test

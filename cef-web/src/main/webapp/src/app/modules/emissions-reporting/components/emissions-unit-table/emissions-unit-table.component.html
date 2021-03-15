@@ -4,9 +4,9 @@
     <thead>
     <tr>
       <th scope="col" sortable="unitIdentifier" (sort)="onSort($event)">Unit ID</th>
-      <th scope="col" sortable="unitTypeCodeDescription" (sort)="onSort($event)">Unit Type</th>
+      <th scope="col" sortable="unitTypeCode.description" (sort)="onSort($event)">Unit Type</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Unit Description</th>
-      <th scope="col" sortable="operatingStatusCodeDescription" (sort)="onSort($event)">Operating Status</th>
+      <th scope="col" sortable="operatingStatusCode.description" (sort)="onSort($event)">Operating Status</th>
       <ng-container *ngIf="!readOnlyMode">
         <th scope="col"></th>
       </ng-container>

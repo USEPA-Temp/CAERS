@@ -47,7 +47,11 @@ public class CefConfig {
     public boolean getFeatureBulkEntryEnabled() {
         return this.propertyProvider.getBoolean(AppPropertyName.FeatureBulkEntryEnabled);
     }
-    
+
+    public boolean getFeatureCersV2Enabled() {
+        return this.propertyProvider.getBoolean(AppPropertyName.FeatureCersV2Enabled);
+    }
+
     public boolean getFeatureUserFeedbackEnabled() {
         return this.propertyProvider.getBoolean(AppPropertyName.FeatureUserFeedbackEnabled);
     }
