@@ -51,13 +51,16 @@
       </div>
       <form [formGroup]="deleteReportForm">
         <div class="row">
+          <button type="button" class="btn btn-success mr-2" (click)="deleteReportModal()" [disabled]="!deleteReportForm.get('deleteReportId').value">Delete Emissions Report</button>
           <label for="deleteReportId" class="ml-1 col-form-label"><strong>Report ID:</strong></label>&nbsp;
-          <input type="text" id="deleteReportId" #deleteReportId formControlName="deleteReportId"/>&nbsp;
-          <button type="button" class="btn btn-success mr-2" (click)="deleteReportModal()" [disabled]="!deleteReportId.value">Delete Emissions Report</button>
+          <input type="text" id="deleteReportId" formControlName="deleteReportId"/>&nbsp;&nbsp;
           Using the respective report ID, permanently delete from CAERS the facility report entered in the adjacent text field.
         </div>
         <div class="row pb-3">
-          <app-validation-message [control]="deleteReportForm.get('deleteReportId')"></app-validation-message>
+          <div class="col-sm-2"></div>
+          <div class="col-sm-4">
+            <app-validation-message [control]="deleteReportForm.get('deleteReportId')"></app-validation-message>
+          </div>
         </div>
       </form>
       

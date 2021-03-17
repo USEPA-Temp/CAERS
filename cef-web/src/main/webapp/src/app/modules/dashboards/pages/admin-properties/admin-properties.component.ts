@@ -25,6 +25,8 @@ export class AdminPropertiesComponent implements OnInit {
     deleteReportId: [null, [wholeNumberValidator()]],
   });
 
+  deleteReportInfo: string;
+
   migrating = false;
   migrationFeature = false;
 
@@ -130,6 +132,8 @@ export class AdminPropertiesComponent implements OnInit {
           const modalMessage = `Are you sure you want to permanently delete from CAERS the ${reportResp.emissionsReport.year} ${reportResp.name}
           Facility Report from Agency Facility ID ${reportResp.altSiteIdentifier}, EIS ID ${reportResp.emissionsReport.eisProgramId}?`;
           const modalRef = this.modalService.open(ConfirmationDialogComponent);
+          this.deleteReportInfo = `${reportResp.emissionsReport.year} ${reportResp.name}
+          Facility Report from Agency Facility ID ${reportResp.altSiteIdentifier}, EIS ID ${reportResp.emissionsReport.eisProgramId}`;
           modalRef.componentInstance.message = modalMessage;
           modalRef.componentInstance.continue.subscribe(() => {
             this.deleteReport(reportId);
@@ -166,7 +170,8 @@ export class AdminPropertiesComponent implements OnInit {
 
   deleteReport(reportId: number) {
     this.reportService.delete(reportId).subscribe(() => {
-      this.toastr.success('', 'Facility Report has been deleted successfully.');
+      this.toastr.success('', 'The ' + this.deleteReportInfo + ' has been deleted successfully.');
+      this.deleteReportInfo = null;
       this.deleteReportForm.get('deleteReportId').reset();
     });
   }
