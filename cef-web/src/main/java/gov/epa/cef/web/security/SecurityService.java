@@ -97,7 +97,7 @@ public class SecurityService {
 
     public FacilityAccessEnforcer facilityEnforcer() {
 
-        if (hasRole(AppRole.RoleType.REVIEWER)) {
+        if (hasRole(AppRole.RoleType.REVIEWER)||hasRole(AppRole.RoleType.CAERS_ADMIN)) {
 
             return new ReviewerFacilityAccessEnforcerImpl();
         }
