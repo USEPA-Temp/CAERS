@@ -57,14 +57,24 @@ import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.BulkUploadMapperImpl;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapperImpl;
-import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapper;
-import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapperImpl;
-import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapper;
-import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapperImpl;
-import gov.epa.cef.web.service.mapper.cers.CersFacilitySiteMapper;
-import gov.epa.cef.web.service.mapper.cers.CersFacilitySiteMapperImpl;
-import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapper;
-import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersDataTypeMapper;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersDataTypeMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersEmissionsUnitMapper;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersEmissionsUnitMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersFacilitySiteMapper;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersFacilitySiteMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersReleasePointMapper;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersReleasePointMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2ControlMapper;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2ControlMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2DataTypeMapper;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2DataTypeMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2EmissionsUnitMapper;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2EmissionsUnitMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2FacilitySiteMapper;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2FacilitySiteMapperImpl;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2ReleasePointMapper;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2ReleasePointMapperImpl;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
 import net.exchangenetwork.schema.cer._1._2.EmissionsDataType;
@@ -215,7 +225,13 @@ public class CersXmlServiceImplTest {
         CersFacilitySiteMapper facilitySiteMapper = new CersFacilitySiteMapperImpl(emissionsUnitMapper, releasePointMapper);
         CersDataTypeMapper cersMapper = new CersDataTypeMapperImpl(facilitySiteMapper);
 
-        CersXmlService cersXmlService = new CersXmlServiceImpl(userService, reportRepo, cersMapper, emissionsUnitMapper, releasePointMapper);
+        CersV2ControlMapper controlV2mapper = new CersV2ControlMapperImpl();
+        CersV2ReleasePointMapper releasePointV2Mapper = new CersV2ReleasePointMapperImpl();
+        CersV2EmissionsUnitMapper emissionsUnitV2Mapper = new CersV2EmissionsUnitMapperImpl(releasePointV2Mapper);
+        CersV2FacilitySiteMapper facilitySiteV2Mapper = new CersV2FacilitySiteMapperImpl(controlV2mapper, emissionsUnitV2Mapper, releasePointV2Mapper);
+        CersV2DataTypeMapper cersV2Mapper = new CersV2DataTypeMapperImpl(facilitySiteV2Mapper);
+
+        CersXmlService cersXmlService = new CersXmlServiceImpl(userService, reportRepo, cersMapper, emissionsUnitMapper, releasePointMapper, cersV2Mapper);
 
         return cersXmlService.generateCersData(1l, null);
     }

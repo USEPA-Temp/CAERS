@@ -62,4 +62,30 @@ public class CersApi {
 
         }, HttpStatus.OK);
     }
+
+    /**
+     * Retrieve XML report for an Emissions Report
+     *
+     * @param reportId
+     * @return
+     */
+    @GetMapping(value = "/emissionsReport/{reportId}/xml/v2/{submissionType}", produces = MediaType.APPLICATION_XML_VALUE)
+    public ResponseEntity<StreamingResponseBody> retrieveReportV2Xml(
+            @NotNull @PathVariable("reportId") Long reportId,
+            @NotNull @PathVariable("submissionType") String submissionType) {
+
+        this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
+
+        EisSubmissionStatus eisSubmissionStatus;
+        if (StringUtils.equals(EMISSIONS_XML_INDICATOR, submissionType)){
+            eisSubmissionStatus = EisSubmissionStatus.QaEmissions;
+        } else {
+            eisSubmissionStatus = EisSubmissionStatus.QaFacility;
+        }
+            
+        return new ResponseEntity<>(outputStream -> {
+                this.cersXmlService.writeCersV2XmlTo(reportId, outputStream, eisSubmissionStatus);
+
+        }, HttpStatus.OK);
+    }
 }
