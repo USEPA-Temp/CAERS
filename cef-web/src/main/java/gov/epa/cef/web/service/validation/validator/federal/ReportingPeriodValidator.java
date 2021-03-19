@@ -257,7 +257,7 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        if (period.getEmissionsProcess().getSccCode() != null) {
 	        	PointSourceSccCode scc = sccRepo.findById(period.getEmissionsProcess().getSccCode()).orElse(null);
 	        
-		        if (scc.getFuelUseRequired()) {
+		        if (scc != null && scc.getFuelUseRequired()) {
 		        	FuelUseSccCode fuelSccMaterial = fuelUseSccCodeRepo.findByScc(scc.getCode()).orElse(null);
 		        	
 		        	if (fuelSccMaterial != null) {
