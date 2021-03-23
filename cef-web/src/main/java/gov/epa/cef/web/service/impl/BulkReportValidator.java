@@ -160,7 +160,9 @@ public class BulkReportValidator {
             this.report = report;
             this.violations = violations;
 
-            this.detailMap = this.report.getOperatingDetails().stream().collect(Collectors.groupingBy(OperatingDetailBulkUploadDto::getReportingPeriodId));
+            this.detailMap = this.report.getOperatingDetails().stream()
+                                                              .filter(od -> od.getReportingPeriodId() != null)
+                                                              .collect(Collectors.groupingBy(OperatingDetailBulkUploadDto::getReportingPeriodId));
         }
 
         HashMap<Long, List<String>> processPeriodMap = new HashMap<Long, List<String>>();
