@@ -128,7 +128,7 @@ public class ControlPathServiceImpl implements ControlPathService {
     public ControlPathPollutantDto createPollutant(ControlPathPollutantDto dto) {
     	ControlPathPollutant controlPath = pollutantMapper.fromDto(dto);
     	
-    	ControlPathPollutantDto result = pollutantMapper.toDto(pollutantRepo.save(controlPath));
+    	ControlPathPollutantDto result = controlPath != null ? pollutantMapper.toDto(pollutantRepo.save(controlPath)) : null;
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getControlPathId()), ControlPathRepository.class);
     	return result;
     }
@@ -141,7 +141,7 @@ public class ControlPathServiceImpl implements ControlPathService {
     	ControlPathPollutant controlPath = pollutantRepo.findById(dto.getId()).orElse(null);
     	pollutantMapper.updateFromDto(dto, controlPath);
     	
-    	ControlPathPollutantDto result = pollutantMapper.toDto(pollutantRepo.save(controlPath));
+    	ControlPathPollutantDto result = controlPath != null ? pollutantMapper.toDto(pollutantRepo.save(controlPath)) : null;
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getControlPathId()), ControlPathRepository.class);
     	return result;
     }
@@ -162,7 +162,7 @@ public class ControlPathServiceImpl implements ControlPathService {
 	 * @param paths
 	 */
 	private List<ControlPath> getChildren(List<ControlPath> paths) {
-		List<ControlPath> childPaths = new ArrayList<ControlPath>();
+		List<ControlPath> childPaths = new ArrayList<>();
 		
 		if (paths != null) {
 	        for (ControlPath path : paths) {
@@ -181,7 +181,7 @@ public class ControlPathServiceImpl implements ControlPathService {
     	ControlPath controlPath = repo.findById(dto.getId()).orElse(null);
     	mapper.updateFromDto(dto, controlPath);
     	
-    	ControlPathDto result = mapper.toDto(repo.save(controlPath));
+    	ControlPathDto result = controlPath != null ? mapper.toDto(repo.save(controlPath)) : null;
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlPathRepository.class);
     	return result;
     }
@@ -192,9 +192,8 @@ public class ControlPathServiceImpl implements ControlPathService {
      * @param path
      */
     private List<ControlPath> getChildPaths(ControlPath path) {
-    	List<ControlPath> childPaths = new ArrayList<ControlPath>();
-    	
-    	if (path.getAssignments() != null) {
+    	List<ControlPath> childPaths = new ArrayList<>();
+    	if (!path.getAssignments().isEmpty()) {
 			for (ControlAssignment assignment : path.getAssignments()) {
 				if (assignment.getControlPathChild() != null) {
 					ControlPath childPath = getPathById(assignment.getControlPathChild().getId());
@@ -255,17 +254,17 @@ public class ControlPathServiceImpl implements ControlPathService {
      * Update an existing Control Path Assignment from a DTO
      */
     public ControlAssignmentDto updateAssignment(ControlAssignmentDto dto) {
-    	ControlPathDto controlPathDto = new ControlPathDto();
-    	ControlPathDto controlPathChildDto = new ControlPathDto();
-    	ControlDto controlDto = new ControlDto();
     	
+    	ControlPathDto controlPathChildDto = null;
+    	ControlDto controlDto = null;
+
     	if(dto.getControl() != null){
         	controlDto = controlService.retrieveById(dto.getControl().getId());	
     	}
     	if(dto.getControlPathChild() != null){
     		controlPathChildDto = controlPathservice.retrieveById(dto.getControlPathChild().getId());
     	}
-    	controlPathDto = controlPathservice.retrieveById(dto.getControlPath().getId());	
+    	ControlPathDto controlPathDto = controlPathservice.retrieveById(dto.getControlPath().getId());	
 
     	ControlAssignment controlPathAssignment = assignmentRepo.findById(dto.getId()).orElse(null);
     	dto.setControlPath(null);
@@ -273,18 +272,20 @@ public class ControlPathServiceImpl implements ControlPathService {
     	dto.setControl(null);
     	assignmentMapper.updateFromDto(dto, controlPathAssignment);
     	ControlPath controlPath = controlPathMapper.fromDto(controlPathDto);
-    	controlPathAssignment.setControlPath(controlPath);
+    	if(controlPathAssignment != null) {
+    		controlPathAssignment.setControlPath(controlPath);
     	
-    	if(controlDto.getId() != null){
-        	Control control = controlMapper.fromDto(controlDto);
-        	controlPathAssignment.setControl(control);
-    	}
-    	if(controlPathChildDto.getId() != null){
-        	ControlPath controlPathChild = controlPathMapper.fromDto(controlPathChildDto);
-        	controlPathAssignment.setControlPathChild(controlPathChild);
+	    	if(controlDto.getId() != null){
+	        	Control control = controlMapper.fromDto(controlDto);
+	        	controlPathAssignment.setControl(control);
+	    	}
+	    	if(controlPathChildDto.getId() != null){
+	        	ControlPath controlPathChild = controlPathMapper.fromDto(controlPathChildDto);
+	        	controlPathAssignment.setControlPathChild(controlPathChild);
+	    	}
     	}
 
-    	ControlAssignmentDto result = assignmentMapper.toDto(assignmentRepo.save(controlPathAssignment));
+    	ControlAssignmentDto result = controlPathAssignment != null ? assignmentMapper.toDto(assignmentRepo.save(controlPathAssignment)) : null;
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlAssignmentRepository.class);
     	return result;
     }
