@@ -8,7 +8,6 @@ import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.service.dto.EisHeaderDto;
 import gov.epa.cef.web.util.DateUtils;
 import gov.epa.cef.web.util.SLTConfigHelper;
-import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.header._2.DocumentHeaderType;
 import net.exchangenetwork.schema.header._2.DocumentPayloadType;
 import net.exchangenetwork.schema.header._2.ExchangeNetworkDocumentType;
@@ -63,7 +62,7 @@ public class EisXmlServiceImpl {
     public ExchangeNetworkDocumentType generateEisDocument(EisHeaderDto eisHeader) {
 
         if (cefConfig.getFeatureCersV2Enabled()) {
-            throw new ApplicationException(ApplicationErrorCode.E_INTERNAL_ERROR, "Cers V2 is not yet implemented.");
+            return generateEisDocumentV2_0(eisHeader);
         } else {
             return generateEisDocumentV1_2(eisHeader);
         }
@@ -73,7 +72,7 @@ public class EisXmlServiceImpl {
 
         SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(eisHeader.getProgramSystemCode());
 
-        CERSDataType cersData = new CERSDataType();
+        net.exchangenetwork.schema.cer._1._2.CERSDataType cersData = new net.exchangenetwork.schema.cer._1._2.CERSDataType();
         cersData.setUserIdentifier(sltConfig.getSltEisUser());
         cersData.setProgramSystemCode(sltConfig.getSltEisProgramCode());
 
@@ -81,7 +80,7 @@ public class EisXmlServiceImpl {
 
         eisHeader.getEmissionsReports().forEach(reportId -> {
 
-            CERSDataType reportCersData = this.cersXmlService.generateCersData(reportId, eisHeader.getSubmissionStatus());
+            net.exchangenetwork.schema.cer._1._2.CERSDataType reportCersData = this.cersXmlService.generateCersData(reportId, eisHeader.getSubmissionStatus());
             cersData.getFacilitySite().addAll(reportCersData.getFacilitySite());
 
             cersData.setEmissionsYear(reportCersData.getEmissionsYear());
@@ -98,7 +97,76 @@ public class EisXmlServiceImpl {
         try {
 
             JAXBContext jaxbContext =
-                JAXBContext.newInstance(CERSDataType.class);
+                JAXBContext.newInstance(net.exchangenetwork.schema.cer._1._2.CERSDataType.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            // create an xml document to marshal CERS xml into so that the CERS namespace declaration will be at the CERS level for EIS
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.newDocument();
+
+            jaxbMarshaller.marshal( cersObjectFactory.createCERS(cersData), doc );
+
+            return new ExchangeNetworkDocumentType()
+                    .withId("_".concat(UUID.randomUUID().toString()))
+                    .withHeader(
+                        new DocumentHeaderType()
+                            .withDataFlowName(DataflowName)
+                            .withAuthorName(eisHeader.getAuthorName())
+                            .withOrganizationName(eisHeader.getOrganizationName())
+                            .withDocumentTitle(DocumentTitle)
+                            .withProperty(
+                                new NameValuePair()
+                                    .withPropertyName(SubmissionTypePropertyName)
+                                    .withPropertyValue(eisHeader.getSubmissionStatus().submissionType()),
+                                new NameValuePair()
+                                    .withPropertyName(DataCategoryPropertyName)
+                                    .withPropertyValue(eisHeader.getSubmissionStatus().dataCategory()))
+                            .withCreationDateTime(DateUtils.createGregorianCalendar()))
+                    .withPayload(
+                        new DocumentPayloadType()
+                            .withId("_".concat(UUID.randomUUID().toString()))
+                            .withAny(doc.getDocumentElement()));
+
+        } catch (JAXBException | ParserConfigurationException e) {
+
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private ExchangeNetworkDocumentType generateEisDocumentV2_0(EisHeaderDto eisHeader) {
+
+        SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(eisHeader.getProgramSystemCode());
+
+        net.exchangenetwork.schema.cer._2._0.CERSDataType cersData = new net.exchangenetwork.schema.cer._2._0.CERSDataType();
+        cersData.setUserIdentifier(sltConfig.getSltEisUser());
+        cersData.setProgramSystemCode(sltConfig.getSltEisProgramCode());
+
+        Set<XMLGregorianCalendar> reportYears = new HashSet<>();
+
+        eisHeader.getEmissionsReports().forEach(reportId -> {
+
+            net.exchangenetwork.schema.cer._2._0.CERSDataType reportCersData = this.cersXmlService.generateCersV2Data(reportId, eisHeader.getSubmissionStatus());
+            cersData.getFacilitySite().addAll(reportCersData.getFacilitySite());
+
+            cersData.setEmissionsYear(reportCersData.getEmissionsYear());
+            reportYears.add(reportCersData.getEmissionsYear());
+        });
+
+        if (reportYears.size() > 1) {
+            throw new AppValidationException("All reports for a single submission to EIS must be for the same year.");
+        }
+
+        net.exchangenetwork.schema.cer._2._0.ObjectFactory cersObjectFactory =
+            new net.exchangenetwork.schema.cer._2._0.ObjectFactory();
+
+        try {
+
+            JAXBContext jaxbContext =
+                JAXBContext.newInstance(net.exchangenetwork.schema.cer._2._0.CERSDataType.class);
 
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
