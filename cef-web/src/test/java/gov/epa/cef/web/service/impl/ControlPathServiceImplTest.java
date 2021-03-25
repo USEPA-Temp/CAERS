@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPathPollutant;
@@ -16,9 +17,12 @@ import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlPathPollutantRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
+import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.dto.ControlPathPollutantDto;
+import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 import gov.epa.cef.web.service.mapper.ControlAssignmentMapper;
+import gov.epa.cef.web.service.mapper.ControlMapper;
 import gov.epa.cef.web.service.mapper.ControlPathMapper;
 import gov.epa.cef.web.service.mapper.ControlPathPollutantMapper;
 
@@ -55,6 +59,15 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
     @Mock
     private EmissionsReportStatusServiceImpl reportStatusService;
     
+    @Mock
+    private ControlServiceImpl controlService;
+    
+    @Mock
+    private ControlPathServiceImpl controlPathService;
+    
+    @Mock
+    private ControlMapper controlMapper;
+    
     @InjectMocks
     private ControlPathServiceImpl serviceImpl;
     
@@ -67,16 +80,20 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
     @Before
     public void init(){
         ControlPath control = new ControlPath();
+        ControlPath controlPathChild = new ControlPath();
         List<ControlAssignment> caList = new ArrayList<ControlAssignment>();
         List<ControlAssignment> emptyCaList = new ArrayList<ControlAssignment>();
         ControlAssignment contAssignment = new ControlAssignment();
         List<ControlPath> controlList = new ArrayList<ControlPath>();
         List<ControlPath> emptyControlList = new ArrayList<ControlPath>();
-        controlList.add(control);
+        controlPathChild.setId(19L);
+        contAssignment.setControlPathChild(controlPathChild);
         caList.add(contAssignment);
         control.setAssignments(caList);
+        controlList.add(control);
         
         when(repo.findById(1L)).thenReturn(Optional.of(control));
+        when(repo.findById(19L)).thenReturn(Optional.of(controlPathChild));
         when(repo.findById(2L)).thenReturn(Optional.empty());
         when(repo.findByEmissionsProcessId(3L)).thenReturn(controlList);
         when(repo.findByEmissionsProcessId(4L)).thenReturn(emptyControlList);
@@ -122,10 +139,26 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
         when(assignmentMapper.fromDto(controlAssignmentSaveDto)).thenReturn(contAssignment);
         when(assignmentRepo.save(contAssignment)).thenReturn(contAssignment);
         when(assignmentMapper.toDto(contAssignment)).thenReturn(controlAssignmentDto);
+        ControlPathDto cp = new ControlPathDto();
+        ControlDto c = new ControlDto();
+        ControlPostOrderDto cpo = new ControlPostOrderDto();
+        Control controlDev = new Control();
+        ControlPath cpc = new ControlPath ();
+        controlAssignmentSaveDto.setControl(c);
+        controlAssignmentSaveDto.setId(1L);
+        controlAssignmentSaveDto.setControlPathChild(cp);
+        controlAssignmentSaveDto.setControlPath(c);
+        when(controlService.retrieveById(1L)).thenReturn(cpo);
+        when(controlPathService.retrieveById(1L)).thenReturn(controlPathDto);
+        when(assignmentRepo.findById(1L)).thenReturn(Optional.of(contAssignment));
+        when(mapper.fromDto(controlPathDto)).thenReturn(control);
+        when(controlMapper.fromDto(cpo)).thenReturn(controlDev);
+        when(mapper.fromDto(cp)).thenReturn(cpc);
+        when(assignmentMapper.toDto(contAssignment)).thenReturn(controlAssignmentDto);
         
         when(reportStatusService.resetEmissionsReportForEntity(ArgumentMatchers.anyList(), ArgumentMatchers.any())).thenReturn(null);
     }
-
+    
     @Test
     public void retrieveById_Should_Return_ControlObject_When_ControlExists(){
         ControlPathDto controlPath = serviceImpl.retrieveById(1L);
@@ -256,6 +289,12 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
     public void updateControlPath_Should_ReturnControlPathDtoObject_When_ControlPathExists() {
     	ControlPathDto controlPath = serviceImpl.update(controlPathSaveDto);
     	assertNotEquals(null, controlPath);
+    }
+    
+    @Test
+    public void updateAssignment_Should_ReturnControlAssignmentDtoObject_When_ControlAssignmentExists() {
+    	ControlAssignmentDto controlAssignment = serviceImpl.updateAssignment(controlAssignmentSaveDto);
+    	assertNotEquals(null, controlAssignment);
     }
     
 }
