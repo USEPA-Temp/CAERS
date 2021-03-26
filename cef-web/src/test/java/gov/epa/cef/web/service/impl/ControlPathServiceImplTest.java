@@ -93,8 +93,8 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
         controlList.add(control);
         
         when(repo.findById(1L)).thenReturn(Optional.of(control));
-        when(repo.findById(19L)).thenReturn(Optional.of(controlPathChild));
         when(repo.findById(2L)).thenReturn(Optional.empty());
+        when(repo.findById(19L)).thenReturn(Optional.of(controlPathChild));
         when(repo.findByEmissionsProcessId(3L)).thenReturn(controlList);
         when(repo.findByEmissionsProcessId(4L)).thenReturn(emptyControlList);
         when(repo.findByEmissionsUnitId(5L)).thenReturn(controlList);
@@ -132,24 +132,33 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
         when(pollutantRepo.save(cpp)).thenReturn(cpp);
         when(pollutantMapper.toDto(cpp)).thenReturn(controlPathPollutantDto);
         when(pollutantRepo.findById(1L)).thenReturn(Optional.of(cpp));
+        when(pollutantRepo.findById(2L)).thenReturn(Optional.empty());
         
         controlAssignmentSaveDto = new ControlAssignmentDto();
         ControlAssignmentDto controlAssignmentDto = new ControlAssignmentDto();
+        contAssignment.setId(1L);
         contAssignment.setControlPath(control);
         when(assignmentMapper.fromDto(controlAssignmentSaveDto)).thenReturn(contAssignment);
         when(assignmentRepo.save(contAssignment)).thenReturn(contAssignment);
         when(assignmentMapper.toDto(contAssignment)).thenReturn(controlAssignmentDto);
         ControlPathDto cp = new ControlPathDto();
+        cp.setId(19L);
         ControlDto c = new ControlDto();
+        c.setId(19L);
         ControlPostOrderDto cpo = new ControlPostOrderDto();
+        cpo.setId(19L);
         Control controlDev = new Control();
+        controlDev.setId(19L);
         ControlPath cpc = new ControlPath ();
+        cpc.setId(19L);
+        control.setId(19L);
         controlAssignmentSaveDto.setControl(c);
         controlAssignmentSaveDto.setId(1L);
         controlAssignmentSaveDto.setControlPathChild(cp);
         controlAssignmentSaveDto.setControlPath(c);
-        when(controlService.retrieveById(1L)).thenReturn(cpo);
-        when(controlPathService.retrieveById(1L)).thenReturn(controlPathDto);
+        controlPathDto.setId(19L);
+        when(controlService.retrieveById(19L)).thenReturn(cpo);
+        when(controlPathService.retrieveById(19L)).thenReturn(controlPathDto);
         when(assignmentRepo.findById(1L)).thenReturn(Optional.of(contAssignment));
         when(mapper.fromDto(controlPathDto)).thenReturn(control);
         when(controlMapper.fromDto(cpo)).thenReturn(controlDev);
@@ -295,6 +304,28 @@ public class ControlPathServiceImplTest extends BaseServiceTest {
     public void updateAssignment_Should_ReturnControlAssignmentDtoObject_When_ControlAssignmentExists() {
     	ControlAssignmentDto controlAssignment = serviceImpl.updateAssignment(controlAssignmentSaveDto);
     	assertNotEquals(null, controlAssignment);
+    }
+    
+    @Test
+    public void deleteControlPath_When_ControlPathExists() {
+    	serviceImpl.delete(2L);
+    	ControlPathDto controlPathDto = serviceImpl.retrieveById(2L);
+    	assertEquals(null, controlPathDto);
+    }
+    
+    @Test
+    public void deleteAssignment_When_ControlAssignmentExists() {
+    	serviceImpl.deleteAssignment(15L);
+    	Collection<ControlAssignmentDto> controlAssignment = serviceImpl.retrieveParentPathById(15L);
+    	assertEquals(0, controlAssignment.size());
+    }
+    
+    @Test
+    public void deleteControlPathPollutant_When_ControlPathPollutantExists() {
+    	controlPathPollutantSaveDto.setId(2L);
+    	serviceImpl.deleteControlPathPollutant(2L);
+    	ControlPathPollutantDto controlPathPollutant = serviceImpl.updateControlPathPollutant(controlPathPollutantSaveDto);
+    	assertEquals(null, controlPathPollutant);
     }
     
 }
