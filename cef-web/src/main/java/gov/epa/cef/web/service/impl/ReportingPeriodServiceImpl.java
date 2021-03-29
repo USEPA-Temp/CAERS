@@ -221,7 +221,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
                             lastReport.get().getMasterFacilityRecord().getId(), 
                             lastReport.get().getYear());
                     if (!oldEntities.isEmpty()) {
-                        dto.setPreviousCalculationParameterValue(oldEntities.get(0).getCalculationParameterValue());
+                        dto.setPreviousCalculationParameterValue(oldEntities.get(0).getCalculationParameterValue().toString());
                         if (oldEntities.get(0).getCalculationParameterUom() != null) {
                         	dto.setPreviousCalculationParameterUomCode(oldEntities.get(0).getCalculationParameterUom().getCode());
                         } else {
@@ -246,7 +246,7 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
         List<ReportingPeriod> periods = dtos.stream().map(dto -> {
             ReportingPeriod period = repo.findById(dto.getReportingPeriodId())
                     .orElseThrow(() -> new NotExistException("Reporting Period", dto.getReportingPeriodId()));
-            period.setCalculationParameterValue(dto.getCalculationParameterValue());
+            period.setCalculationParameterValue(new BigDecimal(dto.getCalculationParameterValue()));
             return period;
         }).collect(Collectors.toList());
 

@@ -126,6 +126,7 @@ public class ReportingPeriodServiceImplTest extends BaseServiceTest {
         bulkDto.setEmissionsProcessIdentifier("1");
         bulkDto.setUnitIdentifier("1");
         bulkDto.setReportingPeriodTypeCode(code);
+        bulkDto.setCalculationParameterValue("123");
         reportingPeriodBulkDtoList = new ArrayList<>();
         reportingPeriodBulkDtoList.add(bulkDto);
         when(reportingPeriodMapper.toDto(reportingPeriod)).thenReturn(reportingPeriodDto);

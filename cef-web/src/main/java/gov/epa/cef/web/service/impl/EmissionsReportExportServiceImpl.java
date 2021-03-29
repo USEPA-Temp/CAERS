@@ -830,21 +830,21 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
                 row.getCell(10).setCellFormula(generateLookupFormula(wb, "CalculationParameterTypeCode", dto.getCalculationParameterTypeCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(10));
             }
-            setCellNumberValue(row.getCell(11), dto.getCalculationParameterValue());
+            row.getCell(11).setCellValue(dto.getCalculationParameterValue());
             row.getCell(12).setCellValue(dto.getCalculationParameterUom());
             if (dto.getCalculationMaterialCode() != null) {
                 row.getCell(13).setCellValue(dto.getCalculationMaterialCode());
                 row.getCell(14).setCellFormula(generateLookupFormula(wb, "CalculationMaterialCode", dto.getCalculationMaterialCode(), false));
                 formulaEvaluator.evaluateInCell(row.getCell(14));
             }
-            setCellNumberValue(row.getCell(15), dto.getFuelUseValue());
+            row.getCell(15).setCellValue(dto.getFuelUseValue());
             row.getCell(16).setCellValue(dto.getFuelUseUom());
             if (dto.getFuelUseMaterialCode() != null) {
                 row.getCell(17).setCellValue(dto.getFuelUseMaterialCode());
                 row.getCell(18).setCellFormula(generateLookupFormula(wb, "CalculationMaterialCode", dto.getFuelUseMaterialCode(), false));
                 formulaEvaluator.evaluateInCell(row.getCell(18));
             }
-            setCellNumberValue(row.getCell(19), dto.getHeatContentValue());
+            row.getCell(19).setCellValue(dto.getHeatContentValue());
             row.getCell(20).setCellValue(dto.getHeatContentUom());
             row.getCell(21).setCellValue(dto.getComments());
 
