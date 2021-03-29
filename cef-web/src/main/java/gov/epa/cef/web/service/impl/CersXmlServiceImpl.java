@@ -17,9 +17,10 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
-import gov.epa.cef.web.service.mapper.cers.CersDataTypeMapper;
-import gov.epa.cef.web.service.mapper.cers.CersEmissionsUnitMapper;
-import gov.epa.cef.web.service.mapper.cers.CersReleasePointMapper;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersDataTypeMapper;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersEmissionsUnitMapper;
+import gov.epa.cef.web.service.mapper.cers._1._2.CersReleasePointMapper;
+import gov.epa.cef.web.service.mapper.cers._2._0.CersV2DataTypeMapper;
 import gov.epa.cef.web.util.ConstantUtils;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
@@ -53,7 +54,7 @@ import java.util.stream.Collectors;
 @Service
 public class CersXmlServiceImpl implements CersXmlService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CersXmlServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CersXmlServiceImpl.class);
 
     private final EmissionsReportRepository reportRepo;
 
@@ -64,6 +65,8 @@ public class CersXmlServiceImpl implements CersXmlService {
     private final CersEmissionsUnitMapper euMapper;
 
     private final CersReleasePointMapper rpMapper;
+    
+    private final CersV2DataTypeMapper cersV2Mapper;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -73,14 +76,109 @@ public class CersXmlServiceImpl implements CersXmlService {
 					   EmissionsReportRepository reportRepo,
 					   CersDataTypeMapper cersMapper,
 					   CersEmissionsUnitMapper euMapper,
-					   CersReleasePointMapper rpMapper) {
+					   CersReleasePointMapper rpMapper,
+					   CersV2DataTypeMapper cersV2Mapper) {
 
     	this.userService = userService;
     	this.reportRepo = reportRepo;
     	this.cersMapper = cersMapper;
     	this.euMapper = euMapper;
     	this.rpMapper = rpMapper;
+    	this.cersV2Mapper = cersV2Mapper;
 	}
+
+    public net.exchangenetwork.schema.cer._2._0.CERSDataType generateCersV2Data(Long reportId, EisSubmissionStatus submissionStatus) {
+
+        EmissionsReport source = reportRepo.findById(reportId)
+            .orElseThrow(() -> new NotExistException("Emissions Report", reportId));
+
+        if (submissionStatus != null) {
+            if (ConstantUtils.EIS_TRANSMISSION_POINT_EMISSIONS.contentEquals(submissionStatus.dataCategory())) {
+                source.getFacilitySites().forEach(fs -> {
+
+                    // remove extra data
+                    fs.getReleasePoints().clear();
+                    fs.getControlPaths().clear();
+                    fs.getControls().clear();
+                    // remove non-operating units and units without processes
+                    fs.setEmissionsUnits(fs.getEmissionsUnits().stream()
+                        .peek(eu -> {
+                           
+                            // remove non-operating processes and processes without emissions
+                            eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
+                               .peek(ep -> {
+
+                                   // remove extra data and remove reporting periods without emissions
+                                   ep.getReleasePointAppts().clear();
+                                   ep.setReportingPeriods(ep.getReportingPeriods().stream()
+                                           .filter(rp -> !rp.getEmissions().isEmpty())
+                                           .collect(Collectors.toList()));
+
+                               }).filter(ep -> ConstantUtils.STATUS_OPERATING.equals(ep.getOperatingStatusCode().getCode()) && !ep.getReportingPeriods().isEmpty())
+                               .collect(Collectors.toList()));
+                        }).filter(eu -> ConstantUtils.STATUS_OPERATING.equals(eu.getOperatingStatusCode().getCode()) && !eu.getEmissionsProcesses().isEmpty())
+                        .collect(Collectors.toList()));
+                });
+            } else if (ConstantUtils.EIS_TRANSMISSION_FACILITY_INVENTORY.equals(submissionStatus.dataCategory())) {
+                source.getFacilitySites().forEach(fs -> {
+
+                    fs.setEmissionsUnits(fs.getEmissionsUnits().stream()
+                        .map(eu -> {
+                            
+                            // remove extra information from units which are not operational
+                            if (!ConstantUtils.STATUS_OPERATING.equals(eu.getOperatingStatusCode().getCode())) {
+                                EmissionsUnit result = this.cersV2Mapper.emissionsUnitToNonOperatingEmissionsUnit(eu);
+                                return result;
+                            } else {
+                            
+                                //first set the Processes for the emissions unit
+                                eu.setEmissionsProcesses(eu.getEmissionsProcesses().stream()
+                                    .map(ep -> {
+                                        
+                                        //remove all reporting periods, operating details, and emissions from the emission process
+                                        //for a FacilityInventory submission
+                                        ep.getReportingPeriods().clear();
+    
+                                        // remove extra information from processes which are not operational
+                                        if (!ConstantUtils.STATUS_OPERATING.equals(ep.getOperatingStatusCode().getCode())) {
+                                            EmissionsProcess result = this.cersV2Mapper.processToNonOperatingEmissionsProcess(ep);
+                                            return result;
+                                        }
+                                        return ep;
+                                    }).collect(Collectors.toList()));
+                                
+                                return eu;
+                            }
+                            
+                        }).collect(Collectors.toList()));
+
+                    fs.setReleasePoints(fs.getReleasePoints().stream()
+                        .map(rp -> {
+
+                            // remove extra information from release points which are not operational
+                            if (!ConstantUtils.STATUS_OPERATING.equals(rp.getOperatingStatusCode().getCode())) {
+                                ReleasePoint result = this.cersV2Mapper.releasePointToNonOperatingReleasePoint(rp);
+                                return result;
+                            }
+                            return rp;
+                        }).collect(Collectors.toList()));
+
+                });
+            }
+        }
+
+        net.exchangenetwork.schema.cer._2._0.CERSDataType cers = cersV2Mapper.fromEmissionsReport(source);
+
+        cers.setUserIdentifier(userService.getCurrentUser().getEmail());
+
+        // check if this exists for unit tests
+        if (this.entityManager != null) {
+            // detach entity from session so that the dirty entity won't get picked up by other database calls
+            entityManager.detach(source);
+        }
+
+        return cers;
+    }
 
 	/* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.CersXmlService#generateCersData(java.lang.Long)
@@ -140,9 +238,9 @@ public class CersXmlServiceImpl implements CersXmlService {
 	
 	                                    // remove extra information from processes which are not operational
 	                                    if (!ConstantUtils.STATUS_OPERATING.equals(ep.getOperatingStatusCode().getCode())) {
-	                                        EmissionsProcess result = this.euMapper.processToNonOperatingEmissionsProcess(ep);                                           
+	                                        EmissionsProcess result = this.euMapper.processToNonOperatingEmissionsProcess(ep);
 	                                        return result;
-	                                    }                   
+	                                    }
 	                                    return ep;
 	                                }).collect(Collectors.toList()));
 	                            
@@ -184,12 +282,32 @@ public class CersXmlServiceImpl implements CersXmlService {
     }
 
 
+    @Override
+    public void writeCersV2XmlTo(long reportId, OutputStream outputStream, EisSubmissionStatus submissionStatus) {
+
+        net.exchangenetwork.schema.cer._2._0.CERSDataType cers = generateCersV2Data(reportId, submissionStatus);
+
+        try {
+            net.exchangenetwork.schema.cer._2._0.ObjectFactory objectFactory = new net.exchangenetwork.schema.cer._2._0.ObjectFactory();
+            JAXBContext jaxbContext = JAXBContext.newInstance(net.exchangenetwork.schema.cer._2._0.CERSDataType.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            jaxbMarshaller.marshal(objectFactory.createCERS(cers), outputStream);
+
+        } catch (JAXBException e) {
+
+            logger.error("error while marshalling", e);
+            throw ApplicationException.asApplicationException(e);
+        }
+    }
+
 	/* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.CersXmlService#retrieveCersXml(java.lang.Long)
      */
     @Override
     public void writeCersXmlTo(long reportId, OutputStream outputStream, EisSubmissionStatus submissionStatus) {
-    	
+
     	CERSDataType cers = generateCersData(reportId, submissionStatus);
 
         try {
@@ -202,7 +320,7 @@ public class CersXmlServiceImpl implements CersXmlService {
 
         } catch (JAXBException e) {
 
-            LOGGER.error("error while marshalling", e);
+            logger.error("error while marshalling", e);
             throw ApplicationException.asApplicationException(e);
         }
     }

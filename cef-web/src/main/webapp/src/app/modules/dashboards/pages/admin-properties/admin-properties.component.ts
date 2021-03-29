@@ -7,6 +7,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { RecalculateEmissionTonsModalComponent } from 'src/app/modules/dashboards/components/recalculate-emission-tons-modal/recalculate-emission-tons-modal.component';
 import { UserFacilityAssociationService } from 'src/app/core/services/user-facility-association.service';
+import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
+import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
+import {wholeNumberValidator} from 'src/app/modules/shared/directives/whole-number-validator.directive';
 
 @Component({
   selector: 'app-admin-properties',
@@ -18,12 +21,20 @@ export class AdminPropertiesComponent implements OnInit {
 
   propertyForm = this.fb.group({});
 
+  deleteReportForm = this.fb.group({
+    deleteReportId: [null, [wholeNumberValidator()]],
+  });
+
+  deleteReportInfo: string;
+
   migrating = false;
   migrationFeature = false;
 
   constructor(
       private propertyService: AdminPropertyService,
       private ufaService: UserFacilityAssociationService,
+      private reportService: EmissionsReportingService,
+      private facilitySiteService: FacilitySiteService,
       private fb: FormBuilder,
       private modalService: NgbModal,
       private toastr: ToastrService) { }
@@ -108,6 +119,32 @@ export class AdminPropertiesComponent implements OnInit {
     });
   }
 
+  deleteReportModal() {
+    const reportId = this.deleteReportForm.get('deleteReportId').value;
+
+    if (!this.deleteReportForm.valid) {
+
+      this.deleteReportForm.markAllAsTouched();
+    } else {
+
+      this.facilitySiteService.retrieveForReport(reportId).subscribe(reportResp => {
+        if (reportResp) {
+          const modalMessage = `Are you sure you want to permanently delete from CAERS the ${reportResp.emissionsReport.year} ${reportResp.name}
+          Facility Report from Agency Facility ID ${reportResp.altSiteIdentifier}, EIS ID ${reportResp.emissionsReport.eisProgramId}?`;
+          const modalRef = this.modalService.open(ConfirmationDialogComponent);
+          this.deleteReportInfo = `${reportResp.emissionsReport.year} ${reportResp.name}
+          Facility Report from Agency Facility ID ${reportResp.altSiteIdentifier}, EIS ID ${reportResp.emissionsReport.eisProgramId}`;
+          modalRef.componentInstance.message = modalMessage;
+          modalRef.componentInstance.continue.subscribe(() => {
+            this.deleteReport(reportId);
+          });
+        } else {
+          this.toastr.error('', 'Facility Report with Report ID ' + reportId + ' does not exist.');
+        }
+      });
+    }
+  }
+
   onSubmit() {
     if (!this.propertyForm.valid) {
       this.propertyForm.markAllAsTouched();
@@ -129,6 +166,14 @@ export class AdminPropertiesComponent implements OnInit {
       });
 
     }
+  }
+
+  deleteReport(reportId: number) {
+    this.reportService.delete(reportId).subscribe(() => {
+      this.toastr.success('', 'The ' + this.deleteReportInfo + ' has been deleted successfully.');
+      this.deleteReportInfo = null;
+      this.deleteReportForm.get('deleteReportId').reset();
+    });
   }
 
 }

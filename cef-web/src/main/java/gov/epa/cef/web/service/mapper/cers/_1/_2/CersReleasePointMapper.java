@@ -1,4 +1,4 @@
-package gov.epa.cef.web.service.mapper.cers;
+package gov.epa.cef.web.service.mapper.cers._1._2;
 
 import gov.epa.cef.web.domain.ReleasePoint;
 import net.exchangenetwork.schema.cer._1._2.GeographicCoordinatesDataType;

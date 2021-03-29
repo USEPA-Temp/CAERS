@@ -192,7 +192,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 tmp = File.createTempFile("Attachment", ".xml");
                 try (OutputStream outputStream = new FileOutputStream(tmp)) {
                     // use null status to get full XML generation
-                    cersXmlService.writeCersXmlTo(emissionsReportId, outputStream, null);
+                    if (cefConfig.getFeatureCersV2Enabled()) {
+                        cersXmlService.writeCersV2XmlTo(emissionsReportId, outputStream, null);
+                    } else {
+                        cersXmlService.writeCersXmlTo(emissionsReportId, outputStream, null);
+                    }
                 }
                 sigDoc.setContent(new DataHandler(new DocumentDataSource(tmp, "application/octet-stream")));
                 cromerrDocumentId =
