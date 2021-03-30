@@ -1,7 +1,6 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ReportingPeriodDto implements Serializable {
@@ -13,13 +12,13 @@ public class ReportingPeriodDto implements Serializable {
     private CodeLookupDto reportingPeriodTypeCode;
     private CodeLookupDto emissionsOperatingTypeCode;
     private CodeLookupDto calculationParameterTypeCode;
-    private BigDecimal calculationParameterValue;
+    private String calculationParameterValue;
     private UnitMeasureCodeDto calculationParameterUom;
     private CodeLookupDto calculationMaterialCode;
-    private BigDecimal fuelUseValue;
+    private String fuelUseValue;
     private UnitMeasureCodeDto fuelUseUom;
     private CodeLookupDto fuelUseMaterialCode;
-    private BigDecimal heatContentValue;
+    private String heatContentValue;
     private UnitMeasureCodeDto heatContentUom;
     private String comments;
     private List<EmissionDto> emissions;
@@ -65,11 +64,11 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
-    public BigDecimal getCalculationParameterValue() {
+    public String getCalculationParameterValue() {
         return calculationParameterValue;
     }
 
-    public void setCalculationParameterValue(BigDecimal calculationParameterValue) {
+    public void setCalculationParameterValue(String calculationParameterValue) {
         this.calculationParameterValue = calculationParameterValue;
     }
 
@@ -89,11 +88,11 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public BigDecimal getFuelUseValue() {
+    public String getFuelUseValue() {
 		return fuelUseValue;
 	}
 
-	public void setFuelUseValue(BigDecimal fuelUseValue) {
+	public void setFuelUseValue(String fuelUseValue) {
 		this.fuelUseValue = fuelUseValue;
 	}
 
@@ -113,11 +112,11 @@ public class ReportingPeriodDto implements Serializable {
 		this.fuelUseMaterialCode = fuelUseMaterialCode;
 	}
 
-	public BigDecimal getHeatContentValue() {
+	public String getHeatContentValue() {
 		return heatContentValue;
 	}
 
-	public void setHeatContentValue(BigDecimal heatContentValue) {
+	public void setHeatContentValue(String heatContentValue) {
 		this.heatContentValue = heatContentValue;
 	}
 

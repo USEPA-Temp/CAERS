@@ -15,9 +15,9 @@ export class BulkEntryReportingPeriod {
 
   reportingPeriodId: number;
   reportingPeriodTypeCode: BaseCodeLookup;
-  calculationParameterValue: number;
+  calculationParameterValue: string;
   calculationParameterUom: UnitMeasureCode;
   calculationMaterialCode: BaseCodeLookup;
-  previousCalculationParameterValue: number;
+  previousCalculationParameterValue: string;
   previousCalculationParameterUomCode: string;
 }
