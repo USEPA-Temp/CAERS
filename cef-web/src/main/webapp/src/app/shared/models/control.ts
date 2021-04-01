@@ -7,6 +7,7 @@ export class Control {
   id: number;
   facilitySiteId: number;
   operatingStatusCode: BaseCodeLookup;
+  statusYear: number;
   identifier: string;
   description: string;
   upgradeDescription: string;

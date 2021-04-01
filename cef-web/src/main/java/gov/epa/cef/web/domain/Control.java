@@ -28,6 +28,9 @@ public class Control extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_code")
     private OperatingStatusCode operatingStatusCode;
+    
+    @Column(name = "status_year")
+    private Short statusYear;
 
     @Column(name = "identifier", nullable = false, length = 20)
     private String identifier;
@@ -83,6 +86,7 @@ public class Control extends BaseAuditEntity {
     	this.id = originalControl.getId();
     	this.facilitySite = facilitySite;
     	this.operatingStatusCode = originalControl.getOperatingStatusCode();
+    	this.statusYear = originalControl.getStatusYear();
     	this.identifier = originalControl.getIdentifier();
     	this.description = originalControl.getDescription();
     	this.percentControl = originalControl.getPercentControl();
@@ -224,6 +228,14 @@ public class Control extends BaseAuditEntity {
 
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
+	}
+
+	public Short getStatusYear() {
+		return statusYear;
+	}
+
+	public void setStatusYear(Short statusYear) {
+		this.statusYear = statusYear;
 	}
 
 

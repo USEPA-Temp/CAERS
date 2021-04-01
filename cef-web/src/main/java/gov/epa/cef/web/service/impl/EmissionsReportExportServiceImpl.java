@@ -611,17 +611,18 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
                 row.getCell(7).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(7));
             }
+            setCellNumberValue(row.getCell(8), dto.getStatusYear());
             if (dto.getControlMeasureCode() != null) {
-                row.getCell(8).setCellValue(dto.getControlMeasureCode());
-                row.getCell(9).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
-                formulaEvaluator.evaluateInCell(row.getCell(9));
+                row.getCell(9).setCellValue(dto.getControlMeasureCode());
+                row.getCell(10).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(10));
             }
-            setCellNumberValue(row.getCell(10), dto.getNumberOperatingMonths());
-            row.getCell(11).setCellValue(dto.getStartDate());
-            row.getCell(12).setCellValue(dto.getUpgradeDate());
-            row.getCell(13).setCellValue(dto.getEndDate());
-            row.getCell(14).setCellValue(dto.getUpgradeDescription());
-            row.getCell(15).setCellValue(dto.getComments());
+            setCellNumberValue(row.getCell(11), dto.getNumberOperatingMonths());
+            row.getCell(12).setCellValue(dto.getStartDate());
+            row.getCell(13).setCellValue(dto.getUpgradeDate());
+            row.getCell(14).setCellValue(dto.getEndDate());
+            row.getCell(15).setCellValue(dto.getUpgradeDescription());
+            row.getCell(16).setCellValue(dto.getComments());
 
             currentRow++;
 
