@@ -7,7 +7,6 @@ public class EmissionsReportDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String frsFacilityId;
     private String eisProgramId;
     private Long masterFacilityRecordId;
     private CodeLookupDto programSystemCode;
@@ -24,14 +23,6 @@ public class EmissionsReportDto implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getFrsFacilityId() {
-        return frsFacilityId;
-    }
-
-    public void setFrsFacilityId(String frsFacilityId) {
-        this.frsFacilityId = frsFacilityId;
     }
 
     public String getEisProgramId() {

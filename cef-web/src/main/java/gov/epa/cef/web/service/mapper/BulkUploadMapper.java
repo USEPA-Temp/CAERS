@@ -65,6 +65,7 @@ public interface BulkUploadMapper {
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
     @Mapping(source="programSystemCode.code", target="programSystemCode")
     @Mapping(source="tribalCode.code", target="tribalCode")
+    @Mapping(source="emissionsReport.masterFacilityRecord.eisProgramId", target="eisProgramId")
     @Mapping(source="emissionsReport.masterFacilityRecord.id", target="masterFacilityRecordId")
     FacilitySiteBulkUploadDto facilitySiteToDto(FacilitySite source);
 

@@ -59,9 +59,6 @@ public class EmissionsReport extends BaseAuditEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private List<FacilitySite> facilitySites = new ArrayList<>();
 
-    @Column(name = "frs_facility_id", nullable = false, length = 22)
-    private String frsFacilityId;
-
     @Column(name = "has_submitted")
     private Boolean hasSubmitted;
     
@@ -100,7 +97,6 @@ public class EmissionsReport extends BaseAuditEntity {
 
         this.id = originalEmissionsReport.getId();
         this.masterFacilityRecord = originalEmissionsReport.getMasterFacilityRecord();
-        this.frsFacilityId = originalEmissionsReport.frsFacilityId;
         this.eisProgramId = originalEmissionsReport.eisProgramId;
         this.programSystemCode = originalEmissionsReport.programSystemCode;
         this.year = originalEmissionsReport.year;
@@ -216,16 +212,6 @@ public class EmissionsReport extends BaseAuditEntity {
         if (facilitySites != null) {
             this.facilitySites.addAll(facilitySites);
         }
-    }
-
-    public String getFrsFacilityId() {
-
-        return this.frsFacilityId;
-    }
-
-    public void setFrsFacilityId(String frsFacilityId) {
-
-        this.frsFacilityId = frsFacilityId;
     }
 
     public Boolean getHasSubmitted() {

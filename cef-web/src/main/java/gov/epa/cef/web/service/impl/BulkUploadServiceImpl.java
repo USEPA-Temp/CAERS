@@ -706,7 +706,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         EmissionsReport emissionsReport = new EmissionsReport();
 
         emissionsReport.setEisProgramId(bulkEmissionsReport.getEisProgramId());
-        emissionsReport.setFrsFacilityId(bulkEmissionsReport.getFrsFacilityId());
         emissionsReport.setYear(bulkEmissionsReport.getYear());
         emissionsReport.setStatus(ReportStatus.valueOf(bulkEmissionsReport.getStatus()));
         emissionsReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
@@ -777,7 +776,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         facility.setMailingStreetAddress(bulkFacility.getMailingStreetAddress());
         facility.setMailingCity(bulkFacility.getMailingCity());
         facility.setMailingPostalCode(bulkFacility.getMailingPostalCode());
-        facility.setEisProgramId(bulkFacility.getEisProgramId());
         facility.setComments(bulkFacility.getComments());
 
         if (bulkFacility.getFacilityCategoryCode() != null) {

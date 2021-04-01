@@ -80,8 +80,6 @@ export class FacilityInformationComponent implements OnInit {
       Object.assign(updatedFacilitySite, this.facilitySiteComponent.facilitySiteForm.value);
       updatedFacilitySite.id = this.facilitySite.id;
       updatedFacilitySite.emissionsReport = this.facilitySite.emissionsReport;
-      updatedFacilitySite.frsFacilityId = this.facilitySite.frsFacilityId;
-      updatedFacilitySite.eisProgramId = this.facilitySite.eisProgramId;
       updatedFacilitySite.programSystemCode = this.facilitySite.programSystemCode;
 
       this.facilityService.update(updatedFacilitySite)

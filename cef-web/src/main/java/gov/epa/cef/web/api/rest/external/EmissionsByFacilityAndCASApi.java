@@ -20,19 +20,6 @@ public class EmissionsByFacilityAndCASApi {
     private EmissionService emissionService;
 
     /**
-     * Retrieve the total point and non-point emissions for a given FRS Facility Id and pollutant
-     * @param frsFacilityId
-     * @param casNumber
-     * @return
-     */
-    @GetMapping(value = "/v1/{frsFacilityId}/{casNumber}")
-    @ResponseBody
-    public ResponseEntity<EmissionsByFacilityAndCASDto> retrieveEmissionsByFRSid(@PathVariable String frsFacilityId, @PathVariable String casNumber) {
-        EmissionsByFacilityAndCASDto emissions = emissionService.findEmissionsByFacilityAndCAS(frsFacilityId, casNumber);
-        return new ResponseEntity<EmissionsByFacilityAndCASDto>(emissions, HttpStatus.OK);
-    }
-    
-    /**
      * Retrieve the total point and non-point emissions for a given TRI Facility ID and pollutant
      * @param trifid
      * @param casNumber

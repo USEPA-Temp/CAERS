@@ -43,12 +43,6 @@ public class FacilitySite extends BaseAuditEntity {
     @JoinColumn(name = "report_id", nullable = false)
     private EmissionsReport emissionsReport;
 
-    @Column(name = "frs_facility_id", length = 22)
-    private String frsFacilityId;
-
-    @Column(name = "eis_program_id", length = 22)
-    private String eisProgramId;
-
     @Column(name = "alt_site_identifier", nullable = false, length = 30)
     private String altSiteIdentifier;
 
@@ -144,8 +138,6 @@ public class FacilitySite extends BaseAuditEntity {
         this.programSystemCode = originalFacilitySite.getProgramSystemCode();
         this.operatingStatusCode = originalFacilitySite.getOperatingStatusCode();
         this.emissionsReport = emissionsReport;
-        this.frsFacilityId = originalFacilitySite.getFrsFacilityId();
-        this.eisProgramId = originalFacilitySite.getEisProgramId();
         this.altSiteIdentifier = originalFacilitySite.getAltSiteIdentifier();
         this.name = originalFacilitySite.getName();
         this.description = originalFacilitySite.getDescription();
@@ -260,22 +252,6 @@ public class FacilitySite extends BaseAuditEntity {
 
     public void setEmissionsReport(EmissionsReport emissionsReport) {
         this.emissionsReport = emissionsReport;
-    }
-
-    public String getFrsFacilityId() {
-        return this.frsFacilityId;
-    }
-
-    public void setFrsFacilityId(String frsFacilityId) {
-        this.frsFacilityId = frsFacilityId;
-    }
-
-    public String getEisProgramId() {
-        return eisProgramId;
-    }
-
-    public void setEisProgramId(String eisProgramId) {
-        this.eisProgramId = eisProgramId;
     }
 
     public String getAltSiteIdentifier() {

@@ -1323,15 +1323,18 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     private ReleasePoint createBaseReleasePoint() {
 
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setEisProgramId("111111");
+
     	EmissionsReport er = new EmissionsReport();
     	er.setYear((short)2019);
+    	er.setMasterFacilityRecord(mfr);
 
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");
 
         FacilitySite facility = new FacilitySite();
         facility.setId(1L);
-        facility.setEisProgramId("111111");
         facility.setLatitude(new BigDecimal(33.949000));
         facility.setLongitude(new BigDecimal(-84.388000));
         facility.setOperatingStatusCode(opStatCode);
@@ -1382,12 +1385,19 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	OperatingStatusCode opStatCode = new OperatingStatusCode();
     	opStatCode.setCode("OP");
 
+    	MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setEisProgramId("536411");
+
+        EmissionsReport er = new EmissionsReport();
+        er.setYear((short)2019);
+        er.setMasterFacilityRecord(mfr);
+
     	FacilitySite facility = new FacilitySite();
     	facility.setId(1L);
-    	facility.setEisProgramId("536411");
     	facility.setLatitude(new BigDecimal(33.949000));
     	facility.setLongitude(new BigDecimal(-84.388000));
     	facility.setOperatingStatusCode(opStatCode);
+    	facility.setEmissionsReport(er);
 
     	ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
     	releasePointTypeCode.setCode("1");
@@ -1418,17 +1428,20 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	return result;
     }
 
-private ReleasePoint createNonOperatingReleasePoint() {
+    private ReleasePoint createNonOperatingReleasePoint() {
+
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setEisProgramId("111111");
 
     	EmissionsReport er = new EmissionsReport();
     	er.setYear((short)2019);
+    	er.setMasterFacilityRecord(mfr);
 
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("TS");
 
         FacilitySite facility = new FacilitySite();
         facility.setId(1L);
-        facility.setEisProgramId("111111");
         facility.setLatitude(new BigDecimal(33.949000));
         facility.setLongitude(new BigDecimal(-84.388000));
         facility.setOperatingStatusCode(opStatCode);

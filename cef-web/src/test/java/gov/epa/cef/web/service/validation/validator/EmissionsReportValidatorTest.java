@@ -144,7 +144,6 @@ public class EmissionsReportValidatorTest extends BaseValidatorTest {
         EmissionsReport result = new EmissionsReport();
         result.setYear(Integer.valueOf(Calendar.getInstance().get(Calendar.YEAR) - 1).shortValue());
         result.setProgramSystemCode(psc);
-        result.setFrsFacilityId("1");
         result.setEisProgramId("1");
         result.setId(1L);
         

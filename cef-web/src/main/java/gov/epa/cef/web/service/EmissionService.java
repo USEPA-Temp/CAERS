@@ -79,18 +79,6 @@ public interface EmissionService {
     public Emission calculateTotalEmissions(Emission emission, ReportingPeriod rp);
 
     /**
-     * Find Emission by Facility and CAS Number.
-     * This method is primarily intended to provide the interface to TRIMEweb so that TRI users can
-     * see what emissions have been reported to the Common Emissions Form for the current
-     * facility and chemical that they are working on.
-     *
-     * @param frsFacilityId
-     * @param pollutantCasId
-     * @return
-     */
-    public EmissionsByFacilityAndCASDto findEmissionsByFacilityAndCAS(String frsFacilityId, String pollutantCasId);
-
-    /**
      * Find Emission by TRI Facility ID and CAS Number.
      * This method is the second version of the interface to TRIMEweb so that TRI users can
      * see what emissions have been reported to the Common Emissions Form for the current

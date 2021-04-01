@@ -614,7 +614,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         BigDecimal releasePointCoordinate = null;
         BigDecimal facilityTolerance = DEFAULT_TOLERANCE;
 
-        String facilityEisId = releasePoint.getFacilitySite().getEisProgramId();
+        String facilityEisId = releasePoint.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getEisProgramId();
 
         if (!rpCoordinate.equals(null)) {
             releasePointCoordinate = (new BigDecimal(rpCoordinate)).setScale(6, RoundingMode.HALF_UP);

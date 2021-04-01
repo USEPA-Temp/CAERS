@@ -15,7 +15,6 @@ public class FacilitySiteDto implements Serializable {
     private CodeLookupDto tribalCode;
     private EmissionsReportDto emissionsReport;
     private String frsFacilityId;
-    private String eisProgramId;
     private String altSiteIdentifier;
     private String name;
     private String description;
@@ -98,14 +97,6 @@ public class FacilitySiteDto implements Serializable {
 
     public void setFrsFacilityId(String frsFacilityId) {
         this.frsFacilityId = frsFacilityId;
-    }
-
-    public String getEisProgramId() {
-        return eisProgramId;
-    }
-
-    public void setEisProgramId(String eisProgramId) {
-        this.eisProgramId = eisProgramId;
     }
 
     public String getAltSiteIdentifier() {
