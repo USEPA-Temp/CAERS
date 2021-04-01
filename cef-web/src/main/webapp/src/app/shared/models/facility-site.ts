@@ -12,8 +12,6 @@ import { InventoryYearCodeLookup } from './inventory-year-code-lookup';
 export class FacilitySite {
   id: number;
   name: string;
-  eisProgramId: string;
-  frsFacilityId: string;
   latitude: number;
   longitude: number;
   streetAddress: string;

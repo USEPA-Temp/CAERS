@@ -254,33 +254,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             })
             .orElse(null);
 
-        /*
-        // FIXME
-        This code is being commented out until after the pilot and FRS integration can be solidified.
-
-            .orElseGet(() -> this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
-                .map(programFacility -> {
-
-                    // create a shell/dto report
-                    EmissionsReportDto newReport = new EmissionsReportDto();
-                    newReport.setYear(reportYear);
-                    newReport.setStatus(ReportStatus.IN_PROGRESS.toString());
-                    newReport.setValidationStatus(ValidationStatus.UNVALIDATED.toString());
-
-                    newReport.setFrsFacilityId(programFacility.getRegistryId());
-                    newReport.setEisProgramId(programFacility.getProgramSystemId());
-
-                    // TODO: Remove hard coded value
-                    // Using GA for now until FRS has the agency id available for us
-                    // https://alm.cgifederal.com/projects/browse/CEF-319
-                    newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
-
-                    return newReport;
-                })
-                .orElse(null)
-            );
-         */
-
     }
 
     public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
