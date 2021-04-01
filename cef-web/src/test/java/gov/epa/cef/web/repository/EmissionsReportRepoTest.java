@@ -144,7 +144,6 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		er.setMasterFacilityRecord(mfr);
 		er.setProgramSystemCode(psc);
 		er.setEisProgramId("ABC");
-		er.setFrsFacilityId("111111111111");
 		er.setId(1L);
 		er.setStatus(ReportStatus.APPROVED);
 		er.setValidationStatus(ValidationStatus.PASSED);
@@ -156,7 +155,6 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		fs.setAltSiteIdentifier("ALTID");
 		fs.setCity("Raleigh");
 		fs.setDescription("Facility Description");
-		fs.setEisProgramId("EISID");
 		fs.setEmissionsReport(er);
 		fs.setId(1L);
 		fs.setLatitude(BigDecimal.valueOf(2.5d));

@@ -1,5 +1,5 @@
 
-DROP VIEW vw_report_summary;
+DROP VIEW IF EXISTS vw_report_summary;
 
 -- update view
 CREATE OR REPLACE VIEW vw_report_summary

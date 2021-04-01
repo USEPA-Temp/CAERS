@@ -294,7 +294,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
-        newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         newReport.setHasSubmitted(false);
 

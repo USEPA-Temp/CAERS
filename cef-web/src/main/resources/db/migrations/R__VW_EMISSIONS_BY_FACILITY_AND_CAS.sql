@@ -1,11 +1,10 @@
 
-DROP VIEW vw_emissions_by_facility_and_cas;
+DROP VIEW IF EXISTS vw_emissions_by_facility_and_cas;
 
 -- update view
 CREATE OR REPLACE VIEW vw_emissions_by_facility_and_cas
  AS
  SELECT concat(e.id, rpa.id) AS id,
-    fs.frs_facility_id,
     etx.trifid,
     fs.name AS facility_name,
     er.year,

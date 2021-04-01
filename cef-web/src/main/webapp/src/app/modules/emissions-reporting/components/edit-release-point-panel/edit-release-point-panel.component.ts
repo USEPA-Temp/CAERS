@@ -214,7 +214,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.route.data
             .subscribe((data: { facilitySite: FacilitySite }) => {
                 this.facilitySite = data.facilitySite;
-                this.eisProgramId = this.facilitySite.eisProgramId;
+                this.eisProgramId = this.facilitySite.emissionsReport.eisProgramId;
                 this.facilityOpCode = this.facilitySite.operatingStatusCode;
                 this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
                 this.releasePointService.retrieveForFacility(data.facilitySite.id)

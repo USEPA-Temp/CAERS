@@ -20,9 +20,6 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
     
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "frs_facility_id")
-    private String frsFacilityId;
-    
     @Column(name = "trifid")
     private String trifid;
     
@@ -56,14 +53,6 @@ public class EmissionsByFacilityAndCAS extends BaseEntity {
     @Column(name = "report_id")
     private Long reportId;
     
-    public String getFrsFacilityId() {
-        return frsFacilityId;
-    }
-
-    public void setFrsFacilityId(String frsFacilityId) {
-        this.frsFacilityId = frsFacilityId;
-    }
-
     public String getTrifid() {
 		return trifid;
 	}

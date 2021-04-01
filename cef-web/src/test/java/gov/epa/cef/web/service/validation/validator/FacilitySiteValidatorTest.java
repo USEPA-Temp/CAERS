@@ -25,6 +25,7 @@ import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReleasePoint;
@@ -635,7 +636,6 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         mailingStateCode.setUspsCode("GA");
         
         FacilitySite result = new FacilitySite();
-        result.setEisProgramId("1");
         result.setStatusYear(null);
         result.setPostalCode("31750");
         result.setMailingPostalCode("31750");
@@ -647,6 +647,10 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         er.setYear(new Short("2019"));
         er.setEisProgramId("1");
         result.setEmissionsReport(er);
+        
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setEisProgramId("1");
+        er.setMasterFacilityRecord(mfr);
         
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");

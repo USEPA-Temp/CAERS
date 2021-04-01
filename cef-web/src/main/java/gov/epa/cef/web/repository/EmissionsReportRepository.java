@@ -20,21 +20,6 @@ import java.util.Optional;
 public interface EmissionsReportRepository extends CrudRepository<EmissionsReport, Long>, ProgramIdRetriever {
 
     /**
-     * Find reports for a given facility
-     * @param frsFacilityId {@link ProgramFacility}'s programId
-     * @return
-     */
-    List<EmissionsReport> findByFrsFacilityId(String frsFacilityId);
-
-    /**
-     * Find reports for a given facility with the specified order
-     * @param frsFacilityId {@link ProgramFacility}'s programId
-     * @param sort
-     * @return
-     */
-    List<EmissionsReport> findByFrsFacilityId(String frsFacilityId, Sort sort);
-
-    /**
      * Find reports for a given eisProgramId
      * @param eisProgramId {@link ProgramFacility}'s programId
      * @return

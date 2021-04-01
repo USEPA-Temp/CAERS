@@ -107,7 +107,6 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
 		er.setProgramSystemCode(psc);
 		er.setMasterFacilityRecord(mfr);
 		er.setEisProgramId("ABC");
-		er.setFrsFacilityId("111111111111");
 		er.setId(1L);
 		er.setStatus(ReportStatus.APPROVED);
 		er.setValidationStatus(ValidationStatus.PASSED);
