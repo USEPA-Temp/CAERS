@@ -12,6 +12,7 @@ import {legacyItemValidator} from 'src/app/modules/shared/directives/legacy-item
 import {VariableValidationType} from 'src/app/shared/enums/variable-validation-type';
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 
 @Component({
     selector: 'app-edit-control-device-info-panel',
@@ -34,6 +35,12 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
             Validators.pattern('^[0-9]{1,3}([\.][0-9]{1,3})?$')
         ]],
         operatingStatusCode: [null, Validators.required],
+        statusYear: ['', [
+            Validators.required,
+            Validators.min(1900),
+            Validators.max(2050),
+            numberValidator()
+        ]],
         controlMeasureCode: [null, [Validators.required]],
         numberOperatingMonths: [null, [
             Validators.max(12.0),
@@ -104,11 +111,19 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
             this.controlDeviceForm.get('upgradeDate').setValue(this.transformDate(this.control.upgradeDate));
             this.controlDeviceForm.get('endDate').setValue(this.transformDate(this.control.endDate));
         }
+
     }
 
     ngOnChanges() {
 
         this.controlDeviceForm.reset(this.control);
+    }
+
+    onChange(newValue) {
+        if (newValue) {
+            this.controlDeviceForm.controls.statusYear.reset();
+        }
+        this.controlDeviceForm.controls.statusYear.markAsTouched();
     }
 
     transformDate(date) {

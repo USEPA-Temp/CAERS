@@ -70,6 +70,54 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		
 	}
 	
+	@Test
+    public void statusYearRangePassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Control testData = createBaseControl();
+        
+        testData.setStatusYear((short) 1900);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.setStatusYear((short) 2050);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+	
+	@Test
+    public void statusYearRangeFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+        Control testData = createBaseControl();
+        
+        testData.setStatusYear((short) 1800);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_STATUS_YEAR.value()) && errorMap.get(ValidationField.CONTROL_STATUS_YEAR.value()).size() == 1);		
+	}
+	
+	@Test
+    public void statusYearNullFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+        Control testData = createBaseControl();
+        
+        testData.setStatusYear(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_STATUS_YEAR.value()) && errorMap.get(ValidationField.CONTROL_STATUS_YEAR.value()).size() == 1);		
+	}
+	
 	/**
 	 * There should be errors for control pollutant percent reduction when the percent is < 5 or >= 100.
 	 */
@@ -201,6 +249,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		Control result = new Control();
 		result.setId(1L);
 		result.setIdentifier("test");
+		result.setStatusYear((short) 2020);
 		result.setPercentControl(50.0);
 		FacilitySite fs = new FacilitySite();
 		fs.getControls().add(result);

@@ -576,9 +576,13 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (dto.getOperatingStatusCode() != null) {
             result.setOperatingStatusCode(operatingStatusRepo.findById(dto.getOperatingStatusCode()).orElse(null));
         }
+        if (dto.getStatusYear() != null) {
+        	result.setStatusYear(toShort(dto.getStatusYear()));
+        }
         if (dto.getControlMeasureCode() != null) {
             result.setControlMeasureCode(controlMeasureCodeRepo.findById(dto.getControlMeasureCode()).orElse(null));
         }
+        // Percent capture has been removed for control device per CEF-984.
         if (dto.getPercentCapture() != null) {
         	result.setPercentCapture(null);
         }

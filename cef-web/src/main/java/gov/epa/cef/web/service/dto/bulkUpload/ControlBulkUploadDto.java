@@ -34,6 +34,10 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars.")
     private String operatingStatusCode;
+    
+    @Pattern(regexp = YearPattern,
+        message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
+    private String statusYear;
 
     // field has become legacy with CEF-984. Data is no longer saved in db.
     // field remains to prevent error when uploading older version of template.
@@ -189,6 +193,14 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
 
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getStatusYear() {
+		return statusYear;
+	}
+
+	public void setStatusYear(String statusYear) {
+		this.statusYear = statusYear;
 	}
 
 }

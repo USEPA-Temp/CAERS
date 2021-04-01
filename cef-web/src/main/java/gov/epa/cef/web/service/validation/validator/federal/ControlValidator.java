@@ -2,7 +2,6 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -44,6 +43,23 @@ public class ControlValidator extends BaseValidator<Control> {
 	  			createValidationDetails(control));
 			}
 		}
+		
+		// Status year is required
+		if (control.getStatusYear() == null) {
+			
+			result = false;
+	        context.addFederalError(
+	            ValidationField.CONTROL_STATUS_YEAR.value(), "control.statusYear.required",
+	            createValidationDetails(control));
+			
+		// Status year must be between 1900 and 2050
+		} else if (control.getStatusYear() < 1900 || control.getStatusYear() > 2050) {
+
+	        result = false;
+	        context.addFederalError(
+	            ValidationField.CONTROL_STATUS_YEAR.value(), "control.statusYear.range",
+	            createValidationDetails(control));
+	    }
 
         if (control.getControlMeasureCode() != null && control.getControlMeasureCode().getLastInventoryYear() != null
             && control.getControlMeasureCode().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {

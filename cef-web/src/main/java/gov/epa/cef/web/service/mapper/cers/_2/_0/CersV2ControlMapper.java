@@ -50,7 +50,7 @@ public interface CersV2ControlMapper {
     @Mapping(source="upgradeDate", target="controlUpgradeDate")
     @Mapping(source="upgradeDescription", target="controlUpgradeDescription")
     @Mapping(source="operatingStatusCode.code", target="controlStatusCode")
-    @Mapping(source="", target="controlStatusCodeYear")
+    @Mapping(source="statusYear", target="controlStatusCodeYear")
     @Mapping(source="numberOperatingMonths", target="controlNumberOperatingMonths")
     @Mapping(source="startDate", target="controlStartDate")
     @Mapping(source="endDate", target="controlEndDate")
