@@ -13,6 +13,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
@@ -159,7 +160,9 @@ public class EmissionsReportValidationServiceImplTest {
         EmissionsReport report = new EmissionsReport();
         report.setId(1L);
         report.setYear((short) 2020);
-
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setEisProgramId("123");
+        report.setMasterFacilityRecord(mfr);
         FacilitySite facilitySite = new FacilitySite();
         facilitySite.setStatusYear((short) 2019);
         EmissionsUnit emissionsUnit = new EmissionsUnit();
@@ -207,6 +210,7 @@ public class EmissionsReportValidationServiceImplTest {
         emissionsUnit.setOperatingStatusCode(opStatCode);
         emissionsUnit.setFacilitySite(facilitySite);
         facilitySite.getEmissionsUnits().add(emissionsUnit);
+        facilitySite.setEmissionsReport(report);
         report.getFacilitySites().add(facilitySite);
         
         ValidationResult result = this.validationService.validate(report);
