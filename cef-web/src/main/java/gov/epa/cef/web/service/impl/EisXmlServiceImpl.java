@@ -26,6 +26,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.XMLConstants;
 
 import java.io.OutputStream;
 import java.util.HashSet;
@@ -104,6 +105,7 @@ public class EisXmlServiceImpl {
 
             // create an xml document to marshal CERS xml into so that the CERS namespace declaration will be at the CERS level for EIS
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             dbf.setNamespaceAware(true);
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.newDocument();
@@ -173,6 +175,7 @@ public class EisXmlServiceImpl {
 
             // create an xml document to marshal CERS xml into so that the CERS namespace declaration will be at the CERS level for EIS
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             dbf.setNamespaceAware(true);
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.newDocument();
