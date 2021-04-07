@@ -17,6 +17,7 @@ import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -109,6 +110,9 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		CefValidatorContext cefContext = createContext();
         Control testData = createBaseControl();
         
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+    	opStatCode.setCode("TS");
+    	testData.setOperatingStatusCode(opStatCode);
         testData.setStatusYear(null);
         
         assertFalse(this.validator.validate(cefContext, testData));
@@ -247,6 +251,9 @@ public class ControlValidatorTest extends BaseValidatorTest {
 	private Control createBaseControl() {
 		
 		Control result = new Control();
+		OperatingStatusCode opStatCode = new OperatingStatusCode();
+    	opStatCode.setCode("OP");
+    	result.setOperatingStatusCode(opStatCode);
 		result.setId(1L);
 		result.setIdentifier("test");
 		result.setStatusYear((short) 2020);
