@@ -54,6 +54,7 @@ public class UserFacilityAssociationApi {
     }
 
     @PostMapping(value = "/request")
+    @RolesAllowed(value = {AppRole.ROLE_PREPARER, AppRole.ROLE_NEI_CERTIFIER})
     public ResponseEntity<UserFacilityAssociationDto> createAssociationRequest(@NotNull @RequestBody MasterFacilityRecordDto facility) {
 
         UserFacilityAssociationDto result = this.ufaService.requestFacilityAssociation(facility, this.securityService.getCurrentApplicationUser());
