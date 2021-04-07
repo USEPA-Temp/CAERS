@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+    <p>Your <span th:text="${reportingYear}" /> emissions report for <span th:text="${facilityName}" /> has been successfully signed and submitted 
+        from EPA's Combined Air Emissions Reporting (CAER) system using CROMERR. To view the details of the CROMERR electronic signature activity 
+        <a th:href="@{https://cdx.epa.gov/SilentHandoff?URL=https://cdxnodengn.epa.gov/cromerr-review/action/submitter/details/details/{id}(id=${submissionId})}">click here</a>. 
+        If you did not perform this submission please contact the CDX Helpdesk at 888-890-1995.
+	</p>
+    <p>Your report will now be reviewed by staff at <span th:text="${slt}"/>, who may reach out to you with additional questions or corrections. 
+        You may view your submitted report inside of CAER at any time. If you have any questions about the progress of your emissions report review 
+        please contact <span th:text="${slt}"/> at <span th:text="${sltEmail}"/>.</p>
+    <br/>
+    <p>US Environmental Protection Agency</p>
+</body>
+</html>

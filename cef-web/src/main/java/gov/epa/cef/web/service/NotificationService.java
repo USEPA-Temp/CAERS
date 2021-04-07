@@ -6,9 +6,9 @@ import gov.epa.cef.web.service.dto.UserFeedbackDto;
 
 public interface NotificationService {
 
-    void sendReportSubmittedNotification(String to, String from, String facilityName, String reportingYear);
-    void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments, Long attachmentId);
-    void sendReportAcceptedNotification(String to, String from, String facilityName, String reportingYear, String comments);
+    void sendReportSubmittedNotification(String to, String cc, String from, String facilityName, String reportingYear, String slt, String sltEmail, String submissionId);
+    void sendReportRejectedNotification(String to, String cc, String from, String facilityName, String reportingYear, String comments, Long attachmentId, String slt, String sltEmail);
+    void sendReportAcceptedNotification(String to, String from, String facilityName, String reportingYear, String comments, String slt, String sltEmail);
     void sendSccUpdateFailedNotification(Exception exception);
     void sendUserAccessRequestNotification(String to, String from, String facilityName, String agencyFacilityId, String userName, String userEmail, String role);
     void sendUserAssociationAcceptedNotification(String to, String from, String facilityName, String role);

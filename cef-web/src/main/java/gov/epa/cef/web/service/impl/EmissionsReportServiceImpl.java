@@ -209,12 +209,25 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 erRepo.save(emissionsReport);
 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
+                String sltSupportEmail = getSltSupportEmail(sltConfig.getSltEisProgramCode());
 
-                //send an email notification to the SLT's predefined address that a report has been submitted
-                notificationService.sendReportSubmittedNotification(sltConfig.getSltEmail(),
-                        cefConfig.getDefaultEmailAddress(),
-                        emissionsReport.getFacilitySites().get(0).getName(),
-                        emissionsReport.getYear().toString());
+				//there should always be exactly one facility site for a CEF emissions report for now. This may change at
+				//some point in the future if different report types are included in the system
+				FacilitySite reportFacilitySite = emissionsReport.getFacilitySites().get(0);
+                List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
+                
+                eiContacts.forEach(contact -> {
+	                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
+	                notificationService.sendReportSubmittedNotification(
+	                		contact.getEmail(),
+	                		sltConfig.getSltEmail(),
+	                        cefConfig.getDefaultEmailAddress(),
+	                        emissionsReport.getFacilitySites().get(0).getName(),
+	                        emissionsReport.getYear().toString(),
+	                        sltConfig.getSltEisProgramCode(),
+	                        sltSupportEmail,
+	                		activityId);
+                });
             }
             return cromerrDocumentId;
         } catch(IOException e) {
@@ -326,6 +339,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
 	      .forEach(report -> {
+	    	  
+	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+              String sltSupportEmail = getSltSupportEmail(sltConfig.getSltEisProgramCode());
 
 	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
 	    	  //some point in the future if different report types are included in the system
@@ -342,7 +358,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  cefConfig.getDefaultEmailAddress(),
 			        		  reportFacilitySite.getName(),
 			        		  report.getYear().toString(),
-			        		  comments);
+			        		  comments,
+			        		  sltConfig.getSltEisProgramCode(),
+			        		  sltSupportEmail);
 	    		  }
 	    	  });
 	      });
@@ -393,22 +411,26 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	    	  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report
 	    	  //has been accepted
 	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-
+	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	    	  String sltSupportEmail = getSltSupportEmail(sltConfig.getSltEisProgramCode());
+	    	  
 	    	  eiContacts.forEach(contact -> {
 	    		  //if the EI contact has a email address - send them the notification
 	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
 			          notificationService.sendReportRejectedNotification(contact.getEmail(),
+			        		  sltConfig.getSltEmail(),
 			        		  cefConfig.getDefaultEmailAddress(),
 			        		  reportFacilitySite.getName(),
 			        		  report.getYear().toString(),
-			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId());
+			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
+			        		  sltConfig.getSltEisProgramCode(),
+			        		  sltSupportEmail);
 	    		  }
 	    	  });
 	      });
     	return updatedReports;
     }
-
-
+    
     /**
      * Add an emissions report to the list if one does not exist for the current year
      * @param emissionReports
@@ -460,5 +482,29 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	emissionsReport.setHasSubmitted(submitted);
 
     	return this.emissionsReportMapper.toDto(this.erRepo.save(emissionsReport));
+    }
+    
+    private String getSltSupportEmail(String slt) {
+    	String result;
+    	switch(slt) {
+    		  case "GADNR":
+    		    result = "Emissions.Inventory@dnr.ga.gov";
+    		    break;
+    		  case "LLCHD":
+    			result = "gbergstrom@lincoln.ne.gov";
+    		    break;
+    		  case "PDEQ":
+    			result = "Janice.easley@pima.gov";
+      		    break;
+    		  case "RIDEM":
+    			result = "Alexi.Mangili@dem.ri.gov";
+      		    break;
+    		  case "DOEE":
+    			result = "air.quality@dc.gov";
+      		    break;
+    		  default:
+    		    result = null;
+    		}
+    	return result;
     }
 }
