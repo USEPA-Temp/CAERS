@@ -158,6 +158,8 @@ public class EmissionsReportValidationServiceImplTest {
     public void simpleValidateFailureTest() {
 
         EmissionsReport report = new EmissionsReport();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
         report.setId(1L);
         report.setYear((short) 2020);
         MasterFacilityRecord mfr = new MasterFacilityRecord();
@@ -175,14 +177,12 @@ public class EmissionsReportValidationServiceImplTest {
         controlPath.setId(1L);
         Control control = new Control(); 
         control.setIdentifier("control_Identifier");
+        control.setOperatingStatusCode(opStatCode);
         control.setPercentControl(50.0);
         control.setFacilitySite(facilitySite);
         controlPath.setFacilitySite(facilitySite);
         facilitySite.getControls().add(control);
         facilitySite.getControlPaths().add(controlPath);
-        
-        OperatingStatusCode opStatCode = new OperatingStatusCode();
-        opStatCode.setCode("OP");
         
         List<FacilityNAICSXref> naicsList = new ArrayList<FacilityNAICSXref>();
         FacilityNAICSXref facilityNaics = new FacilityNAICSXref();
