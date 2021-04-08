@@ -31,8 +31,4 @@ public class SLTConfigImpl implements SLTBaseConfig {
         return this.propertyProvider.getString(SLTPropertyName.EisProgramCode, programSystemCode);
     }
     
-    public String getSltSupportEmail() {
-        return this.propertyProvider.getString(SLTPropertyName.SltSupportEmail, programSystemCode);
-    }
-
 }

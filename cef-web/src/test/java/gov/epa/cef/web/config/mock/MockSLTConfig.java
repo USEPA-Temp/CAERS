@@ -7,7 +7,6 @@ public class MockSLTConfig implements SLTBaseConfig {
     private String sltEmail;
     private String sltEisUser;
     private String sltEisProgramCode;
-    private String sltSupportEmail;
 
     public String getSltEmail() {
         return sltEmail;
@@ -32,13 +31,5 @@ public class MockSLTConfig implements SLTBaseConfig {
     public void setSltEisProgramCode(String sltEisProgramCode) {
         this.sltEisProgramCode = sltEisProgramCode;
     }
-
-	public String getSltSupportEmail() {
-		return sltSupportEmail;
-	}
-
-	public void setSltSupportEmail(String sltSupportEmail) {
-		this.sltSupportEmail = sltSupportEmail;
-	}
 
 }

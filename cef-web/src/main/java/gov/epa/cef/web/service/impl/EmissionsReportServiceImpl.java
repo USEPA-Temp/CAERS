@@ -225,7 +225,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	                        emissionsReport.getFacilitySites().get(0).getName(),
 	                        emissionsReport.getYear().toString(),
 	                        sltConfig.getSltEisProgramCode(),
-	                        sltConfig.getSltSupportEmail(),
+	                        sltConfig.getSltEmail(),
 	                        cdxSubmissionUrl);
                 });
             }
@@ -359,7 +359,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  report.getYear().toString(),
 			        		  comments,
 			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltConfig.getSltSupportEmail());
+			        		  sltConfig.getSltEmail());
 	    		  }
 	    	  });
 	      });
@@ -422,7 +422,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  report.getYear().toString(),
 			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
 			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltConfig.getSltSupportEmail());
+			        		  sltConfig.getSltEmail());
 	    		  }
 	    	  });
 	      });
