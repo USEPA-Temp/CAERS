@@ -43,6 +43,9 @@ public class CdxConfig {
 
     @NotBlank
     private String cdxBaseUrl;
+    
+    @NotBlank
+    private String submissionHistoryUrl;
 
     private final List<String> allowedOrigins = new ArrayList<>();
 
@@ -129,6 +132,14 @@ public class CdxConfig {
     public void setCdxBaseUrl(String cdxBaseUrl) {
         this.cdxBaseUrl = cdxBaseUrl;
     }
+    
+    public String getSubmissionHistoryUrl() {
+		return submissionHistoryUrl;
+	}
+
+	public void setSubmissionHistoryUrl(String submissionHistoryUrl) {
+		this.submissionHistoryUrl = submissionHistoryUrl;
+	}
 
     public List<String> getAllowedOrigins() {
 

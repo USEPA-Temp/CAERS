@@ -209,7 +209,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 erRepo.save(emissionsReport);
 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
-                String sltSupportEmail = getSltSupportEmail(sltConfig.getSltEisProgramCode());
+                String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
 
 				//there should always be exactly one facility site for a CEF emissions report for now. This may change at
 				//some point in the future if different report types are included in the system
@@ -225,8 +225,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	                        emissionsReport.getFacilitySites().get(0).getName(),
 	                        emissionsReport.getYear().toString(),
 	                        sltConfig.getSltEisProgramCode(),
-	                        sltSupportEmail,
-	                		activityId);
+	                        sltConfig.getSltSupportEmail(),
+	                        cdxSubmissionUrl);
                 });
             }
             return cromerrDocumentId;
@@ -341,7 +341,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	      .forEach(report -> {
 	    	  
 	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
-              String sltSupportEmail = getSltSupportEmail(sltConfig.getSltEisProgramCode());
 
 	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
 	    	  //some point in the future if different report types are included in the system
@@ -360,7 +359,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  report.getYear().toString(),
 			        		  comments,
 			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltSupportEmail);
+			        		  sltConfig.getSltSupportEmail());
 	    		  }
 	    	  });
 	      });
@@ -412,7 +411,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	    	  //has been accepted
 	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
 	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
-	    	  String sltSupportEmail = getSltSupportEmail(sltConfig.getSltEisProgramCode());
 	    	  
 	    	  eiContacts.forEach(contact -> {
 	    		  //if the EI contact has a email address - send them the notification
@@ -424,7 +422,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  report.getYear().toString(),
 			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
 			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltSupportEmail);
+			        		  sltConfig.getSltSupportEmail());
 	    		  }
 	    	  });
 	      });
@@ -484,27 +482,4 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	return this.emissionsReportMapper.toDto(this.erRepo.save(emissionsReport));
     }
     
-    private String getSltSupportEmail(String slt) {
-    	String result;
-    	switch(slt) {
-    		  case "GADNR":
-    		    result = "Emissions.Inventory@dnr.ga.gov";
-    		    break;
-    		  case "LLCHD":
-    			result = "gbergstrom@lincoln.ne.gov";
-    		    break;
-    		  case "PDEQ":
-    			result = "Janice.easley@pima.gov";
-      		    break;
-    		  case "RIDEM":
-    			result = "Alexi.Mangili@dem.ri.gov";
-      		    break;
-    		  case "DOEE":
-    			result = "air.quality@dc.gov";
-      		    break;
-    		  default:
-    		    result = null;
-    		}
-    	return result;
-    }
 }

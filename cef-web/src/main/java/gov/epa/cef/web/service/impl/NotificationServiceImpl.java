@@ -131,7 +131,7 @@ public class NotificationServiceImpl implements NotificationService {
         sendAdminEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress), subject, body);
     }
     
-    public void sendReportSubmittedNotification(String to, String cc, String from, String facilityName, String reportingYear, String slt, String sltEmail, String submissionId)
+    public void sendReportSubmittedNotification(String to, String cc, String from, String facilityName, String reportingYear, String slt, String sltEmail, String cdxSubmissionUrl)
     {
     	String emailSubject = MessageFormat.format(REPORT_SUBMITTED_BY_CERT_SUBJECT, reportingYear, facilityName);
     	Context context = new Context();
@@ -139,7 +139,7 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("facilityName", facilityName);
         context.setVariable("sltEmail", sltEmail);
         context.setVariable("slt", slt);
-        context.setVariable("submissionId", submissionId);
+        context.setVariable("cdxSubmissionUrl", cdxSubmissionUrl);
         
         String emailBody = templateEngine.process(REPORT_SUBMITTED_BY_CERT_BODY_TEMPLATE, context);
         sendHtmlMessage(to, cc, from, emailSubject, emailBody);

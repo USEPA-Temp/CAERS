@@ -6,7 +6,8 @@ public enum SLTPropertyName implements IPropertyKey {
 
     EmailAddress("slt-email"),
     EisUser("slt-eis-user"),
-    EisProgramCode("slt-eis-program-code");
+    EisProgramCode("slt-eis-program-code"),
+	SltSupportEmail("slt-support-email");
 
     private final String key;
 

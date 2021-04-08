@@ -7,5 +7,7 @@ public interface SLTBaseConfig {
     public String getSltEisUser();
 
     public String getSltEisProgramCode();
+    
+    public String getSltSupportEmail();
 
 }
