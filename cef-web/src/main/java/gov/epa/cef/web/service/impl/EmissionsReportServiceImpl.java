@@ -18,6 +18,7 @@ import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
@@ -118,6 +119,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private UserFeedbackService userFeedbackService;
+    
+    @Autowired
+    private SecurityService securityService;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -210,24 +214,18 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
                 String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
-
-				//there should always be exactly one facility site for a CEF emissions report for now. This may change at
-				//some point in the future if different report types are included in the system
-				FacilitySite reportFacilitySite = emissionsReport.getFacilitySites().get(0);
-                List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
+                String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
                 
-                eiContacts.forEach(contact -> {
-	                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
-	                notificationService.sendReportSubmittedNotification(
-	                		contact.getEmail(),
-	                		sltConfig.getSltEmail(),
-	                        cefConfig.getDefaultEmailAddress(),
-	                        emissionsReport.getFacilitySites().get(0).getName(),
-	                        emissionsReport.getYear().toString(),
-	                        sltConfig.getSltEisProgramCode(),
-	                        sltConfig.getSltEmail(),
-	                        cdxSubmissionUrl);
-                });
+                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
+                notificationService.sendReportSubmittedNotification(
+                		certifierEmail,
+                		sltConfig.getSltEmail(),
+                        cefConfig.getDefaultEmailAddress(),
+                        emissionsReport.getFacilitySites().get(0).getName(),
+                        emissionsReport.getYear().toString(),
+                        sltConfig.getSltEisProgramCode(),
+                        sltConfig.getSltEmail(),
+                        cdxSubmissionUrl);
             }
             return cromerrDocumentId;
         } catch(IOException e) {
