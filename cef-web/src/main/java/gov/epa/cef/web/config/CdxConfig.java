@@ -44,7 +44,6 @@ public class CdxConfig {
     @NotBlank
     private String cdxBaseUrl;
     
-    @NotBlank
     private String submissionHistoryUrl;
 
     private final List<String> allowedOrigins = new ArrayList<>();
