@@ -101,10 +101,12 @@ public class NotificationServiceImpl implements NotificationService {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
             messageHelper.setFrom(from);
-            messageHelper.setCc(cc);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
             messageHelper.setText(body, true);
+            if (cc != null) {
+            	messageHelper.setCc(cc);
+            }
         };
         try {
         	emailSender.send(messagePreparator);
