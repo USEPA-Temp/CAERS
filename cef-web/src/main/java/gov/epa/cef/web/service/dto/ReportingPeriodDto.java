@@ -3,6 +3,8 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.google.common.base.Strings;
+
 public class ReportingPeriodDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,7 +67,7 @@ public class ReportingPeriodDto implements Serializable {
     }
 
     public String getCalculationParameterValue() {
-        return calculationParameterValue;
+        return Strings.emptyToNull(calculationParameterValue);
     }
 
     public void setCalculationParameterValue(String calculationParameterValue) {
@@ -89,7 +91,7 @@ public class ReportingPeriodDto implements Serializable {
     }
 
     public String getFuelUseValue() {
-		return fuelUseValue;
+		return Strings.emptyToNull(fuelUseValue);
 	}
 
 	public void setFuelUseValue(String fuelUseValue) {
@@ -113,7 +115,7 @@ public class ReportingPeriodDto implements Serializable {
 	}
 
 	public String getHeatContentValue() {
-		return heatContentValue;
+		return Strings.emptyToNull(heatContentValue);
 	}
 
 	public void setHeatContentValue(String heatContentValue) {
