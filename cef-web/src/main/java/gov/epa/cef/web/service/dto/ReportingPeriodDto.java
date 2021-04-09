@@ -66,6 +66,9 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
+    // this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
     public String getCalculationParameterValue() {
         return Strings.emptyToNull(calculationParameterValue);
     }
@@ -90,6 +93,9 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
+    // this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
     public String getFuelUseValue() {
 		return Strings.emptyToNull(fuelUseValue);
 	}
@@ -114,6 +120,9 @@ public class ReportingPeriodDto implements Serializable {
 		this.fuelUseMaterialCode = fuelUseMaterialCode;
 	}
 
+	// this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
 	public String getHeatContentValue() {
 		return Strings.emptyToNull(heatContentValue);
 	}
