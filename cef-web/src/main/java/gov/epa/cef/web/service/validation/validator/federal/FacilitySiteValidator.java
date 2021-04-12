@@ -406,17 +406,17 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
     private ValidationDetailDto createValidationDetails(FacilitySite source) {
 
-    	String description = MessageFormat.format("Facility Site ", source.getEisProgramId());
+    	String description = MessageFormat.format("Facility Site ", source.getEmissionsReport().getMasterFacilityRecord().getEisProgramId());
 
-    	ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEisProgramId(), EntityType.FACILITY_SITE, description);
+    	ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEmissionsReport().getMasterFacilityRecord().getEisProgramId(), EntityType.FACILITY_SITE, description);
     	return dto;
     }
 
     private ValidationDetailDto createContactValidationDetails(FacilitySite source) {
 
-    	String description = MessageFormat.format("Facility Contact ", source.getEisProgramId());
+    	String description = MessageFormat.format("Facility Contact ", source.getEmissionsReport().getMasterFacilityRecord().getEisProgramId());
 
-    	ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEisProgramId(), EntityType.FACILITY_SITE, description);
+    	ValidationDetailDto dto = new ValidationDetailDto(source.getId(), source.getEmissionsReport().getMasterFacilityRecord().getEisProgramId(), EntityType.FACILITY_SITE, description);
     	return dto;
     }
 

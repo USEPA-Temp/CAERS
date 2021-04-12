@@ -46,7 +46,7 @@ public interface EmissionRepository extends CrudRepository<Emission, Long>, Prog
     @Query("select e from Emission e join e.reportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r "
             + "where  e.pollutant.pollutantCode = :pollutantCode and rp.reportingPeriodTypeCode.code = :rpTypeCode "
             + "and ep.emissionsProcessIdentifier = :processIdentifier and eu.unitIdentifier = :unitIdentifier "
-            + "and fs.eisProgramId = :eisProgramId and r.year = :year")
+            + "and r.eisProgramId = :eisProgramId and r.year = :year")
     List<Emission> retrieveMatchingForYear(@Param("pollutantCode") String pollutantCode, @Param("rpTypeCode") String rpTypeCode,
             @Param("processIdentifier") String processIdentifier, @Param("unitIdentifier") String unitIdentifier,
             @Param("eisProgramId") String eisProgramId, @Param("year") Short year);

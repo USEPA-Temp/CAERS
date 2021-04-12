@@ -611,17 +611,18 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
                 row.getCell(7).setCellFormula(generateLookupFormula(wb, "OperatingStatusCode", dto.getOperatingStatusCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(7));
             }
+            setCellNumberValue(row.getCell(8), dto.getStatusYear());
             if (dto.getControlMeasureCode() != null) {
-                row.getCell(8).setCellValue(dto.getControlMeasureCode());
-                row.getCell(9).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
-                formulaEvaluator.evaluateInCell(row.getCell(9));
+                row.getCell(9).setCellValue(dto.getControlMeasureCode());
+                row.getCell(10).setCellFormula(generateLookupFormula(wb, "ControlMeasureCode", dto.getControlMeasureCode(), false));
+                formulaEvaluator.evaluateInCell(row.getCell(10));
             }
-            setCellNumberValue(row.getCell(10), dto.getNumberOperatingMonths());
-            row.getCell(11).setCellValue(dto.getStartDate());
-            row.getCell(12).setCellValue(dto.getUpgradeDate());
-            row.getCell(13).setCellValue(dto.getEndDate());
-            row.getCell(14).setCellValue(dto.getUpgradeDescription());
-            row.getCell(15).setCellValue(dto.getComments());
+            setCellNumberValue(row.getCell(11), dto.getNumberOperatingMonths());
+            row.getCell(12).setCellValue(dto.getStartDate());
+            row.getCell(13).setCellValue(dto.getUpgradeDate());
+            row.getCell(14).setCellValue(dto.getEndDate());
+            row.getCell(15).setCellValue(dto.getUpgradeDescription());
+            row.getCell(16).setCellValue(dto.getComments());
 
             currentRow++;
 
@@ -830,21 +831,21 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
                 row.getCell(10).setCellFormula(generateLookupFormula(wb, "CalculationParameterTypeCode", dto.getCalculationParameterTypeCode(), true));
                 formulaEvaluator.evaluateInCell(row.getCell(10));
             }
-            setCellNumberValue(row.getCell(11), dto.getCalculationParameterValue());
+            row.getCell(11).setCellValue(dto.getCalculationParameterValue());
             row.getCell(12).setCellValue(dto.getCalculationParameterUom());
             if (dto.getCalculationMaterialCode() != null) {
                 row.getCell(13).setCellValue(dto.getCalculationMaterialCode());
                 row.getCell(14).setCellFormula(generateLookupFormula(wb, "CalculationMaterialCode", dto.getCalculationMaterialCode(), false));
                 formulaEvaluator.evaluateInCell(row.getCell(14));
             }
-            setCellNumberValue(row.getCell(15), dto.getFuelUseValue());
+            row.getCell(15).setCellValue(dto.getFuelUseValue());
             row.getCell(16).setCellValue(dto.getFuelUseUom());
             if (dto.getFuelUseMaterialCode() != null) {
                 row.getCell(17).setCellValue(dto.getFuelUseMaterialCode());
                 row.getCell(18).setCellFormula(generateLookupFormula(wb, "CalculationMaterialCode", dto.getFuelUseMaterialCode(), false));
                 formulaEvaluator.evaluateInCell(row.getCell(18));
             }
-            setCellNumberValue(row.getCell(19), dto.getHeatContentValue());
+            row.getCell(19).setCellValue(dto.getHeatContentValue());
             row.getCell(20).setCellValue(dto.getHeatContentUom());
             row.getCell(21).setCellValue(dto.getComments());
 

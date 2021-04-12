@@ -16,7 +16,7 @@ SELECT er.id AS emissions_report_id,
     er.program_system_code,
     ( SELECT max(emissions_report.year) AS max
            FROM emissions_report
-          WHERE emissions_report.frs_facility_id::text = er.frs_facility_id::text AND emissions_report.id <> er.id AND emissions_report.year < er.year) AS last_submittal_year
+          WHERE emissions_report.master_facility_id = er.master_facility_id AND emissions_report.id <> er.id AND emissions_report.year < er.year) AS last_submittal_year
    FROM facility_site fs
      JOIN emissions_report er ON fs.report_id = er.id
      JOIN operating_status_code os ON os.code::text = fs.status_code::text

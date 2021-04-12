@@ -17,6 +17,7 @@ import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -68,6 +69,57 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
 		assertTrue(errorMap.containsKey(ValidationField.CONTROL_IDENTIFIER.value()) && errorMap.get(ValidationField.CONTROL_IDENTIFIER.value()).size() == 1);		
 		
+	}
+	
+	@Test
+    public void statusYearRangePassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Control testData = createBaseControl();
+        
+        testData.setStatusYear((short) 1900);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.setStatusYear((short) 2050);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+	
+	@Test
+    public void statusYearRangeFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+        Control testData = createBaseControl();
+        
+        testData.setStatusYear((short) 1800);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_STATUS_YEAR.value()) && errorMap.get(ValidationField.CONTROL_STATUS_YEAR.value()).size() == 1);		
+	}
+	
+	@Test
+    public void statusYearNullFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+        Control testData = createBaseControl();
+        
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+    	opStatCode.setCode("TS");
+    	testData.setOperatingStatusCode(opStatCode);
+        testData.setStatusYear(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_STATUS_YEAR.value()) && errorMap.get(ValidationField.CONTROL_STATUS_YEAR.value()).size() == 1);		
 	}
 	
 	/**
@@ -199,8 +251,12 @@ public class ControlValidatorTest extends BaseValidatorTest {
 	private Control createBaseControl() {
 		
 		Control result = new Control();
+		OperatingStatusCode opStatCode = new OperatingStatusCode();
+    	opStatCode.setCode("OP");
+    	result.setOperatingStatusCode(opStatCode);
 		result.setId(1L);
 		result.setIdentifier("test");
+		result.setStatusYear((short) 2020);
 		result.setPercentControl(50.0);
 		FacilitySite fs = new FacilitySite();
 		fs.getControls().add(result);

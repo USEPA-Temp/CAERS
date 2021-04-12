@@ -17,7 +17,7 @@
             <label for="controlStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
         </div>
         <div class="col-sm-3">
-            <select type="text" class="form-control" id="controlStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
+            <select type="text" class="form-control" id="controlStatusCodeSelect" (ngModelChange)="onChange($event)" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of subFacilityOperatingStatusValues" [ngValue]="opt">{{opt.description}}</option>
             </select>
@@ -36,12 +36,20 @@
             <fa-icon class="ml-2 mt-2" title="Code that describes the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlMeasureCodeSelect" class="ml-1 col-form-label"><strong>Control Measure:</strong></label>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <select type="text" class="form-control" id="controlMeasureCodeSelect" formControlName="controlMeasureCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of controlMeasureCode" [ngValue]="opt">{{opt.description}}</option>
             </select>
             <app-validation-message [control]="controlDeviceForm.get('controlMeasureCode')"></app-validation-message>
+        </div>
+        <div class="col-sm-3">
+            <fa-icon class="mt-2 ml-2" title="The year the current operating status came into effect. Required if Control Device Status Code is anything other than operating. Must be between 1900-2050." [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="controlStatusYearInput" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="controlStatusYearInput" formControlName="statusYear" maxlength="4">
+            <app-validation-message [control]="controlDeviceForm.get('statusYear')"></app-validation-message>
         </div>
     </div>
 

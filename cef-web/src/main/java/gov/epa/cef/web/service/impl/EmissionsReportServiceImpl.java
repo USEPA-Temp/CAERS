@@ -18,6 +18,7 @@ import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
@@ -118,6 +119,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private UserFeedbackService userFeedbackService;
+    
+    @Autowired
+    private SecurityService securityService;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -209,12 +213,19 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 erRepo.save(emissionsReport);
 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
-
-                //send an email notification to the SLT's predefined address that a report has been submitted
-                notificationService.sendReportSubmittedNotification(sltConfig.getSltEmail(),
+                String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
+                String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
+                
+                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
+                notificationService.sendReportSubmittedNotification(
+                		certifierEmail,
+                		sltConfig.getSltEmail(),
                         cefConfig.getDefaultEmailAddress(),
                         emissionsReport.getFacilitySites().get(0).getName(),
-                        emissionsReport.getYear().toString());
+                        emissionsReport.getYear().toString(),
+                        sltConfig.getSltEisProgramCode(),
+                        sltConfig.getSltEmail(),
+                        cdxSubmissionUrl);
             }
             return cromerrDocumentId;
         } catch(IOException e) {
@@ -254,33 +265,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             })
             .orElse(null);
 
-        /*
-        // FIXME
-        This code is being commented out until after the pilot and FRS integration can be solidified.
-
-            .orElseGet(() -> this.facilitySiteService.retrieveFromFrs(facilityEisProgramId)
-                .map(programFacility -> {
-
-                    // create a shell/dto report
-                    EmissionsReportDto newReport = new EmissionsReportDto();
-                    newReport.setYear(reportYear);
-                    newReport.setStatus(ReportStatus.IN_PROGRESS.toString());
-                    newReport.setValidationStatus(ValidationStatus.UNVALIDATED.toString());
-
-                    newReport.setFrsFacilityId(programFacility.getRegistryId());
-                    newReport.setEisProgramId(programFacility.getProgramSystemId());
-
-                    // TODO: Remove hard coded value
-                    // Using GA for now until FRS has the agency id available for us
-                    // https://alm.cgifederal.com/projects/browse/CEF-319
-                    newReport.setAgencyCode(__HARD_CODED_AGENCY_CODE__);
-
-                    return newReport;
-                })
-                .orElse(null)
-            );
-         */
-
     }
 
     public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
@@ -294,7 +278,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setYear(reportDto.getYear());
         newReport.setStatus(ReportStatus.IN_PROGRESS);
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
-        newReport.setFrsFacilityId(reportDto.getFrsFacilityId());
         newReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         newReport.setHasSubmitted(false);
 
@@ -354,6 +337,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
 	      .forEach(report -> {
+	    	  
+	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
 
 	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
 	    	  //some point in the future if different report types are included in the system
@@ -370,7 +355,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 			        		  cefConfig.getDefaultEmailAddress(),
 			        		  reportFacilitySite.getName(),
 			        		  report.getYear().toString(),
-			        		  comments);
+			        		  comments,
+			        		  sltConfig.getSltEisProgramCode(),
+			        		  sltConfig.getSltEmail());
 	    		  }
 	    	  });
 	      });
@@ -421,22 +408,25 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	    	  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report
 	    	  //has been accepted
 	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-
+	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	    	  
 	    	  eiContacts.forEach(contact -> {
 	    		  //if the EI contact has a email address - send them the notification
 	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
 			          notificationService.sendReportRejectedNotification(contact.getEmail(),
+			        		  sltConfig.getSltEmail(),
 			        		  cefConfig.getDefaultEmailAddress(),
 			        		  reportFacilitySite.getName(),
 			        		  report.getYear().toString(),
-			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId());
+			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
+			        		  sltConfig.getSltEisProgramCode(),
+			        		  sltConfig.getSltEmail());
 	    		  }
 	    	  });
 	      });
     	return updatedReports;
     }
-
-
+    
     /**
      * Add an emissions report to the list if one does not exist for the current year
      * @param emissionReports
@@ -489,4 +479,5 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     	return this.emissionsReportMapper.toDto(this.erRepo.save(emissionsReport));
     }
+    
 }

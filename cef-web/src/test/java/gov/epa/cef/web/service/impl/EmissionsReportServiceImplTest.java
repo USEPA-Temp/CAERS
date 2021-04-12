@@ -238,7 +238,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         
     	EmissionsReport er = new EmissionsReport();
     	er.setEisProgramId("");
-    	er.setFrsFacilityId("");
     	er.setId(1L);
     	er.setStatus(ReportStatus.APPROVED);
     	er.setValidationStatus(ValidationStatus.PASSED);
@@ -249,7 +248,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	fs.setAltSiteIdentifier("ALTID");
     	fs.setCity("Raleigh");
     	fs.setDescription("Facility Description");
-    	fs.setEisProgramId("EISID");
     	fs.setEmissionsReport(er);
     	fs.setId(1L);
     	fs.setLatitude(BigDecimal.valueOf(2.5d));

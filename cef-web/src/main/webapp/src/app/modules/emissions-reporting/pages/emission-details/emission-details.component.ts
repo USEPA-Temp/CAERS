@@ -348,7 +348,7 @@ export class EmissionDetailsComponent implements OnInit {
         this.failedTotalDesc = null;
       }
 
-      if (this.reportingPeriod.calculationParameterValue < 0 || !this.reportingPeriod.calculationParameterValue) {
+      if (Number(this.reportingPeriod.calculationParameterValue) < 0 || !this.reportingPeriod.calculationParameterValue) {
         this.calcParamValue = false;
       } else {
         this.calcParamValue = true;

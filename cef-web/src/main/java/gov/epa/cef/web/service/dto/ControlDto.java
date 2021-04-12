@@ -11,6 +11,7 @@ public class ControlDto implements Serializable {
     private Long id;
     private Long facilitySiteId;
     private CodeLookupDto operatingStatusCode;
+    private Short statusYear;
     private String identifier;
     private String description;
     private String upgradeDescription;
@@ -142,6 +143,14 @@ public class ControlDto implements Serializable {
 	
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
+	}
+
+	public Short getStatusYear() {
+		return statusYear;
+	}
+
+	public void setStatusYear(Short statusYear) {
+		this.statusYear = statusYear;
 	}
 
 	public ControlDto withId(Long id) {

@@ -1,8 +1,9 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
+
+import com.google.common.base.Strings;
 
 public class ReportingPeriodDto implements Serializable {
 
@@ -13,13 +14,13 @@ public class ReportingPeriodDto implements Serializable {
     private CodeLookupDto reportingPeriodTypeCode;
     private CodeLookupDto emissionsOperatingTypeCode;
     private CodeLookupDto calculationParameterTypeCode;
-    private BigDecimal calculationParameterValue;
+    private String calculationParameterValue;
     private UnitMeasureCodeDto calculationParameterUom;
     private CodeLookupDto calculationMaterialCode;
-    private BigDecimal fuelUseValue;
+    private String fuelUseValue;
     private UnitMeasureCodeDto fuelUseUom;
     private CodeLookupDto fuelUseMaterialCode;
-    private BigDecimal heatContentValue;
+    private String heatContentValue;
     private UnitMeasureCodeDto heatContentUom;
     private String comments;
     private List<EmissionDto> emissions;
@@ -65,11 +66,14 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
-    public BigDecimal getCalculationParameterValue() {
-        return calculationParameterValue;
+    // this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
+    public String getCalculationParameterValue() {
+        return Strings.emptyToNull(calculationParameterValue);
     }
 
-    public void setCalculationParameterValue(BigDecimal calculationParameterValue) {
+    public void setCalculationParameterValue(String calculationParameterValue) {
         this.calculationParameterValue = calculationParameterValue;
     }
 
@@ -89,11 +93,14 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public BigDecimal getFuelUseValue() {
-		return fuelUseValue;
+    // this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
+    public String getFuelUseValue() {
+		return Strings.emptyToNull(fuelUseValue);
 	}
 
-	public void setFuelUseValue(BigDecimal fuelUseValue) {
+	public void setFuelUseValue(String fuelUseValue) {
 		this.fuelUseValue = fuelUseValue;
 	}
 
@@ -113,11 +120,14 @@ public class ReportingPeriodDto implements Serializable {
 		this.fuelUseMaterialCode = fuelUseMaterialCode;
 	}
 
-	public BigDecimal getHeatContentValue() {
-		return heatContentValue;
+	// this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
+	public String getHeatContentValue() {
+		return Strings.emptyToNull(heatContentValue);
 	}
 
-	public void setHeatContentValue(BigDecimal heatContentValue) {
+	public void setHeatContentValue(String heatContentValue) {
 		this.heatContentValue = heatContentValue;
 	}
 

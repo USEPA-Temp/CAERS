@@ -2,7 +2,6 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,6 +17,7 @@ import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
 
 @Component
 public class ControlValidator extends BaseValidator<Control> {
@@ -43,6 +43,24 @@ public class ControlValidator extends BaseValidator<Control> {
 	  			"control.controlIdentifier.duplicate",
 	  			createValidationDetails(control));
 			}
+		}
+		
+		// If control device operation status is not operating, status year is required
+		if (!ConstantUtils.STATUS_OPERATING.contentEquals(control.getOperatingStatusCode().getCode()) && control.getStatusYear() == null) {
+				
+				result = false;
+		        context.addFederalError(
+		            ValidationField.CONTROL_STATUS_YEAR.value(), "control.statusYear.required",
+		            createValidationDetails(control));
+		}
+		
+		// Status year must be between 1900 and 2050
+		if (control.getStatusYear() != null && (control.getStatusYear() < 1900 || control.getStatusYear() > 2050)) {
+
+	        result = false;
+	        context.addFederalError(
+	            ValidationField.CONTROL_STATUS_YEAR.value(), "control.statusYear.range",
+	            createValidationDetails(control));
 		}
 
         if (control.getControlMeasureCode() != null && control.getControlMeasureCode().getLastInventoryYear() != null

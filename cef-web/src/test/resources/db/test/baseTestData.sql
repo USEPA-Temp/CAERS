@@ -23,58 +23,58 @@ INSERT INTO MASTER_FACILITY_RECORD (id, eis_program_id, agency_facility_id, cate
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --EMISSION REPORTS
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999997', '110015680798', '9758611', 'GADNR', '2018', 'IN_PROGRESS', 'PASSED_WARNINGS', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999996', '110015680798', '9758611', 'GADNR', '2014', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999995', '110015680798', '9758611', 'GADNR', '2017', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999994', '110015680798', '9758611', 'GADNR', '2016', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999993', '110015680798', '9758611', 'GADNR', '2015', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999998', '110024286002', '2774511', 'GADNR', '2013', 'APPROVED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
- INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999999', '110024286002', '2774511', 'GADNR', '2018', 'SUBMITTED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999910', '110024286002', '2774511', 'GADNR', '2017', 'APPROVED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999911', '110024286002', '2774511', 'GADNR', '2016', 'APPROVED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999912', '110020517412', '3721011', 'GADNR', '2017', 'APPROVED', 'PASSED', '9999993', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTO emissions_report(id, frs_facility_id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
- VALUES ('9999913', '110020517412', '3721011', 'GADNR', '2016', 'APPROVED', 'PASSED', '9999993', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999997', '9758611', 'GADNR', '2018', 'IN_PROGRESS', 'PASSED_WARNINGS', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999996', '9758611', 'GADNR', '2014', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999995', '9758611', 'GADNR', '2017', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999994', '9758611', 'GADNR', '2016', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999993', '9758611', 'GADNR', '2015', 'APPROVED', 'PASSED', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999998', '2774511', 'GADNR', '2013', 'APPROVED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+ INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999999', '2774511', 'GADNR', '2018', 'SUBMITTED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999910', '2774511', 'GADNR', '2017', 'APPROVED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999911', '2774511', 'GADNR', '2016', 'APPROVED', 'PASSED', '9999992', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999912', '3721011', 'GADNR', '2017', 'APPROVED', 'PASSED', '9999993', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date)
+ VALUES ('9999913', '3721011', 'GADNR', '2016', 'APPROVED', 'PASSED', '9999993', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
-INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
+INSERT INTO FACILITY_SITE (id, report_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
-    VALUES ('9999991', '9999997', '110015680798', '9758611', '1301700008', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant',
+    VALUES ('9999991', '9999997', '1301700008', 'CAP', '133', 'Gilman Building Products LLC', 'Pulp and Paper Processing Plant',
      'OP', '1985', '63JJJJ', '173 Peachtree Rd', 'Fitzgerald', '13313', '13' , '', '31750', '33.7490', '-84.3880', '173 Peachtree Rd', 'Fitzgerald', '13', '31750', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --FACILITY
-INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
+INSERT INTO FACILITY_SITE (id, report_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
-    VALUES ('9999992', '9999999', '110024286002', '2774511', '1331300097', 'HAPCAP', '173', 'Tiarco Chemical', 'Rubber Manufacturing Plant', 'OP', '2005', '63U-SBRubber',
+    VALUES ('9999992', '9999999', '1331300097', 'HAPCAP', '173', 'Tiarco Chemical', 'Rubber Manufacturing Plant', 'OP', '2005', '63U-SBRubber',
     '1350 Tiarco Dr.', 'Dalton', '13313', '13', '', '30720', '34.688290', '-84.9938603', '1350 Tiarco Dr.', 'Dalton', '13', '30720', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     
 --FACILITY
-INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
+INSERT INTO FACILITY_SITE (id, report_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
-    VALUES ('9999993', '9999912', '110020517412', '3721011', '1331300099', 'HAPCAP', '133', 'GP CELLULOSE', 'GP Cellulose Pulp Mill', 'OP', '2005', 'GADNR',
+    VALUES ('9999993', '9999912', '1331300099', 'HAPCAP', '133', 'GP CELLULOSE', 'GP Cellulose Pulp Mill', 'OP', '2005', 'GADNR',
     '1400 9th St', 'Brunswick', '13127', '13', '', '31520', '31.182550', '-81.500850', '1400 9th St', 'Brunswick', '13', '31520', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     
 --FACILITY
-INSERT INTO FACILITY_SITE (id, report_id, frs_facility_id, eis_program_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
+INSERT INTO FACILITY_SITE (id, report_id, alt_site_identifier, category_code, source_type_code, name, description, status_code, status_year,
  program_system_code, street_address, city, county_code, state_code, country_code, postal_code, latitude, longitude, 
  mailing_street_address, mailing_city, mailing_state_code, mailing_postal_code,  created_by, created_date, last_modified_by, last_modified_date) 
-    VALUES ('9999994', '9999913', '110020517412', '3721011', '1331300099', 'HAPCAP', '133', 'GP CELLULOSE', 'GP Cellulose Pulp Mill', 'OP', '2005', 'GADNR',
+    VALUES ('9999994', '9999913', '1331300099', 'HAPCAP', '133', 'GP CELLULOSE', 'GP Cellulose Pulp Mill', 'OP', '2005', 'GADNR',
     '1400 9th St', 'Brunswick', '13127', '13', '', '31520', '31.182550', '-81.500850', '1400 9th St', 'Brunswick', '13', '31520', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
     

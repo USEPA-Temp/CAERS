@@ -22,10 +22,10 @@ public class ReportingPeriodBulkEntryDto implements Serializable {
     // reporting period
     private Long reportingPeriodId;
     private CodeLookupDto reportingPeriodTypeCode;
-    private BigDecimal calculationParameterValue;
+    private String calculationParameterValue;
     private UnitMeasureCodeDto calculationParameterUom;
     private CodeLookupDto calculationMaterialCode;
-    private BigDecimal previousCalculationParameterValue;
+    private String previousCalculationParameterValue;
     private String previousCalculationParameterUomCode;
 
     public Long getEmissionsUnitId() {
@@ -108,11 +108,11 @@ public class ReportingPeriodBulkEntryDto implements Serializable {
         this.reportingPeriodTypeCode = reportingPeriodTypeCode;
     }
 
-    public BigDecimal getCalculationParameterValue() {
+    public String getCalculationParameterValue() {
         return calculationParameterValue;
     }
 
-    public void setCalculationParameterValue(BigDecimal calculationParameterValue) {
+    public void setCalculationParameterValue(String calculationParameterValue) {
         this.calculationParameterValue = calculationParameterValue;
     }
 
@@ -132,11 +132,11 @@ public class ReportingPeriodBulkEntryDto implements Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
-    public BigDecimal getPreviousCalculationParameterValue() {
+    public String getPreviousCalculationParameterValue() {
         return previousCalculationParameterValue;
     }
 
-    public void setPreviousCalculationParameterValue(BigDecimal previousCalculationParameterValue) {
+    public void setPreviousCalculationParameterValue(String previousCalculationParameterValue) {
         this.previousCalculationParameterValue = previousCalculationParameterValue;
     }
 

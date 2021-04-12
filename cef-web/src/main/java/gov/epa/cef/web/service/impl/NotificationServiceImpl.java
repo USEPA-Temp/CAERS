@@ -28,14 +28,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
-    private final String REPORT_SUBMITTED_TO_SLT_SUBJECT = "Emission Report Submitted for {0}";
-    private final String REPORT_SUBMITTED_TO_SLT_BODY = "A new emissions report has been submitted for the {0} facility "
-            + "for reporting year {1} in the EPA Common Emissions Form.";
 
-    private final String REPORT_REJECTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report has been Returned";
+    private final String REPORT_SUBMITTED_BY_CERT_SUBJECT = "Submitted - {0} Emissions Report for {1}";
+    private final String REPORT_SUBMITTED_BY_CERT_BODY_TEMPLATE = "reportSubmitted";
+    
+    private final String REPORT_REJECTED_BY_SLT_SUBJECT = "Returned - {0} Emissions Report for {1}";
     private final String REPORT_REJECTED_BY_SLT_BODY_TEMPLATE = "reportRejected";
 
-    private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "{0} {1} Emissions Report has been Accepted";
+    private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "Accepted - {0} Emissions Report for {1}";
     private final String REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE = "reportAccepted";
 
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
@@ -97,19 +97,26 @@ public class NotificationServiceImpl implements NotificationService {
         sendAdminEmail(type.subject(), emailBody);
     }
 
-    public void sendHtmlMessage(String to, String from, String subject, String body) {
+    public void sendHtmlMessage(String to, String cc, String from, String subject, String body) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
             messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
             messageHelper.setText(body, true);
+            if (cc != null) {
+            	messageHelper.setCc(cc);
+            }
         };
         try {
         	emailSender.send(messagePreparator);
         } catch (MailException e) {
         	logger.error("sendHTMLMessage - unable to send email message. - {}", e.getMessage());
         }
+    }
+    
+    public void sendHtmlMessage(String to, String from, String subject, String body) {
+    	sendHtmlMessage(to, null, from, subject, body);
     }
 
     private void sendAdminEmail(String from, String subject, String body) {
@@ -126,20 +133,29 @@ public class NotificationServiceImpl implements NotificationService {
         sendAdminEmail(this.propertyProvider.getString(AppPropertyName.DefaultEmailAddress), subject, body);
     }
     
-    public void sendReportSubmittedNotification(String to, String from, String facilityName, String reportingYear)
+    public void sendReportSubmittedNotification(String to, String cc, String from, String facilityName, String reportingYear, String slt, String sltEmail, String cdxSubmissionUrl)
     {
-        String emailSubject = MessageFormat.format(REPORT_SUBMITTED_TO_SLT_SUBJECT, facilityName);
-        String emailBody = MessageFormat.format(REPORT_SUBMITTED_TO_SLT_BODY, facilityName, reportingYear);
-        sendSimpleMessage(to, from, emailSubject, emailBody);
+    	String emailSubject = MessageFormat.format(REPORT_SUBMITTED_BY_CERT_SUBJECT, reportingYear, facilityName);
+    	Context context = new Context();
+    	context.setVariable("reportingYear", reportingYear);
+        context.setVariable("facilityName", facilityName);
+        context.setVariable("sltEmail", sltEmail);
+        context.setVariable("slt", slt);
+        context.setVariable("cdxSubmissionUrl", cdxSubmissionUrl);
+        
+        String emailBody = templateEngine.process(REPORT_SUBMITTED_BY_CERT_BODY_TEMPLATE, context);
+        sendHtmlMessage(to, cc, from, emailSubject, emailBody);
     }
-
-    public void sendReportRejectedNotification(String to, String from, String facilityName, String reportingYear, String comments, Long attachmentId)
+    
+    public void sendReportRejectedNotification(String to, String cc, String from, String facilityName, String reportingYear, String comments, Long attachmentId, String slt, String sltEmail)
     {
         String emailSubject = MessageFormat.format(REPORT_REJECTED_BY_SLT_SUBJECT, reportingYear, facilityName);
         Context context = new Context();
         context.setVariable("reportingYear", reportingYear);
         context.setVariable("facilityName", facilityName);
         context.setVariable("comments", comments);
+        context.setVariable("sltEmail", sltEmail);
+        context.setVariable("slt", slt);
         
         if (attachmentId != null) {
             ReportAttachment attachment = reportAttachmentsRepo.findById(attachmentId)
@@ -149,16 +165,19 @@ public class NotificationServiceImpl implements NotificationService {
         }
         
         String emailBody = templateEngine.process(REPORT_REJECTED_BY_SLT_BODY_TEMPLATE, context);
-        sendHtmlMessage(to, from, emailSubject, emailBody);
+        sendHtmlMessage(to, cc, from, emailSubject, emailBody);
     }
 
-    public void sendReportAcceptedNotification(String to, String from, String facilityName, String reportingYear, String comments)
+    public void sendReportAcceptedNotification(String to, String from, String facilityName, String reportingYear, String comments, String slt, String sltEmail)
     {
         String emailSubject = MessageFormat.format(REPORT_ACCEPTED_BY_SLT_SUBJECT, reportingYear, facilityName);
         Context context = new Context();
         context.setVariable("reportingYear", reportingYear);
         context.setVariable("facilityName", facilityName);
         context.setVariable("comments", comments);
+        context.setVariable("sltEmail", sltEmail);
+        context.setVariable("slt", slt);
+        
         String emailBody = templateEngine.process(REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }
