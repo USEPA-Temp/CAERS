@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import gov.epa.cef.web.service.validation.ValidationRegistry;
 import com.google.common.base.Strings;
 
 import gov.epa.cef.web.domain.Control;
@@ -21,6 +23,17 @@ import gov.epa.cef.web.util.ConstantUtils;
 
 @Component
 public class ControlValidator extends BaseValidator<Control> {
+
+    @Override
+    public void compose(FluentValidator validator,
+                        ValidatorContext validatorContext,
+                        Control control) {
+
+        ValidationRegistry registry = getCefValidatorContext(validatorContext).getValidationRegistry();
+
+        validator.onEach(control.getPollutants(),
+            registry.findOneByType(ControlPollutantValidator.class));
+    }
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Control control) {

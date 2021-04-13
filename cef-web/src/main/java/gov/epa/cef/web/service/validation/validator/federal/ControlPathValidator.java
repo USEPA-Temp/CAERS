@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import gov.epa.cef.web.service.validation.ValidationRegistry;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
@@ -30,6 +32,18 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+
+
+    @Override
+    public void compose(FluentValidator validator,
+                        ValidatorContext validatorContext,
+                        ControlPath controlPath) {
+
+        ValidationRegistry registry = getCefValidatorContext(validatorContext).getValidationRegistry();
+
+        validator.onEach(controlPath.getPollutants(),
+            registry.findOneByType(ControlPathPollutantValidator.class));
+    }
 
     @Override
     public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
