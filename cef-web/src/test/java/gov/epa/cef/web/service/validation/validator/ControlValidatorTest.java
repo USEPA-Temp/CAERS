@@ -247,6 +247,45 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		
 	}
 	
+	@Test
+	public void controlPercentControlRangeFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		testData.setPercentControl(0.5);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PERCENT_CONTROL.value()).size() == 1);
+		
+		cefContext = createContext();
+		testData.setPercentControl(500.0);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PERCENT_CONTROL.value()).size() == 1);
+	}
+	
+	@Test
+	public void controlPercentControlPrecisionFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		testData.setPercentControl(10.568);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PERCENT_CONTROL.value()).size() == 1);
+	}
+	
 	
 	private Control createBaseControl() {
 		

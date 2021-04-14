@@ -278,7 +278,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     public void percentControlRangeFailTest() {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
-		testData.setPercentControl(-50.0);
+		testData.setPercentControl(0.5);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -296,6 +296,21 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()).size() == 1);
         
     }
+    
+    @Test
+	public void percentControlPrecisionFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		
+		testData.setPercentControl(10.568);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()).size() == 1);
+	}
 
 
 	private ControlPath createBaseControlPath() {

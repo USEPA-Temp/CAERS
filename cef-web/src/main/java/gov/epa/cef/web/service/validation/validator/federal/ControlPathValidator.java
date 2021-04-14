@@ -5,6 +5,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
 
 @Component
 public class ControlPathValidator extends BaseValidator<ControlPath> {
@@ -148,12 +151,26 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             }
         }
 
-        if (controlPath.getPercentControl() != null && (controlPath.getPercentControl() < 1 || controlPath.getPercentControl() > 100)) {
-            result = false;
-            context.addFederalError(
-                ValidationField.CONTROL_PATH_PERCENT_CONTROL.value(),
-                "controlPath.percentControl.range",
-                createValidationDetails(controlPath));
+        if (controlPath.getPercentControl() != null) {
+        	
+        	if (controlPath.getPercentControl() < 1 || controlPath.getPercentControl() > 100) {
+
+        		result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_PATH_PERCENT_CONTROL.value(),
+	                "controlPath.percentControl.range",
+	                createValidationDetails(controlPath));
+	        }
+        	
+        	Pattern pattern = Pattern.compile(ConstantUtils.REGEX_ONE_DECIMAL_PRECISION);
+        	Matcher matcher = pattern.matcher(controlPath.getPercentControl().toString());
+            if(!matcher.matches()){
+                result = false;
+                context.addFederalError(
+                    ValidationField.CONTROL_PATH_PERCENT_CONTROL.value(),
+                    "controlPath.percentControl.invalidFormat",
+                    createValidationDetails(controlPath));
+            }
         }
 
         // if control assigned is PS status
