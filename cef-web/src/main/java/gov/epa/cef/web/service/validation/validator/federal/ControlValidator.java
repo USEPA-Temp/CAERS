@@ -89,7 +89,6 @@ public class ControlValidator extends BaseValidator<Control> {
         }
 
         if (control.getPercentControl() != null) {
-        	System.out.println(control.getPercentControl());
         	if (control.getPercentControl() < 1 || control.getPercentControl() > 100) {
         		
 	            result = false;
