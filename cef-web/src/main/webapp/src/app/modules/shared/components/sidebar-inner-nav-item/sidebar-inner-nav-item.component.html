@@ -9,6 +9,7 @@
         </button>
         <a [attr.aria-label]="'select ' + navItem?.baseUrl + navItem?.description" class="text-primary font-weight-bold small" [routerLinkActive]="'active text-success'"
                 [routerLinkActiveOptions]="{exact: true}" routerLink="{{itemUrl}}" 
+                [attr.data-cy]="'select ' + navItem?.baseUrl + navItem?.description"
                 title="{{navItem.description}}">
             <span>
                 {{navItem.description.length > 30 ? (navItem.description | slice:0:25) + '...' : navItem.description}}
