@@ -40,7 +40,7 @@ public class ControlPathPollutantValidator extends BaseValidator<ControlPathPoll
 
     private ValidationDetailDto createValidationDetails(ControlPathPollutant source) {
 
-        String description = MessageFormat.format("ControlPath: {0}; ControlPathPollutant: {1}", source.getControlPath().getPathId(), source.getPollutant().getPollutantCode());
+        String description = MessageFormat.format("ControlPath: {0}, ControlPathPollutant: {1}", source.getControlPath().getPathId(), source.getPollutant().getPollutantCode());
 
         ValidationDetailDto dto = new ValidationDetailDto(source.getControlPath().getId(), source.getControlPath().getPathId(), EntityType.CONTROL_PATH, description);
         return dto;
