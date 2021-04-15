@@ -19,6 +19,7 @@ import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
@@ -35,7 +36,10 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
-
+    private static final String PM10FIL = "PM10-FIL";
+    private static final String PM10PRI = "PM10-PRI";
+    private static final String PM25FIL = "PM25-FIL";
+    private static final String PM25PRI = "PM25-PRI";
 
     @Override
     public void compose(FluentValidator validator,
@@ -186,6 +190,37 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
                     createValidationDetails(controlPath));
             }
         }
+        
+        Map<String, List<ControlPathPollutant>> cppMap = controlPath.getPollutants().stream()
+        		.filter(e -> e.getPollutant() != null)
+        		.collect(Collectors.groupingBy(e -> e.getPollutant().getPollutantCode()));
+        
+        Double pm10Fil = cppMap.containsKey(PM10FIL) ? cppMap.get(PM10FIL).get(0).getPercentReduction() : null;
+        Double pm10Pri = cppMap.containsKey(PM10PRI) ? cppMap.get(PM10PRI).get(0).getPercentReduction() : null;
+        Double pm25Fil = cppMap.containsKey(PM25FIL) ? cppMap.get(PM25FIL).get(0).getPercentReduction() : null;
+        Double pm25Pri = cppMap.containsKey(PM25PRI) ? cppMap.get(PM25PRI).get(0).getPercentReduction() : null;
+
+        // PM2.5 Filterable should not exceed PM10 Filterable.
+        if (pm25Fil != null && pm10Fil != null && pm10Fil < pm25Fil) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                "controlPath.controlPathPollutant.pm25.fil.greater.pm10fil",
+                createValidationDetails(controlPath));
+
+        }
+        
+        // PM2.5 Primary should not exceed PM10 Primary.
+        if (pm25Pri != null && pm10Pri != null && pm10Pri < pm25Pri) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                "controlPath.controlPathPollutant.pm25.pri.greater.pm10pri",
+                createValidationDetails(controlPath));
+
+        }		
 
         // if control assigned is PS status
         if ((caPSList.size() > 0)) {

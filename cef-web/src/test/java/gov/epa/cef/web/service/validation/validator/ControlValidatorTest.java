@@ -169,9 +169,9 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		Control testData = createBaseControl();
 		ControlPollutant cp1 = new ControlPollutant();
 		Pollutant p1 = new Pollutant();
-		p1.setPollutantName("NOX");
+		p1.setPollutantCode("NOX");
 		Pollutant p2 = new Pollutant();
-		p2.setPollutantName("CO2");
+		p2.setPollutantCode("CO2");
 		cp1.setPollutant(p1);
 		cp1.setPercentReduction(50.0);
 		testData.getPollutants().add(cp1);
@@ -194,7 +194,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		CefValidatorContext cefContext = createContext();
 		Control testData = createBaseControl();
 		Pollutant p2 = new Pollutant();
-		p2.setPollutantName("CO2");
+		p2.setPollutantCode("CH4");
 		ControlPollutant cp2 = new ControlPollutant();
 		cp2.setPollutant(p2);
 		cp2.setPercentReduction(50.0);
@@ -332,6 +332,96 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		assertTrue(errorMap.containsKey(ValidationField.CONTROL_DATE.value()) && errorMap.get(ValidationField.CONTROL_DATE.value()).size() == 1);
 	}
 	
+	@Test
+	public void controlPollutantPassTest() {
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		ControlPollutant cp1 = new ControlPollutant();
+		ControlPollutant cp2 = new ControlPollutant();
+		Pollutant p1 = new Pollutant();
+		Pollutant p2 = new Pollutant();
+		p1.setPollutantCode("PM10-FIL");
+		p2.setPollutantCode("PM25-FIL");
+		cp1.setPollutant(p1);
+		cp2.setPollutant(p2);
+		cp1.setPercentReduction(50.0);
+		cp2.setPercentReduction(50.0);
+		testData.getPollutants().add(cp1);
+		testData.getPollutants().add(cp2);
+	
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+		
+		cefContext = createContext();
+		ControlPollutant cp3 = new ControlPollutant();
+		ControlPollutant cp4 = new ControlPollutant();
+		Pollutant p3 = new Pollutant();
+		Pollutant p4 = new Pollutant();
+		p3.setPollutantCode("PM10-PRI");
+		p4.setPollutantCode("PM25-PRI");
+		cp3.setPollutant(p3);
+		cp4.setPollutant(p4);
+		cp3.setPercentReduction(80.0);
+		cp4.setPercentReduction(50.0);
+		testData.getPollutants().add(cp3);
+		testData.getPollutants().add(cp4);
+	
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+	}
+	
+	@Test
+	public void controlPollutant_PM25FIL_PM10FIL_FailTest() {
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		ControlPollutant cp1 = new ControlPollutant();
+		ControlPollutant cp2 = new ControlPollutant();
+		Pollutant p1 = new Pollutant();
+		Pollutant p2 = new Pollutant();
+		p1.setPollutantCode("PM10-FIL");
+		p2.setPollutantCode("PM25-FIL");
+		cp1.setPollutant(p1);
+		cp2.setPollutant(p2);
+		cp1.setPercentReduction(50.0);
+		cp2.setPercentReduction(80.0);
+		testData.getPollutants().add(cp1);
+		testData.getPollutants().add(cp2);
+	
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);		
+	}
+	
+	@Test
+	public void controlPollutant_PM25PRI_PM10PRI_FailTest() {
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		ControlPollutant cp1 = new ControlPollutant();
+		ControlPollutant cp2 = new ControlPollutant();
+		Pollutant p1 = new Pollutant();
+		Pollutant p2 = new Pollutant();
+		p1.setPollutantCode("PM10-PRI");
+		p2.setPollutantCode("PM25-PRI");
+		cp1.setPollutant(p1);
+		cp2.setPollutant(p2);
+		cp1.setPercentReduction(50.0);
+		cp2.setPercentReduction(80.0);
+		testData.getPollutants().add(cp1);
+		testData.getPollutants().add(cp2);
+	
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);		
+		
+	}
+	
 	
 	private Control createBaseControl() {
 		
@@ -353,7 +443,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		
 		ControlPollutant cp1 = new ControlPollutant();
 		Pollutant p1 = new Pollutant();
-		p1.setPollutantName("NOX");
+		p1.setPollutantCode("CO2");
 		cp1.setPollutant(p1);
 		cp1.setPercentReduction(50.0);
 		result.getPollutants().add(cp1);

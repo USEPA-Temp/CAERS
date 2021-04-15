@@ -25,6 +25,11 @@ import gov.epa.cef.web.util.ConstantUtils;
 
 @Component
 public class ControlValidator extends BaseValidator<Control> {
+	
+	private static final String PM10FIL = "PM10-FIL";
+    private static final String PM10PRI = "PM10-PRI";
+    private static final String PM25FIL = "PM25-FIL";
+    private static final String PM25PRI = "PM25-PRI";
 
     @Override
     public void compose(FluentValidator validator,
@@ -145,10 +150,15 @@ public class ControlValidator extends BaseValidator<Control> {
                     cp.getPollutant().getPollutantName());
             }
         }
-
-        Map<Object, List<ControlPollutant>> cpMap = control.getPollutants().stream()
-            .filter(cp -> cp.getPollutant() != null)
-            .collect(Collectors.groupingBy(p -> p.getPollutant().getPollutantName()));
+        
+        Map<String, List<ControlPollutant>> cpMap = control.getPollutants().stream()
+        		.filter(e -> e.getPollutant() != null)
+        		.collect(Collectors.groupingBy(e -> e.getPollutant().getPollutantCode()));
+        		
+        Double pm10Fil = cpMap.containsKey(PM10FIL) ? cpMap.get(PM10FIL).get(0).getPercentReduction() : null;
+        Double pm10Pri = cpMap.containsKey(PM10PRI) ? cpMap.get(PM10PRI).get(0).getPercentReduction() : null;
+        Double pm25Fil = cpMap.containsKey(PM25FIL) ? cpMap.get(PM25FIL).get(0).getPercentReduction() : null;
+        Double pm25Pri = cpMap.containsKey(PM25PRI) ? cpMap.get(PM25PRI).get(0).getPercentReduction() : null;
 
         for (List<ControlPollutant> pList : cpMap.values()) {
             if (pList.size() > 1) {
@@ -161,6 +171,28 @@ public class ControlValidator extends BaseValidator<Control> {
                     pList.get(0).getPollutant().getPollutantName());
 
             }
+        }
+        
+        // PM2.5 Filterable should not exceed PM10 Filterable.
+        if (pm25Fil != null && pm10Fil != null && pm10Fil < pm25Fil) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_POLLUTANT.value(),
+                "control.controlPollutant.pm25.fil.greater.pm10fil",
+                createValidationDetails(control));
+
+        }
+        
+        // PM2.5 Primary should not exceed PM10 Primary.
+        if (pm25Pri != null && pm10Pri != null && pm10Pri < pm25Pri) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_POLLUTANT.value(),
+                "control.controlPollutant.pm25.pri.greater.pm10pri",
+                createValidationDetails(control));
+
         }
 
         if (control.getAssignments().isEmpty()) {
