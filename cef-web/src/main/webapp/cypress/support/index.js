@@ -18,3 +18,9 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+// Modify the selector priority for the Selector Playground and for automatically generating tests
+// This should make it so that aria-label is used at a high priority for creating selectors, but this functionality is currently broken in cypress
+//Cypress.SelectorPlayground.defaults({
+//  selectorPriority: ['data-cy', 'data-test', 'data-testid', 'id', 'aria-label', 'class', 'tag', 'attributes', 'nth-child'],
+//});
