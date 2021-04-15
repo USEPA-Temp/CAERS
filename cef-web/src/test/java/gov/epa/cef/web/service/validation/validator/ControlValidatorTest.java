@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.validation.validator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -245,6 +246,53 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
 		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);		
 		
+	}
+	
+	@Test
+	public void controlDatesPassTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		LocalDate start = LocalDate.parse("2021-01-01");
+		LocalDate end = LocalDate.parse("2021-04-04");
+		LocalDate upgrade = LocalDate.parse("2021-02-02");
+		testData.setStartDate(start);
+		testData.setEndDate(end);
+		testData.setUpgradeDate(upgrade);
+		
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());		
+	}
+	
+	@Test
+	public void controlDatesFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		LocalDate start = LocalDate.parse("2021-04-04");
+		LocalDate end = LocalDate.parse("2021-01-01");
+		testData.setStartDate(start);
+		testData.setEndDate(end);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_DATE.value()) && errorMap.get(ValidationField.CONTROL_DATE.value()).size() == 1);		
+		
+		cefContext = createContext();
+		end = LocalDate.parse("2021-05-05");
+		LocalDate upgrade = LocalDate.parse("2021-06-06");
+		testData.setUpgradeDate(upgrade);
+		testData.setEndDate(end);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_DATE.value()) && errorMap.get(ValidationField.CONTROL_DATE.value()).size() == 1);
 	}
 	
 	

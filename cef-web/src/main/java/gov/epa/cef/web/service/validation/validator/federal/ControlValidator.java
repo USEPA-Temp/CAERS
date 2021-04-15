@@ -152,6 +152,27 @@ public class ControlValidator extends BaseValidator<Control> {
                 "control.controlPollutant.required",
                 createValidationDetails(control));
         }
+        
+        if (control.getStartDate() != null && control.getEndDate() != null && (control.getEndDate().isBefore(control.getStartDate()))) {
+
+	            result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_DATE.value(),
+	                "control.date.startEndInvalid",
+	                createValidationDetails(control));
+        }
+        	
+        if (control.getUpgradeDate() != null) {
+        	if ((control.getStartDate() != null && (control.getUpgradeDate().isBefore(control.getStartDate())))
+        			|| (control.getEndDate() != null && (control.getEndDate().isBefore(control.getUpgradeDate())))) {
+
+	            result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_DATE.value(),
+	                "control.date.upgradeDate.Invalid",
+	                createValidationDetails(control));
+	        }
+        }
 
         return result;
     }
