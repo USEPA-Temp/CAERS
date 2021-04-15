@@ -249,11 +249,49 @@ public class ControlValidatorTest extends BaseValidatorTest {
 	}
 	
 	@Test
-	public void controlDatesPassTest() {
+	public void controlPercentControlRangeFailTest() {
 		
 		CefValidatorContext cefContext = createContext();
 		Control testData = createBaseControl();
 		
+		testData.setPercentControl(0.5);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PERCENT_CONTROL.value()).size() == 1);
+		
+		cefContext = createContext();
+		testData.setPercentControl(500.0);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PERCENT_CONTROL.value()).size() == 1);
+	}
+	
+	@Test
+	public void controlPercentControlPrecisionFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		testData.setPercentControl(10.568);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PERCENT_CONTROL.value()).size() == 1);
+	}
+	
+	@Test
+	public void controlDatesPassTest() {
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+	
 		LocalDate start = LocalDate.parse("2021-01-01");
 		LocalDate end = LocalDate.parse("2021-04-04");
 		LocalDate upgrade = LocalDate.parse("2021-02-02");
@@ -262,15 +300,14 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		testData.setUpgradeDate(upgrade);
 		
 		assertTrue(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());		
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 	}
 	
 	@Test
 	public void controlDatesFailTest() {
-		
 		CefValidatorContext cefContext = createContext();
 		Control testData = createBaseControl();
-		
+	
 		LocalDate start = LocalDate.parse("2021-04-04");
 		LocalDate end = LocalDate.parse("2021-01-01");
 		testData.setStartDate(start);

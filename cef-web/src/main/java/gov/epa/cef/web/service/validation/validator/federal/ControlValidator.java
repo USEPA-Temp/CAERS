@@ -3,6 +3,8 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -86,13 +88,26 @@ public class ControlValidator extends BaseValidator<Control> {
 
         }
 
-        if (control.getPercentControl() != null && (control.getPercentControl() < 1 || control.getPercentControl() > 100)) {
-
-            result = false;
-            context.addFederalError(
-                ValidationField.CONTROL_PERCENT_CONTROL.value(),
-                "control.percentControl.range",
-                createValidationDetails(control));
+        if (control.getPercentControl() != null) {
+        	if (control.getPercentControl() < 1 || control.getPercentControl() > 100) {
+        		
+	            result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_PERCENT_CONTROL.value(),
+	                "control.percentControl.range",
+	                createValidationDetails(control));
+        	}
+        	
+        	Pattern pattern = Pattern.compile(ConstantUtils.REGEX_ONE_DECIMAL_PRECISION);
+        	Matcher matcher = pattern.matcher(control.getPercentControl().toString());
+            if(!matcher.matches()){
+            	
+                result = false;
+                context.addFederalError(
+                    ValidationField.CONTROL_PERCENT_CONTROL.value(),
+                    "control.percentControl.invalidFormat",
+                    createValidationDetails(control));
+            }
         }
 
         for (ControlPollutant cp : control.getPollutants()) {
