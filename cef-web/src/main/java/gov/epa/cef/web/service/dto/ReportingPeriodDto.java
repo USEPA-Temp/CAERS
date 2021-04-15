@@ -3,6 +3,8 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.google.common.base.Strings;
+
 public class ReportingPeriodDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,8 +66,11 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
+    // this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
     public String getCalculationParameterValue() {
-        return calculationParameterValue;
+        return Strings.emptyToNull(calculationParameterValue);
     }
 
     public void setCalculationParameterValue(String calculationParameterValue) {
@@ -88,8 +93,11 @@ public class ReportingPeriodDto implements Serializable {
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
+    // this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
     public String getFuelUseValue() {
-		return fuelUseValue;
+		return Strings.emptyToNull(fuelUseValue);
 	}
 
 	public void setFuelUseValue(String fuelUseValue) {
@@ -112,8 +120,11 @@ public class ReportingPeriodDto implements Serializable {
 		this.fuelUseMaterialCode = fuelUseMaterialCode;
 	}
 
+	// this was changed to a string to keep the numbers precise, 
+    // however mapstruct cannot convert an empty string to a BigDecimal
+    // so this will make sure null is returned instead of an empty string
 	public String getHeatContentValue() {
-		return heatContentValue;
+		return Strings.emptyToNull(heatContentValue);
 	}
 
 	public void setHeatContentValue(String heatContentValue) {
