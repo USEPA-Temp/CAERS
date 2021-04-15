@@ -59,7 +59,8 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     }, {
         validators: [
             this.controlIdentifierCheck(),
-            this.facilitySiteStatusCheck()
+            this.facilitySiteStatusCheck(),
+            this.controlDatesCheck()
         ]
     });
 
@@ -176,6 +177,35 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                 } else if (this.facilityOpCode.code === OperatingStatus.PERM_SHUTDOWN
                     && controlStatus.code !== OperatingStatus.PERM_SHUTDOWN) {
                     return {invalidStatusCodePS: true};
+                }
+            }
+            return null;
+        };
+    }
+
+    controlDatesCheck(): ValidatorFn {
+        return (control: FormGroup): ValidationErrors | null => {
+            const start = control.get('startDate').value;
+            const upgrade = control.get('upgradeDate').value;
+            const end = control.get('endDate').value;
+
+            const startDate = start ? new Date(start.year, start.month - 1, start.day) : null;
+            const endDate = end ? new Date(end.year, end.month - 1, end.day) : null;
+            const upgradeDate = upgrade ? new Date(upgrade.year, upgrade.month - 1, upgrade.day) : null;
+
+            if (startDate && endDate && startDate > endDate) {
+                control.get('startDate').markAsTouched();
+                control.get('startDate').setErrors({startDateInvalid: true});
+            } else {
+                control.get('startDate').setErrors(null);
+            }
+
+            if (upgradeDate) {
+                if ((startDate && startDate > upgradeDate) || (endDate && upgradeDate > endDate)) {
+                    control.get('upgradeDate').markAsTouched();
+                    control.get('upgradeDate').setErrors({upgradeDateInvalid: true});
+                } else {
+                    control.get('upgradeDate').setErrors(null);
                 }
             }
             return null;
