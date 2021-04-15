@@ -1,1 +1,13 @@
-{}
+{
+  "baseUrl": "http://localhost:8080/cef-web",
+  "experimentalStudio": true,
+  "chromeWebSecurity": false,
+  "XFrameOptions": false,
+  "requestTimeout": 10000,
+  "defaultCommandTimeout": 10000,
+  "numTestsKeptInMemory": 3,
+  "env": {
+    "local": true,
+    "login_url": "https://dev.epacdx.net/"
+  }
+}
