@@ -25,7 +25,9 @@ import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.service.validation.validator.IEmissionsReportValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ControlPathPollutantValidator;
 import gov.epa.cef.web.service.validation.validator.federal.ControlPathValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ControlPollutantValidator;
 import gov.epa.cef.web.service.validation.validator.federal.ControlValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionValidator;
 import gov.epa.cef.web.service.validation.validator.federal.EmissionsProcessValidator;
@@ -131,6 +133,9 @@ public class EmissionsReportValidationServiceImplTest {
         
         when(validationRegistry.findOneByType(ControlValidator.class))
         .thenReturn(new ControlValidator());
+        
+        when(validationRegistry.findOneByType(ControlPollutantValidator.class))
+        .thenReturn(new ControlPollutantValidator());
 
         when(validationRegistry.findOneByType(EmissionsProcessValidator.class))
             .thenReturn(new EmissionsProcessValidator());
@@ -146,6 +151,9 @@ public class EmissionsReportValidationServiceImplTest {
         
         when(validationRegistry.findOneByType(ControlPathValidator.class))
             .thenReturn(cpValidator);
+        
+        when(validationRegistry.findOneByType(ControlPathPollutantValidator.class))
+        .thenReturn(new ControlPathPollutantValidator());
 
         ValidatorChain reportChain = new ValidatorChain();
         reportChain.setValidators(Arrays.asList(erValidator, new GeorgiaValidator()));
