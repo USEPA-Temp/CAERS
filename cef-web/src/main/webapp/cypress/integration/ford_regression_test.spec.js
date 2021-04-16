@@ -47,13 +47,13 @@ describe('FORD TESTING SUITE', () => {
 
   describe('Basic Copy Test', () => {
     it('Create Report', function() {
-      cy.get('[data-cy=continueReportGADNR12100364]').click();
-      cy.get('[data-cy="create new2020report"]').click();
+      cy.get('#continueReportGADNR12100364').click();
+      cy.get('#createNew2020Report').click();
     });
 
     it('Create Emissions Unit', function() {
       cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
-      cy.get('[data-cy="add emissions unit"] > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#tblAddEmissionsUnitBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#unitIdentifierInput').clear();
       cy.get('#unitIdentifierInput').type('Cypress');
       cy.get('#unitStatusCodeSelect').select('1: Object');
@@ -68,7 +68,7 @@ describe('FORD TESTING SUITE', () => {
 
     it('Create Process', function() {
       cy.get('[data-cy="emissions unitCypress"]').click();
-      cy.get('[data-cy="add emissions process"] > .ng-fa-icon > .svg-inline--fa > path').click();
+      cy.get('#tblAddProcessBtn > .ng-fa-icon > .svg-inline--fa > path').click();
       cy.get('#processIdentifierInput').clear();
       cy.get('#processIdentifierInput').type('Cypress 1');
       cy.get('#processStatusCodeSelect').select('1: Object');
@@ -76,11 +76,11 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#processDescriptionInput').type('Cypress Test Process 1');
       cy.get('#processStatusYearInput').clear();
       cy.get('#processStatusYearInput').type('2020');
-      cy.get('[data-cy="openSccSearchModalBtn"]').click();
+      cy.get('#openSccSearchModalBtn').click();
       cy.get('#pollutantNameInput').clear();
       cy.get('#pollutantNameInput').type('waste');
-      cy.get('[data-cy=sccSearchButton]').click();
-      cy.get('[data-cy=selectScc10100901]').click();
+      cy.get('#sccSearchButton').click();
+      cy.get('#selectScc10100901').click();
       cy.get('#odDaysPerWeekInput').clear();
       cy.get('#odDaysPerWeekInput').type('7');
       cy.get('#odHoursPerPeriodInput').clear();
@@ -109,7 +109,7 @@ describe('FORD TESTING SUITE', () => {
 
     it('Create Emission', function() {
       cy.get('[data-cy="emissions processCypress 1"]').click();
-      cy.get('[data-cy="add emission pollutant"]').click();
+      cy.get('#tblAddEmissionBtn').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').type('nox');
       cy.get('#ngb-typeahead-0-2 > ngb-highlight').click();
@@ -124,10 +124,10 @@ describe('FORD TESTING SUITE', () => {
 
     it('Delete Report', function() {
       cy.get('[data-cy="bcMy Facilities"]').click();
-      cy.get('[data-cy=continueReportGADNR12100364]').click();
-      cy.get('[data-cy=delete2020report]').click();
+      cy.get('#continueReportGADNR12100364').click();
+      cy.get('#delete2020Report').click();
       cy.get('app-confirmation-dialog > .modal-body').click();
-      cy.get('[data-cy=confirm]').click();
+      cy.get('#modalConfirmBtn').click();
     });
   });
 })

@@ -10,19 +10,19 @@
         <div class="button-list-horizontal">
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', 'upload', report.year]"
              class="btn btn-primary" [attr.aria-label]="'upload'+ report.year +'report'"
-            [attr.data-cy]="'upload'+ report.year +'report'"
-            *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'VALIDATED'])">
+             [id]="'upload'+ report.year +'Report'"
+             *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'VALIDATED'])">
             <span>Upload Report</span>
           </a>
 
           <a href="javascript:void(0);" class="btn btn-primary" [attr.aria-label]="'create new'+ report.year +'report'"
-            [attr.data-cy]="'create new'+ report.year +'report'"
-            (click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
+             [id]="'createNew'+ report.year +'Report'"
+             (click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
 
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
-            class="btn btn-primary" [attr.aria-label]="'continue'+ report.year +'report'"
-            [attr.data-cy]="'continue'+ report.year +'report'"
-            *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
+             class="btn btn-primary" [attr.aria-label]="'continue'+ report.year +'report'"
+             [id]="'continue'+ report.year +'Report'"
+             *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
 
           <a href="#" class="btn btn-primary"
             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>
@@ -32,25 +32,25 @@
             *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
 
           <a [routerLink]="['.']" *ngIf="excelExportEnabled && report.status !== 'NEW'" class="btn btn-primary"
-            [attr.aria-label]="'download '+ report.year +' report template'"
-            (click)="downloadExcelTemplate(report)">Download as Template</a>
+             [attr.aria-label]="'download '+ report.year +' report template'"
+             (click)="downloadExcelTemplate(report)">Download as Template</a>
 
           <a [routerLink]="['.']" class="btn btn-primary" [attr.aria-label]="'reopen'+ report.year +'report'"
-            (click)="reopenReport(report)" *ngIf="isOneOf(report.status, ['SUBMITTED'])">Reopen Report</a>
+             (click)="reopenReport(report)" *ngIf="isOneOf(report.status, ['SUBMITTED'])">Reopen Report</a>
 
           <a href="#" class="btn btn-primary"
-            *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Certify</a>
+             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Certify</a>
 
           <a href="#" class="btn btn-primary"
-            *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Return to Preparer</a>
+             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Return to Preparer</a>
 
           <a href="#" class="btn btn-primary"
-            *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
+             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
 
           <a href="#" class="btn btn-primary" [attr.aria-label]="'delete'+ report.year +'report'"
-            [attr.data-cy]="'delete'+ report.year +'report'"
-            *ngIf="report.status !== 'NEW'" [routerLink]="['.']"
-            (click)="openDeleteModal(report.eisProgramId, report.id, report.year)">Delete</a>
+             [id]="'delete'+ report.year +'Report'"
+             *ngIf="report.status !== 'NEW'" [routerLink]="['.']"
+             (click)="openDeleteModal(report.eisProgramId, report.id, report.year)">Delete</a>
         </div>
         <ng-template #FailedToCreateMessageBox>
           <div class="modal-header bg-warning">
