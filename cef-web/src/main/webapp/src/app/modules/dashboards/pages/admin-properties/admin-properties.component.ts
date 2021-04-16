@@ -129,12 +129,15 @@ export class AdminPropertiesComponent implements OnInit {
 
       this.facilitySiteService.retrieveForReport(reportId).subscribe(reportResp => {
         if (reportResp) {
-          const modalMessage = `Are you sure you want to permanently delete from CAERS the ${reportResp.emissionsReport.year} ${reportResp.name}
-          Facility Report from Agency Facility ID ${reportResp.altSiteIdentifier}, EIS ID ${reportResp.emissionsReport.eisProgramId}?`;
+          const modalHtmlMessage = `Are you sure you want to permanently delete this ${reportResp.emissionsReport.year} report from CAERS?` +
+          '\n <ul><li>' + `SLT: ${reportResp.programSystemCode.code}`
+          + '</li><li>' + `Facility: ${reportResp.name}`
+          + '</li><li>' + `Facility ID: ${reportResp.altSiteIdentifier}`
+          + '</li><li>' + `EIS ID: ${reportResp.emissionsReport.eisProgramId}`
+          + '</li></ul>';
           const modalRef = this.modalService.open(ConfirmationDialogComponent);
-          this.deleteReportInfo = `${reportResp.emissionsReport.year} ${reportResp.name}
-          Facility Report from Agency Facility ID ${reportResp.altSiteIdentifier}, EIS ID ${reportResp.emissionsReport.eisProgramId}`;
-          modalRef.componentInstance.message = modalMessage;
+          this.deleteReportInfo = `${reportResp.name} ${reportResp.emissionsReport.year} Emissions Report for ${reportResp.programSystemCode.code}`;
+          modalRef.componentInstance.htmlMessage = modalHtmlMessage;
           modalRef.componentInstance.continue.subscribe(() => {
             this.deleteReport(reportId);
           });
