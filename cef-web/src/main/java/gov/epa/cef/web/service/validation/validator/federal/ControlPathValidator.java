@@ -128,6 +128,15 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             }
         }
 
+        if (!controlPath.getReleasePointAppts().isEmpty() && controlPath.getPollutants().isEmpty()) {
+
+            result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                "controlPath.controlPathPollutant.required",
+                createValidationDetails(controlPath));
+        }
+
 
         List<Control> controls = new ArrayList<Control>();
         List<Control> controlsList = buildAssignedControlsList(controlPath.getAssignments(), controls);
