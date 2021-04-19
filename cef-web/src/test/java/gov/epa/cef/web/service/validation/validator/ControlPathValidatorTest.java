@@ -431,6 +431,12 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ca.setPercentApportionment(100.0);
 		ca.setId(1234L);
 		ca.setControlPath(result);
+		ControlPathPollutant cpp = new ControlPathPollutant();
+		Pollutant p1 = new Pollutant();
+        p1.setPollutantCode("NOX");
+        cpp.setPollutant(p1);
+        cpp.setPercentReduction(50.0);
+        result.getPollutants().add(cpp);
 		result.setPathId("path 1");
 		result.setDescription("test description 1");
 		result.getReleasePointAppts().add(rpa);
