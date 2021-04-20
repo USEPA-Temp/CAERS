@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -30,6 +31,8 @@ public class ControlValidator extends BaseValidator<Control> {
     private static final String PM10PRI = "PM10-PRI";
     private static final String PM25FIL = "PM25-FIL";
     private static final String PM25PRI = "PM25-PRI";
+    private static final LocalDate MIN_DATE_RANGE = LocalDate.parse("1900-01-01");
+    private static final LocalDate MAX_DATE_RANGE = LocalDate.parse("2050-12-31");
 
     @Override
     public void compose(FluentValidator validator,
@@ -229,10 +232,40 @@ public class ControlValidator extends BaseValidator<Control> {
 	            result = false;
 	            context.addFederalError(
 	                ValidationField.CONTROL_DATE.value(),
-	                "control.date.upgradeDate.Invalid",
+	                "control.date.upgradeDateInvalid",
 	                createValidationDetails(control));
 	        }
         }
+        
+        if (control.getStartDate() != null && (control.getStartDate().isBefore(MIN_DATE_RANGE) || control.getStartDate().isAfter(MAX_DATE_RANGE))) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_DATE.value(),
+                "control.date.range",
+                createValidationDetails(control),
+                "Control Start");
+        }
+        
+        if (control.getUpgradeDate() != null && (control.getUpgradeDate().isBefore(MIN_DATE_RANGE) || control.getUpgradeDate().isAfter(MAX_DATE_RANGE))) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_DATE.value(),
+                "control.date.range",
+                createValidationDetails(control),
+                "Control Upgrade");
+        }
+
+		if (control.getEndDate() != null && (control.getEndDate().isBefore(MIN_DATE_RANGE) || control.getEndDate().isAfter(MAX_DATE_RANGE))) {
+			
+			result = false;
+		    context.addFederalError(
+		        ValidationField.CONTROL_DATE.value(),
+		        "control.date.range",
+		        createValidationDetails(control),
+		        "Control End");
+		}
 
         return result;
     }
