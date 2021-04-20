@@ -188,26 +188,38 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
             const start = control.get('startDate').value;
             const upgrade = control.get('upgradeDate').value;
             const end = control.get('endDate').value;
+            const maxDateRange = new Date(2050, 12, 31);
+            const minDateRange = new Date(1900, 1, 1);
 
             const startDate = start ? new Date(start.year, start.month - 1, start.day) : null;
             const endDate = end ? new Date(end.year, end.month - 1, end.day) : null;
             const upgradeDate = upgrade ? new Date(upgrade.year, upgrade.month - 1, upgrade.day) : null;
 
-            if (startDate && endDate && startDate > endDate) {
+            if (endDate && (endDate > maxDateRange || endDate < minDateRange)) {
+                control.get('endDate').markAsTouched();
+                control.get('endDate').setErrors({endDateRangeInvalid: true});
+            }
+
+            if (startDate && (startDate > maxDateRange || startDate < minDateRange)) {
+                control.get('startDate').markAsTouched();
+                control.get('startDate').setErrors({startDateRangeInvalid: true});
+            } else if (startDate && endDate && startDate > endDate) {
                 control.get('startDate').markAsTouched();
                 control.get('startDate').setErrors({startDateInvalid: true});
             } else {
                 control.get('startDate').setErrors(null);
             }
 
-            if (upgradeDate) {
-                if ((startDate && startDate > upgradeDate) || (endDate && upgradeDate > endDate)) {
-                    control.get('upgradeDate').markAsTouched();
-                    control.get('upgradeDate').setErrors({upgradeDateInvalid: true});
-                } else {
-                    control.get('upgradeDate').setErrors(null);
-                }
+            if (upgradeDate && (upgradeDate > maxDateRange || upgradeDate < minDateRange)) {
+                control.get('upgradeDate').markAsTouched();
+                control.get('upgradeDate').setErrors({upgradeDateRangeInvalid: true});
+            } else if (upgradeDate && (startDate && startDate > upgradeDate) || (endDate && upgradeDate > endDate)) {
+                control.get('upgradeDate').markAsTouched();
+                control.get('upgradeDate').setErrors({upgradeDateInvalid: true});
+            } else {
+                control.get('upgradeDate').setErrors(null);
             }
+
             return null;
         };
     }

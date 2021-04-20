@@ -333,6 +333,44 @@ public class ControlValidatorTest extends BaseValidatorTest {
 	}
 	
 	@Test
+	public void controlDateRangeFailTest() {
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+	
+		LocalDate start = LocalDate.parse("1800-04-04");
+		testData.setStartDate(start);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_DATE.value()) && errorMap.get(ValidationField.CONTROL_DATE.value()).size() == 1);		
+		
+		cefContext = createContext();
+		start = LocalDate.parse("1900-04-04");
+		LocalDate end = LocalDate.parse("2055-05-05");
+		testData.setStartDate(start);
+		testData.setEndDate(end);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_DATE.value()) && errorMap.get(ValidationField.CONTROL_DATE.value()).size() == 1);
+		
+		cefContext = createContext();
+		LocalDate upgrade = LocalDate.parse("2055-05-05");
+		testData.setUpgradeDate(upgrade);
+		testData.setEndDate(null);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_DATE.value()) && errorMap.get(ValidationField.CONTROL_DATE.value()).size() == 1);
+	}
+	
+	@Test
 	public void controlPollutantPassTest() {
 		CefValidatorContext cefContext = createContext();
 		Control testData = createBaseControl();
