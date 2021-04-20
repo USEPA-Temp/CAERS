@@ -152,6 +152,20 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    public void assignedPathPollutantFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ControlPath testData = createBaseControlPath();
+        testData.getPollutants().clear();
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_PATH_POLLUTANT.value()).size() == 1);
+    }
+
+    @Test
     public void controlDeviceAssignmentFailTest() {
 
         CefValidatorContext cefContext = createContext();
