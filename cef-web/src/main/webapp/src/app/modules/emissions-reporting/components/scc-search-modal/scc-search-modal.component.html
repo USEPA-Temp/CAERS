@@ -18,7 +18,7 @@
       <app-validation-message [control]="searchControl"></app-validation-message>
     </div>
     <div class="col-sm-4">
-      <button type="button" class="btn btn-success mr-2" (click)="onSearch()">Search</button>
+      <button type="button" class="btn btn-success mr-2" (click)="onSearch()" id="sccSearchButton">Search</button>
     </div>
   </div>
 
@@ -34,7 +34,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of tableData">
-            <td><button type="button" class="btn btn-link" (click)="onSubmit(item)">{{item.code}}</button></td>
+            <td><button type="button" class="btn btn-link" (click)="onSubmit(item)" [id]="'selectScc' + item?.code">{{item.code}}</button></td>
             <td>{{item.description}}</td>
             <td>{{item.sector}}</td>
           </tr>
@@ -50,7 +50,7 @@
   <div *ngIf="hasSearched && searchError" class="text-warning">
     The Common Emissions Form is having difficulty communicating with the SCC Code service at the moment. 
     Please visit the SCC Code search page at 
-    <a [href]='sccSearchUrl' target="blank">{{sccSearchUrl}}</a> 
+    <a [href]="sccSearchUrl" target="blank">{{sccSearchUrl}}</a> 
     to find the appropriate code for your process.
   </div>
 
