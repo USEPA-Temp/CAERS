@@ -128,6 +128,7 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             }
         }
 
+        // check if the control path is assigned, but has no pollutants
         if (!controlPath.getReleasePointAppts().isEmpty() && controlPath.getPollutants().isEmpty()) {
 
             result = false;

@@ -154,6 +154,26 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void simpleValidateFacilityNAICSDuplicateFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        
+        FacilityNAICSXref facilityNaics = new FacilityNAICSXref();
+        NaicsCode naics = new NaicsCode();
+        naics.setCode(332116);
+        naics.setDescription("Metal Stamping");
+        facilityNaics.setNaicsCode(naics);
+        testData.getFacilityNAICS().add(facilityNaics);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_NAICS.value()) && errorMap.get(ValidationField.FACILITY_NAICS.value()).size() == 1);
+    }
+    
+    @Test
     public void simpleValidateFacilityNAICSCodeFailTest() {
 
         CefValidatorContext cefContext = createContext();

@@ -23,6 +23,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -239,6 +241,23 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
                             naics.getNaicsCode().getCode().toString());
                 }
 
+            }
+        }
+
+        Map<Integer, List<FacilityNAICSXref>> fsNAICSMap = facilitySite.getFacilityNAICS().stream()
+                .collect(Collectors.groupingBy(fn -> fn.getNaicsCode().getCode()));
+
+        // check for duplicate NAICS
+        for (Entry<Integer, List<FacilityNAICSXref>> entry : fsNAICSMap.entrySet()) {
+
+            if (entry.getValue().size() > 1) {
+
+                result = false;
+                context.addFederalError(
+                        ValidationField.FACILITY_NAICS.value(),
+                        "facilitysite.naics.duplicate",
+                        createValidationDetails(facilitySite),
+                        entry.getKey().toString());
             }
         }
 
