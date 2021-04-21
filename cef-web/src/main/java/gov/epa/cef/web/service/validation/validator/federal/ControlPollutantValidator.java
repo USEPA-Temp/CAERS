@@ -40,7 +40,7 @@ public class ControlPollutantValidator extends BaseValidator<ControlPollutant> {
 
     private ValidationDetailDto createValidationDetails(ControlPollutant source) {
 
-        String description = MessageFormat.format("Control: {0}, ControlPollutant: {1}", source.getControl().getIdentifier(), source.getPollutant().getPollutantCode());
+        String description = MessageFormat.format("Control: {0}, Control Pollutant: {1}", source.getControl().getIdentifier(), source.getPollutant().getPollutantName());
 
         ValidationDetailDto dto = new ValidationDetailDto(source.getControl().getId(), source.getControl().getIdentifier(), EntityType.CONTROL, description);
         return dto;
