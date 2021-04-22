@@ -44,7 +44,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         controlMeasureCode: [null, [Validators.required]],
         numberOperatingMonths: [null, [
             Validators.max(12.0),
-            Validators.min(0)]],
+            Validators.min(1)]],
         upgradeDescription: [null, [
             Validators.maxLength(200)
         ]],
