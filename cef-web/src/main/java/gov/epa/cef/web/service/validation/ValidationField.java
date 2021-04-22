@@ -43,6 +43,7 @@ public enum ValidationField {
     CONTROL_STATUS_CODE("report.facilitySite.control.statusTypeCode"),
     CONTROL_PERCENT_CAPTURE("report.facilitySite.control.percentCapture"),
     CONTROL_PERCENT_CONTROL("report.facilitySite.control.percentControl"),
+    CONTROL_NUMBER_OPERATING_MONTHS("report.facilitySite.control.numberOperatingMonths"),
     CONTROL_POLLUTANT("report.facilitySite.control.controlPollutant"),
     CONTROL_POLLUTANT_PERCENT_REDUCTION("report.facilitySite.control.controlPollutant.percentReduction"),
     CONTROL_MEASURE_CODE("report.facilitySite.control.controlMeasureCode"),

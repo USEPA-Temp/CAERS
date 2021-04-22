@@ -86,6 +86,15 @@ public class ControlValidator extends BaseValidator<Control> {
 	            createValidationDetails(control));
 		}
 
+        // Number Operating Months must be between 1 and 12
+        if (control.getNumberOperatingMonths() != null && (control.getNumberOperatingMonths() < 1 || control.getNumberOperatingMonths() > 12)) {
+	        result = false;
+	        context.addFederalError(
+	            ValidationField.CONTROL_NUMBER_OPERATING_MONTHS.value(), 
+                "control.numberOperatingMonths.range",
+	            createValidationDetails(control));
+        }
+
         if (control.getControlMeasureCode() != null && control.getControlMeasureCode().getLastInventoryYear() != null
             && control.getControlMeasureCode().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
 
