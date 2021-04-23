@@ -98,10 +98,7 @@
             </div>
             <app-validation-message [control]="controlDeviceForm.get('startDate')"></app-validation-message>
             <div class="validation-message" *ngIf="controlDeviceForm.get('startDate').errors?.startDateInvalid">
-                Control Start Date must be before Control End Date.            
-            </div>
-            <div class="validation-message" *ngIf="controlDeviceForm.get('startDate').errors?.startDateRangeInvalid">
-                Date cannot be before 1900-01-01 or after 2050-12-31.          
+                {{startDateErrorMsg}}
             </div>
         </div>
         <div class="col-sm-3">
@@ -118,10 +115,7 @@
             </div>
             <app-validation-message [control]="controlDeviceForm.get('upgradeDate')"></app-validation-message>
             <div class="validation-message" *ngIf="controlDeviceForm.get('upgradeDate').errors?.upgradeDateInvalid">
-                Control Upgrade Date must be after Control Start Date and before Control End Date.        
-            </div>
-            <div class="validation-message" *ngIf="controlDeviceForm.get('upgradeDate').errors?.upgradeDateRangeInvalid">
-                Date cannot be before 1900-01-01 or after 2050-12-31.          
+                {{upgradeDateErrorMsg}}
             </div>
         </div>
     </div>
@@ -140,8 +134,8 @@
                 </div>
             </div>
             <app-validation-message [control]="controlDeviceForm.get('endDate')"></app-validation-message>
-            <div class="validation-message" *ngIf="controlDeviceForm.get('endDate').errors?.endDateRangeInvalid">
-                Date cannot be before 1900-01-01 or after 2050-12-31.          
+            <div class="validation-message" *ngIf="controlDeviceForm.get('endDate').errors?.endDateInvalid">
+                {{endDateErrorMsg}}         
             </div>
         </div>
     </div>

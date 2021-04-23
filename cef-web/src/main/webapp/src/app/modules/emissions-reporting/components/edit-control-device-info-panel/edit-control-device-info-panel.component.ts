@@ -26,6 +26,9 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     controlIdentifiers: string[] = [];
     facilityOpCode: BaseCodeLookup;
     facilitySourceTypeCode: BaseCodeLookup;
+    startDateErrorMsg: string;
+    upgradeDateErrorMsg: string;
+    endDateErrorMsg: string;
 
     controlDeviceForm = this.fb.group({
         identifier: ['', Validators.required],
@@ -188,36 +191,63 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
             const start = control.get('startDate').value;
             const upgrade = control.get('upgradeDate').value;
             const end = control.get('endDate').value;
-            const maxDateRange = new Date(2050, 12, 31);
-            const minDateRange = new Date(1900, 1, 1);
+            const maxDateRange = new Date(2050, 11, 31);
+            const minDateRange = new Date(1900, 0, 1);
 
             const startDate = start ? new Date(start.year, start.month - 1, start.day) : null;
             const endDate = end ? new Date(end.year, end.month - 1, end.day) : null;
             const upgradeDate = upgrade ? new Date(upgrade.year, upgrade.month - 1, upgrade.day) : null;
 
-            if (endDate && (endDate > maxDateRange || endDate < minDateRange)) {
+            if (endDate) {
+                if (endDate.toString() === 'Invalid Date') {
+                    this.endDateErrorMsg = 'Date is invalid.';
+                } else if (endDate > maxDateRange || endDate < minDateRange) {
+                    this.endDateErrorMsg = 'Date cannot be before 1900-01-01 or after 2050-12-31.';
+                } else {
+                    this.endDateErrorMsg = null;
+                }
+            }
+            if (!this.endDateErrorMsg || !endDate) {
+                control.get('endDate').setErrors(null);
+            } else {
                 control.get('endDate').markAsTouched();
-                control.get('endDate').setErrors({endDateRangeInvalid: true});
+                control.get('endDate').setErrors({endDateInvalid: true});
             }
 
-            if (startDate && (startDate > maxDateRange || startDate < minDateRange)) {
-                control.get('startDate').markAsTouched();
-                control.get('startDate').setErrors({startDateRangeInvalid: true});
-            } else if (startDate && endDate && startDate > endDate) {
+            if (startDate) {
+                if (startDate.toString() === 'Invalid Date') {
+                    this.startDateErrorMsg = 'Date is invalid.';
+                } else if (startDate && (startDate > maxDateRange || startDate < minDateRange)) {
+                    this.startDateErrorMsg = 'Date cannot be before 1900-01-01 or after 2050-12-31.';
+                } else if (startDate && endDate && startDate > endDate) {
+                    this.startDateErrorMsg = 'Control Upgrade Date must be after Control Start Date and before Control End Date.';
+                } else {
+                    this.startDateErrorMsg = null;
+                }
+            }
+            if (!this.startDateErrorMsg || !startDate) {
+                control.get('startDate').setErrors(null);
+            } else {
                 control.get('startDate').markAsTouched();
                 control.get('startDate').setErrors({startDateInvalid: true});
-            } else {
-                control.get('startDate').setErrors(null);
             }
 
-            if (upgradeDate && (upgradeDate > maxDateRange || upgradeDate < minDateRange)) {
-                control.get('upgradeDate').markAsTouched();
-                control.get('upgradeDate').setErrors({upgradeDateRangeInvalid: true});
-            } else if (upgradeDate && (startDate && startDate > upgradeDate) || (endDate && upgradeDate > endDate)) {
+            if (upgradeDate) {
+                if (upgradeDate.toString() === 'Invalid Date') {
+                    this.upgradeDateErrorMsg = 'Date is invalid.';
+                } else if (upgradeDate > maxDateRange || upgradeDate < minDateRange) {
+                    this.upgradeDateErrorMsg = 'Date cannot be before 1900-01-01 or after 2050-12-31.';
+                } else if ((startDate && startDate > upgradeDate) || (endDate && upgradeDate > endDate)) {
+                    this.upgradeDateErrorMsg = 'Control Upgrade Date must be after Control Start Date and before Control End Date.';
+                } else {
+                    this.upgradeDateErrorMsg = null;
+                }
+            }
+            if (!this.upgradeDateErrorMsg || !upgradeDate) {
+                control.get('upgradeDate').setErrors(null);
+            } else {
                 control.get('upgradeDate').markAsTouched();
                 control.get('upgradeDate').setErrors({upgradeDateInvalid: true});
-            } else {
-                control.get('upgradeDate').setErrors(null);
             }
 
             return null;
