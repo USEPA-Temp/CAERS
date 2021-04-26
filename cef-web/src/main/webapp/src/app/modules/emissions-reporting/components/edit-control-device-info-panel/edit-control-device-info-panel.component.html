@@ -97,6 +97,9 @@
                 </div>
             </div>
             <app-validation-message [control]="controlDeviceForm.get('startDate')"></app-validation-message>
+            <div class="validation-message" *ngIf="controlDeviceForm.get('startDate').errors?.startDateInvalid">
+                {{startDateErrorMsg}}
+            </div>
         </div>
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The date on which the control device was most recently updated." [icon]="['fas', 'question-circle']"></fa-icon>
@@ -111,6 +114,9 @@
                 </div>
             </div>
             <app-validation-message [control]="controlDeviceForm.get('upgradeDate')"></app-validation-message>
+            <div class="validation-message" *ngIf="controlDeviceForm.get('upgradeDate').errors?.upgradeDateInvalid">
+                {{upgradeDateErrorMsg}}
+            </div>
         </div>
     </div>
 
@@ -128,6 +134,9 @@
                 </div>
             </div>
             <app-validation-message [control]="controlDeviceForm.get('endDate')"></app-validation-message>
+            <div class="validation-message" *ngIf="controlDeviceForm.get('endDate').errors?.endDateInvalid">
+                {{endDateErrorMsg}}         
+            </div>
         </div>
     </div>
 

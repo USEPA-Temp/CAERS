@@ -24,8 +24,8 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Path ID can not exceed {max} chars; found ${validatedValue}.")
     private String pathId;
     
-    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
-        message = "Percent Control Effectiveness is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
+        message = "Percent Control Effectiveness is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentControl;
 
     public ControlPathBulkUploadDto() {

@@ -2,7 +2,8 @@
   <app-facility-info [facility]="facility" class="ml-2"></app-facility-info>
   <div>
 
-    <button class="btn btn-success m-1" [routerLink]="['/facility', facility.id, 'report']" [attr.aria-label]="'begin or continue reporting for'+ facility?.name">
+    <button class="btn btn-success m-1" [routerLink]="['/facility', facility.id, 'report']" [attr.aria-label]="'begin or continue reporting for '+ facility?.name"
+        [id]="'continueReport' + facility.programSystemCode.code + facility.agencyFacilityId">
       Begin / Continue Reporting
     </button>
   </div>

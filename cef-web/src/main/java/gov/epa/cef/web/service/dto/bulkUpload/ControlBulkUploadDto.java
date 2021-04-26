@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.DecimalMax;
 import java.io.Serializable;
 
 public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializable {
@@ -45,10 +47,12 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
         message = "Percent Capture is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentCapture;
 
-    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
-        message = "Percent Control Effectiveness is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
+	@Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
+        message = "Percent Control Effectiveness is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentControl;
     
+    @DecimalMin(value = "1", message = "Control Number of Operating Months must be an integer from 1-12.")
+    @DecimalMax(value = "12", message = "Control Number of Operating Months must be an integer from 1-12.")
     private String numberOperatingMonths;
     
     private String startDate;

@@ -1,13 +1,18 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import gov.epa.cef.web.service.validation.ValidationRegistry;
 import com.google.common.base.Strings;
 
 import gov.epa.cef.web.domain.Control;
@@ -21,6 +26,24 @@ import gov.epa.cef.web.util.ConstantUtils;
 
 @Component
 public class ControlValidator extends BaseValidator<Control> {
+	
+	private static final String PM10FIL = "PM10-FIL";
+    private static final String PM10PRI = "PM10-PRI";
+    private static final String PM25FIL = "PM25-FIL";
+    private static final String PM25PRI = "PM25-PRI";
+    private static final LocalDate MIN_DATE_RANGE = LocalDate.parse("1900-01-01");
+    private static final LocalDate MAX_DATE_RANGE = LocalDate.parse("2050-12-31");
+
+    @Override
+    public void compose(FluentValidator validator,
+                        ValidatorContext validatorContext,
+                        Control control) {
+
+        ValidationRegistry registry = getCefValidatorContext(validatorContext).getValidationRegistry();
+
+        validator.onEach(control.getPollutants(),
+            registry.findOneByType(ControlPollutantValidator.class));
+    }
 
     @Override
     public boolean validate(ValidatorContext validatorContext, Control control) {
@@ -63,6 +86,15 @@ public class ControlValidator extends BaseValidator<Control> {
 	            createValidationDetails(control));
 		}
 
+        // Number Operating Months must be between 1 and 12
+        if (control.getNumberOperatingMonths() != null && (control.getNumberOperatingMonths() < 1 || control.getNumberOperatingMonths() > 12)) {
+	        result = false;
+	        context.addFederalError(
+	            ValidationField.CONTROL_NUMBER_OPERATING_MONTHS.value(), 
+                "control.numberOperatingMonths.range",
+	            createValidationDetails(control));
+        }
+
         if (control.getControlMeasureCode() != null && control.getControlMeasureCode().getLastInventoryYear() != null
             && control.getControlMeasureCode().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
 
@@ -86,13 +118,26 @@ public class ControlValidator extends BaseValidator<Control> {
 
         }
 
-        if (control.getPercentControl() != null && (control.getPercentControl() < 1 || control.getPercentControl() > 100)) {
-
-            result = false;
-            context.addFederalError(
-                ValidationField.CONTROL_PERCENT_CONTROL.value(),
-                "control.percentControl.range",
-                createValidationDetails(control));
+        if (control.getPercentControl() != null) {
+        	if (control.getPercentControl() < 1 || control.getPercentControl() > 100) {
+        		
+	            result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_PERCENT_CONTROL.value(),
+	                "control.percentControl.range",
+	                createValidationDetails(control));
+        	}
+        	
+        	Pattern pattern = Pattern.compile(ConstantUtils.REGEX_ONE_DECIMAL_PRECISION);
+        	Matcher matcher = pattern.matcher(control.getPercentControl().toString());
+            if(!matcher.matches()){
+            	
+                result = false;
+                context.addFederalError(
+                    ValidationField.CONTROL_PERCENT_CONTROL.value(),
+                    "control.percentControl.invalidFormat",
+                    createValidationDetails(control));
+            }
         }
 
         for (ControlPollutant cp : control.getPollutants()) {
@@ -117,10 +162,15 @@ public class ControlValidator extends BaseValidator<Control> {
                     cp.getPollutant().getPollutantName());
             }
         }
-
-        Map<Object, List<ControlPollutant>> cpMap = control.getPollutants().stream()
-            .filter(cp -> cp.getPollutant() != null)
-            .collect(Collectors.groupingBy(p -> p.getPollutant().getPollutantName()));
+        
+        Map<String, List<ControlPollutant>> cpMap = control.getPollutants().stream()
+        		.filter(e -> e.getPollutant() != null)
+        		.collect(Collectors.groupingBy(e -> e.getPollutant().getPollutantCode()));
+        		
+        Double pm10Fil = cpMap.containsKey(PM10FIL) ? cpMap.get(PM10FIL).get(0).getPercentReduction() : null;
+        Double pm10Pri = cpMap.containsKey(PM10PRI) ? cpMap.get(PM10PRI).get(0).getPercentReduction() : null;
+        Double pm25Fil = cpMap.containsKey(PM25FIL) ? cpMap.get(PM25FIL).get(0).getPercentReduction() : null;
+        Double pm25Pri = cpMap.containsKey(PM25PRI) ? cpMap.get(PM25PRI).get(0).getPercentReduction() : null;
 
         for (List<ControlPollutant> pList : cpMap.values()) {
             if (pList.size() > 1) {
@@ -133,6 +183,28 @@ public class ControlValidator extends BaseValidator<Control> {
                     pList.get(0).getPollutant().getPollutantName());
 
             }
+        }
+        
+        // PM2.5 Filterable should not exceed PM10 Filterable.
+        if (pm25Fil != null && pm10Fil != null && pm10Fil < pm25Fil) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_POLLUTANT.value(),
+                "control.controlPollutant.pm25.fil.greater.pm10fil",
+                createValidationDetails(control));
+
+        }
+        
+        // PM2.5 Primary should not exceed PM10 Primary.
+        if (pm25Pri != null && pm10Pri != null && pm10Pri < pm25Pri) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_POLLUTANT.value(),
+                "control.controlPollutant.pm25.pri.greater.pm10pri",
+                createValidationDetails(control));
+
         }
 
         if (control.getAssignments().isEmpty()) {
@@ -152,6 +224,57 @@ public class ControlValidator extends BaseValidator<Control> {
                 "control.controlPollutant.required",
                 createValidationDetails(control));
         }
+        
+        if (control.getStartDate() != null && control.getEndDate() != null && (control.getEndDate().isBefore(control.getStartDate()))) {
+
+	            result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_DATE.value(),
+	                "control.date.startEndInvalid",
+	                createValidationDetails(control));
+        }
+        	
+        if (control.getUpgradeDate() != null) {
+        	if ((control.getStartDate() != null && (control.getUpgradeDate().isBefore(control.getStartDate())))
+        			|| (control.getEndDate() != null && (control.getEndDate().isBefore(control.getUpgradeDate())))) {
+
+	            result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_DATE.value(),
+	                "control.date.upgradeDateInvalid",
+	                createValidationDetails(control));
+	        }
+        }
+        
+        if (control.getStartDate() != null && (control.getStartDate().isBefore(MIN_DATE_RANGE) || control.getStartDate().isAfter(MAX_DATE_RANGE))) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_DATE.value(),
+                "control.date.range",
+                createValidationDetails(control),
+                "Control Start");
+        }
+        
+        if (control.getUpgradeDate() != null && (control.getUpgradeDate().isBefore(MIN_DATE_RANGE) || control.getUpgradeDate().isAfter(MAX_DATE_RANGE))) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_DATE.value(),
+                "control.date.range",
+                createValidationDetails(control),
+                "Control Upgrade");
+        }
+
+		if (control.getEndDate() != null && (control.getEndDate().isBefore(MIN_DATE_RANGE) || control.getEndDate().isAfter(MAX_DATE_RANGE))) {
+			
+			result = false;
+		    context.addFederalError(
+		        ValidationField.CONTROL_DATE.value(),
+		        "control.date.range",
+		        createValidationDetails(control),
+		        "Control End");
+		}
 
         return result;
     }

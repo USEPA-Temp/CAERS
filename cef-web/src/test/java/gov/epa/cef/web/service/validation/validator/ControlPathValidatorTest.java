@@ -17,8 +17,10 @@ import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -150,6 +152,20 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    public void assignedPathPollutantFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ControlPath testData = createBaseControlPath();
+        testData.getPollutants().clear();
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_PATH_POLLUTANT.value()).size() == 1);
+    }
+
+    @Test
     public void controlDeviceAssignmentFailTest() {
 
         CefValidatorContext cefContext = createContext();
@@ -278,7 +294,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     public void percentControlRangeFailTest() {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
-		testData.setPercentControl(-50.0);
+		testData.setPercentControl(0.5);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -295,6 +311,110 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()).size() == 1);
         
+    }
+    
+    @Test
+	public void percentControlPrecisionFailTest() {
+		
+		CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		
+		testData.setPercentControl(10.568);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()).size() == 1);
+	}
+    
+    @Test
+	public void controlPollutantPassTest() {
+		CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		
+		ControlPathPollutant cp1 = new ControlPathPollutant();
+		ControlPathPollutant cp2 = new ControlPathPollutant();
+		Pollutant p1 = new Pollutant();
+		Pollutant p2 = new Pollutant();
+		p1.setPollutantCode("PM10-FIL");
+		p2.setPollutantCode("PM25-FIL");
+		cp1.setPollutant(p1);
+		cp2.setPollutant(p2);
+		cp1.setPercentReduction(50.0);
+		cp2.setPercentReduction(50.0);
+		testData.getPollutants().add(cp1);
+		testData.getPollutants().add(cp2);
+	
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+		
+		cefContext = createContext();
+		ControlPathPollutant cp3 = new ControlPathPollutant();
+		ControlPathPollutant cp4 = new ControlPathPollutant();
+		Pollutant p3 = new Pollutant();
+		Pollutant p4 = new Pollutant();
+		p3.setPollutantCode("PM10-PRI");
+		p4.setPollutantCode("PM25-PRI");
+		cp3.setPollutant(p3);
+		cp4.setPollutant(p4);
+		cp3.setPercentReduction(80.0);
+		cp4.setPercentReduction(50.0);
+		testData.getPollutants().add(cp3);
+		testData.getPollutants().add(cp4);
+	
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+	public void controlPathPollutant_PM25FIL_PM10FIL_FailTest() {
+		CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		
+		ControlPathPollutant cp1 = new ControlPathPollutant();
+		ControlPathPollutant cp2 = new ControlPathPollutant();
+		Pollutant p1 = new Pollutant();
+		Pollutant p2 = new Pollutant();
+		p1.setPollutantCode("PM10-FIL");
+		p2.setPollutantCode("PM25-FIL");
+		cp1.setPollutant(p1);
+		cp2.setPollutant(p2);
+		cp1.setPercentReduction(50.0);
+		cp2.setPercentReduction(80.0);
+		testData.getPollutants().add(cp1);
+		testData.getPollutants().add(cp2);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_PATH_POLLUTANT.value()).size() == 1);
+    }
+    
+    @Test
+	public void controlPathPollutant_PM25PRI_PM10PRI_FailTest() {
+		CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		
+		ControlPathPollutant cp1 = new ControlPathPollutant();
+		ControlPathPollutant cp2 = new ControlPathPollutant();
+		Pollutant p1 = new Pollutant();
+		Pollutant p2 = new Pollutant();
+		p1.setPollutantCode("PM10-PRI");
+		p2.setPollutantCode("PM25-PRI");
+		cp1.setPollutant(p1);
+		cp2.setPollutant(p2);
+		cp1.setPercentReduction(50.0);
+		cp2.setPercentReduction(80.0);
+		testData.getPollutants().add(cp1);
+		testData.getPollutants().add(cp2);
+		
+		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_PATH_POLLUTANT.value()).size() == 1);
     }
 
 
@@ -325,6 +445,12 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ca.setPercentApportionment(100.0);
 		ca.setId(1234L);
 		ca.setControlPath(result);
+		ControlPathPollutant cpp = new ControlPathPollutant();
+		Pollutant p1 = new Pollutant();
+        p1.setPollutantCode("NOX");
+        cpp.setPollutant(p1);
+        cpp.setPercentReduction(50.0);
+        result.getPollutants().add(cpp);
 		result.setPathId("path 1");
 		result.setDescription("test description 1");
 		result.getReleasePointAppts().add(rpa);

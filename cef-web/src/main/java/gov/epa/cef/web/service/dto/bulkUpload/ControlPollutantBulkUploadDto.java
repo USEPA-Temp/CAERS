@@ -21,8 +21,8 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
     private String pollutantCode;
 
     @NotBlank(message = "Percent Reduction is required.")
-    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
-        message = "Percent Reduction Efficiency is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1})?$",
+        message = "Percent Reduction Efficiency is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
     private String percentReduction;
 
     public ControlPollutantBulkUploadDto() {

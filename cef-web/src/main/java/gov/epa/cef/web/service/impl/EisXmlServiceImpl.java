@@ -40,6 +40,8 @@ public class EisXmlServiceImpl {
 
     private static final String DataflowName = "EIS_v1_0";
 
+    private static final String DataflowNameV2 = "CERS_v2";
+
     private static final String DocumentTitle = "EIS";
 
     private static final String SubmissionTypePropertyName = "SubmissionType";
@@ -186,7 +188,7 @@ public class EisXmlServiceImpl {
                     .withId("_".concat(UUID.randomUUID().toString()))
                     .withHeader(
                         new DocumentHeaderType()
-                            .withDataFlowName(DataflowName)
+                            .withDataFlowName(DataflowNameV2)
                             .withAuthorName(eisHeader.getAuthorName())
                             .withOrganizationName(eisHeader.getOrganizationName())
                             .withDocumentTitle(DocumentTitle)

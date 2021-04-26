@@ -6,9 +6,10 @@
 </div>
 <div class="modal-body buttonCenter">
     {{message}}
+    <div class="modal-body list" [innerHTML]="htmlMessage"></div>
     <br/>
-    <button (click)="onContinue()" class="btn btn-primary btn-md m-3">{{confirmButtonText}}</button>
-    <button *ngIf="!singleButton" (click)="onCancel()" class="btn btn-success btn-md m-3">{{cancelButtonText}}</button>
+    <button (click)="onContinue()" class="btn btn-primary btn-md m-3" id="modalConfirmBtn">{{confirmButtonText}}</button>
+    <button *ngIf="!singleButton" (click)="onCancel()" class="btn btn-success btn-md m-3" id="modalCancelBtn">{{cancelButtonText}}</button>
 </div>
 <div class="modal-footer">
   <!-- <button *ngIf="!singleButton" (click)="activeModal.dismiss()" class="btn btn-success btn-md">{{cancelButtonText}}</button>

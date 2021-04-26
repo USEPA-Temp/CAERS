@@ -40,7 +40,7 @@ export class ControlPollutantModalComponent implements OnInit {
         Validators.required,
         Validators.max(99.9),
         Validators.min(5),
-        Validators.pattern('^[0-9]{1,3}([\.][0-9]{1,3})?$')
+        Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
       ]]
   });
 

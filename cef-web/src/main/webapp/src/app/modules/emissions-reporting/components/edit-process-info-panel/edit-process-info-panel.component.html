@@ -63,7 +63,7 @@
         <div class="col-sm-4">
             <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
             <app-validation-message [control]="processForm.get('statusYear')"></app-validation-message>
-            <div class="validation-message" *ngIf="processForm.get('statusYear').errors?.statusYearRequiredFailed && (processForm.dirty || processForm.touched)">                
+            <div class="validation-message" *ngIf="processForm.get('statusYear').errors?.statusYearRequiredFailed && (processForm.dirty || processForm.touched)">
                 Status Year must be entered when creating a new process or updating the process's operating status. If shutdown (temporary or permanent), enter a year greater than the last year of reported emissions for this process.
             </div>
         </div>
@@ -82,7 +82,7 @@
             <app-validation-message [control]="processForm.get('sccCode')"></app-validation-message>
         </div>
         <div class="col-sm-4">
-            <button type="button" class="btn btn-success mr-2" (click)="openSccSearchModal()">Search for Source Classification Code</button>
+            <button type="button" class="btn btn-success mr-2" (click)="openSccSearchModal()" id="openSccSearchModalBtn">Search for Source Classification Code</button>
         </div>
     </div>
     <div class="row">

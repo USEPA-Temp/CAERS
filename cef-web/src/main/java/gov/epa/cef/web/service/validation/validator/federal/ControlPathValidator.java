@@ -5,22 +5,28 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import gov.epa.cef.web.service.validation.ValidationRegistry;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
+import gov.epa.cef.web.util.ConstantUtils;
 
 @Component
 public class ControlPathValidator extends BaseValidator<ControlPath> {
@@ -30,6 +36,21 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String PM10FIL = "PM10-FIL";
+    private static final String PM10PRI = "PM10-PRI";
+    private static final String PM25FIL = "PM25-FIL";
+    private static final String PM25PRI = "PM25-PRI";
+
+    @Override
+    public void compose(FluentValidator validator,
+                        ValidatorContext validatorContext,
+                        ControlPath controlPath) {
+
+        ValidationRegistry registry = getCefValidatorContext(validatorContext).getValidationRegistry();
+
+        validator.onEach(controlPath.getPollutants(),
+            registry.findOneByType(ControlPathPollutantValidator.class));
+    }
 
     @Override
     public boolean validate(ValidatorContext validatorContext, ControlPath controlPath) {
@@ -107,6 +128,16 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             }
         }
 
+        // check if the control path is assigned, but has no pollutants
+        if (!controlPath.getReleasePointAppts().isEmpty() && controlPath.getPollutants().isEmpty()) {
+
+            result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                "controlPath.controlPathPollutant.required",
+                createValidationDetails(controlPath));
+        }
+
 
         List<Control> controls = new ArrayList<Control>();
         List<Control> controlsList = buildAssignedControlsList(controlPath.getAssignments(), controls);
@@ -148,13 +179,58 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             }
         }
 
-        if (controlPath.getPercentControl() != null && (controlPath.getPercentControl() < 1 || controlPath.getPercentControl() > 100)) {
-            result = false;
-            context.addFederalError(
-                ValidationField.CONTROL_PATH_PERCENT_CONTROL.value(),
-                "controlPath.percentControl.range",
-                createValidationDetails(controlPath));
+        if (controlPath.getPercentControl() != null) {
+        	
+        	if (controlPath.getPercentControl() < 1 || controlPath.getPercentControl() > 100) {
+
+        		result = false;
+	            context.addFederalError(
+	                ValidationField.CONTROL_PATH_PERCENT_CONTROL.value(),
+	                "controlPath.percentControl.range",
+	                createValidationDetails(controlPath));
+	        }
+        	
+        	Pattern pattern = Pattern.compile(ConstantUtils.REGEX_ONE_DECIMAL_PRECISION);
+        	Matcher matcher = pattern.matcher(controlPath.getPercentControl().toString());
+            if(!matcher.matches()){
+                result = false;
+                context.addFederalError(
+                    ValidationField.CONTROL_PATH_PERCENT_CONTROL.value(),
+                    "controlPath.percentControl.invalidFormat",
+                    createValidationDetails(controlPath));
+            }
         }
+        
+        Map<String, List<ControlPathPollutant>> cppMap = controlPath.getPollutants().stream()
+        		.filter(e -> e.getPollutant() != null)
+        		.collect(Collectors.groupingBy(e -> e.getPollutant().getPollutantCode()));
+        
+        Double pm10Fil = cppMap.containsKey(PM10FIL) ? cppMap.get(PM10FIL).get(0).getPercentReduction() : null;
+        Double pm10Pri = cppMap.containsKey(PM10PRI) ? cppMap.get(PM10PRI).get(0).getPercentReduction() : null;
+        Double pm25Fil = cppMap.containsKey(PM25FIL) ? cppMap.get(PM25FIL).get(0).getPercentReduction() : null;
+        Double pm25Pri = cppMap.containsKey(PM25PRI) ? cppMap.get(PM25PRI).get(0).getPercentReduction() : null;
+
+        // PM2.5 Filterable should not exceed PM10 Filterable.
+        if (pm25Fil != null && pm10Fil != null && pm10Fil < pm25Fil) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                "controlPath.controlPathPollutant.pm25.fil.greater.pm10fil",
+                createValidationDetails(controlPath));
+
+        }
+        
+        // PM2.5 Primary should not exceed PM10 Primary.
+        if (pm25Pri != null && pm10Pri != null && pm10Pri < pm25Pri) {
+        	
+        	result = false;
+            context.addFederalError(
+                ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                "controlPath.controlPathPollutant.pm25.pri.greater.pm10pri",
+                createValidationDetails(controlPath));
+
+        }		
 
         // if control assigned is PS status
         if ((caPSList.size() > 0)) {

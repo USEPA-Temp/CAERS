@@ -13,6 +13,7 @@ import {VariableValidationType} from 'src/app/shared/enums/variable-validation-t
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
+import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-number-validator.directive';
 
 @Component({
     selector: 'app-edit-control-device-info-panel',
@@ -26,13 +27,16 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     controlIdentifiers: string[] = [];
     facilityOpCode: BaseCodeLookup;
     facilitySourceTypeCode: BaseCodeLookup;
+    startDateErrorMsg: string;
+    upgradeDateErrorMsg: string;
+    endDateErrorMsg: string;
 
     controlDeviceForm = this.fb.group({
         identifier: ['', Validators.required],
         percentControl: ['', [
             Validators.max(100.0),
             Validators.min(1),
-            Validators.pattern('^[0-9]{1,3}([\.][0-9]{1,3})?$')
+            Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
         ]],
         operatingStatusCode: [null, Validators.required],
         statusYear: ['', [
@@ -44,7 +48,9 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         controlMeasureCode: [null, [Validators.required]],
         numberOperatingMonths: [null, [
             Validators.max(12.0),
-            Validators.min(0)]],
+            Validators.min(1),
+            wholeNumberValidator()
+        ]],
         upgradeDescription: [null, [
             Validators.maxLength(200)
         ]],
@@ -59,7 +65,8 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     }, {
         validators: [
             this.controlIdentifierCheck(),
-            this.facilitySiteStatusCheck()
+            this.facilitySiteStatusCheck(),
+            this.controlDatesCheck()
         ]
     });
 
@@ -178,6 +185,74 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                     return {invalidStatusCodePS: true};
                 }
             }
+            return null;
+        };
+    }
+
+    controlDatesCheck(): ValidatorFn {
+        return (control: FormGroup): ValidationErrors | null => {
+            const start = control.get('startDate').value;
+            const upgrade = control.get('upgradeDate').value;
+            const end = control.get('endDate').value;
+            const maxDateRange = new Date(2050, 11, 31);
+            const minDateRange = new Date(1900, 0, 1);
+
+            const startDate = start ? new Date(start.year, start.month - 1, start.day) : null;
+            const endDate = end ? new Date(end.year, end.month - 1, end.day) : null;
+            const upgradeDate = upgrade ? new Date(upgrade.year, upgrade.month - 1, upgrade.day) : null;
+
+            if (endDate) {
+                if (endDate.toString() === 'Invalid Date') {
+                    this.endDateErrorMsg = 'Date is invalid.';
+                } else if (endDate > maxDateRange || endDate < minDateRange) {
+                    this.endDateErrorMsg = 'Date cannot be before 1900-01-01 or after 2050-12-31.';
+                } else {
+                    this.endDateErrorMsg = null;
+                }
+            }
+            if (!this.endDateErrorMsg || !endDate) {
+                control.get('endDate').setErrors(null);
+            } else {
+                control.get('endDate').markAsTouched();
+                control.get('endDate').setErrors({endDateInvalid: true});
+            }
+
+            if (startDate) {
+                if (startDate.toString() === 'Invalid Date') {
+                    this.startDateErrorMsg = 'Date is invalid.';
+                } else if (startDate && (startDate > maxDateRange || startDate < minDateRange)) {
+                    this.startDateErrorMsg = 'Date cannot be before 1900-01-01 or after 2050-12-31.';
+                } else if (startDate && endDate && startDate > endDate) {
+                    this.startDateErrorMsg = 'Control Upgrade Date must be after Control Start Date and before Control End Date.';
+                } else {
+                    this.startDateErrorMsg = null;
+                }
+            }
+            if (!this.startDateErrorMsg || !startDate) {
+                control.get('startDate').setErrors(null);
+            } else {
+                control.get('startDate').markAsTouched();
+                control.get('startDate').setErrors({startDateInvalid: true});
+            }
+
+            if (upgradeDate) {
+                if (upgradeDate.toString() === 'Invalid Date') {
+                    this.upgradeDateErrorMsg = 'Date is invalid.';
+                } else if (upgradeDate > maxDateRange || upgradeDate < minDateRange) {
+                    this.upgradeDateErrorMsg = 'Date cannot be before 1900-01-01 or after 2050-12-31.';
+                } else if ((startDate && startDate > upgradeDate) || (endDate && upgradeDate > endDate)) {
+                    this.upgradeDateErrorMsg = 'Control Upgrade Date must be after Control Start Date and before Control End Date.';
+                } else {
+                    this.upgradeDateErrorMsg = null;
+                }
+            }
+            if (!this.upgradeDateErrorMsg || !upgradeDate) {
+                control.get('upgradeDate').setErrors(null);
+            } else {
+                control.get('upgradeDate').markAsTouched();
+                control.get('upgradeDate').setErrors({upgradeDateInvalid: true});
+            }
+
             return null;
         };
     }

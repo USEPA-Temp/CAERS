@@ -11,6 +11,7 @@ export class ConfirmationDialogComponent implements OnInit {
 
   @Input() title = 'Confirm';
   @Input() message: string;
+  @Input() htmlMessage: string;
   @Input() cancelButtonText = 'Cancel';
   @Input() confirmButtonText = 'Confirm';
   @Input() singleButton = false;
