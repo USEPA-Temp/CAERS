@@ -13,6 +13,7 @@ import {VariableValidationType} from 'src/app/shared/enums/variable-validation-t
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
+import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-number-validator.directive';
 
 @Component({
     selector: 'app-edit-control-device-info-panel',
@@ -47,7 +48,9 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         controlMeasureCode: [null, [Validators.required]],
         numberOperatingMonths: [null, [
             Validators.max(12.0),
-            Validators.min(1)]],
+            Validators.min(1),
+            wholeNumberValidator()
+        ]],
         upgradeDescription: [null, [
             Validators.maxLength(200)
         ]],
