@@ -44,6 +44,16 @@ public interface ControlPathRepository extends CrudRepository<ControlPath, Long>
 	@Query("SELECT DISTINCT cp FROM ControlPath cp INNER JOIN cp.releasePointAppts rpa INNER JOIN rpa.releasePoint rp WHERE rp.id = :pointId")
     List<ControlPath> findByReleasePointId(@Param("pointId") Long pointId);
 
+	/**
+	 * Find Control Paths with the specified identifier, master facility record id, and year
+	 * @param identifier
+	 * @param mfrId
+	 * @param year
+	 * @return
+	 */
+    @Query("select cp from ControlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where cp.pathId = :identifier and mfr.id = :mfrId and r.year = :year")
+    List<ControlPath> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("mfrId") Long mfrId, @Param("year") Short year);
+
     @Cacheable(value = CacheName.ControlPathMasterIds)
     @Query("select mfr.id from ControlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where cp.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
