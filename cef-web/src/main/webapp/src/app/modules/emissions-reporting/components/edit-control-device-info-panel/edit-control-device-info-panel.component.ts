@@ -223,7 +223,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                 } else if (startDate && (startDate > maxDateRange || startDate < minDateRange)) {
                     this.startDateErrorMsg = 'Date cannot be before 1900-01-01 or after 2050-12-31.';
                 } else if (startDate && endDate && startDate > endDate) {
-                    this.startDateErrorMsg = 'Control Upgrade Date must be after Control Start Date and before Control End Date.';
+                    this.startDateErrorMsg = 'Control Start Date must be before Control End Date.';
                 } else {
                     this.startDateErrorMsg = null;
                 }
