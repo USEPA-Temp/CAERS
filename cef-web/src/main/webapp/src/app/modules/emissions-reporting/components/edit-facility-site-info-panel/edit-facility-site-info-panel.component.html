@@ -29,8 +29,8 @@
             <app-validation-message [control]="facilitySiteForm.get('name')"></app-validation-message>
         </div>
         <div class="col-sm-2">
-            <fa-icon class="mt-2" title="The year the current operating status came into effect. Required if facility site status is other than operating. Must be changed when the status changes. Must be between 1900 - 2050" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="statusYearInput" class="ml-1 col-form-label"><strong>Status Year:</strong></label>
+            <fa-icon class="mt-2" title="The year the current operating status came into effect. Required if facility site operating status is other than operating. Must be changed when the status changes. Must be between 1900 - 2050" [icon]="['fas', 'question-circle']"></fa-icon>
+            <label for="statusYearInput" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="4" id="statusYearInput" formControlName="statusYear">

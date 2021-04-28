@@ -38,7 +38,7 @@ public class ControlBulkUploadDto extends BaseWorksheetDto implements Serializab
     private String operatingStatusCode;
     
     @Pattern(regexp = YearPattern,
-        message = "Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
+        message = "Operating Status Year is not in expected format: {4} digits; found '${validatedValue}'.")
     private String statusYear;
 
     // field has become legacy with CEF-984. Data is no longer saved in db.
