@@ -69,6 +69,12 @@ export class InventoryControlTableComponent extends BaseSortableTable implements
           this.tableData = controlResponse;
         });
 
+    }, error => {
+      if (error.error && error.status === 422) {
+        const modalRef = this.modalService.open(ConfirmationDialogComponent);
+        modalRef.componentInstance.message = error.error.message;
+        modalRef.componentInstance.singleButton = true;
+      }
     });
   }
 
