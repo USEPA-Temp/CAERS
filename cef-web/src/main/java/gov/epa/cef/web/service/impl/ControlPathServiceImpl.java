@@ -255,7 +255,7 @@ public class ControlPathServiceImpl implements ControlPathService {
                     lastReport.get().getYear())
                     .stream().findFirst().ifPresent(oldUnit -> {
                         throw new AppValidationException("This Path has been submitted on previous years' facility reports, so it cannot be deleted. "
-                                + "If this Path is no longer operational, please use the \"Operating Status\" field to mark this Unit as \"Permanently Shutdown\".");
+                                + "If this Path is no longer operational, please use the \"Operating Status\" field to mark this Path as \"Permanently Shutdown\".");
                     });
         }
 
