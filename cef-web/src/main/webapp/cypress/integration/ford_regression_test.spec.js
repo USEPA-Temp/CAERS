@@ -51,6 +51,65 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#createNew2020Report').click();
     });
 
+    it('Edit Facility Info', function() {
+      cy.get('[data-cy="select facilityInformationFacility Information"] > span').click();
+      cy.get('app-facility-information > :nth-child(1) > .card-header > .float-right > .btn').click();
+      cy.get('#facilityBIACodeSelect').select('1: Object');
+      cy.get('#mailingStreetAddressInput').clear();
+      cy.get('#mailingStreetAddressInput').type('test street');
+      cy.get('#mailingPostalCodeInput').clear();
+      cy.get('#mailingPostalCodeInput').type('30353');
+      cy.get('#mailingCityInput').clear();
+      cy.get('#mailingCityInput').type('Test');
+      cy.get('#mailingStateCodeSelect').select('13: Object');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('New Cypress Description');
+      cy.get('#facilityCommentsInput').click();
+      cy.get('.card-body > :nth-child(1) > .float-right > .btn-success').click();
+    });
+
+    it('Add Facility NAICS', function() {
+      cy.get('#addNaicsBtn').click();
+      cy.get('#facilityNAICS').clear();
+      cy.get('.d-block').click();
+      cy.get('#facilityNAICS').clear();
+      cy.get('#facilityNAICS').type('auto');
+      cy.get('#ngb-typeahead-0-6 > ngb-highlight').click();
+      cy.get('.modal-footer > .btn-success').click();
+      cy.get('#deleteNaics811111').click();
+      cy.get('#modalConfirmBtn').click();
+    });
+
+    it('Create Facility Contact', function() {
+      cy.get('.pb-3 > .btn').click();
+      cy.get('#type').select('13: Object');
+      cy.get('#firstName').clear();
+      cy.get('#firstName').type('Cypress');
+      cy.get('#lastName').clear();
+      cy.get('#lastName').type('Test');
+      cy.get('#phone').clear();
+      cy.get('#phone').type('5555555555');
+      cy.get('#phoneExt').clear();
+      cy.get('#phoneExt').type('555');
+      cy.get('#email').clear();
+      cy.get('#email').type('test@example.com');
+      cy.get('#streetAddress').clear();
+      cy.get('#streetAddress').type('Cypress');
+      cy.get('#city').clear();
+      cy.get('#city').type('Cypress');
+      cy.get('#stateCode').select('28: Object');
+      cy.get('#stateCode').select('34: Object');
+      cy.get('#countySelect').select('122: Object');
+      cy.get('#countySelect').select('125: Object');
+      cy.get('#countySelect').select('126: Object');
+      cy.get('#postalCode').clear();
+      cy.get('#postalCode').type('27707');
+      cy.get('#mailingSameAsContactAddress').check();
+      cy.get('.btn-success').click();
+      cy.get('[data-cy="deleteContactCypressTest"]').click();
+      cy.get('#modalConfirmBtn').click();
+    });
+
     it('Create Emissions Unit', function() {
       cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
       cy.get('#tblAddEmissionsUnitBtn > .ng-fa-icon > .svg-inline--fa').click();
