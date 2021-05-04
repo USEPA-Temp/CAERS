@@ -90,7 +90,7 @@
             <div class="float-right" *ngIf="!editDetails && !readOnlyMode">
                 <button type="button" class="btn btn-success" [routerLink]="[createUrl, contact.id]" [attr.aria-label]="'edit' + contact?.firstName + contact?.lastName + 'contact information'">Edit</button>&nbsp;
                 <a routerLink="." (click)="openDeleteModal(contact.firstName, contact.lastName, contact.id, contact.facilitySiteId)" 
-                        aria-label="delete contact" 
+                        [attr.aria-label]="'delete contact ' + contact?.firstName + ' ' + contact?.lastName" 
                         [attr.data-cy]="'deleteContact'+ contact?.firstName + contact?.lastName">
                     <fa-icon icon="trash-alt"></fa-icon>
                 </a>
