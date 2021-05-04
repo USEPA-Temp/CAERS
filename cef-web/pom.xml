@@ -623,6 +623,7 @@
                                 <wsdlFile>RegisterSignService.wsdl</wsdlFile>
                                 <wsdlFile>NetworkNode2Service.wsdl</wsdlFile>
                                 <wsdlFile>StreamlinedRegistrationService.wsdl</wsdlFile>
+                                <wsdlFile>validator_v30.wsdl</wsdlFile>
                                 <wsdlFile>virusscanMTOM.wsdl</wsdlFile>
                             </wsdlFiles>
                         </configuration>
