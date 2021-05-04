@@ -21,7 +21,7 @@
         </ng-container>
       </td>
       <ng-container *ngIf="!readOnlyMode">
-        <td><a routerLink="." (click)="openDeleteModal(item.code, item.id, item.facilitySiteId)" [attr.aria-label]="'delete' + item?.description + 'NAICS code from facility'">
+        <td><a routerLink="." (click)="openDeleteModal(item.code, item.id, item.facilitySiteId)" [id]="'deleteNaics' + item?.code" [attr.aria-label]="'delete' + item?.description + 'NAICS code from facility'">
           <fa-icon icon="trash-alt"></fa-icon>
         </a></td>
       </ng-container> 
@@ -29,7 +29,7 @@
       <ng-container *ngIf="!readOnlyMode">
         <tr>
           <td colspan="3"></td>
-          <td><a routerLink="." (click)="openFacilityNaicsModal()" aria-label="add facility NAICS code"><fa-icon [icon]="faPlus"></fa-icon></a></td> 
+          <td><a routerLink="." (click)="openFacilityNaicsModal()" id="addNaicsBtn" aria-label="add facility NAICS code"><fa-icon [icon]="faPlus"></fa-icon></a></td> 
         </tr>
       </ng-container> 
    
