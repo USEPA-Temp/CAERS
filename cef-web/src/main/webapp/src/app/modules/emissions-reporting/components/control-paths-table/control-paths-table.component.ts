@@ -52,6 +52,24 @@ export class ControlPathsTableComponent extends BaseSortableTable implements OnI
     const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
+
+      this.controlPathService.isPathPreviouslyReported(id).subscribe(result => {
+        if (result) {
+          this.openPreviouslyReportedConfirmationModal(id, facilitySiteId);
+        } else {
+          this.deleteControlPath(id, facilitySiteId);
+        }
+      });
+    });
+  }
+
+  openPreviouslyReportedConfirmationModal(id: number, facilitySiteId: number) {
+    const modalMessage = `This Control Path has been submitted on previous years' facility reports.
+                          Are you sure you want to permanently delete this Control Path?
+                          This will remove any associations from the path to other sub-facility components in the report.`;
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.continue.subscribe(() => {
       this.deleteControlPath(id, facilitySiteId);
     });
   }
@@ -64,12 +82,6 @@ export class ControlPathsTableComponent extends BaseSortableTable implements OnI
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.tableData = controlPathResponse;
       });
-    }, error => {
-      if (error.error && error.status === 422) {
-        const modalRef = this.modalService.open(ConfirmationDialogComponent);
-        modalRef.componentInstance.message = error.error.message;
-        modalRef.componentInstance.singleButton = true;
-      }
     });
   }
 

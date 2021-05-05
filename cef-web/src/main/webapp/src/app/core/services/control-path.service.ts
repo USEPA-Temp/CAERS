@@ -50,6 +50,11 @@ export class ControlPathService {
     return this.http.put<ControlPath>(url, controlPath);
   }
 
+  isPathPreviouslyReported(id: number): Observable<boolean> {
+    const url = `${this.baseUrl}/${id}/reported`;
+    return this.http.get<boolean>(url);
+  }
+
   delete(id: number): Observable<{}> {
     const url = `${this.baseUrl}/${id}`;
     return this.http.delete(url);
