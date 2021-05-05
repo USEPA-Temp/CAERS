@@ -2,16 +2,14 @@ package gov.epa.cef.web.service.dto;
 
 import java.math.BigDecimal;
 
-import gov.epa.cef.web.domain.UnitMeasureCode;
-
 public class CalculationMaterialCodeDto extends CodeLookupDto {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private Boolean fuelUseMaterial;
 	private BigDecimal defaultHeatContentRatio;
-	private UnitMeasureCode heatContentRatioNumeratorUom;
-	private UnitMeasureCode heatContentRatioDenominatorUom;
+	private UnitMeasureCodeDto heatContentRatioNumeratorUom;
+	private UnitMeasureCodeDto heatContentRatioDenominatorUom;
 	
 	public Boolean getFuelUseMaterial() {
 		return fuelUseMaterial;
@@ -25,18 +23,18 @@ public class CalculationMaterialCodeDto extends CodeLookupDto {
 	public void setDefaultHeatContentRatio(BigDecimal defaultHeatContentRatio) {
 		this.defaultHeatContentRatio = defaultHeatContentRatio;
 	}
-	public UnitMeasureCode getHeatContentRatioNumeratorUom() {
+	public UnitMeasureCodeDto getHeatContentRatioNumeratorUom() {
 		return heatContentRatioNumeratorUom;
 	}
 	public void setHeatContentRatioNumeratorUom(
-			UnitMeasureCode heatContentRatioNumeratorUom) {
+			UnitMeasureCodeDto heatContentRatioNumeratorUom) {
 		this.heatContentRatioNumeratorUom = heatContentRatioNumeratorUom;
 	}
-	public UnitMeasureCode getHeatContentRatioDenominatorUom() {
+	public UnitMeasureCodeDto getHeatContentRatioDenominatorUom() {
 		return heatContentRatioDenominatorUom;
 	}
 	public void setHeatContentRatioDenominatorUom(
-			UnitMeasureCode heatContentRatioDenominatorUom) {
+			UnitMeasureCodeDto heatContentRatioDenominatorUom) {
 		this.heatContentRatioDenominatorUom = heatContentRatioDenominatorUom;
 	}
 	
