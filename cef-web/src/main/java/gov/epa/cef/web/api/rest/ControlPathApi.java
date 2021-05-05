@@ -106,6 +106,21 @@ public class ControlPathApi {
     }
 
     /**
+     * Check if a control path was previously reported
+     * @param controlPathId
+     * @return
+     */
+    @GetMapping(value = "/{controlPathId}/reported")
+    public ResponseEntity<Boolean> isPathPreviouslyReported(@NotNull @PathVariable Long controlPathId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(controlPathId, ControlPathRepository.class);
+
+        Boolean result = controlPathService.isPathPreviouslyReported(controlPathId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
      * Delete a Control Path for given id
      * @param controlPathId
      * @return
