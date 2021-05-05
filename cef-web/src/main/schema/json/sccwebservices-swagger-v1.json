@@ -4,7 +4,7 @@
     "version": "1.11",
     "title": ""
   },
-  "host": "ofmpub.epa.gov",
+  "host": "sor-scc-api.epa.gov",
   "basePath": "/sccwebservices/v1",
   "tags": [
     {
