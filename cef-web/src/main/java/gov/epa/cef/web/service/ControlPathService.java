@@ -72,6 +72,13 @@ public interface ControlPathService {
 	List<ControlAssignmentDto> retrieveParentPathById(Long id);
 
     /**
+     * Check if a control path was previously reported
+     * @param controlPathId
+     * @return
+     */
+    Boolean isPathPreviouslyReported(Long controlPathId);
+
+    /**
      * Delete a Control Path for a given id
      * @param controlId
      */

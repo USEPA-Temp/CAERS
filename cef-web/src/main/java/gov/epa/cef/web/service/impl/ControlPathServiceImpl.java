@@ -234,10 +234,11 @@ public class ControlPathServiceImpl implements ControlPathService {
     }
 
     /**
-     * Delete a Control Path for a given id
-     * @Param controlId
+     * Check if a control path was previously reported
+     * @param controlPathId
+     * @return
      */
-    public void delete(Long controlPathId) {
+    public Boolean isPathPreviouslyReported(Long controlPathId) {
         ControlPath path= repo
                 .findById(controlPathId)
                 .orElse(null);
@@ -250,14 +251,20 @@ public class ControlPathServiceImpl implements ControlPathService {
 
         // check if the control path was reported last year
         if (lastReport.isPresent()) {
-            repo.retrieveByIdentifierFacilityYear(path.getPathId(),
+            return repo.retrieveByIdentifierFacilityYear(path.getPathId(),
                     mfrId,
                     lastReport.get().getYear())
-                    .stream().findFirst().ifPresent(oldUnit -> {
-                        throw new AppValidationException("This Path has been submitted on previous years' facility reports, so it cannot be deleted. "
-                                + "If this Path is no longer operational, please use the \"Operating Status\" field to mark this Path as \"Permanently Shutdown\".");
-                    });
+                    .stream().findFirst().isPresent();
         }
+
+        return false;
+    }
+
+    /**
+     * Delete a Control Path for a given id
+     * @Param controlId
+     */
+    public void delete(Long controlPathId) {
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPathId), ControlPathRepository.class);
     	repo.deleteById(controlPathId);
