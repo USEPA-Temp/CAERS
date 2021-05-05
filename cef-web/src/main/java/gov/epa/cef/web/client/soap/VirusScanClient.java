@@ -7,7 +7,9 @@ import gov.epa.cef.web.provider.system.IPropertyKey;
 import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.util.TempFile;
-import net.exchangenetwork.wsdl.virusscan._1.ScanFilePortType;
+import net.exchangenetwork.schema.validator._3.SchemaType;
+import net.exchangenetwork.schema.validator._3.ValidationType;
+import net.exchangenetwork.wsdl.validator._3.ValidatorPortType3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,8 @@ import java.util.UUID;
 @Component
 public class VirusScanClient extends AbstractClient {
 
-    private static final String CleanFile = "The file is clean";
-    private static final String VirusFound = "Virus Found";
+    private static final String VIRUS_SCAN_CLEAN = "Congratulations! The document,.*, is clean, no virus detected.";
+    private static final String VIRUS_SCAN_DETECTED = "Virus .* found in the submitted file. Please delete the file immediately!";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -64,16 +66,16 @@ public class VirusScanClient extends AbstractClient {
 
     private void doScanFile(TempFile tempFile) {
 
-        ScanFilePortType virusScanner = getClient(this.virusScanConfig.getEndpoint(),
-            ScanFilePortType.class, true, true);
+        ValidatorPortType3 virusScanner = getClient(this.virusScanConfig.getEndpoint(),
+                ValidatorPortType3.class, true, true);
 
-        UUID transId = UUID.randomUUID();
 
         String result = "Waiting for response...";
         try {
 
-            result = virusScanner.scanFile(this.cdxConfig.getNaasUser(), this.cdxConfig.getNaasPassword(),
-                "default", transId.toString(), new DataHandler(new FileDataSource(tempFile.getFile())));
+            // schema type isn't used
+            result = virusScanner.validateDocument(this.cdxConfig.getNaasUser(), this.cdxConfig.getNaasPassword(), 
+                    "default", ValidationType.VIRUSSCAN, SchemaType.EIS_V_1_0, new DataHandler(new FileDataSource(tempFile.getFile())), "bin", null);
 
         } catch (Exception e) {
 
@@ -82,28 +84,25 @@ public class VirusScanClient extends AbstractClient {
 
             result = e.getMessage();
 
-            if (VirusFound.equals(e.getMessage())) {
-
-                throw new VirusScanException(tempFile, e.getMessage());
-
-            } else {
-
-                // unknown exception, eat it and send email to admins
-                // TODO this should be async, suggest to an event/message queue to decouple actions
-                this.notificationService.sendAdminNotification(
-                    NotificationService.AdminEmailType.VirusScanFailure,
-                    ImmutableMap.of("exception", e));
-            }
+            // unknown exception, eat it and send email to admins
+            // TODO this should be async, suggest to an event/message queue to decouple actions
+            this.notificationService.sendAdminNotification(
+                NotificationService.AdminEmailType.VirusScanFailure,
+                ImmutableMap.of("exception", e));
 
         } finally {
 
-            logger.debug("VirusScan {} returned: {}", transId, result);
+            logger.info("VirusScan returned: {}", result);
         }
 
-        // if we get here then the result should be "clean file"
-        // otherwise send an email for unexpected result
-        if (CleanFile.equals(result) == false) {
+        if (result.matches(VIRUS_SCAN_DETECTED)) {
 
+            throw new VirusScanException(tempFile, result);
+
+        } else if (!result.matches(VIRUS_SCAN_CLEAN)) {
+
+            // if we get here then the result should be "clean file"
+            // otherwise send an email for unexpected result
             this.notificationService.sendAdminNotification(
                 NotificationService.AdminEmailType.VirusScanFailure,
                 ImmutableMap.of("exception",

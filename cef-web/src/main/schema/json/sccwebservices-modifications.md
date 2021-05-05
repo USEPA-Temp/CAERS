@@ -1,5 +1,5 @@
 The swagger file available: 
-https://ofmpub.epa.gov/sccwebservices/v1/swagger.json
+https://sor-scc-api.epa.gov/sccwebservices/v1/swagger.json
 
 Help
 https://swagger.io/docs/specification/2-0/describing-responses/

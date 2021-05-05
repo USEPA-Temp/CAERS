@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import java.util.ArrayList;  
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,12 @@ import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPathPollutant;
+import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.exception.AppValidationException;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlPathPollutantRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.ControlPathService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlDto;
@@ -56,6 +60,9 @@ public class ControlPathServiceImpl implements ControlPathService {
     
     @Autowired
     private ControlPathPollutantRepository pollutantRepo;
+
+    @Autowired
+    private EmissionsReportRepository reportRepo;
       
     @Override
     public ControlPathDto retrieveById(Long id) {
@@ -225,16 +232,44 @@ public class ControlPathServiceImpl implements ControlPathService {
     			.findById(id)
     			.orElse(null);
     }
-    
+
+    /**
+     * Check if a control path was previously reported
+     * @param controlPathId
+     * @return
+     */
+    public Boolean isPathPreviouslyReported(Long controlPathId) {
+        ControlPath path= repo
+                .findById(controlPathId)
+                .orElse(null);
+
+        Long mfrId = repo.retrieveMasterFacilityRecordIdById(controlPathId).orElse(null);
+
+        // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
+                path.getFacilitySite().getEmissionsReport().getYear());
+
+        // check if the control path was reported last year
+        if (lastReport.isPresent()) {
+            return repo.retrieveByIdentifierFacilityYear(path.getPathId(),
+                    mfrId,
+                    lastReport.get().getYear())
+                    .stream().findFirst().isPresent();
+        }
+
+        return false;
+    }
+
     /**
      * Delete a Control Path for a given id
      * @Param controlId
      */
     public void delete(Long controlPathId) {
+
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPathId), ControlPathRepository.class);
     	repo.deleteById(controlPathId);
     }
-    
+
     /**
      * Create a new Control Path Assignment from a DTO object
      */

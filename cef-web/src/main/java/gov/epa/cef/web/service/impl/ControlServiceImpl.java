@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +12,13 @@ import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPollutant;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.exception.AppValidationException;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlPollutantRepository;
 import gov.epa.cef.web.repository.ControlRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.ControlPollutantDto;
@@ -43,6 +47,9 @@ public class ControlServiceImpl implements ControlService {
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
+
+    @Autowired
+    private EmissionsReportRepository reportRepo;
 
     /**
      * Create a new Control from a DTO object
@@ -73,6 +80,27 @@ public class ControlServiceImpl implements ControlService {
      * @Param controlId
      */
     public void delete(Long controlId) {
+        Control control= repo
+                .findById(controlId)
+                .orElse(null);
+
+        Long mfrId = repo.retrieveMasterFacilityRecordIdById(controlId).orElse(null);
+
+        // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
+                control.getFacilitySite().getEmissionsReport().getYear());
+
+        // check if the control path was reported last year
+        if (lastReport.isPresent()) {
+            repo.retrieveByIdentifierFacilityYear(control.getIdentifier(),
+                    mfrId,
+                    lastReport.get().getYear())
+                    .stream().findFirst().ifPresent(oldUnit -> {
+                        throw new AppValidationException("This Control has been submitted on previous years' facility reports, so it cannot be deleted. "
+                                + "If this Control is no longer operational, please use the \"Operating Status\" field to mark this Control as \"Permanently Shutdown\".");
+                    });
+        }
+
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlId), ControlRepository.class);
     	repo.deleteById(controlId);
     }
