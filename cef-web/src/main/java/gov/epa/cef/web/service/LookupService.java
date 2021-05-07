@@ -14,6 +14,7 @@ import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.TribalCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
+import gov.epa.cef.web.service.dto.CalculationMaterialCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
@@ -39,7 +40,7 @@ public interface LookupService {
      * Retrieve Fuel Use Calculation Material codes
      * @return
      */
-    List<CodeLookupDto> retrieveFuelUseMaterialCodes();
+    List<CalculationMaterialCodeDto> retrieveFuelUseMaterialCodes();
 
     /**
      * Retrieve Calculation Material code database object by code

@@ -26,6 +26,7 @@ import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.repository.LookupRepositories;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
+import gov.epa.cef.web.service.dto.CalculationMaterialCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
@@ -71,7 +72,8 @@ public abstract class LookupEntityMapper {
 
     public abstract List<CodeLookupDto> controlMeasureCodeToDtoList(List<ControlMeasureCode> source);
     
-    public abstract List<CodeLookupDto> calculationMaterialToDtoList(List<CalculationMaterialCode> source);
+    
+    public abstract List<CalculationMaterialCodeDto> fuelUseCalculationMaterialToDtoList(List<CalculationMaterialCode> source);
     
     public abstract CodeLookupDto releasePointTypCodeToDto(ReleasePointTypeCode source);
     

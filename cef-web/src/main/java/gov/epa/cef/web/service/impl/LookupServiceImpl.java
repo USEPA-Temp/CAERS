@@ -59,6 +59,7 @@ import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
+import gov.epa.cef.web.service.dto.CalculationMaterialCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
@@ -169,11 +170,11 @@ public class LookupServiceImpl implements LookupService {
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.LookupService#retrieveFuelUseMaterialCodes()
      */
-    public List<CodeLookupDto> retrieveFuelUseMaterialCodes() {
+    public List<CalculationMaterialCodeDto> retrieveFuelUseMaterialCodes() {
 
         List<CalculationMaterialCode> entities = materialCodeRepo.findAllFuelUseMaterial(Sort.by(Direction.ASC, DESCRIPTION));
 
-        List<CodeLookupDto> result = lookupMapper.calculationMaterialToDtoList(entities);
+        List<CalculationMaterialCodeDto> result = lookupMapper.fuelUseCalculationMaterialToDtoList(entities);
 
         return result;
     }
