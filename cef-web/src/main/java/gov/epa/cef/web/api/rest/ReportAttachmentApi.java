@@ -145,7 +145,13 @@ public class ReportAttachmentApi {
 
         } catch (IOException e) {
 
-            throw new IllegalStateException(e);
+            //throw new IllegalStateException(e);
+            String msg = String.format("There was an issue during file upload. Please try again. If you continue to experience issues, "
+                    + "please ensure that your file is not infected with a virus and reach out to the helpdesk.",
+                file.getOriginalFilename(), e.getMessage());
+            
+            throw new ReportAttachmentValidationException(
+                    Collections.singletonList(WorksheetError.createSystemError(msg)));
         }
     	
     	return new ResponseEntity<>(result, status);
