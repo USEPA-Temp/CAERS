@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.AircraftEngineTypeCodeDto;
+import gov.epa.cef.web.service.dto.CalculationMaterialCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
@@ -51,10 +52,10 @@ public class LookupApi {
      */
     @GetMapping(value = "/fuelUse/material")
     @ResponseBody
-    public ResponseEntity<List<CodeLookupDto>> retrieveFuelUseMaterialCodes() {
+    public ResponseEntity<List<CalculationMaterialCodeDto>> retrieveFuelUseMaterialCodes() {
 
-        List<CodeLookupDto> result = lookupService.retrieveFuelUseMaterialCodes();
-        return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
+        List<CalculationMaterialCodeDto> result = lookupService.retrieveFuelUseMaterialCodes();
+        return new ResponseEntity<List<CalculationMaterialCodeDto>>(result, HttpStatus.OK);
     }
     
     /**

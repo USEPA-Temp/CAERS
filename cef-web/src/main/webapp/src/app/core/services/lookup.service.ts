@@ -14,6 +14,7 @@ import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-co
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
+import { CalculationMaterialCode } from 'src/app/shared/models/calculation-material-code';
 
 @Injectable({
   providedIn: 'root'
@@ -24,14 +25,14 @@ export class LookupService {
 
   constructor(private http: HttpClient) { }
 
-  retrieveCalcMaterial(): Observable<BaseCodeLookup[]> {
+  retrieveCalcMaterial(): Observable<CalculationMaterialCode[]> {
     const url = `${this.baseUrl}/calculation/material`;
-    return this.http.get<BaseCodeLookup[]>(url);
+    return this.http.get<CalculationMaterialCode[]>(url);
   }
 
-  retrieveFuelUseMaterial(): Observable<BaseCodeLookup[]> {
+  retrieveFuelUseMaterial(): Observable<CalculationMaterialCode[]> {
     const url = `${this.baseUrl}/fuelUse/material`;
-    return this.http.get<BaseCodeLookup[]>(url);
+    return this.http.get<CalculationMaterialCode[]>(url);
   }
 
   retrieveSccFuelUseMaterial(scc: string): Observable<FuelUseSccCode> {

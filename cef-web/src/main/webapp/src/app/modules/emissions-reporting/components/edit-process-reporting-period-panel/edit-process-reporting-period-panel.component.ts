@@ -10,6 +10,7 @@ import {SharedService} from 'src/app/core/services/shared.service';
 import {ToastrService} from 'ngx-toastr';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
+import { CalculationMaterialCode } from 'src/app/shared/models/calculation-material-code';
 
 @Component({
     selector: 'app-edit-process-reporting-period-panel',
@@ -50,7 +51,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   ]});
 
   materialValues: BaseCodeLookup[];
-  fuelUseMaterialValues: BaseCodeLookup[];
+  fuelUseMaterialValues: CalculationMaterialCode[];
   sccFuelUse: FuelUseSccCode;
   sccFuelUseMaterialValue: BaseCodeLookup;
   parameterTypeValues: BaseCodeLookup[];
@@ -178,12 +179,17 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
     // fuel material is set to null when the fuel use material does not match the allowable materials
     checkSccFuelMaterialUom() {
-        if (this.isFuelUseScc && this.processOpStatus === OperatingStatus.OPERATING) {
-            this.reportingPeriodForm.get('fuelUseMaterialCode').value === null
-            || this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code === this.sccFuelUseMaterialValue.code
-            ? null : this.reportingPeriodForm.get('fuelUseMaterialCode').patchValue(null);
+        if (this.processOpStatus === OperatingStatus.OPERATING) {
+            if (this.isFuelUseScc) {
 
-            this.checkSccUom();
+                this.reportingPeriodForm.get('fuelUseMaterialCode').value === null
+                || this.reportingPeriodForm.get('fuelUseMaterialCode').value?.code === this.sccFuelUseMaterialValue.code
+                ? null : this.reportingPeriodForm.get('fuelUseMaterialCode').patchValue(null);
+
+                this.checkSccUom();
+            } else if (this.reportingPeriodForm.get('fuelUseMaterialCode').value) {
+                this.setDefaultHeatContentRatio();
+            }
         }
     }
 
@@ -198,8 +204,22 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
                         match = true;
                 }
             });
+            this.setDefaultHeatContentRatio();
         }
         match ? null : this.reportingPeriodForm.get('fuelUseUom').patchValue(null);
+    }
+
+    setDefaultHeatContentRatio(){
+        let materialValue = this.reportingPeriodForm.get('fuelUseMaterialCode').value ? this.fuelUseMaterialValues.filter(
+                            val => (val.code === (this.reportingPeriodForm.get('fuelUseMaterialCode').value.code)))[0] : null;
+        let fuelUom = materialValue && materialValue.heatContentRatioDenominatorUom ? materialValue.heatContentRatioDenominatorUom.code : null;
+        let defaultHeatRatio = materialValue ? materialValue.defaultHeatContentRatio : null;
+        let defaultHeatUom = materialValue ? materialValue.heatContentRatioNumeratorUom : null;
+
+        if (this.reportingPeriodForm.get('fuelUseUom').value && this.reportingPeriodForm.get('fuelUseUom').value.code === fuelUom) {
+            this.reportingPeriodForm.get('heatContentValue').patchValue(defaultHeatRatio);
+            this.reportingPeriodForm.get('heatContentUom').patchValue(defaultHeatUom);
+        }
     }
 
     disableWarning(opStatus: string) {
