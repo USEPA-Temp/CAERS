@@ -17,7 +17,7 @@ describe('FORD TESTING SUITE', () => {
     cy.clearCookie('JSESSIONID');
 
     Cypress.Cookies.defaults({
-        preserve: ['CDX2_ASP.NET_SessionId', '.CDX2AUTH', 'pubCDXSessionEnd']
+        preserve: ['CDX2_ASP.NET_SessionId', '.CDX2AUTH', 'pubCDXSessionEnd', 'XSRF-TOKEN', 'JSESSIONID']
     });
     
     cy.fixture('userLogin').then(function(user){
@@ -26,7 +26,13 @@ describe('FORD TESTING SUITE', () => {
   });
 
   Cypress.Commands.add('login', function(){
-    cy.visit(Cypress.env('login_url'));
+    if(Cypress.env('environment') == 'dev') {
+      cy.visit(Cypress.env('dev_url'));
+    } else if (Cypress.env('environment') == 'test') {
+      cy.visit(Cypress.env('test_url'));
+    } else if (Cypress.env('environment') == 'prod') {
+      cy.visit(Cypress.env('prod_url'));
+    }
 
     cy.get('#LoginUserId').type(this.user.userId);
     cy.get('#LoginPassword').type(this.user.password);
@@ -38,7 +44,7 @@ describe('FORD TESTING SUITE', () => {
 
 
   it('Handoff from CDX to CAER', function(){
-  	if(Cypress.env('local')) {
+  	if(Cypress.env('environment') == 'local') {
   		cy.visit('/');
   	} else {
       cy.login();
@@ -49,6 +55,23 @@ describe('FORD TESTING SUITE', () => {
     it('Create Report', function() {
       cy.get('#continueReportGADNR12100364').click();
       cy.get('#createNew2020Report').click();
+      cy.get('[data-cy="reportSummaryTotals"] > :nth-child(6)').should('contain', '2793.4857256458');
+      cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
+      cy.get('#euSummaryTable > tbody > tr').should(($tr) => {
+          expect($tr).to.have.length(6)
+      });
+      cy.get('[data-cy="select releaseRelease Points"] > span').click();
+      cy.get('#rpSummaryTable > tbody > tr').should(($tr) => {
+          expect($tr).to.have.length(6)
+      });
+      cy.get('[data-cy="select controlControl Devices"] > span').click();
+      cy.get('#cdSummaryTable > tbody > tr').should(($tr) => {
+          expect($tr).to.have.length(6)
+      });
+      cy.get('[data-cy="select pathControl Paths"] > span').click();
+      cy.get('#cpSummaryTable > tbody > tr').should(($tr) => {
+          expect($tr).to.have.length(6)
+      });
     });
 
     it('Edit Facility Info', function() {
@@ -171,7 +194,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionBtn').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').type('nox');
-      cy.get('#ngb-typeahead-0-2 > ngb-highlight').click();
+      cy.get('[ng-reflect-result="Nitrogen Oxides  -  NOX "]').click();
       cy.get('#emissionsCalcMethodCodeSelect').select('1: Object');
       cy.get('#overallControlPercentInput').clear();
       cy.get('#overallControlPercentInput').type('0');

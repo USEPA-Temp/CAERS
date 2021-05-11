@@ -33,7 +33,7 @@
                     <td>{{ report.previousYearTotal || 'None Reported'}}</td>
                     <td>{{ report.previousYear}}</td>
                 </tr>
-                <tr class="font-weight-bold">
+                <tr class="font-weight-bold" data-cy="reportSummaryTotals">
                     <td>Total Emissions (Tons)<span class="note" *ngIf="radiationData && radiationData.length > 0"><br/>Total Emissions do not include Radionuclides (Radioactivity -including Radon)</span></td>
                     <td>--</td>
                     <td>--</td>

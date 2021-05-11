@@ -5,7 +5,7 @@
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
 
-describe('SAMPLE TEST', () => {
+describe('FORD TESTING SUITE', () => {
 
   before(function(){
     Cypress.Cookies.debug(true);
@@ -51,8 +51,10 @@ describe('SAMPLE TEST', () => {
     }
   });
 
-  describe('EMPTY TEST', () => {
-
+  describe('Basic Copy Test', () => {
+    it('Create Report', function() {
+      cy.get('#continueReportGADNR12100364').click();
+    });
   });
 })
 
