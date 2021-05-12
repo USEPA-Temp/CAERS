@@ -513,27 +513,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
         // CHECKS FOR ALL RELEASE POINT TYPES
 
-        // If release point operation is apportioned to a process, operation status must be operating
-        boolean hasApportionment = !releasePoint.getReleasePointAppts().isEmpty();
-        boolean isRelPointOperating = ConstantUtils.STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode());
-
-        if (hasApportionment && !isRelPointOperating) {
-            List<ReleasePointAppt> appts = releasePoint.getReleasePointAppts();
-            for (ReleasePointAppt appt : appts) {
-                boolean isProcessOperating = ConstantUtils.STATUS_OPERATING.contentEquals(appt.getEmissionsProcess().getOperatingStatusCode().getCode());
-
-                if (isProcessOperating) {
-                    result = false;
-                    context.addFederalError(
-                        ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.apportioned",
-                        createValidationDetails(releasePoint),
-                        releasePoint.getOperatingStatusCode().getDescription()
-                    );
-                    break;
-                }
-            }
-        }
-
         // If release point operation status is not operating, status year is required
         if (!ConstantUtils.STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode()) && releasePoint.getStatusYear() == null) {
 

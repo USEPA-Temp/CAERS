@@ -1,7 +1,6 @@
 package gov.epa.cef.web.service.validation.validator;
 
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -67,6 +66,11 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
+        
+        testData.setExitGasTemperature(null);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         //Verify QA checks are Run correctly when the Release Point is Operating
         cefContext = createContext();
@@ -1111,96 +1115,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
     }
 
-
-
-    @Test
-    public void releasePointApportionedAndNotOperatingFailTest() {
-        CefValidatorContext cefContext = createContext();
-        ReleasePoint testData = createBaseReleasePoint();
-        List<ReleasePointAppt> appts = new ArrayList<>();
-        ReleasePointAppt appt = new ReleasePointAppt();
-        OperatingStatusCode releasePointOpStatus = new OperatingStatusCode();
-        OperatingStatusCode processOpStatus = new OperatingStatusCode();
-        EmissionsProcess process = new EmissionsProcess();
-
-        processOpStatus.setCode("OP");
-        process.setOperatingStatusCode(processOpStatus);
-
-        appt.setEmissionsProcess(process);
-
-        appts.add(appt);
-        testData.setReleasePointAppts(appts);
-
-        releasePointOpStatus.setCode("PS");
-        testData.setOperatingStatusCode(releasePointOpStatus);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        releasePointOpStatus.setCode("TS");
-        testData.setOperatingStatusCode(releasePointOpStatus);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
-    }
-
-    @Test
-    public void releasePointApportionedAndOperatingPassTest() {
-        CefValidatorContext cefContext = createContext();
-        ReleasePoint testData = createBaseReleasePoint();
-        List<ReleasePointAppt> appts = new ArrayList<>();
-        ReleasePointAppt appt = new ReleasePointAppt();
-        OperatingStatusCode releasePointOpStatus = new OperatingStatusCode();
-        OperatingStatusCode processOpStatus = new OperatingStatusCode();
-        EmissionsProcess process = new EmissionsProcess();
-
-        processOpStatus.setCode("OP");
-        process.setOperatingStatusCode(processOpStatus);
-
-        appt.setEmissionsProcess(process);
-
-        appts.add(appt);
-        testData.setReleasePointAppts(appts);
-
-        releasePointOpStatus.setCode("OP");
-        testData.setOperatingStatusCode(releasePointOpStatus);
-
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-    }
-
-    @Test
-    public void releasePointApportionedNotOperatingAndProcessNotOperatingPassTest() {
-        CefValidatorContext cefContext = createContext();
-        ReleasePoint testData = createBaseReleasePoint();
-        List<ReleasePointAppt> appts = new ArrayList<>();
-        ReleasePointAppt appt = new ReleasePointAppt();
-        OperatingStatusCode releasePointOpStatus = new OperatingStatusCode();
-        OperatingStatusCode processOpStatus = new OperatingStatusCode();
-        EmissionsProcess process = new EmissionsProcess();
-
-        processOpStatus.setCode("PS");
-        process.setOperatingStatusCode(processOpStatus);
-
-        appt.setEmissionsProcess(process);
-
-        appts.add(appt);
-        testData.setReleasePointAppts(appts);
-
-        releasePointOpStatus.setCode("PS");
-        testData.setOperatingStatusCode(releasePointOpStatus);
-
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-
-        processOpStatus.setCode("PS");
-        process.setOperatingStatusCode(processOpStatus);
-
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-    }
-
-
     @Test
     public void simpleValidateOperationStatusYearTypeFailTest() {
 
@@ -1428,62 +1342,4 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	return result;
     }
 
-    private ReleasePoint createNonOperatingReleasePoint() {
-
-        MasterFacilityRecord mfr = new MasterFacilityRecord();
-        mfr.setEisProgramId("111111");
-
-    	EmissionsReport er = new EmissionsReport();
-    	er.setYear((short)2019);
-    	er.setMasterFacilityRecord(mfr);
-
-        OperatingStatusCode opStatCode = new OperatingStatusCode();
-        opStatCode.setCode("TS");
-
-        FacilitySite facility = new FacilitySite();
-        facility.setId(1L);
-        facility.setLatitude(new BigDecimal(33.949000));
-        facility.setLongitude(new BigDecimal(-84.388000));
-        facility.setOperatingStatusCode(opStatCode);
-        facility.setEmissionsReport(er);
-        er.getFacilitySites().add(facility);
-
-        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
-        releasePointTypeCode.setCode("2");
-
-        UnitMeasureCode flowUom = new UnitMeasureCode();
-        flowUom.setCode("ACFS");
-
-        UnitMeasureCode velUom = new UnitMeasureCode();
-        velUom.setCode("FPS");
-
-        UnitMeasureCode distUom = new UnitMeasureCode();
-        distUom.setCode("FT");
-
-        ReleasePoint result = new ReleasePoint();
-        result.setExitGasTemperature((short) 50);
-        result.setExitGasFlowRate(0.002);
-        result.setExitGasFlowUomCode(flowUom);
-        result.setExitGasVelocity(0.01);
-        result.setExitGasVelocityUomCode(velUom);
-        result.setFenceLineDistance((long) 1);
-        result.setFenceLineUomCode(distUom);
-        result.setStackHeightUomCode(distUom);
-        result.setStackDiameterUomCode(distUom);
-        result.setStackHeight(1.0);
-        result.setStackDiameter(0.5);
-        result.setTypeCode(releasePointTypeCode);
-        result.setLatitude(33.949000);
-        result.setLongitude(-84.388000);
-        result.setFacilitySite(facility);
-        result.setFugitiveLine1Latitude(33.949000);
-        result.setFugitiveLine1Longitude(-84.388000);
-        result.setFugitiveLine2Latitude(33.949000);
-        result.setFugitiveLine2Longitude(-84.388000);
-        result.setStatusYear((short) 2000);
-        result.setOperatingStatusCode(opStatCode);
-        result.setId(1L);
-
-        return result;
-    }
 }

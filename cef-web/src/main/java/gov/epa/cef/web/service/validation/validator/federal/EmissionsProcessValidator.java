@@ -15,7 +15,6 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
-import gov.epa.cef.web.service.impl.CersXmlServiceImpl;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
@@ -78,6 +77,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         boolean result = true;
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
+        boolean isProcessOperating = ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getOperatingStatusCode().getCode());
 
         Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
         // Might need to add a rounding tolerance.
@@ -104,9 +104,9 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         			createValidationDetails(emissionsProcess));
         }
         
-        // release point can be used only once per rp appt collection
+        
         for (List<ReleasePointAppt> rpa: rpaMap.values()) {
-        	
+        	// release point can be used only once per rp appt collection
         	if (rpa.size() > 1) {
         		
         		result = false;
@@ -116,6 +116,18 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 	        			createValidationDetails(emissionsProcess),
 	        			rpa.get(0).getReleasePoint().getReleasePointIdentifier());
 	        }
+        	
+        	// If release point operation is apportioned to a process, operation status must be operating
+        	if (isProcessOperating && !ConstantUtils.STATUS_OPERATING.contentEquals(rpa.get(0).getReleasePoint().getOperatingStatusCode().getCode())) {
+        		
+        		result = false;
+	        	context.addFederalError(
+	        			ValidationField.PROCESS_RP.value(),
+	        			"emissionsProcess.releasePointAppts.statusTypeCode",
+	        			createValidationDetails(emissionsProcess),
+	        			rpa.get(0).getReleasePoint().getReleasePointIdentifier(),
+	        			rpa.get(0).getReleasePoint().getOperatingStatusCode().getDescription());
+        	}
 	      }
         
         // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
@@ -132,7 +144,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         	}
         }
         
-        if (ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+        if (isProcessOperating) { 
         	
             // Check for valid SCC Code
             if (Strings.emptyToNull(emissionsProcess.getSccCode()) != null) {
