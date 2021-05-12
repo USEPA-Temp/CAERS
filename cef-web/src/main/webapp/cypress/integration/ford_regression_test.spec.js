@@ -144,8 +144,12 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#unitStatusYearInput').type('2020');
       cy.get('#descriptionInput').clear();
       cy.get('#descriptionInput').type('Cypress Test Unit');
+      cy.get('#unitDesignCapacityInput').clear();
+      cy.get('#unitDesignCapacityInput').type('1000');
+      cy.get('#unitOfMeasureCodeSelect').select('6: Object');
+      cy.get('#unitCommentsInput').clear();
+      cy.get('#unitCommentsInput').type('Cypress Test Comment');
       cy.get('.btn-success').click();
-
     });
 
     it('Create Process', function() {
