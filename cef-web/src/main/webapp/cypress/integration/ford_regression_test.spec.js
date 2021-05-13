@@ -77,6 +77,9 @@ describe('FORD TESTING SUITE', () => {
     it('Edit Facility Info', function() {
       cy.get('[data-cy="select facilityInformationFacility Information"] > span').click();
       cy.get('app-facility-information > :nth-child(1) > .card-header > .float-right > .btn').click();
+      cy.get('#facilityStatusCodeSelect').select('1: Object');
+      cy.get('#statusYearInput').clear();
+      cy.get('#statusYearInput').type('2017');
       cy.get('#facilityBIACodeSelect').select('1: Object');
       cy.get('#mailingStreetAddressInput').clear();
       cy.get('#mailingStreetAddressInput').type('test street');
@@ -138,6 +141,23 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionsUnitBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#unitIdentifierInput').clear();
       cy.get('#unitIdentifierInput').type('Cypress');
+      cy.get('#unitStatusCodeSelect').select('2: Object');
+      cy.get('#unitTypeCodeSelect').select('3: Object');
+      cy.get('#unitStatusYearInput').clear();
+      cy.get('#unitStatusYearInput').type('1999');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress Test Uni');
+      cy.get('#unitDesignCapacityInput').clear();
+      cy.get('#unitDesignCapacityInput').type('10000');
+      cy.get('#unitOfMeasureCodeSelect').select('5: Object');
+      cy.get('#unitCommentsInput').clear();
+      cy.get('#unitCommentsInput').type('Cypress Test Commen');
+      cy.get('.btn-success').click();
+    });
+
+    it('Edit Emissions Unit', function() {
+      cy.get('[data-cy="emissions unitCypress"]').click();
+      cy.get('.float-right > .btn').click();
       cy.get('#unitStatusCodeSelect').select('1: Object');
       cy.get('#unitTypeCodeSelect').select('1: Object');
       cy.get('#unitStatusYearInput').clear();
@@ -153,7 +173,6 @@ describe('FORD TESTING SUITE', () => {
     });
 
     it('Create Process', function() {
-      cy.get('[data-cy="emissions unitCypress"]').click();
       cy.get('#tblAddProcessBtn > .ng-fa-icon > .svg-inline--fa > path').click();
       cy.get('#processIdentifierInput').clear();
       cy.get('#processIdentifierInput').type('Cypress 1');
@@ -198,7 +217,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionBtn').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').type('nox');
-      cy.get('[ng-reflect-result="Nitrogen Oxides  -  NOX "]').click();
+      cy.get('#ngb-typeahead-1-2 > ngb-highlight').click();
       cy.get('#emissionsCalcMethodCodeSelect').select('1: Object');
       cy.get('#overallControlPercentInput').clear();
       cy.get('#overallControlPercentInput').type('0');
