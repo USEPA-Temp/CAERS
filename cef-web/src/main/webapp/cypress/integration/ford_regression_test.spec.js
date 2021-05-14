@@ -78,8 +78,6 @@ describe('FORD TESTING SUITE', () => {
       cy.get('[data-cy="select facilityInformationFacility Information"] > span').click();
       cy.get('app-facility-information > :nth-child(1) > .card-header > .float-right > .btn').click();
       cy.get('#facilityBIACodeSelect').select('1: Object');
-      cy.get('#facilityStatusCodeSelect').select('1: Object');
-      cy.get('#statusYearInput').type('2020');
       cy.get('#mailingStreetAddressInput').clear();
       cy.get('#mailingStreetAddressInput').type('test street');
       cy.get('#mailingPostalCodeInput').clear();
