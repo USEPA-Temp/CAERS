@@ -77,6 +77,9 @@ describe('FORD TESTING SUITE', () => {
     it('Edit Facility Info', function() {
       cy.get('[data-cy="select facilityInformationFacility Information"] > span').click();
       cy.get('app-facility-information > :nth-child(1) > .card-header > .float-right > .btn').click();
+      cy.get('#facilityStatusCodeSelect').select('1: Object');
+      cy.get('#statusYearInput').clear();
+      cy.get('#statusYearInput').type('2017');
       cy.get('#facilityBIACodeSelect').select('1: Object');
       cy.get('#mailingStreetAddressInput').clear();
       cy.get('#mailingStreetAddressInput').type('test street');
@@ -138,6 +141,23 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionsUnitBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#unitIdentifierInput').clear();
       cy.get('#unitIdentifierInput').type('Cypress');
+      cy.get('#unitStatusCodeSelect').select('2: Object');
+      cy.get('#unitTypeCodeSelect').select('3: Object');
+      cy.get('#unitStatusYearInput').clear();
+      cy.get('#unitStatusYearInput').type('1999');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress Test Uni');
+      cy.get('#unitDesignCapacityInput').clear();
+      cy.get('#unitDesignCapacityInput').type('10000');
+      cy.get('#unitOfMeasureCodeSelect').select('5: Object');
+      cy.get('#unitCommentsInput').clear();
+      cy.get('#unitCommentsInput').type('Cypress Test Commen');
+      cy.get('.btn-success').click();
+    });
+
+    it('Edit Emissions Unit', function() {
+      cy.get('[data-cy="emissions unitCypress"]').click();
+      cy.get('.float-right > .btn').click();
       cy.get('#unitStatusCodeSelect').select('1: Object');
       cy.get('#unitTypeCodeSelect').select('1: Object');
       cy.get('#unitStatusYearInput').clear();
@@ -153,7 +173,6 @@ describe('FORD TESTING SUITE', () => {
     });
 
     it('Create Process', function() {
-      cy.get('[data-cy="emissions unitCypress"]').click();
       cy.get('#tblAddProcessBtn > .ng-fa-icon > .svg-inline--fa > path').click();
       cy.get('#processIdentifierInput').clear();
       cy.get('#processIdentifierInput').type('Cypress 1');
@@ -198,7 +217,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionBtn').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').type('nox');
-      cy.get('[ng-reflect-result="Nitrogen Oxides  -  NOX "]').click();
+      cy.get('#ngb-typeahead-1-2 > ngb-highlight').click();
       cy.get('#emissionsCalcMethodCodeSelect').select('1: Object');
       cy.get('#overallControlPercentInput').clear();
       cy.get('#overallControlPercentInput').type('0');
@@ -255,6 +274,123 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#longitude').clear();
       cy.get('#longitude').type('-84.4011');
       cy.get('.btn-success').click();
+    });
+
+    it('Create Control Device', function() {
+      cy.get('[data-cy="select controlControl Devices"] > span').click();
+      cy.get('#tblAddControlDeviceBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#controlIdentifierInput').clear();
+      cy.get('#controlIdentifierInput').type('Cypress Control 1');
+      cy.get('#controlMeasureCodeSelect').select('1: Object');
+      cy.get('#controlStatusCodeSelect').select('1: Object');
+      cy.get('#controlStatusYearInput').clear();
+      cy.get('#controlStatusYearInput').type('2021');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress Test Control 1');
+      cy.get('#numberOperatingMonths').clear();
+      cy.get('#numberOperatingMonths').type('10');
+      cy.get('#percentControlInput').clear();
+      cy.get('#percentControlInput').type('85.5');
+      cy.get('#startDate').clear();
+      cy.get('#startDate').type('2019-01-01');
+      cy.get('#upgradeDate').clear();
+      cy.get('#upgradeDate').type('2019-06-01');
+      cy.get('#endDate').clear();
+      cy.get('#endDate').type('2020-12-31');
+      cy.get('#upgradeDescription').clear();
+      cy.get('#upgradeDescription').type('Description.');
+      cy.get('#controlCommentsInput').clear();
+      cy.get('#controlCommentsInput').type('Comments.');
+      cy.get('.btn-success').click();
+    });
+
+    it('Create Control Pollutant', function() {
+      cy.get('[data-cy="control deviceCypress Control 1"]').click();
+      cy.get('#tblAddControlPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#pollutantSelect').clear();
+      cy.get('#pollutantSelect').type('nox');
+      cy.get('#ngb-typeahead-2-2 > ngb-highlight').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('80');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Pollutant', function() {
+      cy.get('[data-cy="edit control pollutantNOX"]').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('75');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Device', function() {
+      cy.get('.float-right > .btn').click();
+      cy.get('#controlStatusYearInput').clear();
+      cy.get('#controlStatusYearInput').type('2020');
+      cy.get('#upgradeDate').clear();
+      cy.get('#upgradeDate').type('2020-01-01');
+      cy.get('#upgradeDescription').clear();
+      cy.get('#upgradeDescription').type('Description of control device upgraded.');
+      cy.get('#controlCommentsInput').clear();
+      cy.get('#controlCommentsInput').type('Comments about the control device.');
+      cy.get('.btn-success').click();
+    });
+
+    it('Create Control Path', function() {
+      cy.get('[data-cy="select pathControl Paths"] > span').click();
+      cy.get('#tblAddControlPathBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#controlPathIdInput').clear();
+      cy.get('#controlPathIdInput').type('Cypress CP 1');
+      cy.get('#percentControlInput').clear();
+      cy.get('#percentControlInput').type('85');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress Test');
+      cy.get('.btn-success').click();
+    });
+
+    it('Create Control Path Pollutant', function() {
+      cy.get('[data-cy="control pathCypress CP 1"]').click();
+      cy.get('#tblAddControlPathPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#pollutantSelect').clear();
+      cy.get('#pollutantSelect').type('nox');
+      cy.get('#ngb-typeahead-4-2 > ngb-highlight').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('25');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Create Control Path Assignment', function() {
+      cy.get('#tblAddControlPathAssignmentBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#sequenceNumberInput').clear();
+      cy.get('#sequenceNumberInput').type('1');
+      cy.get('#controlSelect').select('6: Object');
+      cy.get('#percentInput').clear();
+      cy.get('#percentInput').type('50');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Path', function() {
+      cy.get('.float-right > .btn').click();
+      cy.get('#percentControlInput').clear();
+      cy.get('#percentControlInput').type('80.5');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress test control path Cypress CP 1.');
+      cy.get('.btn-success').click();
+    });
+
+    it('Edit Control Path Pollutant', function() {
+      cy.get('[data-cy="edit control pollutantNOX"]').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('75');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Path Assignment', function() {
+      cy.get('[data-cy="edit control path assignment sequence number1"]').click();
+      cy.get('#controlSelect').select('0: null');
+      cy.get('#controlPathSelect').select('1: Object');
+      cy.get('#percentInput').clear();
+      cy.get('#percentInput').type('85');
+      cy.get('.modal-footer > .btn-success').click();
     });
 
     it('Delete Report', function() {

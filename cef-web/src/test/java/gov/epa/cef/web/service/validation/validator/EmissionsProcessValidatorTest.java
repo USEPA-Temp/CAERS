@@ -51,7 +51,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     private EmissionsProcessValidator validator;
     
     @Mock
-		private PointSourceSccCodeRepository sccRepo;
+	private PointSourceSccCodeRepository sccRepo;
     
     @Mock
     private AircraftEngineTypeCodeRepository aircraftEngCodeRepo;
@@ -347,6 +347,9 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	EmissionsProcess testData = createBaseEmissionsProcess();
         ReleasePointAppt rpa1 = new ReleasePointAppt();
         ReleasePoint rp1 = new ReleasePoint();
+        OperatingStatusCode releasePointOpStatus = new OperatingStatusCode();
+        releasePointOpStatus.setCode("OP");
+        rp1.setOperatingStatusCode(releasePointOpStatus);
         rp1.setReleasePointIdentifier("test");
         rp1.setId(5L);
         rpa1.setPercent(101D);
@@ -472,6 +475,79 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	assertTrue(errorMap.containsKey(ValidationField.EMISSION_TOTAL_EMISSIONS.value()) && errorMap.get(ValidationField.EMISSION_TOTAL_EMISSIONS.value()).size() == 1);
     }
     
+    @Test
+    public void releasePointApportionedAndNotOperatingFailTest() {
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	
+    	List<ReleasePointAppt> appts = new ArrayList<>();
+    	ReleasePointAppt rpa1 = new ReleasePointAppt();
+        ReleasePoint rp1 = new ReleasePoint();
+        OperatingStatusCode releasePointOpStatus = new OperatingStatusCode();
+        releasePointOpStatus.setCode("PS");
+        rp1.setOperatingStatusCode(releasePointOpStatus);
+        rp1.setReleasePointIdentifier("test");
+        rp1.setId(5L);
+        rpa1.setPercent(100.0);
+        rpa1.setReleasePoint(rp1);
+        rpa1.setEmissionsProcess(testData);
+        appts.add(rpa1);
+        testData.setReleasePointAppts(appts);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP.value()) && errorMap.get(ValidationField.PROCESS_RP.value()).size() == 1);
+    }
+    
+    @Test
+    public void releasePointApportionedAndOperatingPassTest() {
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	
+    	List<ReleasePointAppt> appts = new ArrayList<>();
+    	ReleasePointAppt rpa1 = new ReleasePointAppt();
+        ReleasePoint rp1 = new ReleasePoint();
+        OperatingStatusCode releasePointOpStatus = new OperatingStatusCode();
+        releasePointOpStatus.setCode("OP");
+        rp1.setOperatingStatusCode(releasePointOpStatus);
+        rp1.setReleasePointIdentifier("test");
+        rp1.setId(5L);
+        rpa1.setPercent(100.0);
+        rpa1.setReleasePoint(rp1);
+        rpa1.setEmissionsProcess(testData);
+        appts.add(rpa1);
+        testData.setReleasePointAppts(appts);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void releasePointApportionedNotOperatingAndProcessNotOperatingPassTest() {
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	
+    	List<ReleasePointAppt> appts = new ArrayList<>();
+    	ReleasePointAppt rpa1 = new ReleasePointAppt();
+        ReleasePoint rp1 = new ReleasePoint();
+        OperatingStatusCode opStatus = new OperatingStatusCode();
+        opStatus.setCode("PS");
+        testData.setOperatingStatusCode(opStatus);
+        rp1.setOperatingStatusCode(opStatus);
+        rp1.setReleasePointIdentifier("test");
+        rp1.setId(5L);
+        rpa1.setPercent(100.0);
+        rpa1.setReleasePoint(rp1);
+        rpa1.setEmissionsProcess(testData);
+        appts.add(rpa1);
+        testData.setReleasePointAppts(appts);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
@@ -515,6 +591,8 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         ReleasePoint rp2 = new ReleasePoint();
         rp1.setId(1L);
         rp2.setId(2L);
+        rp1.setOperatingStatusCode(os);
+        rp2.setOperatingStatusCode(os);
         
         ReleasePointAppt rpa1 = new ReleasePointAppt();
         ReleasePointAppt rpa2 = new ReleasePointAppt();
