@@ -286,6 +286,64 @@ describe('FORD TESTING SUITE', () => {
       cy.get('.btn-success').click();
     });
 
+    it('Create Control Path', function() {
+      cy.get('[data-cy="select pathControl Paths"] > span').click();
+      cy.get('#tblAddControlPathBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#controlPathIdInput').clear();
+      cy.get('#controlPathIdInput').type('Cypress CP 1');
+      cy.get('#percentControlInput').clear();
+      cy.get('#percentControlInput').type('85');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress Test');
+      cy.get('.btn-success').click();
+    });
+
+    it('Create Control Path Pollutant', function() {
+      cy.get('[data-cy="control pathCypress CP 1"]').click();
+      cy.get('#tblAddControlPathPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#pollutantSelect').clear();
+      cy.get('#pollutantSelect').type('nox');
+      cy.get('#ngb-typeahead-4-2 > ngb-highlight').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('25');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Create Control Path Assignment', function() {
+      cy.get('#tblAddControlPathAssignmentBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#sequenceNumberInput').clear();
+      cy.get('#sequenceNumberInput').type('1');
+      cy.get('#controlSelect').select('6: Object');
+      cy.get('#percentInput').clear();
+      cy.get('#percentInput').type('50');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Path', function() {
+      cy.get('.float-right > .btn').click();
+      cy.get('#percentControlInput').clear();
+      cy.get('#percentControlInput').type('80.5');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress test control path Cypress CP 1.');
+      cy.get('.btn-success').click();
+    });
+
+    it('Edit Control Path Pollutant', function() {
+      cy.get('[data-cy="edit control pollutantNOX"]').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('75');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Path Assignment', function() {
+      cy.get('[data-cy="edit control path assignment sequence number1"]').click();
+      cy.get('#controlSelect').select('0: null');
+      cy.get('#controlPathSelect').select('1: Object');
+      cy.get('#percentInput').clear();
+      cy.get('#percentInput').type('85');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
     it('Delete Report', function() {
       cy.get('[data-cy="bcMy Facilities"]').click();
       cy.get('#continueReportGADNR12100364').click();
