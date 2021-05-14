@@ -78,6 +78,8 @@ describe('FORD TESTING SUITE', () => {
       cy.get('[data-cy="select facilityInformationFacility Information"] > span').click();
       cy.get('app-facility-information > :nth-child(1) > .card-header > .float-right > .btn').click();
       cy.get('#facilityBIACodeSelect').select('1: Object');
+      cy.get('#facilityStatusCodeSelect').select('1: Object');
+      cy.get('#statusYearInput').type('2020');
       cy.get('#mailingStreetAddressInput').clear();
       cy.get('#mailingStreetAddressInput').type('test street');
       cy.get('#mailingPostalCodeInput').clear();
@@ -201,6 +203,65 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#totalEmissionsInput').clear();
       cy.get('#totalEmissionsInput').type('15');
       cy.get('#emissionsUomCodeSelect').select('8: Object');
+      cy.get('.btn-success').click();
+    });
+
+    it('Create Control Device', function() {
+      cy.get('[data-cy="select controlControl Devices"] > span').click();
+      cy.get('#tblAddControlDeviceBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#controlIdentifierInput').clear();
+      cy.get('#controlIdentifierInput').type('Cypress Control 1');
+      cy.get('#controlMeasureCodeSelect').select('1: Object');
+      cy.get('#controlStatusCodeSelect').select('1: Object');
+      cy.get('#controlStatusYearInput').clear();
+      cy.get('#controlStatusYearInput').type('2021');
+      cy.get('#descriptionInput').clear();
+      cy.get('#descriptionInput').type('Cypress Test Control 1');
+      cy.get('#numberOperatingMonths').clear();
+      cy.get('#numberOperatingMonths').type('10');
+      cy.get('#percentControlInput').clear();
+      cy.get('#percentControlInput').type('85.5');
+      cy.get('#startDate').clear();
+      cy.get('#startDate').type('2019-01-01');
+      cy.get('#upgradeDate').clear();
+      cy.get('#upgradeDate').type('2019-06-01');
+      cy.get('#endDate').clear();
+      cy.get('#endDate').type('2020-12-31');
+      cy.get('#upgradeDescription').clear();
+      cy.get('#upgradeDescription').type('Description.');
+      cy.get('#controlCommentsInput').clear();
+      cy.get('#controlCommentsInput').type('Comments.');
+      cy.get('.btn-success').click();
+    });
+
+    it('Create Control Pollutant', function() {
+      cy.get('[data-cy="control deviceCypress Control 1"]').click();
+      cy.get('#tblAddControlPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#pollutantSelect').clear();
+      cy.get('#pollutantSelect').type('nox');
+      cy.get('#ngb-typeahead-2-2 > ngb-highlight').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('80');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Pollutant', function() {
+      cy.get('[data-cy="edit control pollutantNOX"]').click();
+      cy.get('#percentReductionSelect').clear();
+      cy.get('#percentReductionSelect').type('75');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Edit Control Device', function() {
+      cy.get('.float-right > .btn').click();
+      cy.get('#controlStatusYearInput').clear();
+      cy.get('#controlStatusYearInput').type('2020');
+      cy.get('#upgradeDate').clear();
+      cy.get('#upgradeDate').type('2020-01-01');
+      cy.get('#upgradeDescription').clear();
+      cy.get('#upgradeDescription').type('Description of control device upgraded.');
+      cy.get('#controlCommentsInput').clear();
+      cy.get('#controlCommentsInput').type('Comments about the control device.');
       cy.get('.btn-success').click();
     });
 
