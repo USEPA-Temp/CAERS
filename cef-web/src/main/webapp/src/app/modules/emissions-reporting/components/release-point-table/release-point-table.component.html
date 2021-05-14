@@ -14,7 +14,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of tableData">
-      <td><a routerLink="{{baseUrl}}/{{item.id}}" [attr.aria-label]="'release point' + item?.releasePointIdentifier">
+      <td><a routerLink="{{baseUrl}}/{{item.id}}" [attr.aria-label]="'release point' + item?.releasePointIdentifier" [attr.data-cy]="'release point' + item?.releasePointIdentifier">
         {{item.releasePointIdentifier}}
       </a></td>
       <td>{{item.typeCode.description}}</td>
@@ -29,7 +29,7 @@
       <ng-container *ngIf="!readOnlyMode">
         <tr>
           <td colspan="4"></td>
-          <td><a routerLink="{{baseUrl}}/create" aria-label="add release point"><fa-icon [icon]="faPlus"></fa-icon></a></td> 
+          <td><a routerLink="{{baseUrl}}/create" aria-label="add release point" id="tblAddReleasePointBtn"><fa-icon [icon]="faPlus"></fa-icon></a></td> 
         </tr>
       </ng-container> 
     </tbody>
