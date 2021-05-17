@@ -227,6 +227,55 @@ describe('FORD TESTING SUITE', () => {
       cy.get('.btn-success').click();
     });
 
+    it('Create Release Points', function() {
+      cy.get('[data-cy="select releaseRelease Points"] > span').click();
+      cy.get('#tblAddReleasePointBtn > .ng-fa-icon > .svg-inline--fa > path').click();
+      cy.get('#releasePointIdentifier').clear();
+      cy.get('#releasePointIdentifier').type('CypressStack');
+      cy.get('#releaseStatusCodeSelect').select('1: Object');
+      cy.get('#description').clear();
+      cy.get('#description').type("Cypress Stack Desc");
+      cy.get('#statusYear').clear();
+      cy.get('#statusYear').type('2020');
+      cy.get('#releaseTypeCodeSelect').select('5: Object');
+      cy.get('#exitGasVelocity').clear();
+      cy.get('#exitGasVelocity').type('66');
+      cy.get('#exitGasVelocityUomCodeSelect').select('1: Object');
+      cy.get('#exitGasFlowRate').clear();
+      cy.get('#exitGasFlowRate').type('5183.627');
+      cy.get('#exitGasFlowUomCodeSelect').select('1: Object');
+      cy.get('#exitGasTemperature').clear();
+      cy.get('#exitGasTemperature').type('100');
+      cy.get('#stackHeight').clear();
+      cy.get('#stackHeight').type('100');
+      cy.get('#stackDiameter').clear();
+      cy.get('#stackDiameter').type('10');
+      cy.get('.btn-success').click();
+
+      cy.get('#tblAddReleasePointBtn > .ng-fa-icon > .svg-inline--fa > path').click();
+      cy.get('#releasePointIdentifier').clear();
+      cy.get('#releasePointIdentifier').type('CypressFugitive');
+      cy.get('#releaseStatusCodeSelect').select('1: Object');
+      cy.get('#description').clear();
+      cy.get('#description').type("Cypress Fugitive Desc");
+      cy.get('#statusYear').clear();
+      cy.get('#statusYear').type('2020');
+      cy.get('#releaseTypeCodeSelect').select('2: Object');
+      cy.get('#latitude').clear();
+      cy.get('#latitude').type('33.65332');
+      cy.get('#longitude').clear();
+      cy.get('#longitude').type('-84.4012');
+      cy.get('.btn-success').click();
+
+      cy.get('[data-cy="release pointCypressFugitive"]').click();
+      cy.get('#editReleasePointBtn').click();
+      cy.get('#description').clear();
+      cy.get('#description').type("Cypress Fugitive Description Edit");
+      cy.get('#longitude').clear();
+      cy.get('#longitude').type('-84.4011');
+      cy.get('.btn-success').click();
+    });
+
     it('Create Control Device', function() {
       cy.get('[data-cy="select controlControl Devices"] > span').click();
       cy.get('#tblAddControlDeviceBtn > .ng-fa-icon > .svg-inline--fa').click();
