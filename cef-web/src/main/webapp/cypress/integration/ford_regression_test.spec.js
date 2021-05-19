@@ -393,6 +393,30 @@ describe('FORD TESTING SUITE', () => {
       cy.get('.modal-footer > .btn-success').click();
     });
 
+    it('Create Stack Release Point Apportionment', function() {
+      cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
+      cy.get('[data-cy="emissions unitCypress"]').click();
+      cy.get('[data-cy="emissions processCypress 1"]').click();
+      cy.get('#tblAddReleasePointApptBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#releasePointSelect').select('3: CypressStack');
+      cy.get('#controlPathSelect').select('1: Object');
+      cy.get('#percentInput').clear();
+      cy.get('#percentInput').type('50');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Create Fugitive Release Point Apportionment', function() {
+      cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
+      cy.get('[data-cy="emissions unitCypress"]').click();
+      cy.get('[data-cy="emissions processCypress 1"]').click();
+      cy.get('#tblAddReleasePointApptBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#releasePointSelect').select('2: CypressFugitive');
+      cy.get('#controlPathSelect').select('1: Object');
+      cy.get('#percentInput').clear();
+      cy.get('#percentInput').type('50');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+    
     it('Delete Report', function() {
       cy.get('[data-cy="bcMy Facilities"]').click();
       cy.get('#continueReportGADNR12100364').click();
