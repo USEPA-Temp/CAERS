@@ -1,0 +1,101 @@
+<div *ngIf="user && user.isAdmin()" class="container-fluid flex-fill">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light py-2 mt-2">
+      <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" [(ngbCollapse)]="isCollapsed">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item" [routerLinkActive]="'active'">
+            <a class="nav-link" routerLink="reviewer">Submission Review</a>
+          </li>
+          <li class="nav-item" ngbDropdown>
+            <a class="nav-link" ngbDropdownToggle id="statAndReportsDropdown" role="button">
+              Statistics and Reports
+            </a>
+            <div ngbDropdownMenu aria-labelledby="statAndReportsDropdown">
+              <a ngbDropdownItem routerLink="admin/userFeedback" [routerLinkActive]="'active'">User Feedback Report</a>
+            </div>
+          </li>
+          <li class="nav-item" ngbDropdown>
+            <a class="nav-link" ngbDropdownToggle id="comToolsDropdown" role="button">
+              User Communication Tools
+            </a>
+            <div ngbDropdownMenu aria-labelledby="comToolsDropdown">
+              <a ngbDropdownItem routerLink="admin/announcement" [routerLinkActive]="'active'">Announcement Banner</a>
+              <!-- <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Facility Notifications</a> -->
+            </div>
+          </li>
+          <li class="nav-item" [routerLinkActive]="'active'">
+            <a class="nav-link" routerLink="admin/properties">Application Properties</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="'active'">
+            <a class="nav-link" routerLink="upload">JSON Upload</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  
+
+  <div *ngIf="user && user.isReviewer()" class="container-fluid flex-fill">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light p-1 mb-3">
+        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" (click)="isCollapsed = !isCollapsed" data-target="#nb-reviewer-component"
+                aria-controls="nb-reviewer-component" [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation">
+           <span class="navbar-toggler-icon"></span>
+        </button>
+     
+        <div id="nb-reviewer-component" class="collapse navbar-collapse" [(ngbCollapse)]="isCollapsed">
+           <ul class="navbar-nav mr-auto">
+              <li class="nav-item" [routerLinkActive]="'active'">
+                 <a class="nav-link" routerLink="/reviewer/dashboard">Submission Review</a>
+              </li>
+              <li ngbDropdown class="nav-item dropdown" [routerLinkActive]="'active'">
+                 <a ngbDropdownToggle id="nb-eis-transmission"
+                    class="nav-link dropdown-toggle"
+                    style="cursor: pointer"
+                    role="button" aria-haspopup="true" aria-expanded="false">
+                    <span>EIS Transmission</span>
+                 </a>
+                 <div ngbDropdownMenu class="dropdown-menu"
+                      aria-labelledby="nb-eis-transmission">
+                    <a ngbDropdownItem class="dropdown-item"
+                       routerLink="/reviewer/eisSubmitData"
+                       [routerLinkActive]="'active'">Submit Data</a>
+                    <a ngbDropdownItem class="dropdown-item"
+                       routerLink="/reviewer/eisTransactions"
+                       [routerLinkActive]="'active'">Review Transactions</a>
+                 </div>
+              </li>
+              <li class="nav-item" [routerLinkActive]="'active'">
+                 <a class="nav-link disabled" href="#">Statistics and Reports</a>
+              </li>
+              <li ngbDropdown class="nav-item dropdown" [routerLinkActive]="'active'">
+                 <a ngbDropdownToggle id="nb-facility-management"
+                    class="nav-link dropdown-toggle"
+                    style="cursor: pointer"
+                    role="button" aria-haspopup="true" aria-expanded="false">
+                    <span>Facility Management</span>
+                 </a>
+                 <div ngbDropdownMenu class="dropdown-menu"
+                      aria-labelledby="nb-facility-management">
+                    <a ngbDropdownItem class="dropdown-item"
+                       routerLink="/reviewer/facility"
+                       [routerLinkActive]="'active'"
+                       [routerLinkActiveOptions]="{exact: true}">Facility Information</a>
+                    <a ngbDropdownItem class="dropdown-item"
+                       routerLink="/reviewer/facility/pendingAssociations"
+                       [routerLinkActive]="'active'">Pending Authorization Requests</a>
+                 </div>
+              </li>
+              <li class="nav-item" [routerLinkActive]="'active'">
+                 <a class="nav-link" routerLink="/reviewer/properties">Agency Administration</a>
+              </li>
+           </ul>
+        </div>
+     </nav>
+     
+  </div>
