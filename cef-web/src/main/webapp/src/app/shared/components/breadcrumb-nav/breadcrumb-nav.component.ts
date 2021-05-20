@@ -10,6 +10,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { User } from "src/app/shared/models/user";
 import { UserContextService } from "src/app/core/services/user-context.service";
 import { Location } from '@angular/common';
+import { AppRole } from 'src/app/shared/enums/app-role';
 
 @Component( {
     selector: 'app-breadcrumb-nav',
@@ -38,11 +39,12 @@ export class BreadcrumbNavComponent implements OnInit {
         this.userContext.getUser()
         .subscribe(currentUser => {
             this.user=currentUser;
-            if (currentUser.role === 'Reviewer') {
-                this.baseLabel = 'Submission Review Dashboard';
+            if (currentUser.isReviewer() || currentUser.isAdmin()) {
+                this.baseLabel = '';
             } else {
                 this.baseLabel = 'My Facilities';
             }
+            
             this.sharedService.changeEmitted$
             .subscribe( facilitySite => {
                 if ( facilitySite != null ) {
