@@ -5,7 +5,6 @@
   "XFrameOptions": false,
   "requestTimeout": 10000,
   "defaultCommandTimeout": 10000,
-  "numTestsKeptInMemory": 3,
   "env": {
     "environment": "local",
     "dev_url": "https://dev.epacdx.net/",

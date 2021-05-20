@@ -186,7 +186,7 @@
 
                     <div class="row pb-3 justify-content-end" *ngIf="epaEmissionFactor && !emissionForm.disabled">
                         <div>
-                            <button type="button" class="btn btn-success mr-3" (click)="openSearchEfModal()">Search for Emission Factor</button>
+                            <button type="button" id="openEfSearchBtn" class="btn btn-success mr-3" (click)="openSearchEfModal()">Search for Emission Factor</button>
                             <div class="validation-message" *ngIf="!emissionForm.get('pollutant').valid">
                                 A pollutant must be selected to search for an Emission Factor.
                             </div>
@@ -390,10 +390,10 @@
     </form>
     <div class="float-right pb-3 pr-3" *ngIf="!readOnlyMode && editable">
         <span *ngIf="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry && !emissionForm.disabled">
-            <button type="button" class="btn btn-success mr-2" (click)="onCalculate()">Calculate Emissions</button>
+            <button id="calculateEmissionsBtn" type="button" class="btn btn-success mr-2" (click)="onCalculate()">Calculate Emissions</button>
         </span>
         <button type="button" class="btn btn-primary mr-2" (click)="onCancelEdit()">Cancel</button>
-        <button type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
+        <button id="saveEmissionsBtn" type="submit" class="btn btn-success" (click)="onSubmit()">Save</button>
     </div>
     <div class="float-right pb-3 pr-3" *ngIf="!editable">
         <button type="button" class="btn btn-primary mr-2" [routerLink]="[processUrl]">Back</button>

@@ -77,7 +77,7 @@ describe('FORD TESTING SUITE', () => {
     it('Edit Facility Info', function() {
       cy.get('[data-cy="select facilityInformationFacility Information"] > span').click();
       cy.get('app-facility-information > :nth-child(1) > .card-header > .float-right > .btn').click();
-      cy.get('#facilityStatusCodeSelect').select('1: Object');
+      cy.get('#facilityStatusCodeSelect').select('0: Object');
       cy.get('#statusYearInput').clear();
       cy.get('#statusYearInput').type('2017');
       cy.get('#facilityBIACodeSelect').select('1: Object');
@@ -176,6 +176,44 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddProcessBtn > .ng-fa-icon > .svg-inline--fa > path').click();
       cy.get('#processIdentifierInput').clear();
       cy.get('#processIdentifierInput').type('Cypress 1');
+      cy.get('#processStatusCodeSelect').select('2: Object');
+      cy.get('#processDescriptionInput').clear();
+      cy.get('#processDescriptionInput').type('Cypress Test Process');
+      cy.get('#processStatusYearInput').clear();
+      cy.get('#processStatusYearInput').type('2019');
+      cy.get('#openSccSearchModalBtn').click();
+      cy.get('#pollutantNameInput').clear();
+      cy.get('#pollutantNameInput').type('waste');
+      cy.get('#sccSearchButton').click();
+      cy.get('#selectScc10100901').click();
+      cy.get('#odDaysPerWeekInput').clear();
+      cy.get('#odDaysPerWeekInput').type('5');
+      cy.get('#odHoursPerPeriodInput').clear();
+      cy.get('#odHoursPerPeriodInput').type('7');
+      cy.get('#odHoursPerDayInput').clear();
+      cy.get('#odHoursPerDayInput').type('7');
+      cy.get('#odWeeksPerPeriodInput').clear();
+      cy.get('#odWeeksPerPeriodInput').type('7');
+      cy.get('#odPercentSummerInput').clear();
+      cy.get('#odPercentSummerInput').type('50');
+      cy.get('#odPercentWinterInput').clear();
+      cy.get('#odPercentWinterInput').type('0');
+      cy.get('#odPercentSpringInput').clear();
+      cy.get('#odPercentSpringInput').type('50');
+      cy.get('#odPercentFallInput').clear();
+      cy.get('#odPercentFallInput').type('0');
+      cy.get('#rpOperatingCodeSelect').select('1: Object');
+      cy.get('#rpParamSelect').select('1: Object');
+      cy.get('#rpMaterialSelect').select('1: Object');
+      cy.get('#rpValueInput').clear();
+      cy.get('#rpValueInput').type('1000');
+      cy.get('#rpUomSelect').select('1: Object');
+      cy.get('.float-right > .btn-success').click();
+    });
+
+    it('Edit Process Info', function() {
+      cy.get('[data-cy="emissions processCypress 1"]').click();
+      cy.get('#editProcessInfoBtn').click();
       cy.get('#processStatusCodeSelect').select('1: Object');
       cy.get('#processDescriptionInput').clear();
       cy.get('#processDescriptionInput').type('Cypress Test Process 1');
@@ -183,9 +221,14 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#processStatusYearInput').type('2020');
       cy.get('#openSccSearchModalBtn').click();
       cy.get('#pollutantNameInput').clear();
-      cy.get('#pollutantNameInput').type('waste');
+      cy.get('#pollutantNameInput').type('coal');
       cy.get('#sccSearchButton').click();
-      cy.get('#selectScc10100901').click();
+      cy.get('#selectScc10100101').click();
+      cy.get('.card-body > :nth-child(1) > .float-right > .btn-success').click();
+    });
+
+    it('Edit Operating Details', function() {
+      cy.get('#editOperatingDetailsBtn').click();
       cy.get('#odDaysPerWeekInput').clear();
       cy.get('#odDaysPerWeekInput').type('7');
       cy.get('#odHoursPerPeriodInput').clear();
@@ -202,29 +245,97 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#odPercentSpringInput').type('25');
       cy.get('#odPercentFallInput').clear();
       cy.get('#odPercentFallInput').type('25');
-      cy.get('#rpOperatingCodeSelect').select('1: Object');
-      cy.get('#rpParamSelect').select('1: Object');
-      cy.get('#rpMaterialSelect').select('1: Object');
-      cy.get('#rpValueInput').clear();
-      cy.get('#rpValueInput').type('1000');
-      cy.get('#rpUomSelect').select('1: Object');
-      cy.get('.float-right > .btn-success').click();
-
+      cy.get('.card-body > :nth-child(1) > .float-right > .btn-success').click();
     });
 
-    it('Create Emission', function() {
-      cy.get('[data-cy="emissions processCypress 1"]').click();
-      cy.get('#tblAddEmissionBtn').click();
+    it('Edit Reporting Period', function() {
+      cy.get('#editReportingPeriodBtn').click();
+      cy.get('form.ng-untouched > :nth-child(1) > :nth-child(3)').click();
+      cy.get('#rpOperatingCodeSelect').select('3: Object');
+      cy.get('#rpParamSelect').select('2: Object');
+      cy.get('#rpMaterialSelect').select('2: Object');
+      cy.get('#rpValueInput').clear();
+      cy.get('#rpValueInput').type('100');
+      cy.get('#rpUomSelect').select('64: Object');
+      cy.get('#rpFuelMaterialSelect').select('1: Object');
+      cy.get('#rpFuelValueInput').clear();
+      cy.get('#rpFuelValueInput').type('10');
+      cy.get('#rpFuelUomSelect').select('1: Object');
+      cy.get('#rpHeatContentUomSelect').select('1: Object');
+      cy.get('#rpHeatContentValueInput').clear();
+      cy.get('#rpHeatContentValueInput').type('2');
+      cy.get('#rpCommentsInput').click();
+      cy.get('.card-body > :nth-child(1) > .float-right > .btn-success').click();
+    });
+
+    it('Create USEPA Emission', function() {
+      cy.get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
-      cy.get('#pollutantSelect').type('nox');
-      cy.get('#ngb-typeahead-1-2 > ngb-highlight').click();
-      cy.get('#emissionsCalcMethodCodeSelect').select('1: Object');
+      cy.get('#pollutantSelect').type('so2');
+      cy.get('ngb-highlight').click();
+      cy.get('#emissionsCalcMethodCodeSelect').select('19: Object');
+      cy.get('#openEfSearchBtn').click();
+      cy.get('#selectEf10').check();
+      cy.get('.modal-footer > .btn-success').click();
+      cy.get('#SUInput').clear();
+      cy.get('#SUInput').type('10');
       cy.get('#overallControlPercentInput').clear();
       cy.get('#overallControlPercentInput').type('0');
+      cy.get('#overallControlPercentInput').click();
+      cy.get('#calculateEmissionsBtn').click();
+      cy.get('#saveEmissionsBtn').click();
+    });
+
+    it('Create Manual Entry Emission', function() {
+      cy.get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#pollutantSelect').clear();
+      cy.get('#pollutantSelect').type('nox');
+      cy.get('#ngb-typeahead-2-2 > ngb-highlight > .ngb-highlight').click();
+      cy.get('#emissionsCalcMethodCodeSelect').select('19: Object');
+      cy.get('#openEfSearchBtn').click();
+      cy.get('#selectEf5').check();
+      cy.get('.modal-footer > .btn-success').click();
+      cy.get('#manualEntryCb').check();
       cy.get('#totalEmissionsInput').clear();
-      cy.get('#totalEmissionsInput').type('15');
+      cy.get('#totalEmissionsInput').type('1800');
+      cy.get('#emissionCalcCommentInput').click();
+      cy.get('#emissionCalcCommentInput').type('Cypress Manual Total Emissions');
+      cy.get('#emissionCommentsInput').click();
+      cy.get('#emissionCommentsInput').type('Cypress Manual Entry Emission');
+      cy.get('#saveEmissionsBtn').click();
+    });
+
+    it('Create CEMS Emission', function() {
+      cy.get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#pollutantSelect').clear();
+      cy.get('#pollutantSelect').type('voc');
+      cy.get('#ngb-typeahead-3-0').click();
+      cy.get('#emissionsCalcMethodCodeSelect').select('1: Object');
+      cy.get('#totalEmissionsInput').clear();
+      cy.get('#totalEmissionsInput').type('12');
       cy.get('#emissionsUomCodeSelect').select('8: Object');
-      cy.get('.btn-success').click();
+      cy.get('#emissionCommentsInput').click();
+      cy.get('#emissionCommentsInput').type('Cypress CEMS Emission');
+      cy.get('#saveEmissionsBtn').click();
+    });
+
+    it('Create SLT Emission', function() {
+      cy.get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#pollutantSelect').clear();
+      cy.get('#pollutantSelect').type('co');
+      cy.get('#ngb-typeahead-4-4').click();
+      cy.get('#emissionsCalcMethodCodeSelect').select('10: Object');
+      cy.get('#emissionFactorInput').clear();
+      cy.get('#emissionFactorInput').type('10');
+      cy.get('#emissionsFactorTextInput').click();
+      cy.get('#emissionsFactorTextInput').type('Cypress SLT EF');
+      cy.get('#emissionsNumeratorSelect').select('8: Object');
+      cy.get('#emissionsDenominatorSelect').select('64: Object');
+      cy.get('#emissionsUomCodeSelect').select('8: Object');
+      cy.get('#calculateEmissionsBtn').click();
+      cy.get('#emissionCommentsInput').click();
+      cy.get('#emissionCommentsInput').type('Cypress SLT EF Emission');
+      cy.get('#saveEmissionsBtn').click();
     });
 
     it('Create Release Points', function() {
@@ -309,7 +420,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddControlPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').type('nox');
-      cy.get('#ngb-typeahead-2-2 > ngb-highlight').click();
+      cy.get('#ngb-typeahead-5-2 > ngb-highlight').click();
       cy.get('#percentReductionSelect').clear();
       cy.get('#percentReductionSelect').type('80');
       cy.get('.modal-footer > .btn-success').click();
@@ -352,7 +463,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddControlPathPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').type('nox');
-      cy.get('#ngb-typeahead-4-2 > ngb-highlight').click();
+      cy.get('#ngb-typeahead-7-2 > ngb-highlight').click();
       cy.get('#percentReductionSelect').clear();
       cy.get('#percentReductionSelect').type('25');
       cy.get('.modal-footer > .btn-success').click();
