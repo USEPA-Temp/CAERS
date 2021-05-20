@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
-      <li *ngIf="(user?.role !== 'CAERS Administrator') && 
-          (user?.role !== 'Reviewer') &&
+      <li *ngIf="!(user?.isAdmin()) && 
+          !(user?.isReviewer()) &&
           ((url === '/helpPage') || (url === '/error') || (url === '/review'))">
         <u><a class="nav-link menu_links" (click)="goToMyFacilities()" id="bcMyFacilities">My Facilities</a></u>
       </li>

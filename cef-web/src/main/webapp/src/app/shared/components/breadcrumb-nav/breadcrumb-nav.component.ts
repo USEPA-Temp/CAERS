@@ -39,7 +39,7 @@ export class BreadcrumbNavComponent implements OnInit {
         this.userContext.getUser()
         .subscribe(currentUser => {
             this.user=currentUser;
-            if (currentUser.role === AppRole.REVIEWER || currentUser.role === AppRole.CAER_ADMIN) {
+            if (currentUser.isReviewer() || currentUser.isAdmin()) {
                 this.baseLabel = '';
             } else {
                 this.baseLabel = 'My Facilities';
