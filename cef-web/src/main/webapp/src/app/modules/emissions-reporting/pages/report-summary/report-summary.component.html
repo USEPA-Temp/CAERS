@@ -34,6 +34,7 @@
             <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
                 <div class="float-right pr-3">
                     <button *ngIf="userRole!=='Reviewer'"
+                            id="runQualityChecksBtn"
                             class="btn btn-primary btn-md my-3 ml-1"
                             aria-label="run quality checks"
                             (click)="validateReport()">

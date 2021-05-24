@@ -33,7 +33,6 @@ import { SubmissionReviewModalComponent } from './modules/dashboards/components/
 import { HelpPageComponent } from './modules/dashboards/pages/help-page/help-page.component';
 import { AdminPropertiesComponent } from './modules/dashboards/pages/admin-properties/admin-properties.component';
 import { AdminAnnouncementPropertiesComponent } from './modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
-import { ReviewerNavComponent } from './modules/dashboards/components/reviewer-nav/reviewer-nav.component';
 import { EisSubmissionComponent } from './modules/dashboards/pages/eis-submission/eis-submission.component';
 import { EisTransactionsComponent } from './modules/dashboards/pages/eis-transactions/eis-transactions.component';
 import { SortByPipe } from './shared/pipes/sort-by.pipe';
@@ -75,7 +74,6 @@ import { PendingUserFacilityAssociationsComponent } from './modules/dashboards/p
     AdminPropertiesComponent,
     AdminAnnouncementPropertiesComponent,
     AdminUserFeedbackComponent,
-    ReviewerNavComponent,
     EisSubmissionComponent,
     EisTransactionsComponent,
     SortByPipe,
