@@ -21,7 +21,7 @@ describe('FORD TESTING SUITE', () => {
     });
     
     cy.fixture('userLogin').then(function(user){
-        this.user=user;
+        this.user = user;
     });
   });
 
@@ -52,10 +52,17 @@ describe('FORD TESTING SUITE', () => {
   });
 
   describe('Basic Copy Test', () => {
+
+    beforeEach(function(){
+      cy.fixture('userLogin').then(function(user){
+          this.user = user;
+      });
+    });
+
     it('Create Report', function() {
       cy.get('#continueReportGADNR12100364').click();
       cy.get('#createNew2020Report').click();
-      cy.get('[data-cy="reportSummaryTotals"] > :nth-child(6)').should('contain', '2793.4857256458');
+      cy.get('[data-cy="reportSummaryTotals"] > :nth-child(6)').should('contain', '2787.046373');
       cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
       cy.get('#euSummaryTable > tbody > tr').should(($tr) => {
           expect($tr).to.have.length(6)
@@ -500,7 +507,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#controlSelect').select('0: null');
       cy.get('#controlPathSelect').select('1: Object');
       cy.get('#percentInput').clear();
-      cy.get('#percentInput').type('85');
+      cy.get('#percentInput').type('100');
       cy.get('.modal-footer > .btn-success').click();
     });
 
@@ -527,7 +534,113 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#percentInput').type('50');
       cy.get('.modal-footer > .btn-success').click();
     });
-    
+
+    it('Upload Attachment', function() {
+      cy.contains('Report Summary').click();
+      cy.get('app-report-attachment-table > .float-right > .btn').click();
+      cy.fixture('upload_doc.txt').as('upload_doc')
+      cy.get('#file-attachment').then(function (el) {
+        // convert the logo base64 string to a blob
+        const blob = Cypress.Blob.base64StringToBlob(this.upload_doc, 'text/plain')
+
+        const file = new File([blob], 'upload_doc.txt', { type: 'text/plain' })
+        const list = new DataTransfer()
+
+        list.items.add(file)
+        const myFileList = list.files
+
+        el[0].files = myFileList
+        el[0].dispatchEvent(new Event('change', { bubbles: true }))
+      })
+      cy.get('#attachmentComments').clear();
+      cy.get('#attachmentComments').type('Cypress Test Attachment');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+    it('Validate Report', function() {
+      cy.get('[data-cy="reportSummaryTotals"] > :nth-child(6)').should('contain', '3819.446373');
+      cy.get('#runQualityChecksBtn').click();
+      cy.wait(1000);
+      cy.get('#proceedToReportSummaryBtn').click();
+      cy.wait(1000);
+    });
+
+    it('Submit Report', function() {
+      if (Cypress.env('submit_to_reviewer') != true) {
+          this.skip();
+      } else {
+        cy.get('#certifyAndSubmit').click();
+        cy.get('#disclaimerAccept').click();
+        cy.get('#password').clear();
+        cy.get('#password').type(this.user.password);
+        cy.get('#loginButton').click();
+        cy.wait(1000);
+        cy.get('#questionId').then(($question) => {
+
+            const txt = $question.val();
+
+            for (var i = this.user.cromerrQuestions.length - 1; i >= 0; i--) {
+                if (txt == this.user.cromerrQuestions[i].id) {
+                    cy.get('#answer').clear();
+                    cy.get('#answer').type(this.user.cromerrQuestions[i].answer);
+                }
+            }
+
+        });
+        cy.get('#answerButton').click();
+        cy.get('#signSubmit').click();
+        cy.wait(3000);
+        cy.get('[data-cy="bcMy Facilities"]').click();
+        cy.get('#continueReportGADNR12100364').click();
+      }
+    });
+
+    it('Reopen Report', function() {
+      if (Cypress.env('submit_to_reviewer') != true) {
+          this.skip();
+      } else {
+        cy.get('[aria-label="reopen2020report"]').click();
+        cy.get('#modalConfirmBtn').click();
+      }
+    });
+
+    it('Delete Components', function() {
+      cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
+      cy.get('[data-cy="emissions unitCypress"]').click();
+      cy.get('[data-cy="emissions processCypress 1"]').click();
+      cy.wait(500);
+      cy.get('[aria-label="delete emission pollutantVolatile Organic Compounds"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.wait(500);
+      cy.get('[aria-label="delete emission pollutantSulfur Dioxide"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.wait(500);
+      cy.get('[aria-label="delete emission pollutantNitrogen Oxides"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.wait(500);
+      cy.get('[aria-label="delete emission pollutantCarbon Dioxide"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
+      cy.get('[data-cy="emissions unitCypress"]').click();
+      cy.get('[data-cy="delete emissions processCypress 1"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
+      cy.get('[data-cy="delete emissions unitCypress"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.get('[data-cy="select releaseRelease Points"] > span').click();
+      cy.get('[aria-label="delete release pointCypressFugitive"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.wait(500);
+      cy.get('[aria-label="delete release pointCypressStack"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.get('[data-cy="select pathControl Paths"] > span').click();
+      cy.get('[aria-label="delete control pathCypress CP 1"]').click();
+      cy.get('#modalConfirmBtn').click();
+      cy.get('[data-cy="select controlControl Devices"] > span').click();
+      cy.get('[aria-label="delete control deviceCypress Control 1"]').click();
+      cy.get('#modalConfirmBtn').click();
+    });
+
     it('Delete Report', function() {
       cy.get('[data-cy="bcMy Facilities"]').click();
       cy.get('#continueReportGADNR12100364').click();
