@@ -9,6 +9,7 @@
     "environment": "local",
     "dev_url": "https://dev.epacdx.net/",
     "test_url": "https://test.epacdx.net/",
-    "prod_url": "https://cdx.epa.gov/"
+    "prod_url": "https://cdx.epa.gov/",
+    "submit_to_reviewer": false
   }
 }
