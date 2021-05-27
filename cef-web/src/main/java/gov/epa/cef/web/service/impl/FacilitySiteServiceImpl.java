@@ -10,6 +10,8 @@ import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
+import gov.epa.cef.web.util.ConstantUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -73,7 +75,9 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
     	
-    	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode()))){
+    	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode()))
+    			&& !(facilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode())
+    			.equals((ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE))) {
     		
 			OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
 			tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());

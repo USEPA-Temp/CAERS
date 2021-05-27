@@ -11,6 +11,8 @@ import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { ToastrService } from 'ngx-toastr';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
+import { MasterFacilityRecordService } from 'src/app/core/services/master-facility-record.service';
+import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 
 @Component({
   selector: 'app-edit-facility-site-info-panel',
@@ -19,6 +21,7 @@ import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-co
 })
 export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   @Input() facilitySite: FacilitySite;
+  facilitySourceType: InventoryYearCodeLookup;
 
   facilitySiteForm = this.fb.group({
     altSiteIdentifier: [''],
@@ -72,6 +75,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
 
   constructor(
     private lookupService: LookupService,
+    private masterFacilityService: MasterFacilityRecordService,
     public formUtils: FormUtilsService,
     private fb: FormBuilder,
     private toastr: ToastrService) { }
@@ -118,6 +122,11 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
       // required to trigger a fetch of counties
       this.facilitySiteForm.get('stateCode').updateValueAndValidity();
     });
+
+    this.masterFacilityService.getRecord(this.facilitySite.emissionsReport.masterFacilityRecordId)
+    .subscribe(result => {
+      this.facilitySourceType = result.facilitySourceTypeCode;
+    });
   }
 
 
@@ -128,7 +137,9 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
   onChange(newValue) {
     if(newValue) {
       this.facilitySiteForm.controls.statusYear.reset();
-      this.toastr.warning('', 'If the operating status of the Facility Site is changed, then the operating status of all the child Emission Units, Processes, Controls, and Release Points that are underneath this Facility Site will also be updated, unless they are already Permanently Shutdown.');
+      if (this.facilitySourceType.code !== VariableValidationType.LANDFILL_SOURCE_TYPE) {
+        this.toastr.warning('', 'If the operating status of the Facility Site is changed, then the operating status of all the child Emission Units, Processes, Controls, and Release Points that are underneath this Facility Site will also be updated, unless they are already Permanently Shutdown.');
+      }
     }
   }
 
