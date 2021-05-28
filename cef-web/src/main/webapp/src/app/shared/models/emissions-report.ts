@@ -1,4 +1,4 @@
-import { FacilitySite } from "src/app/shared/models/facility-site";
+import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 
 export class EmissionsReport {

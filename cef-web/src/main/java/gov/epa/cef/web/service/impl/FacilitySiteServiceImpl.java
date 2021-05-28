@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
@@ -75,9 +76,10 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
     	
-    	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode()))
-    			&& !(facilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode())
-    			.equals((ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE))) {
+    	FacilitySourceTypeCode facilitySourceTypeCode = facilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode();
+    	boolean isLandfill = (facilitySourceTypeCode != null && facilitySourceTypeCode.getCode().equals(ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE)) ? true : false;
+    	
+    	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode())) && !isLandfill) {
     		
 			OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
 			tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());
