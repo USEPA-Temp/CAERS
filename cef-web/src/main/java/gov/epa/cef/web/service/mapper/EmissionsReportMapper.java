@@ -14,6 +14,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportDto;
 public interface EmissionsReportMapper {
 
     @Mapping(source="masterFacilityRecord.id", target="masterFacilityRecordId")
+    @Mapping(source="masterFacilityRecord.facilitySourceTypeCode", target="masterFacilityRecordSourceTypeCode")
     EmissionsReportDto toDto(EmissionsReport emissionsReport);
     
     List<EmissionsReportDto> toDtoList(List<EmissionsReport> emissionsReportList);
