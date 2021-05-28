@@ -16,8 +16,6 @@ public class EmissionsReportStarterDto {
 
     private Long masterFacilityRecordId;
     
-    private CodeLookupDto masterFacilityRecordSourceTypeCode;
-
     private String programSystemCode;
 
     private SourceType source;
@@ -104,15 +102,6 @@ public class EmissionsReportStarterDto {
         this.year = year;
     }
 
-	public CodeLookupDto getMasterFacilityRecordSourceTypeCode() {
-		return masterFacilityRecordSourceTypeCode;
-	}
-
-	public void setMasterFacilityRecordSourceTypeCode(
-			CodeLookupDto masterFacilityRecordSourceTypeCode) {
-		this.masterFacilityRecordSourceTypeCode = masterFacilityRecordSourceTypeCode;
-	}
-
 	@Override
     public String toString() {
 
@@ -121,7 +110,6 @@ public class EmissionsReportStarterDto {
             .add("facilitySite", facilitySite)
             .add("frsFacilityId", frsFacilityId)
             .add("masterFacilityRecordId", masterFacilityRecordId)
-            .add("masterFacilityRecordSourceTypeCode", masterFacilityRecordSourceTypeCode)
             .add("programSystemCode", programSystemCode)
             .add("source", source)
             .add("stateFacilityId", stateFacilityId)

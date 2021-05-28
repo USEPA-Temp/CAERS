@@ -13,7 +13,6 @@ import gov.epa.cef.web.service.dto.FacilitySiteDto;
 public interface FacilitySiteMapper {
 
     @Mapping(source="emissionsReport.masterFacilityRecord.id", target="emissionsReport.masterFacilityRecordId")
-    @Mapping(source="emissionsReport.masterFacilityRecord.facilitySourceTypeCode", target="emissionsReport.masterFacilityRecordSourceTypeCode")
     FacilitySiteDto toDto(FacilitySite facility);
 
     List<FacilitySiteDto> toDtoList(List<FacilitySite> facilitySites);

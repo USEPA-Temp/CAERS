@@ -9,7 +9,6 @@ public class EmissionsReportDto implements Serializable {
     private Long id;
     private String eisProgramId;
     private Long masterFacilityRecordId;
-    private CodeLookupDto masterFacilityRecordSourceTypeCode;
     private CodeLookupDto programSystemCode;
     private Short year;
     private String status;
@@ -102,15 +101,6 @@ public class EmissionsReportDto implements Serializable {
         setId(id);
         return this;
     }
-
-	public CodeLookupDto getMasterFacilityRecordSourceTypeCode() {
-		return masterFacilityRecordSourceTypeCode;
-	}
-
-	public void setMasterFacilityRecordSourceTypeCode(
-			CodeLookupDto masterFacilityRecordSourceTypeCode) {
-		this.masterFacilityRecordSourceTypeCode = masterFacilityRecordSourceTypeCode;
-	}
 
 
 }
