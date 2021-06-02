@@ -81,6 +81,7 @@ export class FacilityInformationComponent implements OnInit {
       updatedFacilitySite.id = this.facilitySite.id;
       updatedFacilitySite.emissionsReport = this.facilitySite.emissionsReport;
       updatedFacilitySite.programSystemCode = this.facilitySite.programSystemCode;
+      updatedFacilitySite.facilitySourceTypeCode = this.facilitySite.facilitySourceTypeCode;
 
       this.facilityService.update(updatedFacilitySite)
       .subscribe(result => {

@@ -76,8 +76,8 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
     	
-    	FacilitySourceTypeCode facilitySourceTypeCode = facilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode();
-    	boolean isLandfill = (facilitySourceTypeCode != null && facilitySourceTypeCode.getCode().equals(ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE)) ? true : false;
+    	boolean isLandfill = (facilitySite.getFacilitySourceTypeCode() != null
+    			&& facilitySite.getFacilitySourceTypeCode().getCode().equals(ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE)) ? true : false;
     	
     	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode())) && !isLandfill) {
     		
