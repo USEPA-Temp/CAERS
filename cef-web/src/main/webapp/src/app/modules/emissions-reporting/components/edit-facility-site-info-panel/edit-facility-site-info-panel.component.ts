@@ -123,11 +123,6 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
       this.facilitySiteForm.get('stateCode').updateValueAndValidity();
     });
 
-    this.masterFacilityService.getRecord(this.facilitySite.emissionsReport.masterFacilityRecordId)
-    .subscribe(result => {
-      this.facilitySourceType = result.facilitySourceTypeCode;
-    });
-
   }
 
 
@@ -139,7 +134,7 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     if (newValue) {
       this.facilitySiteForm.controls.statusYear.reset();
 
-      if (!this.facilitySourceType || this.facilitySourceType.code !== VariableValidationType.LANDFILL_SOURCE_TYPE) {
+      if (!this.facilitySite.facilitySourceTypeCode || this.facilitySite.facilitySourceTypeCode.code !== VariableValidationType.LANDFILL_SOURCE_TYPE) {
         this.toastr.warning('', 'If the operating status of the Facility Site is changed, then the operating status of all the child Emission Units, Processes, Controls, and Release Points that are underneath this Facility Site will also be updated, unless they are already Permanently Shutdown.');
       }
     }
