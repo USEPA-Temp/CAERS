@@ -3,10 +3,10 @@
   "experimentalStudio": true,
   "chromeWebSecurity": false,
   "XFrameOptions": false,
-  "requestTimeout": 10000,
-  "defaultCommandTimeout": 10000,
+  "requestTimeout": 15000,
+  "defaultCommandTimeout": 15000,
   "env": {
-    "environment": "local",
+    "environment": "prod",
     "dev_url": "https://dev.epacdx.net/",
     "test_url": "https://test.epacdx.net/",
     "prod_url": "https://cdx.epa.gov/",
