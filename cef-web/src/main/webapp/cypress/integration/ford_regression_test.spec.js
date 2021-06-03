@@ -17,7 +17,7 @@ describe('FORD TESTING SUITE', () => {
     cy.clearCookie('JSESSIONID');
 
     Cypress.Cookies.defaults({
-        preserve: ['CDX2_ASP.NET_SessionId', '.CDX2AUTH', 'pubCDXSessionEnd', 'XSRF-TOKEN', 'JSESSIONID', 'csrftoken', 'ARRAffinity']
+      preserve: ['CDX2_ASP.NET_SessionId', '.CDX2AUTH', 'pubCDXSessionEnd', 'XSRF-TOKEN', 'JSESSIONID', 'csrftoken', 'ARRAffinity']
     });
     
     cy.fixture('userLogin').then(function(user){
@@ -44,11 +44,11 @@ describe('FORD TESTING SUITE', () => {
 
 
   it('Handoff from CDX to CAER', function(){
-  	if(Cypress.env('environment') == 'local') {
-  		cy.visit('/');
-  	} else {
+    if(Cypress.env('environment') == 'local') {
+      cy.visit('/');
+    } else {
       cy.login();
-  	}
+    }
   });
 
   describe('Basic Copy Test', () => {
@@ -107,7 +107,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('.d-block').click();
       cy.get('#facilityNAICS').clear();
       cy.get('#facilityNAICS').wait(1000).type('auto');
-      cy.wait(500).get('#ngb-typeahead-0-6 > ngb-highlight').click();
+      cy.wait(3000).get('#ngb-typeahead-0-6 > ngb-highlight').click();
       cy.get('.modal-footer > .btn-success').click();
       cy.get('#deleteNaics811111').click();
       cy.get('#modalConfirmBtn').click();
@@ -328,7 +328,7 @@ describe('FORD TESTING SUITE', () => {
     });
 
     it('Create SLT Emission', function() {
-      cy.wait(500).get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.wait(3000).get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').wait(1000).type('co');
       cy.get('#ngb-typeahead-4-4').click();
@@ -529,9 +529,9 @@ describe('FORD TESTING SUITE', () => {
       cy.wait(3000).get('[data-cy="select emissionUnitEmissions Units"] > span').click();
       cy.get('[data-cy="emissions unitCypress"]').click();
       cy.get('[data-cy="emissions processCypress 1"]').click();
-      cy.get('#tblAddReleasePointApptBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#tblAddReleasePointApptBtn > .ng-fa-icon > .svg-inline--fa').click().wait(5000);
       cy.get('#releasePointSelect').select('2: CypressFugitive').wait(3000);
-      cy.get('#controlPathSelect').wait(3000).select('1: Object');
+      cy.get('#controlPathSelect').select('1: Object');
       cy.get('#percentInput').clear();
       cy.get('#percentInput').type('50');
       cy.get('.modal-footer > .btn-success').click();
@@ -596,7 +596,7 @@ describe('FORD TESTING SUITE', () => {
         cy.get('#answerButton').click();
         cy.get('#signSubmit').click();
         cy.wait(5000);
-        cy.get('[data-cy="bcMy Facilities"]').click();
+        cy.wait(3000).get('[data-cy="bcMy Facilities"]').click();
         cy.get('#continueReportGADNR12100364').click();
       }
     });
@@ -614,19 +614,19 @@ describe('FORD TESTING SUITE', () => {
       cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
       cy.get('[data-cy="emissions unitCypress"]').click();
       cy.get('[data-cy="emissions processCypress 1"]').click();
-      cy.wait(500);
+      cy.wait(1000);
       cy.get('[aria-label="delete emission pollutantVolatile Organic Compounds"]').click();
       cy.get('#modalConfirmBtn').click();
-      cy.wait(500);
+      cy.wait(1000);
       cy.get('[aria-label="delete emission pollutantSulfur Dioxide"]').click();
       cy.get('#modalConfirmBtn').click();
-      cy.wait(500);
+      cy.wait(1000);
       cy.get('[aria-label="delete emission pollutantNitrogen Oxides"]').click();
       cy.get('#modalConfirmBtn').click();
-      cy.wait(500);
+      cy.wait(1000);
       cy.get('[aria-label="delete emission pollutantCarbon Dioxide"]').click();
       cy.get('#modalConfirmBtn').click();
-      cy.wait(500);
+      cy.wait(1000);
       cy.get('[data-cy="select emissionUnitEmissions Units"] > span').click();
       cy.get('[data-cy="emissions unitCypress"]').click();
       cy.get('[data-cy="delete emissions processCypress 1"]').click();
