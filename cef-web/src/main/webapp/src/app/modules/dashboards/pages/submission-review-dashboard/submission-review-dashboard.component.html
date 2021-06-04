@@ -23,10 +23,19 @@
                   <strong>Report Year:</strong>
                </label>
                <select id="cbo-report-year" style="width: 150px;"
-                       class="form-control form-control-sm" #yearSelect
+                       class="form-control form-control-sm mr-3" #yearSelect
                        (change)="onYearSelected(yearSelect.value, mySelect.value)" aria-label="select report year">
                   <option value="CURRENT_REPORTING_YEAR" selected="selected">Current Year</option>
                   <option value="ALL_YEARS">All Years</option>
+               </select>
+               <label for="cbo-industry-sector" class="col-form-label col-form-label-sm mr-2">
+                  <strong>Industry Sector:</strong>
+               </label>
+               <select id="cbo-industry-sector" style="width: 150px;"
+                       class="form-control form-control-sm" #industrySelect
+                       (change)="onIndustrySelected(industrySelect.value)" aria-label="select industry sector">
+                  <option value="null" selected>All Sectors</option>
+                  <option *ngFor="let opt of industrySectors" [value]="opt">{{opt}}</option>
                </select>
             </div>
 
