@@ -3,8 +3,8 @@
   "experimentalStudio": true,
   "chromeWebSecurity": false,
   "XFrameOptions": false,
-  "requestTimeout": 10000,
-  "defaultCommandTimeout": 10000,
+  "requestTimeout": 15000,
+  "defaultCommandTimeout": 15000,
   "env": {
     "environment": "local",
     "dev_url": "https://dev.epacdx.net/",
