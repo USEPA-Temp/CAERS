@@ -20,12 +20,16 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     private listComponent: SubmissionReviewListComponent;
 
+    allSubmissions: SubmissionUnderReview[] = [];
     submissions: SubmissionUnderReview[] = [];
     hideButtons: boolean;
     invalidSelection = false;
     currentYear: number;
     selectedYear: string;
     selectedReportStatus = ReportStatus.SUBMITTED;
+    selectedIndustrySector: string;
+
+    industrySectors: string[] = [];
 
     constructor(
         private emissionReportService: EmissionsReportingService,
@@ -54,12 +58,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
-                    if (year === 'ALL_YEARS') {
-                        this.retrieveFacilitiesReportsByReportStatus('SUBMITTED');
-                    }
-                    if (year === 'CURRENT_REPORTING_YEAR') {
-                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, 'SUBMITTED');
-                    }
+                    this.refreshFacilityReports();
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -83,12 +82,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((resp) => {
                 this.emissionReportService.rejectReports(selectedSubmissions, resp.comments, resp.id)
                 .subscribe(() => {
-                    if (year === 'ALL_YEARS') {
-                        this.retrieveFacilitiesReportsByReportStatus(this.selectedReportStatus);
-                    }
-                    if (year === 'CURRENT_REPORTING_YEAR') {
-                        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, this.selectedReportStatus);
-                    }
+                    this.refreshFacilityReports()
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -97,18 +91,45 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
+    refreshFacilityReports(): void {
+        if (this.selectedYear === 'CURRENT_REPORTING_YEAR') {
+            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, this.selectedReportStatus);
+        } else {
+            this.retrieveFacilitiesReportsByReportStatus(this.selectedReportStatus);
+        }
+    }
+
     retrieveFacilitiesReportsByYearAndStatus(year, reportStatus): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus)
             .subscribe((submissions) => {
-                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1);
+                this.sortSubmissions(submissions)
             });
     }
 
     retrieveFacilitiesReportsByReportStatus(reportStatus): void {
         this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus)
             .subscribe((submissions) => {
-                this.submissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1);
+                this.sortSubmissions(submissions);
             });
+    }
+
+    sortSubmissions(submissions: SubmissionUnderReview[]) {
+        this.allSubmissions = submissions.sort((a, b) => (a.facilityName > b.facilityName) ? 1 : -1);
+        // map down to industry values, convert to a Set to get distinct values, remove nulls, and then sort
+        this.industrySectors = [...new Set(this.allSubmissions.map(item => item.industry))].filter(item => item != null).sort();
+        this.filterSubmissions();
+    }
+
+    filterSubmissions() {
+        // reset selected sector if the current selection is no longer in the dropdown
+        if (this.selectedIndustrySector && !this.industrySectors.includes(this.selectedIndustrySector)) {
+            this.selectedIndustrySector = null;
+        }
+        if (this.selectedIndustrySector) {
+            this.submissions = this.allSubmissions.filter(item => item.industry === this.selectedIndustrySector);
+        } else {
+            this.submissions = this.allSubmissions;
+        }
     }
 
     onStatusSelected(value) {
@@ -119,16 +140,17 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         } else {
             this.hideButtons = true;
         }
-        if (this.selectedYear === 'CURRENT_REPORTING_YEAR') {
-            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, value);
-        } else {
-            this.retrieveFacilitiesReportsByReportStatus(value);
-        }
+        this.refreshFacilityReports();
     }
 
     onYearSelected(year: string, value: string) {
         this.selectedYear = year;
         this.onStatusSelected(value);
+    }
+
+    onIndustrySelected(industry: string) {
+        this.selectedIndustrySector = industry;
+        this.filterSubmissions();
     }
 
     // emits the updated submission list to the notification component
