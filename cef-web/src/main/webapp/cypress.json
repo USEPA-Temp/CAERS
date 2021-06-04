@@ -6,7 +6,7 @@
   "requestTimeout": 15000,
   "defaultCommandTimeout": 15000,
   "env": {
-    "environment": "prod",
+    "environment": "local",
     "dev_url": "https://dev.epacdx.net/",
     "test_url": "https://test.epacdx.net/",
     "prod_url": "https://cdx.epa.gov/",
