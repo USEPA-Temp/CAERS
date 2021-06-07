@@ -5,7 +5,7 @@ import { SubmissionReviewListComponent } from 'src/app/modules/dashboards/compon
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/components/submission-review-modal/submission-review-modal.component';
-import {SharedService} from "src/app/core/services/shared.service";
+import {SharedService} from 'src/app/core/services/shared.service';
 import { FileAttachmentModalComponent } from 'src/app/modules/shared/components/file-attachment-modal/file-attachment-modal.component';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 
@@ -22,7 +22,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     allSubmissions: SubmissionUnderReview[] = [];
     submissions: SubmissionUnderReview[] = [];
-    hideButtons: boolean;
+    hideButtons = false;
     invalidSelection = false;
     currentYear: number;
     selectedYear: string;
@@ -42,6 +42,21 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         this.currentYear = new Date().getFullYear() - 1;
         this.selectedYear = CURRENT_REPORTING_YEAR;
         this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, 'SUBMITTED');
+    }
+
+    onBeginAdvancedQA(year) {
+        const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
+
+        if (!selectedSubmissions.length) {
+            this.invalidSelection = true;
+        } else {
+            this.invalidSelection = false;
+            this.emissionReportService.beginAdvancedQA(selectedSubmissions)
+            .subscribe(() => {
+                this.refreshFacilityReports();
+                this.emitAllSubmissions();
+            });
+        }
     }
 
     onApprove(year) {
@@ -135,7 +150,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     onStatusSelected(value) {
         this.selectedReportStatus = value;
 
-        if (value === 'SUBMITTED') {
+        if (value === 'SUBMITTED' || value === 'ADVANCED_QA') {
             this.hideButtons = false;
         } else {
             this.hideButtons = true;

@@ -7,6 +7,13 @@ import gov.epa.cef.web.service.dto.EmissionsReportDto;
 
 public interface EmissionsReportStatusService {
 
+	/**
+     * Begin Advanced QA for the specified reports, move from Submitted to Advanced QA
+     * @param reportIds
+     * @return
+     */
+    List<EmissionsReportDto> advancedQAEmissionsReports(List<Long> reportIds);
+    
     /**
      * Approve the specified reports and move to approved
      * @param reportIds

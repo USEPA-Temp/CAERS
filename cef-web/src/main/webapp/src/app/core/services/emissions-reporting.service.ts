@@ -35,6 +35,11 @@ export class EmissionsReportingService {
         return this.http.get<EmissionsReport>(url);
     }
 
+    beginAdvancedQA(reportIds: number[]): Observable<EmissionsReport[]> {
+        const url = `${this.baseUrl}/beginAdvancedQA`;
+        return this.http.post<EmissionsReport[]>(url, reportIds);
+    }
+
     acceptReports(reportIds: number[], comments: string): Observable<EmissionsReport[]> {
         const url = `${this.baseUrl}/accept`;
         return this.http.post<EmissionsReport[]>(url, {

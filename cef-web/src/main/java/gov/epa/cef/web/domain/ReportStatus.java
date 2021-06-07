@@ -5,6 +5,7 @@ public enum ReportStatus {
     APPROVED("Approved"),
     IN_PROGRESS("In Progress"),
     SUBMITTED("Submitted"),
+    ADVANCED_QA("Advanced QA"),
     VALIDATED("Validated");
 
     private final String label;

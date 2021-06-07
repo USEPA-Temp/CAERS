@@ -9,7 +9,8 @@ public enum ReportAction {
 	REJECTED("Rejected"), 
 	SUBMITTED("Submitted"),
 	ATTACHMENT("Uploaded Attachment"),
-	ATTACHMENT_DELETED("Attachment Deleted");
+	ATTACHMENT_DELETED("Attachment Deleted"),
+	ADVANCED_QA("Advanced QA");
 
 	private final String label;
 

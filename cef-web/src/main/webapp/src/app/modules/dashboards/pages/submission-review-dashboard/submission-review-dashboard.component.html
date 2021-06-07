@@ -17,6 +17,7 @@
                        (change)="onStatusSelected(mySelect.value)" aria-label="select report status">
                   <option value="SUBMITTED">Pending Review</option>
                   <option value="IN_PROGRESS">In Progress</option>
+                  <option value="ADVANCED_QA">Advanced QA</option>
                   <option value="APPROVED">Accepted</option>
                </select>
                <label for="cbo-report-year" class="col-form-label col-form-label-sm mr-2">
@@ -46,17 +47,28 @@
                <span>At least one submission must be selected.</span>
             </div>
 
-            <div class="card-footer text-right">
-               <button class="btn btn-primary btn-md mr-3"
-                     *ngIf="mySelect.value !== 'IN_PROGRESS'"
-                     (click)="onReject(yearSelect.value)">
-                  <span>Reject and Return to Facility</span>
-               </button>
-               <button class="btn btn-success btn-md"
-                        *ngIf="!hideButtons"
-                       (click)="onApprove(yearSelect.value)">
-                  <span>Accept and Submit to EIS</span>
-               </button>
+            <div class="card-footer">
+               <div class="row">
+                  <div class="col-sm-3" style="text-align: align-left">
+                     <button class="btn btn-success btn-md"
+                           *ngIf="mySelect.value === 'SUBMITTED'"
+                        (click)="onBeginAdvancedQA(yearSelect.value)">
+                     <span>Begin Advanced QA</span>
+                  </button>
+                  </div>
+                  <div class="col-sm-9" style="text-align: right">
+                     <button class="btn btn-primary btn-md mr-3"
+                           *ngIf="mySelect.value !== 'IN_PROGRESS'"
+                           (click)="onReject(yearSelect.value)">
+                        <span>Reject and Return to Facility</span>
+                     </button>
+                     <button class="btn btn-success btn-md"
+                              *ngIf="!hideButtons"
+                           (click)="onApprove(yearSelect.value)">
+                        <span>Accept and Submit to EIS</span>
+                     </button>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
