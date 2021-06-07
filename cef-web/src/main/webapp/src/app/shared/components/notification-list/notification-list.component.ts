@@ -17,6 +17,8 @@ export class NotificationListComponent implements OnInit {
   submittedCount: number = 0;
   inProgress: SubmissionUnderReview[];
   inProgressCount: number = 0;
+  advancedQA: SubmissionUnderReview[];
+  advancedQACount: number = 0;
   approved: SubmissionUnderReview[];
   approvedCount: number = 0;
   currentUser: User;
@@ -45,8 +47,8 @@ export class NotificationListComponent implements OnInit {
   }
 
   filterAndCountSubmissions(submissions){
-      this.approvedCount = this.submittedCount = this.inProgressCount = 0;
-      submissions.forEach(submission => { 
+      this.approvedCount = this.advancedQACount = this.submittedCount = this.inProgressCount = 0;
+      submissions.forEach(submission => {
         if (submission.reportStatus === 'APPROVED') {
           this.approvedCount++; 
         }
@@ -55,6 +57,9 @@ export class NotificationListComponent implements OnInit {
         }
         if (submission.reportStatus === 'IN_PROGRESS'){
           this.inProgressCount++;
+        }
+        if (submission.reportStatus === 'ADVANCED_QA'){
+          this.advancedQACount++;
         }
       });
   }
