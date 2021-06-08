@@ -548,7 +548,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
     }
 
     /**
-     * There should be two errors when emission formula variable value for % sulfur is less than 0.01 and greater than 10,
+     * There should be two errors when emission formula variable value for % sulfur is less than 0.00001 and greater than 10,
      * and there should be no errors when value is within range.
      */
     @Test
