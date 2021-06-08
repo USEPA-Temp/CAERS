@@ -3,7 +3,6 @@ import { Emission } from 'src/app/shared/models/emission';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
 import { Validators, FormBuilder, ValidatorFn, FormGroup, FormControl, ValidationErrors } from '@angular/forms';
-import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { CalculationMethodCode } from 'src/app/shared/models/calculation-method-code';
 import { Pollutant } from 'src/app/shared/models/pollutant';
 import { UnitMeasureCode } from 'src/app/shared/models/unit-measure-code';
@@ -27,7 +26,6 @@ import { EmissionFormulaVariable } from 'src/app/shared/models/emission-formula-
 import { VariableValidationType } from 'src/app/shared/enums/variable-validation-type';
 import { EmissionFormulaVariableCode } from 'src/app/shared/models/emission-formula-variable-code';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
-import { ControlPollutantTableComponent } from '../../components/control-pollutant-table/control-pollutant-table.component';
 import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
@@ -710,7 +708,7 @@ export class EmissionDetailsComponent implements OnInit {
     return (control: FormGroup): ValidationErrors | null => {
       const emissionFormulaVar = control.get('formulaVariables');
       if (emissionFormulaVar !== undefined && emissionFormulaVar !== null && Object.keys(emissionFormulaVar.value)[0] === "SU") {
-        if (emissionFormulaVar.value.SU !== null && (emissionFormulaVar.value.SU < 0.01 || emissionFormulaVar.value.SU > 10)) {
+        if (emissionFormulaVar.value.SU !== null && (emissionFormulaVar.value.SU < 0.00001 || emissionFormulaVar.value.SU > 10)) {
           return {invalidSulfurRange: true};
         }
         return null;
