@@ -229,10 +229,10 @@
                                 <input type="number" class="form-control" id="{{variable.code + 'Input'}}" [formControlName]="variable.code">
                                 <app-validation-message [control]="getFormulaVariableForm().get(variable.code)"></app-validation-message>
                                 <div class="validation-message" *ngIf="emissionForm.getError('invalidSulfurRange')">
-                                    If the supplemental calculation parameter type code is percent sulfur content, the value must be between 0.01 and 10.
+                                    The value must be between 0.00001 and 10, inclusive.
                                 </div>
                                 <div class="validation-message" *ngIf="emissionForm.getError('invalidAshRange')">
-                                    If the supplemental calculation parameter type code is percent ash content, the value must be between 0.01 and 30.
+                                    The value must be between 0.01 and 30, inclusive.
                                 </div>
                             </div>
                         </div>

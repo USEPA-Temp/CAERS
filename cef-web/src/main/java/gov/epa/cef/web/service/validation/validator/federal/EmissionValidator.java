@@ -207,10 +207,10 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        		}
 	        	}
 
-	        	// check for emission formula variable code % sulfur value to be between 0.01 and 10
+	        	// check for emission formula variable code % sulfur value to be between 0.00001 and 10
 	        	for (EmissionFormulaVariable formulaVar: efvList) {
 	        		if (SULFUR_EMISSION_FORMULA_CODE.contentEquals(formulaVar.getVariableCode().getCode()) &&
-	        				(formulaVar.getValue() == null || (formulaVar.getValue().compareTo(BigDecimal.valueOf(0.01)) == -1) || (formulaVar.getValue().compareTo(new BigDecimal(10)) == 1))) {
+	        				(formulaVar.getValue() == null || (formulaVar.getValue().compareTo(BigDecimal.valueOf(0.00001)) == -1) || (formulaVar.getValue().compareTo(new BigDecimal(10)) == 1))) {
 
 	        			valid = false;
 	        			context.addFederalError(

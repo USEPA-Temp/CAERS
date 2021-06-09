@@ -36,6 +36,16 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
 
 
     /**
+     * Begin Advanced QA for the specified reports, move from Submitted to Advanced QA
+     * @param reportIds
+     * @return
+     */
+    @Override
+    public List<EmissionsReportDto> advancedQAEmissionsReports(List<Long> reportIds) {
+        return updateEmissionsReportsStatus(reportIds, ReportStatus.ADVANCED_QA);
+    }
+    
+    /**
      * Approve the specified reports and move to approved
      * @param reportIds
      * @return

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Component
 public class BulkReportValidator {
 
-    static final String SPREADSHEET_MAJOR_VERSION = "2.1";
+    static final String SPREADSHEET_MAJOR_VERSION = "2.2";
 
     private final Validator validator;
 

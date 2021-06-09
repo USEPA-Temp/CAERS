@@ -2,6 +2,7 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
@@ -10,6 +11,8 @@ import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
+import gov.epa.cef.web.util.ConstantUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -73,7 +76,10 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
 
     	FacilitySite facilitySite = facSiteRepo.findById(dto.getId()).orElse(null);
     	
-    	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode()))){
+    	boolean isLandfill = (facilitySite.getFacilitySourceTypeCode() != null
+    			&& facilitySite.getFacilitySourceTypeCode().getCode().equals(ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE)) ? true : false;
+    	
+    	if(!(dto.getOperatingStatusCode().getCode().equals(facilitySite.getOperatingStatusCode().getCode())) && !isLandfill) {
     		
 			OperatingStatusCode tempOperatingStatusCode = new OperatingStatusCode();
 			tempOperatingStatusCode.setCode(dto.getOperatingStatusCode().getCode());

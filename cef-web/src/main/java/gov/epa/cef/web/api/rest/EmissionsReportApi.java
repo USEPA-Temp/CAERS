@@ -107,6 +107,25 @@ public class EmissionsReportApi {
 
         this.objectMapper = objectMapper;
     }
+    
+    /**
+     * Begin Advanced QA for the specified reports, move from Submitted to Advanced QA
+     *
+     * @param reviewDTO
+     * @return
+     */
+    @PostMapping(value = "/beginAdvancedQA")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public ResponseEntity<List<EmissionsReportDto>> beginAdvancedQA(@NotNull @RequestBody List<Long> reportIds) {
+
+        this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
+
+        List<EmissionsReportDto> result = emissionsReportStatusService.advancedQAEmissionsReports(reportIds);
+
+        this.reportService.createReportHistory(reportIds, ReportAction.ADVANCED_QA);
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     /**
      * Approve the specified reports and move to approved

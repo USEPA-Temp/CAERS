@@ -22,6 +22,8 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
   @Input() sccCode: string;
   @Input() processOpStatus: string;
   isFuelUseScc = false;
+  isSelectedDefaultHeatRatio: number;
+  isSelectedNumeratorUom: UnitMeasureCode;
   reportingPeriodForm = this.fb.group({
     reportingPeriodTypeCode: [{code: 'A'}, Validators.required],
     emissionsOperatingTypeCode: [null, Validators.required],
@@ -210,15 +212,26 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     }
 
     setDefaultHeatContentRatio(){
-        let materialValue = this.reportingPeriodForm.get('fuelUseMaterialCode').value ? this.fuelUseMaterialValues.filter(
+        const materialValue = this.reportingPeriodForm.get('fuelUseMaterialCode').value ? this.fuelUseMaterialValues.filter(
                             val => (val.code === (this.reportingPeriodForm.get('fuelUseMaterialCode').value.code)))[0] : null;
-        let fuelUom = materialValue && materialValue.heatContentRatioDenominatorUom ? materialValue.heatContentRatioDenominatorUom.code : null;
-        let defaultHeatRatio = materialValue ? materialValue.defaultHeatContentRatio : null;
-        let defaultHeatUom = materialValue ? materialValue.heatContentRatioNumeratorUom : null;
+        const fuelUom = materialValue && materialValue.heatContentRatioDenominatorUom ? materialValue.heatContentRatioDenominatorUom.code : null;
+        const defaultHeatRatio = materialValue ? materialValue.defaultHeatContentRatio : null;
+        const defaultHeatUom = materialValue ? materialValue.heatContentRatioNumeratorUom : null;
 
         if (this.reportingPeriodForm.get('fuelUseUom').value && this.reportingPeriodForm.get('fuelUseUom').value.code === fuelUom) {
             this.reportingPeriodForm.get('heatContentValue').patchValue(defaultHeatRatio);
             this.reportingPeriodForm.get('heatContentUom').patchValue(defaultHeatUom);
+            this.isSelectedNumeratorUom = defaultHeatUom;
+            this.isSelectedDefaultHeatRatio = defaultHeatRatio;
+
+            // if fuel UoM and fuel Material combination does not have default heat content values, and form values are the same as
+            // previously populated default heat values, then clear the heat content value and heat numerator UoM fields.
+        } else if (this.isSelectedDefaultHeatRatio === this.reportingPeriodForm.get('heatContentValue').value
+            && this.isSelectedNumeratorUom === this.reportingPeriodForm.get('heatContentUom').value) {
+                this.reportingPeriodForm.get('heatContentValue').patchValue(null);
+                this.reportingPeriodForm.get('heatContentUom').patchValue(null);
+                this.isSelectedNumeratorUom = null;
+                this.isSelectedDefaultHeatRatio = null;
         }
     }
 
