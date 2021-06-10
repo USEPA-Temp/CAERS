@@ -37,6 +37,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final String REPORT_ACCEPTED_BY_SLT_SUBJECT = "Accepted - {0} Emissions Report for {1}";
     private final String REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE = "reportAccepted";
+    
+    private final String REPORT_BEGIN_ADVANCED_QA_BY_SLT_SUBJECT = "In Review - {0} Emissions Report for {1}";
+    private final String REPORT_BEGIN_ADVANCED_QA_BY_SLT_BODY_TEMPLATE = "reportAdvancedQA";
 
     private final String SCC_UPDATE_FAILED_SUBJECT = "SCC Update Task Failed";
     private final String SCC_UPDATE_FAILED_BODY_TEMPLATE = "sccUpdateFailed";
@@ -179,6 +182,19 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("slt", slt);
         
         String emailBody = templateEngine.process(REPORT_ACCEPTED_BY_SLT_BODY_TEMPLATE, context);
+        sendHtmlMessage(to, from, emailSubject, emailBody);
+    }
+    
+    public void sendReportAdvancedQANotification(String to, String from, String facilityName, String reportingYear, String slt, String sltEmail)
+    {
+        String emailSubject = MessageFormat.format(REPORT_BEGIN_ADVANCED_QA_BY_SLT_SUBJECT, reportingYear, facilityName);
+        Context context = new Context();
+        context.setVariable("reportingYear", reportingYear);
+        context.setVariable("facilityName", facilityName);
+        context.setVariable("sltEmail", sltEmail);
+        context.setVariable("slt", slt);
+        
+        String emailBody = templateEngine.process(REPORT_BEGIN_ADVANCED_QA_BY_SLT_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }
 

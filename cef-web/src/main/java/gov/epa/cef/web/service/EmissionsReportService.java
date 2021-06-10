@@ -87,6 +87,8 @@ public interface EmissionsReportService {
      * @param id
      */
     void delete(Long id);
+    
+    List<EmissionsReportDto> beginAdvancedQAEmissionsReports(List<Long> reportIds);
 
 	List<EmissionsReportDto> acceptEmissionsReports(List<Long> reportIds, String comments);
 
