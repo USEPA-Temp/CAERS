@@ -323,6 +323,44 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         return erRepo.findByMasterFacilityRecordId(masterFacilityRecordId, new Sort(Sort.Direction.DESC, "year"))
             .stream().findFirst();
     }
+    
+	  /**
+	  *  Begin Advanced QA for the specified reports, move from Submitted to Advanced QA
+	  * @param reportIds
+	  * @return
+	  */
+	 @Override
+	 public List<EmissionsReportDto> beginAdvancedQAEmissionsReports(List<Long> reportIds){
+	     List<EmissionsReportDto> updatedReports = statusService.advancedQAEmissionsReports(reportIds);
+	     reportService.createReportHistory(reportIds, ReportAction.ADVANCED_QA);
+	
+	     StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+	       .forEach(report -> {
+	           
+	           SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	
+	           //there should always be exactly one facility site for a CEF emissions report for now. This may change at
+	           //some point in the future if different report types are included in the system
+	           FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
+	
+	           //check for "Emission Inventory" contacts in the facility site and send them a notification that advanced QA has
+	           // begun for their report
+	           List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
+	
+	           eiContacts.forEach(contact -> {
+	               //if the EI contact has a email address - send them the notification
+	               if (StringUtils.isNotEmpty(contact.getEmail())) {
+	                   notificationService.sendReportAdvancedQANotification(contact.getEmail(),
+	                           cefConfig.getDefaultEmailAddress(),
+	                           reportFacilitySite.getName(),
+	                           report.getYear().toString(),
+	                           sltConfig.getSltEisProgramCode(),
+	                           sltConfig.getSltEmail());
+	               }
+	           });
+	       });
+	     return updatedReports;
+	 }
 
     /**
      * Approve the specified reports and move to approved
