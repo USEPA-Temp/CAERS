@@ -119,11 +119,9 @@ public class EmissionsReportApi {
     public ResponseEntity<List<EmissionsReportDto>> beginAdvancedQA(@NotNull @RequestBody List<Long> reportIds) {
 
         this.securityService.facilityEnforcer().enforceEntities(reportIds, EmissionsReportRepository.class);
-
-        List<EmissionsReportDto> result = emissionsReportStatusService.advancedQAEmissionsReports(reportIds);
-
-        this.reportService.createReportHistory(reportIds, ReportAction.ADVANCED_QA);
         
+        List<EmissionsReportDto> result = emissionsReportService.beginAdvancedQAEmissionsReports(reportIds);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
