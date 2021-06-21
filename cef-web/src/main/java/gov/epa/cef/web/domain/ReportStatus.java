@@ -4,6 +4,7 @@ public enum ReportStatus {
 	NEW("New"),
     APPROVED("Approved"),
     IN_PROGRESS("In Progress"),
+    RETURNED("Reviewed and Returned"),
     SUBMITTED("Submitted"),
     ADVANCED_QA("Advanced QA"),
     VALIDATED("Validated");
