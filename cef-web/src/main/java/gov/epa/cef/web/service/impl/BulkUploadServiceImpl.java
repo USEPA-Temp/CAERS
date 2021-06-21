@@ -40,6 +40,7 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -721,18 +722,57 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             emissionsReport.setValidationStatus(ValidationStatus.valueOf(bulkEmissionsReport.getValidationStatus()));
         }
 
-        // if there isn't a mfrId, but there is an EIS ID lookup using EIS instead
-        // this cannot occur for excel upload since they will fail validation but is required for JSON uploads
-        if (bulkEmissionsReport.getMasterFacilityRecordId() == null && bulkEmissionsReport.getEisProgramId() != null) {
-            emissionsReport.setMasterFacilityRecord(mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId())
-                    .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getEisProgramId())));
-        } else {
-            emissionsReport.setMasterFacilityRecord(mfrRepo.findById(bulkEmissionsReport.getMasterFacilityRecordId())
-                    .orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getMasterFacilityRecordId())));
-        }
+        emissionsReport.setMasterFacilityRecord(findMasterFacilityRecord(bulkEmissionsReport));
+
 
         return emissionsReport;
     }
+
+
+    /**
+     * Find the master facility record associated with the bulk upload emissions report
+     */
+    private MasterFacilityRecord findMasterFacilityRecord(EmissionsReportBulkUploadDto bulkEmissionsReport) {
+        Optional<MasterFacilityRecord> mfr = null;
+
+        //check based on the master facility record id
+        if (bulkEmissionsReport.getMasterFacilityRecordId() != null) {
+            mfr = mfrRepo.findById(bulkEmissionsReport.getMasterFacilityRecordId());
+        }
+
+        //if the master facility record isn't found yet, search based on EIS ID
+        if ((mfr == null || !mfr.isPresent()) && bulkEmissionsReport.getEisProgramId() != null && !(bulkEmissionsReport.getEisProgramId().isEmpty())) {
+            mfr = mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId());
+        }
+
+        //if the master facility record isn't found yet, search based on agency facility ID and PSC combo
+        if (mfr == null || !mfr.isPresent()) {
+            String agencyFacilityId = findAgencyFacilityId(bulkEmissionsReport);
+            List<MasterFacilityRecord> mfrList = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityIdIgnoreCase(bulkEmissionsReport.getProgramSystemCode(), agencyFacilityId);
+            if (mfrList.size() > 0) {
+                mfr = Optional.of(mfrList.get(0));
+            }
+
+        }
+
+        return mfr.orElseThrow(() -> new NotExistException("Master Facility Record", bulkEmissionsReport.getMasterFacilityRecordId().toString()));
+    }
+
+
+    /**
+     * Find the agency facility ID within the facility site of the bulk emissions report
+     */
+    private String findAgencyFacilityId(EmissionsReportBulkUploadDto bulkEmissionsReport) {
+        
+        String agencyFacilityId = null;
+
+        if (bulkEmissionsReport.getFacilitySites().size() > 0) {
+            agencyFacilityId = bulkEmissionsReport.getFacilitySites().get(0).getAltSiteIdentifier();
+        }
+
+        return agencyFacilityId;
+    }
+
 
     /**
      * Map an EmissionsUnitBulkUploadDto to an EmissionsUnit domain model
