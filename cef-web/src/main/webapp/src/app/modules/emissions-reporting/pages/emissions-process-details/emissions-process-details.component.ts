@@ -22,6 +22,7 @@ import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-emissions-process-details',
@@ -103,7 +104,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

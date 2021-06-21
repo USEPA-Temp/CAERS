@@ -11,7 +11,7 @@
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', 'upload', report.year]"
              class="btn btn-primary" [attr.aria-label]="'upload'+ report.year +'report'"
              [id]="'upload'+ report.year +'Report'"
-             *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'VALIDATED'])">
+             *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'RETURNED', 'VALIDATED'])">
             <span>Upload Report</span>
           </a>
 
@@ -22,7 +22,7 @@
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
              class="btn btn-primary" [attr.aria-label]="'continue'+ report.year +'report'"
              [id]="'continue'+ report.year +'Report'"
-             *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])">Continue</a>
+             *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'RETURNED', 'VALIDATED'])">Continue</a>
 
           <a href="#" class="btn btn-primary"
             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>

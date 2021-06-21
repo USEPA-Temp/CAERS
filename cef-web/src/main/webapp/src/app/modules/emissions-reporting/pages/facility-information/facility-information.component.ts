@@ -12,6 +12,7 @@ import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EditFacilitySiteInfoPanelComponent } from '../../components/edit-facility-site-info-panel/edit-facility-site-info-panel.component';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-facility-information',
@@ -56,7 +57,7 @@ export class FacilityInformationComponent implements OnInit {
       });
 
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

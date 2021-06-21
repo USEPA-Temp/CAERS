@@ -2,7 +2,6 @@ import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { ActivatedRoute } from '@angular/router';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { EditControlPathInfoPanelComponent } from '../../components/edit-control-path-info-panel/edit-control-path-info-panel.component';
 import { SharedService } from 'src/app/core/services/shared.service';
@@ -10,6 +9,7 @@ import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-control-path-details',
@@ -51,7 +51,7 @@ export class ControlPathDetailsComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

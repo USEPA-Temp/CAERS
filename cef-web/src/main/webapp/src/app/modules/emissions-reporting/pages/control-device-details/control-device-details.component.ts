@@ -5,7 +5,6 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { Control } from 'src/app/shared/models/control';
 import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { EditControlDeviceInfoPanelComponent } from '../../components/edit-control-device-info-panel/edit-control-device-info-panel.component';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
@@ -13,6 +12,7 @@ import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-control-device-details',
@@ -37,6 +37,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
     private userContextService: UserContextService,
     private sharedService: SharedService,
     private modalService: NgbModal,
+    private utilityService: UtilityService,
     private controlPathService: ControlPathService) { }
 
   ngOnInit() {
@@ -63,7 +64,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

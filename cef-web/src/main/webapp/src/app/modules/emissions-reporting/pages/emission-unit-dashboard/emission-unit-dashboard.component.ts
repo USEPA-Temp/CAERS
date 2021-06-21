@@ -8,12 +8,11 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditEmissionUnitInfoPanelComponent } from '../../components/edit-emission-unit-info-panel/edit-emission-unit-info-panel.component';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { EmissionUnitInfoComponent } from '../../components/emission-unit-info/emission-unit-info.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 
 @Component({
@@ -73,7 +72,7 @@ export class EmissionUnitDashboardComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySiteId = data.facilitySite.id;
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

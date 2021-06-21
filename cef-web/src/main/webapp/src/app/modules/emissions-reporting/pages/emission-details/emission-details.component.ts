@@ -29,6 +29,7 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-emission-details',
@@ -140,7 +141,7 @@ export class EmissionDetailsComponent implements OnInit {
       this.editable = data.create === 'true';
 
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

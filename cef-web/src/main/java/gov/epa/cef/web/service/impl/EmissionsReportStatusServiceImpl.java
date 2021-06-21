@@ -56,13 +56,13 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
     }
 
     /**
-     * Reject the specified reports. Sets report status to in progress and validation status to unvalidated.
+     * Reject the specified reports. Sets report status to returned and validation status to unvalidated.
      * @param reportIds
      * @return
      */
     @Override
     public List<EmissionsReportDto> rejectEmissionsReports(List<Long> reportIds) {
-        return updateEmissionsReportsStatus(reportIds, ReportStatus.IN_PROGRESS, ValidationStatus.UNVALIDATED, EisSubmissionStatus.NotStarted);
+        return updateEmissionsReportsStatus(reportIds, ReportStatus.RETURNED, ValidationStatus.UNVALIDATED, EisSubmissionStatus.NotStarted);
     }
 
     /**

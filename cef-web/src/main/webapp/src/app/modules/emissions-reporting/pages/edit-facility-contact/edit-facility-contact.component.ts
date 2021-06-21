@@ -4,7 +4,6 @@ import { LookupService } from 'src/app/core/services/lookup.service';
 import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FacilitySiteContactService } from 'src/app/core/services/facility-site-contact.service';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
@@ -16,6 +15,7 @@ import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -119,7 +119,7 @@ export class EditFacilityContactComponent implements OnInit {
 
       this.createMode = data.create === 'true';
 
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.readOnlyMode = !UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status);
 
       this.sharedService.emitChange(data.facilitySite);
     });
