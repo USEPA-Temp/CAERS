@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { Process } from 'src/app/shared/models/process';
@@ -261,12 +261,41 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.reportingPeriodService.create(reportingPeriod)
       .subscribe(result => {
 
-        console.log();
         this.process.reportingPeriods.push(result);
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.setCreatePeriod(false);
       });
     }
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if both forms are clean
+    if ((!this.editInfo && !this.editDetails && !this.editPeriod && !this.createPeriod)
+      || ((this.infoComponent && !this.infoComponent.processForm.dirty)
+      && (this.operatingDetailsComponent && !this.operatingDetailsComponent.operatingDetailsForm.dirty)
+      && (this.reportingPeriodComponent && !this.reportingPeriodComponent.reportingPeriodForm.dirty))) {
+        return true;
+    }
+    // Otherwise ask the user with the dialog service and return its
+    // promise which resolves to true or false when the user decides
+    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.title = 'Unsaved Changes';
+    modalRef.componentInstance.confirmButtonText = 'Confirm';
+    return modalRef.result;
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if ((this.editInfo || this.editDetails || this.editPeriod)
+      && ((this.infoComponent && this.infoComponent.processForm.dirty)
+      || (this.operatingDetailsComponent && this.operatingDetailsComponent.operatingDetailsForm.dirty)
+      || (this.reportingPeriodComponent && this.reportingPeriodComponent.reportingPeriodForm.dirty))) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

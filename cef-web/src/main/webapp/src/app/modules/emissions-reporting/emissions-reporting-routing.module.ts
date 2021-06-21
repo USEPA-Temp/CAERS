@@ -55,22 +55,27 @@ const reportRoutes: Routes = [
           }, {
             path: `${BaseReportUrl.FACILITY_INFO}`,
             component: FacilityInformationComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Facility Information', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.FACILITY_CONTACT}`,
             component: EditFacilityContactComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Facility Information', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.FACILITY_CONTACT}/:contactId`,
             component: EditFacilityContactComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Facility Information', breadcrumb: emissionsReportBreadcrumb, create: 'false'}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}/create`,
             component: CreateControlDeviceComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Control Device', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}/:controlId`,
             component: ControlDeviceDetailsComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Control Device Details', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.CONTROL_DEVICE}`,
@@ -79,10 +84,12 @@ const reportRoutes: Routes = [
           }, {
           path: `${BaseReportUrl.CONTROL_PATH}/create`,
             component: CreateControlPathComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Control Path', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.CONTROL_PATH}/:controlPathId`,
             component: ControlPathDetailsComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Control Path Details', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.CONTROL_PATH}`,
@@ -91,22 +98,22 @@ const reportRoutes: Routes = [
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId/process/create/:processId`,
             component: CreateEmissionsProcessComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId/process/create`,
             component: CreateEmissionsProcessComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/unit/create`,
             component: CreateEmissionsUnitComponent,
-            data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
-          }, {
-            path: `${BaseReportUrl.EMISSIONS_UNIT}/unit/create`,
-            component: CreateEmissionsUnitComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}/:unitId`,
             component: EmissionUnitDashboardComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Emissions Unit', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.EMISSIONS_UNIT}`,
@@ -115,6 +122,7 @@ const reportRoutes: Routes = [
           }, {
             path: `${BaseReportUrl.EMISSIONS_PROCESS}/:processId`,
             component: EmissionsProcessDetailsComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Emissions Process Details', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}`,
@@ -127,10 +135,12 @@ const reportRoutes: Routes = [
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}/create`,
             component: CreateReleasePointComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Release Point', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}/:releasePointId`,
             component: ReleasePointDetailsComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Release Point', breadcrumb: emissionsReportBreadcrumb}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}`,

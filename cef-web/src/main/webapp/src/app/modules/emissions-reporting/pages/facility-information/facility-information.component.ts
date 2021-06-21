@@ -1,6 +1,6 @@
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FacilitySiteContactService } from 'src/app/core/services/facility-site-contact.service';
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
@@ -121,4 +121,29 @@ export class FacilityInformationComponent implements OnInit {
         });
     });
   }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if both forms are clean
+    if (!this.editInfo || (this.facilitySiteComponent !== undefined && !this.facilitySiteComponent.facilitySiteForm.dirty)) {
+        return true;
+    }
+    // Otherwise ask the user with the dialog service and return its
+    // promise which resolves to true or false when the user decides
+    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.title = 'Unsaved Changes';
+    modalRef.componentInstance.confirmButtonText = 'Confirm';
+    return modalRef.result;
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (this.editInfo && this.facilitySiteComponent.facilitySiteForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
+  }
+  
 }

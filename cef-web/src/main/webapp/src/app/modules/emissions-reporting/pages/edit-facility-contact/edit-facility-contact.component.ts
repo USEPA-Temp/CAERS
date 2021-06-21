@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
@@ -14,6 +14,8 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -28,6 +30,7 @@ export class EditFacilityContactComponent implements OnInit {
   sameAddress = false;
 
   readOnlyMode = true;
+  editInfo = false;
 
   facilityUrl: string;
 
@@ -78,6 +81,7 @@ export class EditFacilityContactComponent implements OnInit {
     private sharedService: SharedService,
     public formUtils: FormUtilsService,
     private route: ActivatedRoute,
+    private modalService: NgbModal,
     private router: Router,
     private fb: FormBuilder) { }
 
@@ -131,6 +135,7 @@ export class EditFacilityContactComponent implements OnInit {
             this.contactForm.enable();
             this.contactForm.reset(this.facilityContact);
             this.mailingStreetAddress = this.facilityContact.mailingStreetAddress;
+            this.editInfo = true;
         });
       } else {
         this.contactForm.enable();
@@ -144,13 +149,6 @@ export class EditFacilityContactComponent implements OnInit {
 
   setMailAddress() {
     this.sameAddress = !this.sameAddress;
-  }
-
-  onCancelEdit() {
-    this.contactForm.enable();
-    if (!this.createMode) {
-      this.contactForm.reset(this.facilityContact);
-    }
   }
 
   onSubmit() {
@@ -170,6 +168,7 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.create(saveContact)
         .subscribe(() => {
 
+          this.createMode = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
@@ -179,11 +178,18 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.update(saveContact)
         .subscribe(() => {
 
+          this.editInfo = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
       }
     }
+  }
+
+  onCancel() {
+    this.createMode = false;
+    this.editInfo = false;
+    this.router.navigate([this.facilityUrl]);
   }
 
   checkMailingAddress() {
@@ -203,6 +209,30 @@ export class EditFacilityContactComponent implements OnInit {
       this.contactForm.get('mailingStateCode').setValue(this.contactForm.get('stateCode').value);
       this.contactForm.get('mailingPostalCode').setValue(this.contactForm.get('postalCode').value);
     }
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if both forms are clean
+    if (!this.contactForm.dirty || (!this.createMode && !this.editInfo)) {
+        return true;
+    }
+    // Otherwise ask the user with the dialog service and return its
+    // promise which resolves to true or false when the user decides
+    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.title = 'Unsaved Changes';
+    modalRef.componentInstance.confirmButtonText = 'Confirm';
+    return modalRef.result;
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if ((this.createMode || this.editInfo) && this.contactForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

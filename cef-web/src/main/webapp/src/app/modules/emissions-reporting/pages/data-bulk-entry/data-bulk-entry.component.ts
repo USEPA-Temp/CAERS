@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ActivatedRoute } from '@angular/router';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
@@ -8,7 +8,6 @@ import { EmissionService } from 'src/app/core/services/emission.service';
 import { BulkEntryEmissionHolder } from 'src/app/shared/models/bulk-entry-emission-holder';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
-import { Observable } from 'rxjs';
 import { BulkEntryEmissionsTableComponent } from 'src/app/modules/emissions-reporting/components/bulk-entry-emissions-table/bulk-entry-emissions-table.component';
 import { BulkEntryReportingPeriodTableComponent } from 'src/app/modules/emissions-reporting/components/bulk-entry-reporting-period-table/bulk-entry-reporting-period-table.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -81,18 +80,37 @@ export class DataBulkEntryComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
+    let message;
     // Allow synchronous navigation (`true`) if both forms are clean
     if (this.readOnlyMode || (!this.periodComponent.reportingPeriodForm.dirty && !this.emissionComponent.emissionForm.dirty)) {
       return true;
     }
+
+    if (this.periodComponent.reportingPeriodForm.dirty && this.emissionComponent.emissionForm.dirty) {
+      message = 'You have unsaved changes which will be lost if you navigate away. Are you sure you wish to discard these changes?';
+    } else if (this.periodComponent.reportingPeriodForm.dirty) {
+      message = 'You have unsaved Process Information changes which will be lost if you navigate away. Are you sure you wish to discard these changes?';
+    } else {
+      message = 'You have unsaved Emission Information changes which will be lost if you navigate away. Are you sure you wish to discard these changes?';
+    }
+
     // Otherwise ask the user with the dialog service and return its
     // promise which resolves to true or false when the user decides
-    const modalMessage = 'You have unsaved changes which will be lost if you navigate away. Are you sure you wish to discard these changes?';
+    const modalMessage = message;
     const modalRef = this.modalService.open(ConfirmationDialogComponent);
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.title = 'Unsaved Changes';
     modalRef.componentInstance.confirmButtonText = 'Discard';
     return modalRef.result;
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (!this.readOnlyMode && (this.periodComponent.reportingPeriodForm.dirty || this.emissionComponent.emissionForm.dirty)) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }
