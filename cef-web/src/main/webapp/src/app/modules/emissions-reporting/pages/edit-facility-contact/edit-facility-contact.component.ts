@@ -14,6 +14,7 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-edit-facility-contact',
@@ -115,7 +116,7 @@ export class EditFacilityContactComponent implements OnInit {
 
       this.createMode = data.create === 'true';
 
-      this.readOnlyMode = ReportStatus.IN_PROGRESS !== data.facilitySite.emissionsReport.status;
+      this.readOnlyMode = !UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status);
 
       this.sharedService.emitChange(data.facilitySite);
     });

@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS'">
+            <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS' || facilitySite.emissionsReport.status==='RETURNED'">
                 <div class="float-right pr-3">
                     <button *ngIf="userRole!=='Reviewer'"
                             id="runQualityChecksBtn"

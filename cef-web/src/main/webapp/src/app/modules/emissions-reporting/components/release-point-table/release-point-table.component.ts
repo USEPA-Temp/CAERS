@@ -11,6 +11,7 @@ import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-release-point-table',
@@ -43,7 +44,7 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
       .subscribe((data: { facilitySite: FacilitySite }) => {
         this.facilitySiteId = (data.facilitySite.id);
         this.userContextService.getUser().subscribe( user => {
-          if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
             this.readOnlyMode = false;
           }
         });

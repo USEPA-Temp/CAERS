@@ -8,6 +8,7 @@ import { EditControlPathInfoPanelComponent } from '../../components/edit-control
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlAssignment } from 'src/app/shared/models/control-assignment';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-control-path-details',
@@ -48,7 +49,7 @@ export class ControlPathDetailsComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

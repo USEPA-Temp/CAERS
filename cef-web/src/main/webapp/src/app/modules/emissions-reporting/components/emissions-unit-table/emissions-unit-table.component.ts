@@ -11,6 +11,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-emissions-unit-table',
@@ -41,7 +42,7 @@ export class EmissionsUnitTableComponent extends BaseSortableTable implements On
     this.route.data
       .subscribe((data: { facilitySite: FacilitySite }) => {
         this.userContextService.getUser().subscribe( user => {
-          if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+          if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
             this.readOnlyMode = false;
           }
         });

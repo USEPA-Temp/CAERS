@@ -11,6 +11,7 @@ import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-control-paths-table',
@@ -40,7 +41,7 @@ export class ControlPathsTableComponent extends BaseSortableTable implements OnI
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });
