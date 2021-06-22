@@ -49,7 +49,7 @@ export class NotificationListComponent implements OnInit {
   }
 
   filterAndCountSubmissions(submissions){
-      this.approvedCount = this.advancedQACount = this.submittedCount = this.inProgressCount = 0;
+      this.approvedCount = this.advancedQACount = this.submittedCount = this.inProgressCount = this.returnedCount = 0;
       submissions.forEach(submission => {
         if (submission.reportStatus === 'APPROVED') {
           this.approvedCount++; 

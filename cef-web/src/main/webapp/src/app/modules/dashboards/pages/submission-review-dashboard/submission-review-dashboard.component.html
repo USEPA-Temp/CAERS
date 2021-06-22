@@ -59,7 +59,7 @@
                   </div>
                   <div class="col-sm-9" style="text-align: right">
                      <button class="btn btn-primary btn-md mr-3"
-                           *ngIf="mySelect.value !== 'IN_PROGRESS'"
+                           *ngIf="mySelect.value !== 'IN_PROGRESS' && mySelect.value !== 'RETURNED'"
                            (click)="onReject(yearSelect.value)">
                         <span>Reject and Return to Facility</span>
                      </button>
