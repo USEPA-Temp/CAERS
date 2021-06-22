@@ -6,8 +6,7 @@ import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ReleasePoint } from 'src/app/shared/models/release-point';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-create-release-point',
@@ -27,7 +26,7 @@ export class CreateReleasePointComponent implements OnInit {
     private releasePointService: ReleasePointService,
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: NgbModal,
+    private utilityService: UtilityService,
     private sharedService: SharedService) { }
 
   ngOnInit() {
@@ -76,18 +75,10 @@ export class CreateReleasePointComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if both forms are clean
     if (!this.editInfo || !this.releasePointComponent.releasePointForm.dirty) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = modalMessage;
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])

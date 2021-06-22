@@ -5,8 +5,7 @@ import { EmissionUnitService } from 'src/app/core/services/emission-unit.service
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 
 @Component({
@@ -28,7 +27,7 @@ export class CreateEmissionsUnitComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private sharedService: SharedService,
-              private modalService: NgbModal,
+              private utilityService: UtilityService,
               private facilitySiteService: FacilitySiteService) { }
 
   ngOnInit() {
@@ -82,14 +81,8 @@ export class CreateEmissionsUnitComponent implements OnInit {
     if (!this.editInfo || !this.infoComponent.emissionUnitForm.dirty) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = modalMessage;
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    // Otherwise ask the user with the dialog service and return its promise which resolves to true or false when the user decides
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -100,5 +93,5 @@ export class CreateEmissionsUnitComponent implements OnInit {
     }
     return true;
   }
-  
+
 }

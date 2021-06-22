@@ -6,8 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { Control } from 'src/app/shared/models/control';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-create-control-device',
@@ -25,7 +24,7 @@ export class CreateControlDeviceComponent implements OnInit {
 
   constructor(
     private controlService: ControlService,
-    private modalService: NgbModal,
+    private utilityService: UtilityService,
     private route: ActivatedRoute,
     private router: Router,
     private sharedService: SharedService) { }
@@ -86,17 +85,10 @@ export class CreateControlDeviceComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if both forms are clean
     if (!this.editInfo || !this.controlDeviceComponent.controlDeviceForm.dirty) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])

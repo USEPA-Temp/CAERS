@@ -13,7 +13,6 @@ import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissi
 import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 import { OperatingDetailService } from 'src/app/core/services/operating-detail.service';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
@@ -63,6 +62,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     private operatingDetailService: OperatingDetailService,
     private controlPathService: ControlPathService,
     private userContextService: UserContextService,
+    private utilityService: UtilityService,
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
@@ -270,21 +270,13 @@ export class EmissionsProcessDetailsComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if both forms are clean
     if ((!this.editInfo && !this.editDetails && !this.editPeriod && !this.createPeriod)
       || ((this.infoComponent && !this.infoComponent.processForm.dirty)
       && (this.operatingDetailsComponent && !this.operatingDetailsComponent.operatingDetailsForm.dirty)
       && (this.reportingPeriodComponent && !this.reportingPeriodComponent.reportingPeriodForm.dirty))) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = modalMessage;
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])

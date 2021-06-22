@@ -6,8 +6,7 @@ import { EditControlPathInfoPanelComponent } from '../../components/edit-control
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-create-control-path',
@@ -25,7 +24,7 @@ export class CreateControlPathComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private controlPathService: ControlPathService,
               private sharedService: SharedService,
-              private modalService: NgbModal,
+              private utilityService: UtilityService,
               private router: Router) { }
 
   ngOnInit() {
@@ -71,18 +70,10 @@ export class CreateControlPathComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if both forms are clean
     if (!this.editInfo || !this.controlPathComponent.controlPathForm.dirty) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = modalMessage;
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])

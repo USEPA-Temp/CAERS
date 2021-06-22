@@ -13,8 +13,6 @@ import { FormUtilsService } from 'src/app/core/services/form-utils.service';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
@@ -80,8 +78,8 @@ export class EditFacilityContactComponent implements OnInit {
     private lookupService: LookupService,
     private sharedService: SharedService,
     public formUtils: FormUtilsService,
+    private utilityService: UtilityService,
     private route: ActivatedRoute,
-    private modalService: NgbModal,
     private router: Router,
     private fb: FormBuilder) { }
 
@@ -212,18 +210,10 @@ export class EditFacilityContactComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if both forms are clean
     if (!this.contactForm.dirty || (!this.createMode && !this.editInfo)) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = modalMessage;
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])

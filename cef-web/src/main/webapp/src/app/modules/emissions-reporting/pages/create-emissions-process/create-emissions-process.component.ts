@@ -12,8 +12,7 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
-import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-create-emissions-process',
@@ -41,10 +40,10 @@ export class CreateEmissionsProcessComponent implements OnInit {
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
     private reportingPeriodService: ReportingPeriodService,
-    private modalService: NgbModal,
     private route: ActivatedRoute,
     private router: Router,
     private sharedService: SharedService,
+    private utilityService: UtilityService,
     private toastr: ToastrService) { }
 
   ngOnInit() {
@@ -168,13 +167,8 @@ export class CreateEmissionsProcessComponent implements OnInit {
       && !this.reportingPeriodComponent.reportingPeriodForm.dirty)) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    // Otherwise ask the user with the dialog service and return its promise which resolves to true or false when the user decides
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])

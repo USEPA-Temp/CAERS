@@ -7,7 +7,6 @@ import { FacilityNaicsCode } from 'src/app/shared/models/facility-naics-code';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ToastrService } from 'ngx-toastr';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
 import { EditFacilitySiteInfoPanelComponent } from '../../components/edit-facility-site-info-panel/edit-facility-site-info-panel.component';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
@@ -36,6 +35,7 @@ export class FacilityInformationComponent implements OnInit {
     private facilityService: FacilitySiteService,
     private userContextService: UserContextService,
     private sharedService: SharedService,
+    private utilityService: UtilityService,
     private toastr: ToastrService,
     private route: ActivatedRoute) { }
 
@@ -124,18 +124,10 @@ export class FacilityInformationComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if both forms are clean
     if (!this.editInfo || (this.facilitySiteComponent !== undefined && !this.facilitySiteComponent.facilitySiteForm.dirty)) {
         return true;
     }
-    // Otherwise ask the user with the dialog service and return its
-    // promise which resolves to true or false when the user decides
-    const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
-    modalRef.componentInstance.message = modalMessage;
-    modalRef.componentInstance.title = 'Unsaved Changes';
-    modalRef.componentInstance.confirmButtonText = 'Confirm';
-    return modalRef.result;
+    return this.utilityService.canDeactivateModal();
   }
 
   @HostListener('window:beforeunload', ['$event'])

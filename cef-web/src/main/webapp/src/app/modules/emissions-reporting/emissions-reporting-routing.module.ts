@@ -127,10 +127,12 @@ const reportRoutes: Routes = [
           }, {
             path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}`,
             component: EmissionDetailsComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Emission Details', breadcrumb: emissionsReportBreadcrumb, create: 'true'}
           }, {
             path: `${BaseReportUrl.REPORTING_PERIOD}/:periodId/${BaseReportUrl.EMISSION}/:emissionId`,
             component: EmissionDetailsComponent,
+            canDeactivate: [CanDeactivateGuard],
             data: { title: 'Emission Details', breadcrumb: emissionsReportBreadcrumb, create: 'false'}
           }, {
             path: `${BaseReportUrl.RELEASE_POINT}/create`,
