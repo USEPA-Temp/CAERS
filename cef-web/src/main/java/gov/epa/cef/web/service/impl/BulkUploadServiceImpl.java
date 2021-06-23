@@ -237,7 +237,11 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         	}
 
         	//update the report metadata to make sure it's reset since the report has been recreated
-        	reportToUpdate.setStatus(ReportStatus.IN_PROGRESS);
+        	if (ReportStatus.RETURNED == reportToUpdate.getStatus()) {
+        	    reportToUpdate.setStatus(ReportStatus.RETURNED);
+        	} else {
+        	    reportToUpdate.setStatus(ReportStatus.IN_PROGRESS);
+        	}
             reportToUpdate.setValidationStatus(ValidationStatus.UNVALIDATED);
             reportToUpdate.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         	reportToUpdate.setCromerrActivityId(null);
