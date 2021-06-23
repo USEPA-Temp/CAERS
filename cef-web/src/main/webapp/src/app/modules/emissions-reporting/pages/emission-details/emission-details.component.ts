@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, HostListener} from '@angular/core';
 import { Emission } from 'src/app/shared/models/emission';
 import { ReportingPeriod } from 'src/app/shared/models/reporting-period';
 import { Process } from 'src/app/shared/models/process';
@@ -19,7 +19,6 @@ import { EmissionFactor } from 'src/app/shared/models/emission-factor';
 import { EmissionFactorService } from 'src/app/core/services/emission-factor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmissionFactorModalComponent } from 'src/app/modules/emissions-reporting/components/emission-factor-modal/emission-factor-modal.component';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ToastrService } from 'ngx-toastr';
 import { EmissionFormulaVariable } from 'src/app/shared/models/emission-formula-variable';
@@ -105,6 +104,7 @@ export class EmissionDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private sharedService: SharedService,
+    private utilityService: UtilityService,
     public formUtils: FormUtilsService,
     private modalService: NgbModal,
     private toastr: ToastrService,
@@ -391,6 +391,7 @@ export class EmissionDetailsComponent implements OnInit {
       });
     }
     this.editable = false;
+    this.createMode = false;
   }
 
   onEdit() {
@@ -442,7 +443,7 @@ export class EmissionDetailsComponent implements OnInit {
 
         this.emissionService.create(saveEmission)
         .subscribe(result => {
-
+          this.createMode = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.processUrl]);
         });
@@ -749,6 +750,22 @@ export class EmissionDetailsComponent implements OnInit {
       }
       return null;
     };
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if ((!this.createMode && !this.editable) || !this.emissionForm.dirty) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if ((this.createMode || this.editable) && this.emissionForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

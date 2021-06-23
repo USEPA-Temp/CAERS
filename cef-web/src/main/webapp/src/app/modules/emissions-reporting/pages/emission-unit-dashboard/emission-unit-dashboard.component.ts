@@ -3,13 +3,13 @@ import { Process } from 'src/app/shared/models/process';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { EmissionUnitInfoComponent } from '../../components/emission-unit-info/emission-unit-info.component';
 import { UtilityService } from 'src/app/core/services/utility.service';
 
 
@@ -26,11 +26,15 @@ export class EmissionUnitDashboardComponent implements OnInit {
 
   readOnlyMode = true;
 
+  @ViewChild(EmissionUnitInfoComponent)
+  private infoComponentParent: EmissionUnitInfoComponent;
+
   constructor(
     private emissionUnitService: EmissionUnitService,
     private processService: EmissionsProcessService,
     private controlPathService: ControlPathService,
     private userContextService: UserContextService,
+    private utilityService: UtilityService,
     private route: ActivatedRoute,
     private sharedService: SharedService) { }
 
@@ -75,4 +79,19 @@ export class EmissionUnitDashboardComponent implements OnInit {
     });
   }
 
+  canDeactivate(): Promise<boolean> | boolean {
+    if ((this.infoComponentParent.infoComponent === undefined || !this.infoComponentParent.infoComponent.emissionUnitForm.dirty)) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if ((this.infoComponentParent.infoComponent !== undefined && this.infoComponentParent.infoComponent.emissionUnitForm.dirty)) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
+  }
 }

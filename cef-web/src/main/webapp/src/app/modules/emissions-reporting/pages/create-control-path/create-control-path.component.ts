@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
@@ -6,6 +6,7 @@ import { EditControlPathInfoPanelComponent } from '../../components/edit-control
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { SharedService } from 'src/app/core/services/shared.service';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-create-control-path',
@@ -15,6 +16,7 @@ import { SharedService } from 'src/app/core/services/shared.service';
 export class CreateControlPathComponent implements OnInit {
   @Input() facilitySite: FacilitySite;
   controlPathUrl: string;
+  editInfo = true;
 
   @ViewChild(EditControlPathInfoPanelComponent, { static: true })
   private controlPathComponent: EditControlPathInfoPanelComponent;
@@ -22,6 +24,7 @@ export class CreateControlPathComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private controlPathService: ControlPathService,
               private sharedService: SharedService,
+              private utilityService: UtilityService,
               private router: Router) { }
 
   ngOnInit() {
@@ -53,11 +56,33 @@ export class CreateControlPathComponent implements OnInit {
 
       this.controlPathService.create(saveControlPath)
         .subscribe(() => {
+          this.editInfo = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.controlPathUrl]);
         });
     }
 
+  }
+
+  onCancel() {
+    this.editInfo = false;
+    this.router.navigate([this.controlPathUrl]);
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if (!this.editInfo || !this.controlPathComponent.controlPathForm.dirty) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (this.editInfo && this.controlPathComponent.controlPathForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

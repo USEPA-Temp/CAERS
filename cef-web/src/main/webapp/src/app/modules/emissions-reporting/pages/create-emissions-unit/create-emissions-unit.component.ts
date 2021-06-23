@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { EditEmissionUnitInfoPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-emission-unit-info-panel/edit-emission-unit-info-panel.component';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { SharedService } from 'src/app/core/services/shared.service';
-import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 
 @Component({
@@ -22,11 +21,13 @@ export class CreateEmissionsUnitComponent implements OnInit {
 
   facilitySiteId: number;
   reportId: number;
+  editInfo = true;
 
   constructor(private emissionUnitService: EmissionUnitService,
               private router: Router,
               private route: ActivatedRoute,
               private sharedService: SharedService,
+              private utilityService: UtilityService,
               private facilitySiteService: FacilitySiteService) { }
 
   ngOnInit() {
@@ -62,11 +63,35 @@ export class CreateEmissionsUnitComponent implements OnInit {
           emissionUnit.unitIdentifier = this.infoComponent.emissionUnitForm.controls.unitIdentifier.value.trim();
 
           this.emissionUnitService.create(emissionUnit)
-          .subscribe(result => {
+          .subscribe(() => {
+            this.editInfo = false;
             this.sharedService.updateReportStatusAndEmit(this.route);
             this.router.navigate(['../..'], { relativeTo: this.route });
           });
         }
+  }
+
+  onCancel() {
+    this.editInfo = false;
+    this.router.navigate(['../..'], { relativeTo: this.route });
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if both forms are clean
+    if (!this.editInfo || !this.infoComponent.emissionUnitForm.dirty) {
+        return true;
+    }
+    // Otherwise ask the user with the dialog service and return its promise which resolves to true or false when the user decides
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (this.editInfo && this.infoComponent.emissionUnitForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

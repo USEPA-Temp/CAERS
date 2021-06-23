@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmissionsProcessService } from 'src/app/core/services/emissions-process.service';
 import { Process } from 'src/app/shared/models/process';
@@ -13,7 +13,6 @@ import { EditProcessOperatingDetailPanelComponent } from 'src/app/modules/emissi
 import { EditProcessReportingPeriodPanelComponent } from 'src/app/modules/emissions-reporting/components/edit-process-reporting-period-panel/edit-process-reporting-period-panel.component';
 import { OperatingDetailService } from 'src/app/core/services/operating-detail.service';
 import { OperatingDetail } from 'src/app/shared/models/operating-detail';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ToastrService } from 'ngx-toastr';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
 import { EmissionUnit } from 'src/app/shared/models/emission-unit';
@@ -63,6 +62,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     private operatingDetailService: OperatingDetailService,
     private controlPathService: ControlPathService,
     private userContextService: UserContextService,
+    private utilityService: UtilityService,
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
@@ -262,12 +262,33 @@ export class EmissionsProcessDetailsComponent implements OnInit {
       this.reportingPeriodService.create(reportingPeriod)
       .subscribe(result => {
 
-        console.log();
         this.process.reportingPeriods.push(result);
         this.sharedService.updateReportStatusAndEmit(this.route);
         this.setCreatePeriod(false);
       });
     }
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if ((!this.editInfo && !this.editDetails && !this.editPeriod && !this.createPeriod)
+      || ((this.infoComponent && !this.infoComponent.processForm.dirty)
+      && (this.operatingDetailsComponent && !this.operatingDetailsComponent.operatingDetailsForm.dirty)
+      && (this.reportingPeriodComponent && !this.reportingPeriodComponent.reportingPeriodForm.dirty))) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if ((this.editInfo || this.editDetails || this.editPeriod)
+      && ((this.infoComponent && this.infoComponent.processForm.dirty)
+      || (this.operatingDetailsComponent && this.operatingDetailsComponent.operatingDetailsForm.dirty)
+      || (this.reportingPeriodComponent && this.reportingPeriodComponent.reportingPeriodForm.dirty))) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

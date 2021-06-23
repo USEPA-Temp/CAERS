@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { ActivatedRoute } from '@angular/router';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { EditControlPathInfoPanelComponent } from '../../components/edit-control-path-info-panel/edit-control-path-info-panel.component';
 import { SharedService } from 'src/app/core/services/shared.service';
@@ -28,6 +27,7 @@ export class ControlPathDetailsComponent implements OnInit {
   constructor(private controlPathService: ControlPathService,
               private route: ActivatedRoute,
               private userContextService: UserContextService,
+              private utilityService: UtilityService,
               private sharedService: SharedService) { }
 
   ngOnInit() {
@@ -80,4 +80,21 @@ export class ControlPathDetailsComponent implements OnInit {
         });
       }
   }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if ((this.controlPathComponent !== undefined && !this.controlPathComponent.controlPathForm.dirty) || !this.editInfo) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (this.editInfo && this.controlPathComponent.controlPathForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
+  }
+
 }
