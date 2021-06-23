@@ -222,13 +222,25 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	        }
 
 	        if (emission.getEmissionsCalcMethodCode() != null && !emission.getEmissionsCalcMethodCode().getTotalDirectEntry() && !emission.getTotalManualEntry()) {
-	        	if (Strings.emptyToNull(emission.getEmissionsFactorText()) == null) {
-	        		valid = false;
-	        		context.addFederalError(
-	        				ValidationField.EMISSION_EF_TEXT.value(),
-	        				"emission.emissionsFactorText.required.emissionsFactor",
-	        				createValidationDetails(emission));
-	        	}
+
+	            if (emission.getEmissionsCalcMethodCode().getEpaEmissionFactor()) {
+    	        	if (Strings.emptyToNull(emission.getEmissionsFactorText()) == null) {
+    	        		valid = false;
+    	        		context.addFederalError(
+    	        				ValidationField.EMISSION_EF_TEXT.value(),
+    	        				"emission.emissionsFactorText.required.emissionsFactor.epa",
+    	        				createValidationDetails(emission));
+    	        	}
+	            } else {
+
+    	        	if (Strings.emptyToNull(emission.getEmissionsFactorText()) == null) {
+                        valid = false;
+                        context.addFederalError(
+                                ValidationField.EMISSION_EF_TEXT.value(),
+                                "emission.emissionsFactorText.required.emissionsFactor",
+                                createValidationDetails(emission));
+                    }
+	            }
 	        }
 
 	        // Emission Calculation checks
