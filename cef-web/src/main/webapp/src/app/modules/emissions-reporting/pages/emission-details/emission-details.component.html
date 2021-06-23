@@ -215,7 +215,10 @@
                         </div>
                         <div class="col-sm-3">
                             <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText" [readonly]="epaEmissionFactor"></textarea>
-                            <app-validation-message [control]="emissionForm.controls.emissionsFactorText"></app-validation-message>
+                            <app-validation-message [control]="emissionForm.controls.emissionsFactorText" [disableRequired]="epaEmissionFactor"></app-validation-message>
+                            <div class="validation-message" *ngIf="epaEmissionFactor && emissionForm.get('emissionsFactorText').getError('required')">
+                                Please search and (re)select your emission factor or check the "I prefer to calculate" box.
+                            </div>
                         </div>
                     </div>
 

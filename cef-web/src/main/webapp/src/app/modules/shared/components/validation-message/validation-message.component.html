@@ -1,5 +1,5 @@
 <div class="validation-message" *ngIf="control.errors && (control.dirty || control.touched)">
-  <div *ngIf="control.errors?.required">
+  <div *ngIf="control.errors?.required && !disableRequired">
       This field is required.
   </div>
 

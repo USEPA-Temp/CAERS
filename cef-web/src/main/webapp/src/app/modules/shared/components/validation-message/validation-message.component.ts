@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 })
 export class ValidationMessageComponent implements OnInit {
   @Input() control: FormControl;
+  @Input() disableRequired = false;
 
   constructor() { }
 
