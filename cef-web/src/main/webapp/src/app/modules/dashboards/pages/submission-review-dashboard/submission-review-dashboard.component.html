@@ -17,6 +17,7 @@
                        (change)="onStatusSelected(mySelect.value)" aria-label="select report status">
                   <option value="SUBMITTED">Pending Review</option>
                   <option value="IN_PROGRESS">In Progress</option>
+                  <option value="RETURNED">Reviewed and Returned</option>
                   <option value="ADVANCED_QA">Advanced QA</option>
                   <option value="APPROVED">Accepted</option>
                </select>
@@ -58,7 +59,7 @@
                   </div>
                   <div class="col-sm-9" style="text-align: right">
                      <button class="btn btn-primary btn-md mr-3"
-                           *ngIf="mySelect.value !== 'IN_PROGRESS'"
+                           *ngIf="mySelect.value !== 'IN_PROGRESS' && mySelect.value !== 'RETURNED'"
                            (click)="onReject(yearSelect.value)">
                         <span>Reject and Return to Facility</span>
                      </button>

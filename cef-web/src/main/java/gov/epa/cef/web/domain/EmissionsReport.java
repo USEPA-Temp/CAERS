@@ -53,7 +53,7 @@ public class EmissionsReport extends BaseAuditEntity {
     @Column(name = "eis_last_trans_id")
     private String eisLastTransactionId;
 
-    @Column(name = "eis_program_id", nullable = false, length = 22)
+    @Column(name = "eis_program_id", length = 22)
     private String eisProgramId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")

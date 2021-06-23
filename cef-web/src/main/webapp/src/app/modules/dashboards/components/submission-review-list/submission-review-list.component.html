@@ -4,7 +4,7 @@
     <table class="table table-sm table-striped table-bordered">
       <thead class="thead-cef-medium">
       <tr>
-        <th *ngIf="reportStatus !== 'IN_PROGRESS'" scope="col">Select</th>
+        <th *ngIf="reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'" scope="col">Select</th>
         <th scope="col" sortable="facilityName" (sort)="onSort($event)">Facility Name</th>
         <th scope="col" sortable="altFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
         <th scope="col" sortable="operatingStatus" (sort)="onSort($event)">Operating Status</th>
@@ -16,7 +16,7 @@
       </thead>
       <tbody>
       <tr *ngFor="let submission of tableData">
-        <th *ngIf="reportStatus !== 'IN_PROGRESS'" scope="row"><input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report"></th>
+        <th *ngIf="reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'" scope="row"><input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report"></th>
         <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>

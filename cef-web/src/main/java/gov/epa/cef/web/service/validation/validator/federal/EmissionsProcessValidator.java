@@ -80,31 +80,10 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         boolean isProcessOperating = ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getOperatingStatusCode().getCode());
 
         Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
-        // Might need to add a rounding tolerance.
-        if (100 != totalReleasePointPercent) {
-
-        	result = false;
-        	context.addFederalError(
-                  ValidationField.PROCESS_RP_PCT.value(),
-                  "emissionsProcess.releasePointAppts.percent.total",
-                  createValidationDetails(emissionsProcess));
-        }
-	  
         Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
             .filter(rpa -> rpa.getReleasePoint() != null)
             .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
 	     
-        // Process must go to at least one release point
-        if (CollectionUtils.sizeIsEmpty(rpaMap)) {
-
-        	result = false;
-        	context.addFederalError(
-        			ValidationField.PROCESS_RP.value(),
-        			"emissionsProcess.releasePointAppts.required",
-        			createValidationDetails(emissionsProcess));
-        }
-        
-        
         for (List<ReleasePointAppt> rpa: rpaMap.values()) {
         	// release point can be used only once per rp appt collection
         	if (rpa.size() > 1) {
@@ -145,6 +124,25 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         }
         
         if (isProcessOperating) { 
+        	// Might need to add a rounding tolerance.
+            if (100 != totalReleasePointPercent) {
+
+            	result = false;
+            	context.addFederalError(
+                      ValidationField.PROCESS_RP_PCT.value(),
+                      "emissionsProcess.releasePointAppts.percent.total",
+                      createValidationDetails(emissionsProcess));
+            }
+            
+            // Process must go to at least one release point
+            if (CollectionUtils.sizeIsEmpty(rpaMap)) {
+
+            	result = false;
+            	context.addFederalError(
+            			ValidationField.PROCESS_RP.value(),
+            			"emissionsProcess.releasePointAppts.required",
+            			createValidationDetails(emissionsProcess));
+            }
         	
             // Check for valid SCC Code
             if (Strings.emptyToNull(emissionsProcess.getSccCode()) != null) {

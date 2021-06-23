@@ -11,6 +11,7 @@ import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
 import { ControlPathService } from 'src/app/core/services/control-path.service';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-control-device-details',
@@ -60,7 +61,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
     this.route.data
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && ReportStatus.IN_PROGRESS === data.facilitySite.emissionsReport.status) {
+        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

@@ -440,6 +440,7 @@ public class EmissionsReportApi {
             savedReport.setFileName(fileName);
             return new ResponseEntity<>(savedReport, HttpStatus.OK);
         } catch (Exception ex) {
+            LOGGER.error("uploadReport exception: ", ex);
             String msg = String.format("'%s' failed to upload.  Error: %s",
                 fileName, ex.getMessage());
 
