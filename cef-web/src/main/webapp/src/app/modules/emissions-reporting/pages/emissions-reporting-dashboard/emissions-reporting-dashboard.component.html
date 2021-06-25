@@ -29,9 +29,9 @@
 
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
             class="btn btn-primary" [attr.aria-label]="'view'+ report.year +'report'"
-            *ngIf="isOneOf(report.status, ['APPROVED', 'SUBMITTED'])">View</a>
+            *ngIf="isOneOf(report.status, ['ADVANCED_QA', 'APPROVED', 'SUBMITTED'])">View</a>
 
-          <a [routerLink]="['.']" *ngIf="excelExportEnabled && report.status !== 'NEW'" class="btn btn-primary"
+          <a [routerLink]="['.']" *ngIf="excelExportEnabled && !isOneOf(report.status, ['NEW', 'ADVANCED_QA', 'APPROVED'])" class="btn btn-primary"
              [attr.aria-label]="'download '+ report.year +' report template'"
              (click)="downloadExcelTemplate(report)">Download as Template</a>
 
