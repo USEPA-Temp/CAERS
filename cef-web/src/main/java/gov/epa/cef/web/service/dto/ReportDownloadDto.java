@@ -22,6 +22,7 @@ public class ReportDownloadDto implements Serializable{
 	private String emissionUnitDescription;
 	private String processId;
 	private String processDescription;
+	private String sccCode;
     private String pollutantName;
     private String emissionsUomCode;
     private BigDecimal totalEmissions;
@@ -41,6 +42,11 @@ public class ReportDownloadDto implements Serializable{
 	private BigDecimal fuelValue;
 	private String heatContentRatioNumerator;
 	private BigDecimal heatContentRatio;
+	private BigDecimal apportionedEmissions;
+    private String pathId;
+    private String pathDescription;
+    private BigDecimal releasePointApportionment;
+    private String releasePointId;
     private String lastModifiedBy;
 	private String lastModifiedDate;
 	private String calculationComment;
@@ -142,7 +148,13 @@ public class ReportDownloadDto implements Serializable{
 	public void setProcessDescription(String processDescription) {
 		this.processDescription = processDescription;
 	}
-	public String getPollutantName() {
+	public String getSccCode() {
+        return sccCode;
+    }
+    public void setSccCode(String sccCode) {
+        this.sccCode = sccCode;
+    }
+    public String getPollutantName() {
 		return pollutantName;
 	}
 	public void setPollutantName(String pollutantName) {
@@ -221,5 +233,35 @@ public class ReportDownloadDto implements Serializable{
 	public void setHeatContentRatio(BigDecimal heatContentValue) {
 		this.heatContentRatio = heatContentValue;
 	}
+    public BigDecimal getApportionedEmissions() {
+        return apportionedEmissions;
+    }
+    public void setApportionedEmissions(BigDecimal apportionedEmissions) {
+        this.apportionedEmissions = apportionedEmissions;
+    }
+    public String getPathId() {
+        return pathId;
+    }
+    public void setPathId(String pathId) {
+        this.pathId = pathId;
+    }
+    public String getPathDescription() {
+        return pathDescription;
+    }
+    public void setPathDescription(String pathDescription) {
+        this.pathDescription = pathDescription;
+    }
+    public BigDecimal getReleasePointApportionment() {
+        return releasePointApportionment;
+    }
+    public void setReleasePointApportionment(BigDecimal releasePointApportionment) {
+        this.releasePointApportionment = releasePointApportionment;
+    }
+    public String getReleasePointId() {
+        return releasePointId;
+    }
+    public void setReleasePointId(String releasePointId) {
+        this.releasePointId = releasePointId;
+    }
 
 }
