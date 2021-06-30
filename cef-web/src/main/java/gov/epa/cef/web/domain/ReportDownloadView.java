@@ -39,6 +39,9 @@ public class ReportDownloadView extends BaseEntity{
     @Column(name = "process_description", length = 200)
     private String processDescription;
 
+    @Column(name = "scc_code", length = 20)
+    private String sccCode;
+
 	@Column(name = "pollutant_name", length = 200)
     private String pollutantName;
 
@@ -95,6 +98,21 @@ public class ReportDownloadView extends BaseEntity{
 
 	@Column(name = "total_emissions")
     private BigDecimal totalEmissions;
+
+    @Column(name = "apportioned_emissions")
+    private BigDecimal apportionedEmissions;
+    
+    @Column(name = "path_id")
+    private String pathId;
+    
+    @Column(name = "path_description")
+    private String pathDescription;
+    
+    @Column(name = "release_point_apportionment")
+    private BigDecimal releasePointApportionment;
+    
+    @Column(name = "release_point_id")
+    private String releasePointId;
 
     @Column(name = "last_modified_by", length = 255)
     private String lastModifiedBy;
@@ -232,7 +250,15 @@ public class ReportDownloadView extends BaseEntity{
 		this.processDescription = processDescription;
 	}
 
-	public String getPollutantName() {
+	public String getSccCode() {
+        return sccCode;
+    }
+
+    public void setSccCode(String sccCode) {
+        this.sccCode = sccCode;
+    }
+
+    public String getPollutantName() {
 		return pollutantName;
 	}
 
@@ -334,4 +360,44 @@ public class ReportDownloadView extends BaseEntity{
 	public void setHeatContentRatioNumerator(String heatContentUom) {
 		this.heatContentRatioNumerator = heatContentUom;
 	}
+
+    public BigDecimal getApportionedEmissions() {
+        return apportionedEmissions;
+    }
+
+    public void setApportionedEmissions(BigDecimal apportionedEmissions) {
+        this.apportionedEmissions = apportionedEmissions;
+    }
+
+    public String getPathId() {
+        return pathId;
+    }
+
+    public void setPathId(String pathId) {
+        this.pathId = pathId;
+    }
+
+    public String getPathDescription() {
+        return pathDescription;
+    }
+
+    public void setPathDescription(String pathDescription) {
+        this.pathDescription = pathDescription;
+    }
+
+    public BigDecimal getReleasePointApportionment() {
+        return releasePointApportionment;
+    }
+
+    public void setReleasePointApportionment(BigDecimal releasePointApportionment) {
+        this.releasePointApportionment = releasePointApportionment;
+    }
+
+    public String getReleasePointId() {
+        return releasePointId;
+    }
+
+    public void setReleasePointId(String releasePointId) {
+        this.releasePointId = releasePointId;
+    }
 }

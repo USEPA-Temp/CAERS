@@ -12,6 +12,7 @@ SELECT row_number() OVER (ORDER BY p.pollutant_cas_id) AS id,
     replace(eu.description::text, ','::text, ''::text) AS emission_unit_description,
     replace(ep.emissions_process_identifier::text, ','::text, ''::text) AS process_id,
     replace(ep.description::text, ','::text, ''::text) AS process_description,
+    ep.scc_code,
     replace(p.pollutant_name::text, ','::text, ''::text) AS pollutant_name,
     replace(repcode.short_name::text, ','::text, ''::text) AS reporting_period_type,
     replace(calc_mat.description::text, ','::text, ''::text) AS throughput_material,
@@ -33,7 +34,12 @@ SELECT row_number() OVER (ORDER BY p.pollutant_cas_id) AS id,
     replace(replace(replace(e.emissions_factor_text::text, ','::text, ''::text), chr(13), ' '::text), chr(10), ' '::text) AS emissions_factor_text,
     replace(replace(replace(e.comments::text, ','::text, ''::text), chr(13), ' '::text), chr(10), ' '::text) AS emissions_comment,
     replace(replace(replace(e.calculation_comment::text, ','::text, ''::text), chr(13), ' '::text), chr(10), ' '::text) AS calculation_comment,
-    e.total_emissions
+    e.total_emissions,
+    rtrim((e.total_emissions * rpa.percent / 100::numeric)::text, '00'::text)::numeric AS apportioned_emissions,
+    replace(cp.path_id::text, ','::text, ''::text) AS path_id,
+    replace(cp.description::text, ','::text, ''::text) AS path_description,
+    rpa.percent AS release_point_apportionment,
+    replace(rp.release_point_identifier::text, ','::text, ''::text) AS release_point_id
    FROM emission e
      JOIN calculation_method_code cmc ON cmc.code::text = e.emissions_calc_method_code::text
      JOIN reporting_period repper ON repper.id = e.reporting_period_id
@@ -45,5 +51,8 @@ SELECT row_number() OVER (ORDER BY p.pollutant_cas_id) AS id,
      JOIN facility_site fs ON fs.id = eu.facility_site_id
      JOIN emissions_report er ON er.id = fs.report_id
      JOIN pollutant p ON p.pollutant_code::text = e.pollutant_code::text
+     LEFT JOIN release_point_appt rpa on rpa.emissions_process_id = ep.id
+     JOIN release_point rp on rp.id = rpa.release_point_id
+     LEFT JOIN control_path cp on cp.id = rpa.control_path_id
   WHERE ep.status_code::text = 'OP'::text
   ORDER BY er.id, eu.unit_identifier, ep.emissions_process_identifier, p.pollutant_code;
