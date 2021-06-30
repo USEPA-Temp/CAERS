@@ -39,6 +39,13 @@ export class ReportDownloadService {
         document.body.removeChild(dwldLink);
     }
 
+    downloadReportSummary(data: any, filename: string) {
+        const csvData = this.ConvertToCSV(data, ['pollutantName', 'pollutantType', 'fugitiveTonsTotal', 'stackTonsTotal',
+            'emissionsTonsTotal', 'previousYearTonsTotal', 'previousYear']);
+
+        this.downloadFile(data, filename, csvData);
+    }
+
     ConvertToCSV(objArray: string, headerList: string[]) {
         const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
         let str = '';
