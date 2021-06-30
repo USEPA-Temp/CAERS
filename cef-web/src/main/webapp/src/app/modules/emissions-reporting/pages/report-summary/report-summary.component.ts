@@ -141,6 +141,16 @@ export class ReportSummaryComponent implements OnInit {
         });
     }
 
+    downloadSummaryReport(altFacilityIdentifier: number) {
+        if ((this.facilitySite.emissionsReport.status === 'APPROVED') || (this.facilitySite.emissionsReport.status === 'SUBMITTED')) {
+            this.reportDownloadService.downloadReportSummary(this.tableData, altFacilityIdentifier + '_' +
+            this.facilitySite.emissionsReport.year + '_' + 'Report_Summary' + '_Final_Submission');
+        } else {
+            this.reportDownloadService.downloadReportSummary(this.tableData, altFacilityIdentifier + '_' +
+            this.facilitySite.emissionsReport.year + '_' + 'Report_Summary' + '_Submission_In_Progress');
+        }
+    }
+
     navigateToFeedbackPage(){
         this.router.navigateByUrl(this.feedbackUrl);
     }

@@ -3,6 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
 import { ReportSummary } from 'src/app/shared/models/report-summary';
 import { ReportService } from 'src/app/core/services/report.service';
+import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 
 @Component({
   selector: 'app-report-summary-modal',
@@ -16,7 +17,10 @@ export class ReportSummaryModalComponent implements OnInit {
     radiationData: ReportSummary[];
     emissionsReportYear: number;
 
-    constructor(public activeModal: NgbActiveModal, private reportService: ReportService) { }
+    constructor(
+      public activeModal: NgbActiveModal,
+      private reportService: ReportService,
+      private reportDownloadService: ReportDownloadService) { }
 
 
     ngOnInit() {
@@ -43,6 +47,16 @@ export class ReportSummaryModalComponent implements OnInit {
 
     onPrint() {
       alert('Print clicked');
+    }
+
+    downloadSummaryReport() {
+        if ((this.submission.reportStatus === 'APPROVED') || (this.submission.reportStatus === 'SUBMITTED')) {
+            this.reportDownloadService.downloadReportSummary(this.tableData, this.submission.altFacilityId + '_' +
+            this.submission.year + '_' + 'Report_Summary' + '_Final_Submission');
+        } else {
+            this.reportDownloadService.downloadReportSummary(this.tableData, this.submission.altFacilityId + '_' +
+            this.submission.year + '_' + 'Report_Summary' + '_Submission_In_Progress');
+        }
     }
 
 }
