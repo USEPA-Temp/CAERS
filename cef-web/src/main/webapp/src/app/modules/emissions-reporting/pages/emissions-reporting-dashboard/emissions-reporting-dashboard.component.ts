@@ -16,6 +16,7 @@ import { FileDownloadService } from 'src/app/core/services/file-download.service
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -188,7 +189,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
             // when being run on tomcat this call will return success with an empty body
             // instead of an error when the call times out
             if (file.size > 0) {
-                this.fileDownloadService.downloadFile(file, `${reportFacility.altSiteIdentifier}-${this.facility.name}-${report.year}.xlsx`);
+                this.fileDownloadService.downloadFile(file, UtilityService.removeSpecialCharacters(`${reportFacility.altSiteIdentifier}-${this.facility.name}-${report.year}.xlsx`));
             } else {
                 this.openDownloadFailure();
             }

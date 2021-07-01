@@ -28,6 +28,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.EmissionsReportBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.validation.ValidationResult;
 import gov.epa.cef.web.util.TempFile;
+import gov.epa.cef.web.util.StringUtils;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -303,10 +304,11 @@ public class EmissionsReportApi {
 
         EmissionsReportDto report = emissionsReportService.findById(reportId);
         FacilitySiteDto facility = facilitySiteService.findByReportId(reportId);
+        String fileName = StringUtils.createValidFileName(facility.getAltSiteIdentifier(), facility.getName(), report.getYear());
 
         return ResponseEntity.ok()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s-%s-%d.xlsx\"", facility.getAltSiteIdentifier(), facility.getName(), report.getYear()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"", fileName))
                 .body(outputStream -> {
                     exportService.generateExcel(reportId, outputStream);
                 });
