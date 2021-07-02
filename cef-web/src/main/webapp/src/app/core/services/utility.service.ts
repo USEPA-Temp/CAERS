@@ -24,4 +24,12 @@ export class UtilityService {
     modalRef.componentInstance.confirmButtonText = 'Confirm';
     return modalRef.result;
   }
+
+
+  static removeSpecialCharacters(input: string): string {
+    var regExpr = /[^a-zA-Z0-9-.]/g;
+    const output: string = input.replace(regExpr, "");
+    return output;
+  }
+
 }
