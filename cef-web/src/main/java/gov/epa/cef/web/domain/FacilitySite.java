@@ -219,6 +219,7 @@ public class FacilitySite extends BaseAuditEntity {
         	}
         	
         	if (emissionsUnit.getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)
+        			&& originalFacilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode() != null
         			&& originalFacilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode().equals(ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE)) {
         		
         		if (emissionsUnit.getEmissionsProcesses().stream()
