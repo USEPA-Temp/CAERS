@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { Process } from 'src/app/shared/models/process';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmissionUnitService } from 'src/app/core/services/emission-unit.service';
@@ -12,7 +12,7 @@ import { OperatingDetail } from 'src/app/shared/models/operating-detail';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ReportingPeriodService } from 'src/app/core/services/reporting-period.service';
-import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
+import { UtilityService } from 'src/app/core/services/utility.service';
 
 @Component({
   selector: 'app-create-emissions-process',
@@ -25,6 +25,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
   originalPeriod: ReportingPeriod;
   originalDetails: OperatingDetail;
   originalId: number;
+  editInfo = true;
 
   @ViewChild(EditProcessInfoPanelComponent, { static: true })
   private infoComponent: EditProcessInfoPanelComponent;
@@ -42,6 +43,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private sharedService: SharedService,
+    private utilityService: UtilityService,
     private toastr: ToastrService) { }
 
   ngOnInit() {
@@ -129,7 +131,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
 
         this.processService.create(process)
         .subscribe(result => {
-
+          this.editInfo = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate(['../../..'], { relativeTo: this.route });
         });
@@ -138,7 +140,7 @@ export class CreateEmissionsProcessComponent implements OnInit {
 
         this.processService.create(process)
         .subscribe(result => {
-          // console.log(result);
+          this.editInfo = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate(['../..'], { relativeTo: this.route });
         });
@@ -148,13 +150,37 @@ export class CreateEmissionsProcessComponent implements OnInit {
   }
 
   onCancel() {
-
+    this.editInfo = false;
     if (this.originalProcess) {
       // this.router.navigate([BaseReportUrl.EMISSIONS_PROCESS, this.originalId], { relativeTo: this.route.parent });
       this.router.navigate(['../../..'], { relativeTo: this.route });
     } else {
       this.router.navigate(['../..'], { relativeTo: this.route });
     }
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if both forms are clean
+    if (!this.editInfo
+      || (!this.infoComponent.processForm.dirty
+      && !this.operatingDetailsComponent.operatingDetailsForm.dirty
+      && !this.reportingPeriodComponent.reportingPeriodForm.dirty)) {
+        return true;
+    }
+    // Otherwise ask the user with the dialog service and return its promise which resolves to true or false when the user decides
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (this.editInfo
+      && (this.infoComponent.processForm.dirty
+      || this.operatingDetailsComponent.operatingDetailsForm.dirty
+      || this.reportingPeriodComponent.reportingPeriodForm.dirty)) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

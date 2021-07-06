@@ -1,9 +1,6 @@
 import {Component, OnInit, TemplateRef, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CdxFacility} from 'src/app/shared/models/cdx-facility';
-
 import bsCustomFileInput from 'bs-custom-file-input';
-
 import {EmissionsReportingService} from 'src/app/core/services/emissions-reporting.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -11,6 +8,7 @@ import {HttpEvent, HttpEventType} from '@angular/common/http';
 import {EMPTY} from 'rxjs';
 import {UserService} from 'src/app/core/services/user.service';
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
+import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 
 interface PleaseWaitConfig {
     modal: NgbModalRef;
@@ -53,11 +51,20 @@ export class ReportBulkUploadComponent implements OnInit {
 
     pleaseWait: PleaseWaitConfig;
 
+
+    fileUploadForm = this.fb.group({
+        excelFileUpload: ['', Validators.required]
+    }, {
+        validators: [
+            this.checkFileName()]
+    });
+
     constructor(private emissionsReportingService: EmissionsReportingService,
                 private userService: UserService,
                 private modalService: NgbModal,
                 public router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private fb: FormBuilder) {
 
         this.bsflags = {
             showSystemErrors: false,
@@ -221,7 +228,29 @@ export class ReportBulkUploadComponent implements OnInit {
     }
 
     onFileChanged(files: FileList) {
+        if (this.fileUploadForm.valid) {
+            this.selectedFile = files.length ? files.item(0) : null;
+        }
+    }
 
-        this.selectedFile = files.length ? files.item(0) : null;
+    
+
+    // make sure file name is using valid characters
+    checkFileName(): ValidatorFn {
+        return (control: FormGroup): ValidationErrors | null => {
+            const excelFile = control.get('excelFileUpload').value;
+            if (excelFile) {
+                const fileParts: string[] = excelFile.split('\\');
+                if (fileParts.length > 0) {
+                    const fileName = fileParts[fileParts.length-1];
+                    const regex = /^[a-zA-Z0-9. -]+\.(xlsx|xls)$/;
+                    if (!regex.test(fileName)) {
+                        this.selectedFile = null;
+                        return {invalidFileName: true};
+                    }
+                }
+            }
+            return null;
+        };
     }
 }

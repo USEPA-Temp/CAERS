@@ -1,6 +1,7 @@
 package gov.epa.cef.web.domain;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
+import gov.epa.cef.web.util.ConstantUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -82,7 +83,9 @@ public class EmissionsUnit extends BaseAuditEntity {
         this.comments = originalUnit.getComments();
 
         for (EmissionsProcess process : originalUnit.getEmissionsProcesses()) {
-        	this.emissionsProcesses.add(new EmissionsProcess(this, process));
+        	if (!process.getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)) {
+        		this.emissionsProcesses.add(new EmissionsProcess(this, process));
+        	}
         }
     }
 

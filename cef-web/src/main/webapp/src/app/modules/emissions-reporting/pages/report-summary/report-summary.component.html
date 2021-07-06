@@ -12,8 +12,13 @@
                         <div class="float-right pr-3">
                             <button class="btn btn-success btn-md my-3 ml-1" 
                                     aria-label="download report"
+                                    (click)="downloadSummaryReport(facilitySite.altSiteIdentifier)">
+                                Download Report Summary
+                            </button>
+                            <button class="btn btn-success btn-md my-3 ml-1" 
+                                    aria-label="download report"
                                     (click)="downloadReport(facilitySite.emissionsReport.id, facilitySite.id, facilitySite.altSiteIdentifier)">
-                                Download Report
+                                Download Process Emissions Summary
                             </button>
                         </div>
                     </div>

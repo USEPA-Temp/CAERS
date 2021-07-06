@@ -10,9 +10,10 @@ export class ReportDownloadService {
     downloadFile(data?: any, filename = 'data', dataCsv?: string) {
 
         const csvData = dataCsv ? dataCsv : this.ConvertToCSV(data, ['facilitySiteId', 'reportYear', 'emissionsUnitId', 'emissionUnitDescription',
-            'processId', 'processDescription', 'reportingPeriodType', 'throughputMaterial', 'throughputValue', 'throughputUom','fuelMaterial', 
+            'processId', 'processDescription', 'sccCode', 'reportingPeriodType', 'throughputMaterial', 'throughputValue', 'throughputUom','fuelMaterial', 
             'fuelValue', 'fuelUom', 'heatContentRatio', 'heatContentRatioNumerator', 'pollutantName',
-            'totalEmissions', 'emissionsUomCode', 'overallControlPercent', 'emissionsCalcMethod', 'emissionsFactor',
+            'totalEmissions', 'apportionedEmissions', 'emissionsUomCode', 'pathId', 'pathDescription', 'releasePointApportionment', 'releasePointId',
+            'overallControlPercent', 'emissionsCalcMethod', 'emissionsFactor',
             'emissionsNumeratorUom', 'emissionsDenominatorUom', 'emissionsFactorText', 'emissionsComment', 'calculationComment',
             'lastModifiedBy', 'lastModifiedDate']);
 
@@ -36,6 +37,13 @@ export class ReportDownloadService {
         document.body.appendChild(dwldLink);
         dwldLink.click();
         document.body.removeChild(dwldLink);
+    }
+
+    downloadReportSummary(data: any, filename: string) {
+        const csvData = this.ConvertToCSV(data, ['pollutantName', 'pollutantType', 'fugitiveTonsTotal', 'stackTonsTotal',
+            'emissionsTonsTotal', 'previousYearTonsTotal', 'previousYear']);
+
+        this.downloadFile(data, filename, csvData);
     }
 
     ConvertToCSV(objArray: string, headerList: string[]) {

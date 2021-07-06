@@ -1,10 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { FacilitySiteContact } from 'src/app/shared/models/facility-site-contact';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FacilitySiteContactService } from 'src/app/core/services/facility-site-contact.service';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseReportUrl } from 'src/app/shared/enums/base-report-url';
@@ -29,6 +28,7 @@ export class EditFacilityContactComponent implements OnInit {
   sameAddress = false;
 
   readOnlyMode = true;
+  editInfo = false;
 
   facilityUrl: string;
 
@@ -78,6 +78,7 @@ export class EditFacilityContactComponent implements OnInit {
     private lookupService: LookupService,
     private sharedService: SharedService,
     public formUtils: FormUtilsService,
+    private utilityService: UtilityService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder) { }
@@ -132,6 +133,7 @@ export class EditFacilityContactComponent implements OnInit {
             this.contactForm.enable();
             this.contactForm.reset(this.facilityContact);
             this.mailingStreetAddress = this.facilityContact.mailingStreetAddress;
+            this.editInfo = true;
         });
       } else {
         this.contactForm.enable();
@@ -145,13 +147,6 @@ export class EditFacilityContactComponent implements OnInit {
 
   setMailAddress() {
     this.sameAddress = !this.sameAddress;
-  }
-
-  onCancelEdit() {
-    this.contactForm.enable();
-    if (!this.createMode) {
-      this.contactForm.reset(this.facilityContact);
-    }
   }
 
   onSubmit() {
@@ -171,6 +166,7 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.create(saveContact)
         .subscribe(() => {
 
+          this.createMode = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
@@ -180,11 +176,18 @@ export class EditFacilityContactComponent implements OnInit {
         this.contactService.update(saveContact)
         .subscribe(() => {
 
+          this.editInfo = false;
           this.sharedService.updateReportStatusAndEmit(this.route);
           this.router.navigate([this.facilityUrl]);
         });
       }
     }
+  }
+
+  onCancel() {
+    this.createMode = false;
+    this.editInfo = false;
+    this.router.navigate([this.facilityUrl]);
   }
 
   checkMailingAddress() {
@@ -204,6 +207,22 @@ export class EditFacilityContactComponent implements OnInit {
       this.contactForm.get('mailingStateCode').setValue(this.contactForm.get('stateCode').value);
       this.contactForm.get('mailingPostalCode').setValue(this.contactForm.get('postalCode').value);
     }
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if (!this.contactForm.dirty || (!this.createMode && !this.editInfo)) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if ((this.createMode || this.editInfo) && this.contactForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 
 }

@@ -3,15 +3,14 @@ import {Process} from 'src/app/shared/models/process';
 import {ReleasePoint} from 'src/app/shared/models/release-point';
 import {EmissionsProcessService} from 'src/app/core/services/emissions-process.service';
 import {ReleasePointService} from 'src/app/core/services/release-point.service';
-import {Component, OnInit, ViewChild, Input} from '@angular/core';
+import {Component, OnInit, ViewChild, Input, HostListener} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {SharedService} from 'src/app/core/services/shared.service';
 import {ControlPath} from 'src/app/shared/models/control-path';
 import {ControlPathService} from 'src/app/core/services/control-path.service';
-import {ReportStatus} from 'src/app/shared/enums/report-status';
 import {EditReleasePointPanelComponent} from '../../components/edit-release-point-panel/edit-release-point-panel.component';
 import {UserContextService} from 'src/app/core/services/user-context.service';
-import { UtilityService } from 'src/app/core/services/utility.service';
+import {UtilityService} from 'src/app/core/services/utility.service';
 
 @Component({
     selector: 'app-release-point-details',
@@ -37,6 +36,7 @@ export class ReleasePointDetailsComponent implements OnInit {
         private processService: EmissionsProcessService,
         private controlPathService: ControlPathService,
         private userContextService: UserContextService,
+        private utilityService: UtilityService,
         private route: ActivatedRoute,
         private sharedService: SharedService) {
     }
@@ -147,4 +147,21 @@ export class ReleasePointDetailsComponent implements OnInit {
                 });
         }
     }
+
+    canDeactivate(): Promise<boolean> | boolean {
+    if (!this.editInfo || (this.releasePointComponent !== undefined && !this.releasePointComponent.releasePointForm.dirty)) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (this.editInfo && this.releasePointComponent.releasePointForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
+  }
+
 }

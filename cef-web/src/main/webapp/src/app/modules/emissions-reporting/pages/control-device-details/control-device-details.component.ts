@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
 import { ControlService } from 'src/app/core/services/control.service';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { Control } from 'src/app/shared/models/control';
 import { EmissionsReportItem } from 'src/app/shared/models/emissions-report-item';
 import { FacilitySite } from 'src/app/shared/models/facility-site';
-import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { EditControlDeviceInfoPanelComponent } from '../../components/edit-control-device-info-panel/edit-control-device-info-panel.component';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ControlPath } from 'src/app/shared/models/control-path';
@@ -35,6 +34,7 @@ export class ControlDeviceDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private userContextService: UserContextService,
     private sharedService: SharedService,
+    private utilityService: UtilityService,
     private controlPathService: ControlPathService) { }
 
   ngOnInit() {
@@ -101,5 +101,21 @@ export class ControlDeviceDetailsComponent implements OnInit {
         this.setEditInfo(false);
       });
     }
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if (!this.editInfo || (this.controlComponent !== undefined && !this.controlComponent.controlDeviceForm.dirty)) {
+        return true;
+    }
+    return this.utilityService.canDeactivateModal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event) {
+    if (this.editInfo && this.controlComponent.controlDeviceForm.dirty) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+    return true;
   }
 }

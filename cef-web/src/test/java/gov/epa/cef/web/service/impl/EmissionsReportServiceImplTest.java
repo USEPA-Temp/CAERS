@@ -16,6 +16,7 @@ import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
@@ -243,6 +244,9 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	er.setValidationStatus(ValidationStatus.PASSED);
     	er.setYear((short) 2018);
 
+    	OperatingStatusCode opStatus = new OperatingStatusCode();
+    	opStatus.setCode("OP");
+    	
     	List<FacilitySite> facilitySites = new ArrayList<>();
     	FacilitySite fs = new FacilitySite();
     	fs.setAltSiteIdentifier("ALTID");
@@ -280,6 +284,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     	List<ReleasePoint> releasePoints = new ArrayList<>();
     	ReleasePoint rp = new ReleasePoint();
+    	rp.setOperatingStatusCode(opStatus);
     	rp.setId(1L);
     	rp.setComments("Comments");
     	releasePoints.add(rp);
@@ -287,6 +292,7 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     	List<Control> controls = new ArrayList<>();
     	Control control = new Control();
+    	control.setOperatingStatusCode(opStatus);
     	control.setId(1L);
     	control.setFacilitySite(fs);
 
@@ -309,12 +315,14 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     	List<EmissionsUnit> units = new ArrayList<>();
     	EmissionsUnit eu = new EmissionsUnit();
+    	eu.setOperatingStatusCode(opStatus);
     	eu.setId(1L);
     	eu.setComments("Test Unit");
     	eu.setFacilitySite(fs);
 
     	List<EmissionsProcess> processes = new ArrayList<>();
     	EmissionsProcess ep = new EmissionsProcess();
+    	ep.setOperatingStatusCode(opStatus);
     	ep.setId(1L);
     	ep.setEmissionsUnit(eu);
     	ep.setComments("Test Process Comments");

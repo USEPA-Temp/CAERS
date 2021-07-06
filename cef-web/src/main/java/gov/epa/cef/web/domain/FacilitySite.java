@@ -1,6 +1,7 @@
 package gov.epa.cef.web.domain;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
+import gov.epa.cef.web.util.ConstantUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Facility entity. @author MyEclipse Persistence Tools
@@ -161,13 +163,17 @@ public class FacilitySite extends BaseAuditEntity {
         	this.facilityNAICS.add(new FacilityNAICSXref(this, naicsXref));
         }
         for (ReleasePoint releasePoint : originalFacilitySite.getReleasePoints()) {
-        	this.releasePoints.add(new ReleasePoint(this, releasePoint));
+        	if (!releasePoint.getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)) {
+        		this.releasePoints.add(new ReleasePoint(this, releasePoint));
+        	}
         }
         
         //controls need to be before emission unit so that emission process and release point apportionments
         //underneath the units can association themselves with the appropriate controls
         for (Control control : originalFacilitySite.getControls()) {
-            this.controls.add(new Control(this, control));
+        	if (!control.getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)) {
+        		this.controls.add(new Control(this, control));
+        	}
         }
         for (ControlPath controlPath : originalFacilitySite.getControlPaths()) {
             this.controlPaths.add(new ControlPath(this, controlPath));
@@ -205,9 +211,26 @@ public class FacilitySite extends BaseAuditEntity {
         		}
         	}
         }
+        
         for (EmissionsUnit emissionsUnit : originalFacilitySite.getEmissionsUnits()) {
-        	this.emissionsUnits.add(new EmissionsUnit(this, emissionsUnit));
+        	if (!emissionsUnit.getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)) {
+        			
+        		this.emissionsUnits.add(new EmissionsUnit(this, emissionsUnit));
+        	}
+        	
+        	if (emissionsUnit.getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)
+        			&& originalFacilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode() != null
+        			&& originalFacilitySite.getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode().equals(ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE)) {
+        		
+        		if (emissionsUnit.getEmissionsProcesses().stream()
+                        .filter(emissionsProcess -> !emissionsProcess.getOperatingStatusCode().getCode().contentEquals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN))
+                        .collect(Collectors.toList()).size() > 0) {
+        			
+            			this.emissionsUnits.add(new EmissionsUnit(this, emissionsUnit));
+        		}
+        	}
         }
+        
         for (FacilitySiteContact siteContact : originalFacilitySite.getContacts()) {
         	this.contacts.add(new FacilitySiteContact(this, siteContact));
         }

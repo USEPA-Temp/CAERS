@@ -21,7 +21,7 @@ export class EmissionUnitInfoComponent implements OnInit {
   unitId: number;
 
   @ViewChild(EditEmissionUnitInfoPanelComponent)
-  private infoComponent: EditEmissionUnitInfoPanelComponent;
+  infoComponent: EditEmissionUnitInfoPanelComponent;
 
   constructor(private route: ActivatedRoute,
               private unitService: EmissionUnitService,

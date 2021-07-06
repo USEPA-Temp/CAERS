@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
+import gov.epa.cef.web.util.ConstantUtils;
 
 /**
  * EmissionsProcess entity
@@ -103,7 +104,9 @@ public class EmissionsProcess extends BaseAuditEntity {
             		}
             	}
         	}
-        	this.releasePointAppts.add(new ReleasePointAppt(rp, this, cp, originalApportionment));
+        	if (!originalApportionment.getReleasePoint().getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)) {
+        		this.releasePointAppts.add(new ReleasePointAppt(rp, this, cp, originalApportionment));
+        	}
         }
 
         for (ReportingPeriod reportingPeriod : originalProcess.getReportingPeriods()) {
