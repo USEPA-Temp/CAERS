@@ -460,6 +460,23 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		
 	}
 	
+	@Test
+    public void operationStatusPSFailTest() {
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		OperatingStatusCode opStatusCode = new OperatingStatusCode();
+        opStatusCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatusCode);
+        testData.setStatusYear((short) 2021);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_STATUS_YEAR.value()) && errorMap.get(ValidationField.CONTROL_STATUS_YEAR.value()).size() == 1);	
+	}
+	
 	
 	private Control createBaseControl() {
 		

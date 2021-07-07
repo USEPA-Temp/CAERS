@@ -509,21 +509,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
-        //Verify QA Checks are NOT run when RP is NOT Operating
+        // Verify QA Checks are NOT run when RP is NOT Operating
+        // Operating status code of PS will generate a warning to inform users component will not be copied forward
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("PS");
         testData.setOperatingStatusCode(opStatCode);
         testData.setFenceLineDistance((long) -1);
 
         cefContext = createContext();
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         testData.setFenceLineDistance((long) 100000);
 
         cefContext = createContext();
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
 
     @Test
@@ -623,21 +624,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
-        //Verify QA Checks are NOT run when RP is NOT Operating
+        // Verify QA Checks are NOT run when RP is NOT Operating
+        // Operating status code of PS will generate a warning to inform users component will not be copied forward
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("PS");
         testData.setOperatingStatusCode(opStatCode);
         testData.setFugitiveWidth((long) 0);
 
         cefContext = createContext();
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         testData.setFugitiveWidth((long) 20000);
 
         cefContext = createContext();
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
 
     @Test
@@ -837,7 +839,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
-        //Verify QA Checks are NOT run when RP is NOT Operating
+        // Verify QA Checks are NOT run when RP is NOT Operating
+        // Operating status code of PS will generate a warning to inform users component will not be copied forward
         testData = createBaseFugitiveReleasePoint();
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("PS");
@@ -846,26 +849,26 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setFenceLineUomCode(uomM);
 
         cefContext = createContext();
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         testData.setStackDiameter(0.0);
 
         cefContext = createContext();
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         cefContext = createContext();
         testData.setFenceLineUomCode(uomFT);
         testData.setFugitiveLengthUomCode(uomM);
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         cefContext = createContext();
         testData.setFugitiveLengthUomCode(uomFT);
         testData.setFugitiveWidthUomCode(uomM);
-        assertTrue(this.validator.validate(cefContext, testData));
-        assertNull(cefContext.result.getErrors());
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
 
     @Test
@@ -1232,6 +1235,24 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
+    }
+    
+    @Test
+    public void operationStatusPSFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+
+        OperatingStatusCode opStatusCode = new OperatingStatusCode();
+        opStatusCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatusCode);
+        testData.setStatusYear((short) 2021);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
     }
 
 
