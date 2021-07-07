@@ -123,6 +123,16 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         	}
         }
         
+        // Warning if Emissions Process operation status is permanently shutdown Emissions Process will not be copied forward
+        if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) { 
+        		
+        	result = false;
+			context.addFederalWarning(
+					ValidationField.PROCESS_STATUS_CODE.value(),
+					"emissionsProcess.statusTypeCode.psNotCopied",
+					createValidationDetails(emissionsProcess));
+		}
+        
         if (isProcessOperating) { 
         	// Might need to add a rounding tolerance.
             if (100 != totalReleasePointPercent) {

@@ -77,6 +77,15 @@ public class ControlValidator extends BaseValidator<Control> {
 		            createValidationDetails(control));
 		}
 		
+		// Warning if control device operation status is permanently shutdown control device will not be copied forward
+		if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode())) {
+				
+				result = false;
+		        context.addFederalWarning(
+		            ValidationField.CONTROL_STATUS_YEAR.value(), "control.statusYear.psNotCopied",
+		            createValidationDetails(control));
+		}
+		
 		// Status year must be between 1900 and 2050
 		if (control.getStatusYear() != null && (control.getStatusYear() < 1900 || control.getStatusYear() > 2050)) {
 
