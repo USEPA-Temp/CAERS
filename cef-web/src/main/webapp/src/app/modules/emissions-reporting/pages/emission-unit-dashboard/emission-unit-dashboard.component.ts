@@ -80,10 +80,18 @@ export class EmissionUnitDashboardComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
-    if ((this.infoComponentParent.infoComponent === undefined || !this.infoComponentParent.infoComponent.emissionUnitForm.dirty)) {
-        return true;
+    if (!this.infoComponentParent.infoComponent?.emissionUnitForm.dirty) {
+      this.infoComponentParent.setEditInfo(false);
+      return true;
     }
-    return this.utilityService.canDeactivateModal();
+
+    let result = this.utilityService.canDeactivateModal();
+    result.then(data => {
+      if (data) {
+        this.infoComponentParent.setEditInfo(false);
+      }
+    });
+    return result;
   }
 
   @HostListener('window:beforeunload', ['$event'])
