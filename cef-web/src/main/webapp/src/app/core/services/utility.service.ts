@@ -17,8 +17,9 @@ export class UtilityService {
   }
 
   canDeactivateModal() {
+    const config = {backdrop: false};
     const modalMessage = 'There are unsaved edits on the screen. Leaving without saving will discard any changes. Are you sure you want to continue?';
-    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, config);
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.title = 'Unsaved Changes';
     modalRef.componentInstance.confirmButtonText = 'Confirm';

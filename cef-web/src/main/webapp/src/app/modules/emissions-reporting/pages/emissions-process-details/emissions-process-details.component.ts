@@ -271,12 +271,24 @@ export class EmissionsProcessDetailsComponent implements OnInit {
 
   canDeactivate(): Promise<boolean> | boolean {
     if ((!this.editInfo && !this.editDetails && !this.editPeriod && !this.createPeriod)
-      || ((this.infoComponent && !this.infoComponent.processForm.dirty)
-      && (this.operatingDetailsComponent && !this.operatingDetailsComponent.operatingDetailsForm.dirty)
-      && (this.reportingPeriodComponent && !this.reportingPeriodComponent.reportingPeriodForm.dirty))) {
+      || (!this.infoComponent?.processForm.dirty
+      && !this.operatingDetailsComponent?.operatingDetailsForm.dirty
+      && !this.reportingPeriodComponent?.reportingPeriodForm.dirty)) {
+        this.setEditInfo(false);
+        this.setEditDetails(false);
+        this.setEditPeriod(false);
         return true;
     }
-    return this.utilityService.canDeactivateModal();
+
+    let result = this.utilityService.canDeactivateModal();
+    result.then(data => {
+      if (data) {
+        this.setEditInfo(false);
+        this.setEditDetails(false);
+        this.setEditPeriod(false);
+      }
+    });
+    return result;
   }
 
   @HostListener('window:beforeunload', ['$event'])
