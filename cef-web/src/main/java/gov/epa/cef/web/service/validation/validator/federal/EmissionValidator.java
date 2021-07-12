@@ -16,6 +16,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -187,8 +188,18 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	            }
 
 	        }
-
-	        if (emission.getVariables() != null) {
+	        
+        	if (CollectionUtils.isNotEmpty(emission.getVariables())) {
+        		
+	        	if (Boolean.FALSE.equals(emission.getFormulaIndicator())) {
+	        		
+                    valid = false;
+                    context.addFederalError(
+                            ValidationField.EMISSION_FORMULA_VARIABLE.value(),
+                            "emission.formula.variable.invalid",
+                            createValidationDetails(emission));
+	            }
+	        	
 		        List<EmissionFormulaVariable> efvList = emission.getVariables().stream()
 		            .filter(var -> var.getVariableCode() != null)
 		            .collect(Collectors.toList());
