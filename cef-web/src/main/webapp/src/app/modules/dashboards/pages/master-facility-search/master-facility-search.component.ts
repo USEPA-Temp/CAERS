@@ -29,7 +29,7 @@ export class MasterFacilitySearchComponent implements OnInit {
   stateValues: FipsStateCode[];
   programSystemCodeValues: BaseCodeLookup[];
 
-  myFacilityIds: number[];
+  myFacilityAssociations = new Map<number, UserFacilityAssociation>();
 
   constructor(private mfrService: MasterFacilityRecordService,
               private ufaService: UserFacilityAssociationService,
@@ -40,7 +40,9 @@ export class MasterFacilitySearchComponent implements OnInit {
 
     this.ufaService.getMyAssociations()
     .subscribe(result => {
-      this.myFacilityIds = result.map(a => a.masterFacilityRecord.id);
+      result.forEach(a => {
+        this.myFacilityAssociations.set(a.masterFacilityRecord.id, a);
+      });
     });
 
     this.mfrService.getProgramSystemCodes()
@@ -66,14 +68,19 @@ export class MasterFacilitySearchComponent implements OnInit {
       this.mfrService.search(criteria)
       .subscribe(result => {
         // remove facilities already associated with
-        this.searchResults = result.filter(f => !this.myFacilityIds.includes(f.id));
+        this.searchResults = result;
+        this.searchResults.forEach(f => {
+          if (this.myFacilityAssociations.has(f.id)) {
+            f.associationStatus = this.myFacilityAssociations.get(f.id).approved ? 'APPROVED' : 'PENDING';
+          }
+        });
       });
     }
   }
 
   onAccessRequested(ufa: UserFacilityAssociation) {
 
-    this.myFacilityIds.push(ufa.masterFacilityRecord.id);
+    this.myFacilityAssociations.set(ufa.masterFacilityRecord.id, ufa);
   }
 
 }
