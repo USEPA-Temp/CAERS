@@ -290,6 +290,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#overallControlPercentInput').type('0');
       cy.get('#overallControlPercentInput').click();
       cy.get('#calculateEmissionsBtn').click();
+      cy.get('#totalEmissionsInput').should('have.value', '39000');
       cy.wait(500);
       cy.get('#saveEmissionsBtn').click().wait(500);
     });
@@ -341,6 +342,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#emissionsDenominatorSelect').select('64: Object');
       cy.get('#emissionsUomCodeSelect').select('8: Object');
       cy.get('#calculateEmissionsBtn').click();
+      cy.get('#totalEmissionsInput').should('have.value', '1000');
       cy.get('#emissionCommentsInput').click();
       cy.get('#emissionCommentsInput').type('Cypress SLT EF Emission');
       cy.get('#saveEmissionsBtn').click();

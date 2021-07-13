@@ -4,7 +4,6 @@ import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 
 import gov.epa.cef.web.domain.ReleasePoint;
-import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
 import gov.epa.cef.web.service.dto.EntityType;
@@ -519,6 +518,15 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             result = false;
             context.addFederalError(
                 ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.required",
+                createValidationDetails(releasePoint));
+        }
+        
+        // Warning if release point operation status is permanently shutdown release point will not be copied forward
+        if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
+
+            result = false;
+            context.addFederalWarning(
+                ValidationField.RP_STATUS_CODE.value(), "releasePoint.statusTypeCode.psNotCopied",
                 createValidationDetails(releasePoint));
         }
 

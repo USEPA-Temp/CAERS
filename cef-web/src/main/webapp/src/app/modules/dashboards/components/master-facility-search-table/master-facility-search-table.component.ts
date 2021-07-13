@@ -20,6 +20,7 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
 
   filteredItems: MasterFacilityRecord[] = [];
   filter = new FormControl('');
+  statusFilter = new FormControl('');
 
   selectedFacility: MasterFacilityRecord;
 
@@ -32,7 +33,11 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
     super();
 
     this.filter.valueChanges.subscribe((text) => {
-      this.filteredItems = this.search(text);
+      this.filteredItems = this.search(text, this.statusFilter.value);
+    });
+
+    this.statusFilter.valueChanges.subscribe((text) => {
+      this.filteredItems = this.search(this.filter.value, text);
     });
   }
 
@@ -41,12 +46,14 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
 
   ngOnChanges() {
 
-    this.filteredItems = this.search(this.filter.value);
+    this.filteredItems = this.search(this.filter.value, this.statusFilter.value);
   }
 
   selectFacility(facility: MasterFacilityRecord) {
 
-    this.selectedFacility = facility;
+    if (!facility.associationStatus) {
+      this.selectedFacility = facility;
+    }
   }
 
   onClearFilterClick() {
@@ -56,11 +63,18 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
    sortAndSearch(sortEvent: SortEvent) {
 
     this.onSort(sortEvent);
-    this.filteredItems = this.search(this.filter.value);
+    this.filteredItems = this.search(this.filter.value, this.statusFilter.value);
    }
 
-  search(text: string): MasterFacilityRecord[] {
+  search(text: string, status: string): MasterFacilityRecord[] {
     return this.tableData.filter(item => {
+      if ((status === 'UNASSOCIATED' && item.associationStatus)
+          || (status === 'APPROVED' && item.associationStatus !== 'APPROVED')
+          || (status === 'PENDING' && item.associationStatus !== 'PENDING')) {
+
+        return false;
+      }
+
       const term = text.toLowerCase();
       return item.name?.toLowerCase().includes(term)
           || item.agencyFacilityId?.toLowerCase().includes(term)
@@ -82,8 +96,8 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
     .subscribe(result => {
       this.toastr.success('', `Access requested for ${facility.name}`);
       this.accessRequested.emit(result);
-      this.tableData.splice(this.tableData.indexOf(facility), 1);
-      this.filteredItems = this.search(this.filter.value);
+      facility.associationStatus = 'PENDING';
+      this.filteredItems = this.search(this.filter.value, this.statusFilter.value);
       this.selectedFacility = null;
     });
 

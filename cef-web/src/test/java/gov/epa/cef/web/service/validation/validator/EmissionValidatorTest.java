@@ -745,6 +745,20 @@ public class EmissionValidatorTest extends BaseValidatorTest {
        assertTrue(this.validator.validate(cefContext, testData));
        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
    }
+   
+   @Test
+   public void emissionFormualVarAndNoEmissionFormula_FailTest() {
+	   CefValidatorContext cefContext = createContext();
+	   Emission testData = createBaseFormulaEmission();
+	   
+	   testData.setFormulaIndicator(false);
+	   
+       assertFalse(this.validator.validate(cefContext, testData));
+       assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+       Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+       assertTrue(errorMap.containsKey(ValidationField.EMISSION_FORMULA_VARIABLE.value()) && errorMap.get(ValidationField.EMISSION_FORMULA_VARIABLE.value()).size() == 1);
+   }
 
 
     private Emission createBaseEmission(boolean totalDirectEntry) {

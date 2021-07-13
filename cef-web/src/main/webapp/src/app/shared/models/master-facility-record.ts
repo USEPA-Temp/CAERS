@@ -27,4 +27,6 @@ export class MasterFacilityRecord {
   facilityCategoryCode: FacilityCategoryCode;
   facilitySourceTypeCode: InventoryYearCodeLookup;
   description: string;
+
+  associationStatus: string;
 }

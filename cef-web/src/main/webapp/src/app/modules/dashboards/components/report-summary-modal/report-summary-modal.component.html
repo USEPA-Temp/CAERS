@@ -10,6 +10,6 @@
 
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-primary" (click)="downloadSummaryReport()">Download Report Summary</button>
+  <button type="button" class="btn btn-primary" (click)="downloadSummaryReport()" [disabled]="!tableData">Download Report Summary</button>
   <button type="button" class="btn btn-primary" (click)="onClose()">Cancel</button>
 </div>

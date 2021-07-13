@@ -58,8 +58,8 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
         // If the facility source type code is landfill, then the emissions process can still be "operating" because of passive emissions that are emitted from the landfill.
         // For all other facility source types, if the facility is shutdown, then the emissions process underneath the emissions unit must also be shutdown.
-        if ((emissionsUnit.getFacilitySite().getFacilitySourceTypeCode() != null && !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(emissionsUnit.getFacilitySite().getFacilitySourceTypeCode().getCode()))
-            || emissionsUnit.getFacilitySite().getFacilitySourceTypeCode() == null) {
+        if ((emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode() == null
+        		|| !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode()))) {
 
             //if the unit is temporarily shutdown, then the underlying processes must also be temporarily or permanently shutdown
             if (ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
@@ -76,20 +76,85 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                         createEmissionsProcessValidationDetails(ep));
                 }
 
-                //if the unit is permanently shutdown, then the underlying processes must also be permanently shutdown
-            } else if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+            } 
+
+            if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+            	
+            	// Warning if unit operation status is permanently shutdown unit will not be copied forward
+            	result = false;
+                context.addFederalWarning(
+                    ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+                    "emissionsUnit.statusTypeCode.psNotCopied",
+                    createValidationDetails(emissionsUnit));
+                
+                // Warning if unit operation status is permanently shutdown, process will not be copied forward
+                for (EmissionsProcess ep : emissionsUnit.getEmissionsProcesses()) {
+
+                	result = false;
+        			context.addFederalWarning(
+        					ValidationField.PROCESS_STATUS_CODE.value(),
+        					"emissionsProcess.statusTypeCode.notCopied",
+        					createEmissionsProcessValidationDetails(ep));
+                }
+                
                 List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
                     .filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
                     .collect(Collectors.toList());
 
+                // If the unit is permanently shutdown, then the underlying processes must also be permanently shutdown
                 for (EmissionsProcess ep : epList) {
+        			
                     result = false;
                     context.addFederalError(
                         ValidationField.PROCESS_STATUS_CODE.value(),
                         "emissionsProcess.statusTypeCode.permanentShutdown",
                         createEmissionsProcessValidationDetails(ep));
                 }
+                
+            } else {
+            	// Warning if unit operating status is OP or TS and process operation status is permanently shutdown, process will not be copied forward
+            	for (EmissionsProcess ep : emissionsUnit.getEmissionsProcesses()) {
+            		if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(ep.getOperatingStatusCode().getCode())) {
+
+	                	result = false;
+	        			context.addFederalWarning(
+	        					ValidationField.PROCESS_STATUS_CODE.value(),
+	        					"emissionsProcess.statusTypeCode.psNotCopied",
+	        					createEmissionsProcessValidationDetails(ep));
+            		}
+                }
             }
+        }
+        
+        if (emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode() != null 
+        		&& ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode())) {
+        	
+        	// Warning if the facility source type code is landfill and there are no processes or all processes are permanently shutdown,
+            // then unit will not be copied forward
+        	List<EmissionsProcess> epList = emissionsUnit.getEmissionsProcesses().stream()
+                    .filter(emissionsProcess -> !ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode()))
+                    .collect(Collectors.toList());
+        	
+        	if (epList.isEmpty() && ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+        		
+        		result = false;
+                context.addFederalWarning(
+                    ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+                    "emissionsUnit.statusTypeCode.psNotCopied",
+                    createValidationDetails(emissionsUnit));
+        	}
+        	
+        	// Warning if process operation status is permanently shutdown process will not be copied forward
+        	for (EmissionsProcess ep : emissionsUnit.getEmissionsProcesses()) {
+	        	if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(ep.getOperatingStatusCode().getCode())) { 
+	        		
+	            	result = false;
+	    			context.addFederalWarning(
+	    					ValidationField.PROCESS_STATUS_CODE.value(),
+	    					"emissionsProcess.statusTypeCode.psNotCopied",
+	    					createEmissionsProcessValidationDetails(ep));
+	    		}
+        	}
         }
 
         // If unit operation status is not operating, status year is required
