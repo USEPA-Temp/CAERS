@@ -140,10 +140,9 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         ep1.setEmissionsUnit(testData);
         testData.getEmissionsProcesses().add(ep1);
         
-        // When Unit status code is PS and source type code is landfill will generate a warning to inform users component will not be copied forward
+        // When Unit status code is PS and Process status code is PS, warnings are generated to inform users components will not be copied forward
         assertFalse(this.validator.validate(cefContext, testData));
-        System.out.println(cefContext.result.getErrors());
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
         
         cefContext = createContext();
         ep1.getOperatingStatusCode().setCode("OP");
@@ -151,6 +150,16 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         // No warning when Unit status code is PS, Process status code is OP, and source type code is landfill
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+        ep1.getOperatingStatusCode().setCode("PS");
+        
+        // When Unit status code is OP, processes is PS will generate a warning to inform users process will not be copied forward
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
     
     @Test
@@ -378,9 +387,10 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     
     /**
      * There should be no errors when emissions unit operating status is not PS.
-     * There should be two errors when emissions unit operating status is PS and emission process operating status is not PS, 
-     * and when emissions unit operating status is PS and source type is not landfill.
-     * There should be one error when emissions unit operating status is PS and emission process operating status is PS.
+     * There should be three errors when emissions unit operating status is PS and emission process operating status is not PS, 
+     * PS unit and underlying process not copied forward warnings.
+     * There should be two errors when emissions unit operating status is PS and emission process operating status is PS,
+     * PS unit and PS process not copied forward warnings.
      */
     @Test
     public void emissionUnitOperatingStatusPSEmissionProcessStatusTest() {
@@ -404,22 +414,23 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setFacilitySourceTypeCode(stc);
         
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 3);
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 2);
         
         cefContext = createContext();
         ep.getOperatingStatusCode().setCode("PS");
         
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
     }
     
     /**
      * There should be no errors when emissions unit operating status is not TS or PS.
      * There should be one error when emissions unit operating status is TS and emission process operating status is not PS and not TS.
-     * There should be no errors when emissions unit operating status is TS and emission process operating status is PS or TS.
+     * There should be no errors when emissions unit operating status is TS and emission process operating status is TS.
+     * There should be one errors when emissions unit operating status is TS and emission process operating status is PS.
      */
     @Test
     public void emissionUnitOperatingStatusTSEmissionUnitStatusTest() {
@@ -449,10 +460,16 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
         
         cefContext = createContext();
-        ep.getOperatingStatusCode().setCode("PS");
+        ep.getOperatingStatusCode().setCode("TS");
         
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        ep.getOperatingStatusCode().setCode("PS");
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
     
     /**
