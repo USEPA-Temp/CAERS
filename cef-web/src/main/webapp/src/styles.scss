@@ -58,6 +58,14 @@ tr.striped {
     background-color: #ecf0f1;
 }
 
+.text-bs-orange {
+    color: $orange;
+}
+
+.text-bs-teal {
+    color: $teal;
+}
+
 .ng-touched.ng-invalid {
   border-color: #dc3545;
 }

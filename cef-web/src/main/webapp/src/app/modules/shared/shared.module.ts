@@ -14,7 +14,7 @@ import {
     faInfoCircle,
     faCheck,
     faTimesCircle,
-    faFilter, faTimes, faSearch, faUpload, faPowerOff, faBan, fas
+    faFilter, faTimes, faSearch, faUpload, faPowerOff, faBan, fas, faClock
 } from '@fortawesome/free-solid-svg-icons';
 import {CollapseIconComponent} from 'src/app/modules/shared/components/collapse-icon/collapse-icon.component';
 import {SidebarComponent} from 'src/app/modules/shared/components/sidebar/sidebar.component';
@@ -103,7 +103,7 @@ export class SharedModule {
         // Add an icon to the library for convenient access in other components
         library.addIconPacks(fas);
         library.addIcons(faCaretRight, faCaretDown, faAngleLeft, faTrashAlt, faPlus, faEdit, faCircle, faInfoCircle,
-            faSearch, faCheck, faTimesCircle, faTimes, faFilter, faUpload, faPowerOff);
+            faSearch, faCheck, faTimesCircle, faTimes, faFilter, faUpload, faPowerOff, faClock);
 
     }
 }
