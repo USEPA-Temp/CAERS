@@ -287,14 +287,13 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE.value()).size() == 1);
         
         // Verify QA Checks are NOT run when Unit is NOT Operating
-        // Operating status code of PS will generate a warning to inform users component will not be copied forward
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("PS");
         testData.setOperatingStatusCode(opStatCode);
         
         cefContext = createContext();
-        assertFalse(this.validator.validate(cefContext, testData));
-    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -316,14 +315,13 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_AIRCRAFT_CODE.value()) && errorMap.get(ValidationField.PROCESS_AIRCRAFT_CODE.value()).size() == 1);
         
         // Verify QA Checks are NOT run when Unit is NOT Operating
-        // Operating status code of PS will generate a warning to inform users component will not be copied forward
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("PS");
         testData.setOperatingStatusCode(opStatCode);
         
         cefContext = createContext();
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertNull(cefContext.result.getErrors());
     }
     
     @Test
@@ -546,26 +544,10 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         appts.add(rpa1);
         testData.setReleasePointAppts(appts);
 
-        // Operating status code of PS will generate a warning to inform users component will not be copied forward
-        assertFalse(this.validator.validate(cefContext, testData));
-    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
     
-    @Test
-    public void operationStatusPSCopyForwardWarningTest() {
-    	CefValidatorContext cefContext = createContext();
-    	EmissionsProcess testData = createBaseEmissionsProcess();
-    	
-    	OperatingStatusCode opStatCode = new OperatingStatusCode();
-        opStatCode.setCode("PS");
-        testData.setOperatingStatusCode(opStatCode);
-        
-        assertFalse(this.validator.validate(cefContext, testData));
-    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-    	
-    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
-    	assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
-    }
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
