@@ -38,6 +38,8 @@ import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.dto.EmissionBulkEntryDto;
 import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
+import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
+import gov.epa.cef.web.service.dto.EmissionFormulaVariableDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
 import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
@@ -67,6 +69,9 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Autowired
     private UnitMeasureCodeRepository uomRepo;
+
+    @Autowired
+    private EmissionFactorServiceImpl efService;
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
@@ -110,6 +115,33 @@ public class EmissionServiceImpl implements EmissionService {
             .findById(id)
             .map(e -> emissionMapper.toDto(e))
             .orElse(null);
+    }
+
+    public EmissionDto retrieveWithVariablesById(Long id) {
+
+        EmissionDto result = this.emissionRepo
+                                .findById(id)
+                                .map(e -> emissionMapper.toDto(e))
+                                .orElse(null);
+
+        // add missing emission factor variables
+        if (result.getFormulaIndicator()) {
+            List<EmissionFormulaVariableCodeDto> variables = this.efService.parseFormulaVariables(result.getEmissionsFactorFormula());
+            List<String> existingVariables = result.getVariables().stream()
+                    .map(EmissionFormulaVariableDto::getVariableCode)
+                    .map(EmissionFormulaVariableCodeDto::getCode)
+                    .collect(Collectors.toList());
+
+            result.getVariables().addAll(variables.stream()
+                .filter(v -> !existingVariables.contains(v.getCode()))
+                .map(v -> {
+                    EmissionFormulaVariableDto dto = new EmissionFormulaVariableDto();
+                    dto.setVariableCode(v);
+                    return dto;
+                }).collect(Collectors.toList()));
+        }
+
+        return result;
     }
 
     /**

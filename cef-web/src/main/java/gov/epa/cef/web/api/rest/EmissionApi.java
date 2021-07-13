@@ -74,6 +74,21 @@ public class EmissionApi {
     }
 
     /**
+     * Retrieve an Emission and generate missing variables
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}/variables")
+    public ResponseEntity<EmissionDto> retrieveWithVariablesById(@NotNull @PathVariable Long id) {
+
+        this.securityService.facilityEnforcer().enforceEntity(id, EmissionRepository.class);
+
+        EmissionDto result = emissionService.retrieveWithVariablesById(id);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
      * Update an existing Emission
      * @param id
      * @param dto

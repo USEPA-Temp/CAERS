@@ -23,6 +23,11 @@ export class EmissionService {
     return this.http.get<Emission>(url);
   }
 
+  retrieveWithVariables(id: number): Observable<Emission> {
+    const url = `${this.baseUrl}/${id}/variables`;
+    return this.http.get<Emission>(url);
+  }
+
   update(emission: Emission): Observable<Emission> {
     const url = `${this.baseUrl}/${emission.id}`;
     return this.http.put<Emission>(url, emission);

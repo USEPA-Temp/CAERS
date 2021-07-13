@@ -25,6 +25,13 @@ public interface EmissionService {
     public EmissionDto retrieveById(Long id);
 
     /**
+     * Retrieve Emission by id and generate missing variables
+     * @param id
+     * @return
+     */
+    public EmissionDto retrieveWithVariablesById(Long id);
+
+    /**
      * Update an existing Emission
      * @param dto
      * @return
