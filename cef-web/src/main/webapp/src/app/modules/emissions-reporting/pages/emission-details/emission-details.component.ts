@@ -152,7 +152,7 @@ export class EmissionDetailsComponent implements OnInit {
     .subscribe(params => {
 
       if (!this.createMode) {
-        this.emissionService.retrieve(+params.get('emissionId'))
+        this.emissionService.retrieveWithVariables(+params.get('emissionId'))
         .subscribe(result => {
           this.emission = result;
 
@@ -381,7 +381,7 @@ export class EmissionDetailsComponent implements OnInit {
     if (this.createMode) {
       this.router.navigate([this.processUrl]);
     } else {
-      this.emissionService.retrieve(this.emission.id)
+      this.emissionService.retrieveWithVariables(this.emission.id)
       .subscribe(result => {
         this.emission = result;
         this.currentCalcMethod = this.emission.emissionsCalcMethodCode;
