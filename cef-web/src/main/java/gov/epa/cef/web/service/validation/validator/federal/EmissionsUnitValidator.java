@@ -93,7 +93,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                 	result = false;
         			context.addFederalWarning(
         					ValidationField.PROCESS_STATUS_CODE.value(),
-        					"emissionsProcess.statusTypeCode.psNotCopied",
+        					"emissionsProcess.statusTypeCode.notCopied",
         					createEmissionsProcessValidationDetails(ep));
                 }
                 
