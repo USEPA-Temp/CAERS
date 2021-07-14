@@ -305,9 +305,21 @@ public class BulkUploadServiceImpl implements BulkUploadService {
             Collection<String> warnings = new ArrayList<>();
 
             EmissionsReport emissionsReport = mapEmissionsReport(bulkEmissionsReport);
+            
+            MasterFacilityRecord mfr = mfrRepo.findByEisProgramId(bulkEmissionsReport.getEisProgramId()).orElse(null);
 
             for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
                 FacilitySite facility = mapFacility(bulkFacility);
+                
+                facility.setName(mfr.getName());
+                facility.setFacilitySourceTypeCode(mfr.getFacilitySourceTypeCode());
+                facility.setLongitude(mfr.getLongitude());
+                facility.setLatitude(mfr.getLatitude());
+                facility.setStreetAddress(mfr.getStreetAddress());
+                facility.setCity(mfr.getCity());
+                facility.setStateCode(mfr.getStateCode());
+                facility.setPostalCode(mfr.getPostalCode());
+                facility.setCountyCode(mfr.getCountyCode());
 
                 Preconditions.checkArgument(bulkFacility.getId() != null,
                     "FacilitySite ID can not be null.");
