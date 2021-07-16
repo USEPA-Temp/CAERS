@@ -193,9 +193,9 @@ public class ReleasePointRepoTest extends BaseRepositoryTest {
     	ReleasePointAppt releasePointAppt = this.rpApptRepo.findById(9999991L)
     		.orElseThrow(() -> new IllegalStateException("Release point apportionment 9999991L does not exist."));
 
-    	assertEquals(Double.valueOf(33.0), releasePointAppt.getPercent());
+    	assertEquals(BigDecimal.valueOf(33.0).setScale(2), releasePointAppt.getPercent());
 
-    	releasePointAppt.setPercent(44.0);
+    	releasePointAppt.setPercent(BigDecimal.valueOf(44.0));
 
     	rpApptRepo.save(releasePointAppt);
 
@@ -219,7 +219,7 @@ private ReleasePointAppt newReleasePtAppt() {
     ReleasePointAppt releasePtAppt = new ReleasePointAppt();
 
     releasePtAppt.setEmissionsProcess(emissionsProcess);
-    releasePtAppt.setPercent(11.00);
+    releasePtAppt.setPercent(BigDecimal.valueOf(11.00));
     releasePtAppt.setReleasePoint(releasePoint);
 
     return releasePtAppt;
@@ -257,8 +257,8 @@ private ReleasePoint newReleasePt() {
         releasePt.setStackDiameterUomCode(distanceUom);
         releasePt.setExitGasVelocityUomCode(velocityUom);
         releasePt.setExitGasFlowUomCode(flowUom);
-        releasePt.setLatitude(1111.000000);
-        releasePt.setLongitude(1111.000000);
+        releasePt.setLatitude(BigDecimal.valueOf(1111.000000));
+        releasePt.setLongitude(BigDecimal.valueOf(1111.000000));
 
         return releasePt;
     }

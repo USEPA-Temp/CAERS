@@ -671,13 +671,13 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         ReportingPeriod rperiod = new ReportingPeriod();
         OperatingDetail od = new OperatingDetail();
         od.setActualHoursPerPeriod((short)1);
-        od.setAvgDaysPerWeek(1.0);
-        od.setAvgHoursPerDay(1.0);
+        od.setAvgDaysPerWeek(BigDecimal.ONE);
+        od.setAvgHoursPerDay(BigDecimal.ONE);
         od.setAvgWeeksPerPeriod((short)1);
-        od.setPercentFall(0.0);
-        od.setPercentSpring(0.0);
-        od.setPercentSummer(0.0);
-        od.setPercentWinter(100.0);
+        od.setPercentFall(BigDecimal.ZERO);
+        od.setPercentSpring(BigDecimal.ZERO);
+        od.setPercentSummer(BigDecimal.ZERO);
+        od.setPercentWinter(BigDecimal.valueOf(100.0));
         od.setReportingPeriod(rperiod);
         rperiod.getOperatingDetails().add(od);
         
@@ -712,13 +712,13 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         ReportingPeriod rperiod2 = new ReportingPeriod();
         OperatingDetail od2 = new OperatingDetail();
         od2.setActualHoursPerPeriod((short)1);
-        od2.setAvgDaysPerWeek(1.0);
-        od2.setAvgHoursPerDay(1.0);
+        od2.setAvgDaysPerWeek(BigDecimal.ONE);
+        od2.setAvgHoursPerDay(BigDecimal.ONE);
         od2.setAvgWeeksPerPeriod((short)1);
-        od2.setPercentFall(0.0);
-        od2.setPercentSpring(0.0);
-        od2.setPercentSummer(0.0);
-        od2.setPercentWinter(100.0);
+        od2.setPercentFall(BigDecimal.ZERO);
+        od2.setPercentSpring(BigDecimal.ZERO);
+        od2.setPercentSummer(BigDecimal.ZERO);
+        od2.setPercentWinter(BigDecimal.valueOf(100.0));
         od2.setReportingPeriod(rperiod2);
         rperiod2.getOperatingDetails().add(od2);
         
@@ -782,13 +782,13 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         ReportingPeriod rperiod = new ReportingPeriod();
         OperatingDetail od = new OperatingDetail();
         od.setActualHoursPerPeriod((short)1);
-        od.setAvgDaysPerWeek(1.0);
-        od.setAvgHoursPerDay(1.0);
+        od.setAvgDaysPerWeek(BigDecimal.ONE);
+        od.setAvgHoursPerDay(BigDecimal.ONE);
+        od.setPercentFall(BigDecimal.ZERO);
+        od.setPercentSpring(BigDecimal.ZERO);
+        od.setPercentSummer(BigDecimal.ZERO);
+        od.setPercentWinter(BigDecimal.valueOf(100.0));
         od.setAvgWeeksPerPeriod((short)1);
-        od.setPercentFall(0.0);
-        od.setPercentSpring(0.0);
-        od.setPercentSummer(0.0);
-        od.setPercentWinter(100.0);
         od.setReportingPeriod(rperiod);
         rperiod.getOperatingDetails().add(od);
         
@@ -823,13 +823,13 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         ReportingPeriod rperiod2 = new ReportingPeriod();
         OperatingDetail od2 = new OperatingDetail();
         od2.setActualHoursPerPeriod((short)1);
-        od2.setAvgDaysPerWeek(1.0);
-        od2.setAvgHoursPerDay(1.0);
         od2.setAvgWeeksPerPeriod((short)1);
-        od2.setPercentFall(0.0);
-        od2.setPercentSpring(0.0);
-        od2.setPercentSummer(0.0);
-        od2.setPercentWinter(100.0);
+        od2.setAvgDaysPerWeek(BigDecimal.ONE);
+        od2.setAvgHoursPerDay(BigDecimal.ONE);
+        od2.setPercentFall(BigDecimal.ZERO);
+        od2.setPercentSpring(BigDecimal.ZERO);
+        od2.setPercentSummer(BigDecimal.ZERO);
+        od2.setPercentWinter(BigDecimal.valueOf(100.0));
         od2.setReportingPeriod(rperiod2);
         rperiod2.getOperatingDetails().add(od2);
         
@@ -870,13 +870,13 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         ReportingPeriod rperiod = new ReportingPeriod();
         OperatingDetail od = new OperatingDetail();
         od.setActualHoursPerPeriod((short)1);
-        od.setAvgDaysPerWeek(1.0);
-        od.setAvgHoursPerDay(1.50);// different
         od.setAvgWeeksPerPeriod((short)1);
-        od.setPercentFall(0.0);
-        od.setPercentSpring(0.0);
-        od.setPercentSummer(0.0);
-        od.setPercentWinter(100.0);
+        od.setAvgDaysPerWeek(BigDecimal.ONE);
+        od.setAvgHoursPerDay(BigDecimal.valueOf(1.5));
+        od.setPercentFall(BigDecimal.ZERO);
+        od.setPercentSpring(BigDecimal.ZERO);
+        od.setPercentSummer(BigDecimal.ZERO);
+        od.setPercentWinter(BigDecimal.valueOf(100.0));
         od.setReportingPeriod(rperiod);
         rperiod.getOperatingDetails().add(od);
         
@@ -911,13 +911,13 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         ReportingPeriod rperiod2 = new ReportingPeriod();
         OperatingDetail od2 = new OperatingDetail();
         od2.setActualHoursPerPeriod((short)1);
-        od2.setAvgDaysPerWeek(1.0);
-        od2.setAvgHoursPerDay(1.0);// different
         od2.setAvgWeeksPerPeriod((short)1);
-        od2.setPercentFall(0.0);
-        od2.setPercentSpring(0.0);
-        od2.setPercentSummer(0.0);
-        od2.setPercentWinter(100.0);
+        od2.setAvgDaysPerWeek(BigDecimal.ONE);
+        od2.setAvgHoursPerDay(BigDecimal.ONE);
+        od2.setPercentFall(BigDecimal.ZERO);
+        od2.setPercentSpring(BigDecimal.ZERO);
+        od2.setPercentSummer(BigDecimal.ZERO);
+        od2.setPercentWinter(BigDecimal.valueOf(100.0));
         od2.setReportingPeriod(rperiod2);
         rperiod2.getOperatingDetails().add(od2);
         

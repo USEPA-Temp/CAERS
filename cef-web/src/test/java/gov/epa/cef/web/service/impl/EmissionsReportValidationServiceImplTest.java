@@ -186,7 +186,7 @@ public class EmissionsReportValidationServiceImplTest {
         Control control = new Control(); 
         control.setIdentifier("control_Identifier");
         control.setOperatingStatusCode(opStatCode);
-        control.setPercentControl(50.0);
+        control.setPercentControl(new BigDecimal(50.0));
         control.setFacilitySite(facilitySite);
         controlPath.setFacilitySite(facilitySite);
         facilitySite.getControls().add(control);

@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class ReleasePointDto implements Serializable {
 
@@ -12,26 +13,26 @@ public class ReleasePointDto implements Serializable {
     private String releasePointIdentifier;
     private CodeLookupDto typeCode;
     private String description;
-    private Double stackHeight;
+    private BigDecimal stackHeight;
     private CodeLookupDto stackHeightUomCode;
-    private Double stackDiameter;
+    private BigDecimal stackDiameter;
     private CodeLookupDto stackDiameterUomCode;
-    private Double stackWidth;
+    private BigDecimal stackWidth;
     private CodeLookupDto stackWidthUomCode;
-    private Double stackLength;
+    private BigDecimal stackLength;
     private CodeLookupDto stackLengthUomCode;
-    private Double exitGasVelocity;
+    private BigDecimal exitGasVelocity;
     private CodeLookupDto exitGasVelocityUomCode;
     private Short exitGasTemperature;
-    private Double exitGasFlowRate;
+    private BigDecimal exitGasFlowRate;
     private CodeLookupDto exitGasFlowUomCode;
     private Short statusYear;
-    private Double fugitiveLine1Latitude;
-    private Double fugitiveLine1Longitude;
-    private Double fugitiveLine2Latitude;
-    private Double fugitiveLine2Longitude;
-    private Double latitude;
-    private Double longitude;
+    private BigDecimal fugitiveLine1Latitude;
+    private BigDecimal fugitiveLine1Longitude;
+    private BigDecimal fugitiveLine2Latitude;
+    private BigDecimal fugitiveLine2Longitude;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     private String comments;
     private Long fenceLineDistance;
     private CodeLookupDto fenceLineUomCode;
@@ -91,11 +92,11 @@ public class ReleasePointDto implements Serializable {
         this.description = description;
     }
 
-    public Double getStackHeight() {
+    public BigDecimal getStackHeight() {
         return stackHeight;
     }
 
-    public void setStackHeight(Double stackHeight) {
+    public void setStackHeight(BigDecimal stackHeight) {
         this.stackHeight = stackHeight;
     }
 
@@ -107,11 +108,11 @@ public class ReleasePointDto implements Serializable {
         this.stackHeightUomCode = stackHeightUomCode;
     }
 
-    public Double getStackDiameter() {
+    public BigDecimal getStackDiameter() {
         return stackDiameter;
     }
 
-    public void setStackDiameter(Double stackDiameter) {
+    public void setStackDiameter(BigDecimal stackDiameter) {
         this.stackDiameter = stackDiameter;
     }
 
@@ -123,27 +124,27 @@ public class ReleasePointDto implements Serializable {
         this.stackDiameterUomCode = stackDiameterUomCode;
     }
 
-    public Double getStackWidth() { return stackWidth; }
+    public BigDecimal getStackWidth() { return stackWidth; }
 
-    public void setStackWidth(Double stackWidth) { this.stackWidth = stackWidth; }
+    public void setStackWidth(BigDecimal stackWidth) { this.stackWidth = stackWidth; }
 
     public CodeLookupDto getStackWidthUomCode() { return stackWidthUomCode; }
 
     public void setStackWidthUomCode(CodeLookupDto stackWidthUomCode) { this.stackWidthUomCode = stackWidthUomCode; }
 
-    public Double getStackLength() { return stackLength; }
+    public BigDecimal getStackLength() { return stackLength; }
 
-    public void setStackLength(Double stackLength) { this.stackLength = stackLength; }
+    public void setStackLength(BigDecimal stackLength) { this.stackLength = stackLength; }
 
     public CodeLookupDto getStackLengthUomCode() { return stackLengthUomCode; }
 
     public void setStackLengthUomCode(CodeLookupDto stackLengthUomCode) { this.stackLengthUomCode = stackLengthUomCode; }
 
-    public Double getExitGasVelocity() {
+    public BigDecimal getExitGasVelocity() {
         return exitGasVelocity;
     }
 
-    public void setExitGasVelocity(Double exitGasVelocity) {
+    public void setExitGasVelocity(BigDecimal exitGasVelocity) {
         this.exitGasVelocity = exitGasVelocity;
     }
 
@@ -163,11 +164,11 @@ public class ReleasePointDto implements Serializable {
         this.exitGasTemperature = exitGasTemperature;
     }
 
-    public Double getExitGasFlowRate() {
+    public BigDecimal getExitGasFlowRate() {
         return exitGasFlowRate;
     }
 
-    public void setExitGasFlowRate(Double exitGasFlowRate) {
+    public void setExitGasFlowRate(BigDecimal exitGasFlowRate) {
         this.exitGasFlowRate = exitGasFlowRate;
     }
 
@@ -187,51 +188,51 @@ public class ReleasePointDto implements Serializable {
         this.statusYear = statusYear;
     }
 
-    public Double getFugitiveLine1Latitude() {
+    public BigDecimal getFugitiveLine1Latitude() {
         return fugitiveLine1Latitude;
     }
 
-    public void setFugitiveLine1Latitude(Double fugitiveLine1Latitude) {
+    public void setFugitiveLine1Latitude(BigDecimal fugitiveLine1Latitude) {
         this.fugitiveLine1Latitude = fugitiveLine1Latitude;
     }
 
-    public Double getFugitiveLine1Longitude() {
+    public BigDecimal getFugitiveLine1Longitude() {
         return fugitiveLine1Longitude;
     }
 
-    public void setFugitiveLine1Longitude(Double fugitiveLine1Longitude) {
+    public void setFugitiveLine1Longitude(BigDecimal fugitiveLine1Longitude) {
         this.fugitiveLine1Longitude = fugitiveLine1Longitude;
     }
 
-    public Double getFugitiveLine2Latitude() {
+    public BigDecimal getFugitiveLine2Latitude() {
         return fugitiveLine2Latitude;
     }
 
-    public void setFugitiveLine2Latitude(Double fugitiveLine2Latitude) {
+    public void setFugitiveLine2Latitude(BigDecimal fugitiveLine2Latitude) {
         this.fugitiveLine2Latitude = fugitiveLine2Latitude;
     }
 
-    public Double getFugitiveLine2Longitude() {
+    public BigDecimal getFugitiveLine2Longitude() {
         return fugitiveLine2Longitude;
     }
 
-    public void setFugitiveLine2Longitude(Double fugitiveLine2Longitude) {
+    public void setFugitiveLine2Longitude(BigDecimal fugitiveLine2Longitude) {
         this.fugitiveLine2Longitude = fugitiveLine2Longitude;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 

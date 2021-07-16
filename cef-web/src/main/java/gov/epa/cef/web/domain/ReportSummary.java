@@ -1,5 +1,7 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -27,28 +29,28 @@ public class ReportSummary extends BaseEntity {
     private String pollutantType;
     
     @Column(name = "fugitive_total")
-    private Double fugitiveTotal;
+    private BigDecimal fugitiveTotal;
     
     @Column(name = "stack_total")
-    private Double stackTotal;
+    private BigDecimal stackTotal;
     
     @Column(name = "fugitive_tons_total")
-    private Double fugitiveTonsTotal;
+    private BigDecimal fugitiveTonsTotal;
     
     @Column(name = "stack_tons_total")
-    private Double stackTonsTotal;
+    private BigDecimal stackTonsTotal;
     
     @Column(name = "emissions_tons_total")
-    private Double emissionsTonsTotal;
+    private BigDecimal emissionsTonsTotal;
 	
 	@Column(name = "emissions_total")
-    private Double emissionsTotal;
+    private BigDecimal emissionsTotal;
     
     @Column(name = "previous_year_total")
-    private Double previousYearTotal ;
+    private BigDecimal previousYearTotal ;
     
     @Column(name = "previous_year_tons_total")
-    private Double previousYearTonsTotal ;
+    private BigDecimal previousYearTonsTotal ;
     
     @Column(name = "report_year")
     private Short reportYear;
@@ -87,60 +89,60 @@ public class ReportSummary extends BaseEntity {
         this.pollutantType = pollutantType;
     }
     
-    public Double getFugitiveTotal() {
+    public BigDecimal getFugitiveTotal() {
         return this.fugitiveTotal;
     }
-    public void setFugitiveTotal(Double fugitiveTotal) {
+    public void setFugitiveTotal(BigDecimal fugitiveTotal) {
         this.fugitiveTotal = fugitiveTotal;
     }
     
-    public Double getStackTotal() {
+    public BigDecimal getStackTotal() {
         return this.stackTotal;
     }
-    public void setStackTotal(Double stackTotal) {
+    public void setStackTotal(BigDecimal stackTotal) {
         this.stackTotal = stackTotal;
     }
    
-	public Double getFugitiveTonsTotal() {
+	public BigDecimal getFugitiveTonsTotal() {
 		return fugitiveTonsTotal;
 	}
-	public void setFugitiveTonsTotal(Double fugitiveTonsTotal) {
+	public void setFugitiveTonsTotal(BigDecimal fugitiveTonsTotal) {
 		this.fugitiveTonsTotal = fugitiveTonsTotal;
 	}
-	public Double getStackTonsTotal() {
+	public BigDecimal getStackTonsTotal() {
 		return stackTonsTotal;
 	}
-	public void setStackTonsTotal(Double stackTonsTotal) {
+	public void setStackTonsTotal(BigDecimal stackTonsTotal) {
 		this.stackTonsTotal = stackTonsTotal;
 	}
     
-    public Double getEmissionsTonsTotal() {
+    public BigDecimal getEmissionsTonsTotal() {
         return this.emissionsTonsTotal;
     }
     
-    public void setEmissionsTonsTotal(Double emissionsTonsTotal) {
+    public void setEmissionsTonsTotal(BigDecimal emissionsTonsTotal) {
         this.emissionsTonsTotal = emissionsTonsTotal;
     }
     
-    public Double getEmissionsTotal() {
+    public BigDecimal getEmissionsTotal() {
 		return emissionsTotal;
 	}
     
-	public void setEmissionsTotal(Double emissionsTotal) {
+	public void setEmissionsTotal(BigDecimal emissionsTotal) {
 		this.emissionsTotal = emissionsTotal;
 	}
     
-    public Double getPreviousYearTotal() {
+    public BigDecimal getPreviousYearTotal() {
         return this.previousYearTotal;
     }
-    public void setPreviousYearTotal(Double previousYearTotal) {
+    public void setPreviousYearTotal(BigDecimal previousYearTotal) {
         this.previousYearTotal = previousYearTotal;
     }
     
-    public Double getPreviousYearTonsTotal() {
+    public BigDecimal getPreviousYearTonsTotal() {
 		return previousYearTonsTotal;
 	}
-	public void setPreviousYearTonsTotal(Double previousYearTonsTotal) {
+	public void setPreviousYearTonsTotal(BigDecimal previousYearTonsTotal) {
 		this.previousYearTonsTotal = previousYearTonsTotal;
 	}
 	public Short getReportYear() {

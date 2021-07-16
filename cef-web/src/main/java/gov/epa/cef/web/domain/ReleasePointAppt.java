@@ -1,5 +1,7 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +32,7 @@ public class ReleasePointAppt extends BaseAuditEntity {
     private EmissionsProcess emissionsProcess;
     
     @Column(name = "percent", nullable = false, precision = 5, scale = 2)
-    private Double percent;
+    private BigDecimal percent;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_path_id")
@@ -75,11 +77,11 @@ public class ReleasePointAppt extends BaseAuditEntity {
         this.emissionsProcess = emissionsProcess;
     }
 
-    public Double getPercent() {
+    public BigDecimal getPercent() {
         return this.percent;
     }
 
-    public void setPercent(Double percent) {
+    public void setPercent(BigDecimal percent) {
         this.percent = percent;
     }
 

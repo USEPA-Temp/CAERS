@@ -140,7 +140,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       Emission previousE1 = new Emission();
       Emission previousE2 = new Emission();
       previousE1.setPollutant(pollutant);
-      previousE1.setTotalEmissions(new BigDecimal(130.00));
+      previousE1.setTotalEmissions(BigDecimal.valueOf(130.00));
       eList.add(previousE1);
       eList.add(previousE2);
 	    
@@ -166,7 +166,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         EmissionsProcess testData = createBaseEmissionsProcess();
-        testData.getReleasePointAppts().get(0).setPercent((double)49);
+        testData.getReleasePointAppts().get(0).setPercent(BigDecimal.valueOf(49));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -260,7 +260,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rp2.setId(2L);
         ReleasePointAppt rpa3 = new ReleasePointAppt();
         rpa3.setEmissionsProcess(testData);
-        rpa3.setPercent(0D);
+        rpa3.setPercent(BigDecimal.ZERO);
         rpa3.setReleasePoint(rp2);
         testData.getReleasePointAppts().add(rpa3);
 
@@ -352,7 +352,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rp1.setOperatingStatusCode(releasePointOpStatus);
         rp1.setReleasePointIdentifier("test");
         rp1.setId(5L);
-        rpa1.setPercent(101D);
+        rpa1.setPercent(BigDecimal.valueOf(101));
         rpa1.setReleasePoint(rp1);
         
         testData.getReleasePointAppts().add(rpa1);
@@ -364,7 +364,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_RP_PCT.value()) && errorMap.get(ValidationField.PROCESS_RP_PCT.value()).size() == 2);
         
         cefContext = createContext();
-        rpa1.setPercent(-1D);
+        rpa1.setPercent(BigDecimal.valueOf(-1));
         testData.getReleasePointAppts().add(rpa1);
         
         assertFalse(this.validator.validate(cefContext, testData));
@@ -457,7 +457,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	List<Emission> eList2 = new ArrayList<Emission>();
     	Emission test1 = new Emission();
     	test1.setPollutant(pollutant);
-    	test1.setTotalEmissions(new BigDecimal(150.00));
+    	test1.setTotalEmissions(BigDecimal.valueOf(150.00));
     	eList2.add(test1);
     	
     	when(emissionRepo.findAllByProcessIdReportId(testData.getId(),testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getId())).thenReturn(eList2);
@@ -466,7 +466,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     	
     	cefContext = createContext();
-    	test1.setTotalEmissions(new BigDecimal(130.00));
+    	test1.setTotalEmissions(BigDecimal.valueOf(130.00));
     	
     	assertFalse(this.validator.validate(cefContext, testData));
     	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -488,7 +488,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rp1.setOperatingStatusCode(releasePointOpStatus);
         rp1.setReleasePointIdentifier("test");
         rp1.setId(5L);
-        rpa1.setPercent(100.0);
+        rpa1.setPercent(BigDecimal.valueOf(100.0));
         rpa1.setReleasePoint(rp1);
         rpa1.setEmissionsProcess(testData);
         appts.add(rpa1);
@@ -514,7 +514,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rp1.setOperatingStatusCode(releasePointOpStatus);
         rp1.setReleasePointIdentifier("test");
         rp1.setId(5L);
-        rpa1.setPercent(100.0);
+        rpa1.setPercent(BigDecimal.valueOf(100.0));
         rpa1.setReleasePoint(rp1);
         rpa1.setEmissionsProcess(testData);
         appts.add(rpa1);
@@ -538,7 +538,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rp1.setOperatingStatusCode(opStatus);
         rp1.setReleasePointIdentifier("test");
         rp1.setId(5L);
-        rpa1.setPercent(100.0);
+        rpa1.setPercent(BigDecimal.valueOf(100.0));
         rpa1.setReleasePoint(rp1);
         rpa1.setEmissionsProcess(testData);
         appts.add(rpa1);
@@ -600,8 +600,8 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rpa2.setReleasePoint(rp2);
         rpa1.setEmissionsProcess(result);
         rpa2.setEmissionsProcess(result);
-        rpa1.setPercent((double) 50);
-        rpa2.setPercent((double) 50);
+        rpa1.setPercent(BigDecimal.valueOf(50));
+        rpa2.setPercent(BigDecimal.valueOf(50));
         rpa1.setId(1L);
         rpa2.setId(2L);
         result.getReleasePointAppts().add(rpa1);

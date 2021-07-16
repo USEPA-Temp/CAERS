@@ -21,6 +21,7 @@ import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.util.ConstantUtils;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +80,9 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         boolean isProcessOperating = ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getOperatingStatusCode().getCode());
 
-        Double totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream().mapToDouble(ReleasePointAppt::getPercent).sum();
+        BigDecimal totalReleasePointPercent = emissionsProcess.getReleasePointAppts().stream()
+        		.map(ReleasePointAppt::getPercent)
+        		.reduce(BigDecimal.ZERO,BigDecimal::add);
         Map<Object, List<ReleasePointAppt>> rpaMap = emissionsProcess.getReleasePointAppts().stream()
             .filter(rpa -> rpa.getReleasePoint() != null)
             .collect(Collectors.groupingBy(e -> e.getReleasePoint().getId()));
@@ -112,7 +115,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         // Release Point Apportionments Emission Percentage for the process must be between 1 and 100.
         if (emissionsProcess.getReleasePointAppts() != null) {
         	for(ReleasePointAppt rpa: emissionsProcess.getReleasePointAppts()){
-        		  if((rpa.getPercent() < 1) || (rpa.getPercent() > 100)){
+        		  if(rpa.getPercent().compareTo(BigDecimal.ONE) == -1 || rpa.getPercent().compareTo(BigDecimal.valueOf(100)) == 1){
   	        		result = false;
 		        	context.addFederalError(
 		        			ValidationField.PROCESS_RP_PCT.value(),
@@ -125,7 +128,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
         
         if (isProcessOperating) { 
         	// Might need to add a rounding tolerance.
-            if (100 != totalReleasePointPercent) {
+            if (totalReleasePointPercent.compareTo(BigDecimal.valueOf(100)) != 0) {
 
             	result = false;
             	context.addFederalError(

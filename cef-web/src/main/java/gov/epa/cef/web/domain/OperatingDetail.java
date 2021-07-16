@@ -1,5 +1,7 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,25 +31,25 @@ public class OperatingDetail extends BaseAuditEntity {
     private Short actualHoursPerPeriod;
     
     @Column(name = "avg_hours_per_day", precision = 3, scale = 1)
-    private Double avgHoursPerDay;
+    private BigDecimal avgHoursPerDay;
     
     @Column(name = "avg_days_per_week", precision = 2, scale = 1)
-    private Double avgDaysPerWeek;
+    private BigDecimal avgDaysPerWeek;
     
     @Column(name = "avg_weeks_per_period", precision = 2, scale = 0)
     private Short avgWeeksPerPeriod;
     
     @Column(name = "percent_winter", precision = 4, scale = 1)    
-    private Double percentWinter;
+    private BigDecimal percentWinter;
     
     @Column(name = "percent_spring", precision = 4, scale = 1)
-    private Double percentSpring;
+    private BigDecimal percentSpring;
     
     @Column(name = "percent_summer", precision = 4, scale = 1)
-    private Double percentSummer;
+    private BigDecimal percentSummer;
     
     @Column(name = "percent_fall", precision = 4, scale = 1)
-    private Double percentFall;
+    private BigDecimal percentFall;
 
     
     /***
@@ -90,19 +92,19 @@ public class OperatingDetail extends BaseAuditEntity {
         this.actualHoursPerPeriod = actualHoursPerPeriod;
     }
 
-    public Double getAvgHoursPerDay() {
+    public BigDecimal getAvgHoursPerDay() {
         return this.avgHoursPerDay;
     }
 
-    public void setAvgHoursPerDay(Double avgHoursPerDay) {
+    public void setAvgHoursPerDay(BigDecimal avgHoursPerDay) {
         this.avgHoursPerDay = avgHoursPerDay;
     }
 
-    public Double getAvgDaysPerWeek() {
+    public BigDecimal getAvgDaysPerWeek() {
         return this.avgDaysPerWeek;
     }
 
-    public void setAvgDaysPerWeek(Double avgDaysPerWeek) {
+    public void setAvgDaysPerWeek(BigDecimal avgDaysPerWeek) {
         this.avgDaysPerWeek = avgDaysPerWeek;
     }
 
@@ -114,35 +116,35 @@ public class OperatingDetail extends BaseAuditEntity {
         this.avgWeeksPerPeriod = avgWeeksPerPeriod;
     }
 
-    public Double getPercentWinter() {
+    public BigDecimal getPercentWinter() {
         return this.percentWinter;
     }
 
-    public void setPercentWinter(Double percentWinter) {
+    public void setPercentWinter(BigDecimal percentWinter) {
         this.percentWinter = percentWinter;
     }
 
-    public Double getPercentSpring() {
+    public BigDecimal getPercentSpring() {
         return this.percentSpring;
     }
 
-    public void setPercentSpring(Double percentSpring) {
+    public void setPercentSpring(BigDecimal percentSpring) {
         this.percentSpring = percentSpring;
     }
 
-    public Double getPercentSummer() {
+    public BigDecimal getPercentSummer() {
         return this.percentSummer;
     }
 
-    public void setPercentSummer(Double percentSummer) {
+    public void setPercentSummer(BigDecimal percentSummer) {
         this.percentSummer = percentSummer;
     }
 
-    public Double getPercentFall() {
+    public BigDecimal getPercentFall() {
         return this.percentFall;
     }
 
-    public void setPercentFall(Double percentFall) {
+    public void setPercentFall(BigDecimal percentFall) {
         this.percentFall = percentFall;
     }
     

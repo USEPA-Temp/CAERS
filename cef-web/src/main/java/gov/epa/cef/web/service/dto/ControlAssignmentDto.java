@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 
 public class ControlAssignmentDto implements Serializable {
@@ -12,7 +13,7 @@ public class ControlAssignmentDto implements Serializable {
     private ControlDto controlPath;
     private Integer sequenceNumber;
     private ControlPathDto controlPathChild;
-    private Double percentApportionment;
+    private BigDecimal percentApportionment;
     private Long facilitySiteId;
     
     public Long getId() {
@@ -47,11 +48,11 @@ public class ControlAssignmentDto implements Serializable {
         this.controlPathChild = controlPathChild;
     }
 
-	public Double getPercentApportionment() {
+	public BigDecimal getPercentApportionment() {
 		return percentApportionment;
 	}
 
-	public void setPercentApportionment(Double percentApportionment) {
+	public void setPercentApportionment(BigDecimal percentApportionment) {
 		this.percentApportionment = percentApportionment;
 	}
 

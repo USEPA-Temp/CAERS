@@ -1,5 +1,7 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,7 +26,7 @@ public class ControlPollutant extends BaseAuditEntity {
     private Pollutant pollutant;
     
     @Column(name = "percent_reduction", precision = 6, scale = 3, nullable = false)
-    private Double percentReduction;
+    private BigDecimal percentReduction;
 
     
     /**
@@ -61,11 +63,11 @@ public class ControlPollutant extends BaseAuditEntity {
         this.pollutant = pollutant;
     }
 
-    public Double getPercentReduction() {
+    public BigDecimal getPercentReduction() {
         return percentReduction;
     }
 
-    public void setPercentReduction(Double percentReduction) {
+    public void setPercentReduction(BigDecimal percentReduction) {
         this.percentReduction = percentReduction;
     }
     

@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ControlPath extends BaseAuditEntity {
     private String pathId;
     
     @Column(name = "percent_control", precision = 6, scale = 3)
-    private Double percentControl;
+    private BigDecimal percentControl;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "controlPath")
     private List<ControlAssignment> assignments = new ArrayList<>();
@@ -84,11 +85,11 @@ public class ControlPath extends BaseAuditEntity {
         this.pathId = pathId;
     }
     
-    public Double getPercentControl() {
+    public BigDecimal getPercentControl() {
         return percentControl;
     }
 
-    public void setPercentControl(Double percentControl) {
+    public void setPercentControl(BigDecimal percentControl) {
         this.percentControl = percentControl;
     }
 

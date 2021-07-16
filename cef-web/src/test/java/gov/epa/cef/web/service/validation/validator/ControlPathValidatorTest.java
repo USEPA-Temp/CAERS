@@ -2,6 +2,8 @@ package gov.epa.cef.web.service.validation.validator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +77,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 
 		CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
-		testData.getAssignments().get(0).setPercentApportionment(40.0);
+		testData.getAssignments().get(0).setPercentApportionment(BigDecimal.valueOf(40.0));
 		ControlAssignment ca1 = new ControlAssignment();
 		ControlAssignment ca2 = new ControlAssignment();
 		Control c1 = new Control();
@@ -90,8 +92,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		c1.setOperatingStatusCode(opStatusCode);
 		ca1.setSequenceNumber(1);
 		ca2.setSequenceNumber(1);
-		ca1.setPercentApportionment(30.0);
-		ca2.setPercentApportionment(30.0);
+		ca1.setPercentApportionment(BigDecimal.valueOf(30.0));
+		ca2.setPercentApportionment(BigDecimal.valueOf(30.0));
 		ca1.setControl(c1);
 		ca2.setControl(c1);
 		testData.getAssignments().add(ca1);
@@ -111,7 +113,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 
 		CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
-		testData.getAssignments().get(0).setPercentApportionment(40.0);
+		testData.getAssignments().get(0).setPercentApportionment(BigDecimal.valueOf(40.0));
 		ControlPath cp1 = new ControlPath();
 		cp1.setId(1L);
 		ControlAssignment ca1 = new ControlAssignment();
@@ -124,8 +126,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		testData.getAssignments().add(ca2);
 		ca1.setSequenceNumber(1);
 		ca2.setSequenceNumber(1);
-		ca1.setPercentApportionment(30.0);
-		ca2.setPercentApportionment(30.0);
+		ca1.setPercentApportionment(BigDecimal.valueOf(30.0));
+		ca2.setPercentApportionment(BigDecimal.valueOf(30.0));
 
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -233,7 +235,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
 
-		testData.getAssignments().get(0).setPercentApportionment(99.0);
+		testData.getAssignments().get(0).setPercentApportionment(BigDecimal.valueOf(99.0));
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
@@ -272,7 +274,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     public void percentApportionmentRangeFailTest() {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
-		testData.getAssignments().get(0).setPercentApportionment(-0.1);
+		testData.getAssignments().get(0).setPercentApportionment(BigDecimal.valueOf(-0.1));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
@@ -281,7 +283,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_ASSIGNMENT.value()) && errorMap.get(ValidationField.CONTROL_PATH_ASSIGNMENT.value()).size() == 2);
 
         cefContext = createContext();
-		testData.getAssignments().get(0).setPercentApportionment(101.0);
+		testData.getAssignments().get(0).setPercentApportionment(BigDecimal.valueOf(101.0));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
@@ -294,7 +296,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
     public void percentControlRangeFailTest() {
         CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
-		testData.setPercentControl(0.5);
+		testData.setPercentControl(BigDecimal.valueOf(0.5));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -303,7 +305,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PATH_PERCENT_CONTROL.value()).size() == 1);
         
         cefContext = createContext();
-		testData.setPercentControl(101.0);
+		testData.setPercentControl(BigDecimal.valueOf(101.0));
 		
 		assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -319,7 +321,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		CefValidatorContext cefContext = createContext();
 		ControlPath testData = createBaseControlPath();
 		
-		testData.setPercentControl(10.568);
+		testData.setPercentControl(BigDecimal.valueOf(10.568));
 		
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -341,8 +343,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		p2.setPollutantCode("PM25-FIL");
 		cp1.setPollutant(p1);
 		cp2.setPollutant(p2);
-		cp1.setPercentReduction(50.0);
-		cp2.setPercentReduction(50.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		cp2.setPercentReduction(BigDecimal.valueOf(50.0));
 		testData.getPollutants().add(cp1);
 		testData.getPollutants().add(cp2);
 	
@@ -358,8 +360,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		p4.setPollutantCode("PM25-PRI");
 		cp3.setPollutant(p3);
 		cp4.setPollutant(p4);
-		cp3.setPercentReduction(80.0);
-		cp4.setPercentReduction(50.0);
+		cp3.setPercentReduction(BigDecimal.valueOf(80.0));
+		cp4.setPercentReduction(BigDecimal.valueOf(50.0));
 		testData.getPollutants().add(cp3);
 		testData.getPollutants().add(cp4);
 	
@@ -380,8 +382,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		p2.setPollutantCode("PM25-FIL");
 		cp1.setPollutant(p1);
 		cp2.setPollutant(p2);
-		cp1.setPercentReduction(50.0);
-		cp2.setPercentReduction(80.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		cp2.setPercentReduction(BigDecimal.valueOf(80.0));
 		testData.getPollutants().add(cp1);
 		testData.getPollutants().add(cp2);
 		
@@ -405,8 +407,8 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		p2.setPollutantCode("PM25-PRI");
 		cp1.setPollutant(p1);
 		cp2.setPollutant(p2);
-		cp1.setPercentReduction(50.0);
-		cp2.setPercentReduction(80.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		cp2.setPercentReduction(BigDecimal.valueOf(80.0));
 		testData.getPollutants().add(cp1);
 		testData.getPollutants().add(cp2);
 		
@@ -422,7 +424,7 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 
 		ControlPath result = new ControlPath();
 		result.setId(1L);
-		result.setPercentControl(50.0);
+		result.setPercentControl(BigDecimal.valueOf(50.0));
 		ReleasePointAppt rpa = new ReleasePointAppt();
 		ControlMeasureCode cmc = new ControlMeasureCode();
 		OperatingStatusCode opStatusCode = new OperatingStatusCode();
@@ -442,14 +444,14 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		ControlAssignment ca = new ControlAssignment();
 		ca.setControl(c);
 		ca.setSequenceNumber(1);
-		ca.setPercentApportionment(100.0);
+		ca.setPercentApportionment(BigDecimal.valueOf(100.0));
 		ca.setId(1234L);
 		ca.setControlPath(result);
 		ControlPathPollutant cpp = new ControlPathPollutant();
 		Pollutant p1 = new Pollutant();
         p1.setPollutantCode("NOX");
         cpp.setPollutant(p1);
-        cpp.setPercentReduction(50.0);
+        cpp.setPercentReduction(BigDecimal.valueOf(50.0));
         result.getPollutants().add(cpp);
 		result.setPathId("path 1");
 		result.setDescription("test description 1");

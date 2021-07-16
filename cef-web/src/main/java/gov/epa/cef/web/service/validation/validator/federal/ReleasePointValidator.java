@@ -107,7 +107,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                         "Stack Height");
 
                     // Stack Height range
-                } else if (releasePoint.getStackHeight() < 1 || releasePoint.getStackHeight() > 1300) {
+                } else if (releasePoint.getStackHeight().compareTo(BigDecimal.ONE) == -1 || releasePoint.getStackHeight().compareTo(BigDecimal.valueOf(1300)) == 1) {
 
                     result = false;
                     context.addFederalError(
@@ -137,7 +137,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                     // Check value ranges when a stack diameter OR width/length is reported.
                 } else {
                     // Check Stack Diameter range
-                    if (releasePoint.getStackDiameter() != null && (releasePoint.getStackDiameter() < 0.001 || releasePoint.getStackDiameter() > 300)) {
+                    if (releasePoint.getStackDiameter() != null && (releasePoint.getStackDiameter().compareTo(BigDecimal.valueOf(0.001)) == -1 || releasePoint.getStackDiameter().compareTo(BigDecimal.valueOf(300)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -149,7 +149,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                     // Calculation check, Stack Diameter must be less than Stack Height
                     if (releasePoint.getStackDiameter() != null
                         && releasePoint.getStackHeight() != null
-                        && (releasePoint.getStackDiameter() >= releasePoint.getStackHeight())) {
+                        && (releasePoint.getStackDiameter().compareTo(releasePoint.getStackHeight()) >= 0 )) {
 
                         result = false;
                         context.addFederalWarning(
@@ -158,36 +158,38 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                             createValidationDetails(releasePoint));
                     }
 
-                    if ((releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0)
-                        || (releasePoint.getStackWidth() != null && releasePoint.getStackWidth() > 0
-                        && releasePoint.getStackLength() != null && releasePoint.getStackLength() > 0)) {
+                    if ((releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter().compareTo(BigDecimal.ZERO) == 1)
+                        || (releasePoint.getStackWidth() != null && releasePoint.getStackWidth().compareTo(BigDecimal.ZERO) == 1
+                        && releasePoint.getStackLength() != null && releasePoint.getStackLength().compareTo(BigDecimal.ZERO) == 1)) {
 
                         // Determine stack area based on stack dimensions
-                        Double inputDiameter = null;
-                        boolean isDiameter = releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter() > 0;
+                    	BigDecimal inputDiameter = null;
+                        boolean isDiameter = releasePoint.getStackDiameter() != null && releasePoint.getStackDiameter().compareTo(BigDecimal.ZERO) == 1;
                         String formula = isDiameter ? DIAMETER_FORMULA : LENGTH_WIDTH_FORMULA;
                         String dimension = isDiameter ? STACK_DIAMETER : STACK_LENGTH_WIDTH;
 
                         if (isDiameter) {
                             inputDiameter = releasePoint.getStackDiameter();
                         }
-                        double calcArea = isDiameter ? (Math.PI) * (Math.pow((inputDiameter / 2), 2)) : (releasePoint.getStackWidth() * releasePoint.getStackLength());
+                        BigDecimal calcArea = isDiameter ? (BigDecimal.valueOf(Math.PI)).multiply((((inputDiameter.divide(BigDecimal.valueOf(2))).pow(2)))) : (releasePoint.getStackWidth().multiply(releasePoint.getStackLength()));
 
                         // Check exit gas velocity if exit gas flow rate and stack diameter are submitted.
-                        if (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0) {
+                        if (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate().compareTo(BigDecimal.ZERO) == 1) {
 
                             BigDecimal minVelocity = BigDecimal.valueOf(0.001);
                             BigDecimal maxVelocity = BigDecimal.valueOf(1500.0);
-                            BigDecimal calcVelocity = new BigDecimal(0);
-                            double inputFlowRate = releasePoint.getExitGasFlowRate();
+                            BigDecimal calcVelocity = BigDecimal.ZERO;
+                            BigDecimal inputFlowRate = releasePoint.getExitGasFlowRate();
 
                             String uom = VELOCITY_UOM_FPS;
 
-                            calcVelocity = BigDecimal.valueOf(inputFlowRate / calcArea).setScale(3, RoundingMode.HALF_UP);
+                            if (calcArea.compareTo(BigDecimal.ZERO) == 1 && inputFlowRate.compareTo(BigDecimal.ZERO) == 1) {
+                            	calcVelocity = (inputFlowRate.divide(calcArea,3,BigDecimal.ROUND_HALF_UP));
+                            }
 
                             if (releasePoint.getExitGasFlowUomCode() != null && !FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode())) {
                                 minVelocity = BigDecimal.valueOf(0.060);
-                                maxVelocity = new BigDecimal(90000);
+                                maxVelocity = BigDecimal.valueOf(90000);
                                 uom = VELOCITY_UOM_FPM;
                             }
 
@@ -209,15 +211,15 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                         }
 
                         // Check exit gas flow rate if exit gas flow rate, exit gas velocity, and stack diameter are submitted.
-                        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocity() > 0)
-                            && (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate() > 0)) {
+                        if ((releasePoint.getExitGasVelocity() != null && releasePoint.getExitGasVelocity().compareTo(BigDecimal.ZERO) == 1)
+                            && (releasePoint.getExitGasFlowRate() != null && releasePoint.getExitGasFlowRate().compareTo(BigDecimal.ZERO) == 1)) {
 
-                            BigDecimal inputFlowRate = new BigDecimal(releasePoint.getExitGasFlowRate());
-                            double inputVelocity = releasePoint.getExitGasVelocity();
+                            BigDecimal inputFlowRate = releasePoint.getExitGasFlowRate();
+                            BigDecimal inputVelocity = releasePoint.getExitGasVelocity();
 
-                            double calcFlowRate = (inputVelocity * calcArea);
-                            BigDecimal lowerLimitFlowRate = new BigDecimal(0);
-                            BigDecimal upperLimitFlowRate = new BigDecimal(0);
+                            BigDecimal calcFlowRate = inputVelocity.multiply(calcArea);
+                            BigDecimal lowerLimitFlowRate = BigDecimal.ZERO;
+                            BigDecimal upperLimitFlowRate = BigDecimal.ZERO;
                             String uom = FLOW_RATE_UOM_ACFS;
 
                             if (releasePoint.getExitGasVelocityUomCode() != null && !VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode())) {
@@ -227,14 +229,14 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                             // set actual flow rate UoM to compare to computed flow rate
                             if (releasePoint.getExitGasFlowUomCode() != null) {
                                 if (!FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFS.contentEquals(uom)) {
-                                    inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate() / 60));
+                                    inputFlowRate = releasePoint.getExitGasFlowRate().divide(BigDecimal.valueOf(60));
                                 } else if (!FLOW_RATE_UOM_ACFM.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFM.contentEquals(uom)) {
-                                    inputFlowRate = BigDecimal.valueOf((releasePoint.getExitGasFlowRate() * 60));
+                                    inputFlowRate = releasePoint.getExitGasFlowRate().multiply(BigDecimal.valueOf(60));
                                 }
                             }
 
-                            lowerLimitFlowRate = BigDecimal.valueOf(0.95 * calcFlowRate).setScale(8, RoundingMode.HALF_UP);
-                            upperLimitFlowRate = BigDecimal.valueOf(1.05 * calcFlowRate).setScale(8, RoundingMode.HALF_UP);
+                            lowerLimitFlowRate = BigDecimal.valueOf(0.95).multiply(calcFlowRate).setScale(8, RoundingMode.HALF_UP);
+                            upperLimitFlowRate = BigDecimal.valueOf(1.05).multiply(calcFlowRate).setScale(8, RoundingMode.HALF_UP);
 
                             if (!((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).equals(BigDecimal.valueOf(0.00000001).setScale(8, RoundingMode.HALF_UP)))
                                 && (((inputFlowRate.setScale(8, RoundingMode.HALF_UP)).compareTo(upperLimitFlowRate) == 1)
@@ -245,7 +247,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                                     ValidationField.RP_GAS_FLOW.value(),
                                     "releasePoint.exitGasFlowRate.range",
                                     createValidationDetails(releasePoint),
-                                    BigDecimal.valueOf(calcFlowRate).setScale(8, RoundingMode.HALF_UP).toString(),
+                                    calcFlowRate.setScale(8, RoundingMode.HALF_UP).toString(),
                                     uom,
                                     dimension,
                                     formula);
@@ -352,7 +354,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             if (releasePoint.getExitGasFlowUomCode() != null && releasePoint.getExitGasFlowRate() != null) {
                 if (FUGITIVE_RELEASE_POINT_CODE.contentEquals(releasePoint.getTypeCode().getCode())) {
                     if (FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
-                        (releasePoint.getExitGasFlowRate() < 0 || releasePoint.getExitGasFlowRate() > 200000)) {
+                        (releasePoint.getExitGasFlowRate().compareTo(BigDecimal.ZERO) == -1 || releasePoint.getExitGasFlowRate().compareTo(BigDecimal.valueOf(200000)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -361,7 +363,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                             createValidationDetails(releasePoint));
 
                     } else if (!FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
-                        (releasePoint.getExitGasFlowRate() < 0 || releasePoint.getExitGasFlowRate() > 12000000)) {
+                        (releasePoint.getExitGasFlowRate().compareTo(BigDecimal.ZERO) == -1 || releasePoint.getExitGasFlowRate().compareTo(BigDecimal.valueOf(12000000)) == 1)) {
                         result = false;
                         context.addFederalError(
                             ValidationField.RP_GAS_FLOW.value(),
@@ -370,7 +372,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                     }
                 } else {
                     if (FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
-                        (releasePoint.getExitGasFlowRate() < 0.00000001 || releasePoint.getExitGasFlowRate() > 200000)) {
+                        (releasePoint.getExitGasFlowRate().compareTo(BigDecimal.valueOf(0.00000001)) == -1  || releasePoint.getExitGasFlowRate().compareTo(BigDecimal.valueOf(200000)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -379,7 +381,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                             createValidationDetails(releasePoint));
 
                     } else if (!FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
-                        (releasePoint.getExitGasFlowRate() < 0.00000001 || releasePoint.getExitGasFlowRate() > 12000000)) {
+                        (releasePoint.getExitGasFlowRate().compareTo(BigDecimal.valueOf(0.00000001)) == -1 || releasePoint.getExitGasFlowRate().compareTo(BigDecimal.valueOf(12000000)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -394,7 +396,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             if (releasePoint.getExitGasVelocityUomCode() != null && releasePoint.getExitGasVelocity() != null) {
                 if (FUGITIVE_RELEASE_POINT_CODE.contentEquals(releasePoint.getTypeCode().getCode())) {
                     if (VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
-                        (releasePoint.getExitGasVelocity() < 0 || releasePoint.getExitGasVelocity() > 400)) {
+                        (releasePoint.getExitGasVelocity().compareTo(BigDecimal.ZERO) == -1 || releasePoint.getExitGasVelocity().compareTo(BigDecimal.valueOf(400)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -403,7 +405,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                             createValidationDetails(releasePoint));
 
                     } else if (!VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
-                        (releasePoint.getExitGasVelocity() < 0 || releasePoint.getExitGasVelocity() > 24000)) {
+                        (releasePoint.getExitGasVelocity().compareTo(BigDecimal.ZERO) == -1 || releasePoint.getExitGasVelocity().compareTo(BigDecimal.valueOf(24000)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -413,7 +415,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                     }
                 } else {
                     if (VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
-                        (releasePoint.getExitGasVelocity() < 0.001 || releasePoint.getExitGasVelocity() > 1500)) {
+                        (releasePoint.getExitGasVelocity().compareTo(BigDecimal.valueOf(0.001)) == -1 || releasePoint.getExitGasVelocity().compareTo(BigDecimal.valueOf(1500)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -422,7 +424,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                             createValidationDetails(releasePoint));
 
                     } else if (!VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
-                        (releasePoint.getExitGasVelocity() < 0.060 || releasePoint.getExitGasVelocity() > 90000)) {
+                        (releasePoint.getExitGasVelocity().compareTo(BigDecimal.valueOf(0.060)) == -1 || releasePoint.getExitGasVelocity().compareTo(BigDecimal.valueOf(90000)) == 1)) {
 
                         result = false;
                         context.addFederalError(
@@ -566,7 +568,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     }
 
 
-    public boolean validateUomFT(ValidatorContext validatorContext, ReleasePoint releasePoint, Double measure, UnitMeasureCode uom, String uomField) {
+    public boolean validateUomFT(ValidatorContext validatorContext, ReleasePoint releasePoint, BigDecimal measure, UnitMeasureCode uom, String uomField) {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         boolean result = true;
@@ -586,13 +588,13 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
     public boolean validateUomFT_long(ValidatorContext validatorContext, ReleasePoint releasePoint, Long measure, UnitMeasureCode uom, String uomField) {
         if (measure != null) {
-            return validateUomFT(validatorContext, releasePoint, Double.valueOf(measure), uom, uomField);
+            return validateUomFT(validatorContext, releasePoint, BigDecimal.valueOf(measure), uom, uomField);
         } else {
             return validateUomFT(validatorContext, releasePoint, null, uom, uomField);
         }
     }
 
-    public boolean validateCoordinateTolerance(ValidatorContext validatorContext, ReleasePoint releasePoint, Double rpCoordinate, BigDecimal facilityCoordinate, String rpLatLongField, String facilityLatLongField) {
+    public boolean validateCoordinateTolerance(ValidatorContext validatorContext, ReleasePoint releasePoint, BigDecimal rpCoordinate, BigDecimal facilityCoordinate, String rpLatLongField, String facilityLatLongField) {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
         boolean result = true;
@@ -604,7 +606,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         String facilityEisId = releasePoint.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getEisProgramId();
 
         if (!rpCoordinate.equals(null)) {
-            releasePointCoordinate = (new BigDecimal(rpCoordinate)).setScale(6, RoundingMode.HALF_UP);
+            releasePointCoordinate = rpCoordinate.setScale(6, RoundingMode.HALF_UP);
         }
 
         if (Strings.emptyToNull(facilityEisId) == null || latLongToleranceRepo.findById(facilityEisId).orElse(null) == null) {

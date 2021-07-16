@@ -87,7 +87,7 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
         ControlAssignment controlPathAssignment = this.repository.findById(9999991L)
             .orElseThrow(() -> new IllegalStateException("Control 9999991L does not exist."));
 
-        Double percentApportionment = (100D);
+        BigDecimal percentApportionment = BigDecimal.valueOf(100);
 
         controlPathAssignment.setPercentApportionment(percentApportionment);
         this.repository.save(controlPathAssignment);
@@ -121,7 +121,7 @@ public class ControlAssignmentRepositoryTest extends BaseRepositoryTest {
         controlPathAssignment.setControlPath(controlPath);
         controlPathAssignment.setControlPathChild(controlPathChild);
         controlPathAssignment.setSequenceNumber(1);
-        controlPathAssignment.setPercentApportionment(1D);
+        controlPathAssignment.setPercentApportionment(BigDecimal.ONE);
         controlPathAssignment.setCreatedBy("JUNIT-TEST");
         controlPathAssignment.setCreatedDate(new Date());
         controlPathAssignment.setLastModifiedBy(controlPathAssignment.getCreatedBy());

@@ -19,6 +19,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import javax.sql.DataSource;
+
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +136,7 @@ public class ControlRepositoryTest extends BaseRepositoryTest {
         control.setFacilitySite(facilitySite);
         control.setOperatingStatusCode(operatingStatusCode);
         control.setIdentifier("Control 001");
-        control.setPercentControl(50d);
+        control.setPercentControl(BigDecimal.valueOf(50));
         control.setControlMeasureCode(controlMeasureCode);
         control.setCreatedBy("JUNIT-TEST");
         control.setCreatedDate(new Date());
