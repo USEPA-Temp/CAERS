@@ -306,9 +306,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             EmissionsReport emissionsReport = mapEmissionsReport(bulkEmissionsReport);
             
-            MasterFacilityRecord mfr = mfrRepo.findByEisProgramIdAndAgencyFacilityId(bulkEmissionsReport.getEisProgramId(), bulkEmissionsReport.getAltSiteIdentifier()).orElse(null);
-
             for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
+            	MasterFacilityRecord mfr = mfrRepo.findByEisProgramIdAndAgencyFacilityId(bulkFacility.getEisProgramId(), bulkFacility.getAltSiteIdentifier()).orElse(null);
                 FacilitySite facility = mapFacility(bulkFacility);
                 
                 facility.setName(mfr.getName());
