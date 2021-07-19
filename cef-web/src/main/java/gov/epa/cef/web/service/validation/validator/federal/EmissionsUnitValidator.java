@@ -17,6 +17,7 @@ import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.util.ConstantUtils;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -219,7 +220,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
             // Design capacity range
             if ((emissionsUnit.getDesignCapacity() != null)
-                && (emissionsUnit.getDesignCapacity().doubleValue() < 0.01 || emissionsUnit.getDesignCapacity().doubleValue() > 100000000)) {
+                && (emissionsUnit.getDesignCapacity().compareTo(BigDecimal.valueOf(0.01)) == -1 || emissionsUnit.getDesignCapacity().compareTo(BigDecimal.valueOf(100000000)) == 1)) {
 
                 result = false;
                 context.addFederalError(
