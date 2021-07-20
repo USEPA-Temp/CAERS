@@ -331,7 +331,7 @@ public class CersXmlServiceImplTest {
         when(this.emissionsOperatingTypeCodeRepo.findById(any())).thenReturn(Optional.empty());
         when(this.facilityCategoryRepo.findById(any())).thenReturn(Optional.empty());
         when(this.facilitySourceTypeRepo.findById(any())).thenReturn(Optional.empty());
-        when(this.mfrRepo.findByEisProgramId(any())).thenReturn(Optional.of(new MasterFacilityRecord()));
+        when(this.mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityId(any(),any())).thenReturn(Optional.of(new MasterFacilityRecord()));
         when(this.mfrRepo.findById(any())).thenReturn(Optional.of(new MasterFacilityRecord()));
         when(this.naicsCodeRepo.findById(any())).thenReturn(Optional.empty());
         when(this.operatingStatusRepo.findById(any())).then(invocation -> {
