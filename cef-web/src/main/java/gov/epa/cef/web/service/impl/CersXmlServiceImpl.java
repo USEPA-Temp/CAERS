@@ -377,11 +377,15 @@ public class CersXmlServiceImpl implements CersXmlService {
         }
 
         // average percent control
-        BigDecimal totalPercentControlApproachEff = controls.stream()
+        List<Control> cList = controls.stream()
                 .filter(c -> c.getPercentControl() != null)
+                .collect(Collectors.toList());
+        BigDecimal totalPercentControlApproachEff = cList.stream()
         		.map(Control::getPercentControl)
                 .reduce(BigDecimal.ZERO,BigDecimal::add);
-        ca.setPercentControlApproachEffectiveness(totalPercentControlApproachEff.divide(BigDecimal.valueOf(controls.size())).setScale(3, RoundingMode.HALF_UP));
+        if (!cList.isEmpty()) {
+        	ca.setPercentControlApproachEffectiveness(totalPercentControlApproachEff.divide(BigDecimal.valueOf(cList.size())).setScale(3, RoundingMode.HALF_UP));
+        }
 
         // make description a list of control measure code descriptions
         ca.setControlApproachDescription(controls.stream()

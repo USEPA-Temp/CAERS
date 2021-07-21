@@ -1145,7 +1145,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setStatusYear((short) 1900);
 
         assertTrue(this.validator.validate(cefContext, testData));
-        System.out.println(cefContext.result.getErrors());
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
