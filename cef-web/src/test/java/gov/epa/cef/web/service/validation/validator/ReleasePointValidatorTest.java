@@ -43,7 +43,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     	EisLatLongToleranceLookup fsTolerance = new EisLatLongToleranceLookup();
     	fsTolerance.setEisProgramId("536411");
-    	fsTolerance.setCoordinateTolerance(new BigDecimal(0.0055));
+    	fsTolerance.setCoordinateTolerance(BigDecimal.valueOf(0.0055));
 
     	toleranceList.add(fsTolerance);
 
@@ -167,7 +167,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
-        testData.setExitGasFlowRate(0.0);
+        testData.setExitGasFlowRate(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -179,7 +179,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
         testData.setTypeCode(releasePointTypeCode);
-        testData.setExitGasFlowRate(200000.1);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(200000.1));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -194,7 +194,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         velocityUom.setCode("FPM");
         testData.setExitGasFlowUomCode(flowUom);
         testData.setExitGasVelocityUomCode(velocityUom);
-        testData.setExitGasFlowRate(12000000.1);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(12000000.1));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -215,7 +215,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         releasePointTypeCode.setCode("1");
         testData.setTypeCode(releasePointTypeCode);
-        testData.setExitGasFlowRate(200000.1);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(200000.1));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
@@ -227,7 +227,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         velocityUom.setCode("FPM");
         testData.setExitGasFlowUomCode(flowUom);
         testData.setExitGasVelocityUomCode(velocityUom);
-        testData.setExitGasFlowRate(12000000.1);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(12000000.1));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
@@ -249,7 +249,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         testData.setExitGasFlowUomCode(null);
-        testData.setExitGasFlowRate(0.002);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(0.002));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -271,7 +271,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         testData.setExitGasFlowUomCode(null);
-        testData.setExitGasFlowRate(0.002);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(0.002));
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
@@ -282,7 +282,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
-        testData.setExitGasVelocity(0.0);
+        testData.setExitGasVelocity(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -294,7 +294,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
         testData.setTypeCode(releasePointTypeCode);
-        testData.setExitGasVelocity(1500.1);
+        testData.setExitGasVelocity(BigDecimal.valueOf(1500.1));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -309,7 +309,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         velocityUom.setCode("FPM");
         testData.setExitGasFlowUomCode(flowUom);
         testData.setExitGasVelocityUomCode(velocityUom);
-        testData.setExitGasVelocity(90000.1);
+        testData.setExitGasVelocity(BigDecimal.valueOf(90000.1));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -331,7 +331,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
         testData.setTypeCode(releasePointTypeCode);
-        testData.setExitGasVelocity(1500.1);
+        testData.setExitGasVelocity(BigDecimal.valueOf(1500.1));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
@@ -343,7 +343,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         velocityUom.setCode("FPM");
         testData.setExitGasFlowUomCode(flowUom);
         testData.setExitGasVelocityUomCode(velocityUom);
-        testData.setExitGasVelocity(90000.1);
+        testData.setExitGasVelocity(BigDecimal.valueOf(90000.1));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
@@ -362,9 +362,9 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(null);
         testData.setStackDiameter(null);
-        testData.setExitGasFlowRate(9.0);
-        testData.setStackLength(23.0);
-        testData.setStackWidth(8.5);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(9.0));
+        testData.setStackLength(BigDecimal.valueOf(23.0));
+        testData.setStackWidth(BigDecimal.valueOf(8.5));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(errorMap.containsKey(ValidationField.RP_GAS_VELOCITY.value()) && errorMap.get(ValidationField.RP_GAS_VELOCITY.value()).size() == 1);
@@ -387,7 +387,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         testData.setExitGasVelocityUomCode(null);
-        testData.setExitGasVelocity(1000.0);
+        testData.setExitGasVelocity(BigDecimal.valueOf(1000.0));
         testData.setExitGasFlowRate(null);
         testData.setExitGasFlowUomCode(null);
 
@@ -410,7 +410,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         testData.setExitGasVelocityUomCode(null);
-        testData.setExitGasVelocity(1000.0);
+        testData.setExitGasVelocity(BigDecimal.valueOf(1000.0));
         testData.setExitGasFlowRate(null);
         testData.setExitGasFlowUomCode(null);
 
@@ -438,7 +438,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	uom.setCode("BTU");
 
     	testData.setExitGasVelocityUomCode(uom);
-    	testData.setExitGasVelocity(0.06);
+    	testData.setExitGasVelocity(BigDecimal.valueOf(0.06));
     	testData.setExitGasFlowRate(null);
     	testData.setExitGasFlowUomCode(null);
 
@@ -471,7 +471,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	testData.setExitGasFlowUomCode(uom);
     	testData.setExitGasVelocity(null);
     	testData.setExitGasVelocityUomCode(null);
-    	testData.setStackDiameter(0.1);
+    	testData.setStackDiameter(BigDecimal.valueOf(0.1));
 
     	assertFalse(this.validator.validate(cefContext, testData));
     	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
@@ -696,15 +696,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setStackHeight(0.5);
-        testData.setStackDiameter(0.001);
-        testData.setExitGasFlowRate(0.00000001);
+        testData.setStackHeight(BigDecimal.valueOf(0.5));
+        testData.setStackDiameter(BigDecimal.valueOf(0.001));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(0.00000001));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         cefContext = createContext();
-        testData.setStackHeight(1400.0);
+        testData.setStackHeight(BigDecimal.valueOf(1400.0));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -713,13 +713,13 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("TS");
         testData.setOperatingStatusCode(opStatCode);
-        testData.setStackHeight(0.5);
+        testData.setStackHeight(BigDecimal.valueOf(0.5));
 
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
-        testData.setStackHeight(1400.0);
+        testData.setStackHeight(BigDecimal.valueOf(1400.0));
 
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
@@ -742,16 +742,16 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STACK.value()) && errorMap.get(ValidationField.RP_STACK.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setStackDiameter(0.0);
+        testData.setStackDiameter(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         cefContext = createContext();
-        testData.setStackDiameter(400.0);
-        testData.setStackHeight(1300.0);
-        testData.setExitGasVelocity(0.0025);
-        testData.setExitGasFlowRate(300.0);
+        testData.setStackDiameter(BigDecimal.valueOf(400.0));
+        testData.setStackHeight(BigDecimal.valueOf(1300.0));
+        testData.setExitGasVelocity(BigDecimal.valueOf(0.0025));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(300.0));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -766,13 +766,13 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
-        testData.setStackDiameter(0.0);
+        testData.setStackDiameter(BigDecimal.ZERO);
 
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
-        testData.setStackDiameter(400.0);
+        testData.setStackDiameter(BigDecimal.valueOf(400.0));
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
@@ -852,7 +852,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
-        testData.setStackDiameter(0.0);
+        testData.setStackDiameter(BigDecimal.ZERO);
 
         cefContext = createContext();
         assertFalse(this.validator.validate(cefContext, testData));
@@ -878,10 +878,10 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         cefContext = createContext();
-        testData.setStackDiameter(10.0);
-        testData.setStackHeight(5.0);
-        testData.setExitGasVelocity(2.0);
-        testData.setExitGasFlowRate(150.0);
+        testData.setStackDiameter(BigDecimal.valueOf(10.0));
+        testData.setStackHeight(BigDecimal.valueOf(5.0));
+        testData.setExitGasVelocity(BigDecimal.valueOf(2.0));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(150.0));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -906,7 +906,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseFugitiveReleasePoint();
 
         cefContext = createContext();
-        testData.setLatitude(32.959000);
+        testData.setLatitude(BigDecimal.valueOf(32.959000));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -915,15 +915,15 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setLongitude(-84.888000);
-        testData.setLatitude(33.951000);
+        testData.setLongitude(BigDecimal.valueOf(-84.888000));
+        testData.setLatitude(BigDecimal.valueOf(33.951000));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         cefContext = createContext();
         testData = createBaseReleasePoint();
-        testData.setLongitude(-84.888000);
+        testData.setLongitude(BigDecimal.valueOf(-84.888000));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -938,19 +938,19 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         testData.setOperatingStatusCode(opStatCode);
 
         cefContext = createContext();
-        testData.setLatitude(32.959000);
+        testData.setLatitude(BigDecimal.valueOf(32.959000));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
         cefContext = createContext();
-        testData.setLongitude(-84.888000);
-        testData.setLatitude(33.951000);
+        testData.setLongitude(BigDecimal.valueOf(-84.888000));
+        testData.setLatitude(BigDecimal.valueOf(33.951000));
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
         cefContext = createContext();
-        testData.setLongitude(-84.888000);
+        testData.setLongitude(BigDecimal.valueOf(-84.888000));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
@@ -982,8 +982,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         cefContext = createContext();
-        testData.setExitGasVelocity(250.0);
-        testData.setExitGasFlowRate(0.00001);
+        testData.setExitGasVelocity(BigDecimal.valueOf(250.0));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(0.00001));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
@@ -1009,10 +1009,10 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         cefContext = createContext();
-        testData.setExitGasVelocity(250.0);
-        testData.setExitGasFlowRate(200.0);
-        testData.setStackDiameter(1.0);
-        testData.setStackHeight(5.0);
+        testData.setExitGasVelocity(BigDecimal.valueOf(250.0));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(200.0));
+        testData.setStackDiameter(BigDecimal.ONE);
+        testData.setStackHeight(BigDecimal.valueOf(5.0));
 
         assertTrue(this.validator.validate(cefContext, testData));
       	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -1025,10 +1025,10 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         cefContext = createContext();
-        testData.setExitGasVelocity(100.0);
-        testData.setStackDiameter(1.0);
-        testData.setStackHeight(5.0);
-        testData.setExitGasFlowRate(38.0);
+        testData.setExitGasVelocity(BigDecimal.valueOf(100.0));
+        testData.setStackDiameter(BigDecimal.ONE);
+        testData.setStackHeight(BigDecimal.valueOf(5.0));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(38.0));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -1053,19 +1053,19 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         cefContext = createContext();
-        testData.setExitGasVelocity(0.001);
-        testData.setStackDiameter(0.001);
-        testData.setStackHeight(5.0);
-        testData.setExitGasFlowRate(0.00000001);
+        testData.setExitGasVelocity(BigDecimal.valueOf(0.001));
+        testData.setStackDiameter(BigDecimal.valueOf(0.001));
+        testData.setStackHeight(BigDecimal.valueOf(5.0));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(0.00000001));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
-        testData.setExitGasVelocity(1500.0);
-        testData.setStackDiameter(13.2);
-        testData.setStackHeight(15.0);
-        testData.setExitGasFlowRate(200000.0);
+        testData.setExitGasVelocity(BigDecimal.valueOf(1500.0));
+        testData.setStackDiameter(BigDecimal.valueOf(13.2));
+        testData.setStackHeight(BigDecimal.valueOf(15.0));
+        testData.setExitGasFlowRate(BigDecimal.valueOf(200000.0));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -1094,9 +1094,9 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseReleasePoint();
 
         testData.setStackDiameter(null);
-        testData.setExitGasFlowRate(2.0);
-        testData.setStackLength(23.0);
-        testData.setStackWidth(8.5);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(2.0));
+        testData.setStackLength(BigDecimal.valueOf(23.0));
+        testData.setStackWidth(BigDecimal.valueOf(8.5));
         
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -1107,9 +1107,9 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
 
-        testData.setStackDiameter(0.5);
-        testData.setStackLength(1.0);
-        testData.setStackWidth(1.96);
+        testData.setStackDiameter(BigDecimal.valueOf(0.5));
+        testData.setStackLength(BigDecimal.valueOf(1.0));
+        testData.setStackWidth(BigDecimal.valueOf(1.96));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -1270,8 +1270,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         FacilitySite facility = new FacilitySite();
         facility.setId(1L);
-        facility.setLatitude(new BigDecimal(33.949000));
-        facility.setLongitude(new BigDecimal(-84.388000));
+        facility.setLatitude(BigDecimal.valueOf(33.949000));
+        facility.setLongitude(BigDecimal.valueOf(-84.388000));
         facility.setOperatingStatusCode(opStatCode);
         facility.setEmissionsReport(er);
         er.getFacilitySites().add(facility);
@@ -1290,24 +1290,24 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         ReleasePoint result = new ReleasePoint();
         result.setExitGasTemperature((short) 50);
-        result.setExitGasFlowRate(0.002);
+        result.setExitGasFlowRate(BigDecimal.valueOf(0.002));
         result.setExitGasFlowUomCode(flowUom);
-        result.setExitGasVelocity(0.01);
+        result.setExitGasVelocity(BigDecimal.valueOf(0.01));
         result.setExitGasVelocityUomCode(velUom);
         result.setFenceLineDistance((long) 1);
         result.setFenceLineUomCode(distUom);
         result.setStackHeightUomCode(distUom);
         result.setStackDiameterUomCode(distUom);
-        result.setStackHeight(1.0);
-        result.setStackDiameter(0.5);
+        result.setStackHeight(BigDecimal.ONE);
+        result.setStackDiameter(BigDecimal.valueOf(0.5));
         result.setTypeCode(releasePointTypeCode);
-        result.setLatitude(33.949000);
-        result.setLongitude(-84.388000);
+        result.setLatitude(BigDecimal.valueOf(33.949000));
+        result.setLongitude(BigDecimal.valueOf(-84.388000));
         result.setFacilitySite(facility);
-        result.setFugitiveLine1Latitude(33.949000);
-        result.setFugitiveLine1Longitude(-84.388000);
-        result.setFugitiveLine2Latitude(33.949000);
-        result.setFugitiveLine2Longitude(-84.388000);
+        result.setFugitiveLine1Latitude(BigDecimal.valueOf(33.949000));
+        result.setFugitiveLine1Longitude(BigDecimal.valueOf(-84.388000));
+        result.setFugitiveLine2Latitude(BigDecimal.valueOf(33.949000));
+        result.setFugitiveLine2Longitude(BigDecimal.valueOf(-84.388000));
         result.setStatusYear((short) 2000);
         result.setOperatingStatusCode(opStatCode);
         result.setId(1L);
@@ -1329,8 +1329,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     	FacilitySite facility = new FacilitySite();
     	facility.setId(1L);
-    	facility.setLatitude(new BigDecimal(33.949000));
-    	facility.setLongitude(new BigDecimal(-84.388000));
+    	facility.setLatitude(BigDecimal.valueOf(33.949000));
+    	facility.setLongitude(BigDecimal.valueOf(-84.388000));
     	facility.setOperatingStatusCode(opStatCode);
     	facility.setEmissionsReport(er);
 
@@ -1350,13 +1350,13 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	result.setFugitiveLength((long) 1);
     	result.setFugitiveWidth((long) 1);
     	result.setFugitiveHeight((long) 1);
-    	result.setLatitude(33.949000);
-    	result.setLongitude(-84.388000);
+    	result.setLatitude(BigDecimal.valueOf(33.949000));
+    	result.setLongitude(BigDecimal.valueOf(-84.388000));
     	result.setFacilitySite(facility);
-    	result.setFugitiveLine1Latitude(33.949000);
-    	result.setFugitiveLine1Longitude(-84.388000);
-    	result.setFugitiveLine2Latitude(33.949000);
-    	result.setFugitiveLine2Longitude(-84.388000);
+    	result.setFugitiveLine1Latitude(BigDecimal.valueOf(33.949000));
+    	result.setFugitiveLine1Longitude(BigDecimal.valueOf(-84.388000));
+    	result.setFugitiveLine2Latitude(BigDecimal.valueOf(33.949000));
+    	result.setFugitiveLine2Longitude(BigDecimal.valueOf(-84.388000));
     	result.setStatusYear((short) 2000);
     	result.setOperatingStatusCode(opStatCode);
 

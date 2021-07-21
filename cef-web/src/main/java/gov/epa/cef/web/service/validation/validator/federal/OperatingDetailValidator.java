@@ -7,6 +7,7 @@ import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 
 import org.springframework.stereotype.Component;
@@ -38,7 +39,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	                    "operatingDetail.avgHoursPerDay.required",
 	                    createValidationDetails(detail));
 	
-	        } else if (detail.getAvgHoursPerDay() > 24 || detail.getAvgHoursPerDay() < .1) {
+	        } else if (detail.getAvgHoursPerDay().compareTo(BigDecimal.valueOf(24)) == 1 || detail.getAvgHoursPerDay().compareTo(BigDecimal.valueOf(0.1)) == -1) {
 	
 	            // Average Hours Per Day must be between 0.1 and 24
 	            result = false;
@@ -57,7 +58,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	                    "operatingDetail.avgDaysPerWeek.required",
 	                    createValidationDetails(detail));
 	
-	        } else if (detail.getAvgDaysPerWeek() > 7 || detail.getAvgDaysPerWeek() < .1) {
+	        } else if (detail.getAvgDaysPerWeek().compareTo(BigDecimal.valueOf(7)) == 1 || detail.getAvgDaysPerWeek().compareTo(BigDecimal.valueOf(0.1)) == -1) {
 	
 	            // Average Days Per Week must be between 0.1 and 7
 	            result = false;
@@ -88,8 +89,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	
 	        
 	        int seasons = 0; // number of seasons with percents entered
-	        double total = 0; // total of percents for all seasons
-	
+	        BigDecimal total = BigDecimal.ZERO; // total of percents for all seasons
 	        if (detail.getPercentSpring() == null) {
 	
 	            // Spring Season % is required
@@ -98,14 +98,13 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	                    ValidationField.DETAIL_PCT_SPRING.value(),
 	                    "operatingDetail.percentSpring.required",
 	                    createValidationDetails(detail));
-	
-	        } else if (detail.getPercentSpring() != 0) {
+	            
+	        } else if (detail.getPercentSpring().compareTo(BigDecimal.ZERO) != 0) {
 	
 	            seasons++;
-	            total += detail.getPercentSpring();
-	            
+	            total = total.add(detail.getPercentSpring());
 	            // Spring Season % range
-	            if (detail.getPercentSpring() > 100 || detail.getPercentSpring() < 0) {
+	            if (detail.getPercentSpring().compareTo(BigDecimal.valueOf(100)) == 1 || detail.getPercentSpring().compareTo(BigDecimal.ZERO) == -1) {
 	            
 		            result = false;
 		            context.addFederalError(
@@ -124,13 +123,12 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	                    "operatingDetail.percentSummer.required",
 	                    createValidationDetails(detail));
 	
-	        } else if (detail.getPercentSummer() != 0) {
+	        } else if (detail.getPercentSummer().compareTo(BigDecimal.ZERO) != 0) {
 	
 	            seasons++;
-	            total += detail.getPercentSummer();
-	            
+	            total = total.add(detail.getPercentSummer());
 	            // Summer Season % range
-	            if (detail.getPercentSummer() > 100 || detail.getPercentSummer() < 0) {
+	            if (detail.getPercentSummer().compareTo(BigDecimal.valueOf(100)) == 1 || detail.getPercentSummer().compareTo(BigDecimal.ZERO) == -1) {
 	            
 		            result = false;
 		            context.addFederalError(
@@ -149,13 +147,12 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	                    "operatingDetail.percentFall.required",
 	                    createValidationDetails(detail));
 	
-	        } else if (detail.getPercentFall() != 0) {
+	        } else if (detail.getPercentFall().compareTo(BigDecimal.ZERO) != 0) {
 	
 	            seasons++;
-	            total += detail.getPercentFall();
-	            
+	            total = total.add(detail.getPercentFall());
 	            // Fall Season % range
-	            if (detail.getPercentFall() > 100 || detail.getPercentFall() < 0) {
+	            if (detail.getPercentFall().compareTo(BigDecimal.valueOf(100)) == 1 || detail.getPercentFall().compareTo(BigDecimal.ZERO) == -1) {
 	            
 		            result = false;
 		            context.addFederalError(
@@ -174,13 +171,12 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	                    "operatingDetail.percentWinter.required",
 	                    createValidationDetails(detail));
 	
-	        } else if (detail.getPercentWinter() != 0) {
+	        } else if (detail.getPercentWinter().compareTo(BigDecimal.ZERO) != 0) {
 	
 	            seasons++;
-	            total += detail.getPercentWinter();
-	            
+	            total = total.add(detail.getPercentWinter());
 	            // Winter Season % range
-	            if (detail.getPercentWinter() > 100 || detail.getPercentWinter() < 0) {
+	            if (detail.getPercentWinter().compareTo(BigDecimal.valueOf(100)) == 1 || detail.getPercentWinter().compareTo(BigDecimal.ZERO) == -1) {
 	            
 		            result = false;
 		            context.addFederalError(
@@ -239,7 +235,7 @@ public class OperatingDetailValidator extends BaseValidator<OperatingDetail> {
 	
 	            }
 	
-	            if (total > 100.5 || total < 99.5) {
+	            if (total.compareTo(BigDecimal.valueOf(100.5)) == 1 || total.compareTo(BigDecimal.valueOf(99.5)) == -1) {
 	
 	                // The sum of seasonal percentages must be between 99.5 and 100.5
 	                result = false;

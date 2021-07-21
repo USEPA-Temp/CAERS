@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,35 +53,35 @@ public class ReleasePoint extends BaseAuditEntity {
     private UnitMeasureCode fenceLineUomCode;
 
     @Column(name = "stack_height", precision = 8, scale = 3)
-    private Double stackHeight;
+    private BigDecimal stackHeight;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_height_uom_code", nullable = false)
     private UnitMeasureCode stackHeightUomCode;
 
     @Column(name = "stack_diameter", precision = 6, scale = 3)
-    private Double stackDiameter;
+    private BigDecimal stackDiameter;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_diameter_uom_code", nullable = false)
     private UnitMeasureCode stackDiameterUomCode;
 
     @Column(name = "stack_width", precision = 4, scale = 1)
-    private Double stackWidth;
+    private BigDecimal stackWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_width_uom_code", nullable = false)
     private UnitMeasureCode stackWidthUomCode;
 
     @Column(name = "stack_length", precision = 4, scale = 1)
-    private Double stackLength;
+    private BigDecimal stackLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_length_uom_code", nullable = false)
     private UnitMeasureCode stackLengthUomCode;
 
     @Column(name = "exit_gas_velocity", precision = 8, scale = 3)
-    private Double exitGasVelocity;
+    private BigDecimal exitGasVelocity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exit_gas_velocity_uom_code", nullable = false)
@@ -90,7 +91,7 @@ public class ReleasePoint extends BaseAuditEntity {
     private Short exitGasTemperature;
 
     @Column(name = "exit_gas_flow_rate", precision = 16, scale = 8)
-    private Double exitGasFlowRate;
+    private BigDecimal exitGasFlowRate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exit_gas_flow_uom_code", nullable = false)
@@ -100,22 +101,22 @@ public class ReleasePoint extends BaseAuditEntity {
     private Short statusYear;
 
     @Column(name = "fugitive_line_1_latitude", precision = 10, scale = 6)
-    private Double fugitiveLine1Latitude;
+    private BigDecimal fugitiveLine1Latitude;
 
     @Column(name = "fugitive_line_1_longitude", precision = 10, scale = 6)
-    private Double fugitiveLine1Longitude;
+    private BigDecimal fugitiveLine1Longitude;
 
     @Column(name = "fugitive_line_2_latitude", precision = 10, scale = 6)
-    private Double fugitiveLine2Latitude;
+    private BigDecimal fugitiveLine2Latitude;
 
     @Column(name = "fugitive_line_2_longitude", precision = 10, scale = 6)
-    private Double fugitiveLine2Longitude;
+    private BigDecimal fugitiveLine2Longitude;
 
     @Column(name = "latitude", precision = 10, scale = 6)
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Column(name = "longitude", precision = 10, scale = 6)
-    private Double longitude;
+    private BigDecimal longitude;
 
     @Column(name = "fugitive_height", precision = 3, scale = 0)
     private Long fugitiveHeight;
@@ -240,11 +241,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.description = description;
     }
 
-    public Double getStackHeight() {
+    public BigDecimal getStackHeight() {
         return this.stackHeight;
     }
 
-    public void setStackHeight(Double stackHeight) {
+    public void setStackHeight(BigDecimal stackHeight) {
         this.stackHeight = stackHeight;
     }
 
@@ -256,11 +257,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.stackHeightUomCode = stackHeightUomCode;
     }
 
-    public Double getStackDiameter() {
+    public BigDecimal getStackDiameter() {
         return this.stackDiameter;
     }
 
-    public void setStackDiameter(Double stackDiameter) {
+    public void setStackDiameter(BigDecimal stackDiameter) {
         this.stackDiameter = stackDiameter;
     }
 
@@ -272,11 +273,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.stackDiameterUomCode = stackDiameterUomCode;
     }
 
-    public Double getStackWidth() {
+    public BigDecimal getStackWidth() {
         return stackWidth;
     }
 
-    public void setStackWidth(Double stackWidth) {
+    public void setStackWidth(BigDecimal stackWidth) {
         this.stackWidth = stackWidth;
     }
 
@@ -288,11 +289,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.stackWidthUomCode = stackWidthUomCode;
     }
 
-    public Double getStackLength() {
+    public BigDecimal getStackLength() {
         return stackLength;
     }
 
-    public void setStackLength(Double stackLength) {
+    public void setStackLength(BigDecimal stackLength) {
         this.stackLength = stackLength;
     }
 
@@ -304,11 +305,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.stackLengthUomCode = stackLengthUomCode;
     }
 
-    public Double getExitGasVelocity() {
+    public BigDecimal getExitGasVelocity() {
         return this.exitGasVelocity;
     }
 
-    public void setExitGasVelocity(Double exitGasVelocity) {
+    public void setExitGasVelocity(BigDecimal exitGasVelocity) {
         this.exitGasVelocity = exitGasVelocity;
     }
 
@@ -328,11 +329,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.exitGasTemperature = exitGasTemperature;
     }
 
-    public Double getExitGasFlowRate() {
+    public BigDecimal getExitGasFlowRate() {
         return this.exitGasFlowRate;
     }
 
-    public void setExitGasFlowRate(Double exitGasFlowRate) {
+    public void setExitGasFlowRate(BigDecimal exitGasFlowRate) {
         this.exitGasFlowRate = exitGasFlowRate;
     }
 
@@ -352,51 +353,51 @@ public class ReleasePoint extends BaseAuditEntity {
         this.statusYear = statusYear;
     }
 
-    public Double getFugitiveLine1Latitude() {
+    public BigDecimal getFugitiveLine1Latitude() {
         return fugitiveLine1Latitude;
     }
 
-    public void setFugitiveLine1Latitude(Double fugitiveLine1Latitude) {
+    public void setFugitiveLine1Latitude(BigDecimal fugitiveLine1Latitude) {
         this.fugitiveLine1Latitude = fugitiveLine1Latitude;
     }
 
-    public Double getFugitiveLine1Longitude() {
+    public BigDecimal getFugitiveLine1Longitude() {
         return fugitiveLine1Longitude;
     }
 
-    public void setFugitiveLine1Longitude(Double fugitiveLine1Longitude) {
+    public void setFugitiveLine1Longitude(BigDecimal fugitiveLine1Longitude) {
         this.fugitiveLine1Longitude = fugitiveLine1Longitude;
     }
 
-    public Double getFugitiveLine2Latitude() {
+    public BigDecimal getFugitiveLine2Latitude() {
         return fugitiveLine2Latitude;
     }
 
-    public void setFugitiveLine2Latitude(Double fugitiveLine2Latitude) {
+    public void setFugitiveLine2Latitude(BigDecimal fugitiveLine2Latitude) {
         this.fugitiveLine2Latitude = fugitiveLine2Latitude;
     }
 
-    public Double getFugitiveLine2Longitude() {
+    public BigDecimal getFugitiveLine2Longitude() {
         return fugitiveLine2Longitude;
     }
 
-    public void setFugitiveLine2Longitude(Double fugitiveLine2Longitude) {
+    public void setFugitiveLine2Longitude(BigDecimal fugitiveLine2Longitude) {
         this.fugitiveLine2Longitude = fugitiveLine2Longitude;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return this.latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return this.longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 

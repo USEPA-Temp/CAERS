@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,14 +57,14 @@ public class ReportServiceImplTest extends BaseServiceTest {
             ReportSummary rs = new ReportSummary();
             rs.setCasId("ABC123-" + String.valueOf(x));
             rs.setFacilitySiteId(1L);
-            rs.setFugitiveTotal(new Double(x*10));
+            rs.setFugitiveTotal(BigDecimal.valueOf(x*10));
             rs.setId(1L);
             rs.setPollutantName("Test Pollutant-" + String.valueOf(x));
             rs.setPollutantType("HAP");
-            rs.setPreviousYearTotal(new Double(0));
+            rs.setPreviousYearTotal(BigDecimal.ZERO);
             rs.setReportYear(new Short("2019"));
-            rs.setStackTotal(new Double(x*20));
-            rs.setEmissionsTonsTotal(rs.getFugitiveTotal() + rs.getStackTotal());
+            rs.setStackTotal(BigDecimal.valueOf(x*20));
+            rs.setEmissionsTonsTotal(rs.getFugitiveTotal().add(rs.getStackTotal()));
             fullReportSummaryList.add(rs);
 
             ReportSummaryDto dto = new ReportSummaryDto();
@@ -105,8 +106,8 @@ public class ReportServiceImplTest extends BaseServiceTest {
 
         ReportSummaryDto dto = dtoList.get(0);
         assertEquals("ABC123-1", dto.getCasId());
-        assertEquals(new Double(10), dto.getFugitiveTotal());
-        assertEquals(new Double(30), dto.getEmissionsTonsTotal());
+        assertEquals(new BigDecimal(10), dto.getFugitiveTotal());
+        assertEquals(new BigDecimal(30), dto.getEmissionsTonsTotal());
     }
 
     @Test

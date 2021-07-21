@@ -3,6 +3,7 @@ package gov.epa.cef.web.service.validation.validator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -136,14 +137,14 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		p.setPollutantName("Nitrogen Oxides");
 		p.setPollutantCode("NOX");
 		cp.setPollutant(p);
-		cp.setPercentReduction(99.9);
+		cp.setPercentReduction(BigDecimal.valueOf(99.9));
 		testData.getPollutants().add(cp);
 		
 		assertTrue(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 		
 		cefContext = createContext();
-		cp.setPercentReduction(0.0);
+		cp.setPercentReduction(BigDecimal.ZERO);
 		
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -152,7 +153,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);
 		
 		cefContext = createContext();
-		cp.setPercentReduction(100.0);
+		cp.setPercentReduction(BigDecimal.valueOf(100.0));
 		
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -173,10 +174,10 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		Pollutant p2 = new Pollutant();
 		p2.setPollutantCode("CO2");
 		cp1.setPollutant(p1);
-		cp1.setPercentReduction(50.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
 		testData.getPollutants().add(cp1);
 		ControlPollutant cp2 = new ControlPollutant();
-		cp2.setPercentReduction(50.0);
+		cp2.setPercentReduction(BigDecimal.valueOf(50.0));
 		testData.getPollutants().add(cp2);
 		cp2.setPollutant(p1);
 		
@@ -197,7 +198,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		p2.setPollutantCode("CH4");
 		ControlPollutant cp2 = new ControlPollutant();
 		cp2.setPollutant(p2);
-		cp2.setPercentReduction(50.0);
+		cp2.setPercentReduction(BigDecimal.valueOf(50.0));
 		testData.getPollutants().add(cp2);
 		
 		assertTrue(this.validator.validate(cefContext, testData));
@@ -254,7 +255,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		CefValidatorContext cefContext = createContext();
 		Control testData = createBaseControl();
 		
-		testData.setPercentControl(0.5);
+		testData.setPercentControl(BigDecimal.valueOf(0.5));
 		
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -263,7 +264,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PERCENT_CONTROL.value()) && errorMap.get(ValidationField.CONTROL_PERCENT_CONTROL.value()).size() == 1);
 		
 		cefContext = createContext();
-		testData.setPercentControl(500.0);
+		testData.setPercentControl(BigDecimal.valueOf(500.0));
 		
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -278,7 +279,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		CefValidatorContext cefContext = createContext();
 		Control testData = createBaseControl();
 		
-		testData.setPercentControl(10.568);
+		testData.setPercentControl(BigDecimal.valueOf(10.568));
 		
 		assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -383,8 +384,8 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		p2.setPollutantCode("PM25-FIL");
 		cp1.setPollutant(p1);
 		cp2.setPollutant(p2);
-		cp1.setPercentReduction(50.0);
-		cp2.setPercentReduction(50.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		cp2.setPercentReduction(BigDecimal.valueOf(50.0));
 		testData.getPollutants().add(cp1);
 		testData.getPollutants().add(cp2);
 	
@@ -400,8 +401,8 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		p4.setPollutantCode("PM25-PRI");
 		cp3.setPollutant(p3);
 		cp4.setPollutant(p4);
-		cp3.setPercentReduction(80.0);
-		cp4.setPercentReduction(50.0);
+		cp3.setPercentReduction(BigDecimal.valueOf(80.0));
+		cp4.setPercentReduction(BigDecimal.valueOf(50.0));
 		testData.getPollutants().add(cp3);
 		testData.getPollutants().add(cp4);
 	
@@ -422,8 +423,8 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		p2.setPollutantCode("PM25-FIL");
 		cp1.setPollutant(p1);
 		cp2.setPollutant(p2);
-		cp1.setPercentReduction(50.0);
-		cp2.setPercentReduction(80.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		cp2.setPercentReduction(BigDecimal.valueOf(80.0));
 		testData.getPollutants().add(cp1);
 		testData.getPollutants().add(cp2);
 	
@@ -447,8 +448,8 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		p2.setPollutantCode("PM25-PRI");
 		cp1.setPollutant(p1);
 		cp2.setPollutant(p2);
-		cp1.setPercentReduction(50.0);
-		cp2.setPercentReduction(80.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		cp2.setPercentReduction(BigDecimal.valueOf(80.0));
 		testData.getPollutants().add(cp1);
 		testData.getPollutants().add(cp2);
 	
@@ -487,7 +488,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		result.setId(1L);
 		result.setIdentifier("test");
 		result.setStatusYear((short) 2020);
-		result.setPercentControl(50.0);
+		result.setPercentControl(BigDecimal.valueOf(50.0));
 		FacilitySite fs = new FacilitySite();
 		fs.getControls().add(result);
 		result.setFacilitySite(fs);
@@ -500,7 +501,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		Pollutant p1 = new Pollutant();
 		p1.setPollutantCode("CO2");
 		cp1.setPollutant(p1);
-		cp1.setPercentReduction(50.0);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
 		result.getPollutants().add(cp1);
 		
 		return result;

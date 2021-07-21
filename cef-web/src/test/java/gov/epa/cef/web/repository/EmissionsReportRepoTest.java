@@ -217,8 +217,8 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		rp.setReleasePointIdentifier("TestRP");
 		rp.setComments("Comments");
 		rp.setDescription("Test Description");
-		rp.setLatitude(1111.000000);
-		rp.setLongitude(1111.000000);
+		rp.setLatitude(BigDecimal.valueOf(1111.000000));
+		rp.setLongitude(BigDecimal.valueOf(1111.000000));
 
 		status = new OperatingStatusCode();
 		status.setCode("OP");
@@ -253,7 +253,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		ca.setControl(control);
 		ca.setId(1L);
 		ca.setSequenceNumber(1);
-		ca.setPercentApportionment(50.0);
+		ca.setPercentApportionment(BigDecimal.valueOf(50.0));
 
 		ControlPath cp = new ControlPath();
 		List<ControlAssignment> caSet = new ArrayList<>();

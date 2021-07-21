@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class OperatingDetailDto implements Serializable {
 
@@ -9,13 +10,13 @@ public class OperatingDetailDto implements Serializable {
     private Long id;
     private Long reportingPeriodId;
     private Short actualHoursPerPeriod;
-    private Double avgHoursPerDay;
-    private Double avgDaysPerWeek;
+    private BigDecimal avgHoursPerDay;
+    private BigDecimal avgDaysPerWeek;
     private Short avgWeeksPerPeriod;
-    private Double percentWinter;
-    private Double percentSpring;
-    private Double percentSummer;
-    private Double percentFall;
+    private BigDecimal percentWinter;
+    private BigDecimal percentSpring;
+    private BigDecimal percentSummer;
+    private BigDecimal percentFall;
 
     public Long getId() {
         return id;
@@ -41,19 +42,19 @@ public class OperatingDetailDto implements Serializable {
         this.actualHoursPerPeriod = actualHoursPerPeriod;
     }
 
-    public Double getAvgHoursPerDay() {
+    public BigDecimal getAvgHoursPerDay() {
         return avgHoursPerDay;
     }
 
-    public void setAvgHoursPerDay(Double avgHoursPerDay) {
+    public void setAvgHoursPerDay(BigDecimal avgHoursPerDay) {
         this.avgHoursPerDay = avgHoursPerDay;
     }
 
-    public Double getAvgDaysPerWeek() {
+    public BigDecimal getAvgDaysPerWeek() {
         return avgDaysPerWeek;
     }
 
-    public void setAvgDaysPerWeek(Double avgDaysPerWeek) {
+    public void setAvgDaysPerWeek(BigDecimal avgDaysPerWeek) {
         this.avgDaysPerWeek = avgDaysPerWeek;
     }
 
@@ -65,35 +66,35 @@ public class OperatingDetailDto implements Serializable {
         this.avgWeeksPerPeriod = avgWeeksPerPeriod;
     }
 
-    public Double getPercentWinter() {
+    public BigDecimal getPercentWinter() {
         return percentWinter;
     }
 
-    public void setPercentWinter(Double percentWinter) {
+    public void setPercentWinter(BigDecimal percentWinter) {
         this.percentWinter = percentWinter;
     }
 
-    public Double getPercentSpring() {
+    public BigDecimal getPercentSpring() {
         return percentSpring;
     }
 
-    public void setPercentSpring(Double percentSpring) {
+    public void setPercentSpring(BigDecimal percentSpring) {
         this.percentSpring = percentSpring;
     }
 
-    public Double getPercentSummer() {
+    public BigDecimal getPercentSummer() {
         return percentSummer;
     }
 
-    public void setPercentSummer(Double percentSummer) {
+    public void setPercentSummer(BigDecimal percentSummer) {
         this.percentSummer = percentSummer;
     }
 
-    public Double getPercentFall() {
+    public BigDecimal getPercentFall() {
         return percentFall;
     }
 
-    public void setPercentFall(Double percentFall) {
+    public void setPercentFall(BigDecimal percentFall) {
         this.percentFall = percentFall;
     }
 

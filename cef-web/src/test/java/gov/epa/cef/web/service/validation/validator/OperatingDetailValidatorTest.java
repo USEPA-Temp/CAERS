@@ -4,6 +4,7 @@ package gov.epa.cef.web.service.validation.validator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         OperatingDetail testData = createBaseOperatingDetail();
 
         cefContext = createContext();
-        testData.setAvgHoursPerDay(Double.valueOf(25));
+        testData.setAvgHoursPerDay(BigDecimal.valueOf(25));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -68,7 +69,7 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_HR_PER_DAY.value()) && errorMap.get(ValidationField.DETAIL_AVG_HR_PER_DAY.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setAvgHoursPerDay(Double.valueOf(0));
+        testData.setAvgHoursPerDay(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -82,13 +83,13 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         OperatingDetail testData = createBaseOperatingDetail();
-        testData.setAvgHoursPerDay(Double.valueOf(.1));
+        testData.setAvgHoursPerDay(BigDecimal.valueOf(0.1));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
-        testData.setAvgHoursPerDay(Double.valueOf(24));
+        testData.setAvgHoursPerDay(BigDecimal.valueOf(24));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -116,7 +117,7 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         OperatingDetail testData = createBaseOperatingDetail();
 
         cefContext = createContext();
-        testData.setAvgDaysPerWeek(Double.valueOf(8));
+        testData.setAvgDaysPerWeek(BigDecimal.valueOf(8));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -125,7 +126,7 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()) && errorMap.get(ValidationField.DETAIL_AVG_DAY_PER_WEEK.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setAvgDaysPerWeek(Double.valueOf(0));
+        testData.setAvgDaysPerWeek(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -139,13 +140,13 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         OperatingDetail testData = createBaseOperatingDetail();
-        testData.setAvgDaysPerWeek(Double.valueOf(.1));
+        testData.setAvgDaysPerWeek(BigDecimal.valueOf(0.1));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
-        testData.setAvgDaysPerWeek(Double.valueOf(7));
+        testData.setAvgDaysPerWeek(BigDecimal.valueOf(7));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -236,10 +237,10 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         OperatingDetail testData = createBaseOperatingDetail();
 
         cefContext = createContext();
-        testData.setPercentSpring(Double.valueOf(110));
-        testData.setPercentSummer(Double.valueOf(110));
-        testData.setPercentFall(Double.valueOf(110));
-        testData.setPercentWinter(Double.valueOf(110));
+        testData.setPercentSpring(BigDecimal.valueOf(110));
+        testData.setPercentSummer(BigDecimal.valueOf(110));
+        testData.setPercentFall(BigDecimal.valueOf(110));
+        testData.setPercentWinter(BigDecimal.valueOf(110));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 5);
@@ -254,10 +255,10 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         testData = createBaseOperatingDetail();
 
-        testData.setPercentSpring(Double.valueOf(-10));
-        testData.setPercentSummer(Double.valueOf(-10));
-        testData.setPercentFall(Double.valueOf(-10));
-        testData.setPercentWinter(Double.valueOf(-10));
+        testData.setPercentSpring(BigDecimal.valueOf(-10));
+        testData.setPercentSummer(BigDecimal.valueOf(-10));
+        testData.setPercentFall(BigDecimal.valueOf(-10));
+        testData.setPercentWinter(BigDecimal.valueOf(-10));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 5);
@@ -277,10 +278,10 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         OperatingDetail testData = createBaseOperatingDetail();
 
         cefContext = createContext();
-        testData.setPercentSpring(Double.valueOf(100));
-        testData.setPercentSummer(Double.valueOf(100));
-        testData.setPercentFall(Double.valueOf(100));
-        testData.setPercentWinter(Double.valueOf(100));
+        testData.setPercentSpring(BigDecimal.valueOf(100));
+        testData.setPercentSummer(BigDecimal.valueOf(100));
+        testData.setPercentFall(BigDecimal.valueOf(100));
+        testData.setPercentWinter(BigDecimal.valueOf(100));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -289,10 +290,10 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setPercentSpring(Double.valueOf(0));
-        testData.setPercentSummer(Double.valueOf(0));
-        testData.setPercentFall(Double.valueOf(0));
-        testData.setPercentWinter(Double.valueOf(0));
+        testData.setPercentSpring(BigDecimal.ZERO);
+        testData.setPercentSummer(BigDecimal.ZERO);
+        testData.setPercentFall(BigDecimal.ZERO);
+        testData.setPercentWinter(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -308,7 +309,7 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         OperatingDetail testData = createBaseOperatingDetail();
 
         cefContext = createContext();
-        testData.setPercentWinter(Double.valueOf(26));
+        testData.setPercentWinter(BigDecimal.valueOf(26));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -317,7 +318,7 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_PCT.value()) && errorMap.get(ValidationField.DETAIL_PCT.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setPercentWinter(Double.valueOf(24));
+        testData.setPercentWinter(BigDecimal.valueOf(24));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -331,13 +332,13 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         OperatingDetail testData = createBaseOperatingDetail();
-        testData.setPercentWinter(Double.valueOf(25.5));
+        testData.setPercentWinter(BigDecimal.valueOf(25.5));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
-        testData.setPercentWinter(Double.valueOf(24.5));
+        testData.setPercentWinter(BigDecimal.valueOf(24.5));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -404,10 +405,10 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         OperatingDetail testData = createBaseOperatingDetail();
-        testData.setPercentSpring(Double.valueOf(100));
-        testData.setPercentSummer(Double.valueOf(0));
-        testData.setPercentFall(Double.valueOf(0));
-        testData.setPercentWinter(Double.valueOf(0));
+        testData.setPercentSpring(BigDecimal.valueOf(100));
+        testData.setPercentSummer(BigDecimal.ZERO);
+        testData.setPercentFall(BigDecimal.ZERO);
+        testData.setPercentWinter(BigDecimal.ZERO);
         testData.setAvgWeeksPerPeriod(Short.valueOf("45"));
 
         assertFalse(this.validator.validate(cefContext, testData));
@@ -417,8 +418,8 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setPercentSpring(Double.valueOf(75));
-        testData.setPercentSummer(Double.valueOf(25));
+        testData.setPercentSpring(BigDecimal.valueOf(75));
+        testData.setPercentSummer(BigDecimal.valueOf(25));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -427,8 +428,8 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setPercentSpring(Double.valueOf(50));
-        testData.setPercentFall(Double.valueOf(25));
+        testData.setPercentSpring(BigDecimal.valueOf(50));
+        testData.setPercentFall(BigDecimal.valueOf(25));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -437,8 +438,8 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()) && errorMap.get(ValidationField.DETAIL_AVG_WEEK_PER_PERIOD.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setPercentSpring(Double.valueOf(25));
-        testData.setPercentWinter(Double.valueOf(25));
+        testData.setPercentSpring(BigDecimal.valueOf(25));
+        testData.setPercentWinter(BigDecimal.valueOf(25));
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -455,13 +456,13 @@ public class OperatingDetailValidatorTest extends BaseValidatorTest {
         period.getEmissionsProcess().setOperatingStatusCode(opStatCode);
         
         OperatingDetail result = new OperatingDetail();
-        result.setAvgHoursPerDay(Double.valueOf(5));
-        result.setAvgDaysPerWeek(Double.valueOf(5));
+        result.setAvgHoursPerDay(BigDecimal.valueOf(5));
+        result.setAvgDaysPerWeek(BigDecimal.valueOf(5));
         result.setActualHoursPerPeriod(Short.valueOf("5"));
-        result.setPercentSpring(Double.valueOf(25));
-        result.setPercentSummer(Double.valueOf(25));
-        result.setPercentFall(Double.valueOf(25));
-        result.setPercentWinter(Double.valueOf(25));
+        result.setPercentSpring(BigDecimal.valueOf(25));
+        result.setPercentSummer(BigDecimal.valueOf(25));
+        result.setPercentFall(BigDecimal.valueOf(25));
+        result.setPercentWinter(BigDecimal.valueOf(25));
         result.setAvgWeeksPerPeriod(Short.valueOf("5"));
         result.setReportingPeriod(period);
         period.getOperatingDetails().add(result);

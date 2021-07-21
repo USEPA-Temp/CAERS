@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -128,7 +129,8 @@ public class ControlValidator extends BaseValidator<Control> {
         }
 
         if (control.getPercentControl() != null) {
-        	if (control.getPercentControl() < 1 || control.getPercentControl() > 100) {
+        	// percent control must be > 1 or < 100
+        	if (control.getPercentControl().compareTo(BigDecimal.ONE) == -1 || control.getPercentControl().compareTo(BigDecimal.valueOf(100)) == 1) {
         		
 	            result = false;
 	            context.addFederalError(
@@ -161,7 +163,8 @@ public class ControlValidator extends BaseValidator<Control> {
                     cp.getPollutant().getPollutantName());
             }
 
-            if (cp.getPercentReduction() < 5 || cp.getPercentReduction() > 99.9) {
+            // percent reduction must be > 5 or < 99.9
+            if (cp.getPercentReduction().compareTo(BigDecimal.valueOf(5)) == -1 || cp.getPercentReduction().compareTo(BigDecimal.valueOf(99.9)) == 1) {
 
                 result = false;
                 context.addFederalError(
@@ -176,10 +179,10 @@ public class ControlValidator extends BaseValidator<Control> {
         		.filter(e -> e.getPollutant() != null)
         		.collect(Collectors.groupingBy(e -> e.getPollutant().getPollutantCode()));
         		
-        Double pm10Fil = cpMap.containsKey(PM10FIL) ? cpMap.get(PM10FIL).get(0).getPercentReduction() : null;
-        Double pm10Pri = cpMap.containsKey(PM10PRI) ? cpMap.get(PM10PRI).get(0).getPercentReduction() : null;
-        Double pm25Fil = cpMap.containsKey(PM25FIL) ? cpMap.get(PM25FIL).get(0).getPercentReduction() : null;
-        Double pm25Pri = cpMap.containsKey(PM25PRI) ? cpMap.get(PM25PRI).get(0).getPercentReduction() : null;
+        BigDecimal pm10Fil = cpMap.containsKey(PM10FIL) ? cpMap.get(PM10FIL).get(0).getPercentReduction() : null;
+        BigDecimal pm10Pri = cpMap.containsKey(PM10PRI) ? cpMap.get(PM10PRI).get(0).getPercentReduction() : null;
+        BigDecimal pm25Fil = cpMap.containsKey(PM25FIL) ? cpMap.get(PM25FIL).get(0).getPercentReduction() : null;
+        BigDecimal pm25Pri = cpMap.containsKey(PM25PRI) ? cpMap.get(PM25PRI).get(0).getPercentReduction() : null;
 
         for (List<ControlPollutant> pList : cpMap.values()) {
             if (pList.size() > 1) {
@@ -195,7 +198,8 @@ public class ControlValidator extends BaseValidator<Control> {
         }
         
         // PM2.5 Filterable should not exceed PM10 Filterable.
-        if (pm25Fil != null && pm10Fil != null && pm10Fil < pm25Fil) {
+        if (pm25Fil != null && pm10Fil != null
+        		&& pm10Fil.compareTo(pm25Fil) == -1) {
         	
         	result = false;
             context.addFederalError(
@@ -206,7 +210,8 @@ public class ControlValidator extends BaseValidator<Control> {
         }
         
         // PM2.5 Primary should not exceed PM10 Primary.
-        if (pm25Pri != null && pm10Pri != null && pm10Pri < pm25Pri) {
+        if (pm25Pri != null && pm10Pri != null
+        		&& pm10Pri.compareTo(pm25Pri) == -1) {
         	
         	result = false;
             context.addFederalError(
