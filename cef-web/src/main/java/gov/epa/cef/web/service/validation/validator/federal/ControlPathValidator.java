@@ -193,7 +193,7 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	        }
         	
         	Pattern pattern = Pattern.compile(ConstantUtils.REGEX_ONE_DECIMAL_PRECISION);
-        	Matcher matcher = pattern.matcher(controlPath.getPercentControl().toString());
+        	Matcher matcher = pattern.matcher(controlPath.getPercentControl().stripTrailingZeros().toPlainString());
             if(!matcher.matches()){
                 result = false;
                 context.addFederalError(

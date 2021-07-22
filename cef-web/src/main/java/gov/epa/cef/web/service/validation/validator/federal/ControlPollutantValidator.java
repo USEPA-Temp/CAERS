@@ -24,7 +24,7 @@ public class ControlPollutantValidator extends BaseValidator<ControlPollutant> {
         String regex = "^\\d{0,3}(\\.\\d{1})?$";
         Pattern pattern = Pattern.compile(regex);
         if(controlPollutant.getPercentReduction() != null) {
-            Matcher matcher = pattern.matcher(controlPollutant.getPercentReduction().toString());
+            Matcher matcher = pattern.matcher(controlPollutant.getPercentReduction().stripTrailingZeros().toPlainString());
             if(!matcher.matches()){
                 result = false;
                 context.addFederalError(
