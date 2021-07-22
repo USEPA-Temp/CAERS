@@ -140,7 +140,7 @@ public class ControlValidator extends BaseValidator<Control> {
         	}
         	
         	Pattern pattern = Pattern.compile(ConstantUtils.REGEX_ONE_DECIMAL_PRECISION);
-        	Matcher matcher = pattern.matcher(control.getPercentControl().toString());
+        	Matcher matcher = pattern.matcher(control.getPercentControl().stripTrailingZeros().toPlainString());
             if(!matcher.matches()){
             	
                 result = false;
