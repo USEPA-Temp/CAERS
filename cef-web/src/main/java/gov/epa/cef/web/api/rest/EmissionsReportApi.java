@@ -283,6 +283,8 @@ public class EmissionsReportApi {
     @GetMapping(value = "/export/{reportId}")
     public ResponseEntity<EmissionsReportBulkUploadDto> exportReport(
         @NotNull @PathVariable Long reportId) {
+    	
+    	this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
 
         EmissionsReportBulkUploadDto result =
             exportService.generateBulkUploadDto(reportId);
