@@ -25,20 +25,34 @@ describe('FORD TESTING SUITE', () => {
     });
   });
 
+
   Cypress.Commands.add('login', function(){
-    if(Cypress.env('environment') == 'dev') {
-      cy.visit(Cypress.env('dev_url'));
-    } else if (Cypress.env('environment') == 'test') {
-      cy.visit(Cypress.env('test_url'));
-    } else if (Cypress.env('environment') == 'prod') {
-      cy.visit(Cypress.env('prod_url'));
-    }
 
-    cy.get('#LoginUserId').type(this.user.userId);
-    cy.get('#LoginPassword').type(this.user.password);
+    // get correct endpoints for environment
+    this.endpoints = Cypress.env(Cypress.env('environment'));
 
-    cy.get('#LogInButton').click();  
-    cy.get(':nth-child(1) > .mycdx-role > .handoff').click();
+    // login to CDX via request so that we don't have to deal with anything cross domain
+    cy.request('POST', this.endpoints.login, {
+      LoginUserId: this.user.userId,
+      LoginPassword: this.user.password,
+    }).then((response) => {
+      // request handoff to app
+      cy.request('GET', this.endpoints.handoff).then((response2) => {
+        // parse the response from the handoff request for the NAAS handoff info
+        const $html = Cypress.$(response2.body);
+        const token = $html.find('input[name=Token]').val();
+        const data = $html.find('input[name=CDX_DATA]').val();
+        // visit the app with handoff information to handoff
+        // going directly into the app to prevent an error that was occurring using the /handoff url
+        cy.visit({
+          url: this.endpoints.app,
+          qs: {
+            CDX_DATA: data,
+            Token: token,
+          }
+        });
+      });
+    });
   });
 
 
@@ -177,6 +191,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#unitCommentsInput').clear();
       cy.get('#unitCommentsInput').type('Cypress Test Comment');
       cy.get('.btn-success').click();
+      cy.wait(500);
     });
 
     it('Create Process', function() {
@@ -273,6 +288,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#rpHeatContentValueInput').type('2');
       cy.get('#rpCommentsInput').click();
       cy.get('.card-body > :nth-child(1) > .float-right > .btn-success').click();
+      cy.wait(3000);
     });
 
     it('Create USEPA Emission', function() {
@@ -326,10 +342,11 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#emissionCommentsInput').click();
       cy.get('#emissionCommentsInput').type('Cypress CEMS Emission');
       cy.get('#saveEmissionsBtn').click();
+      cy.wait(3000);
     });
 
     it('Create SLT Emission', function() {
-      cy.wait(3000).get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
+      cy.get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').wait(1000).type('co');
       cy.get('#ngb-typeahead-4-4').click();
@@ -395,6 +412,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#longitude').clear();
       cy.get('#longitude').type('-84.4011');
       cy.get('.btn-success').click();
+      cy.wait(3000);
     });
 
     it('Create Control Device', function() {
@@ -454,6 +472,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#controlCommentsInput').clear();
       cy.get('#controlCommentsInput').type('Comments about the control device.');
       cy.get('.btn-success').click();
+      cy.wait(3000);
     });
 
     it('Create Control Path', function() {
@@ -525,10 +544,11 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#percentInput').clear();
       cy.get('#percentInput').type('50');
       cy.get('.modal-footer > .btn-success').click();
+      cy.wait(3000);
     });
 
     it('Create Fugitive Release Point Apportionment', function() {
-      cy.wait(3000).get('[data-cy="select emissionUnitEmissions Units"] > span').click();
+      cy.wait(5000).get('[data-cy="select emissionUnitEmissions Units"] > span').click();
       cy.get('[data-cy="emissions unitCypress"]').click();
       cy.get('[data-cy="emissions processCypress 1"]').click();
       cy.get('#tblAddReleasePointApptBtn > .ng-fa-icon > .svg-inline--fa').click().wait(5000);
@@ -652,6 +672,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('[data-cy="select controlControl Devices"] > span').click();
       cy.get('[aria-label="delete control deviceCypress Control 1"]').click();
       cy.get('#modalConfirmBtn').click();
+      cy.wait(3000);
     });
 
     it('Delete Report', function() {
@@ -664,4 +685,3 @@ describe('FORD TESTING SUITE', () => {
     });
   });
 })
-
