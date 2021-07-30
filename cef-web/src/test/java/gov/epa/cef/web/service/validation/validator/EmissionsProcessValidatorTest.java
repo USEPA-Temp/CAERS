@@ -28,6 +28,7 @@ import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
@@ -132,15 +133,22 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       erList.add(er1);
       erList.add(er2);
       
+      OperatingStatusCode os = new OperatingStatusCode();
+      os.setCode("OP");
+      
       EmissionsProcess p1 = new EmissionsProcess();
       p1.setEmissionsProcessIdentifier("Boiler 001");
       p1.setId(2L);
+      p1.setOperatingStatusCode(os);
+      p1.setStatusYear((short) 2017);
       
       List<Emission> eList = new ArrayList<Emission>();
       Emission previousE1 = new Emission();
       Emission previousE2 = new Emission();
       previousE1.setPollutant(pollutant);
       previousE1.setTotalEmissions(BigDecimal.valueOf(130.00));
+      previousE2.setPollutant(pollutant);
+      previousE2.setTotalEmissions(BigDecimal.valueOf(10.00));
       eList.add(previousE1);
       eList.add(previousE2);
 	    
@@ -380,7 +388,6 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         EmissionsProcess testData = createBaseEmissionsProcess();
         EmissionsProcess ep1 = createBaseEmissionsProcess();
-
         
         AircraftEngineTypeCode aircraft = new AircraftEngineTypeCode();
         aircraft.setCode("1322");
@@ -548,11 +555,58 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
     
+    @Test
+    public void previousOpYearCurrentShutdownYear() {
+    	// pass when previous and current op status is OP
+    	CefValidatorContext cefContext = createContext();
+    	EmissionsProcess testData = createBaseEmissionsProcess();
+    	testData.setStatusYear((short) 2017);
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    	
+    	// fail when previous op status is OP, current op status is PS/TS, and both have same status years
+    	cefContext = createContext();
+    	testData.getOperatingStatusCode().setCode("PS");
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	// fail when previous op status is OP, current op status is PS/TS, and current op status year is prior to previous year
+    	cefContext = createContext();
+    	testData.setStatusYear((short) 2016);
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+    	
+    	Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+    	assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_YEAR.value()) && errorMap.get(ValidationField.PROCESS_STATUS_YEAR.value()).size() == 1);
+    	
+    	// pass when facility source type code is landfill, QA is not checked if it is landfill
+    	cefContext = createContext();
+    	testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("104");
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    	
+    	// pass when previous op status is OP, current op status is PS/TS, and current op status year is after previous year
+    	cefContext = createContext();
+    	testData.setStatusYear((short) 2020);
+    	testData.getOperatingStatusCode().setCode("PS");
+    	testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("137");
+    	
+    	assertTrue(this.validator.validate(cefContext, testData));
+    	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
         MasterFacilityRecord mfr = new MasterFacilityRecord();
         mfr.setId(1L);
+        FacilitySourceTypeCode fstc = new FacilitySourceTypeCode();
+        fstc.setCode("137");
+        mfr.setFacilitySourceTypeCode(fstc);
         
         EmissionsReport report = new EmissionsReport();
         report.setYear(new Short("2019"));
@@ -604,6 +658,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rpa2.setPercent(BigDecimal.valueOf(50));
         rpa1.setId(1L);
         rpa2.setId(2L);
+        result.setStatusYear((short) 2021);
         result.getReleasePointAppts().add(rpa1);
         result.getReleasePointAppts().add(rpa2);
         result.setId(1L);

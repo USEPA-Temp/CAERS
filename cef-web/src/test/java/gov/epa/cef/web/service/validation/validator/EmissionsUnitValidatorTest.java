@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,6 +39,8 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -51,6 +54,12 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     
     @Mock
 	private PointSourceSccCodeRepository sccRepo;
+    
+    @Mock
+    private EmissionsReportRepository reportRepo;
+    
+    @Mock
+    private EmissionsUnitRepository unitRepo;
     
     @Before
     public void init(){
@@ -74,6 +83,35 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     	when(sccRepo.findById("10200302")).thenReturn(Optional.of(scc1));
     	when(sccRepo.findById("10200301")).thenReturn(Optional.of(scc2));
     	when(sccRepo.findById("30503506")).thenReturn(Optional.of(scc3));
+    	
+    	List<EmissionsReport> erList = new ArrayList<EmissionsReport>();
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(1L);
+        EmissionsReport er1 = new EmissionsReport();
+        EmissionsReport er2 = new EmissionsReport();
+        er1.setId(1L);
+        er2.setId(2L);
+        er1.setYear((short) 2018);
+        er2.setYear((short) 2020);
+        er1.setEisProgramId("1");
+        er2.setEisProgramId("1");
+        er1.setMasterFacilityRecord(mfr);
+        er2.setMasterFacilityRecord(mfr);
+        erList.add(er1);
+        erList.add(er2);
+        
+        OperatingStatusCode os = new OperatingStatusCode();
+        os.setCode("OP");
+        
+        EmissionsUnit eu = new EmissionsUnit();
+        eu.setId(1L);
+        eu.setOperatingStatusCode(os);
+        eu.setStatusYear((short)2018);
+        eu.setUnitIdentifier("Boiler 001");
+        
+    	when(reportRepo.findByMasterFacilityRecordId(1L)).thenReturn(erList);
+    	when(unitRepo.retrieveByIdentifierFacilityYear(
+          		"Boiler 001",1L,(short) 2018)).thenReturn(Collections.singletonList(eu));
     }
 
     @Test
@@ -88,7 +126,8 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
     
     @Test
     public void simpleValidateOperationStatusTypeFailTest() {
-
+    	// fails when operating status is not OP and status year is null
+    	// fails when current year operating status for PS/TS is null and previous year status is OP 
         CefValidatorContext cefContext = createContext();
         EmissionsUnit testData = createBaseEmissionsUnit();
         
@@ -98,7 +137,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         testData.setStatusYear(null);
         
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
         
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
@@ -944,6 +983,55 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_PROCESS.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_PROCESS.value()).size() == 1);
 	}
+	
+	@Test
+    public void previousOpYearCurrentShutdownYear() {
+		// pass when previous and current op status is OP
+        CefValidatorContext cefContext = createContext();
+        EmissionsUnit testData = createBaseEmissionsUnit();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        // pass when previous op status is OP, current op status is PS/TS, and current op status year is after previous year
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+        
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+		 
+        // fail when previous op status is OP, current op status is PS/TS, and current op status year is prior to previous year
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+        testData.setStatusYear((short) 2000);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()).size() == 1);
+        
+        // fail when previous op status is OP, current op status is PS/TS, and both have same status years
+        // fail PS unit not copied forward warning.
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("PS");
+        testData.setStatusYear((short) 2018);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        
+        // pass when facility source type code is landfill, QA is not checked if it is landfill
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+        testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("104");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+		 
+    }
     
 
     private EmissionsUnit createBaseEmissionsUnit() {
@@ -963,9 +1051,12 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         stc.setCode("137");
         
         MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(1L);
         mfr.setFacilitySourceTypeCode(stc);
         
         EmissionsReport er = new EmissionsReport();
+        er.setId(1L);
+        er.setYear(new Short("2019"));
         er.setMasterFacilityRecord(mfr);
         
         FacilitySite facility = new FacilitySite();
@@ -973,8 +1064,9 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         facility.setOperatingStatusCode(opStatCode);
         facility.setEmissionsReport(er);
         
-        result.setStatusYear((short) 2000);
+        result.setStatusYear((short) 2020);
         result.setOperatingStatusCode(opStatCode);
+        result.setUnitIdentifier("Boiler 001");
         result.setUnitTypeCode(utc);
         result.setUnitOfMeasureCode(capUom);
         result.setFacilitySite(facility);
