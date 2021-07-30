@@ -293,7 +293,8 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			    	if (!isProcessOperating
 			    			&& ConstantUtils.STATUS_OPERATING.contentEquals(previousProcess.getOperatingStatusCode().getCode())
 			    			&& (emissionsProcess.getStatusYear() == null || emissionsProcess.getStatusYear() <= previousProcess.getStatusYear())
-			    			&& !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(currentReport.getMasterFacilityRecord().getFacilitySourceTypeCode().getCode())) {
+			    			&& (currentReport.getMasterFacilityRecord().getFacilitySourceTypeCode() == null 
+			    			|| !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(currentReport.getMasterFacilityRecord().getFacilitySourceTypeCode().getCode()))) {
 
 			    		result = false;
         				context.addFederalError(
