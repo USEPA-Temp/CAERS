@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
-import java.io.Serializable; 
+import java.io.Serializable;
+import java.math.BigDecimal; 
 
 public class ReleasePointApptDto implements Serializable{
 
@@ -25,7 +26,7 @@ public class ReleasePointApptDto implements Serializable{
 	
 	private ControlPathDto controlPath;
     
-    private Double percent;
+    private BigDecimal percent;
 
     public Long getId() {
         return id;
@@ -67,11 +68,11 @@ public class ReleasePointApptDto implements Serializable{
         this.releasePointTypeCode = releasePointTypeCode;
     }
 
-    public Double getPercent() {
+    public BigDecimal getPercent() {
         return percent;
     }
 
-    public void setPercent(Double percent) {
+    public void setPercent(BigDecimal percent) {
         this.percent = percent;
     }
 

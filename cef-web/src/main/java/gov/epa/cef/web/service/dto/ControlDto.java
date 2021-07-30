@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class ControlDto implements Serializable {
     private String description;
     private String upgradeDescription;
     private Short numberOperatingMonths;
-    private Double percentCapture;
-    private Double percentControl;
+    private BigDecimal percentCapture;
+    private BigDecimal percentControl;
     private LocalDate startDate;
     private LocalDate upgradeDate;
     private LocalDate endDate;
@@ -65,19 +66,19 @@ public class ControlDto implements Serializable {
         this.description = description;
     }
 
-    public Double getPercentCapture() {
+    public BigDecimal getPercentCapture() {
         return percentCapture;
     }
 
-    public void setPercentCapture(Double percentCapture) {
+    public void setPercentCapture(BigDecimal percentCapture) {
         this.percentCapture = percentCapture;
     }
 
-    public Double getPercentControl() {
+    public BigDecimal getPercentControl() {
         return percentControl;
     }
 
-    public void setPercentControl(Double percentControl) {
+    public void setPercentControl(BigDecimal percentControl) {
         this.percentControl = percentControl;
     }
 

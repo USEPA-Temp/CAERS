@@ -1,5 +1,6 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +43,10 @@ public class Control extends BaseAuditEntity {
     private String upgradeDescription;
 
     @Column(name = "percent_capture", precision = 4, scale = 1)
-    private Double percentCapture;
+    private BigDecimal percentCapture;
 
     @Column(name = "percent_control", precision = 6, scale = 3)
-    private Double percentControl;
+    private BigDecimal percentControl;
     
     @Column(name = "number_operating_months", precision = 2, scale = 0)
     private Short numberOperatingMonths;
@@ -134,19 +135,19 @@ public class Control extends BaseAuditEntity {
         this.description = description;
     }
 
-    public Double getPercentCapture() {
+    public BigDecimal getPercentCapture() {
         return percentCapture;
     }
 
-    public void setPercentCapture(Double percentCapture) {
+    public void setPercentCapture(BigDecimal percentCapture) {
         this.percentCapture = percentCapture;
     }
 
-    public Double getPercentControl() {
+    public BigDecimal getPercentControl() {
         return percentControl;
     }
 
-    public void setPercentControl(Double percentControl) {
+    public void setPercentControl(BigDecimal percentControl) {
         this.percentControl = percentControl;
     }
 

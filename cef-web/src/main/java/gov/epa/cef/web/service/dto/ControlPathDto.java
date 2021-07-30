@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -11,7 +12,7 @@ public class ControlPathDto implements Serializable {
     private Long id;
     private String description;
     private String pathId;
-    private Double percentControl;
+    private BigDecimal percentControl;
     private List<ControlAssignmentDto> assignments;
     private Long facilitySiteId;
     private List<ControlPathPollutantDto> pollutants;
@@ -48,11 +49,11 @@ public class ControlPathDto implements Serializable {
 		this.pathId = pathId;
 	}
 	
-	public Double getPercentControl() {
+	public BigDecimal getPercentControl() {
         return percentControl;
     }
 
-    public void setPercentControl(Double percentControl) {
+    public void setPercentControl(BigDecimal percentControl) {
         this.percentControl = percentControl;
     }
 	

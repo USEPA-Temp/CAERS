@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class ControlPollutantDto implements Serializable {
 
@@ -9,7 +10,7 @@ public class ControlPollutantDto implements Serializable {
     private Long id;
     private Long controlId;
     private PollutantDto pollutant;
-    private Double percentReduction;
+    private BigDecimal percentReduction;
     private Long facilitySiteId;
     
     public Long getId() {
@@ -28,11 +29,11 @@ public class ControlPollutantDto implements Serializable {
         this.pollutant = pollutant;
     }
 
-    public Double getPercentReduction() {
+    public BigDecimal getPercentReduction() {
         return percentReduction;
     }
 
-    public void setPercentReduction(Double percentReduction) {
+    public void setPercentReduction(BigDecimal percentReduction) {
         this.percentReduction = percentReduction;
     }
 

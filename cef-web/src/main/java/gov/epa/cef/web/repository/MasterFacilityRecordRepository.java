@@ -20,6 +20,14 @@ public interface MasterFacilityRecordRepository extends JpaRepository<MasterFaci
      * @return
      */
     Optional<MasterFacilityRecord> findByEisProgramId(String eisProgramId);
+    
+    /**
+     * Retrieve facility by Program System Code and Agency Facility Id
+     * @param programSystemCode
+     * @param agencyFacilityId
+     * @return
+     */
+    Optional<MasterFacilityRecord> findByProgramSystemCodeCodeAndAgencyFacilityId(String programSystemCode, String agencyFacilityId);
 
     /***
      * Retrieve the common form facilities based on a given state code

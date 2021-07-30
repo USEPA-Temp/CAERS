@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class ReportSummaryDto implements Serializable {
 
@@ -10,14 +11,14 @@ public class ReportSummaryDto implements Serializable {
     private String pollutantCode;
     private String pollutantName;
     private String pollutantType;
-    private Double fugitiveTotal;
-    private Double stackTotal;
-    private Double fugitiveTonsTotal;
-    private Double stackTonsTotal;
-    private Double emissionsTonsTotal;
-    private Double emissionsTotal;
-    private Double previousYearTotal;
-    private Double previousYearTonsTotal;
+    private BigDecimal fugitiveTotal;
+    private BigDecimal stackTotal;
+    private BigDecimal fugitiveTonsTotal;
+    private BigDecimal stackTonsTotal;
+    private BigDecimal emissionsTonsTotal;
+    private BigDecimal emissionsTotal;
+    private BigDecimal previousYearTotal;
+    private BigDecimal previousYearTonsTotal;
     private Short reportYear;
     private Long facilitySiteId;
     private Short previousYear;
@@ -57,57 +58,57 @@ public class ReportSummaryDto implements Serializable {
         this.pollutantType = pollutantType;
     }
     
-    public Double getFugitiveTotal() {
+    public BigDecimal getFugitiveTotal() {
         return this.fugitiveTotal;
     }
-    public void setFugitiveTotal(Double fugitiveTotal) {
+    public void setFugitiveTotal(BigDecimal fugitiveTotal) {
         this.fugitiveTotal = fugitiveTotal;
     }
     
-    public Double getStackTotal() {
+    public BigDecimal getStackTotal() {
         return this.stackTotal;
     }
-    public void setStackTotal(Double stackTotal) {
+    public void setStackTotal(BigDecimal stackTotal) {
         this.stackTotal = stackTotal;
     }
     
-	public Double getFugitiveTonsTotal() {
+	public BigDecimal getFugitiveTonsTotal() {
 		return fugitiveTonsTotal;
 	}
-	public void setFugitiveTonsTotal(Double fugitiveTonsTotal) {
+	public void setFugitiveTonsTotal(BigDecimal fugitiveTonsTotal) {
 		this.fugitiveTonsTotal = fugitiveTonsTotal;
 	}
-	public Double getStackTonsTotal() {
+	public BigDecimal getStackTonsTotal() {
 		return stackTonsTotal;
 	}
-	public void setStackTonsTotal(Double stackTonsTotal) {
+	public void setStackTonsTotal(BigDecimal stackTonsTotal) {
 		this.stackTonsTotal = stackTonsTotal;
 	}
     
-    public Double getEmissionsTonsTotal() {
+    public BigDecimal getEmissionsTonsTotal() {
         return this.emissionsTonsTotal;
     }
-    public void setEmissionsTonsTotal(Double emissionsTonsTotal) {
+    public void setEmissionsTonsTotal(BigDecimal emissionsTonsTotal) {
         this.emissionsTonsTotal = emissionsTonsTotal;
     }
     
-    public Double getEmissionsTotal() {
+    public BigDecimal getEmissionsTotal() {
 		return emissionsTotal;
 	}
-	public void setEmissionsTotal(Double emissionsTotal) {
+	public void setEmissionsTotal(BigDecimal emissionsTotal) {
 		this.emissionsTotal = emissionsTotal;
 	}
-	public Double getPreviousYearTotal() {
+	public BigDecimal getPreviousYearTotal() {
         return this.previousYearTotal;
     }
-    public void setPreviousYearTotal(Double previousYearTotal) {
+    public void setPreviousYearTotal(BigDecimal previousYearTotal) {
         this.previousYearTotal = previousYearTotal;
     }
     
-    public Double getPreviousYearTonsTotal() {
+    public BigDecimal getPreviousYearTonsTotal() {
 		return previousYearTonsTotal;
 	}
-	public void setPreviousYearTonsTotal(Double previousYearTonsTotal) {
+	public void setPreviousYearTonsTotal(BigDecimal previousYearTonsTotal) {
 		this.previousYearTonsTotal = previousYearTonsTotal;
 	}
 	public Short getReportYear() {

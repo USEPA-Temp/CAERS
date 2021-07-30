@@ -377,9 +377,15 @@ public class CersXmlServiceImpl implements CersXmlService {
         }
 
         // average percent control
-        ca.setPercentControlApproachEffectiveness(BigDecimal.valueOf(controls.stream()
+        List<Control> cList = controls.stream()
                 .filter(c -> c.getPercentControl() != null)
-                .collect(Collectors.averagingDouble(Control::getPercentControl))).setScale(3, RoundingMode.HALF_UP));
+                .collect(Collectors.toList());
+        BigDecimal totalPercentControlApproachEff = cList.stream()
+        		.map(Control::getPercentControl)
+                .reduce(BigDecimal.ZERO,BigDecimal::add);
+        if (!cList.isEmpty()) {
+        	ca.setPercentControlApproachEffectiveness(totalPercentControlApproachEff.divide(BigDecimal.valueOf(cList.size())).setScale(3, RoundingMode.HALF_UP));
+        }
 
         // make description a list of control measure code descriptions
         ca.setControlApproachDescription(controls.stream()
@@ -409,8 +415,10 @@ public class CersXmlServiceImpl implements CersXmlService {
         for (Entry<String, List<ControlPollutant>> entry : pollutantMap.entrySet()) {
 
             ControlPollutantDataType cp = new ControlPollutantDataType();
-            cp.setPercentControlMeasuresReductionEfficiency(BigDecimal.valueOf((entry.getValue().stream()
-                    .collect(Collectors.averagingDouble(ControlPollutant::getPercentReduction)))).setScale(3, RoundingMode.HALF_UP));
+            BigDecimal totalPercentControlRedEff = entry.getValue().stream()
+                    .map(ControlPollutant::getPercentReduction)
+                    .reduce(BigDecimal.ZERO,BigDecimal::add);
+            cp.setPercentControlMeasuresReductionEfficiency(totalPercentControlRedEff.divide(BigDecimal.valueOf(entry.getValue().size())).setScale(3, RoundingMode.HALF_UP));
             cp.setPollutantCode(entry.getKey());
             ca.getControlPollutant().add(cp);
         }

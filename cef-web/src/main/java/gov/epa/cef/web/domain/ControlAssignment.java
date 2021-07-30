@@ -1,5 +1,7 @@
 package gov.epa.cef.web.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,7 +33,7 @@ public class ControlAssignment extends BaseAuditEntity {
     private Integer sequenceNumber;
     
     @Column(name = "percent_apportionment", nullable = false, precision = 5, scale = 2)
-    private Double percentApportionment;
+    private BigDecimal percentApportionment;
 
     
     /**
@@ -86,11 +88,11 @@ public class ControlAssignment extends BaseAuditEntity {
         this.sequenceNumber = sequenceNumber;
     }
 
-    public Double getPercentApportionment() {
+    public BigDecimal getPercentApportionment() {
         return this.percentApportionment;
     }
 
-    public void setPercentApportionment(Double percentApportionment) {
+    public void setPercentApportionment(BigDecimal percentApportionment) {
         this.percentApportionment = percentApportionment;
     }
     

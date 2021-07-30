@@ -17,10 +17,13 @@ import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.EmissionRepository;
+import gov.epa.cef.web.repository.EmissionsProcessRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.ValidationResult;
@@ -51,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,6 +79,16 @@ public class EmissionsReportValidationServiceImplTest {
     
     @Spy
     private ControlAssignmentRepository assignmentRepo;
+    
+    @Spy
+    private EmissionsReportRepository reportRepo;
+    
+    @Spy
+    private EmissionsProcessRepository processRepo;
+    
+    @Spy
+    @InjectMocks
+    private EmissionsProcessValidator processValidator;
     
     @Spy
     @InjectMocks
@@ -118,6 +132,38 @@ public class EmissionsReportValidationServiceImplTest {
         ca.setControlPathChild(cp1);
         caList.add(ca);
         
+        List<EmissionsReport> erList = new ArrayList<EmissionsReport>();
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(1L);
+        EmissionsReport er1 = new EmissionsReport();
+        er1.setId(1L);
+        er1.setYear((short) 2018);
+        er1.setEisProgramId("1");
+        er1.setMasterFacilityRecord(mfr);
+        erList.add(er1);
+        
+        OperatingStatusCode os = new OperatingStatusCode();
+        os.setCode("PS");
+        
+        EmissionsProcess p1 = new EmissionsProcess();
+        p1.setEmissionsProcessIdentifier("Boiler 001");
+        p1.setId(2L);
+        p1.setOperatingStatusCode(os);
+        p1.setStatusYear((short) 2017);
+        
+        Pollutant pollutant = new Pollutant();
+    	pollutant.setPollutantCode("NO3");
+        
+        List<Emission> eList2 = new ArrayList<Emission>();
+        Emission previousE1 = new Emission();
+        previousE1.setPollutant(pollutant);
+        previousE1.setTotalEmissions(BigDecimal.valueOf(130.00));
+        eList2.add(previousE1);
+        
+        when(reportRepo.findByMasterFacilityRecordId(1L)).thenReturn(erList);
+        when(processRepo.retrieveByIdentifierParentFacilityYear(
+          		"Boiler 001","test_unit",1L,(short) 2018)).thenReturn(Collections.singletonList(p1));
+        when(emissionRepo.findAllByProcessIdReportId(2L,1L)).thenReturn(eList2);
         when(emissionRepo.findAllByReportId(1L)).thenReturn(eList);
         when(historyRepo.findByEmissionsReportIdOrderByActionDate(1L)).thenReturn(raList);
         when(assignmentRepo.findByControlPathChildId(1L)).thenReturn(caList);
@@ -138,7 +184,7 @@ public class EmissionsReportValidationServiceImplTest {
         .thenReturn(new ControlPollutantValidator());
 
         when(validationRegistry.findOneByType(EmissionsProcessValidator.class))
-            .thenReturn(new EmissionsProcessValidator());
+            .thenReturn(processValidator);
 
         when(validationRegistry.findOneByType(ReportingPeriodValidator.class))
             .thenReturn(new ReportingPeriodValidator());
@@ -171,6 +217,7 @@ public class EmissionsReportValidationServiceImplTest {
         report.setId(1L);
         report.setYear((short) 2020);
         MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(1L);
         mfr.setEisProgramId("123");
         report.setMasterFacilityRecord(mfr);
         FacilitySite facilitySite = new FacilitySite();
@@ -186,7 +233,7 @@ public class EmissionsReportValidationServiceImplTest {
         Control control = new Control(); 
         control.setIdentifier("control_Identifier");
         control.setOperatingStatusCode(opStatCode);
-        control.setPercentControl(50.0);
+        control.setPercentControl(new BigDecimal(50.0));
         control.setFacilitySite(facilitySite);
         controlPath.setFacilitySite(facilitySite);
         facilitySite.getControls().add(control);

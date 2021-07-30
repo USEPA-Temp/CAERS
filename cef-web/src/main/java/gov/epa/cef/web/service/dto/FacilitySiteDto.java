@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class FacilitySiteDto implements Serializable {
@@ -29,8 +30,8 @@ public class FacilitySiteDto implements Serializable {
     private String mailingCity;
     private FipsStateCodeDto mailingStateCode;
     private String mailingPostalCode;
-    private Double latitude;
-    private Double longitude;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     private String tribalCodeDesc;
     private String comments;
     private Set<FacilityNAICSDto> facilityNAICS;
@@ -179,19 +180,19 @@ public class FacilitySiteDto implements Serializable {
         this.postalCode = postalCode;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 

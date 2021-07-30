@@ -2,12 +2,15 @@ package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReleasePointAppt;
 import gov.epa.cef.web.domain.ReportingPeriod;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
@@ -17,9 +20,11 @@ import gov.epa.cef.web.service.validation.ValidationRegistry;
 import gov.epa.cef.web.service.validation.validator.BaseValidator;
 import gov.epa.cef.web.util.ConstantUtils;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,6 +41,12 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
     @Autowired
     private PointSourceSccCodeRepository sccRepo;
+    
+    @Autowired
+	private EmissionsReportRepository reportRepo;
+    
+    @Autowired
+	private EmissionsUnitRepository unitRepo;
 
     @Override
     public void compose(FluentValidator validator,
@@ -123,6 +134,43 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	        					createEmissionsProcessValidationDetails(ep));
             		}
                 }
+            }
+            
+            if (!ConstantUtils.STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+	            EmissionsReport currentReport = emissionsUnit.getFacilitySite().getEmissionsReport();
+
+				List<EmissionsReport> erList = reportRepo.findByMasterFacilityRecordId(currentReport.getMasterFacilityRecord().getId()).stream()
+						.filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
+						.sorted(Comparator.comparing(EmissionsReport::getYear))
+						.collect(Collectors.toList());
+
+				if (!erList.isEmpty()) {
+					Short previousReportYr = erList.get(erList.size()-1).getYear();
+
+					List<EmissionsUnit> previousUnits = unitRepo.retrieveByIdentifierFacilityYear(
+							emissionsUnit.getUnitIdentifier(), 
+	    			        currentReport.getMasterFacilityRecord().getId(), 
+	    			        previousReportYr);
+
+					if (!previousUnits.isEmpty()) {
+	    			    for (EmissionsUnit previousUnit : previousUnits) {
+
+	    			    	// check PS/TS status year of current report to OP status year of previous report
+	    			    	if (ConstantUtils.STATUS_OPERATING.contentEquals(previousUnit.getOperatingStatusCode().getCode())
+	    			    			&& (emissionsUnit.getStatusYear() == null || emissionsUnit.getStatusYear() <= previousUnit.getStatusYear())) {
+	    			    		
+	    			    		result = false;
+	            				context.addFederalError(
+	            						ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value(),
+	            						"emissionsUnit.statusYear.invalid",
+	            						createValidationDetails(emissionsUnit),
+	            						emissionsUnit.getOperatingStatusCode().getDescription(),
+	            						emissionsUnit.getStatusYear() != null ? emissionsUnit.getStatusYear().toString(): emissionsUnit.getStatusYear());
+	    			    		
+	    			    	}
+	    			    }
+					}
+				}
             }
         }
         
@@ -219,7 +267,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
             // Design capacity range
             if ((emissionsUnit.getDesignCapacity() != null)
-                && (emissionsUnit.getDesignCapacity().doubleValue() < 0.01 || emissionsUnit.getDesignCapacity().doubleValue() > 100000000)) {
+                && (emissionsUnit.getDesignCapacity().compareTo(BigDecimal.valueOf(0.01)) == -1 || emissionsUnit.getDesignCapacity().compareTo(BigDecimal.valueOf(100000000)) == 1)) {
 
                 result = false;
                 context.addFederalError(
@@ -356,10 +404,10 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                             // same process details	same operating details	same reporting period op type
                             // TRUE					TRUE					TRUE			CHECK DUPLICATE FUEL
                             // processes considered not duplicates
-                            // FALSE					FALSE/TRUE				TRUE			CHECK WARNING DUPLICATE
+                            // FALSE				FALSE/TRUE				TRUE			CHECK WARNING DUPLICATE
                             // TRUE					FALSE					TRUE			CHECK WARNING DUPLICATE
                             // TRUE					FALSE/TRUE				FALSE			NONE
-                            // FALSE					FALSE/TRUE				FALSE			NONE
+                            // FALSE				FALSE/TRUE				FALSE			NONE
                             // note: any time the reporting period operating type is different the process is not a duplicate process
 
                             // processes are the same if all the details are the same

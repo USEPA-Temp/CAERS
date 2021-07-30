@@ -1,5 +1,6 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
@@ -100,7 +101,8 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
             .collect(Collectors.toList());
 
         for (ControlAssignment ca : percentApptRange) {
-            if (ca.getPercentApportionment() < 0.1 || ca.getPercentApportionment() > 100) {
+        	// percent appt must be > 0.1 or < 100
+            if (ca.getPercentApportionment().compareTo(BigDecimal.valueOf(0.1)) == -1 || ca.getPercentApportionment().compareTo(BigDecimal.valueOf(100)) == 1) {
                 result = false;
                 context.addFederalError(
                     ValidationField.CONTROL_PATH_ASSIGNMENT.value(),
@@ -180,8 +182,8 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         }
 
         if (controlPath.getPercentControl() != null) {
-        	
-        	if (controlPath.getPercentControl() < 1 || controlPath.getPercentControl() > 100) {
+        	// percent control must be > 1 or < 100
+        	if (controlPath.getPercentControl().compareTo(BigDecimal.ONE) == -1 || controlPath.getPercentControl().compareTo(BigDecimal.valueOf(100)) == 1) {
 
         		result = false;
 	            context.addFederalError(
@@ -191,7 +193,7 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
 	        }
         	
         	Pattern pattern = Pattern.compile(ConstantUtils.REGEX_ONE_DECIMAL_PRECISION);
-        	Matcher matcher = pattern.matcher(controlPath.getPercentControl().toString());
+        	Matcher matcher = pattern.matcher(controlPath.getPercentControl().stripTrailingZeros().toPlainString());
             if(!matcher.matches()){
                 result = false;
                 context.addFederalError(
@@ -205,13 +207,14 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         		.filter(e -> e.getPollutant() != null)
         		.collect(Collectors.groupingBy(e -> e.getPollutant().getPollutantCode()));
         
-        Double pm10Fil = cppMap.containsKey(PM10FIL) ? cppMap.get(PM10FIL).get(0).getPercentReduction() : null;
-        Double pm10Pri = cppMap.containsKey(PM10PRI) ? cppMap.get(PM10PRI).get(0).getPercentReduction() : null;
-        Double pm25Fil = cppMap.containsKey(PM25FIL) ? cppMap.get(PM25FIL).get(0).getPercentReduction() : null;
-        Double pm25Pri = cppMap.containsKey(PM25PRI) ? cppMap.get(PM25PRI).get(0).getPercentReduction() : null;
+        BigDecimal pm10Fil = cppMap.containsKey(PM10FIL) ? cppMap.get(PM10FIL).get(0).getPercentReduction() : null;
+        BigDecimal pm10Pri = cppMap.containsKey(PM10PRI) ? cppMap.get(PM10PRI).get(0).getPercentReduction() : null;
+        BigDecimal pm25Fil = cppMap.containsKey(PM25FIL) ? cppMap.get(PM25FIL).get(0).getPercentReduction() : null;
+        BigDecimal pm25Pri = cppMap.containsKey(PM25PRI) ? cppMap.get(PM25PRI).get(0).getPercentReduction() : null;
 
         // PM2.5 Filterable should not exceed PM10 Filterable.
-        if (pm25Fil != null && pm10Fil != null && pm10Fil < pm25Fil) {
+        if (pm25Fil != null && pm10Fil != null
+        		&& pm10Fil.compareTo(pm25Fil) == -1) {
         	
         	result = false;
             context.addFederalError(
@@ -222,7 +225,8 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         }
         
         // PM2.5 Primary should not exceed PM10 Primary.
-        if (pm25Pri != null && pm10Pri != null && pm10Pri < pm25Pri) {
+        if (pm25Pri != null && pm10Pri != null
+        		&& pm10Pri.compareTo(pm25Pri) == -1) {
         	
         	result = false;
             context.addFederalError(
@@ -271,13 +275,13 @@ public class ControlPathValidator extends BaseValidator<ControlPath> {
         }
 
         for (Integer sequenceNumber : uniqueSequenceList) {
-            Double totalApportionment = 0.0;
+        	BigDecimal totalApportionment = BigDecimal.ZERO;
             for (ControlAssignment ca : sequenceMap) {
                 if (ca.getSequenceNumber() != null && ca.getSequenceNumber().equals(sequenceNumber)) {
-                    totalApportionment = ca.getPercentApportionment() + totalApportionment;
+                    totalApportionment = ca.getPercentApportionment().add(totalApportionment);
                 }
             }
-            if (totalApportionment != 100) {
+            if (totalApportionment.compareTo(BigDecimal.valueOf(100)) != 0) {
                 result = false;
                 context.addFederalError(
                     ValidationField.CONTROL_PATH_ASSIGNMENT.value(),

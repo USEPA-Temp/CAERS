@@ -1,6 +1,7 @@
 package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class EmissionsUnitDto implements Serializable {
@@ -16,7 +17,7 @@ public class EmissionsUnitDto implements Serializable {
     private String description;
     private Short statusYear;
     private UnitMeasureCodeDto unitOfMeasureCode;
-    private Double designCapacity;
+    private BigDecimal designCapacity;
     private String unitOfMeasureDescription;
     private String comments;
     private List<EmissionsProcessDto> emissionsProcesses;
@@ -72,10 +73,10 @@ public class EmissionsUnitDto implements Serializable {
         this.unitOfMeasureCode = unitOfMeasureCode;
     }
 
-    public Double getDesignCapacity() {
+    public BigDecimal getDesignCapacity() {
         return designCapacity;
     }
-    public void setDesignCapacity(Double designCapacity) {
+    public void setDesignCapacity(BigDecimal designCapacity) {
         this.designCapacity = designCapacity;
     }
     public String getUnitOfMeasureDescription() {
