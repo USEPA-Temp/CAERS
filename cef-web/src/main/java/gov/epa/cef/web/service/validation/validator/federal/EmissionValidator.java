@@ -97,8 +97,8 @@ public class EmissionValidator extends BaseValidator<Emission> {
 //	                        createValidationDetails(emission));
 //	            }
 
-	        } else if (emission.getEmissionsCalcMethodCode().getTotalDirectEntry() == false
-	                && !(Boolean.TRUE.equals(emission.getFormulaIndicator()) && Boolean.TRUE.equals(emission.getTotalManualEntry()))) {
+	        } else if (Boolean.FALSE.equals(emission.getEmissionsCalcMethodCode().getTotalDirectEntry())
+                    && !(Boolean.TRUE.equals(emission.getFormulaIndicator()) && Boolean.TRUE.equals(emission.getTotalManualEntry()))) {
 
 	            if(emission.getEmissionsFactor() == null) {
 
@@ -167,7 +167,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	                        emission.getEmissionsDenominatorUom().getDescription());
 	            }
 
-	        } else if (emission.getEmissionsFactor() == null) {
+	        } else if (emission.getEmissionsFactor() == null && Boolean.FALSE.equals(emission.getFormulaIndicator())) {
 
 	            if (emission.getEmissionsNumeratorUom() != null) {
 
