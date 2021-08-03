@@ -1,8 +1,7 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { FormControl } from '@angular/forms';
-import { SortEvent } from 'src/app/shared/directives/sortable.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserFacilityAssociationService } from 'src/app/core/services/user-facility-association.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
@@ -14,7 +13,7 @@ import { UserFacilityAssociation } from 'src/app/shared/models/user-facility-ass
   templateUrl: './master-facility-search-table.component.html',
   styleUrls: ['./master-facility-search-table.component.scss']
 })
-export class MasterFacilitySearchTableComponent extends BaseSortableTable implements OnInit, OnChanges {
+export class MasterFacilitySearchTableComponent extends BaseSortableTable implements OnInit {
   @Input() tableData: MasterFacilityRecord[];
   @Output() accessRequested = new EventEmitter<UserFacilityAssociation>();
 
@@ -24,8 +23,7 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
 
   selectedFacility: MasterFacilityRecord;
 
-  page = 1;
-  pageSize = 10;
+  matchFunction: (item: any, searchTerm: any) => boolean = this.matches;
 
   constructor(private modalService: NgbModal,
               private userFacilityAssociationService: UserFacilityAssociationService,
@@ -33,20 +31,15 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
     super();
 
     this.filter.valueChanges.subscribe((text) => {
-      this.filteredItems = this.search(text, this.statusFilter.value);
+      this.controller.searchTerm = {text, status: this.statusFilter.value};
     });
 
     this.statusFilter.valueChanges.subscribe((text) => {
-      this.filteredItems = this.search(this.filter.value, text);
+      this.controller.searchTerm = {text: this.filter.value, status: text};
     });
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnChanges() {
-
-    this.filteredItems = this.search(this.filter.value, this.statusFilter.value);
   }
 
   selectFacility(facility: MasterFacilityRecord) {
@@ -60,26 +53,18 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
       this.filter.setValue('');
    }
 
-   sortAndSearch(sortEvent: SortEvent) {
+  matches(item: MasterFacilityRecord, searchTerm: {text: string, status: string}): boolean {
+    if ((searchTerm.status === 'UNASSOCIATED' && item.associationStatus)
+        || (searchTerm.status === 'APPROVED' && item.associationStatus !== 'APPROVED')
+        || (searchTerm.status === 'PENDING' && item.associationStatus !== 'PENDING')) {
 
-    this.onSort(sortEvent);
-    this.filteredItems = this.search(this.filter.value, this.statusFilter.value);
-   }
+      return false;
+    }
 
-  search(text: string, status: string): MasterFacilityRecord[] {
-    return this.tableData.filter(item => {
-      if ((status === 'UNASSOCIATED' && item.associationStatus)
-          || (status === 'APPROVED' && item.associationStatus !== 'APPROVED')
-          || (status === 'PENDING' && item.associationStatus !== 'PENDING')) {
-
-        return false;
-      }
-
-      const term = text.toLowerCase();
-      return item.name?.toLowerCase().includes(term)
-          || item.agencyFacilityId?.toLowerCase().includes(term)
-          || `${item.streetAddress}, ${item.city}, ${item?.stateCode?.uspsCode} ${item.postalCode}`.toLowerCase().includes(term);
-    });
+    const term = searchTerm.text ? searchTerm.text.toLowerCase() : '';
+    return item.name?.toLowerCase().includes(term)
+        || item.agencyFacilityId?.toLowerCase().includes(term)
+        || `${item.streetAddress}, ${item.city}, ${item?.stateCode?.uspsCode} ${item.postalCode}`.toLowerCase().includes(term);
   }
 
   openRequestAccessModal() {
@@ -97,7 +82,6 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
       this.toastr.success('', `Access requested for ${facility.name}`);
       this.accessRequested.emit(result);
       facility.associationStatus = 'PENDING';
-      this.filteredItems = this.search(this.filter.value, this.statusFilter.value);
       this.selectedFacility = null;
     });
 
