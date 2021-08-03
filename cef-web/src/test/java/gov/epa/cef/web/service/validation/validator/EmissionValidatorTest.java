@@ -210,6 +210,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         CefValidatorContext cefContext = createContext();
         Emission testData = createBaseEmission(true);
+        testData.setFormulaIndicator(false);
         testData.setEmissionsDenominatorUom(new UnitMeasureCode());
         testData.setEmissionsNumeratorUom(new UnitMeasureCode());
 
