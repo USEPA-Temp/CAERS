@@ -38,18 +38,18 @@
     <table class="table table-sm table-striped table-bordered">
       <thead class="thead-cef-medium">
         <tr>
-          <th scope="col" sortable="name" (sort)="sortAndSearch($event)">Facility Name</th>
-          <th scope="col" sortable="agencyFacilityId" (sort)="sortAndSearch($event)">Agency Facility ID</th>
-          <th scope="col" sortable="streetAddress" (sort)="sortAndSearch($event)">Address</th>
+          <th scope="col" sortable="name" (sort)="onSort($event)">Facility Name</th>
+          <th scope="col" sortable="agencyFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
+          <th scope="col" sortable="streetAddress" (sort)="onSort($event)">Address</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="!filteredItems || filteredItems.length === 0">
+        <tr *ngIf="!tableItems || tableItems.length === 0">
           <td colspan="4" class="text-center">
               <strong class="text-larger">No data available.</strong>
           </td>
         </tr>
-        <ng-container *ngFor="let item of filteredItems | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+        <ng-container *ngFor="let item of tableItems">
           <tr [class.cursor-pointer]="!item.associationStatus" [class.table-dark]="item === selectedFacility" [class.text-muted]="item.associationStatus" (click)="selectFacility(item)">
             <td>
               {{item.name}} 
@@ -68,7 +68,7 @@
         </ng-container>
       </tbody>
     </table>
-    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredItems.length" [maxSize]="5" [rotate]="true"></ngb-pagination>
+    <ngb-pagination [(page)]="controller.page" [pageSize]="controller.pageSize" [collectionSize]="controller.total$ | async" [maxSize]="5" [rotate]="true"></ngb-pagination>
   </div>
 
   <div>

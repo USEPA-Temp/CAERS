@@ -21,12 +21,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngIf="!tableData || tableData.length === 0">
+                <tr *ngIf="!tableItems || tableItems.length === 0">
                   <td colspan="6" class="text-center">
                       <strong class="text-larger">No data available.</strong>
                   </td>
                 </tr>
-                <tr *ngFor="let item of tableData">
+                <tr *ngFor="let item of tableItems">
                   <td><input type="checkbox" [attr.aria-label]="" [(ngModel)]="item.checked" class="form-check-inline mr-0"/></td>
                   <td>{{item.fullName}}</td>
                   <td>{{item.email}}</td>
