@@ -11,6 +11,8 @@ import { ReportService } from 'src/app/core/services/report.service';
 import { ReportHistory } from 'src/app/shared/models/report-history';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ActivatedRoute } from '@angular/router';
+import { User } from 'src/app/shared/models/user';
+import { AppRole } from 'src/app/shared/enums/app-role';
 
 @Component({
   selector: 'app-report-attachment-table',
@@ -21,7 +23,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
 
     @Input() facilitySite: FacilitySite;
     tableData: ReportHistory[];
-    userRole: string;
+    user: User;
     reportStatus: string;
 
     constructor(
@@ -38,13 +40,13 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
     ngOnInit() {
 
         this.userContextService.getUser().subscribe( user => {
-            this.userRole = user.role;
+            this.user = user;
         });
 
         this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
         .subscribe(report => {
             this.tableData = report.filter(data =>
-                data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
+                data.userRole !== AppRole.REVIEWER && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
                 .sort((a, b) => (a.actionDate < b.actionDate) ? 1 : -1);
         });
 
@@ -70,7 +72,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
             this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
             .subscribe(report => {
                 this.tableData = report.filter(data => 
-                    data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
+                    data.userRole !== AppRole.REVIEWER && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
                     .sort((a, b) => (a.actionDate < b.actionDate) ? 1 : -1);
             });
         }, () => {
@@ -94,7 +96,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
             this.reportService.retrieveHistory(this.facilitySite.emissionsReport.id, this.facilitySite.id)
             .subscribe(report => {
                 this.tableData = report.filter(data => 
-                    data.userRole !== 'Reviewer' && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
+                    data.userRole !== AppRole.REVIEWER && data.fileName && data.fileName.length > 0 && !data.fileDeleted)
                     .sort((a, b) => (a.actionDate < b.actionDate) ? 1 : -1);
             });
         });

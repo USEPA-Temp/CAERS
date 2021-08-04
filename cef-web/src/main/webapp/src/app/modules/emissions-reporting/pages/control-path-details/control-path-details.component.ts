@@ -49,7 +49,7 @@ export class ControlPathDetailsComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
+        if (UtilityService.isNotReadOnlyMode(user, data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

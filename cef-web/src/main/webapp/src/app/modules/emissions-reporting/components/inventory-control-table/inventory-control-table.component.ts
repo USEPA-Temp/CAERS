@@ -42,7 +42,7 @@ export class InventoryControlTableComponent extends BaseSortableTable implements
     this.route.data
       .subscribe((data: { facilitySite: FacilitySite }) => {
         this.userContextService.getUser().subscribe( user => {
-          if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
+          if (UtilityService.isNotReadOnlyMode(user, data.facilitySite.emissionsReport.status)) {
             this.readOnlyMode = false;
           }
         });

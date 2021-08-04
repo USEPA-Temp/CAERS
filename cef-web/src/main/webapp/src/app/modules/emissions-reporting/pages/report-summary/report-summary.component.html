@@ -38,7 +38,7 @@
 
             <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS' || facilitySite.emissionsReport.status==='RETURNED'">
                 <div class="float-right pr-3">
-                    <button *ngIf="userRole!=='Reviewer'"
+                    <button *ngIf="user?.canPrepare()"
                             id="runQualityChecksBtn"
                             class="btn btn-primary btn-md my-3 ml-1"
                             aria-label="run quality checks"
@@ -48,7 +48,7 @@
                 </div>
                 <div class="float-right pr-3">
                     <button *ngIf="(facilitySite.emissionsReport.validationStatus==='PASSED'|| facilitySite.emissionsReport.validationStatus==='PASSED_WARNINGS')
-                            && userRole==='NEI Certifier'"
+                            && user?.isNeiCertifier()"
                             [disabled]="!cromerrLoaded"
                             id="certifyAndSubmit"
                             aria-label="certify and submit to SLT"
@@ -62,7 +62,7 @@
             </div>
             <div *ngIf="(facilitySite.emissionsReport.status==='SUBMITTED')">
                 <div class="float-right pr-3">
-                    <button *ngIf="userRole==='NEI Certifier' || userRole==='Preparer'"
+                    <button *ngIf="user?.canPrepare()"
                             class="btn btn-success btn-md my-3 ml-1" 
                             aria-label="reopen report"
                             (click)="reopenReport()">

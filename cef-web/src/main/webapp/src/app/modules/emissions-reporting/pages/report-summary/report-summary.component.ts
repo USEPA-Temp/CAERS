@@ -14,6 +14,7 @@ import { EmissionsReportingService } from 'src/app/core/services/emissions-repor
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
 import { Subject } from 'rxjs';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { User } from 'src/app/shared/models/user';
 
 declare const initCromerrWidget: any;
 
@@ -29,7 +30,7 @@ export class ReportSummaryComponent implements OnInit {
     emissionsReportYear: number;
     cromerrLoaded = false;
     cromerrLoadedEmitter = new Subject<boolean>();
-    userRole: string;
+    user: User;
     feedbackSubmitted: boolean;
     feedbackEnabled: boolean;
     feedbackUrl: string;
@@ -75,8 +76,8 @@ export class ReportSummaryComponent implements OnInit {
                         this.userService.getCurrentUserNaasToken()
                             .subscribe(userToken => {
                                 this.userContextService.getUser().subscribe( user => {
-                                    this.userRole = user.role;
-                                    if (user.role === 'NEI Certifier' && this.facilitySite.emissionsReport.status !== 'SUBMITTED') {
+                                    this.user = user;
+                                    if (user.isNeiCertifier() && this.facilitySite.emissionsReport.status !== ReportStatus.SUBMITTED) {
                                         initCromerrWidget(user.cdxUserId, user.userRoleId, userToken.baseServiceUrl,
                                             this.facilitySite.emissionsReport.id, this.facilitySite.emissionsReport.masterFacilityRecordId, this.toastr,
                                             this.cromerrLoadedEmitter, this.feedbackEnabled, this.feedbackSubmitted);
