@@ -47,6 +47,8 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
 
       this.onSort({column: 'createdDate', direction: 'desc'});
     });
+
+    this.controller.paginate = true;
   }
 
   private refreshHistory() {

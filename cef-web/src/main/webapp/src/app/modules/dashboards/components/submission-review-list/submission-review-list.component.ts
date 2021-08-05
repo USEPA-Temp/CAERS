@@ -19,7 +19,7 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
   @Input() hideSelectColumn: boolean;
   @Input() reportStatus: string;
 
-  constructor(public userContext: UserContextService, 
+  constructor(public userContext: UserContextService,
               private modalService: NgbModal,
               private reportService: ReportService,
               private reportDownloadService: ReportDownloadService) {
@@ -27,6 +27,7 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
   }
 
   ngOnInit() {
+    this.controller.paginate = true;
   }
 
   openSummaryModal(submission: SubmissionUnderReview) {

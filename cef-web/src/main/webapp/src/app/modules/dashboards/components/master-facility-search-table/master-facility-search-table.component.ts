@@ -40,6 +40,7 @@ export class MasterFacilitySearchTableComponent extends BaseSortableTable implem
   }
 
   ngOnInit(): void {
+    this.controller.paginate = true;
   }
 
   selectFacility(facility: MasterFacilityRecord) {

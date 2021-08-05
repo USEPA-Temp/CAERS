@@ -15,6 +15,7 @@ interface SearchResult<T> {
 interface State {
   page: number;
   pageSize: number;
+  paginate: boolean;
   searchTerm: string;
   sortColumn: SortColumn;
   sortDirection: SortDirection;
@@ -23,7 +24,6 @@ interface State {
 
 export class TableController<T> {
 
-  private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
   private _items$ = new BehaviorSubject<T[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
@@ -36,6 +36,7 @@ export class TableController<T> {
   private _state: State = {
     page: 1,
     pageSize: 10,
+    paginate: false,
     searchTerm: '',
     sortColumn: '',
     sortDirection: '',
@@ -47,7 +48,6 @@ export class TableController<T> {
   get min$() { return this._min$.asObservable(); }
   get max$() { return this._max$.asObservable(); }
 
-  get loading$() { return this._loading$.asObservable(); }
   get page() { return this._state.page; }
   get pageSize() { return this._state.pageSize; }
   get searchTerm() { return this._state.searchTerm; }
@@ -56,6 +56,7 @@ export class TableController<T> {
 
   set page(page: number) { this._set({page}); }
   set pageSize(pageSize: number) { this._set({pageSize}); }
+  set paginate(paginate: boolean) { this._set({paginate}); }
   set searchTerm(searchTerm: any) { this._set({searchTerm}); }
   set sortColumn(sortColumn: SortColumn) { this._set({sortColumn}); }
   set sortDirection(sortDirection: SortDirection) { this._set({sortDirection}); }
@@ -115,7 +116,7 @@ export class TableController<T> {
   }
 
   private _search(): Observable<SearchResult<T>> {
-    const {sortColumn, sortDirection, pageSize, page, searchTerm} = this._state;
+    const {sortColumn, sortDirection, pageSize, page, paginate, searchTerm} = this._state;
 
     // 1. sort
     let items = this.sort(this.tableData || [], sortColumn, sortDirection);
@@ -127,11 +128,15 @@ export class TableController<T> {
     const total = items.length;
 
     // 3. paginate
-    const minItem = (page - 1) * pageSize;
-    const maxItem = minItem + pageSize;
-    const min = minItem + 1;
-    const max = (maxItem > total) ? total : maxItem;
-    items = items.slice(minItem, maxItem);
+    let min: number;
+    let max: number;
+    if (paginate) {
+      const minItem = (page - 1) * pageSize;
+      const maxItem = minItem + pageSize;
+      min = minItem + 1;
+      max = (maxItem > total) ? total : maxItem;
+      items = items.slice(minItem, maxItem);
+    }
 
     return of({items, total, min, max});
   }
