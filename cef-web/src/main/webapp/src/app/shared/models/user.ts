@@ -11,6 +11,10 @@ export class User {
   programSystemCode: string;
 
   // these methods can be used for easier role checking
+  public canPrepare() {
+    return this.isPreparer() || this.isNeiCertifier();
+  }
+
   public canReview() {
     return this.isReviewer() || this.isAdmin();
   }

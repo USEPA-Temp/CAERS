@@ -9,6 +9,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 import bsCustomFileInput from 'bs-custom-file-input';
+import { User } from 'src/app/shared/models/user';
 
 interface PleaseWaitConfig {
     modal: NgbModalRef;
@@ -41,7 +42,7 @@ export class EisTransactionAttachmentModalComponent implements OnInit {
   selectedFile: File = null;
   maxFileSize: number;
   acceptedMIMEtypes: string [];
-  userRole: string;
+  user: User;
   bsflags: any;
   disableButton = false;
 
@@ -94,7 +95,7 @@ export class EisTransactionAttachmentModalComponent implements OnInit {
     ];
 
     this.userService.getCurrentUser().subscribe( user => {
-      this.userRole = user.role;
+      this.user = user;
     });
 
   }
@@ -108,12 +109,12 @@ export class EisTransactionAttachmentModalComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.selectedFile === null && this.userRole !== 'Reviewer') {
+    if (this.selectedFile === null && !this.user.isReviewer()) {
       this.attachmentForm.get('attachment').setErrors({required: true});
       this.attachmentForm.get('attachment').markAsTouched();
     }
 
-    if (!this.selectedFile && this.userRole === 'Reviewer' && this.isValid()) {
+    if (!this.selectedFile && this.user.isReviewer() && this.isValid()) {
 
       this.activeModal.close(this.attachmentForm.value);
 
@@ -277,7 +278,7 @@ export class EisTransactionAttachmentModalComponent implements OnInit {
     this.selectedFile = file.length ? file.item(0) : null;
 
     this.disableButton = false;
-    if (this.selectedFile !== null && this.userRole !== 'Reviewer') {
+    if (this.selectedFile !== null && !this.user.isReviewer) {
       this.attachmentForm.controls.attachment.setErrors(null);
     }
 

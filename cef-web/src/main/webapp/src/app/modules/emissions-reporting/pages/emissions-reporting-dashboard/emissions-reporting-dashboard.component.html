@@ -25,7 +25,7 @@
              *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'RETURNED', 'VALIDATED'])">Continue</a>
 
           <a href="#" class="btn btn-primary"
-            *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Notify NEI Certifier</a>
+            *ngIf="report.status === 'VALIDATED' && userContext.user.isPreparer()">Notify NEI Certifier</a>
 
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
             class="btn btn-primary" [attr.aria-label]="'view'+ report.year +'report'"
@@ -39,13 +39,13 @@
              (click)="reopenReport(report)" *ngIf="isOneOf(report.status, ['SUBMITTED'])">Reopen Report</a>
 
           <a href="#" class="btn btn-primary"
-             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Certify</a>
+             *ngIf="report.status === 'VALIDATED' && userContext.user.isNeiCertifier()">Certify</a>
 
           <a href="#" class="btn btn-primary"
-             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'NEI Certifier'">Return to Preparer</a>
+             *ngIf="report.status === 'VALIDATED' && userContext.user.isNeiCertifier()">Return to Preparer</a>
 
           <a href="#" class="btn btn-primary"
-             *ngIf="report.status === 'VALIDATED' && userContext.user.role === 'Preparer'">Cancel Nomination</a>
+             *ngIf="report.status === 'VALIDATED' && userContext.user.isPreparer()">Cancel Nomination</a>
 
           <a href="#" class="btn btn-primary" [attr.aria-label]="'delete'+ report.year +'report'"
              [id]="'delete'+ report.year +'Report'"

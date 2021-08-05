@@ -9,6 +9,7 @@ import { ReportAttachmentService } from 'src/app/core/services/report-attachment
 import { ReportAttachment } from 'src/app/shared/models/report-attachment';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { User } from 'src/app/shared/models/user';
 
 interface PleaseWaitConfig {
     modal: NgbModalRef;
@@ -41,7 +42,7 @@ export class FileAttachmentModalComponent implements OnInit {
   selectedFile: File = null;
   maxFileSize: number;
   acceptedMIMEtypes: string [];
-  userRole: string;
+  user: User;
   bsflags: any;
   disableButton = false;
 
@@ -95,7 +96,7 @@ export class FileAttachmentModalComponent implements OnInit {
     ];
 
     this.userService.getCurrentUser().subscribe( user => {
-      this.userRole = user.role;
+      this.user = user;
     });
 
   }
@@ -109,12 +110,12 @@ export class FileAttachmentModalComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.selectedFile === null && this.userRole !== 'Reviewer') {
+    if (this.selectedFile === null && !this.user.isReviewer()) {
       this.attachmentForm.get('attachment').setErrors({required: true});
       this.attachmentForm.get('attachment').markAsTouched();
     }
 
-    if (!this.selectedFile && this.userRole === 'Reviewer' && this.isValid()) {
+    if (!this.selectedFile && this.user.isReviewer() && this.isValid()) {
 
       this.activeModal.close(this.attachmentForm.value);
 
@@ -277,7 +278,7 @@ export class FileAttachmentModalComponent implements OnInit {
     this.selectedFile = file.length ? file.item(0) : null;
 
     this.disableButton = false;
-    if (this.selectedFile !== null && this.userRole !== 'Reviewer') {
+    if (this.selectedFile !== null && !this.user.isReviewer()) {
       this.attachmentForm.controls.attachment.setErrors(null);
     }
 

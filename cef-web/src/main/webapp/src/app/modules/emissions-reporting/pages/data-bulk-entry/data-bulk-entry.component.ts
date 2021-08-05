@@ -51,7 +51,7 @@ export class DataBulkEntryComponent implements OnInit {
 
       // TODO: this should be turned into a reusable call to reduce code duplication
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
+        if (UtilityService.isNotReadOnlyMode(user, data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

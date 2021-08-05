@@ -44,7 +44,7 @@ export class ReleasePointTableComponent extends BaseSortableTable implements OnI
       .subscribe((data: { facilitySite: FacilitySite }) => {
         this.facilitySiteId = (data.facilitySite.id);
         this.userContextService.getUser().subscribe( user => {
-          if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
+          if (UtilityService.isNotReadOnlyMode(user, data.facilitySite.emissionsReport.status)) {
             this.readOnlyMode = false;
           }
         });

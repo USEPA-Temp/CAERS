@@ -38,13 +38,13 @@ export class BreadcrumbNavComponent implements OnInit {
         });
         this.userContext.getUser()
         .subscribe(currentUser => {
-            this.user=currentUser;
+            this.user = currentUser;
             if (currentUser.isReviewer() || currentUser.isAdmin()) {
                 this.baseLabel = '';
             } else {
                 this.baseLabel = 'My Facilities';
             }
-            
+
             this.sharedService.changeEmitted$
             .subscribe( facilitySite => {
                 if ( facilitySite != null ) {
@@ -79,8 +79,8 @@ export class BreadcrumbNavComponent implements OnInit {
             };
 
         this.breadcrumbs = this.getBreadcrumbs( root );
-        if(this.user.role=='Reviewer'){
-            if(this.breadcrumbs.length>1){
+        if (this.user.isReviewer()){
+            if (this.breadcrumbs.length > 1){
                 this.breadcrumbs.splice(0, 1);
             }
         }
