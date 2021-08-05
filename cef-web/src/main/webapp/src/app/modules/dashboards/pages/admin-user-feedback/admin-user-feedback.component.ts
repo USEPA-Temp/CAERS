@@ -67,6 +67,8 @@ export class AdminUserFeedbackComponent extends BaseSortableTable implements OnI
 
     this.retrieveOptions();
     this.retrieveData();
+
+    this.controller.paginate = true;
   }
 
   retrieveOptions() {

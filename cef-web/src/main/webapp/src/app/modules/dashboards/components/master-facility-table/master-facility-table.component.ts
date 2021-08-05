@@ -28,6 +28,7 @@ export class MasterFacilityTableComponent extends BaseSortableTable implements O
   }
 
   ngOnInit(): void {
+    this.controller.paginate = true;
   }
 
   selectFacility(facility: MasterFacilityRecord) {
