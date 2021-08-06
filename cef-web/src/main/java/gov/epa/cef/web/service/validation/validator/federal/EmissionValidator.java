@@ -98,7 +98,7 @@ public class EmissionValidator extends BaseValidator<Emission> {
 //	            }
 
 	        } else if (Boolean.FALSE.equals(emission.getEmissionsCalcMethodCode().getTotalDirectEntry())
-                    && !(Boolean.TRUE.equals(emission.getFormulaIndicator()) && Boolean.TRUE.equals(emission.getTotalManualEntry()))) {
+                    && !Boolean.TRUE.equals(emission.getFormulaIndicator()) && !Boolean.TRUE.equals(emission.getTotalManualEntry())) {
 
 	            if(emission.getEmissionsFactor() == null) {
 
