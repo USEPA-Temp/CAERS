@@ -144,6 +144,9 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 						.sorted(Comparator.comparing(EmissionsReport::getYear))
 						.collect(Collectors.toList());
 
+				boolean pyUnitExists = false;
+
+				// check if previous report exists then check if this unit exists in that report
 				if (!erList.isEmpty()) {
 					Short previousReportYr = erList.get(erList.size()-1).getYear();
 
@@ -153,6 +156,9 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	    			        previousReportYr);
 
 					if (!previousUnits.isEmpty()) {
+
+					    pyUnitExists = true;
+
 	    			    for (EmissionsUnit previousUnit : previousUnits) {
 
 	    			    	// check PS/TS status year of current report to OP status year of previous report
@@ -170,6 +176,16 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 	    			    	}
 	    			    }
 					}
+				}
+
+				if (!pyUnitExists) {
+
+				    // new unit is PS/TS
+				    result = false;
+                    context.addFederalError(
+                            ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+                            "emissionsUnit.statusTypeCode.newShutdown",
+                            createValidationDetails(emissionsUnit));
 				}
             }
         }

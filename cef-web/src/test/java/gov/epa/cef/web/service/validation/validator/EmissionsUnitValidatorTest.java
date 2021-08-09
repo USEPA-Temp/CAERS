@@ -110,8 +110,11 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         eu.setUnitIdentifier("Boiler 001");
         
     	when(reportRepo.findByMasterFacilityRecordId(1L)).thenReturn(erList);
+    	when(reportRepo.findByMasterFacilityRecordId(2L)).thenReturn(Collections.emptyList());
     	when(unitRepo.retrieveByIdentifierFacilityYear(
           		"Boiler 001",1L,(short) 2018)).thenReturn(Collections.singletonList(eu));
+    	when(unitRepo.retrieveByIdentifierFacilityYear(
+                "test new",1L,(short) 2018)).thenReturn(Collections.emptyList());
     }
 
     @Test
@@ -983,10 +986,10 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_PROCESS.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_PROCESS.value()).size() == 1);
 	}
-	
-	@Test
+
+    @Test
     public void previousOpYearCurrentShutdownYear() {
-		// pass when previous and current op status is OP
+        // pass when previous and current op status is OP
         CefValidatorContext cefContext = createContext();
         EmissionsUnit testData = createBaseEmissionsUnit();
         OperatingStatusCode opStatCode = new OperatingStatusCode();
@@ -1000,9 +1003,9 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         testData.getOperatingStatusCode().setCode("TS");
         
-		assertTrue(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-		 
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+         
         // fail when previous op status is OP, current op status is PS/TS, and current op status year is prior to previous year
         cefContext = createContext();
         testData.getOperatingStatusCode().setCode("TS");
@@ -1029,10 +1032,71 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("104");
         
         assertTrue(this.validator.validate(cefContext, testData));
-		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
-		 
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+         
     }
-    
+
+	@Test
+    public void newUnitShutdownPassTest() {
+		// pass when previous exists and current op status is OP
+        CefValidatorContext cefContext = createContext();
+        EmissionsUnit testData = createBaseEmissionsUnit();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous exists and current op status is PS/TS
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+
+		assertTrue(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report exists, but unit doesn't and current op status is OP
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("OP");
+        testData.setUnitIdentifier("test new");
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report doesn't exist and current op status is OP
+        cefContext = createContext();
+        testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+	@Test
+    public void newUnitShutdownPassFail() {
+	    // fail when previous report exists, but unit doesn't and current op status is TS
+        CefValidatorContext cefContext = createContext();
+        EmissionsUnit testData = createBaseEmissionsUnit();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setUnitIdentifier("test new");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
+
+        // fail when previous report doesn't exist and current op status is TS
+        cefContext = createContext();
+        testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
+    }
 
     private EmissionsUnit createBaseEmissionsUnit() {
 
