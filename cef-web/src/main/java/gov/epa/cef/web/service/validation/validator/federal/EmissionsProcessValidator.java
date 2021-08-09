@@ -275,6 +275,8 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 				.sorted(Comparator.comparing(EmissionsReport::getYear))
 				.collect(Collectors.toList());
 
+		boolean pyProcessExists = false;
+
 		if (!erList.isEmpty()) {
 			Short previousReportYr = erList.get(erList.size()-1).getYear();
 			Long previousReportId = erList.get(erList.size()-1).getId();
@@ -284,7 +286,11 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			        currentReport.getMasterFacilityRecord().getId(), 
 			        previousReportYr);
 
+			// check if previous report exists then check if this process exists in that report
 			if (!previousProcesses.isEmpty()) {
+
+			    pyProcessExists = true;
+
 			    // loop through all processes, if the same report was uploaded twice for a previous year this should only work once
 			    // if the previous report had the same process multiple times this may return duplicate messages
 			    for (EmissionsProcess previousProcess : previousProcesses) {
@@ -329,6 +335,16 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			    	}
 			    }
 			}
+		}
+
+		if (!pyProcessExists && !isProcessOperating) {
+
+		    // process is new, but is PS/TS
+            result = false;
+            context.addFederalError(
+                    ValidationField.PROCESS_STATUS_CODE.value(),
+                    "emissionsProcess.statusTypeCode.newShutdown",
+                    createValidationDetails(emissionsProcess));
 		}
         
         

@@ -153,8 +153,11 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       eList.add(previousE2);
 	    
       when(reportRepo.findByMasterFacilityRecordId(1L)).thenReturn(erList);
+      when(reportRepo.findByMasterFacilityRecordId(2L)).thenReturn(Collections.emptyList());
       when(processRepo.retrieveByIdentifierParentFacilityYear(
       		"Boiler 001","test_unit",1L,(short) 2018)).thenReturn(Collections.singletonList(p1));
+      when(processRepo.retrieveByIdentifierParentFacilityYear(
+              "test new","test_unit",1L,(short) 2018)).thenReturn(Collections.emptyList());
       when(emissionRepo.findAllByProcessIdReportId(2L,1L)).thenReturn(eList);
       
     }
@@ -597,6 +600,68 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	
     	assertTrue(this.validator.validate(cefContext, testData));
     	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void newProcessShutdownPassTest() {
+        // pass when previous exists and current op status is OP
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous exists and current op status is PS/TS
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report exists, but process doesn't and current op status is OP
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("OP");
+        testData.setEmissionsProcessIdentifier("test new");
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report doesn't exist and current op status is OP
+        cefContext = createContext();
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    @Test
+    public void newRpShutdownPassFail() {
+        // fail when previous report exists, but process doesn't and current op status is TS
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setEmissionsProcessIdentifier("test new");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
+
+        // fail when previous report doesn't exist and current op status is TS
+        cefContext = createContext();
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
     }
     
 
