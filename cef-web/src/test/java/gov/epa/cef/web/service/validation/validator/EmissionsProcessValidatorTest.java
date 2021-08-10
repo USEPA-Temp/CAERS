@@ -664,6 +664,30 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
     }
     
+    @Test
+    public void processOpYearBeforeUnitOpYearPassTest() {
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        testData.setStatusYear(new Short("2015"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    
+    @Test
+    public void processOpYearBeforeUnitOpYearFail() {
+    	CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+    	testData.setStatusYear(new Short("2000"));
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_YEAR.value()) && errorMap.get(ValidationField.PROCESS_STATUS_YEAR.value()).size() == 1);
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
@@ -687,6 +711,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         unit.setId(1L);
         unit.setFacilitySite(facility);
         unit.setUnitIdentifier("test_unit");
+        unit.setStatusYear(new Short("2010"));
         facility.getEmissionsUnits().add(unit);
 
         EmissionsProcess result = new EmissionsProcess();
