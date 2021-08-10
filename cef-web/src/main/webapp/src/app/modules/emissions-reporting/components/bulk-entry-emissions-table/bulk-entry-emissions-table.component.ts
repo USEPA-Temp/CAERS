@@ -21,6 +21,7 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
   @Output() emissionsUpdated = new EventEmitter<BulkEntryEmissionHolder[]>();
   baseUrl: string;
   facilitySite: FacilitySite;
+  savingBulkInfo = false;
 
   emissionForm = this.fb.group({});
 
@@ -105,6 +106,7 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
       this.emissionForm.markAllAsTouched();
     } else {
 
+      this.savingBulkInfo = true;
       const emissionDtos: Emission[] = [];
 
       for (const [key, value] of Object.entries(this.emissionForm.value)) {
@@ -117,6 +119,7 @@ export class BulkEntryEmissionsTableComponent extends BaseSortableTable implemen
 
       this.emissionService.bulkUpdate(this.facilitySite.id, emissionDtos)
       .subscribe(result => {
+        this.savingBulkInfo = false;
         this.emissionsUpdated.emit(result);
         this.toastr.success('', 'Changes successfully saved and Total Emissions recalculated.');
         // reset dirty flags
