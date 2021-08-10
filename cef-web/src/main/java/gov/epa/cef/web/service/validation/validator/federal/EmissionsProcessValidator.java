@@ -346,6 +346,16 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
                     "emissionsProcess.statusTypeCode.newShutdown",
                     createValidationDetails(emissionsProcess));
 		}
+		
+		if (emissionsProcess.getStatusYear() < emissionsProcess.getEmissionsUnit().getStatusYear()) {
+			
+			result = false;
+			context.addFederalError(
+					ValidationField.PROCESS_STATUS_YEAR.value(),
+					"emissionsProcess.statusYear.beforeUnitYear",
+					createValidationDetails(emissionsProcess),
+					emissionsProcess.getEmissionsUnit().getUnitIdentifier());
+		}
         
         
         return result;
