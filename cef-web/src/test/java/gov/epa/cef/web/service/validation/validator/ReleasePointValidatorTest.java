@@ -1332,7 +1332,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void newRpShutdownPassFail() {
+    public void newRpShutdownFailTest() {
         // fail when previous report exists, but rp doesn't and current op status is TS
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
@@ -1350,6 +1350,18 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         // fail when previous report doesn't exist and current op status is TS
         cefContext = createContext();
         testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
+
+        // fail even if facility is a landfill
+        cefContext = createContext();
+        FacilitySourceTypeCode stc = new FacilitySourceTypeCode();
+        stc.setCode("104");
+        testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setFacilitySourceTypeCode(stc);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
