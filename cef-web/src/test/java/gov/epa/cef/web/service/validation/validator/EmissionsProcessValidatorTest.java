@@ -638,7 +638,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void newRpShutdownPassFail() {
+    public void newProcessShutdownFailTest() {
         // fail when previous report exists, but process doesn't and current op status is TS
         CefValidatorContext cefContext = createContext();
         EmissionsProcess testData = createBaseEmissionsProcess();
@@ -656,6 +656,16 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         // fail when previous report doesn't exist and current op status is TS
         cefContext = createContext();
         testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
+
+        // fail even if facility is a landfill
+        cefContext = createContext();
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("104");
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
