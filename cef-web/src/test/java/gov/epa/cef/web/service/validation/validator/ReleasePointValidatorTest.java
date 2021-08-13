@@ -1189,7 +1189,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
-        testData.setStatusYear((short) 2050);
+        testData.setStatusYear((short) 2019);
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -1210,7 +1210,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_YEAR.value()) && errorMap.get(ValidationField.RP_STATUS_YEAR.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setStatusYear((short) 2051);
+        testData.setStatusYear((short) 2020);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -1287,7 +1287,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         OperatingStatusCode opStatusCode = new OperatingStatusCode();
         opStatusCode.setCode("PS");
         testData.setOperatingStatusCode(opStatusCode);
-        testData.setStatusYear((short) 2021);
+        testData.setStatusYear((short) 2019);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);

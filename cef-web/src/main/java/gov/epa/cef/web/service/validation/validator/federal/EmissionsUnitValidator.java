@@ -230,13 +230,14 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                 createValidationDetails(emissionsUnit));
         }
 
-        // Status year must be between 1900 and 2050
-        if (emissionsUnit.getStatusYear() != null && (emissionsUnit.getStatusYear() < 1900 || emissionsUnit.getStatusYear() > 2050)) {
+        // Status year must be between 1900 and the report year
+        if (emissionsUnit.getStatusYear() != null && (emissionsUnit.getStatusYear() < 1900 || emissionsUnit.getStatusYear() > emissionsUnit.getFacilitySite().getEmissionsReport().getYear())) {
 
             result = false;
             context.addFederalError(
                 ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value(), "emissionsUnit.statusYear.range",
-                createValidationDetails(emissionsUnit));
+                createValidationDetails(emissionsUnit),
+                emissionsUnit.getFacilitySite().getEmissionsReport().getYear().toString());
         }
 
         // Emissions Unit identifier must be unique within the facility.

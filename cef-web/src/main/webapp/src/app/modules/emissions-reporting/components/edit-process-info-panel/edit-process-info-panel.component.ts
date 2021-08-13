@@ -45,11 +45,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             Validators.required,
             Validators.maxLength(20)
         ]],
-        statusYear: ['', [
-            Validators.min(1900),
-            Validators.max(2050),
-            Validators.pattern('[0-9]*')
-        ]],
+        // Validators set in ngOnInit
+        statusYear: [''],
         sccCode: ['', [
             Validators.required,
             Validators.maxLength(20)
@@ -70,8 +67,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             this.legacyAetcValidator(),
             this.checkMatchSccAircraft(),
             this.checkSccAndAircraftDuplicate(),
-            this.operatingStatusCheck(),
-            this.statusYearRequiredCheck()]
+            this.operatingStatusCheck()]
     });
 
     operatingSubFacilityStatusValues: BaseCodeLookup[];
@@ -99,6 +95,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
             this.emissionsReportYear = data.facilitySite.emissionsReport.year;
         });
+
+        this.processForm.get('statusYear').setValidators([
+                    Validators.required,
+                    Validators.min(1900),
+                    Validators.max(this.emissionsReportYear),
+                    Validators.pattern('[0-9]*')]);
 
         // SCC codes associated with Aircraft Engine Type Codes
         this.aircraftEngineSCC = [
@@ -379,17 +381,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
                         }
                     }
                 }
-            }
-            return null;
-        };
-    }
-
-    statusYearRequiredCheck(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            const statusYear = control.get('statusYear').value;
-
-            if (statusYear === null || statusYear === '') {
-                control.get('statusYear').setErrors({statusYearRequiredFailed: true});
             }
             return null;
         };

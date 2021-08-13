@@ -136,7 +136,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
         
         cefContext = createContext();
-        testData.setStatusYear((short) 2050);
+        testData.setStatusYear((short) 2020);
         
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -520,7 +520,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		OperatingStatusCode opStatusCode = new OperatingStatusCode();
         opStatusCode.setCode("PS");
         testData.setOperatingStatusCode(opStatusCode);
-        testData.setStatusYear((short) 2021);
+        testData.setStatusYear((short) 2020);
         
         assertFalse(this.validator.validate(cefContext, testData));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -602,7 +602,7 @@ public class ControlValidatorTest extends BaseValidatorTest {
 
 	    EmissionsReport er = new EmissionsReport();
         er.setId(1L);
-        er.setYear(new Short("2019"));
+        er.setYear(new Short("2020"));
         er.setMasterFacilityRecord(mfr);
 
         FacilitySite facility = new FacilitySite();
