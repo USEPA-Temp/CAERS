@@ -67,7 +67,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             this.legacyAetcValidator(),
             this.checkMatchSccAircraft(),
             this.checkSccAndAircraftDuplicate(),
-            this.operatingStatusCheck()]
+            this.operatingStatusCheck(),
+            this.statusYearRequiredCheck()]
     });
 
     operatingSubFacilityStatusValues: BaseCodeLookup[];
@@ -97,7 +98,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         });
 
         this.processForm.get('statusYear').setValidators([
-                    Validators.required,
                     Validators.min(1900),
                     Validators.max(this.emissionsReportYear),
                     Validators.pattern('[0-9]*')]);
@@ -381,6 +381,17 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
                         }
                     }
                 }
+            }
+            return null;
+        };
+    }
+
+    statusYearRequiredCheck(): ValidatorFn {
+        return (control: FormGroup): ValidationErrors | null => {
+            const statusYear = control.get('statusYear').value;
+
+            if (statusYear === null || statusYear === '') {
+                control.get('statusYear').setErrors({statusYearRequiredFailed: true});
             }
             return null;
         };

@@ -53,7 +53,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
             this.emissionUnitIdentifierCheck(),
             this.facilitySiteStatusCheck(),
             this.capacityUomCheck(),
-            this.capacityLegacyUomCheck()]
+            this.capacityLegacyUomCheck(),
+            this.statusYearRequiredCheck()]
     });
 
     subFacilityOperatingStatusValues: BaseCodeLookup[];
@@ -80,7 +81,6 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                 this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
                 this.facilityOpCode = data.facilitySite.operatingStatusCode;
                 this.emissionUnitForm.get('statusYear').setValidators([
-                    Validators.required,
                     Validators.min(1900),
                     Validators.max(data.facilitySite.emissionsReport.year),
                     Validators.pattern('[0-9]*')]);
@@ -227,6 +227,17 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                 if (designCapacityUom && (designCapacityUom.legacy || !designCapacityUom.unitDesignCapacity)) {
                     return {eisUomInvalid: true};
                 }
+            }
+            return null;
+        };
+    }
+
+    statusYearRequiredCheck(): ValidatorFn {
+        return (control: FormGroup): ValidationErrors | null => {
+            const statusYear = control.get('statusYear').value;
+
+            if (statusYear === null || statusYear === '') {
+                control.get('statusYear').setErrors({statusYearRequiredFailed: true});
             }
             return null;
         };
