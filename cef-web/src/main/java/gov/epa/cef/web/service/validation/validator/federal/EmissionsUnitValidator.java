@@ -188,47 +188,8 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                             createValidationDetails(emissionsUnit));
 				}
             }
-        } else {
-
-            // check if unit is new for landfills
-            if (!ConstantUtils.STATUS_OPERATING.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
-                EmissionsReport currentReport = emissionsUnit.getFacilitySite().getEmissionsReport();
-
-                List<EmissionsReport> erList = reportRepo.findByMasterFacilityRecordId(currentReport.getMasterFacilityRecord().getId()).stream()
-                        .filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
-                        .sorted(Comparator.comparing(EmissionsReport::getYear))
-                        .collect(Collectors.toList());
-
-                boolean pyUnitExists = false;
-
-                // check if previous report exists then check if this unit exists in that report
-                if (!erList.isEmpty()) {
-                    Short previousReportYr = erList.get(erList.size()-1).getYear();
-
-                    List<EmissionsUnit> previousUnits = unitRepo.retrieveByIdentifierFacilityYear(
-                            emissionsUnit.getUnitIdentifier(), 
-                            currentReport.getMasterFacilityRecord().getId(), 
-                            previousReportYr);
-
-                    if (!previousUnits.isEmpty()) {
-
-                        pyUnitExists = true;
-
-                    }
-                }
-
-                if (!pyUnitExists) {
-
-                    // new unit is PS/TS
-                    result = false;
-                    context.addFederalError(
-                            ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
-                            "emissionsUnit.statusTypeCode.newShutdown",
-                            createValidationDetails(emissionsUnit));
-                }
-            }
         }
-
+        
         if (emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode() != null 
         		&& ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode())) {
         	
@@ -269,13 +230,14 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
                 createValidationDetails(emissionsUnit));
         }
 
-        // Status year must be between 1900 and 2050
-        if (emissionsUnit.getStatusYear() != null && (emissionsUnit.getStatusYear() < 1900 || emissionsUnit.getStatusYear() > 2050)) {
+        // Status year must be between 1900 and the report year
+        if (emissionsUnit.getStatusYear() != null && (emissionsUnit.getStatusYear() < 1900 || emissionsUnit.getStatusYear() > emissionsUnit.getFacilitySite().getEmissionsReport().getYear())) {
 
             result = false;
             context.addFederalError(
                 ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value(), "emissionsUnit.statusYear.range",
-                createValidationDetails(emissionsUnit));
+                createValidationDetails(emissionsUnit),
+                emissionsUnit.getFacilitySite().getEmissionsReport().getYear().toString());
         }
 
         // Emissions Unit identifier must be unique within the facility.

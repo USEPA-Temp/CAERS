@@ -347,6 +347,16 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
                     createValidationDetails(emissionsProcess));
 		}
 		
+        // Status year must be between 1900 and the report year
+        if (emissionsProcess.getStatusYear() != null && (emissionsProcess.getStatusYear() < 1900 || emissionsProcess.getStatusYear() > emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() )) {
+
+            result = false;
+            context.addFederalError(
+                ValidationField.PROCESS_STATUS_YEAR.value(), "emissionsProcess.statusYear.range",
+                createValidationDetails(emissionsProcess),
+                emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().toString());
+        }
+		
 		if (emissionsProcess.getStatusYear() < emissionsProcess.getEmissionsUnit().getStatusYear()) {
 			
 			result = false;

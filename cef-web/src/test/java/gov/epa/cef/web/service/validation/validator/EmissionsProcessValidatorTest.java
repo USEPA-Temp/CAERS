@@ -559,6 +559,54 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     }
     
     @Test
+    public void simpleValidateStatusYearRangeTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        
+        // Set unit date to 1900 to make sure test doesn't fail due to having a
+        // process status year that is after the associated unit year
+        testData.getEmissionsUnit().setStatusYear((short) 1900);
+        testData.setStatusYear((short) 1900);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        testData.setStatusYear((short) 2019);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void simpleValidateStatusYearRangeFailTest() {
+	      
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        
+        // Set the status year of the emissions unit to make sure we only get the out of range error.
+        // Leaving it as mocked causes the error count to be 2 (triggers error for process date being older than unit date).
+        testData.getEmissionsUnit().setStatusYear((short) 1800);
+        testData.setStatusYear((short) 1800);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_YEAR.value()) && errorMap.get(ValidationField.PROCESS_STATUS_YEAR.value()).size() == 1);
+        
+        cefContext = createContext();
+        testData.setStatusYear((short) 2020);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+        
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_YEAR.value()) && errorMap.get(ValidationField.PROCESS_STATUS_YEAR.value()).size() == 1);
+    }
+    
+    @Test
     public void previousOpYearCurrentShutdownYear() {
     	// pass when previous and current op status is OP
     	CefValidatorContext cefContext = createContext();
@@ -594,7 +642,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	
     	// pass when previous op status is OP, current op status is PS/TS, and current op status year is after previous year
     	cefContext = createContext();
-    	testData.setStatusYear((short) 2020);
+    	testData.setStatusYear((short) 2019);
     	testData.getOperatingStatusCode().setCode("PS");
     	testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("137");
     	
@@ -638,7 +686,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void newProcessShutdownFailTest() {
+    public void newRpShutdownPassFail() {
         // fail when previous report exists, but process doesn't and current op status is TS
         CefValidatorContext cefContext = createContext();
         EmissionsProcess testData = createBaseEmissionsProcess();
@@ -656,16 +704,6 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         // fail when previous report doesn't exist and current op status is TS
         cefContext = createContext();
         testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
-
-        assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
-        errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
-
-        // fail even if facility is a landfill
-        cefContext = createContext();
-        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("104");
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -758,7 +796,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rpa2.setPercent(BigDecimal.valueOf(50));
         rpa1.setId(1L);
         rpa2.setId(2L);
-        result.setStatusYear((short) 2021);
+        result.setStatusYear((short) 2019);
         result.getReleasePointAppts().add(rpa1);
         result.getReleasePointAppts().add(rpa2);
         result.setId(1L);
