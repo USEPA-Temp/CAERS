@@ -91,7 +91,11 @@
     </div>
 
     <div class="float-right mt-3" *ngIf="!readOnlyMode">
-      <button type="button" class="btn btn-success" (click)="onSubmit()">Save and Update</button>
+      <button type="button" class="btn btn-success" (click)="onSubmit()">Save Emissions
+        <div *ngIf="savingBulkInfo" class="spinner-border spinner-border-sm" role="status" title="Saving Emission Information...">
+          <span class="sr-only">Saving Emission Information...</span>
+        </div>
+      </button>
     </div>
   </form>
 </div>
