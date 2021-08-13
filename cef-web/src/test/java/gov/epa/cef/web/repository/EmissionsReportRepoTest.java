@@ -148,6 +148,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		er.setStatus(ReportStatus.APPROVED);
 		er.setValidationStatus(ValidationStatus.PASSED);
 		er.setYear((short) 2018);
+		er.setReturnedReport(false);
 
 		List<FacilitySite> facilitySites = new ArrayList<>();
 		FacilitySite fs = new FacilitySite();

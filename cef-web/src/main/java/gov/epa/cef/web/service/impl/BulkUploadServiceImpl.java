@@ -242,6 +242,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         	    reportToUpdate.setReturnedReport(true);
         	} else {
         	    reportToUpdate.setStatus(ReportStatus.IN_PROGRESS);
+        	    reportToUpdate.setReturnedReport(false);
         	}
             reportToUpdate.setValidationStatus(ValidationStatus.UNVALIDATED);
             reportToUpdate.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
@@ -251,6 +252,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
         //otherwise, just add the entire report from the excel upload into the system
         else {
+        	emissionsReport.setReturnedReport(false);
         	return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.UPLOADED);
         }
     }
