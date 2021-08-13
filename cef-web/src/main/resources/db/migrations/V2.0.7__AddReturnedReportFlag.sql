@@ -1,3 +1,3 @@
 ALTER TABLE emissions_report
-    ADD COLUMN returned_report boolean NOT NULL DEFAULT false;
+    ADD COLUMN returned_report boolean DEFAULT false;
    

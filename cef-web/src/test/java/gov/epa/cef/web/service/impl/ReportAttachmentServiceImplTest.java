@@ -110,6 +110,7 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
 		er.setId(1L);
 		er.setStatus(ReportStatus.APPROVED);
 		er.setValidationStatus(ValidationStatus.PASSED);
+		er.setReturnedReport(false);
 		er.setYear((short) 2019);
 		
     	return er;
