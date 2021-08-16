@@ -666,10 +666,33 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     
     @Test
     public void processOpYearBeforeUnitOpYearPassTest() {
+    	// pass when OP process year is >= OP unit year
         CefValidatorContext cefContext = createContext();
         EmissionsProcess testData = createBaseEmissionsProcess();
         testData.setStatusYear(new Short("2015"));
 
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        // pass when TS/PS process and OP unit
+        cefContext = createContext();
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().setId(2L);
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setStatusYear(new Short("2018"));
+        testData.getEmissionsUnit().setStatusYear(new Short("2019"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        // pass when OP process year is <= unit year
+        cefContext = createContext();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setStatusYear(new Short("2009"));
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("104");
+        
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
@@ -696,6 +719,8 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         FacilitySourceTypeCode fstc = new FacilitySourceTypeCode();
         fstc.setCode("137");
         mfr.setFacilitySourceTypeCode(fstc);
+        OperatingStatusCode os = new OperatingStatusCode();
+        os.setCode("OP");
         
         EmissionsReport report = new EmissionsReport();
         report.setYear(new Short("2019"));
@@ -711,13 +736,11 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         unit.setId(1L);
         unit.setFacilitySite(facility);
         unit.setUnitIdentifier("test_unit");
+        unit.setOperatingStatusCode(os);
         unit.setStatusYear(new Short("2010"));
         facility.getEmissionsUnits().add(unit);
 
         EmissionsProcess result = new EmissionsProcess();
-        
-        OperatingStatusCode os = new OperatingStatusCode();
-        os.setCode("OP");
         
         ReportingPeriod rperiod1 = new ReportingPeriod();
         rperiod1.setId(1L);
