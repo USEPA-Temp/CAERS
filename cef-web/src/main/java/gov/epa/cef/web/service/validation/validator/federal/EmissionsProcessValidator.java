@@ -342,6 +342,16 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			}
 		}
 		
+		// Status year must be between 1900 and the report year
+        if (emissionsProcess.getStatusYear() != null && (emissionsProcess.getStatusYear() < 1900 || emissionsProcess.getStatusYear() > emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() )) {
+            
+        	result = false;
+            context.addFederalError(
+                ValidationField.PROCESS_STATUS_YEAR.value(), "emissionsProcess.statusYear.range",
+                createValidationDetails(emissionsProcess),
+                emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().toString());
+        }
+		
 		// process operating status year cannot be before unit operating status year when both are OP.
 		// check does not apply to landfills, process can be operating while unit is TS/PS.
 		if (isProcessOperating && !sourceTypeLandfill

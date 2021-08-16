@@ -723,7 +723,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         os.setCode("OP");
         
         EmissionsReport report = new EmissionsReport();
-        report.setYear(new Short("2019"));
+        report.setYear(new Short("2020"));
         report.setId(3L);
         report.setEisProgramId("1");
         report.setMasterFacilityRecord(mfr);
@@ -771,7 +771,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rpa2.setPercent(BigDecimal.valueOf(50));
         rpa1.setId(1L);
         rpa2.setId(2L);
-        result.setStatusYear((short) 2021);
+        result.setStatusYear((short) 2020);
         result.getReleasePointAppts().add(rpa1);
         result.getReleasePointAppts().add(rpa2);
         result.setId(1L);
