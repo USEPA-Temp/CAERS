@@ -111,6 +111,29 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
         return emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(result);
     }
 
+    /**
+     * Retrieve versions of this process from the last year reported
+     * @param id
+     * @return
+     */
+    public EmissionsProcessDto retrievePreviousById(Long id) {
+        EmissionsProcess process= processRepo
+                .findById(id)
+                .orElse(null);
+
+        Long mfrId = processRepo.retrieveMasterFacilityRecordIdById(id).orElse(null);
+
+        EmissionsProcess result = this.findPrevious(mfrId, 
+                    process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear(), 
+                    process.getEmissionsProcessIdentifier(), 
+                    process.getEmissionsUnit().getUnitIdentifier())
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        return emissionsProcessMapper.emissionsProcessToEmissionsProcessDto(result);
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.EmissionsProcessService#retrieveForReleasePoint(java.lang.Long)
      */
@@ -142,25 +165,44 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
         Long mfrId = processRepo.retrieveMasterFacilityRecordIdById(id).orElse(null);
 
-     // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
-                process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear());
-
-        // check if the emissions process was reported last year
-        if (lastReport.isPresent()) {
-            processRepo.retrieveByIdentifierParentFacilityYear(process.getEmissionsProcessIdentifier(),
-                    process.getEmissionsUnit().getUnitIdentifier(), 
-                    mfrId, 
-                    lastReport.get().getYear())
-                    .stream().findFirst().ifPresent(oldUnit -> {
-                        throw new AppValidationException("This Process has been submitted on previous years' facility reports, so it cannot be deleted. "
-                                + "If this Process is no longer operational, please use the \"Operating Status\" field to mark this Process as \"Permanently Shutdown\".");
-                    });
-        }
+        this.findPrevious(mfrId, 
+                process.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear(), 
+                process.getEmissionsProcessIdentifier(), 
+                process.getEmissionsUnit().getUnitIdentifier())
+            .stream()
+            .findFirst()
+            .ifPresent(oldUnit -> {
+                throw new AppValidationException("This Process has been submitted on previous years' facility reports, so it cannot be deleted. "
+                        + "If this Process is no longer operational, please use the \"Operating Status\" field to mark this Process as \"Permanently Shutdown\".");
+            });
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(id), EmissionsProcessRepository.class);
         processRepo.deleteById(id);
     }
 
+    /**
+     * Find versions of this Process from the last year reported
+     * @param mfrId
+     * @param year
+     * @param processIdentifier
+     * @param unitIdentifier
+     * @return
+     */
+    private List<EmissionsProcess> findPrevious(Long mfrId, Short year, String processIdentifier, String unitIdentifier) {
+
+        // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
+                year);
+
+        // check if the emissions process was reported last year
+        if (lastReport.isPresent()) {
+            return processRepo.retrieveByIdentifierParentFacilityYear(processIdentifier,
+                    unitIdentifier, 
+                    mfrId, 
+                    lastReport.get().getYear());
+        }
+
+        return Collections.emptyList();
+    }
 
 }

@@ -24,6 +24,13 @@ public interface ControlService {
     ControlPostOrderDto retrieveById(Long id);
 
     /**
+     * Retrieve versions of this control from the last year reported
+     * @param id
+     * @return
+     */
+    ControlPostOrderDto retrievePreviousById(Long id);
+
+    /**
      * Retrieve Controls for a facility site
      * @param facilitySiteId
      * @return

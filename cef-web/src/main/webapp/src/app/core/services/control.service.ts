@@ -25,6 +25,11 @@ export class ControlService {
     return this.http.get<Control>(url);
   }
 
+  retrievePrevious(id: number): Observable<Control> {
+    const url = `${this.baseUrl}/${id}/previous`;
+    return this.http.get<Control>(url);
+  }
+
   retrieveForFacilitySite(facilitySiteId: number): Observable<Control[]> {
     const url = `${this.baseUrl}/facilitySite/${facilitySiteId}`;
     return this.http.get<Control[]>(url);

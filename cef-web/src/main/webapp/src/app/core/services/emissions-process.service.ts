@@ -28,6 +28,11 @@ export class EmissionsProcessService {
     return this.http.get<Process>(url);
   }
 
+  retrievePrevious(id: number): Observable<Process> {
+    const url = `${this.baseUrl}/${id}/previous`;
+    return this.http.get<Process>(url);
+  }
+
   retrieveForReleasePoint(releasePointId: number): Observable<Process[]> {
     const url = `${this.baseUrl}/releasePoint/${releasePointId}`;
     return this.http.get<Process[]>(url);

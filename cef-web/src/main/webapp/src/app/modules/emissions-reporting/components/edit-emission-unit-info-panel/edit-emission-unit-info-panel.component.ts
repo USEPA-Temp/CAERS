@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, OnChanges} from '@angular/core';
-import {FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors} from '@angular/forms';
+import {FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors, AbstractControl} from '@angular/forms';
 import {EmissionUnit} from 'src/app/shared/models/emission-unit';
 import {LookupService} from 'src/app/core/services/lookup.service';
 import {BaseCodeLookup} from 'src/app/shared/models/base-code-lookup';
@@ -19,6 +19,7 @@ import {VariableValidationType} from 'src/app/shared/enums/variable-validation-t
 })
 export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     @Input() emissionUnit: EmissionUnit;
+    previousUnit: EmissionUnit;
     designCapacityWarning: any;
     facilitySite: FacilitySite;
     emissionUnitIdentifiers: string[] = [];
@@ -28,7 +29,10 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
     emissionUnitForm = this.fb.group({
         unitTypeCode: [null, Validators.required],
-        operatingStatusCode: [null, Validators.required],
+        operatingStatusCode: [null, [
+            Validators.required,
+            this.newSfcOperatingValidator()
+        ]],
         unitOfMeasureCode: [null],
         unitIdentifier: ['', [
             Validators.required,
@@ -95,6 +99,11 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                         if (this.emissionUnit) {
                             this.emissionUnitIdentifiers = this.emissionUnitIdentifiers.filter(identifer =>
                                 identifer.toString() !== this.emissionUnit.unitIdentifier);
+
+                            this.emissionUnitService.retrievePrevious(this.emissionUnit.id)
+                            .subscribe(result => {
+                                this.previousUnit = result;
+                            });
                         } else {
                             this.edit = false;
                         }
@@ -256,4 +265,17 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
             return null;
         });
     }
+
+    /**
+     * Require newly created Sub-Facility Components to be Operating
+     */
+    newSfcOperatingValidator(): ValidatorFn {
+        return (control: AbstractControl): {[key: string]: any} | null => {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousUnit) {
+                return {newSfcOperating: {value: control.value.code}};
+            }
+            return null;
+        };
+    }
+
 }

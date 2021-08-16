@@ -88,6 +88,21 @@ public class EmissionsProcessApi {
     }
 
     /**
+     * Retrieve versions of this process from the last year reported
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}/previous")
+    public ResponseEntity<EmissionsProcessDto> retrievePreviousEmissionsProcess(@NotNull @PathVariable Long id) {
+
+        this.securityService.facilityEnforcer().enforceEntity(id, EmissionsProcessRepository.class);
+
+        EmissionsProcessDto result = processService.retrievePreviousById(id);
+
+        return new ResponseEntity<EmissionsProcessDto>(result, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve Emissions Processes for a release point
      * @param releasePointId
      * @return

@@ -29,6 +29,11 @@ export class ReleasePointService {
     return this.http.get<ReleasePoint>(url);
   }
 
+  retrievePrevious(id: number): Observable<ReleasePoint> {
+    const url = `${this.baseUrl}/${id}/previous`;
+    return this.http.get<ReleasePoint>(url);
+  }
+
   retrieveForFacility(facilitySiteId: number): Observable<ReleasePoint[]> {
     const url = `${this.baseUrl}/facility/${facilitySiteId}`;
     return this.http.get<ReleasePoint[]>(url);

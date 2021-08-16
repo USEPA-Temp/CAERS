@@ -29,6 +29,13 @@ public interface EmissionsProcessService {
     EmissionsProcessDto retrieveById(Long id);
 
     /**
+     * Retrieve versions of this process from the last year reported
+     * @param id
+     * @return
+     */
+    EmissionsProcessDto retrievePreviousById(Long id);
+
+    /**
      * Retrieve Emissions Processes for a release point
      * @param pointId
      * @return

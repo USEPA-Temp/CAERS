@@ -70,6 +70,21 @@ public class ControlApi {
     }
 
     /**
+     * Retrieve versions of this control from the last year reported
+     * @param controlId
+     * @return
+     */
+    @GetMapping(value = "/{controlId}/previous")
+    public ResponseEntity<ControlPostOrderDto> retrievePreviousControl(@NotNull @PathVariable Long controlId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(controlId, ControlRepository.class);
+
+        ControlPostOrderDto result = controlService.retrievePreviousById(controlId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve Controls for a facility site
      * @param facilitySiteId
      * @return
