@@ -41,6 +41,11 @@ export class EmissionUnitService {
     return this.http.get<EmissionUnit>(url);
   }
 
+  retrievePrevious(id: number): Observable<EmissionUnit> {
+    const url = `${this.baseUrl}/${id}/previous`;
+    return this.http.get<EmissionUnit>(url);
+  }
+
   /**
    * Retrieves the report emissions units and transform them to side navigation tree items.
    */

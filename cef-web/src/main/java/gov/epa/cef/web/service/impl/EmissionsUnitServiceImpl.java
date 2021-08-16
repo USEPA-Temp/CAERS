@@ -55,6 +55,25 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
     }
 
     /**
+     * Retrieve versions of this unit from the last year reported
+     * @param unitId
+     * @return
+     */
+    public EmissionsUnitDto retrievePreviousById(Long unitId) {
+        EmissionsUnit emissionsUnit= unitRepo
+                .findById(unitId)
+                .orElse(null);
+
+        Long mfrId = unitRepo.retrieveMasterFacilityRecordIdById(unitId).orElse(null);
+
+        EmissionsUnit result = this.findPrevious(mfrId, emissionsUnit.getFacilitySite().getEmissionsReport().getYear(), emissionsUnit.getUnitIdentifier())
+                .stream()
+                .findFirst()
+                .orElse(null);
+        return emissionsUnitMapper.emissionsUnitToDto(result);
+    }
+
+    /**
      * Delete an Emissions Unit for a given id
      * @param unitId
      */
@@ -65,20 +84,13 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
 
         Long mfrId = unitRepo.retrieveMasterFacilityRecordIdById(unitId).orElse(null);
 
-        // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
-                emissionsUnit.getFacilitySite().getEmissionsReport().getYear());
-
-        // check if the emissions unit was reported last year
-        if (lastReport.isPresent()) {
-            unitRepo.retrieveByIdentifierFacilityYear(emissionsUnit.getUnitIdentifier(),
-                    mfrId,
-                    lastReport.get().getYear())
-                    .stream().findFirst().ifPresent(oldUnit -> {
-                        throw new AppValidationException("This Unit has been submitted on previous years' facility reports, so it cannot be deleted. "
-                                + "If this Unit is no longer operational, please use the \"Operating Status\" field to mark this Unit as \"Permanently Shutdown\".");
-                    });
-        }
+        this.findPrevious(mfrId, emissionsUnit.getFacilitySite().getEmissionsReport().getYear(), emissionsUnit.getUnitIdentifier())
+            .stream()
+            .findFirst()
+            .ifPresent(oldUnit -> {
+                throw new AppValidationException("This Unit has been submitted on previous years' facility reports, so it cannot be deleted. "
+                        + "If this Unit is no longer operational, please use the \"Operating Status\" field to mark this Unit as \"Permanently Shutdown\".");
+            });
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(unitId), EmissionsUnitRepository.class);
         unitRepo.deleteById(unitId);
@@ -121,6 +133,29 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), EmissionsUnitRepository.class);
         return result;
+    }
+
+    /**
+     * Find versions of this unit from the last year reported
+     * @param mfrId
+     * @param year
+     * @param identifier
+     * @return
+     */
+    private List<EmissionsUnit> findPrevious(Long mfrId, Short year, String identifier) {
+
+        // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
+                year);
+
+        // check if the emissions unit was reported last year
+        if (lastReport.isPresent()) {
+            return unitRepo.retrieveByIdentifierFacilityYear(identifier,
+                    mfrId,
+                    lastReport.get().getYear());
+        }
+
+        return Collections.emptyList();
     }
 
 }

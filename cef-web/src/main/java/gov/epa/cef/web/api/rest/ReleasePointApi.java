@@ -69,6 +69,21 @@ public class ReleasePointApi {
     }
 
     /**
+     * Retrieve versions of this rp from the last year reported
+     * @param pointId
+     * @return
+     */
+    @GetMapping(value = "/{pointId}/previous")
+    public ResponseEntity<ReleasePointDto> retrievePreviousReleasePoint(@NotNull @PathVariable Long pointId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(pointId, ReleasePointRepository.class);
+
+        ReleasePointDto result = releasePointService.retrievePreviousById(pointId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve Release Points for a facility
      * @param facilitySiteId
      * @return

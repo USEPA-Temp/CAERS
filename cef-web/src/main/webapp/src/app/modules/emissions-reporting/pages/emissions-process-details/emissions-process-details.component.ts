@@ -30,6 +30,7 @@ import { UtilityService } from 'src/app/core/services/utility.service';
 })
 export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
+  previousProcess: Process;
   controlPaths: ControlPath[];
   facilitySite: FacilitySite;
   unitIdentifier: string;
@@ -96,6 +97,12 @@ export class EmissionsProcessDetailsComponent implements OnInit {
           this.controlPaths = controlPaths.sort((a, b) => (a.pathId > b.pathId) ? 1 : -1);
         });
       });
+
+      this.processService.retrievePrevious(+map.get('processId'))
+      .subscribe(result => {
+          this.previousProcess = result;
+      });
+
 
     });
 

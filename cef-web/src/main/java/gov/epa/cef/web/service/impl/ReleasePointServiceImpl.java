@@ -74,6 +74,25 @@ public class ReleasePointServiceImpl implements ReleasePointService {
         return releasePointMapper.toDto(releasePoint);
     }
 
+    /**
+     * Retrieve versions of this rp from the last year reported
+     * @param releasePointId
+     * @return
+     */
+    public ReleasePointDto retrievePreviousById(Long releasePointId) {
+        ReleasePoint releasePoint= releasePointRepo
+            .findById(releasePointId)
+            .orElse(null);
+
+        Long mfrId = releasePointRepo.retrieveMasterFacilityRecordIdById(releasePointId).orElse(null);
+
+        ReleasePoint result = this.findPrevious(mfrId, releasePoint.getFacilitySite().getEmissionsReport().getYear(), releasePoint.getReleasePointIdentifier())
+                .stream()
+                .findFirst()
+                .orElse(null);
+        return releasePointMapper.toDto(result);
+    }
+
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReleasePointService#retrieveByFacilityId(java.lang.Long)
      */
@@ -107,20 +126,13 @@ public class ReleasePointServiceImpl implements ReleasePointService {
 
         Long mfrId = releasePointRepo.retrieveMasterFacilityRecordIdById(releasePointId).orElse(null);
 
-        // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
-                rp.getFacilitySite().getEmissionsReport().getYear());
-
-        // check if the release point was reported last year
-        if (lastReport.isPresent()) {
-            releasePointRepo.retrieveByIdentifierFacilityYear(rp.getReleasePointIdentifier(), 
-                    mfrId, 
-                    lastReport.get().getYear())
-                    .stream().findFirst().ifPresent(oldRp -> {
-                        throw new AppValidationException("This Release Point has been submitted on previous years' facility reports, so it cannot be deleted. "
-                                + "If this Release Point is no longer operational, please use the \"Operating Status\" field to mark this Release Point as \"Permanently Shutdown\".");
-                    });
-        }
+        this.findPrevious(mfrId, rp.getFacilitySite().getEmissionsReport().getYear(), rp.getReleasePointIdentifier())
+            .stream()
+            .findFirst()
+            .ifPresent(oldRp -> {
+                throw new AppValidationException("This Release Point has been submitted on previous years' facility reports, so it cannot be deleted. "
+                        + "If this Release Point is no longer operational, please use the \"Operating Status\" field to mark this Release Point as \"Permanently Shutdown\".");
+            });
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(releasePointId), ReleasePointRepository.class);
     	releasePointRepo.deleteById(releasePointId);
@@ -171,6 +183,29 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ReleasePointApptRepository.class);
 
         return result;
+    }
+
+    /**
+     * Find versions of this rp from the last year reported
+     * @param mfrId
+     * @param year
+     * @param identifier
+     * @return
+     */
+    private List<ReleasePoint> findPrevious(Long mfrId, Short year, String identifier) {
+
+        // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
+                year);
+
+        // check if the release point was reported last year
+        if (lastReport.isPresent()) {
+            return releasePointRepo.retrieveByIdentifierFacilityYear(identifier,
+                    mfrId,
+                    lastReport.get().getYear());
+        }
+
+        return Collections.emptyList();
     }
     
 }

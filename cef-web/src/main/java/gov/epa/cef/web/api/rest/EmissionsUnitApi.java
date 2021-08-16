@@ -84,6 +84,21 @@ public class EmissionsUnitApi {
     }
 
     /**
+     * Retrieve versions of this unit from the last year reported
+     * @param unitId
+     * @return
+     */
+    @GetMapping(value = "/{unitId}/previous")
+    public ResponseEntity<EmissionsUnitDto> retrievePreviousEmissionsUnit(@NotNull @PathVariable Long unitId) {
+
+        this.securityService.facilityEnforcer().enforceEntity(unitId, EmissionsUnitRepository.class);
+
+        EmissionsUnitDto emissionsUnit = emissionsUnitService.retrievePreviousById(unitId);
+
+        return new ResponseEntity<>(emissionsUnit, HttpStatus.OK);
+    }
+
+    /**
      * Retrieve emissions unit of a facility
      * @param facilitySiteId
      * @return list of emissions unit

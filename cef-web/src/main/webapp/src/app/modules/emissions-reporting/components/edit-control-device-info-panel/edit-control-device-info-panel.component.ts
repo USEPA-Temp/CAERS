@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, OnChanges} from '@angular/core';
 import {Control} from 'src/app/shared/models/control';
 import {BaseCodeLookup} from 'src/app/shared/models/base-code-lookup';
-import {FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors} from '@angular/forms';
+import {FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors, AbstractControl} from '@angular/forms';
 import {LookupService} from 'src/app/core/services/lookup.service';
 import {FormUtilsService} from 'src/app/core/services/form-utils.service';
 import {ControlService} from 'src/app/core/services/control.service';
@@ -24,6 +24,7 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
 export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     @Input() control: Control;
     @Input() year: number;
+    previousControl: Control;
     controlIdentifiers: string[] = [];
     facilityOpCode: BaseCodeLookup;
     facilitySourceTypeCode: BaseCodeLookup;
@@ -38,7 +39,10 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
             Validators.min(1),
             Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
         ]],
-        operatingStatusCode: [null, Validators.required],
+        operatingStatusCode: [null, [
+            Validators.required,
+            this.newSfcOperatingValidator()
+        ]],
         // Validators set in ngOnInit
         statusYear: [''],
         controlMeasureCode: [null, [Validators.required]],
@@ -104,6 +108,12 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                         // if a control is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
                         if (this.control) {
                             this.controlIdentifiers = this.controlIdentifiers.filter(identifer => identifer.toString() !== this.control.identifier);
+
+                            this.controlService.retrievePrevious(this.control.id)
+                            .subscribe(result => {
+                                this.previousControl = result;
+                            });
+
                         }
 
                     });
@@ -254,6 +264,18 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                 control.get('upgradeDate').setErrors({upgradeDateInvalid: true});
             }
 
+            return null;
+        };
+    }
+
+    /**
+     * Require newly created Sub-Facility Components to be Operating
+     */
+    newSfcOperatingValidator(): ValidatorFn {
+        return (control: AbstractControl): {[key: string]: any} | null => {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousControl) {
+                return {newSfcOperating: {value: control.value.code}};
+            }
             return null;
         };
     }

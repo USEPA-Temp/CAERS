@@ -91,4 +91,8 @@
       The {{control.errors.legacyItem.type}} {{control.errors.legacyItem.value[control.errors.legacyItem.displayField]}} is no longer valid. 
       Please select a different {{control.errors.legacyItem.type}}.
   </div>
+
+  <div *ngIf="control.errors?.newSfcOperating">
+      New facility components added in the current year report must have a status of "Operating"
+  </div>
 </div>
