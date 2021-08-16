@@ -42,11 +42,8 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
     ]],
     operatingStatusCode: [null, Validators.required],
     facilityCategoryCode: [null],
-    statusYear: ['', [
-      Validators.required,
-      Validators.min(1900),
-      Validators.max(2050),
-      numberValidator()]],
+    // Validators set in ngOnInit
+    statusYear: [''],
     tribalCode: [null],
     streetAddress: ['', [
       Validators.maxLength(100),
@@ -82,7 +79,11 @@ export class EditFacilitySiteInfoPanelComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.facilitySiteForm.get('countyCode').setValidators([Validators.required, legacyItemValidator(this.facilitySite.emissionsReport.year, 'County', 'name')]);
-
+    this.facilitySiteForm.get('statusYear').setValidators([
+                    Validators.required,
+                    Validators.min(1900),
+                    Validators.max(this.facilitySite.emissionsReport.year),
+                    numberValidator()]);
     this.facilitySiteForm.get('stateCode').valueChanges
     .subscribe(value => {
       if (value) {

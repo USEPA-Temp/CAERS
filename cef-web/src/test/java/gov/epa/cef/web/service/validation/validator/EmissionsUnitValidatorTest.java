@@ -155,7 +155,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         OperatingStatusCode opStatusCode = new OperatingStatusCode();
         opStatusCode.setCode("PS");
         testData.setOperatingStatusCode(opStatusCode);
-        testData.setStatusYear((short) 2021);
+        testData.setStatusYear((short) 2020);
         
         // Operating status code of PS will generate a warning to inform users component will not be copied forward
         assertFalse(this.validator.validate(cefContext, testData));
@@ -175,7 +175,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         
         cefContext = createContext();
         EmissionsProcess ep1 = new EmissionsProcess();
-		ep1.setStatusYear((short) 2020);
+		ep1.setStatusYear((short) 2019);
         ep1.setOperatingStatusCode(opStatusCode);
         ep1.setSccCode("10200301"); // not required
         ep1.setEmissionsProcessIdentifier("Boiler 001");
@@ -216,7 +216,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
         
         cefContext = createContext();
-        testData.setStatusYear((short) 2050);
+        testData.setStatusYear((short) 2020);
         
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -237,7 +237,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_YEAR.value()).size() == 1);
         
         cefContext = createContext();
-        testData.setStatusYear((short) 2051);
+        testData.setStatusYear((short) 2021);
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -1120,7 +1120,7 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         
         EmissionsReport er = new EmissionsReport();
         er.setId(1L);
-        er.setYear(new Short("2019"));
+        er.setYear(new Short("2020"));
         er.setMasterFacilityRecord(mfr);
         
         FacilitySite facility = new FacilitySite();

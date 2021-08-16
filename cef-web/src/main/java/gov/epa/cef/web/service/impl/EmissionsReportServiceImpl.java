@@ -253,6 +253,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.setHasSubmitted(false);
+                cloneReport.setReturnedReport(false);
                 cloneReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
                 cloneReport.getFacilitySites().forEach(fs -> {
                     this.mfrMapper.updateFacilitySite(cloneReport.getMasterFacilityRecord(), fs);
@@ -280,6 +281,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         newReport.setValidationStatus(ValidationStatus.UNVALIDATED);
         newReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
         newReport.setHasSubmitted(false);
+        newReport.setReturnedReport(false);
 
         FacilitySite facilitySite = this.mfrMapper.toFacilitySite(mfr);
         facilitySite.setEmissionsReport(newReport);

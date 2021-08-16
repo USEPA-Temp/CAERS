@@ -39,12 +39,8 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
             Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
         ]],
         operatingStatusCode: [null, Validators.required],
-        statusYear: ['', [
-            Validators.required,
-            Validators.min(1900),
-            Validators.max(2050),
-            numberValidator()
-        ]],
+        // Validators set in ngOnInit
+        statusYear: [''],
         controlMeasureCode: [null, [Validators.required]],
         numberOperatingMonths: [null, [
             Validators.max(12.0),
@@ -111,6 +107,11 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                         }
 
                     });
+                this.controlDeviceForm.get('statusYear').setValidators([
+                    Validators.required,
+                    Validators.min(1900),
+                    Validators.max(data.facilitySite.emissionsReport.year),
+                    numberValidator()])
             });
 
         if (this.control) {

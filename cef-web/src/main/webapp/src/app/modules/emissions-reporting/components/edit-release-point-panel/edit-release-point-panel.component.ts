@@ -64,12 +64,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             Validators.maxLength(20)
         ]],
         operatingStatusCode: [null, Validators.required],
-        statusYear: ['', [
-            Validators.required,
-            Validators.min(1900),
-            Validators.max(2050),
-            numberValidator()
-        ]],
+        // Validators set in ngOnInit
+        statusYear: [''],
         typeCode: [null],
         description: ['', [
             Validators.maxLength(200),
@@ -229,6 +225,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                         }
 
                     });
+                this.releasePointForm.get('statusYear').setValidators([
+                    Validators.required,
+                    Validators.min(1900),
+                    Validators.max(data.facilitySite.emissionsReport.year),
+                    numberValidator()])
             });
 
         this.setFormValidation();

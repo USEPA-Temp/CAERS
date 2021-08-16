@@ -45,11 +45,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             Validators.required,
             Validators.maxLength(20)
         ]],
-        statusYear: ['', [
-            Validators.min(1900),
-            Validators.max(2050),
-            Validators.pattern('[0-9]*')
-        ]],
+        // Validators set in ngOnInit
+        statusYear: [''],
         sccCode: ['', [
             Validators.required,
             Validators.maxLength(20)
@@ -99,6 +96,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
             this.emissionsReportYear = data.facilitySite.emissionsReport.year;
         });
+
+        this.processForm.get('statusYear').setValidators([
+                    Validators.min(1900),
+                    Validators.max(this.emissionsReportYear),
+                    Validators.pattern('[0-9]*')]);
 
         // SCC codes associated with Aircraft Engine Type Codes
         this.aircraftEngineSCC = [

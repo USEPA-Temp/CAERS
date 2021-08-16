@@ -98,13 +98,14 @@ public class ControlValidator extends BaseValidator<Control> {
 		            createValidationDetails(control));
 		}
 		
-		// Status year must be between 1900 and 2050
-		if (control.getStatusYear() != null && (control.getStatusYear() < 1900 || control.getStatusYear() > 2050)) {
+		// Status year must be between 1900 and the report year
+		if (control.getStatusYear() != null && (control.getStatusYear() < 1900 || control.getStatusYear() > control.getFacilitySite().getEmissionsReport().getYear())) {
 
 	        result = false;
 	        context.addFederalError(
 	            ValidationField.CONTROL_STATUS_YEAR.value(), "control.statusYear.range",
-	            createValidationDetails(control));
+	            createValidationDetails(control),
+	            control.getFacilitySite().getEmissionsReport().getYear().toString());
 		}
 
         // Number Operating Months must be between 1 and 12

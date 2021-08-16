@@ -34,11 +34,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
             Validators.required,
             Validators.maxLength(20)
         ]],
-        statusYear: ['', [
-            Validators.min(1900),
-            Validators.max(2050),
-            Validators.pattern('[0-9]*')
-        ]],
+        // Validators set in ngOnInit
+        statusYear: [''],
         designCapacity: ['', [
             Validators.min(0.01),
             Validators.max(100000000),
@@ -83,6 +80,10 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
             .subscribe((data: { facilitySite: FacilitySite }) => {
                 this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
                 this.facilityOpCode = data.facilitySite.operatingStatusCode;
+                this.emissionUnitForm.get('statusYear').setValidators([
+                    Validators.min(1900),
+                    Validators.max(data.facilitySite.emissionsReport.year),
+                    Validators.pattern('[0-9]*')]);
                 this.emissionUnitService.retrieveForFacility(data.facilitySite.id)
                     .subscribe(emissionUnits => {
                         emissionUnits.forEach(eu => {

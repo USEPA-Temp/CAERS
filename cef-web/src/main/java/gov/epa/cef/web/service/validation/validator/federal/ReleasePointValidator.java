@@ -542,13 +542,14 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                 createValidationDetails(releasePoint));
         }
 
-        // Status year must be between 1900 and 2050
-        if (releasePoint.getStatusYear() != null && (releasePoint.getStatusYear() < 1900 || releasePoint.getStatusYear() > 2050)) {
+        // Status year must be between 1900 and the report year
+        if (releasePoint.getStatusYear() != null && (releasePoint.getStatusYear() < 1900 || releasePoint.getStatusYear() > releasePoint.getFacilitySite().getEmissionsReport().getYear())) {
 
             result = false;
             context.addFederalError(
                 ValidationField.RP_STATUS_YEAR.value(), "releasePoint.statusYear.range",
-                createValidationDetails(releasePoint));
+                createValidationDetails(releasePoint),
+                releasePoint.getFacilitySite().getEmissionsReport().getYear().toString());
         }
 
         if (releasePoint != null && releasePoint.getFacilitySite() != null && releasePoint.getFacilitySite().getReleasePoints() != null) {
