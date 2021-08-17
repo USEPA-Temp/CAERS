@@ -880,6 +880,32 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setStackDiameter(null);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(2.0));
+        testData.setStackLength(BigDecimal.valueOf(23.0));
+        testData.setStackWidth(BigDecimal.valueOf(8.5));
+        testData.setStackLengthUomCode(uomFT);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setStackLengthUomCode(null);
+        testData.setStackWidthUomCode(uomFT);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+
         // Verify QA Checks are NOT run when RP is NOT Operating
         // Operating status code of PS will generate a warning to inform users component will not be copied forward
         testData = createBaseFugitiveReleasePoint();
@@ -1134,11 +1160,16 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
 
+        UnitMeasureCode ftUom = new UnitMeasureCode();
+        ftUom.setCode("FT");
+
         testData.setStackDiameter(null);
         testData.setExitGasFlowRate(BigDecimal.valueOf(2.0));
         testData.setStackLength(BigDecimal.valueOf(23.0));
+        testData.setStackLengthUomCode(ftUom);
         testData.setStackWidth(BigDecimal.valueOf(8.5));
-        
+        testData.setStackWidthUomCode(ftUom);
+
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
@@ -1148,9 +1179,14 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
 
+        UnitMeasureCode ftUom = new UnitMeasureCode();
+        ftUom.setCode("FT");
+
         testData.setStackDiameter(BigDecimal.valueOf(0.5));
         testData.setStackLength(BigDecimal.valueOf(1.0));
+        testData.setStackLengthUomCode(ftUom);
         testData.setStackWidth(BigDecimal.valueOf(1.96));
+        testData.setStackWidthUomCode(ftUom);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
