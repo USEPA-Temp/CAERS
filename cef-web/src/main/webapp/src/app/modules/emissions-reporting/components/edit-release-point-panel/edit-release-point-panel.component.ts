@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, OnChanges} from '@angular/core';
 import {LookupService} from 'src/app/core/services/lookup.service';
-import {FormBuilder, Validators, ValidationErrors, ValidatorFn, FormGroup} from '@angular/forms';
+import {FormBuilder, Validators, ValidationErrors, ValidatorFn, FormGroup, AbstractControl} from '@angular/forms';
 import {BaseCodeLookup} from 'src/app/shared/models/base-code-lookup';
 import {FormUtilsService} from 'src/app/core/services/form-utils.service';
 import {ReleasePoint} from 'src/app/shared/models/release-point';
@@ -31,6 +31,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     @Input() releasePoint: ReleasePoint;
     @Input() year: number;
+    previousReleasePoint: ReleasePoint;
     releasePointIdentifiers: string[] = [];
     readonly fugitiveType = 'Fugitive';
     readonly circleAreaFormula: string = '(Pi * (Stack Diameter /2) ^ 2) for a circular stack';
@@ -63,13 +64,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             Validators.required,
             Validators.maxLength(20)
         ]],
-        operatingStatusCode: [null, Validators.required],
-        statusYear: ['', [
+        operatingStatusCode: [null, [
             Validators.required,
-            Validators.min(1900),
-            Validators.max(2050),
-            numberValidator()
+            this.newSfcOperatingValidator()
         ]],
+        // Validators set in ngOnInit
+        statusYear: [''],
         typeCode: [null],
         description: ['', [
             Validators.maxLength(200),
@@ -226,9 +226,19 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                         // if a release point is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
                         if (this.releasePoint) {
                             this.releasePointIdentifiers = this.releasePointIdentifiers.filter(identifer => identifer.toString() !== this.releasePoint.releasePointIdentifier);
+
+                            this.releasePointService.retrievePrevious(this.releasePoint.id)
+                            .subscribe(result => {
+                                this.previousReleasePoint = result;
+                            });
                         }
 
                     });
+                this.releasePointForm.get('statusYear').setValidators([
+                    Validators.required,
+                    Validators.min(1900),
+                    Validators.max(data.facilitySite.emissionsReport.year),
+                    numberValidator()])
             });
 
         this.setFormValidation();
@@ -340,6 +350,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.typeCode.updateValueAndValidity();
 
         if (this.releaseType === this.fugitiveType) {
+            this.releasePointForm.controls.fugitiveLengthUomCode.enable();
+            this.releasePointForm.controls.fugitiveWidthUomCode.enable();
+            this.releasePointForm.controls.fugitiveHeightUomCode.enable();
             this.releasePointForm.controls.stackHeight.disable();
             this.releasePointForm.controls.stackDiameter.disable();
             this.releasePointForm.controls.stackWidth.disable();
@@ -354,11 +367,10 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.releasePointForm.controls.stackWidth.reset();
             this.releasePointForm.controls.stackLength.reset();
             this.releasePointForm.controls.exitGasTemperature.reset();
-            this.releasePointForm.controls.stackHeightUomCode.reset();
-            this.releasePointForm.controls.stackDiameterUomCode.reset();
-            this.releasePointForm.controls.stackWidthUomCode.reset();
-            this.releasePointForm.controls.stackLengthUomCode.reset();
         } else {
+            this.releasePointForm.controls.fugitiveLengthUomCode.disable();
+            this.releasePointForm.controls.fugitiveWidthUomCode.disable();
+            this.releasePointForm.controls.fugitiveHeightUomCode.disable();
             this.releasePointForm.controls.stackHeight.enable();
             this.releasePointForm.controls.stackDiameter.enable();
             this.releasePointForm.controls.exitGasTemperature.enable();
@@ -374,9 +386,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             this.releasePointForm.controls.fugitiveWidth.reset();
             this.releasePointForm.controls.fugitiveHeight.reset();
             this.releasePointForm.controls.fugitiveAngle.reset();
-            this.releasePointForm.controls.fugitiveLengthUomCode.reset();
-            this.releasePointForm.controls.fugitiveWidthUomCode.reset();
-            this.releasePointForm.controls.fugitiveHeightUomCode.reset();
         }
     }
 
@@ -778,4 +787,17 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             return null;
         });
     }
+
+    /**
+     * Require newly created Sub-Facility Components to be Operating
+     */
+    newSfcOperatingValidator(): ValidatorFn {
+        return (control: AbstractControl): {[key: string]: any} | null => {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousReleasePoint) {
+                return {newSfcOperating: {value: control.value.code}};
+            }
+            return null;
+        };
+    }
+
 }

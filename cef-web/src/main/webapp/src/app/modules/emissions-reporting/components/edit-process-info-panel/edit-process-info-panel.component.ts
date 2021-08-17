@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, OnChanges, AfterContentChecked} from '@angular/core';
 import {LookupService} from 'src/app/core/services/lookup.service';
-import {FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors} from '@angular/forms';
+import {FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors, AbstractControl} from '@angular/forms';
 import {BaseCodeLookup} from 'src/app/shared/models/base-code-lookup';
 import {Process} from 'src/app/shared/models/process';
 import {FormUtilsService} from 'src/app/core/services/form-utils.service';
@@ -26,6 +26,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     @Input() process: Process;
     @Input() unitIdentifier: string;
     @Input() emissionsUnit: EmissionUnit;
+    @Input() previousProcess: Process;
     sccAndAircraftCombinations: string[] = [];
     emissionsProcessIdentifiers: string[] = [];
     emissionUnit: EmissionUnit;
@@ -40,16 +41,16 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
 
     processForm = this.fb.group({
         aircraftEngineTypeCode: [null],
-        operatingStatusCode: [null, Validators.required],
+        operatingStatusCode: [null, [
+            Validators.required,
+            this.newSfcOperatingValidator()
+        ]],
         emissionsProcessIdentifier: ['', [
             Validators.required,
             Validators.maxLength(20)
         ]],
-        statusYear: ['', [
-            Validators.min(1900),
-            Validators.max(2050),
-            Validators.pattern('[0-9]*')
-        ]],
+        // Validators set in ngOnInit
+        statusYear: [''],
         sccCode: ['', [
             Validators.required,
             Validators.maxLength(20)
@@ -99,6 +100,11 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             this.facilitySourceTypeCode = data.facilitySite.facilitySourceTypeCode;
             this.emissionsReportYear = data.facilitySite.emissionsReport.year;
         });
+
+        this.processForm.get('statusYear').setValidators([
+                    Validators.min(1900),
+                    Validators.max(this.emissionsReportYear),
+                    Validators.pattern('[0-9]*')]);
 
         // SCC codes associated with Aircraft Engine Type Codes
         this.aircraftEngineSCC = [
@@ -407,6 +413,18 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             }
             return null;
         });
+    }
+
+    /**
+     * Require newly created Sub-Facility Components to be Operating
+     */
+    newSfcOperatingValidator(): ValidatorFn {
+        return (control: AbstractControl): {[key: string]: any} | null => {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousProcess) {
+                return {newSfcOperating: {value: control.value.code}};
+            }
+            return null;
+        };
     }
 
 }

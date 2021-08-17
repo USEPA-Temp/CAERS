@@ -3,9 +3,12 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -16,6 +19,7 @@ import gov.epa.cef.web.util.ConstantUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.MessageFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +32,12 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
     @Autowired
     private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+    
+    @Autowired
+    private EmissionsReportRepository reportRepo;
+    
+    @Autowired
+    private ReleasePointRepository rpRepo;
 
     private static final String FUGITIVE_RELEASE_POINT_CODE = "1";
     private static final BigDecimal DEFAULT_TOLERANCE = BigDecimal.valueOf(0.003).setScale(6, RoundingMode.DOWN);
@@ -259,6 +269,14 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
                 // Stack dimensions must be in FT
                 if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackHeight(), releasePoint.getStackHeightUomCode(), "Stack Height")) {
+                    result = false;
+                }
+
+                if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackLength(), releasePoint.getStackLengthUomCode(), "Stack Length")) {
+                    result = false;
+                }
+
+                if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackWidth(), releasePoint.getStackWidthUomCode(), "Stack Width")) {
                     result = false;
                 }
 
@@ -532,13 +550,14 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                 createValidationDetails(releasePoint));
         }
 
-        // Status year must be between 1900 and 2050
-        if (releasePoint.getStatusYear() != null && (releasePoint.getStatusYear() < 1900 || releasePoint.getStatusYear() > 2050)) {
+        // Status year must be between 1900 and the report year
+        if (releasePoint.getStatusYear() != null && (releasePoint.getStatusYear() < 1900 || releasePoint.getStatusYear() > releasePoint.getFacilitySite().getEmissionsReport().getYear())) {
 
             result = false;
             context.addFederalError(
                 ValidationField.RP_STATUS_YEAR.value(), "releasePoint.statusYear.range",
-                createValidationDetails(releasePoint));
+                createValidationDetails(releasePoint),
+                releasePoint.getFacilitySite().getEmissionsReport().getYear().toString());
         }
 
         if (releasePoint != null && releasePoint.getFacilitySite() != null && releasePoint.getFacilitySite().getReleasePoints() != null) {
@@ -561,6 +580,41 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
                     }
                 }
+            }
+        }
+
+        // check if previous report exists then check if this rp exists in that report
+        if (!ConstantUtils.STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
+            EmissionsReport currentReport = releasePoint.getFacilitySite().getEmissionsReport();
+    
+            List<EmissionsReport> erList = reportRepo.findByMasterFacilityRecordId(currentReport.getMasterFacilityRecord().getId()).stream()
+                    .filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
+                    .sorted(Comparator.comparing(EmissionsReport::getYear))
+                    .collect(Collectors.toList());
+    
+            boolean pyRpExists = false;
+    
+            if (!erList.isEmpty()) {
+                Short previousReportYr = erList.get(erList.size()-1).getYear();
+    
+                List<ReleasePoint> previousRps = rpRepo.retrieveByIdentifierFacilityYear(
+                        releasePoint.getReleasePointIdentifier(), 
+                        currentReport.getMasterFacilityRecord().getId(), 
+                        previousReportYr);
+    
+                if (!previousRps.isEmpty()) {
+                    pyRpExists = true;
+                }
+            }
+
+            if (!pyRpExists) {
+
+                // release point is new, but is PS/TS
+                result = false;
+                context.addFederalError(
+                        ValidationField.RP_STATUS_CODE.value(),
+                        "releasePoint.statusTypeCode.newShutdown",
+                        createValidationDetails(releasePoint));
             }
         }
 

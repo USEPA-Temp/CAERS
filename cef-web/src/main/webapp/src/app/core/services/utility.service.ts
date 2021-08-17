@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { User } from 'src/app/shared/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class UtilityService {
 
   static isInProgressStatus(status: string): boolean {
     return ReportStatus.IN_PROGRESS === status || ReportStatus.RETURNED === status;
+  }
+
+  static isNotReadOnlyMode(user: User, status: string) {
+    return user.canPrepare() && this.isInProgressStatus(status);
   }
 
   canDeactivateModal() {

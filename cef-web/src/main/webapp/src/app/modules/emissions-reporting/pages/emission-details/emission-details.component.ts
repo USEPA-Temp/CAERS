@@ -141,7 +141,7 @@ export class EmissionDetailsComponent implements OnInit {
       this.editable = data.create === 'true';
 
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
+        if (UtilityService.isNotReadOnlyMode(user, data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

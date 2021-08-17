@@ -10,7 +10,7 @@
     </thead>
 
     <tbody>
-      <ng-container *ngFor="let item of tableData">
+      <ng-container *ngFor="let item of tableItems">
         <tr>
           <td><a [attr.aria-label]="item?.typeDesc + 'control device assignment' + item?.identifier" routerLink="{{baseUrl}}/{{item.type}}/{{item.id}}">{{item.identifier}}</a></td>
           <td>{{item.description}}</td>

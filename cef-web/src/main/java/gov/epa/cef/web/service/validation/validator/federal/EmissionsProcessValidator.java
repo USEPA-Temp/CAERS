@@ -269,11 +269,20 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
     	// check current year's total emissions against previous year's total emissions warning
     	EmissionsReport currentReport = emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport();
     		
+    	boolean sourceTypeLandfill = false;
+		
+    	if (currentReport.getMasterFacilityRecord().getFacilitySourceTypeCode() != null 
+	    			&& ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(currentReport.getMasterFacilityRecord().getFacilitySourceTypeCode().getCode())) {
+    		sourceTypeLandfill = true;
+    	}
+    	
 		// find previous report
 		List<EmissionsReport> erList = reportRepo.findByMasterFacilityRecordId(currentReport.getMasterFacilityRecord().getId()).stream()
 				.filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
 				.sorted(Comparator.comparing(EmissionsReport::getYear))
 				.collect(Collectors.toList());
+
+		boolean pyProcessExists = false;
 
 		if (!erList.isEmpty()) {
 			Short previousReportYr = erList.get(erList.size()-1).getYear();
@@ -284,7 +293,11 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			        currentReport.getMasterFacilityRecord().getId(), 
 			        previousReportYr);
 
+			// check if previous report exists then check if this process exists in that report
 			if (!previousProcesses.isEmpty()) {
+
+			    pyProcessExists = true;
+
 			    // loop through all processes, if the same report was uploaded twice for a previous year this should only work once
 			    // if the previous report had the same process multiple times this may return duplicate messages
 			    for (EmissionsProcess previousProcess : previousProcesses) {
@@ -293,9 +306,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			    	if (!isProcessOperating
 			    			&& ConstantUtils.STATUS_OPERATING.contentEquals(previousProcess.getOperatingStatusCode().getCode())
 			    			&& (emissionsProcess.getStatusYear() == null || emissionsProcess.getStatusYear() <= previousProcess.getStatusYear())
-			    			&& (currentReport.getMasterFacilityRecord().getFacilitySourceTypeCode() == null 
-			    			|| !ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(currentReport.getMasterFacilityRecord().getFacilitySourceTypeCode().getCode()))) {
-
+			    			&& !sourceTypeLandfill) {
 			    		result = false;
         				context.addFederalError(
         						ValidationField.PROCESS_STATUS_YEAR.value(),
@@ -330,8 +341,42 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			    }
 			}
 		}
+		
+		// Status year must be between 1900 and the report year
+        if (emissionsProcess.getStatusYear() != null && (emissionsProcess.getStatusYear() < 1900 || emissionsProcess.getStatusYear() > emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() )) {
+            
+        	result = false;
+            context.addFederalError(
+                ValidationField.PROCESS_STATUS_YEAR.value(), "emissionsProcess.statusYear.range",
+                createValidationDetails(emissionsProcess),
+                emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().toString());
+        }
+		
+		// process operating status year cannot be before unit operating status year when both are OP.
+		// check does not apply to landfills, process can be operating while unit is TS/PS.
+		if (isProcessOperating && !sourceTypeLandfill
+				&& ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getEmissionsUnit().getOperatingStatusCode().getCode())
+				&& emissionsProcess.getStatusYear() < emissionsProcess.getEmissionsUnit().getStatusYear()) {
+			
+			result = false;
+			context.addFederalError(
+					ValidationField.PROCESS_STATUS_YEAR.value(),
+					"emissionsProcess.statusYear.beforeUnitYear",
+					createValidationDetails(emissionsProcess),
+					emissionsProcess.getEmissionsUnit().getUnitIdentifier());
+		}
         
         
+		if (!pyProcessExists && !isProcessOperating) {
+			
+		    // process is new, but is PS/TS
+            result = false;
+            context.addFederalError(
+                    ValidationField.PROCESS_STATUS_CODE.value(),
+                    "emissionsProcess.statusTypeCode.newShutdown",
+                    createValidationDetails(emissionsProcess));
+		}
+		
         return result;
     }
 

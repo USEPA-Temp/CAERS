@@ -13,4 +13,5 @@ export class EmissionsReport {
   facilitySite: FacilitySite;
   hasSubmitted: boolean;
   fileName: string;
+  returnedReport: boolean;
 }

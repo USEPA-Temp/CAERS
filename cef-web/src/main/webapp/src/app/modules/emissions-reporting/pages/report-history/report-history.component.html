@@ -19,7 +19,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let report of tableData">
+                                <tr *ngFor="let report of tableItems">
                                     <td>{{ report.actionDate | date:'shortDate' }}</td>
                                     <td>{{ report.userRole }} - {{ report.userId }}</td>
                                     <td>{{ report.userFullName }}</td>

@@ -153,8 +153,11 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
       eList.add(previousE2);
 	    
       when(reportRepo.findByMasterFacilityRecordId(1L)).thenReturn(erList);
+      when(reportRepo.findByMasterFacilityRecordId(2L)).thenReturn(Collections.emptyList());
       when(processRepo.retrieveByIdentifierParentFacilityYear(
       		"Boiler 001","test_unit",1L,(short) 2018)).thenReturn(Collections.singletonList(p1));
+      when(processRepo.retrieveByIdentifierParentFacilityYear(
+              "test new","test_unit",1L,(short) 2018)).thenReturn(Collections.emptyList());
       when(emissionRepo.findAllByProcessIdReportId(2L,1L)).thenReturn(eList);
       
     }
@@ -599,6 +602,115 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
     	assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
     
+    @Test
+    public void newProcessShutdownPassTest() {
+        // pass when previous exists and current op status is OP
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous exists and current op status is PS/TS
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report exists, but process doesn't and current op status is OP
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("OP");
+        testData.setEmissionsProcessIdentifier("test new");
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report doesn't exist and current op status is OP
+        cefContext = createContext();
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    @Test
+    public void newRpShutdownPassFail() {
+        // fail when previous report exists, but process doesn't and current op status is TS
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setEmissionsProcessIdentifier("test new");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
+
+        // fail when previous report doesn't exist and current op status is TS
+        cefContext = createContext();
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
+    }
+    
+    @Test
+    public void processOpYearBeforeUnitOpYearPassTest() {
+    	// pass when OP process year is >= OP unit year
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+        testData.setStatusYear(new Short("2015"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        // pass when TS/PS process and OP unit
+        cefContext = createContext();
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().setId(2L);
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setStatusYear(new Short("2018"));
+        testData.getEmissionsUnit().setStatusYear(new Short("2019"));
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        // pass when OP process year is <= unit year
+        cefContext = createContext();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setStatusYear(new Short("2009"));
+        testData.getEmissionsUnit().getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().setCode("104");
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    
+    @Test
+    public void processOpYearBeforeUnitOpYearFail() {
+    	CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+    	testData.setStatusYear(new Short("2000"));
+    	
+    	assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_YEAR.value()) && errorMap.get(ValidationField.PROCESS_STATUS_YEAR.value()).size() == 1);
+    }
+    
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
@@ -607,9 +719,11 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         FacilitySourceTypeCode fstc = new FacilitySourceTypeCode();
         fstc.setCode("137");
         mfr.setFacilitySourceTypeCode(fstc);
+        OperatingStatusCode os = new OperatingStatusCode();
+        os.setCode("OP");
         
         EmissionsReport report = new EmissionsReport();
-        report.setYear(new Short("2019"));
+        report.setYear(new Short("2020"));
         report.setId(3L);
         report.setEisProgramId("1");
         report.setMasterFacilityRecord(mfr);
@@ -622,12 +736,11 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         unit.setId(1L);
         unit.setFacilitySite(facility);
         unit.setUnitIdentifier("test_unit");
+        unit.setOperatingStatusCode(os);
+        unit.setStatusYear(new Short("2010"));
         facility.getEmissionsUnits().add(unit);
 
         EmissionsProcess result = new EmissionsProcess();
-        
-        OperatingStatusCode os = new OperatingStatusCode();
-        os.setCode("OP");
         
         ReportingPeriod rperiod1 = new ReportingPeriod();
         rperiod1.setId(1L);
@@ -658,7 +771,7 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         rpa2.setPercent(BigDecimal.valueOf(50));
         rpa1.setId(1L);
         rpa2.setId(2L);
-        result.setStatusYear((short) 2021);
+        result.setStatusYear((short) 2020);
         result.getReleasePointAppts().add(rpa1);
         result.getReleasePointAppts().add(rpa2);
         result.setId(1L);

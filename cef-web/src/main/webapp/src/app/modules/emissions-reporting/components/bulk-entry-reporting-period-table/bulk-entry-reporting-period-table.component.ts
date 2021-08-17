@@ -20,6 +20,7 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
   @Output() periodsUpdated = new EventEmitter<BulkEntryEmissionHolder[]>();
   baseUrl: string;
   facilitySite: FacilitySite;
+  savingBulkInfo = false;
 
   reportingPeriodForm = this.fb.group({});
 
@@ -75,12 +76,14 @@ export class BulkEntryReportingPeriodTableComponent extends BaseSortableTable im
       this.reportingPeriodForm.markAllAsTouched();
     } else {
 
+      this.savingBulkInfo = true;
       this.tableData.forEach(rp => {
         rp.calculationParameterValue = this.reportingPeriodForm.get('' + rp.reportingPeriodId).value;
       });
 
       this.reportingPeriodService.bulkUpdate(this.facilitySite.id, this.tableData)
       .subscribe(result => {
+        this.savingBulkInfo = false;
         this.periodsUpdated.emit(result);
         this.toastr.success('', 'Throughput values successfully saved and Total Emissions have been recalculated.');
         // reset dirty flags

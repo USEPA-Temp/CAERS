@@ -3,12 +3,14 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
@@ -18,6 +20,9 @@ import com.google.common.base.Strings;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlPollutant;
+import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.repository.ControlRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -27,7 +32,13 @@ import gov.epa.cef.web.util.ConstantUtils;
 
 @Component
 public class ControlValidator extends BaseValidator<Control> {
-	
+
+    @Autowired
+    private EmissionsReportRepository reportRepo;
+
+    @Autowired
+    private ControlRepository controlRepo;
+
 	private static final String PM10FIL = "PM10-FIL";
     private static final String PM10PRI = "PM10-PRI";
     private static final String PM25FIL = "PM25-FIL";
@@ -87,13 +98,14 @@ public class ControlValidator extends BaseValidator<Control> {
 		            createValidationDetails(control));
 		}
 		
-		// Status year must be between 1900 and 2050
-		if (control.getStatusYear() != null && (control.getStatusYear() < 1900 || control.getStatusYear() > 2050)) {
+		// Status year must be between 1900 and the report year
+		if (control.getStatusYear() != null && (control.getStatusYear() < 1900 || control.getStatusYear() > control.getFacilitySite().getEmissionsReport().getYear())) {
 
 	        result = false;
 	        context.addFederalError(
 	            ValidationField.CONTROL_STATUS_YEAR.value(), "control.statusYear.range",
-	            createValidationDetails(control));
+	            createValidationDetails(control),
+	            control.getFacilitySite().getEmissionsReport().getYear().toString());
 		}
 
         // Number Operating Months must be between 1 and 12
@@ -289,6 +301,41 @@ public class ControlValidator extends BaseValidator<Control> {
 		        createValidationDetails(control),
 		        "Control End");
 		}
+		
+		// check if previous report exists then check if this control exists in that report
+        if (!ConstantUtils.STATUS_OPERATING.contentEquals(control.getOperatingStatusCode().getCode())) {
+            EmissionsReport currentReport = control.getFacilitySite().getEmissionsReport();
+    
+            List<EmissionsReport> erList = reportRepo.findByMasterFacilityRecordId(currentReport.getMasterFacilityRecord().getId()).stream()
+                    .filter(var -> (var.getYear() != null && var.getYear() < currentReport.getYear()))
+                    .sorted(Comparator.comparing(EmissionsReport::getYear))
+                    .collect(Collectors.toList());
+    
+            boolean pyControlExists = false;
+    
+            if (!erList.isEmpty()) {
+                Short previousReportYr = erList.get(erList.size()-1).getYear();
+    
+                List<Control> previousControls = controlRepo.retrieveByIdentifierFacilityYear(
+                        control.getIdentifier(), 
+                        currentReport.getMasterFacilityRecord().getId(), 
+                        previousReportYr);
+    
+                if (!previousControls.isEmpty()) {
+                    pyControlExists = true;
+                }
+            }
+
+            if (!pyControlExists) {
+
+                // control is new, but is PS/TS
+                result = false;
+                context.addFederalError(
+                        ValidationField.CONTROL_STATUS_CODE.value(),
+                        "control.statusTypeCode.newShutdown",
+                        createValidationDetails(control));
+            }
+        }
 
         return result;
     }

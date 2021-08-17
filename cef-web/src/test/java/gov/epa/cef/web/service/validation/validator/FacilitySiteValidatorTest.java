@@ -107,7 +107,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
         
         cefContext = createContext();
-        testData.setStatusYear((short) 2050);
+        testData.setStatusYear((short) 2019);
         
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -128,7 +128,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.FACILITY_STATUS.value()) && errorMap.get(ValidationField.FACILITY_STATUS.value()).size() == 1);
         
         cefContext = createContext();
-        testData.setStatusYear((short) 2051);
+        testData.setStatusYear((short) 2020);
         
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);

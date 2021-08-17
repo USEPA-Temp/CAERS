@@ -7,7 +7,7 @@
     </tr>
     </thead>
     <tbody>
-        <ng-container *ngFor="let item of tableData">
+        <ng-container *ngFor="let item of tableItems">
             <ng-container *ngFor="let assignment of item.assignments">
                 <tr *ngIf="assignment.control">
                     <td><a routerLink="{{baseUrl}}/{{assignment.control.id}}" [attr.aria-label]="'control assignment' + assignment?.control?.identifier">{{assignment.control.identifier}}</a></td>

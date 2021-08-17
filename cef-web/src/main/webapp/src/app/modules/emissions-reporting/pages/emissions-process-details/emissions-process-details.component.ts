@@ -30,6 +30,7 @@ import { UtilityService } from 'src/app/core/services/utility.service';
 })
 export class EmissionsProcessDetailsComponent implements OnInit {
   process: Process;
+  previousProcess: Process;
   controlPaths: ControlPath[];
   facilitySite: FacilitySite;
   unitIdentifier: string;
@@ -97,6 +98,12 @@ export class EmissionsProcessDetailsComponent implements OnInit {
         });
       });
 
+      this.processService.retrievePrevious(+map.get('processId'))
+      .subscribe(result => {
+          this.previousProcess = result;
+      });
+
+
     });
 
     // emits the report info to the sidebar
@@ -104,7 +111,7 @@ export class EmissionsProcessDetailsComponent implements OnInit {
     .subscribe((data: { facilitySite: FacilitySite }) => {
       this.facilitySite = data.facilitySite;
       this.userContextService.getUser().subscribe( user => {
-        if (user.role !== 'Reviewer' && UtilityService.isInProgressStatus(data.facilitySite.emissionsReport.status)) {
+        if (UtilityService.isNotReadOnlyMode(user, data.facilitySite.emissionsReport.status)) {
           this.readOnlyMode = false;
         }
       });

@@ -162,7 +162,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionsUnitBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#unitIdentifierInput').clear();
       cy.get('#unitIdentifierInput').type('Cypress');
-      cy.get('#unitStatusCodeSelect').select('2: Object');
+      cy.get('#unitStatusCodeSelect').select('1: Object');
       cy.get('#unitTypeCodeSelect').select('3: Object');
       cy.get('#unitStatusYearInput').clear();
       cy.get('#unitStatusYearInput').type('1999');
@@ -198,7 +198,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddProcessBtn > .ng-fa-icon > .svg-inline--fa > path').click();
       cy.get('#processIdentifierInput').clear();
       cy.get('#processIdentifierInput').type('Cypress 1');
-      cy.get('#processStatusCodeSelect').select('2: Object');
+      cy.get('#processStatusCodeSelect').select('1: Object');
       cy.get('#processDescriptionInput').clear();
       cy.get('#processDescriptionInput').type('Cypress Test Process');
       cy.get('#processStatusYearInput').clear();
@@ -423,7 +423,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#controlMeasureCodeSelect').select('1: Object');
       cy.get('#controlStatusCodeSelect').select('1: Object');
       cy.get('#controlStatusYearInput').clear();
-      cy.get('#controlStatusYearInput').type('2021');
+      cy.get('#controlStatusYearInput').type('2020');
       cy.get('#descriptionInput').clear();
       cy.get('#descriptionInput').type('Cypress Test Control 1');
       cy.get('#numberOperatingMonths').clear();

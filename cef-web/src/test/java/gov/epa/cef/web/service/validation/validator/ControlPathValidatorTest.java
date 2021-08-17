@@ -20,6 +20,7 @@ import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPathPollutant;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
@@ -28,12 +29,16 @@ import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ControlPathValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ControlPathPollutantValidator;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ControlPathValidatorTest extends BaseValidatorTest {
 
 	@InjectMocks
 	private ControlPathValidator validator;
+	
+	@InjectMocks
+	private ControlPathPollutantValidator pollutantValidator;
 
 	@Mock
 	private ControlAssignmentRepository assignmentRepo;
@@ -413,6 +418,33 @@ public class ControlPathValidatorTest extends BaseValidatorTest {
 		testData.getPollutants().add(cp2);
 		
 		assertFalse(this.validator.validate(cefContext, testData));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_PATH_POLLUTANT.value()).size() == 1);
+    }
+
+    @Test
+	public void controlPathPollutantLegacyTest() {
+		CefValidatorContext cefContext = createContext();
+		ControlPath testData = createBaseControlPath();
+		
+		ControlPathPollutant cp1 = new ControlPathPollutant();
+		Pollutant p1 = new Pollutant();
+		p1.setPollutantCode("10025737");
+		p1.setPollutantName("test pollutant");
+		p1.setLastInventoryYear(2005);
+		cp1.setPollutant(p1);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		
+		EmissionsReport er = new EmissionsReport();
+        er.setId(1L);
+        er.setYear(new Short("2020"));
+		testData.getFacilitySite().setEmissionsReport(er);
+		
+		cp1.setControlPath(testData);
+		
+		assertFalse(this.pollutantValidator.validate(cefContext, cp1));
 		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 		
 		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());

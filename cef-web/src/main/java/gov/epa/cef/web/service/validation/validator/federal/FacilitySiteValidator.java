@@ -74,13 +74,14 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
         			createValidationDetails(facilitySite));
         }
 
-        // Status year must be between 1900 and 2050
-        if (facilitySite.getStatusYear() != null && (facilitySite.getStatusYear() < 1900 || facilitySite.getStatusYear() > 2050)) {
+        // Status year must be between 1900 and the report year
+        if (facilitySite.getStatusYear() != null && (facilitySite.getStatusYear() < 1900 || facilitySite.getStatusYear() > facilitySite.getEmissionsReport().getYear())) {
 
         	result = false;
         	context.addFederalError(
         			ValidationField.FACILITY_STATUS.value(), "facilitysite.status.range",
-        			createValidationDetails(facilitySite));
+        			createValidationDetails(facilitySite),
+        			facilitySite.getEmissionsReport().getYear().toString());
         }
 
         if (facilitySite.getCountyCode() == null) {

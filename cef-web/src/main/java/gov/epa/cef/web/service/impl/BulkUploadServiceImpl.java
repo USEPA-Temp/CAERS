@@ -239,8 +239,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         	//update the report metadata to make sure it's reset since the report has been recreated
         	if (ReportStatus.RETURNED == reportToUpdate.getStatus()) {
         	    reportToUpdate.setStatus(ReportStatus.RETURNED);
+        	    reportToUpdate.setReturnedReport(true);
         	} else {
         	    reportToUpdate.setStatus(ReportStatus.IN_PROGRESS);
+        	    reportToUpdate.setReturnedReport(false);
         	}
             reportToUpdate.setValidationStatus(ValidationStatus.UNVALIDATED);
             reportToUpdate.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
@@ -250,6 +252,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         }
         //otherwise, just add the entire report from the excel upload into the system
         else {
+        	emissionsReport.setReturnedReport(false);
         	return this.emissionsReportService.saveAndAuditEmissionsReport(emissionsReport, ReportAction.UPLOADED);
         }
     }

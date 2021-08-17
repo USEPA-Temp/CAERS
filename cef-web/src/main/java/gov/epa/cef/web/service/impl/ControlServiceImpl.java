@@ -74,7 +74,7 @@ public class ControlServiceImpl implements ControlService {
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlRepository.class);
     	return result;
     }
-    
+
     /**
      * Delete a Control for a given id
      * @Param controlId
@@ -86,20 +86,13 @@ public class ControlServiceImpl implements ControlService {
 
         Long mfrId = repo.retrieveMasterFacilityRecordIdById(controlId).orElse(null);
 
-        // find the last year reported
-        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
-                control.getFacilitySite().getEmissionsReport().getYear());
-
-        // check if the control path was reported last year
-        if (lastReport.isPresent()) {
-            repo.retrieveByIdentifierFacilityYear(control.getIdentifier(),
-                    mfrId,
-                    lastReport.get().getYear())
-                    .stream().findFirst().ifPresent(oldUnit -> {
-                        throw new AppValidationException("This Control has been submitted on previous years' facility reports, so it cannot be deleted. "
-                                + "If this Control is no longer operational, please use the \"Operating Status\" field to mark this Control as \"Permanently Shutdown\".");
-                    });
-        }
+        this.findPrevious(mfrId, control.getFacilitySite().getEmissionsReport().getYear(), control.getIdentifier())
+            .stream()
+            .findFirst()
+            .ifPresent(oldUnit -> {
+                throw new AppValidationException("This Control has been submitted on previous years' facility reports, so it cannot be deleted. "
+                        + "If this Control is no longer operational, please use the \"Operating Status\" field to mark this Control as \"Permanently Shutdown\".");
+            });
 
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlId), ControlRepository.class);
     	repo.deleteById(controlId);
@@ -113,6 +106,26 @@ public class ControlServiceImpl implements ControlService {
         Control result = repo
             .findById(id)
             .orElse(null);
+        return mapper.toDto(result);
+    }
+
+    /**
+     * Retrieve versions of this control from the last year reported
+     * @param id
+     * @return
+     */
+    public ControlPostOrderDto retrievePreviousById(Long id) {
+        Control control= repo
+                .findById(id)
+                .orElse(null);
+
+        Long mfrId = repo.retrieveMasterFacilityRecordIdById(id).orElse(null);
+
+        Control result = this.findPrevious(mfrId, control.getFacilitySite().getEmissionsReport().getYear(), control.getIdentifier())
+                .stream()
+                .findFirst()
+                .orElse(null);
+
         return mapper.toDto(result);
     }
 
@@ -174,6 +187,29 @@ public class ControlServiceImpl implements ControlService {
     public void deleteControlPollutant(Long controlPollutantId) {
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(controlPollutantId), ControlPollutantRepository.class);
     	pollutantRepo.deleteById(controlPollutantId);
+    }
+
+    /**
+     * Find versions of this control from the last year reported
+     * @param mfrId
+     * @param year
+     * @param identifier
+     * @return
+     */
+    private List<Control> findPrevious(Long mfrId, Short year, String identifier) {
+
+        // find the last year reported
+        Optional<EmissionsReport> lastReport = reportRepo.findFirstByMasterFacilityRecordIdAndYearLessThanOrderByYearDesc(mfrId,
+                year);
+
+        // check if the control was reported last year
+        if (lastReport.isPresent()) {
+            return repo.retrieveByIdentifierFacilityYear(identifier,
+                    mfrId,
+                    lastReport.get().getYear());
+        }
+
+        return Collections.emptyList();
     }
     
     /***

@@ -261,9 +261,11 @@ public class EmissionsReportValidationServiceImplTest {
         emissionsProcess.getReportingPeriods().add(reportingPeriod);
         emissionsProcess.setEmissionsUnit(emissionsUnit);
         emissionsProcess.setOperatingStatusCode(opStatCode);
+        emissionsProcess.setStatusYear((short)2019);
         emissionsUnit.getEmissionsProcesses().add(emissionsProcess);
         emissionsUnit.setOperatingStatusCode(opStatCode);
         emissionsUnit.setFacilitySite(facilitySite);
+        emissionsUnit.setStatusYear((short)2000);
         facilitySite.getEmissionsUnits().add(emissionsUnit);
         facilitySite.setEmissionsReport(report);
         report.getFacilitySites().add(facilitySite);

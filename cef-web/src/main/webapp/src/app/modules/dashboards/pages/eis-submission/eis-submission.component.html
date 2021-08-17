@@ -99,12 +99,12 @@
                      </tr>
                      </thead>
                      <tbody>
-                     <tr *ngIf="tableData.length === 0">
+                     <tr *ngIf="tableItems.length === 0">
                         <td colspan="9" class="text-center">
                            <strong class="text-larger">No data available.</strong>
                         </td>
                      </tr>
-                     <tr *ngFor="let report of tableData">
+                     <tr *ngFor="let report of tableItems">
                         <td class="text-center">
                            <input type="checkbox"
                                   [attr.aria-label]="report.facilityName"

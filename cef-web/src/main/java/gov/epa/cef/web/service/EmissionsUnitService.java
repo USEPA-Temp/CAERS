@@ -19,7 +19,14 @@ public interface EmissionsUnitService {
      * @return
      */
     List<EmissionsUnitDto> retrieveEmissionUnitsForFacility(Long facilitySiteId);
-    
+
+    /**
+     * Retrieve versions of this unit from the last year reported
+     * @param unitId
+     * @return
+     */
+    EmissionsUnitDto retrievePreviousById(Long unitId);
+
     /**
      * Delete an Emissions Unit for a given id
      * @param unitId

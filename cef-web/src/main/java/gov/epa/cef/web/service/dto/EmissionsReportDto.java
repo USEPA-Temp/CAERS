@@ -16,6 +16,7 @@ public class EmissionsReportDto implements Serializable {
     private Boolean hasSubmitted;
     private String eisLastSubmissionStatus;
     private String fileName;
+    private Boolean returnedReport;
 
     public Long getId() {
         return id;
@@ -102,5 +103,12 @@ public class EmissionsReportDto implements Serializable {
         return this;
     }
 
+	public Boolean getReturnedReport() {
+		return returnedReport;
+	}
+
+	public void setReturnedReport(Boolean returnedReport) {
+		this.returnedReport = returnedReport;
+	}
 
 }

@@ -22,6 +22,13 @@ public interface ReleasePointService {
     ReleasePointDto retrieveById(Long releasePointId);
 
     /**
+     * Retrieve versions of this rp from the last year reported
+     * @param releasePointId
+     * @return
+     */
+    ReleasePointDto retrievePreviousById(Long releasePointId);
+
+    /**
      * Retrieve Release Points by facility id
      * @param facilitySiteId
      * @return

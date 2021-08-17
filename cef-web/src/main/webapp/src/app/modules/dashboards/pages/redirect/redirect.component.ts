@@ -11,10 +11,10 @@ export class RedirectComponent {
   constructor(public userContext: UserContextService, public router: Router) {
     this.userContext.getUser()
     .subscribe(currentUser => {
-        if (currentUser.canReview()) {
-            this.router.navigateByUrl('/reviewer');
-        } else {
+        if (currentUser.canPrepare()) {
             this.router.navigateByUrl('/facility');
+        } else {
+            this.router.navigateByUrl('/reviewer');
         }
     });
   }

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +24,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.repository.EisLatLongToleranceLookupRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ReleasePointValidator;
@@ -35,6 +38,12 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     @Mock
     private EisLatLongToleranceLookupRepository latLongToleranceRepo;
+
+    @Mock
+    private EmissionsReportRepository reportRepo;
+
+    @Mock
+    private ReleasePointRepository rpRepo;
 
     @Before
     public void init(){
@@ -49,6 +58,38 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     	when(latLongToleranceRepo.findById("536411")).thenReturn(Optional.of(fsTolerance));
     	when(latLongToleranceRepo.findById("111111")).thenReturn(Optional.empty());
+
+    	List<EmissionsReport> erList = new ArrayList<EmissionsReport>();
+        MasterFacilityRecord mfr = new MasterFacilityRecord();
+        mfr.setId(1L);
+        EmissionsReport er1 = new EmissionsReport();
+        EmissionsReport er2 = new EmissionsReport();
+        er1.setId(1L);
+        er2.setId(2L);
+        er1.setYear((short) 2018);
+        er2.setYear((short) 2020);
+        er1.setEisProgramId("1");
+        er2.setEisProgramId("1");
+        er1.setMasterFacilityRecord(mfr);
+        er2.setMasterFacilityRecord(mfr);
+        erList.add(er1);
+        erList.add(er2);
+
+        OperatingStatusCode os = new OperatingStatusCode();
+        os.setCode("OP");
+
+        ReleasePoint rp = new ReleasePoint();
+        rp.setId(1L);
+        rp.setOperatingStatusCode(os);
+        rp.setStatusYear((short)2018);
+        rp.setReleasePointIdentifier("identifier");
+
+        when(reportRepo.findByMasterFacilityRecordId(1L)).thenReturn(erList);
+        when(reportRepo.findByMasterFacilityRecordId(2L)).thenReturn(Collections.emptyList());
+        when(rpRepo.retrieveByIdentifierFacilityYear(
+                "identifier",1L,(short) 2018)).thenReturn(Collections.singletonList(rp));
+        when(rpRepo.retrieveByIdentifierFacilityYear(
+                "test new",1L,(short) 2018)).thenReturn(Collections.emptyList());
     }
 
     @Test
@@ -839,6 +880,32 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setStackDiameter(null);
+        testData.setExitGasFlowRate(BigDecimal.valueOf(2.0));
+        testData.setStackLength(BigDecimal.valueOf(23.0));
+        testData.setStackWidth(BigDecimal.valueOf(8.5));
+        testData.setStackLengthUomCode(uomFT);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+
+        cefContext = createContext();
+        testData.setStackLengthUomCode(null);
+        testData.setStackWidthUomCode(uomFT);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_UOM_FT.value()) && errorMap.get(ValidationField.RP_UOM_FT.value()).size() == 1);
+
         // Verify QA Checks are NOT run when RP is NOT Operating
         // Operating status code of PS will generate a warning to inform users component will not be copied forward
         testData = createBaseFugitiveReleasePoint();
@@ -1093,11 +1160,16 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
 
+        UnitMeasureCode ftUom = new UnitMeasureCode();
+        ftUom.setCode("FT");
+
         testData.setStackDiameter(null);
         testData.setExitGasFlowRate(BigDecimal.valueOf(2.0));
         testData.setStackLength(BigDecimal.valueOf(23.0));
+        testData.setStackLengthUomCode(ftUom);
         testData.setStackWidth(BigDecimal.valueOf(8.5));
-        
+        testData.setStackWidthUomCode(ftUom);
+
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
@@ -1107,9 +1179,14 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         ReleasePoint testData = createBaseReleasePoint();
 
+        UnitMeasureCode ftUom = new UnitMeasureCode();
+        ftUom.setCode("FT");
+
         testData.setStackDiameter(BigDecimal.valueOf(0.5));
         testData.setStackLength(BigDecimal.valueOf(1.0));
+        testData.setStackLengthUomCode(ftUom);
         testData.setStackWidth(BigDecimal.valueOf(1.96));
+        testData.setStackWidthUomCode(ftUom);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -1148,7 +1225,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
 
         cefContext = createContext();
-        testData.setStatusYear((short) 2050);
+        testData.setStatusYear((short) 2019);
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
@@ -1169,7 +1246,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_YEAR.value()) && errorMap.get(ValidationField.RP_STATUS_YEAR.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setStatusYear((short) 2051);
+        testData.setStatusYear((short) 2020);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -1246,7 +1323,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         OperatingStatusCode opStatusCode = new OperatingStatusCode();
         opStatusCode.setCode("PS");
         testData.setOperatingStatusCode(opStatusCode);
-        testData.setStatusYear((short) 2021);
+        testData.setStatusYear((short) 2019);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -1255,11 +1332,74 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
     }
 
+    @Test
+    public void newRpShutdownPassTest() {
+        // pass when previous exists and current op status is OP
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        testData.setOperatingStatusCode(opStatCode);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous exists and current op status is PS/TS
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("TS");
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report exists, but rp doesn't and current op status is OP
+        cefContext = createContext();
+        testData.getOperatingStatusCode().setCode("OP");
+        testData.setReleasePointIdentifier("test new");
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+
+        // pass when previous report doesn't exist and current op status is OP
+        cefContext = createContext();
+        testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+
+    @Test
+    public void newRpShutdownPassFail() {
+        // fail when previous report exists, but rp doesn't and current op status is TS
+        CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseReleasePoint();
+        OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("TS");
+        testData.setOperatingStatusCode(opStatCode);
+        testData.setReleasePointIdentifier("test new");
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
+
+        // fail when previous report doesn't exist and current op status is TS
+        cefContext = createContext();
+        testData.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().setId(2L);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_STATUS_CODE.value()) && errorMap.get(ValidationField.RP_STATUS_CODE.value()).size() == 1);
+    }
+
 
     private ReleasePoint createBaseReleasePoint() {
 
         MasterFacilityRecord mfr = new MasterFacilityRecord();
         mfr.setEisProgramId("111111");
+        mfr.setId(1L);
 
     	EmissionsReport er = new EmissionsReport();
     	er.setYear((short)2019);
@@ -1289,6 +1429,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         distUom.setCode("FT");
 
         ReleasePoint result = new ReleasePoint();
+        result.setReleasePointIdentifier("identifier");
         result.setExitGasTemperature((short) 50);
         result.setExitGasFlowRate(BigDecimal.valueOf(0.002));
         result.setExitGasFlowUomCode(flowUom);
@@ -1322,6 +1463,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     	MasterFacilityRecord mfr = new MasterFacilityRecord();
         mfr.setEisProgramId("536411");
+        mfr.setId(1L);
 
         EmissionsReport er = new EmissionsReport();
         er.setYear((short)2019);
@@ -1341,6 +1483,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	distUom.setCode("FT");
 
     	ReleasePoint result = new ReleasePoint();
+    	result.setReleasePointIdentifier("identifier");
     	result.setTypeCode(releasePointTypeCode);
     	result.setFenceLineUomCode(distUom);
     	result.setFugitiveLengthUomCode(distUom);
