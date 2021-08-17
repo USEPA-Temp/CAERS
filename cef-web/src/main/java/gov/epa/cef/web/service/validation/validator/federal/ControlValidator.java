@@ -165,16 +165,6 @@ public class ControlValidator extends BaseValidator<Control> {
 
         for (ControlPollutant cp : control.getPollutants()) {
 
-            if (cp.getPollutant().getLastInventoryYear() != null && cp.getPollutant().getLastInventoryYear() < control.getFacilitySite().getEmissionsReport().getYear()) {
-
-                result = false;
-                context.addFederalError(
-                    ValidationField.CONTROL_POLLUTANT.value(),
-                    "control.controlPollutant.legacy",
-                    createValidationDetails(control),
-                    cp.getPollutant().getPollutantName());
-            }
-
             // percent reduction must be > 5 or < 99.9
             if (cp.getPercentReduction().compareTo(BigDecimal.valueOf(5)) == -1 || cp.getPercentReduction().compareTo(BigDecimal.valueOf(99.9)) == 1) {
 

@@ -34,6 +34,17 @@ public class ControlPollutantValidator extends BaseValidator<ControlPollutant> {
                     controlPollutant.getControl().getIdentifier());
             }
         }
+        
+        if (controlPollutant.getPollutant() != null && controlPollutant.getPollutant().getLastInventoryYear() != null
+                && controlPollutant.getPollutant().getLastInventoryYear() < controlPollutant.getControl().getFacilitySite().getEmissionsReport().getYear()) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                    "pollutant.legacy",
+                    createValidationDetails(controlPollutant));
+        }
+
 
         return result;
     }
