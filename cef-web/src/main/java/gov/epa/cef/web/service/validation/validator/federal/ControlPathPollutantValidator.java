@@ -34,6 +34,16 @@ public class ControlPathPollutantValidator extends BaseValidator<ControlPathPoll
                     controlPathPollutant.getControlPath().getPathId());
             }
         }
+        
+        if (controlPathPollutant.getPollutant() != null && controlPathPollutant.getPollutant().getLastInventoryYear() != null
+                && controlPathPollutant.getPollutant().getLastInventoryYear() < controlPathPollutant.getControlPath().getFacilitySite().getEmissionsReport().getYear()) {
+
+            result = false;
+            context.addFederalError(
+                    ValidationField.CONTROL_PATH_POLLUTANT.value(),
+                    "controlPath.controlPathPollutant.legacy",
+                    createValidationDetails(controlPathPollutant));
+        }
 
         return result;
     }
