@@ -272,6 +272,14 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                     result = false;
                 }
 
+                if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackLength(), releasePoint.getStackLengthUomCode(), "Stack Length")) {
+                    result = false;
+                }
+
+                if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackWidth(), releasePoint.getStackWidthUomCode(), "Stack Width")) {
+                    result = false;
+                }
+
                 if (!validateUomFT(validatorContext, releasePoint, releasePoint.getStackDiameter(), releasePoint.getStackDiameterUomCode(), "Stack Diameter")) {
                     result = false;
                 }
