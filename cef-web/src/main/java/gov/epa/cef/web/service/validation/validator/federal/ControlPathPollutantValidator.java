@@ -42,9 +42,7 @@ public class ControlPathPollutantValidator extends BaseValidator<ControlPathPoll
             context.addFederalError(
                     ValidationField.CONTROL_PATH_POLLUTANT.value(),
                     "controlPath.controlPathPollutant.legacy",
-                    createValidationDetails(controlPathPollutant),
-                    controlPathPollutant.getControlPath().getPathId(),
-                    controlPathPollutant.getPollutant().getPollutantName());
+                    createValidationDetails(controlPathPollutant));
         }
 
         return result;
