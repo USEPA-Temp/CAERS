@@ -17,4 +17,4 @@ If you have any questions or want to read more, check out the [EPA's Interim Ope
 6. Commit your code change with a descriptive commit message.
 7. Submit a Pull Request to the development branch.
 8. One or more members of the EPA's CAERS Project Team will review the pull request.  If the code passes the review then the reviewer will merge the pull request.  If it doesn't pass the review, then the pull request will be rejected with an explanation so you can update and try again.
-9. You may merge the Pull Request once you have the sign-off of a developer on the EPA's CAERS Project Team.  If you
+9. You may merge the Pull Request once you have the sign-off of a developer on the EPA's CAERS Project Team.  If you don't have access to perform the merge then a member of the EPA CAERS Project Team will merge the accepted pull request for you.
