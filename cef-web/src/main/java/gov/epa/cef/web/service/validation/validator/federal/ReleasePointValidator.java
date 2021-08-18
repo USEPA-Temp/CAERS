@@ -239,7 +239,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                             // set actual flow rate UoM to compare to computed flow rate
                             if (releasePoint.getExitGasFlowUomCode() != null) {
                                 if (!FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFS.contentEquals(uom)) {
-                                    inputFlowRate = releasePoint.getExitGasFlowRate().divide(BigDecimal.valueOf(60));
+                                    inputFlowRate = releasePoint.getExitGasFlowRate().divide(BigDecimal.valueOf(60), 8, RoundingMode.HALF_UP);
                                 } else if (!FLOW_RATE_UOM_ACFM.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) && FLOW_RATE_UOM_ACFM.contentEquals(uom)) {
                                     inputFlowRate = releasePoint.getExitGasFlowRate().multiply(BigDecimal.valueOf(60));
                                 }
