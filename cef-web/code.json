@@ -3,7 +3,7 @@
         {
             "name": "USEPA/CAERS",
             "organization": "usepa",
-            "description": "Common air emissions reporting system collects emissions data from facilities and approved by SLTs before distributing the data to multiple EPA emissions systems",
+            "description": "Common Air Emissions Reporting System (CAERS) collects emissions data from facilities and approved by SLTs before distributing the data to multiple EPA emissions systems",
             "version": "",
             "status": "Production",
             "permissions": {
