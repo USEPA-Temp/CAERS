@@ -112,6 +112,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                             this.controlService.retrievePrevious(this.control.id)
                             .subscribe(result => {
                                 this.previousControl = result;
+                                this.controlDeviceForm.get('operatingStatusCode').updateValueAndValidity();
                             });
 
                         }
