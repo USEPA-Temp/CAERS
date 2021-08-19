@@ -230,6 +230,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                             this.releasePointService.retrievePrevious(this.releasePoint.id)
                             .subscribe(result => {
                                 this.previousReleasePoint = result;
+                                this.releasePointForm.get('operatingStatusCode').updateValueAndValidity();
                             });
                         }
 
