@@ -96,7 +96,7 @@
             <label for="stateCodeSelect" class="ml-1 col-form-label"><strong>State:</strong></label>
         </div>
         <div class="col-sm-4">
-            <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode" disabled>
+            <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode" [attr.disabled]="true">
                 <option *ngFor="let opt of fipsStateCode" [ngValue]="opt">{{opt?.uspsCode}}</option>
             </select>
             <app-validation-message [control]="facilitySiteForm.controls.stateCode"></app-validation-message>
@@ -117,7 +117,7 @@
             <label for="countySelect" class="ml-1 col-form-label"><strong>County:</strong></label>
         </div>
         <div class="col-sm-4">
-            <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode" disabled>
+            <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode" [attr.disabled]="true">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of counties" [ngValue]="opt">{{opt?.name}}</option>
             </select>

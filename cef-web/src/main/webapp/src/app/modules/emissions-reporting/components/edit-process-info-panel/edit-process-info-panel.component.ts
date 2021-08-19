@@ -34,7 +34,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     sccRetirementYear: number;
     sccWarning: string;
     aircraftSCCcheck = false;
-    invalidAircraftSCC = false;
     processHasAETC = false;
     facilityOpCode: BaseCodeLookup;
     facilitySourceTypeCode: BaseCodeLookup;
@@ -69,7 +68,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             this.checkPointSourceSccCode(),
             this.checkProcessIdentifier(),
             this.legacyAetcValidator(),
-            this.checkMatchSccAircraft(),
             this.checkSccAndAircraftDuplicate(),
             this.operatingStatusCheck(),
             this.statusYearRequiredCheck()]
@@ -183,7 +181,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     // check for aircraft type SCC and associated Aircraft Engine Type Codes
     checkAircraftSCC() {
         this.aircraftSCCcheck = false;
-        this.invalidAircraftSCC = false;
         this.checkForAircraftSCC();
         if (this.aircraftSCCcheck) {
             // get AETC list and set form value
@@ -228,7 +225,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
                         for (const item of this.aircraftEngineTypeValue) {
 
                             if (item.code === this.process.aircraftEngineTypeCode.code) {
-                                this.invalidAircraftSCC = false;
                                 codeInList = true;
                                 this.processForm.controls.aircraftEngineTypeCode.setValue(item);
                                 break;
@@ -323,19 +319,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         };
     }
 
-
-    checkMatchSccAircraft(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            if (this.invalidAircraftSCC) {
-                if (control.get('aircraftEngineTypeCode') !== null && control.get('aircraftEngineTypeCode').value !== null) {
-                    control.get('aircraftEngineTypeCode').setErrors({invalidAircraftSCC: true});
-                } else {
-                    control.get('aircraftEngineTypeCode').setErrors(null);
-                }
-                return null;
-            }
-        };
-    }
 
     checkSccAndAircraftDuplicate(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
