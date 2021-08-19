@@ -166,6 +166,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
                }
             });
 
+            this.availableYears.sort((a, b) => b - a);
+
             this.stats.notStarted = 0;
             this.stats.qaEmissions = 0;
             this.stats.qaFacility = 0;
