@@ -103,6 +103,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                             this.emissionUnitService.retrievePrevious(this.emissionUnit.id)
                             .subscribe(result => {
                                 this.previousUnit = result;
+                                this.emissionUnitForm.get('operatingStatusCode').updateValueAndValidity();
                             });
                         } else {
                             this.edit = false;
