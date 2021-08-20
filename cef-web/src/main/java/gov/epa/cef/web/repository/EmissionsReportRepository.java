@@ -85,7 +85,7 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
     @Query("select r.eisLastSubmissionStatus as status, count(r.id) as count from EmissionsReport r where r.year = :year and r.programSystemCode.code = :programSystemCode and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED group by r.eisLastSubmissionStatus")
     Collection<EisDataStatsDto.EisDataStatusStat> findEisDataStatusesByYear(@Param("programSystemCode") String programSystemCode, @Param("year") Short year);
 
-    @Query("select distinct r.year from EmissionsReport r where r.programSystemCode.code = :programSystemCode and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED")
+    @Query("select distinct r.year from EmissionsReport r where r.programSystemCode.code = :programSystemCode and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED order by r.year desc")
     Collection<Integer> findEisDataYears(@Param("programSystemCode") String programSystemCode);
 
     @Cacheable(value = CacheName.ReportMasterIds)
