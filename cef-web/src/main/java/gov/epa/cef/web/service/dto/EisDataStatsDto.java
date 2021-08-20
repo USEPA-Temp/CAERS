@@ -18,13 +18,13 @@ package gov.epa.cef.web.service.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class EisDataStatsDto {
 
-    private final Set<Integer> availableYears = new HashSet<>();
+    private final Set<Integer> availableYears = new LinkedHashSet<>();
 
     private final List<EisDataStatusStat> statuses = new ArrayList<>();
 
