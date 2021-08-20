@@ -134,7 +134,6 @@
         <div class="col-sm-10">
             <select type="text" class="form-control" id="processAircraftCodeInput" formControlName="aircraftEngineTypeCode">
                 <option [ngValue]="null"></option>
-                <option *ngIf="invalidAircraftSCC" disabled [selected]="process?.aircraftEngineTypeCode?.code">{{process?.aircraftEngineTypeCode?.faaAircraftType}}&nbsp;-&nbsp;{{process?.aircraftEngineTypeCode?.engine}}</option>
                 <option [selected]="opt.code === process?.aircraftEngineTypeCode?.code" *ngFor="let opt of aircraftEngineTypeValue" [ngValue]="opt">
                     {{opt?.faaAircraftType}}&nbsp;-&nbsp;{{opt?.engine}}
                 </option>
