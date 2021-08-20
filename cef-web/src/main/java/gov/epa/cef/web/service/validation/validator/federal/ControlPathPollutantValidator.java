@@ -57,7 +57,7 @@ public class ControlPathPollutantValidator extends BaseValidator<ControlPathPoll
             result = false;
             context.addFederalError(
                     ValidationField.CONTROL_PATH_POLLUTANT.value(),
-                    "controlPath.controlPathPollutant.legacy",
+                    "pollutant.legacy",
                     createValidationDetails(controlPathPollutant));
         }
 

@@ -67,9 +67,8 @@ public class EmissionValidator extends BaseValidator<Emission> {
                 valid = false;
                 context.addFederalError(
                         ValidationField.EMISSION_POLLUTANT.value(),
-                        "emission.pollutant.legacy",
-                        createValidationDetails(emission),
-                        getPollutantName(emission));
+                        "pollutant.legacy",
+                        createValidationDetails(emission));
             }
 
             if (emission.getEmissionsCalcMethodCode() == null) {
