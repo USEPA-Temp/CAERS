@@ -163,6 +163,7 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
 
 	    			    	// check PS/TS status year of current report to OP status year of previous report
 	    			    	if (ConstantUtils.STATUS_OPERATING.contentEquals(previousUnit.getOperatingStatusCode().getCode())
+	    			    			&& previousUnit.getStatusYear() != null
 	    			    			&& (emissionsUnit.getStatusYear() == null || emissionsUnit.getStatusYear() <= previousUnit.getStatusYear())) {
 	    			    		
 	    			    		result = false;

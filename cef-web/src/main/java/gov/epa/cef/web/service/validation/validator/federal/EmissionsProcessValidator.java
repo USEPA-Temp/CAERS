@@ -303,7 +303,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			    for (EmissionsProcess previousProcess : previousProcesses) {
 			    	
 			    	// check PS/TS status year of current report to OP status year of previous report
-			    	if (!isProcessOperating
+			    	if (!isProcessOperating && previousProcess.getStatusYear() != null
 			    			&& ConstantUtils.STATUS_OPERATING.contentEquals(previousProcess.getOperatingStatusCode().getCode())
 			    			&& (emissionsProcess.getStatusYear() == null || emissionsProcess.getStatusYear() <= previousProcess.getStatusYear())
 			    			&& !sourceTypeLandfill) {
