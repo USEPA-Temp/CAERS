@@ -49,7 +49,7 @@
 
           <a href="#" class="btn btn-primary" [attr.aria-label]="'delete'+ report.year +'report'"
              [id]="'delete'+ report.year +'Report'"
-             *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED']) && !report.returnedReport" [routerLink]="['.']"
+             *ngIf="isOneOf(report.status, ['IN_PROGRESS', 'VALIDATED'])" [routerLink]="['.']"
              (click)="openDeleteModal(report.eisProgramId, report.id, report.year)">Delete</a>
         </div>
         <ng-template #FailedToCreateMessageBox>

@@ -116,9 +116,14 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
                 if ((status != null && !status.equals(report.getStatus()))
                         || (validationStatus != null && !validationStatus.equals(report.getValidationStatus()))) {
                     if (status != null) {
-                        report.setStatus(status);
-                        if (status.equals(ReportStatus.RETURNED)) {
-                        	report.setReturnedReport(true);
+                    	if (status.equals(ReportStatus.IN_PROGRESS) && report.isReturnedReport()) {
+        					report.setStatus(ReportStatus.RETURNED);
+        				} else {
+        					report.setStatus(status);
+        				}
+                    	
+                    	if (status.equals(ReportStatus.RETURNED)) {
+                    		report.setReturnedReport(true);
         				}
                     }
                     if(validationStatus != null) {
