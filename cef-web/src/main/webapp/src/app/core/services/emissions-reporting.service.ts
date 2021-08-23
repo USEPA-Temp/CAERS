@@ -22,6 +22,7 @@ import {ValidationResult} from 'src/app/shared/models/validation-result';
 import {FacilitySite} from 'src/app/shared/models/facility-site';
 import {CdxFacility} from '../../shared/models/cdx-facility';
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
+import { EmissionsReportAgencyData } from 'src/app/shared/models/emissions-report-agency-data';
 
 @Injectable({
     providedIn: 'root'
@@ -49,6 +50,11 @@ export class EmissionsReportingService {
     getReport(reportId: string): Observable<EmissionsReport> {
         const url = `${this.baseUrl}/${reportId}`;
         return this.http.get<EmissionsReport>(url);
+    }
+
+    getAgencyReportedYears(): Observable<EmissionsReportAgencyData[]> {
+        const url = `${this.baseUrl}/agencyYears`;
+        return this.http.get<EmissionsReportAgencyData[]>(url);
     }
 
     beginAdvancedQA(reportIds: number[]): Observable<EmissionsReport[]> {

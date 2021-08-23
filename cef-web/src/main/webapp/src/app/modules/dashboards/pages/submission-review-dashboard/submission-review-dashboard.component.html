@@ -24,13 +24,28 @@
                <strong>Submissions</strong>
             </div>
 
+            <div class="d-flex flex-row pl-2 py-3" *ngIf="user?.isAdmin()">
+               <label for="admin-agency-select" class="col-form-label col-form-label-sm mr-2">
+                  <strong>Agency:</strong>
+               </label>
+               <select id="admin-agency-select" style="width: auto"
+                       class="form-control form-control-sm" #sltSelect
+                       [(ngModel)]="selectedAgency" 
+                       (change)="onAgencySelected()" aria-label="select agency">
+                  <option value=""></option>
+                  <option *ngFor="let opt of agencyDataValues" [ngValue]="opt">{{opt.programSystemCode.code}} - {{opt.programSystemCode.description}}</option>
+               </select>
+               <hr>
+            </div>
+
             <div class="d-flex flex-row pl-2 py-3">
                <label for="cbo-report-status" class="col-form-label col-form-label-sm mr-2">
                   <strong>Report Status:</strong>
                </label>
                <select id="cbo-report-status" style="width: 150px"
-                       class="form-control form-control-sm mr-3" #mySelect
-                       (change)="onStatusSelected(mySelect.value)" aria-label="select report status">
+                       class="form-control form-control-sm mr-3" #statusSelect
+                       [(ngModel)]="selectedReportStatus"
+                       (change)="onStatusSelected()" aria-label="select report status">
                   <option value="SUBMITTED">Pending Review</option>
                   <option value="IN_PROGRESS">In Progress</option>
                   <option value="RETURNED">Reviewed and Returned</option>
@@ -42,9 +57,10 @@
                </label>
                <select id="cbo-report-year" style="width: 150px;"
                        class="form-control form-control-sm mr-3" #yearSelect
-                       (change)="onYearSelected(yearSelect.value, mySelect.value)" aria-label="select report year">
-                  <option value="CURRENT_REPORTING_YEAR" selected="selected">Current Year</option>
-                  <option value="ALL_YEARS">All Years</option>
+                       [(ngModel)]="selectedYear"
+                       (change)="refreshFacilityReports()" aria-label="select report year">
+                  <option [ngValue]="undefined">All Years</option>
+                  <option *ngFor="let opt of selectedAgency?.years" [value]="opt">{{opt}}</option>
                </select>
                <label for="cbo-industry-sector" class="col-form-label col-form-label-sm mr-2">
                   <strong>Industry Sector:</strong>
@@ -57,25 +73,25 @@
                </select>
             </div>
 
-            <app-submission-review-list [hideSelectColumn]="hideButtons"
-                                        [tableData]="submissions" [reportStatus]="mySelect.value"></app-submission-review-list>
+            <app-submission-review-list [reviewer]="user.isReviewer()"
+                                        [tableData]="submissions" [reportStatus]="statusSelect.value"></app-submission-review-list>
 
             <div class="validation-message p-3" *ngIf="invalidSelection">
                <span>At least one submission must be selected.</span>
             </div>
 
             <div class="card-footer">
-               <div class="row">
+               <div class="row" *ngIf="user?.isReviewer()">
                   <div class="col-sm-3" style="text-align: align-left">
                      <button class="btn btn-success btn-md"
-                           *ngIf="mySelect.value === 'SUBMITTED'"
+                           *ngIf="statusSelect.value === 'SUBMITTED'"
                         (click)="onBeginAdvancedQA(yearSelect.value)">
                      <span>Begin Advanced QA</span>
                   </button>
                   </div>
                   <div class="col-sm-9" style="text-align: right">
                      <button class="btn btn-primary btn-md mr-3"
-                           *ngIf="mySelect.value !== 'IN_PROGRESS' && mySelect.value !== 'RETURNED'"
+                           *ngIf="statusSelect.value !== 'IN_PROGRESS' && statusSelect.value !== 'RETURNED'"
                            (click)="onReject(yearSelect.value)">
                         <span>Reject and Return to Facility</span>
                      </button>

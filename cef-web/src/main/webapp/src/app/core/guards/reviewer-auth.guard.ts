@@ -36,7 +36,7 @@ export class ReviewerAuthGuard implements CanActivateChild {
   private checkRole(): Observable<boolean> {
 
     return this.userContext.getUser().pipe(
-       map(user => user.isReviewer())
+       map(user => user.canReview())
     );
   }
 }

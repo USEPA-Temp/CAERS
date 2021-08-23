@@ -77,7 +77,7 @@ public class SubmissionsReviewDasboardServiceImplTest {
         List<SubmissionsReviewDashboardDto> submissionsReviewDashboardDto=new ArrayList<>();
         when(mapper.toDtoList(submissionsReviewDashboardView)).thenReturn(submissionsReviewDashboardDto);
 
-        List<SubmissionsReviewDashboardDto> result= submissionsReviewDasboardServiceImpl.retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear();
+        List<SubmissionsReviewDashboardDto> result= submissionsReviewDasboardServiceImpl.retrieveReviewerFacilityReports(null, null);
 
         assertEquals(submissionsReviewDashboardDto, result);
     }
