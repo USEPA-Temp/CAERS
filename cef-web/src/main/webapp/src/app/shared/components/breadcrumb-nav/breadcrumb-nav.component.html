@@ -16,11 +16,9 @@
 -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
-      <li *ngIf="!(user?.isAdmin()) && 
-          !(user?.isReviewer()) &&
-          ((url === '/helpPage') || (url === '/error') || (url === '/review'))">
-        <u><a class="nav-link menu_links" (click)="goToMyFacilities()" id="bcMyFacilities">My Facilities</a></u>
+    <ul *ngIf="(user?.canPrepare())" class="navbar-nav mr-auto">
+      <li *ngIf="((url === '/helpPage') || (url === '/error') || (url === '/review'))">
+        <u><a class="nav-link menu_links" (click)="goToMyFacilities()" i="bcMyFacilities">My Facilities</a></u>
       </li>
       <li *ngFor="let breadcrumb of breadcrumbs; index as i" class="nav-item">
         <a [routerLink]="[breadcrumb.url]" *ngIf="i<breadcrumbs.length-1 && (url !== '/helpPage') && (url !== '/error') && (url !== '/reviewer') && (url !== '/review') " class="nav-link" [attr.data-cy]="'bc' + breadcrumb.label">
