@@ -24,6 +24,23 @@
         <url>https://alm.cgifederal.com/scm/projects/EPACDX/repos/cdx-oaqps-cef/browse</url>
     </scm>
     <!-- =============================================================================================== -->
+    <!-- Repositories -->
+    <!-- =============================================================================================== -->
+    <repositories>
+        <repository>
+		    <id>central</id>
+			<name>CDX Maven2 Repository</name>
+			<url>https://cdxbuilddev.epacdx.net/nexus/content/groups/public</url>
+		</repository>				
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<name>CDX Maven2 Repository</name>
+			<url>https://cdxbuilddev.epacdx.net/nexus/content/groups/public</url>
+		</pluginRepository>
+	</pluginRepositories>
+    <!-- =============================================================================================== -->
     <!-- Distribution -->
     <!-- =============================================================================================== -->
     <distributionManagement>
