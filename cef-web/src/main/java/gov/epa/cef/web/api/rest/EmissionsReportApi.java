@@ -36,6 +36,7 @@ import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
+import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
@@ -415,6 +416,19 @@ public class EmissionsReportApi {
 
         List<EmissionsReportDto> result =
             emissionsReportService.findByMasterFacilityRecordId(masterFacilityRecordId, true);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Find all agencies with reports and which years they have reports for
+     * @return
+     */
+    @GetMapping(value = "/agencyYears")
+    public ResponseEntity<List<EmissionsReportAgencyDataDto>> findAgencyReportedYears() {
+
+        List<EmissionsReportAgencyDataDto> result =
+            emissionsReportService.findAgencyReportedYears();
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

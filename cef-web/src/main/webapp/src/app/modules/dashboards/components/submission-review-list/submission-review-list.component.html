@@ -20,7 +20,7 @@
     <table class="table table-sm table-striped table-bordered">
       <thead class="thead-cef-medium">
       <tr>
-        <th *ngIf="reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'" scope="col">Select</th>
+        <th *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" scope="col">Select</th>
         <th scope="col" sortable="facilityName" (sort)="onSort($event)">Facility Name</th>
         <th scope="col" sortable="altFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
         <th scope="col" sortable="operatingStatus" (sort)="onSort($event)">Operating Status</th>
@@ -32,7 +32,9 @@
       </thead>
       <tbody>
       <tr *ngFor="let submission of tableItems">
-        <th *ngIf="reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'" scope="row"><input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report"></th>
+        <th *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" scope="row">
+          <input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report">
+        </th>
         <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
@@ -40,7 +42,9 @@
         <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
         <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
         <td>
-          <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)" [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'summary'">Summary</button>
+          <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)" [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'summary'">
+            Summary
+          </button>
           <button class="btn btn-primary btn-sm mr-1" 
                 [routerLink]="['/facility', submission.masterFacilityId, 'report', submission.emissionsReportId, 'summary']"
                 [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>

@@ -16,6 +16,7 @@
 */
 package gov.epa.cef.web.api.rest;
 
+import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.service.dto.SubmissionsReviewDashboardDto;
 import gov.epa.cef.web.service.impl.SubmissionsReviewDasboardServiceImpl;
 import org.junit.Test;
@@ -45,8 +46,8 @@ public class SubmissionsReviewDashboardApiTest extends BaseApiTest {
     @Test
     public void retrieveFacilitiesReportsForReview_Should_ReturnListOfFacilitiesReportsForReview_WhenNoParameterPassed() {
         List<SubmissionsReviewDashboardDto> submissionsUnderReview=new ArrayList<>();
-        when(submissionsReviewDasboardServiceImpl.retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear()).thenReturn(new ArrayList<>());
-        ResponseEntity<List<SubmissionsReviewDashboardDto>> result=submissionsReviewDashboardApi.retrieveFacilitiesReportsForReview();
+        when(submissionsReviewDasboardServiceImpl.retrieveFacilityReports((short)2020, ReportStatus.IN_PROGRESS, "GADNR")).thenReturn(new ArrayList<>());
+        ResponseEntity<List<SubmissionsReviewDashboardDto>> result=submissionsReviewDashboardApi.retrieveAgencySubmissions("GADNR", (short)2020, ReportStatus.IN_PROGRESS);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(submissionsUnderReview, result.getBody());
     }

@@ -45,10 +45,12 @@ import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserFeedbackService;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
+import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
@@ -74,6 +76,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -99,6 +102,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private MasterFacilityRecordMapper mfrMapper;
+
+    @Autowired
+    private LookupEntityMapper lookupMapper;
 
     @Autowired
     private CefConfig cefConfig;
@@ -195,6 +201,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         return findMostRecentEmissionsReport(masterFacilityRecordId)
             .map(emissionsReport -> emissionsReportMapper.toDto(emissionsReport))
             .orElse(null);
+    }
+
+    /**
+     * Find all agencies with reports and which years they have reports for
+     */
+    public List<EmissionsReportAgencyDataDto> findAgencyReportedYears() {
+
+        List<EmissionsReportAgencyDataDto> result = erRepo.findDistinctProgramSystems()
+                .stream()
+                .map(agency -> {
+                    return new EmissionsReportAgencyDataDto()
+                            .withProgramSystemCode(this.lookupMapper.toDto(agency))
+                            .withYears(erRepo.findDistinctReportingYears(agency.getCode()));
+                }).collect(Collectors.toList());
+        return result;
     }
 
     @Override

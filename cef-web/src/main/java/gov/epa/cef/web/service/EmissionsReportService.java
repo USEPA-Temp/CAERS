@@ -21,6 +21,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -79,6 +80,10 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto findMostRecentByMasterFacilityRecordId(Long masterFacilityRecordId);
 
+    /**
+     * Find all agencies with reports and which years they have reports for
+     */
+    List<EmissionsReportAgencyDataDto> findAgencyReportedYears();
 
     String submitToCromerr(Long emissionsReportId, String activityId) throws ApplicationException;
 

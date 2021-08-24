@@ -18,6 +18,7 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.service.dto.EisDataCriteria;
 import gov.epa.cef.web.service.dto.EisDataStatsDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -103,6 +104,12 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
 
     @Query("select distinct r.year from EmissionsReport r where r.programSystemCode.code = :programSystemCode and r.status = gov.epa.cef.web.domain.ReportStatus.APPROVED order by r.year desc")
     Collection<Integer> findEisDataYears(@Param("programSystemCode") String programSystemCode);
+
+    @Query("select distinct r.programSystemCode FROM EmissionsReport r")
+    List<BaseLookupEntity> findDistinctProgramSystems();
+
+    @Query("select distinct r.year from EmissionsReport r where r.programSystemCode.code = :programSystemCode order by r.year desc")
+    List<Integer> findDistinctReportingYears(@Param("programSystemCode") String programSystemCode);
 
     @Cacheable(value = CacheName.ReportMasterIds)
     @Query("select mfr.id from EmissionsReport r join r.masterFacilityRecord mfr where r.id = :id")

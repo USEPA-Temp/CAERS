@@ -32,7 +32,7 @@ import { ReportDownloadService } from 'src/app/core/services/report-download.ser
 export class SubmissionReviewListComponent extends BaseSortableTable implements OnInit {
 
   @Input() tableData: SubmissionUnderReview[];
-  @Input() hideSelectColumn: boolean;
+  @Input() reviewer: boolean;
   @Input() reportStatus: string;
 
   constructor(public userContext: UserContextService,

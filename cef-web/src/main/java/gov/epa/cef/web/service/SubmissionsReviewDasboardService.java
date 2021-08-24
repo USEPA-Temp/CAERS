@@ -22,31 +22,21 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.service.dto.SubmissionsReviewDashboardDto;
 
 public interface SubmissionsReviewDasboardService {
-    
+
     /**
-     * Retrieves all the facilities reports for review 
-     * 
-     */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear();
-    
-    /**
-     * Retrieves all the facilities reports for review by report status
-     * 
-     */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByReportStatusAndProgramSystemCode(ReportStatus reportStatus);
-    
-    /**
-     * Retrieves all the facilities reports for review based on reportYear and reportStatus
+     * Retrieve submissions for the current user's SLT based on year and status
      * @param reportYear
      * @param reportStatus
+     * @return
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndReportStatusAndProgramSystemCode(Short reportYear, ReportStatus reportStatus);
-    
+    List<SubmissionsReviewDashboardDto> retrieveReviewerFacilityReports(Short reportYear, ReportStatus reportStatus);
+
     /**
-     * Retrieves all the facilities reports for review for current reporting year
+     * Retrieve submissions based on year, status, and program
      * @param reportYear
+     * @param reportStatus
+     * @param programSystemCode
+     * @return
      */
-    List<SubmissionsReviewDashboardDto> retrieveFacilitiesReportsByYearAndProgramSystemCode(Short reportYear);
-    
-    
+    List<SubmissionsReviewDashboardDto> retrieveFacilityReports(Short reportYear, ReportStatus reportStatus, String programSystemCode);
 }
