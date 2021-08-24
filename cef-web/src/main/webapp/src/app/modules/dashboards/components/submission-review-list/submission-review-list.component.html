@@ -31,28 +31,36 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let submission of tableItems">
-        <th *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" scope="row">
-          <input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report">
-        </th>
-        <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.industry"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
-        <td>
-          <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)" [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'summary'">
-            Summary
-          </button>
-          <button class="btn btn-primary btn-sm mr-1" 
-                [routerLink]="['/facility', submission.masterFacilityId, 'report', submission.emissionsReportId, 'summary']"
-                [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>
-          <button class="btn btn-primary btn-sm mt-1" 
-                (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId, submission.reportStatus)"
-                [attr.aria-label]="'download' + submission?.year + submission?.facilityName + 'report'">Download Process Emissions Summary</button>
-        </td>
-      </tr>
+        <tr *ngIf="!tableItems || tableItems.length === 0">
+          <td *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" colspan="8" class="text-center">
+              <strong class="text-larger">No data available.</strong>
+          </td>
+          <td *ngIf="!(reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'))" colspan="7" class="text-center">
+              <strong class="text-larger">No data available.</strong>
+          </td>
+        </tr>
+        <tr *ngFor="let submission of tableItems">
+          <th *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" scope="row">
+            <input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report">
+          </th>
+          <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.industry"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
+          <td>
+            <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)" [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'summary'">
+              Summary
+            </button>
+            <button class="btn btn-primary btn-sm mr-1" 
+                  [routerLink]="['/facility', submission.masterFacilityId, 'report', submission.emissionsReportId, 'summary']"
+                  [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>
+            <button class="btn btn-primary btn-sm mt-1" 
+                  (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId, submission.reportStatus)"
+                  [attr.aria-label]="'download' + submission?.year + submission?.facilityName + 'report'">Download Process Emissions Summary</button>
+          </td>
+        </tr>
       </tbody>
     </table>
     <div *ngIf="tableItems && tableItems.length > 0">
