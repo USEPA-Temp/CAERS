@@ -203,7 +203,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     onAgencySelected() {
 
-        if (this.selectedAgency?.years && !(this.selectedYear && this.selectedAgency.years.includes(this.selectedYear))) {
+        if (this.selectedAgency?.years && !(this.selectedYear && this.selectedAgency.years.includes(+this.selectedYear))) {
             this.selectedYear = this.selectedAgency.years[0];
         }
         this.refreshFacilityReports();
