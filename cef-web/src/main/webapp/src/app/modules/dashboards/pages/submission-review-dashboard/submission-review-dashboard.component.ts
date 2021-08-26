@@ -55,12 +55,40 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     yearValues: number[] = [];
     industrySectors: string[] = [];
 
+    summarySubmissions: SubmissionUnderReview[];
+    submitted: SubmissionUnderReview[];
+    submittedCount: 0;
+    inProgress: SubmissionUnderReview[];
+    inProgressCount: 0;
+    returned: SubmissionUnderReview[];
+    returnedCount: 0;
+    advancedQA: SubmissionUnderReview[];
+    advancedQACount: 0;
+    approved: SubmissionUnderReview[];
+    approvedCount: 0;
+    currentUser: User;
+
     constructor(
         private userContext: UserContextService,
         private emissionReportService: EmissionsReportingService,
         private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
         private modalService: NgbModal,
-        private sharedService: SharedService) { }
+        private sharedService: SharedService) {
+            this.currentYear = new Date().getFullYear() - 1;
+            this.sharedService.submissionReviewChangeEmitted$
+            .subscribe(submissions => {
+                this.filterAndCountSubmissions(submissions);
+            });
+            this.userContext.getUser().subscribe(user => {
+                this.currentUser = user;
+                if (this.currentUser.isReviewer()) {
+                this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+                .subscribe(submissions => {
+                    this.filterAndCountSubmissions(submissions);
+                });
+                }
+            });
+        }
 
     ngOnInit() {
 
@@ -216,5 +244,57 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.sharedService.emitSubmissionChange(submissions);
         });
     }
+
+    filterAndCountSubmissions(submissions){
+      this.approvedCount = this.advancedQACount = this.submittedCount = this.inProgressCount = this.returnedCount = 0;
+      submissions.forEach(submission => {
+        if (submission.reportStatus === 'APPROVED') {
+          this.approvedCount++; 
+        }
+        if (submission.reportStatus === 'SUBMITTED') {
+          this.submittedCount++;
+        }
+        if (submission.reportStatus === 'IN_PROGRESS'){
+          this.inProgressCount++;
+        }
+        if (submission.reportStatus === 'RETURNED'){
+          this.returnedCount++;
+        }
+        if (submission.reportStatus === 'ADVANCED_QA'){
+          this.advancedQACount++;
+        }
+      });
+    }
+
+    onFilterApproved() {
+      this.selectedReportStatus = ReportStatus.APPROVED;
+      this.selectedYear = this.currentYear;
+      this.refreshFacilityReports();
+    }
+
+    onFilterAdvancedQA() {
+      this.selectedReportStatus = ReportStatus.ADVANCED_QA;
+      this.selectedYear = this.currentYear;
+      this.refreshFacilityReports();
+    }
+
+    onFilterPendingReview() {
+      this.selectedReportStatus = ReportStatus.SUBMITTED;
+      this.selectedYear = this.currentYear;
+      this.refreshFacilityReports();
+    }
+
+    onFilterReturned() {
+      this.selectedReportStatus = ReportStatus.RETURNED;
+      this.selectedYear = this.currentYear;
+      this.refreshFacilityReports();
+    }
+
+    onFilterInProgress() {
+      this.selectedReportStatus = ReportStatus.IN_PROGRESS;
+      this.selectedYear = this.currentYear;
+      this.refreshFacilityReports();
+    }
+
 
 }

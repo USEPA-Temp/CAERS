@@ -108,7 +108,100 @@
 
 
       <div class="col-sm-12 col-md-3">
-         <app-notification-list></app-notification-list>
+         <div style="flex: 0 0 250px">
+            <div class="card">
+               <div class="card-header text-center">
+                  <strong>My Notifications</strong>
+               </div>
+                  <div class="card-body">
+                     <div *ngIf="currentUser?.isReviewer()">
+                     <strong>{{currentYear}} Status Report</strong>
+                     <br>  
+                     <br>
+                     <div class="mb-3 align-middle">
+                        <a href="javascript:void(0);"
+                           class="text-nowrap text-decoration-none text-body"
+                           [style.pointer-events]="inProgressCount > 0 ? 'all' : 'none'"
+                           [title]="inProgressCount + ' reports Returned Status'"
+                           (click)="onFilterInProgress()">
+                           <span class="badge badge-pill badge-danger text-larger mr-3"
+                              style="background-color: #ff1a1a; font-size: 100%;"
+                              [textContent]="inProgressCount">
+                           </span>
+                           <strong class="mr-2">In Progress</strong>
+                           <fa-icon icon="filter"
+                                    title="Show In Progress reports"
+                                    *ngIf="inProgressCount > 0"></fa-icon>
+                        </a>
+                     </div>
+                     <div class="mb-3 align-middle">
+                        <a href="javascript:void(0);"
+                           class="text-nowrap text-decoration-none text-body"
+                           [style.pointer-events]="returnedCount > 0 ? 'all' : 'none'"
+                           [title]="returnedCount + ' reports Returned Status'"
+                           (click)="onFilterReturned()">
+                           <span class="badge badge-pill badge-danger text-larger mr-3"
+                              style="background-color: #ff1a1a; font-size: 100%;"
+                              [textContent]="returnedCount">
+                           </span>
+                           <strong class="mr-2">Reviewed and Returned</strong>
+                           <fa-icon icon="filter"
+                                    title="Show Returned reports"
+                                    *ngIf="returnedCount > 0"></fa-icon>
+                        </a>
+                     </div>
+                     <div class="mb-3 align-middle">
+                        <a href="javascript:void(0);"
+                           class="text-nowrap text-decoration-none text-body"
+                           [style.pointer-events]="submittedCount > 0 ? 'all' : 'none'"
+                           [title]="submittedCount + ' reports Pending Review Status'"
+                           (click)="onFilterPendingReview()">
+                           <span class="badge badge-pill badge-danger text-larger mr-3"
+                              style="background-color: #ffb90f; font-size: 100%;"
+                              [textContent]="submittedCount">
+                           </span>
+                           <strong class="mr-2">Pending Review</strong>
+                           <fa-icon icon="filter"
+                                    title="Show Pending Review reports"
+                                    *ngIf="submittedCount > 0"></fa-icon>
+                        </a>
+                     </div>
+                     <div class="mb-3 align-middle">
+                        <a href="javascript:void(0);"
+                           class="text-nowrap text-decoration-none text-body"
+                           [style.pointer-events]="advancedQACount > 0 ? 'all' : 'none'"
+                           [title]="advancedQACount + ' reports Advanced QA Status'"
+                           (click)="onFilterAdvancedQA()">
+                           <span class="badge badge-pill badge-danger text-larger mr-3"
+                              style="background-color: #ffb90f; font-size: 100%;"
+                              [textContent]="advancedQACount">
+                           </span>
+                           <strong class="mr-2">Advanced QA</strong>
+                           <fa-icon icon="filter"
+                                    title="Show Advanced QA reports"
+                                    *ngIf="advancedQACount > 0"></fa-icon>
+                        </a>
+                     </div>
+                     <div class="mb-3 align-middle">
+                        <a href="javascript:void(0);"
+                           class="text-nowrap text-decoration-none text-body"
+                           [style.pointer-events]="approvedCount > 0 ? 'all' : 'none'"
+                           [title]="approvedCount + ' reports Approved'"
+                           (click)="onFilterApproved()">
+                           <span class="badge badge-pill badge-danger text-larger mr-3"
+                              style="background-color: #209c98; font-size: 100%;"
+                              [textContent]="approvedCount">
+                           </span>
+                           <strong class="mr-2">Approved</strong>
+                           <fa-icon icon="filter"
+                                    title="Show Approved reports"
+                                    *ngIf="approvedCount > 0"></fa-icon>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
    </div>
 </div>
