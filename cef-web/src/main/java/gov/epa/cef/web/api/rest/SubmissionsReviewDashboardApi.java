@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 package gov.epa.cef.web.api.rest;
 
 import java.util.List; 
@@ -10,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,49 +38,40 @@ import gov.epa.cef.web.service.dto.SubmissionsReviewDashboardDto;
 @RequestMapping("/api/submissionsReview")
 public class SubmissionsReviewDashboardApi {
 
-    
     @Autowired
     private SubmissionsReviewDasboardService submissionsReviewDasboardService;
-    
+
     /**
-     * Retrieve the submissions under review for the reviewer program system and for the current fiscal year
+     * Retrieve submissions for the current user's SLT based on year and status
+     * @param reportYear
+     * @param reportStatus
      * @return
      */
-    @GetMapping(value = "/dashboard/byStatus/{reportStatus}")
-    @ResponseBody
-    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable ReportStatus reportStatus) {
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByReportStatusAndProgramSystemCode(reportStatus);
-        return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
-    }
-    
     @GetMapping(value = "/dashboard")
     @ResponseBody
-    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview() {        
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsForCurrentUserProgramSystemForTheCurrentFiscalYear();       
+    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveReviewerSubmissions(
+            @RequestParam(required = false) Short reportYear,
+            @RequestParam(required = false) ReportStatus reportStatus) {
+
+        List<SubmissionsReviewDashboardDto> result = submissionsReviewDasboardService.retrieveReviewerFacilityReports(reportYear, reportStatus);
         return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
     }
 
     /**
-     * Retrieve the submissions under review for the inputed year/report status
+     * Retrieve submissions based on year, status, and agency
+     * @param agency
+     * @param reportYear
+     * @param reportStatus
      * @return
      */
-    @GetMapping(value = "/dashboard/byStatusAndYear/{reportYear}/{reportStatus}")
+    @GetMapping(value = "/dashboard/{agency}")
     @ResponseBody
-    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable Short reportYear, @NotNull @PathVariable ReportStatus reportStatus) {
+    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveAgencySubmissions(
+            @NotNull @PathVariable String agency,
+            @RequestParam(required = false) Short reportYear,
+            @RequestParam(required = false) ReportStatus reportStatus) {
 
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByYearAndReportStatusAndProgramSystemCode(reportYear, reportStatus);
-        return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
-    }
-    
-    /**
-     * Retrieve all submissions under review for the current reporting year
-     * @return
-     */
-    @GetMapping(value = "/dashboard/forCurrentReportingYear/{reportYear}")
-    @ResponseBody
-    public ResponseEntity<List<SubmissionsReviewDashboardDto>> retrieveFacilitiesReportsForReview(@NotNull @PathVariable Short reportYear) {
-
-        List<SubmissionsReviewDashboardDto> result =submissionsReviewDasboardService.retrieveFacilitiesReportsByYearAndProgramSystemCode(reportYear);
+        List<SubmissionsReviewDashboardDto> result = submissionsReviewDasboardService.retrieveFacilityReports(reportYear, reportStatus, agency);
         return new ResponseEntity<List<SubmissionsReviewDashboardDto>>(result, HttpStatus.OK);
     }
 }

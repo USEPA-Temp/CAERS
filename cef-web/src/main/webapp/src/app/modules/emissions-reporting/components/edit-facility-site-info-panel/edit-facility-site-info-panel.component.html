@@ -1,3 +1,19 @@
+<!--
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+-->
 <form [formGroup]="facilitySiteForm">
     <div class="row pb-1">
         <div class="col-sm-2">
@@ -96,7 +112,7 @@
             <label for="stateCodeSelect" class="ml-1 col-form-label"><strong>State:</strong></label>
         </div>
         <div class="col-sm-4">
-            <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode" disabled>
+            <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode" [attr.disabled]="true">
                 <option *ngFor="let opt of fipsStateCode" [ngValue]="opt">{{opt?.uspsCode}}</option>
             </select>
             <app-validation-message [control]="facilitySiteForm.controls.stateCode"></app-validation-message>
@@ -117,7 +133,7 @@
             <label for="countySelect" class="ml-1 col-form-label"><strong>County:</strong></label>
         </div>
         <div class="col-sm-4">
-            <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode" disabled>
+            <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode" [attr.disabled]="true">
                 <option [ngValue]="null"></option>
                 <option *ngFor="let opt of counties" [ngValue]="opt">{{opt?.name}}</option>
             </select>

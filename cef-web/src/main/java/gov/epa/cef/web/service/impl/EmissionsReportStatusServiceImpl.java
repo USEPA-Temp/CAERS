@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 package gov.epa.cef.web.service.impl;
 
 import java.util.List;
@@ -116,9 +132,14 @@ public class EmissionsReportStatusServiceImpl implements EmissionsReportStatusSe
                 if ((status != null && !status.equals(report.getStatus()))
                         || (validationStatus != null && !validationStatus.equals(report.getValidationStatus()))) {
                     if (status != null) {
-                        report.setStatus(status);
-                        if (status.equals(ReportStatus.RETURNED)) {
-                        	report.setReturnedReport(true);
+                    	if (status.equals(ReportStatus.IN_PROGRESS) && report.isReturnedReport()) {
+        					report.setStatus(ReportStatus.RETURNED);
+        				} else {
+        					report.setStatus(status);
+        				}
+                    	
+                    	if (status.equals(ReportStatus.RETURNED)) {
+                    		report.setReturnedReport(true);
         				}
                     }
                     if(validationStatus != null) {

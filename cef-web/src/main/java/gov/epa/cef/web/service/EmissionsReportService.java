@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.api.rest.EmissionsReportApi.ReviewDTO;
@@ -5,6 +21,7 @@ import gov.epa.cef.web.domain.EmissionsReport;
 
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.exception.ApplicationException;
+import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import net.exchangenetwork.wsdl.register.program_facility._1.ProgramFacility;
@@ -63,6 +80,10 @@ public interface EmissionsReportService {
      */
     EmissionsReportDto findMostRecentByMasterFacilityRecordId(Long masterFacilityRecordId);
 
+    /**
+     * Find all agencies with reports and which years they have reports for
+     */
+    List<EmissionsReportAgencyDataDto> findAgencyReportedYears();
 
     String submitToCromerr(Long emissionsReportId, String activityId) throws ApplicationException;
 

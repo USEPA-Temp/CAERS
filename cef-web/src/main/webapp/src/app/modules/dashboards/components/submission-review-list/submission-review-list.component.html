@@ -1,10 +1,26 @@
+<!--
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+-->
 <form>
 
   <div class="mh-100 overflow-auto">
     <table class="table table-sm table-striped table-bordered">
       <thead class="thead-cef-medium">
       <tr>
-        <th *ngIf="reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'" scope="col">Select</th>
+        <th *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" scope="col">Select</th>
         <th scope="col" sortable="facilityName" (sort)="onSort($event)">Facility Name</th>
         <th scope="col" sortable="altFacilityId" (sort)="onSort($event)">Agency Facility ID</th>
         <th scope="col" sortable="operatingStatus" (sort)="onSort($event)">Operating Status</th>
@@ -15,24 +31,36 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let submission of tableItems">
-        <th *ngIf="reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'" scope="row"><input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report"></th>
-        <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.industry"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
-        <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
-        <td>
-          <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)" [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'summary'">Summary</button>
-          <button class="btn btn-primary btn-sm mr-1" 
-                [routerLink]="['/facility', submission.masterFacilityId, 'report', submission.emissionsReportId, 'summary']"
-                [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>
-          <button class="btn btn-primary btn-sm mt-1" 
-                (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId, submission.reportStatus)"
-                [attr.aria-label]="'download' + submission?.year + submission?.facilityName + 'report'">Download Process Emissions Summary</button>
-        </td>
-      </tr>
+        <tr *ngIf="!tableItems || tableItems.length === 0">
+          <td *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" colspan="8" class="text-center">
+              <strong class="text-larger">No data available.</strong>
+          </td>
+          <td *ngIf="!(reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED'))" colspan="7" class="text-center">
+              <strong class="text-larger">No data available.</strong>
+          </td>
+        </tr>
+        <tr *ngFor="let submission of tableItems">
+          <th *ngIf="reviewer && (reportStatus !== 'IN_PROGRESS' && reportStatus !== 'RETURNED')" scope="row">
+            <input type="checkbox" name="report{{submission.emissionsReportId}}" [(ngModel)]="submission.checked"  aria-label="select report">
+          </th>
+          <td><ngb-highlight [result]="submission.facilityName"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.altFacilityId"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.operatingStatus"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.industry"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.year"></ngb-highlight></td>
+          <td><ngb-highlight [result]="submission.lastSubmittalYear || 'None submitted previously'"></ngb-highlight></td>
+          <td>
+            <button class="btn btn-primary btn-sm mr-1" (click)="openSummaryModal(submission)" [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'summary'">
+              Summary
+            </button>
+            <button class="btn btn-primary btn-sm mr-1" 
+                  [routerLink]="['/facility', submission.masterFacilityId, 'report', submission.emissionsReportId, 'summary']"
+                  [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>
+            <button class="btn btn-primary btn-sm mt-1" 
+                  (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId, submission.reportStatus)"
+                  [attr.aria-label]="'download' + submission?.year + submission?.facilityName + 'report'">Download Process Emissions Summary</button>
+          </td>
+        </tr>
       </tbody>
     </table>
     <div *ngIf="tableItems && tableItems.length > 0">

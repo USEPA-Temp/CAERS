@@ -1,9 +1,23 @@
-import { EmissionUnit } from 'src/app/shared/models/emission-unit';
-import { HttpClient } from '@angular/common/http';
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { SubmissionUnderReview } from "src/app/shared/models/submission-under-review";
+import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
 
 
 @Injectable( {
@@ -16,19 +30,26 @@ export class SubmissionsReviewDashboardService {
     constructor( private http: HttpClient ) {
     }
 
-    retrieveFacilitiesReportsUnderReviewByStatus(reportStatus: string): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/byStatus/${reportStatus}`;
-        return this.http.get<SubmissionUnderReview[]>( url );
+    retrieveReviewerSubmissions(reportYear: number, reportStatus: string): Observable<SubmissionUnderReview[]> {
+
+        const url = `${this.baseUrl}/dashboard`;
+
+        let params = new HttpParams();
+        params = reportYear ? params.append('reportYear', reportYear?.toString()) : params;
+        params = reportStatus ? params.append('reportStatus', reportStatus) : params;
+
+        return this.http.get<SubmissionUnderReview[]>(url, {params});
     }
 
-    retrieveFacilitiesReportsByYearAndStatus(reportYear: number, reportStatus: string): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/byStatusAndYear/${reportYear}/${reportStatus}`;
-        return this.http.get<SubmissionUnderReview[]>( url );
-    }
+    retrieveSubmissions(reportYear: number, reportStatus: string, agency: string): Observable<SubmissionUnderReview[]> {
 
-    retrieveAllFacilitiesReportsForCurrentReportingYear(reportYear: number): Observable<SubmissionUnderReview[]> {
-        const url = `${this.baseUrl}/dashboard/forCurrentReportingYear/${reportYear}`;
-        return this.http.get<SubmissionUnderReview[]>( url );
+        const url = `${this.baseUrl}/dashboard/${agency}`;
+
+        let params = new HttpParams();
+        params = reportYear ? params.append('reportYear', reportYear?.toString()) : params;
+        params = reportStatus ? params.append('reportStatus', reportStatus) : params;
+
+        return this.http.get<SubmissionUnderReview[]>(url, {params});
     }
-    }
+}
 

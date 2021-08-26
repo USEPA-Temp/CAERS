@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 import {Component, OnInit, Input, OnChanges, AfterContentChecked} from '@angular/core';
 import {LookupService} from 'src/app/core/services/lookup.service';
 import {FormBuilder, Validators, ValidatorFn, FormGroup, ValidationErrors, AbstractControl} from '@angular/forms';
@@ -34,7 +50,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     sccRetirementYear: number;
     sccWarning: string;
     aircraftSCCcheck = false;
-    invalidAircraftSCC = false;
     processHasAETC = false;
     facilityOpCode: BaseCodeLookup;
     facilitySourceTypeCode: BaseCodeLookup;
@@ -69,7 +84,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
             this.checkPointSourceSccCode(),
             this.checkProcessIdentifier(),
             this.legacyAetcValidator(),
-            this.checkMatchSccAircraft(),
             this.checkSccAndAircraftDuplicate(),
             this.operatingStatusCheck(),
             this.statusYearRequiredCheck()]
@@ -183,7 +197,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     // check for aircraft type SCC and associated Aircraft Engine Type Codes
     checkAircraftSCC() {
         this.aircraftSCCcheck = false;
-        this.invalidAircraftSCC = false;
         this.checkForAircraftSCC();
         if (this.aircraftSCCcheck) {
             // get AETC list and set form value
@@ -228,7 +241,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
                         for (const item of this.aircraftEngineTypeValue) {
 
                             if (item.code === this.process.aircraftEngineTypeCode.code) {
-                                this.invalidAircraftSCC = false;
                                 codeInList = true;
                                 this.processForm.controls.aircraftEngineTypeCode.setValue(item);
                                 break;
@@ -323,19 +335,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         };
     }
 
-
-    checkMatchSccAircraft(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            if (this.invalidAircraftSCC) {
-                if (control.get('aircraftEngineTypeCode') !== null && control.get('aircraftEngineTypeCode').value !== null) {
-                    control.get('aircraftEngineTypeCode').setErrors({invalidAircraftSCC: true});
-                } else {
-                    control.get('aircraftEngineTypeCode').setErrors(null);
-                }
-                return null;
-            }
-        };
-    }
 
     checkSccAndAircraftDuplicate(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {

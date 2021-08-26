@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SubmissionsReviewDashboardService } from 'src/app/core/services/submissions-review-dashboard.service';
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
@@ -8,6 +24,10 @@ import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/compo
 import {SharedService} from 'src/app/core/services/shared.service';
 import { FileAttachmentModalComponent } from 'src/app/modules/shared/components/file-attachment-modal/file-attachment-modal.component';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { UserContextService } from 'src/app/core/services/user-context.service';
+import { EmissionsReportAgencyData } from 'src/app/shared/models/emissions-report-agency-data';
+import { User } from 'src/app/shared/models/user';
 
 @Component( {
     selector: 'app-submission-review-dashboard',
@@ -22,29 +42,53 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 
     allSubmissions: SubmissionUnderReview[] = [];
     submissions: SubmissionUnderReview[] = [];
+    user: User;
     hideButtons = false;
     invalidSelection = false;
     currentYear: number;
-    selectedYear: string;
+    selectedYear: number;
     selectedReportStatus = ReportStatus.SUBMITTED;
+    selectedAgency: EmissionsReportAgencyData;
     selectedIndustrySector: string;
 
+    agencyDataValues: EmissionsReportAgencyData[];
+    yearValues: number[] = [];
     industrySectors: string[] = [];
 
     constructor(
+        private userContext: UserContextService,
         private emissionReportService: EmissionsReportingService,
         private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
         private modalService: NgbModal,
         private sharedService: SharedService) { }
 
     ngOnInit() {
-        const CURRENT_REPORTING_YEAR = 'CURRENT_REPORTING_YEAR';
-        this.currentYear = new Date().getFullYear() - 1;
-        this.selectedYear = CURRENT_REPORTING_YEAR;
-        this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, 'SUBMITTED');
+
+        this.userContext.getUser()
+        .subscribe(user => {
+
+            this.user = user;
+
+            this.emissionReportService.getAgencyReportedYears()
+            .subscribe(result => {
+
+                this.agencyDataValues = result.sort((a, b) => (a.programSystemCode.code > b.programSystemCode.code) ? 1 : -1);
+
+                if (this.user.isReviewer()) {
+                    const userAgency = this.agencyDataValues.find(item => item.programSystemCode.code === this.user.programSystemCode);
+                    this.selectedAgency = userAgency;
+                    this.selectedYear = this.selectedAgency.years[0];
+                    this.refreshFacilityReports();
+                } else if (this.user.isAdmin()) {
+
+                }
+            });
+
+            this.currentYear = new Date().getFullYear() - 1;
+        });
     }
 
-    onBeginAdvancedQA(year) {
+    onBeginAdvancedQA() {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
 
         if (!selectedSubmissions.length) {
@@ -59,7 +103,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    onApprove(year) {
+    onApprove() {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
 
         if (!selectedSubmissions.length) {
@@ -82,7 +126,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    onReject(year) {
+    onReject() {
         const selectedSubmissions = this.listComponent.tableData.filter(item => item.checked).map(item => item.emissionsReportId);
 
         if (!selectedSubmissions.length) {
@@ -97,7 +141,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((resp) => {
                 this.emissionReportService.rejectReports(selectedSubmissions, resp.comments, resp.id)
                 .subscribe(() => {
-                    this.refreshFacilityReports()
+                    this.refreshFacilityReports();
                     this.emitAllSubmissions();
                 });
             }, () => {
@@ -107,25 +151,20 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     }
 
     refreshFacilityReports(): void {
-        if (this.selectedYear === 'CURRENT_REPORTING_YEAR') {
-            this.retrieveFacilitiesReportsByYearAndStatus(this.currentYear, this.selectedReportStatus);
-        } else {
-            this.retrieveFacilitiesReportsByReportStatus(this.selectedReportStatus);
-        }
-    }
-
-    retrieveFacilitiesReportsByYearAndStatus(year, reportStatus): void {
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsByYearAndStatus(year, reportStatus)
-            .subscribe((submissions) => {
-                this.sortSubmissions(submissions)
-            });
-    }
-
-    retrieveFacilitiesReportsByReportStatus(reportStatus): void {
-        this.submissionsReviewDashboardService.retrieveFacilitiesReportsUnderReviewByStatus(reportStatus)
+        if (this.user.isReviewer()) {
+            this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.selectedYear, this.selectedReportStatus)
             .subscribe((submissions) => {
                 this.sortSubmissions(submissions);
             });
+        } else if (this.user.isAdmin() && this.selectedAgency) {
+            this.submissionsReviewDashboardService.retrieveSubmissions(
+                this.selectedYear,
+                this.selectedReportStatus,
+                this.selectedAgency.programSystemCode.code)
+            .subscribe((submissions) => {
+                this.sortSubmissions(submissions);
+            });
+        }
     }
 
     sortSubmissions(submissions: SubmissionUnderReview[]) {
@@ -147,10 +186,9 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         }
     }
 
-    onStatusSelected(value) {
-        this.selectedReportStatus = value;
+    onStatusSelected() {
 
-        if (value === 'SUBMITTED' || value === 'ADVANCED_QA') {
+        if (this.selectedReportStatus === ReportStatus.SUBMITTED || this.selectedReportStatus === ReportStatus.ADVANCED_QA) {
             this.hideButtons = false;
         } else {
             this.hideButtons = true;
@@ -158,19 +196,22 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         this.refreshFacilityReports();
     }
 
-    onYearSelected(year: string, value: string) {
-        this.selectedYear = year;
-        this.onStatusSelected(value);
-    }
-
     onIndustrySelected(industry: string) {
         this.selectedIndustrySector = industry;
         this.filterSubmissions();
     }
 
+    onAgencySelected() {
+
+        if (this.selectedAgency?.years && !(this.selectedYear && this.selectedAgency.years.includes(+this.selectedYear))) {
+            this.selectedYear = this.selectedAgency.years[0];
+        }
+        this.refreshFacilityReports();
+    }
+
     // emits the updated submission list to the notification component
     emitAllSubmissions(): void {
-        this.submissionsReviewDashboardService.retrieveAllFacilitiesReportsForCurrentReportingYear(this.currentYear)
+        this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
         .subscribe(submissions => {
             this.sharedService.emitSubmissionChange(submissions);
         });

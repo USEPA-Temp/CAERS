@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
@@ -303,7 +319,7 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			    for (EmissionsProcess previousProcess : previousProcesses) {
 			    	
 			    	// check PS/TS status year of current report to OP status year of previous report
-			    	if (!isProcessOperating
+			    	if (!isProcessOperating && previousProcess.getStatusYear() != null
 			    			&& ConstantUtils.STATUS_OPERATING.contentEquals(previousProcess.getOperatingStatusCode().getCode())
 			    			&& (emissionsProcess.getStatusYear() == null || emissionsProcess.getStatusYear() <= previousProcess.getStatusYear())
 			    			&& !sourceTypeLandfill) {
@@ -342,28 +358,30 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			}
 		}
 		
-		// Status year must be between 1900 and the report year
-        if (emissionsProcess.getStatusYear() != null && (emissionsProcess.getStatusYear() < 1900 || emissionsProcess.getStatusYear() > emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear() )) {
-            
-        	result = false;
-            context.addFederalError(
-                ValidationField.PROCESS_STATUS_YEAR.value(), "emissionsProcess.statusYear.range",
-                createValidationDetails(emissionsProcess),
-                emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().toString());
-        }
-		
-		// process operating status year cannot be before unit operating status year when both are OP.
-		// check does not apply to landfills, process can be operating while unit is TS/PS.
-		if (isProcessOperating && !sourceTypeLandfill
-				&& ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getEmissionsUnit().getOperatingStatusCode().getCode())
-				&& emissionsProcess.getStatusYear() < emissionsProcess.getEmissionsUnit().getStatusYear()) {
+		if (emissionsProcess.getStatusYear() != null) {
+			// Status year must be between 1900 and the report year
+	        if (emissionsProcess.getStatusYear() < 1900 || emissionsProcess.getStatusYear() > emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear()) {
+	            
+	        	result = false;
+	            context.addFederalError(
+	                ValidationField.PROCESS_STATUS_YEAR.value(), "emissionsProcess.statusYear.range",
+	                createValidationDetails(emissionsProcess),
+	                emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear().toString());
+	        }
 			
-			result = false;
-			context.addFederalError(
-					ValidationField.PROCESS_STATUS_YEAR.value(),
-					"emissionsProcess.statusYear.beforeUnitYear",
-					createValidationDetails(emissionsProcess),
-					emissionsProcess.getEmissionsUnit().getUnitIdentifier());
+			// process operating status year cannot be before unit operating status year when both are OP.
+			// check does not apply to landfills, process can be operating while unit is TS/PS.
+			if (isProcessOperating && !sourceTypeLandfill && emissionsProcess.getEmissionsUnit().getStatusYear() != null
+					&& ConstantUtils.STATUS_OPERATING.contentEquals(emissionsProcess.getEmissionsUnit().getOperatingStatusCode().getCode())
+					&& emissionsProcess.getStatusYear() < emissionsProcess.getEmissionsUnit().getStatusYear()) {
+				
+				result = false;
+				context.addFederalError(
+						ValidationField.PROCESS_STATUS_YEAR.value(),
+						"emissionsProcess.statusYear.beforeUnitYear",
+						createValidationDetails(emissionsProcess),
+						emissionsProcess.getEmissionsUnit().getUnitIdentifier());
+			}
 		}
         
         

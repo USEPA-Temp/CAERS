@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 package gov.epa.cef.web.api.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,6 +36,7 @@ import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.EmissionsReportValidationService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
+import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.EntityRefDto;
@@ -399,6 +416,19 @@ public class EmissionsReportApi {
 
         List<EmissionsReportDto> result =
             emissionsReportService.findByMasterFacilityRecordId(masterFacilityRecordId, true);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Find all agencies with reports and which years they have reports for
+     * @return
+     */
+    @GetMapping(value = "/agencyYears")
+    public ResponseEntity<List<EmissionsReportAgencyDataDto>> findAgencyReportedYears() {
+
+        List<EmissionsReportAgencyDataDto> result =
+            emissionsReportService.findAgencyReportedYears();
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

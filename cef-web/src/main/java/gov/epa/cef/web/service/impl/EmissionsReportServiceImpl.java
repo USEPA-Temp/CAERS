@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.api.rest.EmissionsReportApi.ReviewDTO;
@@ -29,10 +45,12 @@ import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserFeedbackService;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
+import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
@@ -58,6 +76,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -83,6 +102,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private MasterFacilityRecordMapper mfrMapper;
+
+    @Autowired
+    private LookupEntityMapper lookupMapper;
 
     @Autowired
     private CefConfig cefConfig;
@@ -179,6 +201,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         return findMostRecentEmissionsReport(masterFacilityRecordId)
             .map(emissionsReport -> emissionsReportMapper.toDto(emissionsReport))
             .orElse(null);
+    }
+
+    /**
+     * Find all agencies with reports and which years they have reports for
+     */
+    public List<EmissionsReportAgencyDataDto> findAgencyReportedYears() {
+
+        List<EmissionsReportAgencyDataDto> result = erRepo.findDistinctProgramSystems()
+                .stream()
+                .map(agency -> {
+                    return new EmissionsReportAgencyDataDto()
+                            .withProgramSystemCode(this.lookupMapper.toDto(agency))
+                            .withYears(erRepo.findDistinctReportingYears(agency.getCode()));
+                }).collect(Collectors.toList());
+        return result;
     }
 
     @Override

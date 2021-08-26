@@ -1,3 +1,19 @@
+/*
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+*/
 package gov.epa.cef.web.service.validation.validator;
 
 import static org.junit.Assert.assertFalse;
@@ -33,12 +49,16 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.validator.federal.ControlValidator;
+import gov.epa.cef.web.service.validation.validator.federal.ControlPollutantValidator;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ControlValidatorTest extends BaseValidatorTest {
 	
 	@InjectMocks
 	private ControlValidator validator;
+	
+	@InjectMocks
+	private ControlPollutantValidator pollutantValidator;
 	
     @Mock
     private EmissionsReportRepository reportRepo;
@@ -511,6 +531,33 @@ public class ControlValidatorTest extends BaseValidatorTest {
 		assertTrue(errorMap.containsKey(ValidationField.CONTROL_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_POLLUTANT.value()).size() == 1);		
 		
 	}
+	
+	@Test
+	public void controlPathPollutantLegacyTest() {
+		CefValidatorContext cefContext = createContext();
+		Control testData = createBaseControl();
+		
+		ControlPollutant cp1 = new ControlPollutant();
+		Pollutant p1 = new Pollutant();
+		p1.setPollutantCode("10025737");
+		p1.setPollutantName("test pollutant");
+		p1.setLastInventoryYear(2005);
+		cp1.setPollutant(p1);
+		cp1.setPercentReduction(BigDecimal.valueOf(50.0));
+		
+		EmissionsReport er = new EmissionsReport();
+        er.setId(1L);
+        er.setYear(new Short("2020"));
+		testData.getFacilitySite().setEmissionsReport(er);
+		
+		cp1.setControl(testData);
+		
+		assertFalse(this.pollutantValidator.validate(cefContext, cp1));
+		assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+		
+		Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+		assertTrue(errorMap.containsKey(ValidationField.CONTROL_PATH_POLLUTANT.value()) && errorMap.get(ValidationField.CONTROL_PATH_POLLUTANT.value()).size() == 1);
+    }
 	
 	@Test
     public void operationStatusPSFailTest() {
