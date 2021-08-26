@@ -55,40 +55,20 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     yearValues: number[] = [];
     industrySectors: string[] = [];
 
-    summarySubmissions: SubmissionUnderReview[];
-    submitted: SubmissionUnderReview[];
+    reportStatus = ReportStatus;
+
     submittedCount: 0;
-    inProgress: SubmissionUnderReview[];
     inProgressCount: 0;
-    returned: SubmissionUnderReview[];
     returnedCount: 0;
-    advancedQA: SubmissionUnderReview[];
     advancedQACount: 0;
-    approved: SubmissionUnderReview[];
     approvedCount: 0;
-    currentUser: User;
 
     constructor(
         private userContext: UserContextService,
         private emissionReportService: EmissionsReportingService,
         private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
         private modalService: NgbModal,
-        private sharedService: SharedService) {
-            this.currentYear = new Date().getFullYear() - 1;
-            this.sharedService.submissionReviewChangeEmitted$
-            .subscribe(submissions => {
-                this.filterAndCountSubmissions(submissions);
-            });
-            this.userContext.getUser().subscribe(user => {
-                this.currentUser = user;
-                if (this.currentUser.isReviewer()) {
-                this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
-                .subscribe(submissions => {
-                    this.filterAndCountSubmissions(submissions);
-                });
-                }
-            });
-        }
+        private sharedService: SharedService) { }
 
     ngOnInit() {
 
@@ -113,6 +93,14 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             });
 
             this.currentYear = new Date().getFullYear() - 1;
+
+            if (this.user.isReviewer()) {
+                this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+                .subscribe(submissions => {
+                    this.filterAndCountSubmissions(submissions);
+                });
+            }
+
         });
     }
 
@@ -248,50 +236,26 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     filterAndCountSubmissions(submissions){
       this.approvedCount = this.advancedQACount = this.submittedCount = this.inProgressCount = this.returnedCount = 0;
       submissions.forEach(submission => {
-        if (submission.reportStatus === 'APPROVED') {
-          this.approvedCount++; 
+        if (submission.reportStatus === ReportStatus.APPROVED) {
+          this.approvedCount++;
         }
-        if (submission.reportStatus === 'SUBMITTED') {
+        if (submission.reportStatus === ReportStatus.SUBMITTED) {
           this.submittedCount++;
         }
-        if (submission.reportStatus === 'IN_PROGRESS'){
+        if (submission.reportStatus === ReportStatus.IN_PROGRESS){
           this.inProgressCount++;
         }
-        if (submission.reportStatus === 'RETURNED'){
+        if (submission.reportStatus === ReportStatus.RETURNED){
           this.returnedCount++;
         }
-        if (submission.reportStatus === 'ADVANCED_QA'){
+        if (submission.reportStatus === ReportStatus.ADVANCED_QA){
           this.advancedQACount++;
         }
       });
     }
 
-    onFilterApproved() {
-      this.selectedReportStatus = ReportStatus.APPROVED;
-      this.selectedYear = this.currentYear;
-      this.refreshFacilityReports();
-    }
-
-    onFilterAdvancedQA() {
-      this.selectedReportStatus = ReportStatus.ADVANCED_QA;
-      this.selectedYear = this.currentYear;
-      this.refreshFacilityReports();
-    }
-
-    onFilterPendingReview() {
-      this.selectedReportStatus = ReportStatus.SUBMITTED;
-      this.selectedYear = this.currentYear;
-      this.refreshFacilityReports();
-    }
-
-    onFilterReturned() {
-      this.selectedReportStatus = ReportStatus.RETURNED;
-      this.selectedYear = this.currentYear;
-      this.refreshFacilityReports();
-    }
-
-    onFilterInProgress() {
-      this.selectedReportStatus = ReportStatus.IN_PROGRESS;
+    onFilter(reportStatus: ReportStatus) {
+      this.selectedReportStatus = reportStatus;
       this.selectedYear = this.currentYear;
       this.refreshFacilityReports();
     }
