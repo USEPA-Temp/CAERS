@@ -55,6 +55,14 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     yearValues: number[] = [];
     industrySectors: string[] = [];
 
+    reportStatus = ReportStatus;
+
+    submittedCount: 0;
+    inProgressCount: 0;
+    returnedCount: 0;
+    advancedQACount: 0;
+    approvedCount: 0;
+
     constructor(
         private userContext: UserContextService,
         private emissionReportService: EmissionsReportingService,
@@ -85,6 +93,14 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             });
 
             this.currentYear = new Date().getFullYear() - 1;
+
+            if (this.user.isReviewer()) {
+                this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+                .subscribe(submissions => {
+                    this.filterAndCountSubmissions(submissions);
+                });
+            }
+
         });
     }
 
@@ -216,5 +232,33 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.sharedService.emitSubmissionChange(submissions);
         });
     }
+
+    filterAndCountSubmissions(submissions){
+      this.approvedCount = this.advancedQACount = this.submittedCount = this.inProgressCount = this.returnedCount = 0;
+      submissions.forEach(submission => {
+        if (submission.reportStatus === ReportStatus.APPROVED) {
+          this.approvedCount++;
+        }
+        if (submission.reportStatus === ReportStatus.SUBMITTED) {
+          this.submittedCount++;
+        }
+        if (submission.reportStatus === ReportStatus.IN_PROGRESS){
+          this.inProgressCount++;
+        }
+        if (submission.reportStatus === ReportStatus.RETURNED){
+          this.returnedCount++;
+        }
+        if (submission.reportStatus === ReportStatus.ADVANCED_QA){
+          this.advancedQACount++;
+        }
+      });
+    }
+
+    onFilter(reportStatus: ReportStatus) {
+      this.selectedReportStatus = reportStatus;
+      this.selectedYear = this.currentYear;
+      this.refreshFacilityReports();
+    }
+
 
 }
