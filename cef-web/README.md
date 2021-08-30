@@ -71,8 +71,8 @@ At the bottom of the document are some helpful tips on how to create new Angular
     - host: 172.20.6.6
     - port: 5432
     - database: CEF
-    - username: cef@cdx-pgs-general-shared-dev-01
-    - password: cef_fall2017
+    - username: USERNAME_REMOVED
+    - password: PASSWORD_REMOVED
 
 ## Building CAERS
 - ### Maven build
