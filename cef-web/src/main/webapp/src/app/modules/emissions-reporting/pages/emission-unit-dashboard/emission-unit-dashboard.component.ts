@@ -64,6 +64,10 @@ export class EmissionUnitDashboardComponent implements OnInit {
           .subscribe(processes => {
             this.processes = processes;
           });
+          this.emissionUnitService.retrievePrevious(this.emissionsUnit.id)
+          .subscribe(result => {
+              this.emissionsUnit.previousUnit = result;
+          });
         });
 
         this.controlPathService.retrieveForEmissionsUnit(+map.get('unitId'))

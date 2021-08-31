@@ -35,7 +35,6 @@ import {VariableValidationType} from 'src/app/shared/enums/variable-validation-t
 })
 export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
     @Input() emissionUnit: EmissionUnit;
-    previousUnit: EmissionUnit;
     designCapacityWarning: any;
     facilitySite: FacilitySite;
     emissionUnitIdentifiers: string[] = [];
@@ -116,11 +115,6 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                             this.emissionUnitIdentifiers = this.emissionUnitIdentifiers.filter(identifer =>
                                 identifer.toString() !== this.emissionUnit.unitIdentifier);
 
-                            this.emissionUnitService.retrievePrevious(this.emissionUnit.id)
-                            .subscribe(result => {
-                                this.previousUnit = result;
-                                this.emissionUnitForm.get('operatingStatusCode').updateValueAndValidity();
-                            });
                         } else {
                             this.edit = false;
                         }
@@ -288,7 +282,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
      */
     newSfcOperatingValidator(): ValidatorFn {
         return (control: AbstractControl): {[key: string]: any} | null => {
-            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousUnit) {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.emissionUnit?.previousUnit) {
                 return {newSfcOperating: {value: control.value.code}};
             }
             return null;

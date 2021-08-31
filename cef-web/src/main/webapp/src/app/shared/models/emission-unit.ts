@@ -31,4 +31,5 @@ export class EmissionUnit {
   comments: string;
   processes: Process[];
   emissionsProcesses: Process[];
+  previousUnit: EmissionUnit;
 }
