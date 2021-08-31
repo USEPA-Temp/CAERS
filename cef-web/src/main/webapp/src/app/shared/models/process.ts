@@ -35,4 +35,5 @@ export class Process {
   releasePointAppts: ReleasePointApportionment[];
   reportingPeriods: ReportingPeriod[];
   emissionsUnit: EmissionUnit;
+  previousProcess: Process;
 }

@@ -30,11 +30,12 @@ export class Control {
   percentCapture: number;
   numberOperatingMonths: number;
   percentControl: number;
-  assignments: ControlAssignment[];
-  pollutants: ControlPollutant[];
   startDate: Date;
   upgradeDate: Date;
   endDate: Date;
   comments: string;
   controlMeasureCode: InventoryYearCodeLookup;
+  assignments: ControlAssignment[];
+  pollutants: ControlPollutant[];
+  previousControl: Control;
 }
