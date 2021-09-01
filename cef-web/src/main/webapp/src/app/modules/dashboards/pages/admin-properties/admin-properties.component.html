@@ -18,24 +18,42 @@
 
   <div class="card mb-3">
     <div class="card-header text-center">
-      <strong>Admin Properties</strong>
+      <span class="pageHeader"><strong>Admin Properties</strong></span>
+      <div class="float-right">
+        <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>
+      </div>
     </div>
     <div class="card-body">
       <form [formGroup]="propertyForm">
-        <div class="row pb-2" *ngFor="let prop of properties">
+        <div class="row pb-1 even" *ngFor="let prop of properties; let even = even; let odd = odd"  [ngClass]="{ odd: odd, even: even }">
           <div class="col-sm-6 col-lg-3">
             <label for="{{prop.name + 'Input'}}" class="ml-1 col-form-label">
-              <strong>{{prop.name}}:</strong>
+              <fa-icon class="mt-2 ml-2" title="{{prop.description}}" [icon]="['fas', 'question-circle']"></fa-icon>
+              &nbsp;<strong>{{prop.label}}:</strong>
             </label>
           </div>
           <div class="col-sm-6 col-lg-3">
-            <input type="text" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name">
-            <app-validation-message [control]="propertyForm.get([prop.name])"></app-validation-message>
+            <div class="textboxes">
+              <div *ngIf="prop.datatype !== 'boolean' && propertyForm.value[prop.name].length > 30">
+                <textarea maxlength="255" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name"></textarea>
+              </div>
+              <div *ngIf="prop.datatype !== 'boolean' && !(propertyForm.value[prop.name].length > 30)">
+                <input type="text" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name">
+              </div>
+              <app-validation-message [control]="propertyForm.get([prop.name])"></app-validation-message>
+            </div>
+            <div class="custom-control custom-switch custom-switch" *ngIf="prop.datatype === 'boolean'">
+              <input type="checkbox" [checked]="prop.value===true" class="custom-control-input" id="{{'switch'+prop.name}}"
+              [attr.aria-label]="prop.description" [formControlName]="prop.name">
+              <label class="custom-control-label" for="{{'switch'+prop.name}}">
+                <span *ngIf="propertyForm.value[prop.name]===true">Enabled</span>
+                <span *ngIf="propertyForm.value[prop.name]!==true">Disabled</span>
+              </label>
+            </div>
           </div>
         </div>
 
         <div class="float-right mb-3">
-          
           <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>
         </div>
       </form>
