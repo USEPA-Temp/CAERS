@@ -19,3 +19,7 @@ UPDATE admin_properties SET label = 'Admin Email Enabled', description = 'Enabli
 UPDATE admin_properties SET label = 'Excel Export Enabled', description = 'Allows excel export.', datatype = 'boolean' WHERE name = 'feature.excel-export.enabled';
 UPDATE admin_properties SET label = 'CDX Association Migration Enabled', description = 'Enables button to migrate user facility associations from CDX be shown.', datatype = 'boolean' WHERE name = 'feature.cdx-association-migration.enabled';
 UPDATE admin_properties SET label = 'CERS-V2 Enabled', description = 'Enables submitting data to EIS from CAERS in the CERS V2.0 schema', datatype = 'boolean' WHERE name = 'feature.cers-v2.enabled';
+
+ALTER TABLE admin_properties ALTER COLUMN label SET NOT NULL;
+ALTER TABLE admin_properties ALTER COLUMN description SET NOT NULL;
+ALTER TABLE admin_properties ALTER COLUMN datatype SET NOT NULL;
