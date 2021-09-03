@@ -61,9 +61,16 @@ export class AdminPropertiesComponent implements OnInit {
 
       result.sort((a, b) => (a.name > b.name) ? 1 : -1);
       result.forEach(prop => {
-        this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
-          Validators.required
-        ]}));
+        if (prop.datatype !== 'boolean') {
+          if (prop.name !== 'feature.announcement.text') {
+            this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [Validators.required]}));
+          } else {
+            this.propertyForm.addControl(prop.name, new FormControl(prop.value));
+          }
+        } else {
+          const booleanValue = (prop.value.toLowerCase() === 'true');
+          this.propertyForm.addControl(prop.name, new FormControl(booleanValue));
+        }
       });
 
       this.properties = result;
@@ -74,7 +81,7 @@ export class AdminPropertiesComponent implements OnInit {
   private setMigrationFeature() {
     this.migrationFeature = this.properties
                             .find(p => p.name.toLowerCase() === 'feature.cdx-association-migration.enabled')
-                            ?.value?.toLowerCase() === 'true';
+                            ?.value?.toString() === 'true';
   }
 
   openTestEmailModal() {

@@ -16,5 +16,8 @@
 */
 export class AppProperty {
   name: string;
+  label: string;
   value: string;
+  description: string;
+  datatype: string;
 }
