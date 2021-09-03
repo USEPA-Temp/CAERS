@@ -62,7 +62,11 @@ export class AdminPropertiesComponent implements OnInit {
       result.sort((a, b) => (a.name > b.name) ? 1 : -1);
       result.forEach(prop => {
         if (prop.datatype !== 'boolean') {
-          this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [Validators.required]}));
+          if (prop.name !== 'feature.announcement.text') {
+            this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [Validators.required]}));
+          } else {
+            this.propertyForm.addControl(prop.name, new FormControl(prop.value));
+          }
         } else {
           const booleanValue = (prop.value.toLowerCase() === 'true');
           this.propertyForm.addControl(prop.name, new FormControl(booleanValue));

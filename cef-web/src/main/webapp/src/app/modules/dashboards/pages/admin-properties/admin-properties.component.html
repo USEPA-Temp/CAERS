@@ -32,12 +32,12 @@
               &nbsp;<strong>{{prop.label}}:</strong>
             </label>
           </div>
-          <div class="col-sm-6 col-lg-3">
-            <div class="textboxes">
-              <div *ngIf="prop.datatype !== 'boolean' && propertyForm.value[prop.name].length > 30">
+          <div class="col-sm-6">
+            <div class="textboxes" *ngIf="prop.datatype !== 'boolean'">
+              <div *ngIf="prop.name === 'feature.announcement.text' || prop.name === 'email.admin'">
                 <textarea maxlength="255" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name"></textarea>
               </div>
-              <div *ngIf="prop.datatype !== 'boolean' && !(propertyForm.value[prop.name].length > 30)">
+              <div *ngIf="prop.name !== 'feature.announcement.text' && prop.name !== 'email.admin'">
                 <input type="text" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name">
               </div>
               <app-validation-message [control]="propertyForm.get([prop.name])"></app-validation-message>
@@ -51,10 +51,6 @@
               </label>
             </div>
           </div>
-        </div>
-        <hr>
-        <div class="float-right">
-          <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>
         </div>
       </form>
     </div>

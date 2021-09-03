@@ -27,13 +27,14 @@
 }
 .custom-switch.custom-switch {
     padding-left: 0;
-    padding-top: 0.3em;
+    padding-top: 0.6em;
     
     .custom-control-label {
         padding: 0 1.5em;
         position: relative;
         border-radius: 1em;
         line-height: 1.4em;
+        width: 7em;
         color: white !important;
         border: 1px solid #2C3E50;
         background-color: #2C3E50;
