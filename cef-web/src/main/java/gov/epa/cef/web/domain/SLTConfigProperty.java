@@ -40,8 +40,9 @@ public class SLTConfigProperty implements Serializable {
     @XmlElement(name = "id")
     protected Long id;
 
-    @Column(name = "name", nullable = false, length = 64)
-    protected String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "name", nullable = false)
+    protected SLTProperty name;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_system_code")
@@ -58,11 +59,11 @@ public class SLTConfigProperty implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
+    public SLTProperty getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void SLTProperty(SLTProperty name) {
         this.name = name;
     }
 

@@ -40,16 +40,17 @@ export class SltPropertiesComponent implements OnInit {
     this.propertyService.retrieveAll()
     .subscribe(result => {
 
-      console.log(result);
-
       result.sort((a, b) => (a.name > b.name) ? 1 : -1);
       result.forEach(prop => {
-        this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
-          Validators.required
-        ]}));
+        if (prop.datatype !== 'boolean') {
+          this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
+            Validators.required
+          ]}));
+        } else {
+          const booleanValue = (prop.value.toLowerCase() === 'true');
+          this.propertyForm.addControl(prop.name, new FormControl(booleanValue));
+        }
       });
-
-      console.log(this.propertyForm);
 
       this.properties = result;
     });
@@ -70,7 +71,6 @@ export class SltPropertiesComponent implements OnInit {
 
       this.propertyService.bulkUpdate(updatedProperties)
       .subscribe(result => {
-        console.log(result);
         this.toastr.success('', 'Properties updated successfully.');
       });
 

@@ -46,9 +46,9 @@ public class SLTPropertyProvider {
     public SLTConfigProperty retrieve(IPropertyKey propertyKey, String programSystemCode) {
 
         String name = propertyKey.configKey();
-
-        SLTConfigProperty property = this.propertyRepo.findByNameAndProgramSystemCodeCode(name, programSystemCode).orElseThrow(() -> {
-
+        
+        SLTConfigProperty property = this.propertyRepo.findByNameNameAndProgramSystemCodeCode(name, programSystemCode).orElseThrow(() -> {
+            	
             return new NotExistException("SltConfigProperty", name);
         });
 

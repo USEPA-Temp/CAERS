@@ -19,6 +19,7 @@ package gov.epa.cef.web.service.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import gov.epa.cef.web.domain.AdminProperty;
 import gov.epa.cef.web.domain.SLTConfigProperty;
@@ -33,6 +34,10 @@ public interface AppPropertyMapper {
 
     AdminProperty fromDto(PropertyDto source);
 
+    @Mapping(source ="name.name", target="name")
+    @Mapping(source ="name.label", target="label")
+    @Mapping(source ="name.description", target="description")
+    @Mapping(source ="name.datatype", target="datatype")
     PropertyDto sltToDto(SLTConfigProperty source);
 
     List<PropertyDto> sltToDtoList(List<SLTConfigProperty> source);

@@ -20,7 +20,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.domain.SLTConfigProperty;
 
@@ -30,7 +32,14 @@ public interface SLTConfigRepository extends CrudRepository<SLTConfigProperty, L
 
     List<SLTConfigProperty> findAll(Sort sort);
 
-    Optional<SLTConfigProperty> findByNameAndProgramSystemCodeCode(String name, String programSystemCode);
+    /**
+     * Find SLT Config Property by specified name and program system code
+     * @param name
+     * @param programSystemCodecode
+     * @return
+     */
+    @Query("select scp from SLTConfigProperty scp join scp.name p where p.name = :name and scp.programSystemCode.code = :programSystemCode")
+    Optional<SLTConfigProperty> findByNameNameAndProgramSystemCodeCode(@Param("name") String name, @Param("programSystemCode") String programSystemCode);
 
     List<SLTConfigProperty> findByProgramSystemCodeCode(String programSystemCode);
 
