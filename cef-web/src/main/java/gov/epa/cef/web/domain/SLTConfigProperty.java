@@ -42,7 +42,7 @@ public class SLTConfigProperty implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "name", nullable = false)
-    protected SLTProperty name;
+    protected SLTProperty sltPropertyDetails;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_system_code")
@@ -59,12 +59,12 @@ public class SLTConfigProperty implements Serializable {
         this.id = id;
     }
 
-    public SLTProperty getName() {
-        return name;
+    public SLTProperty getSltPropertyDetails() {
+        return sltPropertyDetails;
     }
 
-    public void SLTProperty(SLTProperty name) {
-        this.name = name;
+    public void SLTProperty(SLTProperty sltPropertyDetails) {
+        this.sltPropertyDetails = sltPropertyDetails;
     }
 
     public ProgramSystemCode getProgramSystemCode() {

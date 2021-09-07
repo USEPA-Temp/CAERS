@@ -38,8 +38,8 @@ public interface SLTConfigRepository extends CrudRepository<SLTConfigProperty, L
      * @param programSystemCodecode
      * @return
      */
-    @Query("select scp from SLTConfigProperty scp join scp.name p where p.name = :name and scp.programSystemCode.code = :programSystemCode")
-    Optional<SLTConfigProperty> findByNameNameAndProgramSystemCodeCode(@Param("name") String name, @Param("programSystemCode") String programSystemCode);
+    @Query("select scp from SLTConfigProperty scp join scp.sltPropertyDetails p where p.name = :name and scp.programSystemCode.code = :programSystemCode")
+    Optional<SLTConfigProperty> findByNameAndProgramSystemCodeCode(@Param("name") String name, @Param("programSystemCode") String programSystemCode);
 
     List<SLTConfigProperty> findByProgramSystemCodeCode(String programSystemCode);
 

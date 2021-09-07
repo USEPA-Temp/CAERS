@@ -34,10 +34,10 @@ public interface AppPropertyMapper {
 
     AdminProperty fromDto(PropertyDto source);
 
-    @Mapping(source ="name.name", target="name")
-    @Mapping(source ="name.label", target="label")
-    @Mapping(source ="name.description", target="description")
-    @Mapping(source ="name.datatype", target="datatype")
+    @Mapping(source ="sltPropertyDetails.name", target="name")
+    @Mapping(source ="sltPropertyDetails.label", target="label")
+    @Mapping(source ="sltPropertyDetails.description", target="description")
+    @Mapping(source ="sltPropertyDetails.datatype", target="datatype")
     PropertyDto sltToDto(SLTConfigProperty source);
 
     List<PropertyDto> sltToDtoList(List<SLTConfigProperty> source);
