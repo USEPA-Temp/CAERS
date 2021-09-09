@@ -40,7 +40,6 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
   selectedNaicsCode: FacilityNaicsCode;
   naicsCodeType = NaicsCodeType;
   selectedNaicsCodeType = NaicsCodeType.PRIMARY;
-  primaryFlag = true;
   check = true;
   edit: boolean;
 
