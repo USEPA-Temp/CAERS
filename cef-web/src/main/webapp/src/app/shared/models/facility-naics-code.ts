@@ -20,7 +20,7 @@ export class FacilityNaicsCode {
   facilitySiteId: number;
   code: string;
   description: string;
-  primaryFlag: boolean;
+  naicsCodeType: string;
   lastInventoryYear: number;
   mapTo: string;
 }

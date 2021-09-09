@@ -25,6 +25,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
+import { NaicsCodeType } from 'src/app/shared/enums/naics-code-type';
 
 @Component({
   selector: 'app-facility-naics-modal',
@@ -36,8 +37,12 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
   @Input() facilityNaics: FacilityNaicsCode[];
   @Input() year: number;
   updateFacilityNaics: FacilityNaicsCode;
-  primaryFlag = false;
+  selectedNaicsCode: FacilityNaicsCode;
+  naicsCodeType = NaicsCodeType;
+  selectedNaicsCodeType = NaicsCodeType.PRIMARY;
+  primaryFlag = true;
   check = true;
+  edit: boolean;
 
   naicsForm = this.fb.group({
     selectedNaics: [null, Validators.required],
@@ -58,15 +63,14 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
     this.naicsForm.get('selectedNaics').setValidators([Validators.required, legacyItemValidator(this.year, 'NAICS Code', 'code')]);
 
+    if (this.selectedNaicsCode) {
+      this.naicsForm.get('selectedNaics').setValue(this.selectedNaicsCode);
+    }
+
     this.lookupService.retrieveCurrentNaicsCodes(this.year)
     .subscribe(result => {
       this.facilityNaicsCode = result;
     });
-
-  }
-
-  setPrimary() {
-    this.primaryFlag = !this.primaryFlag;
   }
 
   isValid() {
@@ -79,6 +83,18 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
   onSubmit() {
 
+    let tempFacilityNaicsCode = new FacilityNaicsCode();
+    if (this.edit) {
+      this.facilityNaics.forEach(facilityNaics => {
+
+        if (this.naicsForm.value.selectedNaics && facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
+          const index = this.facilityNaics.indexOf(facilityNaics);
+          tempFacilityNaicsCode = facilityNaics;
+          this.facilityNaics.splice(index, 1);
+        }
+      });
+    }
+
     this.facilityNaics.forEach(facilityNaics => {
 
       if (this.naicsForm.value.selectedNaics && facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
@@ -86,11 +102,20 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
         this.toastr.error('', 'This Facility already contains this NAICS code, duplicates are not allowed.');
       }
 
-      if (facilityNaics.primaryFlag && this.primaryFlag && this.check) {
+      if (this.naicsForm.value.selectedNaics && facilityNaics.naicsCodeType === this.naicsCodeType.PRIMARY && this.selectedNaicsCodeType === this.naicsCodeType.PRIMARY) {
+        this.check = false;
+        this.toastr.error('', 'Each facility must have only one NAICS code assigned as primary.');
+      }
+
+      if (facilityNaics.naicsCodeType === this.naicsCodeType.PRIMARY && this.selectedNaicsCodeType === this.naicsCodeType.PRIMARY && this.check) {
         this.updateFacilityNaics = facilityNaics;
       }
 
     });
+
+    if (!this.check && this.edit) {
+      this.facilityNaics.push(tempFacilityNaicsCode);
+    }
 
     if (this.check) {
 
@@ -99,16 +124,17 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
       } else {
         if (this.updateFacilityNaics) {
 
-          this.updateFacilityNaics.primaryFlag = false;
+          this.updateFacilityNaics.naicsCodeType = this.naicsCodeType.SECONDARY;
           this.facilityService.updateFacilityNaics(this.updateFacilityNaics)
           .subscribe(() => {
 
           });
         }
 
+        if (!this.edit) {
         const savedFacilityNaics = new FacilityNaicsCode();
 
-        savedFacilityNaics.primaryFlag = this.primaryFlag;
+          savedFacilityNaics.naicsCodeType = this.selectedNaicsCodeType;
         savedFacilityNaics.facilitySiteId = this.facilitySiteId;
         savedFacilityNaics.code = this.naicsForm.value.selectedNaics.code;
         savedFacilityNaics.description = this.naicsForm.value.selectedNaics.description;
@@ -117,6 +143,18 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
         .subscribe(() => {
           this.activeModal.close();
         });
+        } else {
+          this.selectedNaicsCode.naicsCodeType = this.selectedNaicsCodeType;
+          this.selectedNaicsCode.facilitySiteId = this.facilitySiteId;
+          this.selectedNaicsCode.code = this.naicsForm.value.selectedNaics.code;
+          this.selectedNaicsCode.description = this.naicsForm.value.selectedNaics.description;
+
+          this.facilityService.updateFacilityNaics(this.selectedNaicsCode)
+            .subscribe(() => {
+              this.activeModal.close();
+          });
+          this.facilityNaics.push(this.selectedNaicsCode);
+        }
       }
     }
     this.check = true;

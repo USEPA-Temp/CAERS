@@ -20,5 +20,5 @@ SELECT er.id AS emissions_report_id,
    FROM facility_site fs
      JOIN emissions_report er ON fs.report_id = er.id
      JOIN operating_status_code os ON os.code::text = fs.status_code::text
-     LEFT JOIN facility_naics_xref fxn ON fs.id = fxn.facility_site_id AND fxn.primary_flag = true
+     LEFT JOIN facility_naics_xref fxn ON fs.id = fxn.facility_site_id AND fxn.naics_code_type = 'Primary'
      LEFT JOIN naics_code_industry nci ON nci.code_prefix = "substring"(fxn.naics_code::text, 1, 2)::numeric;

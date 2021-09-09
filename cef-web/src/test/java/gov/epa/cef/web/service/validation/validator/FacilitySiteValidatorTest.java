@@ -43,6 +43,7 @@ import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.NaicsCodeType;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -159,7 +160,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         CefValidatorContext cefContext = createContext();
         FacilitySite testData = createBaseFacilitySite();
         for (FacilityNAICSXref naicsFlag: testData.getFacilityNAICS()) {
-        	naicsFlag.setPrimaryFlag(false);
+        	naicsFlag.setNaicsCodeType(NaicsCodeType.SECONDARY);
         }
         
         assertFalse(this.validator.validate(cefContext, testData));
@@ -180,6 +181,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         naics.setCode(332116);
         naics.setDescription("Metal Stamping");
         facilityNaics.setNaicsCode(naics);
+        facilityNaics.setNaicsCodeType(NaicsCodeType.SECONDARY);
         testData.getFacilityNAICS().add(facilityNaics);
         
         assertFalse(this.validator.validate(cefContext, testData));
@@ -730,7 +732,7 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
         naics.setDescription("Metal Stamping");
         
         facilityNaics.setNaicsCode(naics);
-        facilityNaics.setPrimaryFlag(true);
+        facilityNaics.setNaicsCodeType(NaicsCodeType.PRIMARY);
         naicsList.add(facilityNaics);
         
         result.setFacilityNAICS(naicsList);

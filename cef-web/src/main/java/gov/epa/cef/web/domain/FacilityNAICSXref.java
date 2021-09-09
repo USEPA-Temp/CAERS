@@ -18,6 +18,8 @@ package gov.epa.cef.web.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,8 +41,9 @@ public class FacilityNAICSXref extends BaseAuditEntity {
     @JoinColumn(name = "naics_code", nullable = false)
     private NaicsCode naicsCode;
     
-    @Column(name = "primary_flag", nullable = false)
-    private boolean primaryFlag;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "naics_code_type", nullable = false)
+    private NaicsCodeType naicsCodeType;
 
 
     /**
@@ -58,7 +61,7 @@ public class FacilityNAICSXref extends BaseAuditEntity {
     	this.id = originalNaicsXref.getId();
     	this.facilitySite = facilitySite;
     	this.naicsCode = originalNaicsXref.getNaicsCode();
-    	this.primaryFlag = originalNaicsXref.isPrimaryFlag();
+    	this.naicsCodeType = originalNaicsXref.getNaicsCodeType();
     }
     
     public FacilitySite getFacilitySite() {
@@ -69,8 +72,8 @@ public class FacilityNAICSXref extends BaseAuditEntity {
         return naicsCode;
     }
 
-    public boolean isPrimaryFlag() {
-        return primaryFlag;
+    public NaicsCodeType getNaicsCodeType() {
+        return naicsCodeType;
     }
 
     public void setFacilitySite(FacilitySite facilitySite) {
@@ -81,8 +84,8 @@ public class FacilityNAICSXref extends BaseAuditEntity {
         this.naicsCode = naicsCode;
     }
 
-    public void setPrimaryFlag(boolean primaryFlag) {
-        this.primaryFlag = primaryFlag;
+    public void setNaicsCodeType(NaicsCodeType naicsCodeType) {
+        this.naicsCodeType = naicsCodeType;
     }
     
     
