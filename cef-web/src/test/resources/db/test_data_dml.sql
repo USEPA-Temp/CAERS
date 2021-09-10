@@ -146,18 +146,18 @@ INSERT INTO FACILITY_SITE_CONTACT (id, facility_site_id, type, prefix, first_nam
 
 
 --FACILITY NAICS
-INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
-    VALUES('9999991', '9999991', '4241', true,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
-    VALUES('9999992', '9999991', '331420', false,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
-    VALUES('9999993', '9999991', '311222', false,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
-    VALUES('9999994', '9999992', '325180', true,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
-    VALUES('9999995', '9999993', '322130', true,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
-INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, primary_flag,  created_by, created_date, last_modified_by, last_modified_date)
-    VALUES('9999996', '9999994', '322130', true,  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999991', '9999991', '4241', 'PRIMARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999992', '9999991', '331420', 'SECONDARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999993', '9999991', '311222', 'SECONDARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999994', '9999992', '325180', 'PRIMARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999995', '9999993', '322130', 'PRIMARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo facility_naics_xref(id, facility_site_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999996', '9999994', '322130', 'PRIMARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
 --EMISSION UNITS
 INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, description, type_code, status_code, status_year, unit_measure_cd,

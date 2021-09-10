@@ -20,8 +20,9 @@
     <tr>
       <th scope="col" sortable="description" (sort)="onSort($event)">NAICS Description</th>
       <th scope="col" sortable="code" (sort)="onSort($event)">NAICS Code</th>
-      <th scope="col" sortable="primaryFlag">Primary</th>
+      <th scope="col" sortable="naicsCodeType" (sort)="onSort($event)">NAICS Code Type</th>
       <ng-container *ngIf="!readOnlyMode">
+        <th scope="col"></th>
         <th scope="col"></th>
       </ng-container>
      
@@ -31,12 +32,12 @@
     <tr *ngFor="let item of tableItems">
       <td>{{item.description}}</td>
       <td>{{item.code}}</td>
-      <td>
-        <ng-container *ngIf="item.primaryFlag === true">
-          Primary
-        </ng-container>
+      <td>{{item.naicsCodeType}}
       </td>
       <ng-container *ngIf="!readOnlyMode">
+        <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit naics code' + item?.code" [attr.data-cy]="'edit naics code' + item?.code">
+          <fa-icon style="color:#209c98" [icon]="faEdit"></fa-icon>
+        </a></td>
         <td><a routerLink="." (click)="openDeleteModal(item.code, item.id, item.facilitySiteId)" [id]="'deleteNaics' + item?.code" [attr.aria-label]="'delete' + item?.description + 'NAICS code from facility'">
           <fa-icon icon="trash-alt"></fa-icon>
         </a></td>
@@ -44,7 +45,7 @@
     </tr>
       <ng-container *ngIf="!readOnlyMode">
         <tr>
-          <td colspan="3"></td>
+          <td colspan="4"></td>
           <td><a routerLink="." (click)="openFacilityNaicsModal()" id="addNaicsBtn" aria-label="add facility NAICS code"><fa-icon [icon]="faPlus"></fa-icon></a></td> 
         </tr>
       </ng-container> 

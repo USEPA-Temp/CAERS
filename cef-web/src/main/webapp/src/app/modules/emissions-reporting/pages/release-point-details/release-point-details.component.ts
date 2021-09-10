@@ -72,6 +72,11 @@ export class ReleasePointDetailsComponent implements OnInit {
                             .subscribe(processes => {
                                 this.processes = processes;
                             });
+
+                        this.releasePointService.retrievePrevious(this.releasePoint.id)
+                            .subscribe(result => {
+                                this.releasePoint.previousReleasePoint = result;
+                            });
                     });
 
                 this.controlPathService.retrieveForReleasePoint(+map.get('releasePointId'))

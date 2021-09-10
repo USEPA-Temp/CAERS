@@ -38,6 +38,7 @@ import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsStateCode;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.NaicsCodeType;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
@@ -218,8 +219,7 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		FacilityNAICSXref xref = new FacilityNAICSXref();
 		xref.setFacilitySite(fs);
 		xref.setId(1L);
-		xref.setPrimaryFlag(true);
-
+		xref.setNaicsCodeType(NaicsCodeType.PRIMARY);
 		NaicsCode naics = new NaicsCode();
 		naics.setCode(123);
 		naics.setDescription("ABCDE");

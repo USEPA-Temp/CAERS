@@ -47,7 +47,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     @Input() releasePoint: ReleasePoint;
     @Input() year: number;
-    previousReleasePoint: ReleasePoint;
     releasePointIdentifiers: string[] = [];
     readonly fugitiveType = 'Fugitive';
     readonly circleAreaFormula: string = '(Pi * (Stack Diameter /2) ^ 2) for a circular stack';
@@ -242,12 +241,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                         // if a release point is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
                         if (this.releasePoint) {
                             this.releasePointIdentifiers = this.releasePointIdentifiers.filter(identifer => identifer.toString() !== this.releasePoint.releasePointIdentifier);
-
-                            this.releasePointService.retrievePrevious(this.releasePoint.id)
-                            .subscribe(result => {
-                                this.previousReleasePoint = result;
-                                this.releasePointForm.get('operatingStatusCode').updateValueAndValidity();
-                            });
                         }
 
                     });
@@ -810,7 +803,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
      */
     newSfcOperatingValidator(): ValidatorFn {
         return (control: AbstractControl): {[key: string]: any} | null => {
-            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousReleasePoint) {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.releasePoint?.previousReleasePoint) {
                 return {newSfcOperating: {value: control.value.code}};
             }
             return null;

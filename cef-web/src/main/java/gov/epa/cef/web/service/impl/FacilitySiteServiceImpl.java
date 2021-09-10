@@ -19,9 +19,11 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
+import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
@@ -43,6 +45,8 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     private final FacilitySiteRepository facSiteRepo;
 
     private final FacilityNAICSXrefRepository facilityNaicsXrefRepo;
+    
+    private final NaicsCodeRepository naicsCodeRepo;
 
     private final EmissionsReportStatusServiceImpl reportStatusService;
 
@@ -54,12 +58,14 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     FacilitySiteServiceImpl(FacilitySiteRepository facSiteRepo,
                             FacilitySiteMapper facilitySiteMapper,
                             FacilityNAICSXrefRepository facilityNaicsXrefRepo,
+                            NaicsCodeRepository naicsCodeRepo,
                             FacilityNAICSMapper facilityNaicsMapper,
                             EmissionsReportStatusServiceImpl reportStatusService) {
 
         this.facSiteRepo = facSiteRepo;
         this.facilitySiteMapper = facilitySiteMapper;
         this.facilityNaicsXrefRepo = facilityNaicsXrefRepo;
+        this.naicsCodeRepo = naicsCodeRepo;
         this.facilityNaicsMapper = facilityNaicsMapper;
         this.reportStatusService = reportStatusService;
     }
@@ -169,6 +175,9 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     	FacilityNAICSXref facilityNaics = facilityNaicsXrefRepo.findById(dto.getId()).orElse(null);
     	facilityNaicsMapper.updateFromDto(dto, facilityNaics);
 
+    	NaicsCode naicsCode = naicsCodeRepo.findById(Integer.parseInt(dto.getCode())).orElse(null);
+    	facilityNaics.setNaicsCode(naicsCode);
+    	
     	FacilityNAICSDto result = facilityNaicsMapper.facilityNAICSXrefToFacilityNAICSDto(facilityNaicsXrefRepo.save(facilityNaics));
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), FacilityNAICSXrefRepository.class);
 

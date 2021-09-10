@@ -25,7 +25,11 @@ public class PropertyDto implements IPropertyKey, Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
+    private String label;
     private String value;
+    private String description;
+    private String datatype;
+
 
     public PropertyDto() {};
 
@@ -46,15 +50,38 @@ public class PropertyDto implements IPropertyKey, Serializable {
         this.name = name;
     }
 
-    public String getValue() {
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getValue() {
         return value;
     }
     public void setValue(String value) {
         this.value = value;
     }
 
-    public PropertyDto withName(final String name) {
+    public String getDescription() {
+		return description;
+	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDatatype() {
+		return datatype;
+	}
+
+	public void setDatatype(String datatype) {
+		this.datatype = datatype;
+	}
+
+	public PropertyDto withName(final String name) {
         setName(name);
         return this;
     }

@@ -17,7 +17,7 @@
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule} from '@angular/forms';
+import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 
 import { ReportsRoutingModule } from './emissions-reporting-routing.module';
 import { EmissionsReportingDashboardComponent } from 'src/app/modules/emissions-reporting/pages/emissions-reporting-dashboard/emissions-reporting-dashboard.component';
@@ -155,7 +155,8 @@ import {faBan, faPlus, faQuestionCircle, fas, faUserCircle} from "@fortawesome/f
     ReactiveFormsModule,
     SharedModule,
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    FormsModule
   ],
   entryComponents: [
     EmissionFactorModalComponent,

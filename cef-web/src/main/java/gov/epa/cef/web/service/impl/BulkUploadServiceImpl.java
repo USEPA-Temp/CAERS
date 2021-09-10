@@ -57,6 +57,7 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
+import gov.epa.cef.web.domain.NaicsCodeType;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReleasePointAppt;
@@ -930,7 +931,16 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
         FacilityNAICSXref facilityNAICS = new FacilityNAICSXref();
 
-        facilityNAICS.setPrimaryFlag(bulkFacilityNAICS.isPrimaryFlag());
+        if (Boolean.TRUE.equals(bulkFacilityNAICS.isPrimaryFlag())) {
+        	facilityNAICS.setNaicsCodeType(NaicsCodeType.PRIMARY);
+        }
+        else if (Boolean.FALSE.equals(bulkFacilityNAICS.isPrimaryFlag())) {
+        	facilityNAICS.setNaicsCodeType(NaicsCodeType.SECONDARY);
+        }
+        
+        if (Strings.emptyToNull(bulkFacilityNAICS.getNaicsCodeType()) != null) {
+        	facilityNAICS.setNaicsCodeType(NaicsCodeType.valueOf(bulkFacilityNAICS.getNaicsCodeType()));
+        }
 
         Integer naics = toInt(bulkFacilityNAICS.getCode());
         if (naics != null) {

@@ -32,9 +32,18 @@ public class AdminProperty implements Serializable {
     @Id
     @Column(name = "name", unique = true, nullable = false, length = 64)
     protected String name;
+    
+    @Column(name="label", nullable = false, length = 64)
+    protected String label;
 
     @Column(name = "value", length = 255)
     protected String value;
+    
+    @Column(name = "description", length = 255)
+    protected String description;
+    
+    @Column(name="datatype", nullable = false, length = 20)
+    protected String datatype;
 
     public String getName() {
         return name;
@@ -44,12 +53,36 @@ public class AdminProperty implements Serializable {
         this.name = name;
     }
 
-    public String getValue() {
+    public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getValue() {
         return value;
     }
 
     public void setValue(String value) {
         this.value = value;
     }
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDatatype() {
+		return datatype;
+	}
+
+	public void setDatatype(String datatype) {
+		this.datatype = datatype;
+	}
 
 }

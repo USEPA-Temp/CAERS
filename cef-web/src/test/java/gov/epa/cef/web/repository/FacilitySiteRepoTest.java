@@ -20,6 +20,7 @@ import gov.epa.cef.web.config.CommonInitializers;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.NaicsCodeType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,9 +122,9 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
     	FacilityNAICSXref updatefacilityNaic = naicsXrefRepo.findById(9999991L)
 					.orElseThrow(() -> new IllegalStateException("Facility NAICS 9999991L does not exist."));
 
-			assertEquals(true, updatefacilityNaic.isPrimaryFlag());
+			assertEquals(NaicsCodeType.PRIMARY, updatefacilityNaic.getNaicsCodeType());
 
-			updatefacilityNaic.setPrimaryFlag(false);
+			updatefacilityNaic.setNaicsCodeType(NaicsCodeType.SECONDARY);
 
 			naicsXrefRepo.save(updatefacilityNaic);
 
@@ -134,7 +135,7 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
 					.queryForList("select * from facility_naics_xref where id = :id", params);
 
 			assertEquals(1, facilityNaic.size());
-			assertEquals(false, facilityNaic.get(0).get("primary_flag"));
+			assertEquals("SECONDARY", facilityNaic.get(0).get("naics_code_type"));
     }
 
     /**
@@ -170,7 +171,7 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
 
     	facilityNaics.setFacilitySite(facilitySite);
     	facilityNaics.setNaicsCode(naics);
-    	facilityNaics.setPrimaryFlag(true);
+    	facilityNaics.setNaicsCodeType(NaicsCodeType.PRIMARY);
 
     	return facilityNaics;
     }

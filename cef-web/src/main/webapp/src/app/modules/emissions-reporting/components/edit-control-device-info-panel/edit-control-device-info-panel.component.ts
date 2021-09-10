@@ -40,7 +40,6 @@ import { wholeNumberValidator } from 'src/app/modules/shared/directives/whole-nu
 export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
     @Input() control: Control;
     @Input() year: number;
-    previousControl: Control;
     controlIdentifiers: string[] = [];
     facilityOpCode: BaseCodeLookup;
     facilitySourceTypeCode: BaseCodeLookup;
@@ -124,12 +123,6 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
                         // if a control is being edited then filter that identifer out the list so the validator check doesnt identify it as a duplicate
                         if (this.control) {
                             this.controlIdentifiers = this.controlIdentifiers.filter(identifer => identifer.toString() !== this.control.identifier);
-
-                            this.controlService.retrievePrevious(this.control.id)
-                            .subscribe(result => {
-                                this.previousControl = result;
-                                this.controlDeviceForm.get('operatingStatusCode').updateValueAndValidity();
-                            });
 
                         }
 
@@ -290,7 +283,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
      */
     newSfcOperatingValidator(): ValidatorFn {
         return (control: AbstractControl): {[key: string]: any} | null => {
-            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousControl) {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.control?.previousControl) {
                 return {newSfcOperating: {value: control.value.code}};
             }
             return null;

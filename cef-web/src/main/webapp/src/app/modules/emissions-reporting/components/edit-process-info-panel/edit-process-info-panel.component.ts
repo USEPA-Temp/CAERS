@@ -42,7 +42,6 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
     @Input() process: Process;
     @Input() unitIdentifier: string;
     @Input() emissionsUnit: EmissionUnit;
-    @Input() previousProcess: Process;
     sccAndAircraftCombinations: string[] = [];
     emissionsProcessIdentifiers: string[] = [];
     emissionUnit: EmissionUnit;
@@ -419,7 +418,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
      */
     newSfcOperatingValidator(): ValidatorFn {
         return (control: AbstractControl): {[key: string]: any} | null => {
-            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.previousProcess) {
+            if (control.value && control.value.code !== OperatingStatus.OPERATING && !this.process?.previousProcess) {
                 return {newSfcOperating: {value: control.value.code}};
             }
             return null;

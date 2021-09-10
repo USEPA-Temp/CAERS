@@ -54,7 +54,6 @@ public interface CersFacilitySiteMapper {
     FacilitySiteDataType fromFacilitySite(FacilitySite source);
 
     @Mapping(source="naicsCode.code", target="NAICSCode")
-    @Mapping(source="primaryFlag", target="NAICSPrimaryIndicator")
     FacilityNAICSDataType cersNaicsFromFacilityNAICSXref(FacilityNAICSXref source);
 
     @BeanMapping(ignoreByDefault = true)

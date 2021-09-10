@@ -31,6 +31,7 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.NaicsCodeType;
 import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
@@ -263,7 +264,7 @@ public class EmissionsReportValidationServiceImplTest {
         naics.setDescription("Metal Stamping");
         
         facilityNaics.setNaicsCode(naics);
-        facilityNaics.setPrimaryFlag(true);
+        facilityNaics.setNaicsCodeType(NaicsCodeType.PRIMARY);
         naicsList.add(facilityNaics);
         
         facilitySite.setFacilityNAICS(naicsList);

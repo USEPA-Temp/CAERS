@@ -24,7 +24,8 @@ import { FacilitySiteService } from 'src/app/core/services/facility-site.service
 import { SharedService } from 'src/app/core/services/shared.service';
 import { FacilityNaicsModalComponent } from '../facility-naics-modal/facility-naics-modal.component';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { NaicsCodeType } from 'src/app/shared/enums/naics-code-type';
 
 @Component({
   selector: 'app-facility-naics-table',
@@ -37,6 +38,8 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
   facilitySite: FacilitySite;
   baseUrl: string;
   faPlus = faPlus;
+  faEdit = faEdit;
+  naicsCodeType = NaicsCodeType;
 
   constructor(
     private modalService: NgbModal,
@@ -62,7 +65,6 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
 
   sortTable() {
     this.tableData.sort((a, b) => (a.description > b.description ? 1 : -1));
-    this.tableData.sort((a, b) => a.primaryFlag && !b.primaryFlag ? -1 : !a.primaryFlag && b.primaryFlag ? 1 : 0);
   }
 
   // delete facility NAICS from the database
@@ -88,6 +90,30 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
             this.deleteFacilityNaics(facilityNaicsId, facilitySiteId);
         });
     }
+
+  openEditModal(selectedCode){
+    const modalRef = this.modalService.open(FacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});
+    modalRef.componentInstance.facilitySiteId = this.facilitySite.id;
+    modalRef.componentInstance.facilityNaics = this.tableData;
+    modalRef.componentInstance.year = this.facilitySite.emissionsReport.year;
+    modalRef.componentInstance.selectedNaicsCode = selectedCode;
+    modalRef.componentInstance.selectedNaicsCodeType = selectedCode.naicsCodeType;
+    modalRef.componentInstance.edit = true;
+
+	modalRef.result.then(() => {
+      this.facilityService.retrieve(this.facilitySite.id)
+        .subscribe(facilityResponse => {
+
+          this.sharedService.updateReportStatusAndEmit(this.route);
+
+          this.tableData = facilityResponse.facilityNAICS;
+          this.sortTable();
+        });
+
+    }, () => {
+    //   needed for dismissing without errors
+    });
+  }
 
   openFacilityNaicsModal() {
     const modalRef = this.modalService.open(FacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});

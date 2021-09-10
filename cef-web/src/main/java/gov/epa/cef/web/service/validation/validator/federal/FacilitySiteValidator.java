@@ -24,6 +24,7 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.NaicsCodeType;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
@@ -280,7 +281,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 
         // Facility NAICS must have one and only one primary assigned
         fsNAICSList = facilitySite.getFacilityNAICS().stream()
-            .filter(fn -> fn.isPrimaryFlag() == true)
+            .filter(fn -> fn.getNaicsCodeType().equals(NaicsCodeType.PRIMARY))
             .collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(fsNAICSList) || fsNAICSList.size() != 1) {

@@ -54,7 +54,7 @@ public interface CersV2FacilitySiteMapper {
     FacilitySiteDataType fromFacilitySite(FacilitySite source);
 
     @Mapping(source="naicsCode.code", target="NAICSCode")
-    @Mapping(target="NAICSType", expression = "java( source.isPrimaryFlag() ? \"PRIMARY\" : \"SECONDARY\" )")
+    @Mapping(source="naicsCodeType", target="NAICSType")
     FacilityNAICSDataType cersNaicsFromFacilityNAICSXref(FacilityNAICSXref source);
 
     @BeanMapping(ignoreByDefault = true)

@@ -452,8 +452,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
                 formulaEvaluator.evaluateInCell(row.getCell(4));
             }
             row.getCell(5).setCellStyle(tfStyle);
-            row.getCell(5).setCellValue("" + dto.isPrimaryFlag());
-
+            row.getCell(5).setCellValue("" + dto.getNaicsCodeType());
             currentRow++;
 
         }

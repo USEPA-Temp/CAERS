@@ -32,10 +32,18 @@
       Selected NAICS Code is invalid. 
     </div>
   
-    <div class="checkbox">
+    <div>
       <fa-icon class="mt-2 ml-2 mr-1" title="The 6 digit NAICS Code that represents the largest amount of economic activity of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
-      Make this Primary NAICS for facility?
-      <input id="primaryFlag" type="checkbox" [checked]="primaryFlag" aria-label="set primary NAICS" (change)="setPrimary()">
+      Is this the Primary NAICS for facility?
+      <select id="cbo-code-type" style="width: 150px"
+              class="form-control form-control-sm mr-3"
+              [(ngModel)]="selectedNaicsCodeType"
+              aria-label="select naics code type"
+              [ngModelOptions]="{standalone: true}">
+        <option value="PRIMARY">Primary</option>
+        <option value="SECONDARY">Secondary</option>
+        <option value="TERTIARY">Tertiary</option>
+      </select> 
     </div>
   </div>
 

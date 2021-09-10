@@ -61,6 +61,11 @@ export class ControlDeviceDetailsComponent implements OnInit {
       .subscribe(control => {
         this.control = control;
         this.control.pollutants = control.pollutants.sort((a, b) => (a.pollutant.pollutantName > b.pollutant.pollutantName ? 1 : -1));
+
+        this.controlService.retrievePrevious(this.control.id)
+        .subscribe(result => {
+            this.control.previousControl = result;
+        });
       });
 
       this.controlPathService.retrieveForControlDevice(+map.get('controlId')).subscribe((controlPaths) => {
