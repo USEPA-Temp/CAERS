@@ -15,12 +15,14 @@
  * not, see <https://www.gnu.org/licenses/>.
 */
 
+import { NaicsCodeType } from "../enums/naics-code-type";
+
 export class FacilityNaicsCode {
   id: number;
   facilitySiteId: number;
   code: string;
   description: string;
-  naicsCodeType: string;
+  naicsCodeType: NaicsCodeType;
   lastInventoryYear: number;
   mapTo: string;
 }

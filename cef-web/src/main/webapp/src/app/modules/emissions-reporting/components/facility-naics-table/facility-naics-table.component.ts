@@ -99,6 +99,20 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
     modalRef.componentInstance.selectedNaicsCode = selectedCode;
     modalRef.componentInstance.selectedNaicsCodeType = selectedCode.naicsCodeType;
     modalRef.componentInstance.edit = true;
+
+	modalRef.result.then(() => {
+      this.facilityService.retrieve(this.facilitySite.id)
+        .subscribe(facilityResponse => {
+
+          this.sharedService.updateReportStatusAndEmit(this.route);
+
+          this.tableData = facilityResponse.facilityNAICS;
+          this.sortTable();
+        });
+
+    }, () => {
+    //   needed for dismissing without errors
+    });
   }
 
   openFacilityNaicsModal() {

@@ -15,7 +15,6 @@
  * not, see <https://www.gnu.org/licenses/>.
 */
 export enum NaicsCodeType {
-  NONE = 'NONE',
   PRIMARY = 'PRIMARY',
   SECONDARY = 'SECONDARY',
   TERTIARY = 'TERTIARY'

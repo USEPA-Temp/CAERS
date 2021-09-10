@@ -18,6 +18,8 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 
+import gov.epa.cef.web.domain.NaicsCodeType;
+
 public class FacilityNAICSDto implements Serializable{
 
         /**
@@ -29,7 +31,7 @@ public class FacilityNAICSDto implements Serializable{
         private Long facilitySiteId;
         private String code;
         private String description;
-        private String naicsCodeType;
+        private NaicsCodeType naicsCodeType;
         
         public Long getId() {
             return id;
@@ -43,7 +45,7 @@ public class FacilityNAICSDto implements Serializable{
         public String getDescription() {
             return description;
         }
-        public String getNaicsCodeType() {
+        public NaicsCodeType getNaicsCodeType() {
             return naicsCodeType;
         }
         public void setId(Long id) {
@@ -58,7 +60,7 @@ public class FacilityNAICSDto implements Serializable{
         public void setDescription(String description) {
             this.description = description;
         }
-        public void setNaicsCodeType(String naicsCodeType) {
+        public void setNaicsCodeType(NaicsCodeType naicsCodeType) {
             this.naicsCodeType = naicsCodeType;
         }
         

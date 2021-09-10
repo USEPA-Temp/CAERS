@@ -36,7 +36,6 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
   @Input() facilitySiteId: number;
   @Input() facilityNaics: FacilityNaicsCode[];
   @Input() year: number;
-  updateFacilityNaics: FacilityNaicsCode;
   selectedNaicsCode: FacilityNaicsCode;
   naicsCodeType = NaicsCodeType;
   selectedNaicsCodeType = NaicsCodeType.PRIMARY;
@@ -82,20 +81,10 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
   onSubmit() {
 
-    let tempFacilityNaicsCode = new FacilityNaicsCode();
-    if (this.edit) {
-      this.facilityNaics.forEach(facilityNaics => {
-
-        if (this.naicsForm.value.selectedNaics && facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
-          const index = this.facilityNaics.indexOf(facilityNaics);
-          tempFacilityNaicsCode = facilityNaics;
-          this.facilityNaics.splice(index, 1);
-        }
-      });
-    }
-
     this.facilityNaics.forEach(facilityNaics => {
 
+	if(facilityNaics.id !== this.selectedNaicsCode?.id) {
+		
       if (this.naicsForm.value.selectedNaics && facilityNaics.code === this.naicsForm.value.selectedNaics.code) {
         this.check = false;
         this.toastr.error('', 'This Facility already contains this NAICS code, duplicates are not allowed.');
@@ -106,34 +95,20 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
         this.toastr.error('', 'Each facility must have only one NAICS code assigned as primary.');
       }
 
-      if (facilityNaics.naicsCodeType === this.naicsCodeType.PRIMARY && this.selectedNaicsCodeType === this.naicsCodeType.PRIMARY && this.check) {
-        this.updateFacilityNaics = facilityNaics;
-      }
+	}
 
     });
-
-    if (!this.check && this.edit) {
-      this.facilityNaics.push(tempFacilityNaicsCode);
-    }
 
     if (this.check) {
 
       if (!this.isValid()) {
         this.naicsForm.markAsTouched();
       } else {
-        if (this.updateFacilityNaics) {
-
-          this.updateFacilityNaics.naicsCodeType = this.naicsCodeType.SECONDARY;
-          this.facilityService.updateFacilityNaics(this.updateFacilityNaics)
-          .subscribe(() => {
-
-          });
-        }
 
         if (!this.edit) {
         const savedFacilityNaics = new FacilityNaicsCode();
 
-          savedFacilityNaics.naicsCodeType = this.selectedNaicsCodeType;
+        savedFacilityNaics.naicsCodeType = this.selectedNaicsCodeType;
         savedFacilityNaics.facilitySiteId = this.facilitySiteId;
         savedFacilityNaics.code = this.naicsForm.value.selectedNaics.code;
         savedFacilityNaics.description = this.naicsForm.value.selectedNaics.description;
@@ -152,7 +127,6 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
             .subscribe(() => {
               this.activeModal.close();
           });
-          this.facilityNaics.push(this.selectedNaicsCode);
         }
       }
     }

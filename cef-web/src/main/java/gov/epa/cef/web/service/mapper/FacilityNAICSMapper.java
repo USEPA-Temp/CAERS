@@ -32,7 +32,6 @@ public interface FacilityNAICSMapper {
     @Mapping(source = "facilitySite.id", target = "facilitySiteId")
     @Mapping(source = "naicsCode.code", target = "code")
     @Mapping(source = "naicsCode.description", target = "description")
-    @Mapping(source = "naicsCodeType", target = "naicsCodeType")
     FacilityNAICSDto facilityNAICSXrefToFacilityNAICSDto(FacilityNAICSXref facilityNAICS);
     
     Set<FacilityNAICSDto> facilityNAICSXrefsToFacilityNAICSDtos(Set<FacilityNAICSXref> facilityNAICSs);
@@ -40,11 +39,8 @@ public interface FacilityNAICSMapper {
     @Mapping(source = "facilitySiteId", target = "facilitySite.id")
     @Mapping(source = "code", target = "naicsCode.code")
     @Mapping(source = "description", target = "naicsCode.description")
-    @Mapping(source = "naicsCodeType", target = "naicsCodeType")
     FacilityNAICSXref fromDto(FacilityNAICSDto source);
-       
-    @Mapping(source = "code", target = "naicsCode.code")
-    @Mapping(source = "description", target = "naicsCode.description")
+
     @Mapping(source = "facilitySiteId", target = "facilitySite.id")
     FacilityNAICSXref updateFromDto(FacilityNAICSDto source, @MappingTarget FacilityNAICSXref target);
     

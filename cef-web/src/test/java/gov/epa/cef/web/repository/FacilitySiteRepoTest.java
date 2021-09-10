@@ -122,7 +122,7 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
     	FacilityNAICSXref updatefacilityNaic = naicsXrefRepo.findById(9999991L)
 					.orElseThrow(() -> new IllegalStateException("Facility NAICS 9999991L does not exist."));
 
-			assertEquals("PRIMARY", updatefacilityNaic.getNaicsCodeType());
+			assertEquals(NaicsCodeType.PRIMARY, updatefacilityNaic.getNaicsCodeType());
 
 			updatefacilityNaic.setNaicsCodeType(NaicsCodeType.SECONDARY);
 
