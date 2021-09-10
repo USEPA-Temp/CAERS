@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS vw_submissions_review_dashboard;
+
 ALTER TABLE facility_naics_xref
 ADD COLUMN naics_code_type varchar(10);
    
