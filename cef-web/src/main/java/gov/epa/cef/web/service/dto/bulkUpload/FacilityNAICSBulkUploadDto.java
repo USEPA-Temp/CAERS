@@ -36,8 +36,8 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
         message = "NAICS is not in expected numeric format; found '${validatedValue}'.")
 	private String code;
 
-    // Object type boolean is used here only to trigger @NotNull validation, primitive type boolean should be used to only allow true/false values.
-    @NotNull(message = "Primary Flag is required.")
+	private String naicsCodeType;
+    
 	private Boolean primaryFlag;
 
     public FacilityNAICSBulkUploadDto() {
@@ -69,11 +69,19 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 		this.code = code;
 	}
 
-	public boolean isPrimaryFlag() {
+	public String getNaicsCodeType() {
+		return naicsCodeType;
+	}
+
+	public void setNaicsCodeType(String naicsCodeType) {
+		this.naicsCodeType = naicsCodeType;
+	}
+	
+    public Boolean isPrimaryFlag() {
 		return primaryFlag;
 	}
 
-	public void setPrimaryFlag(boolean primaryFlag) {
+    public void setPrimaryFlag(Boolean primaryFlag) {
 		this.primaryFlag = primaryFlag;
 	}
 
