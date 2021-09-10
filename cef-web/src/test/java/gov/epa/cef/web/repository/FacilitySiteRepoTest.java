@@ -135,7 +135,7 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
 					.queryForList("select * from facility_naics_xref where id = :id", params);
 
 			assertEquals(1, facilityNaic.size());
-			assertEquals(false, facilityNaic.get(0).get("primary_flag"));
+			assertEquals("SECONDARY", facilityNaic.get(0).get("naics_code_type"));
     }
 
     /**
