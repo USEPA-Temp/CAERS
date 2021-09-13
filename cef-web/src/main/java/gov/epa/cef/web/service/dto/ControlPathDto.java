@@ -28,6 +28,7 @@ public class ControlPathDto implements Serializable {
     private Long id;
     private String description;
     private String pathId;
+    //percentControl maps to Percent Path Effectiveness in the UI
     private BigDecimal percentControl;
     private List<ControlAssignmentDto> assignments;
     private Long facilitySiteId;
