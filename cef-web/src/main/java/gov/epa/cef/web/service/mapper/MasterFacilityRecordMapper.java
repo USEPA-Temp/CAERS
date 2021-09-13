@@ -27,7 +27,7 @@ import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 
-@Mapper(componentModel = "spring", uses = {LookupEntityMapper.class})
+@Mapper(componentModel = "spring", uses = {LookupEntityMapper.class, MasterFacilityNAICSMapper.class})
 public interface MasterFacilityRecordMapper {
 
     MasterFacilityRecordDto toDto(MasterFacilityRecord source);
@@ -50,6 +50,7 @@ public interface MasterFacilityRecordMapper {
     @Mapping(target ="operatingStatusCode", qualifiedByName  = "OperatingStatusCode")
     @Mapping(target = "facilityCategoryCode", qualifiedByName = "FacilityCategoryCode")
     @Mapping(target = "facilitySourceTypeCode", qualifiedByName = "FacilitySourceTypeCode")
+    @Mapping(target = "masterFacilityNAICS", ignore = true)
     void updateFromDto(MasterFacilityRecordDto source, @MappingTarget MasterFacilityRecord target);
 
     @Mapping(target = "id", ignore = true)

@@ -20,6 +20,7 @@ import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
+import gov.epa.cef.web.service.dto.MasterFacilityNAICSDto;
 
 import java.util.List;
 
@@ -96,4 +97,22 @@ public interface MasterFacilityRecordService {
      * @return
      */
     Boolean isDuplicateAgencyId(String agencyFacilityId, String programSystemCode);
+    
+    /**
+     * Create Master Facility Record NAICS
+     * @param dto
+     */
+    MasterFacilityNAICSDto createMasterFacilityNaics(MasterFacilityNAICSDto dto);
+    
+    /**
+     * Update Master Facility Record NAICS
+     * @param dto
+     */
+    MasterFacilityNAICSDto updateMasterFacilityNaics(MasterFacilityNAICSDto dto);
+    
+    /**
+     * Delete Master Facility Record NAICS by id
+     * @param mfNaicsId
+     */
+    void deleteMasterFacilityNaics(Long mfNaicsId);
 }

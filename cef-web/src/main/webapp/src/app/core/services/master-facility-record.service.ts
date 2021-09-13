@@ -19,6 +19,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { MasterFacilityNaicsCode } from 'src/app/shared/models/master-facility-naics-code';
 
 @Injectable({
   providedIn: 'root'
@@ -64,13 +65,31 @@ export class MasterFacilityRecordService {
         return this.http.post<MasterFacilityRecord>(url, masterFacility);
     }
 
-    isDuplicateAgencyId(agencyFacilityId: string, psc: string) : Observable<boolean> {
+    isDuplicateAgencyId(agencyFacilityId: string, psc: string): Observable<boolean> {
         const url = `${this.baseUrl}/isDuplicateAgencyId/${agencyFacilityId}/${psc}`;
         return this.http.get<boolean>(url);
     }
 
-    getUserProgramSystemCode() : Observable<BaseCodeLookup> {
+    getUserProgramSystemCode(): Observable<BaseCodeLookup> {
         const url = `${this.baseUrl}/userProgramSystemCode`;
         return this.http.get<BaseCodeLookup>(url);
+    }
+
+    /** Create Master facility NAICS */
+    createMasterFacilityNaics(masterFacilityNaics: MasterFacilityNaicsCode): Observable<{}> {
+        const url = `${this.baseUrl}/naics/`;
+        return this.http.post<MasterFacilityNaicsCode>(url, masterFacilityNaics);
+    }
+
+    /** Update Master facility NAICS */
+    updateMasterFacilityNaics(masterFacilityNaics: MasterFacilityNaicsCode): Observable<MasterFacilityNaicsCode> {
+        const url = `${this.baseUrl}/naics/${masterFacilityNaics.id}`;
+        return this.http.put<MasterFacilityNaicsCode>(url, masterFacilityNaics);
+    }
+
+    /** DELETE Master facility NAICS from the database */
+    deleteMasterFacilityNaics(masterFacilityNaicsId: number): Observable<{}> {
+        const url = `${this.baseUrl}/naics/${masterFacilityNaicsId}`;
+        return this.http.delete(url);
     }
 }

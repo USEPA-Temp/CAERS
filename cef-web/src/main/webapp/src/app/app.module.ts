@@ -65,6 +65,8 @@ import { EditMasterFacilityInfoComponent } from './modules/dashboards/components
 import { MasterFacilitySearchComponent } from './modules/dashboards/pages/master-facility-search/master-facility-search.component';
 import { MasterFacilitySearchTableComponent } from './modules/dashboards/components/master-facility-search-table/master-facility-search-table.component';
 import { PendingUserFacilityAssociationsComponent } from './modules/dashboards/pages/pending-user-facility-associations/pending-user-facility-associations.component';
+import { MasterFacilityNaicsTableComponent } from './modules/dashboards/components/master-facility-naics-table/master-facility-naics-table.component';
+import { MasterFacilityNaicsModalComponent } from './modules/dashboards/components/master-facility-naics-modal/master-facility-naics-modal.component';
 
 
 @NgModule({
@@ -100,6 +102,8 @@ import { PendingUserFacilityAssociationsComponent } from './modules/dashboards/p
     MasterFacilityInformationComponent,
     MasterFacilityTableComponent,
     MasterFacilityInfoComponent,
+    MasterFacilityNaicsTableComponent,
+    MasterFacilityNaicsModalComponent,
     UserFacilityAssociationTableComponent,
     EditMasterFacilityInfoComponent,
     MasterFacilitySearchComponent,
@@ -126,6 +130,7 @@ import { PendingUserFacilityAssociationsComponent } from './modules/dashboards/p
     ReportSummaryModalComponent,
     BusyModalComponent,
     RejectSubmissionModalComponent,
+    MasterFacilityNaicsModalComponent,
     TimeoutModalComponent,
     ConfirmationDialogComponent,
     SubmissionReviewModalComponent,

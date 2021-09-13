@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,11 +34,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.domain.ProgramSystemCode;
+import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
+import gov.epa.cef.web.service.dto.MasterFacilityNAICSDto;
 import gov.epa.cef.web.service.MasterFacilityRecordService;
 import gov.epa.cef.web.service.LookupService;
 
@@ -149,5 +152,44 @@ public class MasterFacilityRecordApi {
 
         Boolean result = this.mfrService.isDuplicateAgencyId(agencyFacilityId, programSystemCode);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Create Master Facility Record NAICS
+     * @param dto
+     * @return
+     */
+    @PostMapping(value = "/naics/")
+    public ResponseEntity<MasterFacilityNAICSDto> createMasterFacilityNaics(@NotNull @RequestBody MasterFacilityNAICSDto dto) {
+    	this.securityService.facilityEnforcer().enforceEntity(dto.getMasterFacilityRecordId(), MasterFacilityRecordRepository.class);
+    	
+    	MasterFacilityNAICSDto result = mfrService.createMasterFacilityNaics(dto);
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Update Master Facility Record NAICS
+     * @param mfrNaicsId
+     * @param dto
+     * @return
+     */
+    @PutMapping(value = "/naics/{mfrNaicsId}")
+    public ResponseEntity<MasterFacilityNAICSDto> updateMasterFacilityNaics(@NotNull @PathVariable Long mfrNaicsId, @NotNull @RequestBody MasterFacilityNAICSDto dto) {
+    	this.securityService.facilityEnforcer().enforceEntity(dto.getMasterFacilityRecordId(), MasterFacilityRecordRepository.class);
+    	
+    	MasterFacilityNAICSDto result = mfrService.updateMasterFacilityNaics(dto.withId(mfrNaicsId));
+    	return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Delete a Master Facility Record NAICS
+     * @param mfrNaicsId
+     * @return
+     */
+    @DeleteMapping(value = "/naics/{mfrNaicsId}")
+    public void deleteMasterFacilityNAICS(@PathVariable Long mfrNaicsId) {
+    	this.securityService.facilityEnforcer().enforceEntity(mfrNaicsId, MasterFacilityNAICSXrefRepository.class);
+    	
+    	mfrService.deleteMasterFacilityNaics(mfrNaicsId);
     }
 }

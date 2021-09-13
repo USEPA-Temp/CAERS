@@ -24,7 +24,7 @@
     <div class="col-8">
       <div class="card mb-3" *ngIf="selectedFacility">
         <div class="card-header text-center">
-            <strong *ngIf="addFacility">New </strong><strong>Facility Details</strong>
+            <span class="pageHeader"><strong *ngIf="addFacility">New </strong><strong>Facility Details</strong></span>
             <div class="float-right" *ngIf="!editInfo && !addFacility">
                 <button type="button" class="btn btn-success" aria-label="edit facility details" (click)="onEditClick(selectedFacility)">Edit</button>
             </div>
