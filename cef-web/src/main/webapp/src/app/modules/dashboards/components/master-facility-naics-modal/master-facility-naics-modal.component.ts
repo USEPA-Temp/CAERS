@@ -33,7 +33,7 @@ import { MasterFacilityRecordService } from 'src/app/core/services/master-facili
   styleUrls: ['./master-facility-naics-modal.component.scss']
 })
 export class MasterFacilityNaicsModalComponent extends BaseSortableTable implements OnInit {
-  @Input() facilitySiteId: number;
+  @Input() masterFacilityId: number;
   @Input() facilityNaics: MasterFacilityNaicsCode[];
   @Input() year: number;
   selectedNaicsCode: MasterFacilityNaicsCode;
@@ -104,7 +104,7 @@ export class MasterFacilityNaicsModalComponent extends BaseSortableTable impleme
           const savedFacilityNaics = new MasterFacilityNaicsCode();
 
           savedFacilityNaics.naicsCodeType = this.selectedNaicsCodeType;
-          savedFacilityNaics.masterFacilityRecordId = this.facilitySiteId;
+          savedFacilityNaics.masterFacilityRecordId = this.masterFacilityId;
           savedFacilityNaics.code = this.naicsForm.value.selectedNaics.code;
           savedFacilityNaics.description = this.naicsForm.value.selectedNaics.description;
 
@@ -114,7 +114,7 @@ export class MasterFacilityNaicsModalComponent extends BaseSortableTable impleme
             });
         } else {
           this.selectedNaicsCode.naicsCodeType = this.selectedNaicsCodeType;
-          this.selectedNaicsCode.masterFacilityRecordId = this.facilitySiteId;
+          this.selectedNaicsCode.masterFacilityRecordId = this.masterFacilityId;
           this.selectedNaicsCode.code = this.naicsForm.value.selectedNaics.code;
           this.selectedNaicsCode.description = this.naicsForm.value.selectedNaics.description;
 

@@ -17,7 +17,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { MasterFacilityNaicsCode } from 'src/app/shared/models/master-facility-naics-code';
@@ -34,7 +33,6 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
   @Input() masterFacilityId: number;
   @Input() facility: MasterFacilityRecord;
   tableData: MasterFacilityNaicsCode[];
-  facilitySite: FacilitySite;
   baseUrl: string;
   faPlus = faPlus;
   faEdit = faEdit;
@@ -77,7 +75,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
 
   openEditModal(selectedCode){
     const modalRef = this.modalService.open(MasterFacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});
-    modalRef.componentInstance.facilitySiteId = this.facility.id;
+    modalRef.componentInstance.masterFacilityId = this.facility.id;
     modalRef.componentInstance.facilityNaics = this.tableData;
     modalRef.componentInstance.year = this.facility.statusYear;
     modalRef.componentInstance.selectedNaicsCode = selectedCode;
@@ -99,7 +97,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
 
   openFacilityNaicsModal() {
     const modalRef = this.modalService.open(MasterFacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});
-    modalRef.componentInstance.facilitySiteId = this.facility.id;
+    modalRef.componentInstance.masterFacilityId = this.facility.id;
     modalRef.componentInstance.facilityNaics = this.tableData;
     modalRef.componentInstance.year = this.facility.statusYear;
 
