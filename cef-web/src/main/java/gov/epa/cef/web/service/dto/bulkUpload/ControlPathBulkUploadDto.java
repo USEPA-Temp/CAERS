@@ -41,8 +41,8 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
     private String pathId;
     
     @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
-        message = "Percent Control Effectiveness is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
-    private String percentControl;
+        message = "Percent Path Effectiveness is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    private String percentPath;
 
     public ControlPathBulkUploadDto() {
 
@@ -81,14 +81,14 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
 		this.pathId = pathId;
 	}
 	
-	public String getPercentControl() {
+	public String getPercentPath() {
 
-        return percentControl;
+        return percentPath;
     }
 
-    public void setPercentControl(String percentControl) {
+    public void setPercentPath(String percentControl) {
 
-        this.percentControl = percentControl;
+        this.percentPath = percentControl;
     }
 
 }
