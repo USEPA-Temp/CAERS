@@ -18,13 +18,17 @@ package gov.epa.cef.web.domain;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "master_facility_record")
@@ -105,6 +109,9 @@ public class MasterFacilityRecord extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tribal_code")
     private TribalCode tribalCode;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "masterFacilityRecord")
+    private List<MasterFacilityNAICSXref> masterFacilityNAICS = new ArrayList<>();
 
 
     /***
@@ -141,6 +148,10 @@ public class MasterFacilityRecord extends BaseAuditEntity {
         this.latitude = originalMasterFacilityRecord.getLatitude();
         this.longitude = originalMasterFacilityRecord.getLongitude();
         this.tribalCode = originalMasterFacilityRecord.getTribalCode();
+        
+        for (MasterFacilityNAICSXref naicsXref : originalMasterFacilityRecord.getMasterFacilityNAICS()) {
+        	this.masterFacilityNAICS.add(new MasterFacilityNAICSXref(this, naicsXref));
+        }
 
     }
 
@@ -364,12 +375,28 @@ public class MasterFacilityRecord extends BaseAuditEntity {
         this.tribalCode = tribalCode;
     }
 
+    public List<MasterFacilityNAICSXref> getMasterFacilityNAICS() {
+		return masterFacilityNAICS;
+	}
 
-    /***
+
+	public void setMasterFacilityNAICS(List<MasterFacilityNAICSXref> masterFacilityNAICS) {
+		this.masterFacilityNAICS.clear();
+		if(masterFacilityNAICS != null) {
+			this.masterFacilityNAICS.addAll(masterFacilityNAICS);
+		}
+	}
+
+
+	/***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.
      */
     public void clearId() {
     	this.id = null;
+    	
+    	for (MasterFacilityNAICSXref naicsXref : this.masterFacilityNAICS) {
+        	naicsXref.clearId();
+        }
 
     }
 }

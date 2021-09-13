@@ -37,6 +37,14 @@ INSERT INTO MASTER_FACILITY_RECORD (id, eis_program_id, agency_facility_id, cate
     '1400 9th St', 'Brunswick', '13127', '13', '', '31520', '31.182550', '-81.500850', '1400 9th St', 'Brunswick', '13', '31520', 
     'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
 
+--MASTER_FACILITY_NAICS
+INSERT INTo master_facility_naics_xref(id, master_facility_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999991', '9999991', '4241', 'PRIMARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo master_facility_naics_xref(id, master_facility_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999992', '9999991', '331420', 'SECONDARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+INSERT INTo master_facility_naics_xref(id, master_facility_id, naics_code, naics_code_type,  created_by, created_date, last_modified_by, last_modified_date)
+    VALUES('9999993', '9999991', '311222', 'SECONDARY',  'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp);
+
 --EMISSION REPORTS
 INSERT INTO emissions_report(id, eis_program_id, program_system_code, year, status, validation_status, master_facility_id, created_by, created_date, last_modified_by, last_modified_date, returned_report)
  VALUES ('9999997', '9758611', 'GADNR', '2018', 'IN_PROGRESS', 'PASSED_WARNINGS', '9999991', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, false);

@@ -31,6 +31,7 @@ import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
 import { CalculationMaterialCode } from 'src/app/shared/models/calculation-material-code';
+import { MasterFacilityNaicsCode } from 'src/app/shared/models/master-facility-naics-code';
 
 @Injectable({
   providedIn: 'root'
@@ -184,6 +185,11 @@ export class LookupService {
   retrieveCurrentNaicsCodes(year: number): Observable<FacilityNaicsCode[]> {
     const url = `${this.baseUrl}/naicsCode/${year}`;
     return this.http.get<FacilityNaicsCode[]>(url);
+  }
+
+  retrieveCurrentMFNaicsCodes(year: number): Observable<MasterFacilityNaicsCode[]> {
+    const url = `${this.baseUrl}/naicsCode/${year}`;
+    return this.http.get<MasterFacilityNaicsCode[]>(url);
   }
 
   retrieveAircraftEngineCodes(scc: string): Observable<AircraftEngineTypeCode[]> {

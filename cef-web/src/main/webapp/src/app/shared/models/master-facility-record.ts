@@ -19,6 +19,7 @@ import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
+import { MasterFacilityNaicsCode } from 'src/app/shared/models/master-facility-naics-code';
 
 export class MasterFacilityRecord {
   id: number;
@@ -43,6 +44,7 @@ export class MasterFacilityRecord {
   facilityCategoryCode: FacilityCategoryCode;
   facilitySourceTypeCode: InventoryYearCodeLookup;
   description: string;
+  masterFacilityNAICS: MasterFacilityNaicsCode[];
 
   associationStatus: string;
 }

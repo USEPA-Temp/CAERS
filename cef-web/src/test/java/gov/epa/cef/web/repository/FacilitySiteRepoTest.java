@@ -95,14 +95,23 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
     @Test
     public void createFacilityNaicsTest() throws Exception {
 
-    	//delete the all facility NAICS codes from facility 9999991
-    	naicsXrefRepo.deleteAll(naicsXrefRepo.findByFacilitySiteId(9999991L));
+      FacilitySite facilitySite = facilitySiteRepo.findById(9999991L)
+				.orElseThrow(() -> new IllegalStateException("Facility Site 9999991L does not exist."));
+      
+	  //delete the all facility NAICS codes from facility 9999991
+	  naicsXrefRepo.deleteAll(naicsXrefRepo.findByFacilitySiteId(9999991L));
 
       List<FacilityNAICSXref> facilityNaicsList = naicsXrefRepo.findByFacilitySiteId(9999991L);
       assertEquals(0, facilityNaicsList.size());
+      
+      NaicsCode naics = new NaicsCode();
+  	  naics.setCode(311222);
 
       //create new facility NAICS code
-      FacilityNAICSXref facilityNaics = newFacilityNAICSXref();
+      FacilityNAICSXref facilityNaics = new FacilityNAICSXref();
+      facilityNaics.setFacilitySite(facilitySite);
+  	  facilityNaics.setNaicsCode(naics);
+  	  facilityNaics.setNaicsCodeType(NaicsCodeType.SECONDARY);
 
       naicsXrefRepo.save(facilityNaics);
 
@@ -110,6 +119,8 @@ public class FacilitySiteRepoTest extends BaseRepositoryTest {
       facilityNaicsList = naicsXrefRepo.findByFacilitySiteId(9999991L);
 
       assertEquals(1, facilityNaicsList.size());
+      assertEquals(NaicsCodeType.SECONDARY, facilityNaicsList.get(0).getNaicsCodeType());
+      assertEquals("311222", facilityNaicsList.get(0).getNaicsCode().getCode().toString());
     }
 
     /**

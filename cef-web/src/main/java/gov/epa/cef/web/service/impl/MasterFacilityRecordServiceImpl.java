@@ -27,14 +27,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.MasterFacilityRecord;
+import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
+import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
+import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
+import gov.epa.cef.web.service.dto.MasterFacilityNAICSDto;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
+import gov.epa.cef.web.service.mapper.MasterFacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.service.MasterFacilityRecordService;
 
@@ -55,6 +61,15 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
 
     @Autowired
     private LookupEntityMapper lookupMapper;
+    
+    @Autowired
+    private NaicsCodeRepository naicsCodeRepo;
+    
+    @Autowired
+    private MasterFacilityNAICSMapper mfNaicsMapper;
+    
+    @Autowired
+    private MasterFacilityNAICSXrefRepository mfNaicsXrefRepo;
 
 
     public MasterFacilityRecordDto findById(Long id) {
@@ -147,5 +162,36 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     public Boolean isDuplicateAgencyId(String agencyFacilityId, String programSystemCode) {
         List<MasterFacilityRecord> mfr = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityIdIgnoreCase(programSystemCode.trim(), agencyFacilityId.trim());
         return Boolean.valueOf(mfr.size() > 0);
+    }
+    
+    /**
+     * Create Master Facility Record NAICS
+     * @param dto
+     */
+    public MasterFacilityNAICSDto createMasterFacilityNaics(MasterFacilityNAICSDto dto) {
+    	MasterFacilityNAICSXref mfNaics = mfNaicsMapper.fromDto(dto);
+
+    	return mfNaicsMapper.mfrNAICSXrefToMfrNAICSDto(mfNaicsXrefRepo.save(mfNaics));
+    }
+    
+    /**
+     * Update Master Facility Record NAICS
+     */
+    public MasterFacilityNAICSDto updateMasterFacilityNaics(MasterFacilityNAICSDto dto) {
+    	MasterFacilityNAICSXref mfNaics = mfNaicsXrefRepo.findById(dto.getId()).orElse(null);
+    	mfNaicsMapper.updateFromDto(dto, mfNaics);
+    	
+    	NaicsCode naicsCode = naicsCodeRepo.findById(Integer.parseInt(dto.getCode())).orElse(null);
+    	mfNaics.setNaicsCode(naicsCode);
+    	
+    	return mfNaicsMapper.mfrNAICSXrefToMfrNAICSDto(mfNaicsXrefRepo.save(mfNaics));
+    }
+    
+    /**
+     * Delete Master Facility Record NAICS by id
+     * @param mfNaicsId
+     */
+    public void deleteMasterFacilityNaics(Long mfNaicsId) {
+    	mfNaicsXrefRepo.deleteById(mfNaicsId);
     }
 }
