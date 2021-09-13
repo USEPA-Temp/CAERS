@@ -86,9 +86,9 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
         return percentPath;
     }
 
-    public void setPercentPath(String percentControl) {
+    public void setPercentPath(String percentPath) {
 
-        this.percentPath = percentControl;
+        this.percentPath = percentPath;
     }
 
 }
