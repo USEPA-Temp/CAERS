@@ -43,6 +43,7 @@ public class ControlPath extends BaseAuditEntity {
     @Column(name = "path_id", nullable = false, length = 20)
     private String pathId;
     
+    //percentControl maps to Percent Path Effectiveness in the UI
     @Column(name = "percent_control", precision = 6, scale = 3)
     private BigDecimal percentControl;
 

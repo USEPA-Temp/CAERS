@@ -663,7 +663,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
 
             row.getCell(2).setCellValue(dto.getPathId());
             row.getCell(3).setCellValue(dto.getDescription());
-            setCellNumberValue(row.getCell(5), dto.getPercentPath());
+            setCellNumberValue(row.getCell(5), dto.getPercentControl());
 
             currentRow++;
 
