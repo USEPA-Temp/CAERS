@@ -43,12 +43,14 @@ public interface ReportService {
     
     /**
      * Create Report History record 
-     * @param userIds
+     * @param reportIds
      * @param reportAction
      * @param comments
      * @param reportAttachment
+     * @param cromerrActivityId
+     * @param cromerrDocumentId
      */
-    void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment);
+    void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment, String cromerrActivityId, String cromerrDocumentId);
     
     /**
      * Create Report History record 
@@ -88,6 +90,15 @@ public interface ReportService {
      * @param reportAction
      */
     void createReportHistory(Long reportId, ReportAction reportAction);
+    
+    /**
+     * Create Report History record with CROMERR info
+     * @param reportId
+     * @param reportAction
+     * @param cromerrActivityId
+     * @param cromerrDocumentId
+     */
+    void createReportHistory(Long reportId, ReportAction reportAction, String cromerrActivityId, String cromerrDocumentId);
     
     /**
      * Update Report History record to indicate attachment was deleted

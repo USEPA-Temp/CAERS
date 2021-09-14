@@ -449,7 +449,7 @@ public class EmissionsReportApi {
 
         String documentId = emissionsReportService.submitToCromerr(reportId, activityId);
 
-        this.reportService.createReportHistory(reportId, ReportAction.SUBMITTED);
+        this.reportService.createReportHistory(reportId, ReportAction.SUBMITTED, activityId, documentId);
 
         return new ResponseEntity<>(documentId, HttpStatus.OK);
     }
