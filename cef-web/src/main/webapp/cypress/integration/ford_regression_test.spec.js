@@ -122,6 +122,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#facilityNAICS').clear();
       cy.get('#facilityNAICS').wait(1000).type('auto');
       cy.wait(3000).get('#ngb-typeahead-0-6 > ngb-highlight').click();
+      cy.get('#cbo-code-type').select('SECONDARY');
       cy.get('.modal-footer > .btn-success').click();
       cy.get('#deleteNaics811111').click();
       cy.get('#modalConfirmBtn').click();
