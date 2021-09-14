@@ -25,4 +25,6 @@ export class ReportHistory {
   fileName: string;
   comments: string;
   fileDeleted: boolean;
+  cromerrActivityId: string;
+  cromerrDocumentId: string;
 }

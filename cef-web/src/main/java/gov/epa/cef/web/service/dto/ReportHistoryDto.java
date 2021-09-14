@@ -33,6 +33,8 @@ public class ReportHistoryDto implements Serializable {
 	private String userRole;
 	private String fileName;
 	private boolean fileDeleted;
+    private String cromerrActivityId;
+    private String cromerrDocumentId;
 
 	public Long getId() {
 		return id;
@@ -121,5 +123,21 @@ public class ReportHistoryDto implements Serializable {
 	public void setFileDeleted(boolean fileDeleted) {
 		this.fileDeleted = fileDeleted;
 	}
+
+    public String getCromerrActivityId() {
+        return cromerrActivityId;
+    }
+
+    public void setCromerrActivityId(String cromerrActivityId) {
+        this.cromerrActivityId = cromerrActivityId;
+    }
+
+    public String getCromerrDocumentId() {
+        return cromerrDocumentId;
+    }
+
+    public void setCromerrDocumentId(String cromerrDocumentId) {
+        this.cromerrDocumentId = cromerrDocumentId;
+    }
 	
 }
