@@ -63,7 +63,7 @@
         </tr>
       </tbody>
     </table>
-    <div *ngIf="tableItems && tableItems.length > 0">
+    <div [class.d-none]="!(tableItems && tableItems.length > 0)">
       <ngb-pagination [(page)]="controller.page" [pageSize]="controller.pageSize" [collectionSize]="controller.total$ | async" [maxSize]="5" [rotate]="true"></ngb-pagination>
     </div>
   </div>
