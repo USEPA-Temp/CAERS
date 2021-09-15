@@ -49,7 +49,10 @@ import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
+import gov.epa.cef.web.service.dto.FacilitySiteDto;
+import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
@@ -102,6 +105,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private MasterFacilityRecordMapper mfrMapper;
+    
+    @Autowired
+    private FacilitySiteMapper fsMapper;
 
     @Autowired
     private LookupEntityMapper lookupMapper;
@@ -248,6 +254,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 emissionsReport.setCromerrActivityId(activityId);
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
                 erRepo.save(emissionsReport);
+                
+                // update MFR record 
+                MasterFacilityRecordDto mfr = this.mfrMapper.toDto(emissionsReport.getMasterFacilityRecord());
+                FacilitySiteDto fs = this.fsMapper.toDto(emissionsReport.getFacilitySites().get(0));
+                updateMasterFacilityRecord(mfr, fs);
 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
                 String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
@@ -555,6 +566,25 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	emissionsReport.setHasSubmitted(submitted);
 
     	return this.emissionsReportMapper.toDto(this.erRepo.save(emissionsReport));
+    }
+    
+    /**
+     * Update master facility record with changes made in emission report
+     * @param mfr
+     * @param fs
+     * @return
+     */
+    private void updateMasterFacilityRecord(MasterFacilityRecordDto mfr, FacilitySiteDto fs) {
+    	mfr.setFacilityCategoryCode(fs.getFacilityCategoryCode());
+    	mfr.setOperatingStatusCode(fs.getOperatingStatusCode());
+    	mfr.setStatusYear(fs.getStatusYear());
+    	mfr.setTribalCode(fs.getTribalCode());
+    	mfr.setMailingStreetAddress(fs.getMailingStreetAddress());
+    	mfr.setMailingCity(fs.getMailingCity());
+    	mfr.setMailingStateCode(fs.getMailingStateCode());
+    	mfr.setMailingPostalCode(fs.getMailingPostalCode());
+    	mfr.setDescription(fs.getDescription());
+    	mfrService.update(mfr);
     }
     
 }
