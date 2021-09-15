@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
@@ -193,5 +194,23 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
      */
     public void deleteMasterFacilityNaics(Long mfNaicsId) {
     	mfNaicsXrefRepo.deleteById(mfNaicsId);
+    }
+    
+    /**
+     * Update master facility record with changes made in emission report
+     * @param mfr
+     * @param fs
+     */
+    public void updateMasterFacilityRecord(MasterFacilityRecord mfr, FacilitySite fs) {
+    	mfr.setFacilityCategoryCode(fs.getFacilityCategoryCode());
+    	mfr.setOperatingStatusCode(fs.getOperatingStatusCode());
+    	mfr.setStatusYear(fs.getStatusYear());
+    	mfr.setTribalCode(fs.getTribalCode());
+    	mfr.setMailingStreetAddress(fs.getMailingStreetAddress());
+    	mfr.setMailingCity(fs.getMailingCity());
+    	mfr.setMailingStateCode(fs.getMailingStateCode());
+    	mfr.setMailingPostalCode(fs.getMailingPostalCode());
+    	mfr.setDescription(fs.getDescription());
+    	mfrRepo.save(mfr);
     }
 }
