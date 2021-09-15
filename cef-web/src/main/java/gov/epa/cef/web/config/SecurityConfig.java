@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .cors().configurationSource(cdxConfig.createCorsConfigurationSource()).and()
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()
+            .antMatchers("/HealthCheck").permitAll()
             .antMatchers("/api/public/**").permitAll()
             .antMatchers("/**")
             .hasAnyRole(

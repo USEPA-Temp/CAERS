@@ -16,10 +16,18 @@
 */
 package gov.epa.cef.web;
 
+import gov.epa.cdx.shared.hosting.AzureLogbackFilter;
+import gov.epa.cdx.shared.hosting.HealthCheckServlet;
 import gov.epa.cef.web.config.YamlPropertySourceFactory;
+
+import javax.servlet.http.HttpServlet;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
@@ -41,5 +49,22 @@ public class CefWebApplication extends SpringBootServletInitializer {
 
     private static SpringApplicationBuilder configureApplication(SpringApplicationBuilder builder) {
         return builder.sources(CefWebApplication.class);
+    }
+
+    @Bean
+    public ServletRegistrationBean<HttpServlet> healthCheck() {
+        ServletRegistrationBean<HttpServlet> servlet = new ServletRegistrationBean<>();
+        servlet.setServlet(new HealthCheckServlet());
+        servlet.addUrlMappings("/HealthCheck");
+        servlet.setLoadOnStartup(1);
+        return servlet;
+    }
+
+    @Bean
+    public FilterRegistrationBean azureLogbackFilter() {
+        FilterRegistrationBean filter = new FilterRegistrationBean();
+        filter.setFilter(new AzureLogbackFilter());
+        filter.addUrlPatterns("/*");
+        return filter;
     }
 }
