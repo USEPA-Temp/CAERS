@@ -23,7 +23,7 @@
             </label>
         </div>
         <div class="col-sm-4">
-            <input [readonly]="!addFacility" type="text" class="form-control" maxlength="30" id="agencyFacilityIdInput" formControlName="agencyFacilityId" [value]="facility.agencyFacilityId">
+            <input [readonly]="user?.isReviewer() && !addFacility" type="text" class="form-control" maxlength="30" id="agencyFacilityIdInput" formControlName="agencyFacilityId" [value]="facility.agencyFacilityId">
             <app-validation-message [control]="facilitySiteForm.get('agencyFacilityId')"></app-validation-message>
             <div class="validation-message" *ngIf="facilitySiteForm.get('agencyFacilityId').errors?.duplicateAgencyId">
                 Duplicate agency facility ID.
@@ -74,7 +74,7 @@
             </label>
         </div>
         <div class="col-sm-4">
-            <input [readonly]="!addFacility" type="text" class="form-control" maxlength="11" id="longitudeInput" formControlName="longitude">
+            <input [readonly]="user?.isReviewer() && !addFacility" type="text" class="form-control" maxlength="11" id="longitudeInput" formControlName="longitude">
             <app-validation-message [control]="facilitySiteForm.get('longitude')"></app-validation-message>
         </div>
         <div class="col-sm-2">
@@ -84,7 +84,7 @@
             </label>
         </div>
         <div class="col-sm-4">
-            <input [readonly]="!addFacility" type="text" class="form-control" maxlength="10" id="latitudeInput" formControlName="latitude">
+            <input [readonly]="user?.isReviewer() && !addFacility" type="text" class="form-control" maxlength="10" id="latitudeInput" formControlName="latitude">
             <app-validation-message [control]="facilitySiteForm.get('latitude')"></app-validation-message>
         </div>
     </div>
