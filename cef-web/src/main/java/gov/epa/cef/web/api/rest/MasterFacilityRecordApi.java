@@ -91,7 +91,7 @@ public class MasterFacilityRecordApi {
     }
 
     @GetMapping(value = "/program/my")
-    @RolesAllowed(value = {AppRole.ROLE_REVIEWER, AppRole.ROLE_CAERS_ADMIN})
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentProgram() {
 
         List<MasterFacilityRecordDto> result =
