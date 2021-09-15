@@ -255,10 +255,10 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
                 erRepo.save(emissionsReport);
                 
-                // update MFR record 
-                MasterFacilityRecordDto mfr = this.mfrMapper.toDto(emissionsReport.getMasterFacilityRecord());
-                FacilitySiteDto fs = this.fsMapper.toDto(emissionsReport.getFacilitySites().get(0));
-                updateMasterFacilityRecord(mfr, fs);
+                // update MFR record with site changes
+                MasterFacilityRecord mfr = emissionsReport.getMasterFacilityRecord();
+                FacilitySite fs = emissionsReport.getFacilitySites().get(0);
+                mfrService.updateMasterFacilityRecord(mfr, fs);
 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
                 String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
@@ -566,25 +566,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	emissionsReport.setHasSubmitted(submitted);
 
     	return this.emissionsReportMapper.toDto(this.erRepo.save(emissionsReport));
-    }
-    
-    /**
-     * Update master facility record with changes made in emission report
-     * @param mfr
-     * @param fs
-     * @return
-     */
-    private void updateMasterFacilityRecord(MasterFacilityRecordDto mfr, FacilitySiteDto fs) {
-    	mfr.setFacilityCategoryCode(fs.getFacilityCategoryCode());
-    	mfr.setOperatingStatusCode(fs.getOperatingStatusCode());
-    	mfr.setStatusYear(fs.getStatusYear());
-    	mfr.setTribalCode(fs.getTribalCode());
-    	mfr.setMailingStreetAddress(fs.getMailingStreetAddress());
-    	mfr.setMailingCity(fs.getMailingCity());
-    	mfr.setMailingStateCode(fs.getMailingStateCode());
-    	mfr.setMailingPostalCode(fs.getMailingPostalCode());
-    	mfr.setDescription(fs.getDescription());
-    	mfrService.update(mfr);
     }
     
 }
