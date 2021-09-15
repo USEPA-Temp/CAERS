@@ -23,10 +23,11 @@ import { FipsStateCode } from 'src/app/shared/models/fips-state-code';
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { ToastrService } from 'ngx-toastr';
-import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { numberValidator } from 'src/app/modules/shared/directives/number-validator.directive';
 import { MasterFacilityRecordService } from 'src/app/core/services/master-facility-record.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
+import { User } from 'src/app/shared/models/user';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
   fipsStateCode: FipsStateCode[];
   facilityCategoryCodeValues: FacilityCategoryCode[];
   counties: FipsCounty[];
+  user: User;
 
   facilitySiteForm = this.fb.group({
     agencyFacilityId: ['', Validators.required],
@@ -96,11 +98,14 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
   constructor(
     public formUtils: FormUtilsService,
     private fb: FormBuilder,
-    private toastr: ToastrService,
     private lookupService: LookupService,
+    private userContextService: UserContextService,
     private mfrService: MasterFacilityRecordService) { }
 
   ngOnInit(): void {
+    this.userContextService.getUser().subscribe( user => {
+        this.user = user;
+    });
 
     this.facilitySiteForm.get('countyCode').setValidators([Validators.required]);
 
@@ -172,11 +177,12 @@ export class EditMasterFacilityInfoComponent implements OnInit, OnChanges {
     return (control: FormGroup): ValidationErrors | null => {
 
         const agencyFacilityId = control.get('agencyFacilityId');
-        if (this.addFacility && agencyFacilityId.value != '' && agencyFacilityId.value != null) {
+        if (agencyFacilityId.value !== '' && agencyFacilityId.value != null) {
             this.mfrService.isDuplicateAgencyId(agencyFacilityId.value, this.programSystemCode.code)
                 .subscribe(result => {
                     setTimeout(() => {
-                        if (result) {
+                        if ((this.addFacility && result)
+                        || (!this.addFacility && (this.facility?.agencyFacilityId !== agencyFacilityId.value && result))) {
                             control.get('agencyFacilityId').markAsTouched();
                             control.get('agencyFacilityId').setErrors({duplicateAgencyId: true});
                         }

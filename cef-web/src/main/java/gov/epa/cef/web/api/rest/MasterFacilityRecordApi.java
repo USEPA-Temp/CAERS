@@ -73,7 +73,7 @@ public class MasterFacilityRecordApi {
     }
 
     @GetMapping(value = "/program/{programSystemCode}")
-    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER, AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForProgram(
         @NotNull @PathVariable String programSystemCode) {
 
@@ -91,7 +91,7 @@ public class MasterFacilityRecordApi {
     }
 
     @GetMapping(value = "/program/my")
-    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER, AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<List<MasterFacilityRecordDto>> retrieveRecordsForCurrentProgram() {
 
         List<MasterFacilityRecordDto> result =
@@ -123,7 +123,7 @@ public class MasterFacilityRecordApi {
      * @return
      */
     @PostMapping(value = "/create")
-    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER, AppRole.ROLE_CAERS_ADMIN})
     public ResponseEntity<MasterFacilityRecordDto> createMasterFacilityRecord(@NotNull @RequestBody MasterFacilityRecordDto dto) {
 
     	MasterFacilityRecordDto result = mfrService.create(dto);
