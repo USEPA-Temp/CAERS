@@ -49,10 +49,7 @@ import gov.epa.cef.web.service.dto.EmissionsReportAgencyDataDto;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
-import gov.epa.cef.web.service.dto.FacilitySiteDto;
-import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
-import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
@@ -105,9 +102,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private MasterFacilityRecordMapper mfrMapper;
-    
-    @Autowired
-    private FacilitySiteMapper fsMapper;
 
     @Autowired
     private LookupEntityMapper lookupMapper;
