@@ -50,9 +50,9 @@ export class MasterFacilityInformationComponent implements OnInit {
       });
 
       this.mfrService.getProgramSystemCodes()
-      .subscribe(result =>
-        this.agencyDataValues = result
-      );
+      .subscribe(result => {
+        this.agencyDataValues = result.sort((a, b) => (a.code > b.code) ? 1 : -1);
+      });
 
       this.refreshFacilityList();
       if (this.user.isReviewer()) {
