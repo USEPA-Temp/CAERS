@@ -34,7 +34,7 @@ import org.springframework.context.annotation.PropertySources;
 @SpringBootApplication
 @PropertySources({
     @PropertySource(factory = YamlPropertySourceFactory.class,
-        value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true)
+        value = "file:${spring.config.dir}/oar-cef-web/cef-web-config.yml", ignoreResourceNotFound=true)
 })
 public class CefWebApplication extends SpringBootServletInitializer {
 
@@ -51,6 +51,9 @@ public class CefWebApplication extends SpringBootServletInitializer {
         return builder.sources(CefWebApplication.class);
     }
 
+    /**
+     * Servlet for AKS healthcheck
+     */
     @Bean
     public ServletRegistrationBean<HttpServlet> healthCheck() {
         ServletRegistrationBean<HttpServlet> servlet = new ServletRegistrationBean<>();
@@ -60,6 +63,9 @@ public class CefWebApplication extends SpringBootServletInitializer {
         return servlet;
     }
 
+    /**
+     * Log filter for AKS logging
+     */
     @Bean
     public FilterRegistrationBean azureLogbackFilter() {
         FilterRegistrationBean filter = new FilterRegistrationBean();

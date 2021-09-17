@@ -36,6 +36,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
@@ -53,7 +54,7 @@ import static gov.epa.cef.web.controller.HandoffLandingController.HANDOFF_LANDIN
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 @ComponentScan(basePackages = {"gov.epa.cdx.shared"})
-@ImportResource(locations = {"file:${spring.config.dir}/cdx-shared/cdx-shared-config.xml"})
+@ImportResource(locations = {"file:${spring.config.dir}/oar-cef-web/cdx-shared-config.xml"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String J2AHandoffUrl = "/J2AHandoff";
@@ -76,7 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .cors().configurationSource(cdxConfig.createCorsConfigurationSource()).and()
             .addFilter(cdxWebPreAuthFilter())
             .authorizeRequests()
-            .antMatchers("/HealthCheck").permitAll()
             .antMatchers("/api/public/**").permitAll()
             .antMatchers("/**")
             .hasAnyRole(
@@ -86,6 +86,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 AppRole.RoleType.CAERS_ADMIN.roleName())
             .anyRequest().denyAll().and()
             .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(logoutUrl));
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+         web.ignoring()
+            .antMatchers("/HealthCheck");
     }
 
     @Bean

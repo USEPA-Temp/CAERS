@@ -28,7 +28,7 @@
     <springProfile name="prod">
         <appender name="TIME_BASED_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${log.home}/@project.parent.artifactId@/@project.parent.artifactId@.@project.version@.%d{yyyy-MM-dd}.${log.host}.log</fileNamePattern>
+                <fileNamePattern>${log.home}/cef-web/cef-web.%d{yyyy-MM-dd}.${log.host}.log</fileNamePattern>
             </rollingPolicy>
             <encoder>
                 <pattern>%d{yyyy-MM-dd'T'HH:mm:ss,SSS} %-5p [%c] %m%n</pattern>
