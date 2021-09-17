@@ -48,7 +48,7 @@ export class UtilityService {
 
 
   static removeSpecialCharacters(input: string): string {
-    var regExpr = /[^a-zA-Z0-9-.]/g;
+    var regExpr = /[^a-zA-Z0-9-._()]/g;
     const output: string = input.replace(regExpr, "");
     return output;
   }
