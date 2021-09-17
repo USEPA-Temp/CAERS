@@ -259,7 +259,7 @@ export class ReportBulkUploadComponent implements OnInit {
                 const fileParts: string[] = excelFile.split('\\');
                 if (fileParts.length > 0) {
                     const fileName = fileParts[fileParts.length-1];
-                    const regex = /^[a-zA-Z0-9. -]+\.(xlsx|xls)$/;
+                    const regex = /^[a-zA-Z0-9. -_()]+\.(xlsx|xls)$/;
                     if (!regex.test(fileName)) {
                         this.selectedFile = null;
                         return {invalidFileName: true};
