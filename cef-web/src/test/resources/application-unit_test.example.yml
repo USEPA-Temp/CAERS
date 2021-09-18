@@ -63,18 +63,9 @@ excel-parser:
     base-url: https://devngn.epacdxnode.net/excel-json-parser/api/v1
 virus-scanner:
   endpoint: https://tools.epacdxnode.net/xml/validator_v30.wsdl
-frs:
-    facility-ipt-endpoint:  https://localhost/facilityiptqueryprd/v1/FRS
-    naas-user: mock-it
-    naas-password: mock-it
-    debugging: true
-ga:
-  slt-email: no-test@example.com
-  slt-eis-user: mlorefic
-  slt-eis-program-code: GADNR
 network-nodes:
   eis:
     serviceUrl: https://devngn.epacdxnode.net/ngn-enws20/services/NetworkNode2Service
-    dataflow: EIS
+    dataflow: CERS_v2
 scc:
   sccwebservices-endpoint: https://sor-scc-api.epa.gov/sccwebservices/v1
