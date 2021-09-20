@@ -135,6 +135,10 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 .subscribe(() => {
                     this.refreshFacilityReports();
                     this.emitAllSubmissions();
+					this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+	                .subscribe(submissions => {
+	                    this.filterAndCountSubmissions(submissions);
+	                });
                 });
             }, () => {
                 // needed for dismissing without errors
@@ -159,6 +163,10 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 .subscribe(() => {
                     this.refreshFacilityReports();
                     this.emitAllSubmissions();
+	                this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+	                .subscribe(submissions => {
+	                    this.filterAndCountSubmissions(submissions);
+	                });
                 });
             }, () => {
                 // needed for dismissing without errors
