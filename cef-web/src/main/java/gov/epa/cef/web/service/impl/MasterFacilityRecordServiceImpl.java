@@ -125,7 +125,7 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
                 .forEach(fs -> {
                 	fs.setAltSiteIdentifier(updatedMasterFacilityRecord.getAgencyFacilityId());
                 	fs.setLongitude(updatedMasterFacilityRecord.getLongitude());
-                	fs.setLatitude(updatedMasterFacilityRecord.getLongitude());
+                	fs.setLatitude(updatedMasterFacilityRecord.getLatitude());
                     fs.setCity(updatedMasterFacilityRecord.getCity());
                     fs.setCountryCode(updatedMasterFacilityRecord.getCountryCode());
                     fs.setCountyCode(updatedMasterFacilityRecord.getCountyCode());
