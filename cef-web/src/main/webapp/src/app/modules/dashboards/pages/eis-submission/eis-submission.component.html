@@ -249,7 +249,7 @@
                      [style.pointer-events]="stats.qaFacility > 0 ? 'all' : 'none'"
                      [title]="stats.qaFacility + ' reports QA facility status'"
                      (click)="onFilterQaFacility()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.QaFacility ? 'yellow' : 'white'">
+                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.QaFacility && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            style="background-color: #ffb90f; font-size: 100%;"
@@ -285,7 +285,7 @@
                      [style.pointer-events]="stats.qaEmissions > 0 ? 'all' : 'none'"
                      [title]="stats.qaEmissions + ' reports QA Emissions status'"
                      (click)="onFilterQaEmissions()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.QaEmissions ? 'yellow' : 'white'">
+                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.QaEmissions && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            style="background-color: #ffb90f; font-size: 100%;"
@@ -303,7 +303,7 @@
                      [style.pointer-events]="stats.prodEmissions > 0 ? 'all' : 'none'"
                      [title]="stats.prodEmissions + ' reports Prod Emissions status'"
                      (click)="onFilterProdEmissions()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.ProdEmissions ? 'yellow' : 'white'">
+                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.ProdEmissions && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            style="background-color: #ffb90f; font-size: 100%;"
@@ -321,7 +321,7 @@
                      [style.pointer-events]="stats.complete > 0 ? 'all' : 'none'"
                      [title]="stats.complete + ' reports Complete status'"
                      (click)="onFilterComplete()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.Complete ? 'yellow' : 'white'">
+                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.Complete && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
 
                      <span class="badge badge-pill badge-success text-larger mr-3"
                            style="background-color: #209c98; font-size: 100%;"
