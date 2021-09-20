@@ -120,9 +120,12 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
         MasterFacilityRecord updatedMasterFacilityRecord = mfrRepo.save(masterFacilityRecord);
 
         //Cascade changes to the master facility record to the facility site for each of the "In Progress" emissions reports
-        emissionsReportRepo.findInProgressByMasterFacilityId(updatedMasterFacilityRecord.getId())
+        emissionsReportRepo.findInProgressOrReturnedByMasterFacilityId(updatedMasterFacilityRecord.getId())
             .forEach(report -> report.getFacilitySites()
                 .forEach(fs -> {
+                	fs.setAltSiteIdentifier(updatedMasterFacilityRecord.getAgencyFacilityId());
+                	fs.setLongitude(updatedMasterFacilityRecord.getLongitude());
+                	fs.setLatitude(updatedMasterFacilityRecord.getLongitude());
                     fs.setCity(updatedMasterFacilityRecord.getCity());
                     fs.setCountryCode(updatedMasterFacilityRecord.getCountryCode());
                     fs.setCountyCode(updatedMasterFacilityRecord.getCountyCode());
