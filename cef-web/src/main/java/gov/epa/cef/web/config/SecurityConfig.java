@@ -88,6 +88,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logout().logoutSuccessHandler(new LogoutSuccessHandlerImpl(logoutUrl));
     }
 
+    /**
+     * Remove security for /HealthCheck servlet so AKS can access it
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
          web.ignoring()
