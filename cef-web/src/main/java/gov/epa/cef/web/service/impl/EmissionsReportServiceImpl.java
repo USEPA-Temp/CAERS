@@ -248,6 +248,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 emissionsReport.setCromerrActivityId(activityId);
                 emissionsReport.setCromerrDocumentId(cromerrDocumentId);
                 erRepo.save(emissionsReport);
+                
+                // update MFR record with site changes
+                MasterFacilityRecord mfr = emissionsReport.getMasterFacilityRecord();
+                FacilitySite fs = emissionsReport.getFacilitySites().get(0);
+                mfrService.updateMasterFacilityRecord(mfr, fs);
 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
                 String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;

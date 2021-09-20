@@ -16,6 +16,7 @@
 */
 package gov.epa.cef.web.service;
 
+import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
@@ -115,4 +116,12 @@ public interface MasterFacilityRecordService {
      * @param mfNaicsId
      */
     void deleteMasterFacilityNaics(Long mfNaicsId);
+    
+    /**
+     * Update master facility record with changes made in emission report
+     * @param mfr
+     * @param fs
+     */
+    void updateMasterFacilityRecord(MasterFacilityRecord mfr, FacilitySite fs);
+
 }

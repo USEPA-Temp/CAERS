@@ -111,19 +111,18 @@
          <div style="flex: 0 0 250px">
             <div class="card">
                <div class="card-header text-center">
-                  <strong>My Notifications</strong>
+                  <strong>{{currentYear}} Report Submission Statuses</strong>
                </div>
                   <div class="card-body">
                      <div *ngIf="user?.isReviewer()">
-                     <strong>{{currentYear}} Status Report</strong>
-                     <br>  
                      <br>
                      <div class="mb-3 align-middle">
                         <a href="javascript:void(0);"
                            class="text-nowrap text-decoration-none text-body"
                            [style.pointer-events]="inProgressCount > 0 ? 'all' : 'none'"
                            [title]="inProgressCount + ' reports Returned Status'"
-                           (click)="onFilter(reportStatus.IN_PROGRESS)">
+                           (click)="onFilter(reportStatus.IN_PROGRESS)"
+                           [style.background-color]="selectedReportStatus == reportStatus.IN_PROGRESS && selectedYear == currentYear ? 'yellow' : 'white'">
                            <span class="badge badge-pill badge-danger text-larger mr-3"
                               style="background-color: #ff1a1a; font-size: 100%;">
                               {{inProgressCount}}
@@ -139,7 +138,8 @@
                            class="text-nowrap text-decoration-none text-body"
                            [style.pointer-events]="returnedCount > 0 ? 'all' : 'none'"
                            [title]="returnedCount + ' reports Returned Status'"
-                           (click)="onFilter(reportStatus.RETURNED)">
+                           (click)="onFilter(reportStatus.RETURNED)"
+                           [style.background-color]="selectedReportStatus == reportStatus.RETURNED && selectedYear == currentYear ? 'yellow' : 'white'">
                            <span class="badge badge-pill badge-danger text-larger mr-3"
                               style="background-color: #ff1a1a; font-size: 100%;">
                               {{returnedCount}}
@@ -155,7 +155,8 @@
                            class="text-nowrap text-decoration-none text-body"
                            [style.pointer-events]="submittedCount > 0 ? 'all' : 'none'"
                            [title]="submittedCount + ' reports Pending Review Status'"
-                           (click)="onFilter(reportStatus.SUBMITTED)">
+                           (click)="onFilter(reportStatus.SUBMITTED)"
+                           [style.background-color]="selectedReportStatus == reportStatus.SUBMITTED && selectedYear == currentYear ? 'yellow' : 'white'">
                            <span class="badge badge-pill badge-danger text-larger mr-3"
                               style="background-color: #ffb90f; font-size: 100%;">
                               {{submittedCount}}
@@ -171,7 +172,8 @@
                            class="text-nowrap text-decoration-none text-body"
                            [style.pointer-events]="advancedQACount > 0 ? 'all' : 'none'"
                            [title]="advancedQACount + ' reports Advanced QA Status'"
-                           (click)="onFilter(reportStatus.ADVANCED_QA)">
+                           (click)="onFilter(reportStatus.ADVANCED_QA)"
+                           [style.background-color]="selectedReportStatus == reportStatus.ADVANCED_QA && selectedYear == currentYear ? 'yellow' : 'white'">
                            <span class="badge badge-pill badge-danger text-larger mr-3"
                               style="background-color: #ffb90f; font-size: 100%;">
                               {{advancedQACount}}
@@ -187,7 +189,8 @@
                            class="text-nowrap text-decoration-none text-body"
                            [style.pointer-events]="approvedCount > 0 ? 'all' : 'none'"
                            [title]="approvedCount + ' reports Approved'"
-                           (click)="onFilter(reportStatus.APPROVED)">
+                           (click)="onFilter(reportStatus.APPROVED)"
+                           [style.background-color]="selectedReportStatus == reportStatus.APPROVED && selectedYear == currentYear ? 'yellow' : 'white'">
                            <span class="badge badge-pill badge-danger text-larger mr-3"
                               style="background-color: #209c98; font-size: 100%;">
                               {{approvedCount}}

@@ -142,8 +142,9 @@ export class MasterFacilityNaicsModalComponent extends BaseSortableTable impleme
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => this.facilityNaicsCode && this.facilityNaicsCode.filter(
-                                        v => v.description ? v.description.toLowerCase().indexOf(term.toLowerCase()) > -1 : false)
+      map(term => this.facilityNaicsCode && this.facilityNaicsCode.filter(v =>
+                                        v.code.toLowerCase().indexOf(term.toLowerCase()) > -1
+                                        || (v.description ? v.description.toLowerCase().indexOf(term.toLowerCase()) > -1 : false))
                                         .slice(0, 20))
     )
 
