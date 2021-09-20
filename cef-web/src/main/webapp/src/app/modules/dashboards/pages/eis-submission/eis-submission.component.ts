@@ -98,6 +98,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
    readonly currentYear = CurrentYear;
    invalidSelection = false;
 
+   eisSubmissionStatus = EisSubmissionStatus;
+
    constructor(private modalService: NgbModal,
                private eisDataService: EisDataService,
                private fileDownloadService: FileDownloadService,
@@ -396,6 +398,7 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
          this.selectedReports.clear();
          this.cboSubmitType.setValue(null);
          this.cboSubmitCategory.setValue(null);
+		 this.cboFilterStatus.setValue(EisSubmissionStatus.All);
       }
 
    }
