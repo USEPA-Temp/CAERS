@@ -2,6 +2,9 @@ HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
+src/test/resources/application-unit_test.yml
+src/main/resources/application-dev.yml
+
 src/test/resources/cdxWebUser/cdxWebUser*.properties
 !src/test/resources/cdxWebUser/cdxWebUser.example.properties
 
