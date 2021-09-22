@@ -16,9 +16,13 @@
 */
 package gov.epa.cef.web.provider.system;
 
+import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.SLTConfigProperty;
+import gov.epa.cef.web.domain.SLTProperty;
 import gov.epa.cef.web.exception.NotExistException;
+import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
 import gov.epa.cef.web.repository.SLTConfigRepository;
+import gov.epa.cef.web.repository.SLTPropertyRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +30,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class SLTPropertyProvider {
 
     @Autowired
-    private SLTConfigRepository propertyRepo;
+    private SLTConfigRepository sltPropertyRepo;
+    
+    @Autowired
+    private SLTPropertyRepository propertyRepo;
+    
+    @Autowired
+    private ProgramSystemCodeRepository programRepo;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -42,41 +53,66 @@ public class SLTPropertyProvider {
 
         return property.getValue();
     }
+    
+    public boolean getBoolean(IPropertyKey propertyKey, String programSystemCode) {
+
+        String strValue = this.getString(propertyKey, programSystemCode);
+
+        return Boolean.valueOf(strValue);
+    }
 
     public SLTConfigProperty retrieve(IPropertyKey propertyKey, String programSystemCode) {
 
         String name = propertyKey.configKey();
         
-        SLTConfigProperty property = this.propertyRepo.findByNameAndProgramSystemCodeCode(name, programSystemCode).orElseThrow(() -> {
-            	
-            return new NotExistException("SltConfigProperty", name);
-        });
-
+        SLTConfigProperty property = this.sltPropertyRepo.findByNameAndProgramSystemCodeCode(name, programSystemCode).orElse(null);
+        
+        // Create SLT Property for SLT if property does not exist
+        if (property == null) {
+        	createDefaultSLTProperty(name, programSystemCode);
+        	property = this.sltPropertyRepo.findByNameAndProgramSystemCodeCode(name, programSystemCode).orElse(null);
+        }
+        
         return property;
     }
 
     public List<SLTConfigProperty> retrieveAll() {
 
-        return this.propertyRepo.findAll();
+        return this.sltPropertyRepo.findAll();
     }
 
     public List<SLTConfigProperty> retrieveAllForProgramSystem(String programSystemCode) {
-
-        return this.propertyRepo.findByProgramSystemCodeCode(programSystemCode);
+    	List<SLTProperty> availableSLTProperties = (List<SLTProperty>) this.propertyRepo.findAll();
+    	List<SLTConfigProperty> sltProperties = this.sltPropertyRepo.findByProgramSystemCodeCode(programSystemCode);
+    	
+    	if (availableSLTProperties.size() != sltProperties.size()) {
+    		for (SLTProperty prop: availableSLTProperties) {
+    			List<SLTConfigProperty> sltPropList = sltProperties.stream()
+    					.filter(p -> p.getSltPropertyDetails().getName().equals(prop.getName()))
+    					.collect(Collectors.toList());
+    			
+    			// Create SLT Property for SLT if property does not exist
+    			if (sltProperties.isEmpty() || sltPropList.isEmpty()) {
+    				createDefaultSLTProperty(prop.getName(), programSystemCode);
+    			}
+    		}
+    		sltProperties = this.sltPropertyRepo.findByProgramSystemCodeCode(programSystemCode);
+    	}
+        return sltProperties;
     }
 
     public SLTConfigProperty update(Long id, String value) {
 
         logger.info("Updating system property '{}' = '{}'", id, value);
 
-        SLTConfigProperty property = this.propertyRepo.findById(id).orElseThrow(() -> {
+        SLTConfigProperty property = this.sltPropertyRepo.findById(id).orElseThrow(() -> {
 
             return new NotExistException("SltConfigProperty", id);
         });
 
         property.setValue(value);
 
-        return this.propertyRepo.save(property);
+        return this.sltPropertyRepo.save(property);
     }
 
     public SLTConfigProperty update(IPropertyKey propertyKey, String programSystemCode, String value) {
@@ -89,7 +125,33 @@ public class SLTPropertyProvider {
 
         property.setValue(value);
 
-        return this.propertyRepo.save(property);
+        return this.sltPropertyRepo.save(property);
+    }
+    
+    public SLTConfigProperty createDefaultSLTProperty(String name, String programSystemCode) {
+
+        logger.info("Updating system property '{}, {}'", name, programSystemCode);
+
+        SLTConfigProperty configProperty = new SLTConfigProperty();
+        SLTProperty prop = propertyRepo.findById(name).orElseThrow(() -> {
+            return new NotExistException("SLTProperty", name);
+        });
+        ProgramSystemCode psc = programRepo.findById(programSystemCode).orElseThrow(() -> {
+            return new NotExistException("ProgramSystemCode", programSystemCode);
+        });
+        
+        configProperty.setSLTProperty(prop);
+        configProperty.setProgramSystemCode(psc);
+        
+        // Set default value to TRUE when creating boolean property
+        if (configProperty.getSltPropertyDetails().getDatatype().equalsIgnoreCase("boolean")) {
+        	configProperty.setValue(Boolean.TRUE.toString());
+        } else {
+        	// Set default string value to null when creating property
+        	configProperty.setValue(null);
+        }
+        
+        return this.sltPropertyRepo.save(configProperty);
     }
 
 }

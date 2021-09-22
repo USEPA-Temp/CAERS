@@ -16,17 +16,22 @@
 */
 package gov.epa.cef.web.api.rest;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.config.CefConfig;
+import gov.epa.cef.web.config.SLTPropertyName;
 import gov.epa.cef.web.provider.system.AdminPropertyProvider;
+import gov.epa.cef.web.provider.system.SLTPropertyProvider;
 import gov.epa.cef.web.service.dto.PropertyDto;
 
 @RestController
@@ -35,6 +40,9 @@ public class PropertyApi {
 
     @Autowired
     private AdminPropertyProvider propertyProvider;
+    
+    @Autowired
+    private SLTPropertyProvider sltPropertyProvider;
     
     @Autowired
     private CefConfig cefConfig;
@@ -105,5 +113,18 @@ public class PropertyApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    
+    
+    /**
+     * Retrieve Facility Naics enabled property
+     * @return
+     */
+    @GetMapping(value = "/facilityNaics/{slt}/enabled")
+    @ResponseBody
+    public ResponseEntity<Boolean> retrieveUserFeedbackEnabled(@NotNull @PathVariable String slt) {
+    	
+        Boolean result = sltPropertyProvider.getBoolean(SLTPropertyName.FacilityNaicsEnabled, slt);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }

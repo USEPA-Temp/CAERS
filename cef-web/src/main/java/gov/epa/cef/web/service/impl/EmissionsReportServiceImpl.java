@@ -22,7 +22,9 @@ import gov.epa.cef.web.client.soap.SignatureServiceClient;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportAttachment;
@@ -30,8 +32,8 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
-import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.security.SecurityService;
@@ -39,8 +41,6 @@ import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.FacilitySiteContactService;
-import gov.epa.cef.web.service.FacilitySiteService;
-import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserFeedbackService;
@@ -50,7 +50,9 @@ import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
+import gov.epa.cef.web.service.mapper.MasterFacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
@@ -89,19 +91,25 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     private EmissionsReportRepository erRepo;
 
     @Autowired
-    private EmissionsOperatingTypeCodeRepository emissionsOperatingTypeCodeRepo;
-
-    @Autowired
     private MasterFacilityRecordRepository mfrRepo;
 
     @Autowired
     private ReportAttachmentRepository reportAttachmentsRepo;
-
+    
+    @Autowired
+    private MasterFacilityNAICSXrefRepository mfNaicsXrefRepo;
+    
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
 
     @Autowired
     private MasterFacilityRecordMapper mfrMapper;
+    
+    @Autowired
+    private MasterFacilityNAICSMapper mfNaicsMapper;
+    
+    @Autowired
+    private FacilityNAICSMapper facilityNaicsMapper;
 
     @Autowired
     private LookupEntityMapper lookupMapper;
@@ -119,9 +127,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     private CersXmlService cersXmlService;
 
     @Autowired
-    private FacilitySiteService facilitySiteService;
-
-    @Autowired
     private MasterFacilityRecordServiceImpl mfrService;
 
     @Autowired
@@ -135,9 +140,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
     @Autowired
     private FacilitySiteContactService contactService;
-
-    @Autowired
-    private LookupService lookupService;
 
     @Autowired
     private UserFeedbackService userFeedbackService;
@@ -253,11 +255,24 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 MasterFacilityRecord mfr = emissionsReport.getMasterFacilityRecord();
                 FacilitySite fs = emissionsReport.getFacilitySites().get(0);
                 mfrService.updateMasterFacilityRecord(mfr, fs);
-
+                
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
+                
+                // update Master Facility NAICS with Facility Site NAICS if edit NAICs is enabled for certifiers and preparers
+                if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
+	                mfNaicsXrefRepo.deleteByMasterFacilityId(mfr.getId());
+	                
+	                for (FacilityNAICSXref fsNaics: fs.getFacilityNAICS()) {
+	                	MasterFacilityNAICSXref mfNaics;
+		                mfNaics = mfNaicsMapper.toMasterFacilityNaicsXref(fsNaics);
+		                mfNaics.setMasterFacilityRecord(mfr);
+		                mfr.getMasterFacilityNAICS().add(mfNaics);
+	                }
+                }
+               
                 String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
                 String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
-                
+
                 //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
                 notificationService.sendReportSubmittedNotification(
                 		certifierEmail,
@@ -299,7 +314,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 cloneReport.setEisLastSubmissionStatus(EisSubmissionStatus.NotStarted);
                 cloneReport.getFacilitySites().forEach(fs -> {
                     this.mfrMapper.updateFacilitySite(cloneReport.getMasterFacilityRecord(), fs);
+                    
+                    fs.getFacilityNAICS().clear();
+                    FacilityNAICSXref facilityNAICS;
+                    for (MasterFacilityNAICSXref masterFacilityNAICS : cloneReport.getMasterFacilityRecord().getMasterFacilityNAICS()) {
+                    	facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
+                        facilityNAICS.setFacilitySite(fs);
+                        fs.getFacilityNAICS().add(facilityNAICS);
+                    }
                 });
+                
                 cloneReport.clearId();
 
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
@@ -311,7 +335,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     }
 
     public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
-
+    	
         MasterFacilityRecord mfr = this.mfrRepo.findById(reportDto.getMasterFacilityRecordId())
            .orElseThrow(() -> new NotExistException("Master Facility Record", reportDto.getMasterFacilityRecordId()));
 
@@ -327,12 +351,28 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 
         FacilitySite facilitySite = this.mfrMapper.toFacilitySite(mfr);
         facilitySite.setEmissionsReport(newReport);
-
+        
         newReport.setProgramSystemCode(facilitySite.getProgramSystemCode());
 
         newReport.getFacilitySites().add(facilitySite);
+        
+        EmissionsReport report = this.erRepo.save(newReport);
+        
+        SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(mfr.getProgramSystemCode().getCode());
+        if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
+	        for (FacilitySite fs : report.getFacilitySites()) {
+		        FacilityNAICSXref facilityNAICS;
+		        for (MasterFacilityNAICSXref masterFacilityNAICS : mfr.getMasterFacilityNAICS()) {
+		        	facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
+		            facilityNAICS.setFacilitySite(fs);
+		            
+		            fs.getFacilityNAICS().add(facilityNAICS);
+		        }
+	        }
+        }
+        
 
-        return saveAndAuditEmissionsReport(newReport, ReportAction.CREATED);
+        return saveAndAuditEmissionsReport(report, ReportAction.CREATED);
     }
 
     @Override
