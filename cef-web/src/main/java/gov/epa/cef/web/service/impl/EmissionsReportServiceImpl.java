@@ -67,6 +67,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.base.Strings;
+
 import javax.activation.DataHandler;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
@@ -254,7 +256,6 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 // update MFR record with site changes
                 MasterFacilityRecord mfr = emissionsReport.getMasterFacilityRecord();
                 FacilitySite fs = emissionsReport.getFacilitySites().get(0);
-                mfrService.updateMasterFacilityRecord(mfr, fs);
                 
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
                 
@@ -269,6 +270,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 		                mfr.getMasterFacilityNAICS().add(mfNaics);
 	                }
                 }
+                
+                mfrService.updateMasterFacilityRecord(mfr, fs);
                
                 String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
                 String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
@@ -316,8 +319,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                     this.mfrMapper.updateFacilitySite(cloneReport.getMasterFacilityRecord(), fs);
                     
                     fs.getFacilityNAICS().clear();
-                    FacilityNAICSXref facilityNAICS;
                     for (MasterFacilityNAICSXref masterFacilityNAICS : cloneReport.getMasterFacilityRecord().getMasterFacilityNAICS()) {
+                    	FacilityNAICSXref facilityNAICS;
                     	facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
                         facilityNAICS.setFacilitySite(fs);
                         fs.getFacilityNAICS().add(facilityNAICS);
@@ -361,8 +364,8 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(mfr.getProgramSystemCode().getCode());
         if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
 	        for (FacilitySite fs : report.getFacilitySites()) {
-		        FacilityNAICSXref facilityNAICS;
 		        for (MasterFacilityNAICSXref masterFacilityNAICS : mfr.getMasterFacilityNAICS()) {
+		        	FacilityNAICSXref facilityNAICS;
 		        	facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
 		            facilityNAICS.setFacilitySite(fs);
 		            

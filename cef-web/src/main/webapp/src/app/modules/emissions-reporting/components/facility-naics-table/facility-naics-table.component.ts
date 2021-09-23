@@ -41,7 +41,7 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
   faPlus = faPlus;
   faEdit = faEdit;
   naicsCodeType = NaicsCodeType;
-  naicsEntryEnabled = true;
+  naicsEntryEnabled: boolean;
 
   constructor(
     private modalService: NgbModal,

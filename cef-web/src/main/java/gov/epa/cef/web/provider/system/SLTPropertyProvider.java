@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.common.base.Strings;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,13 +52,17 @@ public class SLTPropertyProvider {
     public String getString(IPropertyKey propertyKey, String programSystemCode) {
 
         SLTConfigProperty property = this.retrieve(propertyKey, programSystemCode);
-
+        
+        if (property == null) {
+        	throw new NotExistException("SltConfigProperty", programSystemCode);
+        }
+        
         return property.getValue();
     }
     
-    public boolean getBoolean(IPropertyKey propertyKey, String programSystemCode) {
+    public Boolean getBoolean(IPropertyKey propertyKey, String programSystemCode) {
 
-        String strValue = this.getString(propertyKey, programSystemCode);
+        String strValue = this.retrieve(propertyKey, programSystemCode).getValue();
 
         return Boolean.valueOf(strValue);
     }
@@ -66,12 +72,6 @@ public class SLTPropertyProvider {
         String name = propertyKey.configKey();
         
         SLTConfigProperty property = this.sltPropertyRepo.findByNameAndProgramSystemCodeCode(name, programSystemCode).orElse(null);
-        
-        // Create SLT Property for SLT if property does not exist
-        if (property == null) {
-        	createDefaultSLTProperty(name, programSystemCode);
-        	property = this.sltPropertyRepo.findByNameAndProgramSystemCodeCode(name, programSystemCode).orElse(null);
-        }
         
         return property;
     }
@@ -143,9 +143,9 @@ public class SLTPropertyProvider {
         configProperty.setSLTProperty(prop);
         configProperty.setProgramSystemCode(psc);
         
-        // Set default value to TRUE when creating boolean property
+        // Set default value to FALSE when creating boolean property
         if (configProperty.getSltPropertyDetails().getDatatype().equalsIgnoreCase("boolean")) {
-        	configProperty.setValue(Boolean.TRUE.toString());
+        	configProperty.setValue(Boolean.FALSE.toString());
         } else {
         	// Set default string value to null when creating property
         	configProperty.setValue(null);
