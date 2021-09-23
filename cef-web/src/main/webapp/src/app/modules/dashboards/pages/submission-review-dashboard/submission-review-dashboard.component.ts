@@ -119,7 +119,6 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.invalidSelection = false;
             this.emissionReportService.beginAdvancedQA(selectedSubmissions)
             .subscribe(() => {
-                this.emitAllSubmissions();
                 this.refreshFacilityReports();
 				this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
                 .subscribe(submissions => {
@@ -143,7 +142,6 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((comments) => {
                 this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
-                    this.emitAllSubmissions();
                     this.refreshFacilityReports();
 					this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
 	                .subscribe(submissions => {
@@ -171,7 +169,6 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             modalRef.result.then((resp) => {
                 this.emissionReportService.rejectReports(selectedSubmissions, resp.comments, resp.id)
                 .subscribe(() => {
-                    this.emitAllSubmissions();
                     this.refreshFacilityReports();
 	                this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
 	                .subscribe(submissions => {
@@ -244,14 +241,6 @@ export class SubmissionReviewDashboardComponent implements OnInit {
         this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
         .subscribe(submissions => {
             this.filterAndCountSubmissions(submissions);
-        });
-    }
-
-    // emits the updated submission list to the notification component
-    emitAllSubmissions(): void {
-        this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
-        .subscribe(submissions => {
-            this.sharedService.emitSubmissionChange(submissions);
         });
     }
 

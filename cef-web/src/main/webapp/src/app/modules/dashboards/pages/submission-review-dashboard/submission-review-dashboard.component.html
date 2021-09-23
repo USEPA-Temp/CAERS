@@ -126,7 +126,7 @@
                               style="background-color: #ff1a1a; font-size: 100%;">
                               {{inProgressCount}}
                            </span>
-                           <span [style.background-color]="selectedReportStatus == reportStatus.IN_PROGRESS && selectedYear == currentYear ? 'aqua' : 'white'">
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.IN_PROGRESS && selectedYear == currentYear">
 	                           <strong class="mr-2">In Progress</strong>
 	                           <fa-icon icon="filter"
                                     title="Show In Progress reports"
@@ -144,7 +144,7 @@
                               style="background-color: #ff1a1a; font-size: 100%;">
                               {{returnedCount}}
                            </span>
-                           <span [style.background-color]="selectedReportStatus == reportStatus.RETURNED && selectedYear == currentYear ? 'aqua' : 'white'">
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.RETURNED && selectedYear == currentYear">
 	                           <strong class="mr-2">Reviewed and Returned</strong>
 	                           <fa-icon icon="filter"
                                     title="Show Returned reports"
@@ -162,7 +162,7 @@
                               style="background-color: #ffb90f; font-size: 100%;">
                               {{submittedCount}}
                            </span>
-                           <span [style.background-color]="selectedReportStatus == reportStatus.SUBMITTED && selectedYear == currentYear ? 'aqua' : 'white'">
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.SUBMITTED && selectedYear == currentYear">
 	                           <strong class="mr-2">Pending Review</strong>
 	                           <fa-icon icon="filter"
                                     title="Show Pending Review reports"
@@ -180,7 +180,7 @@
                               style="background-color: #ffb90f; font-size: 100%;">
                               {{advancedQACount}}
                            </span>
-                           <span [style.background-color]="selectedReportStatus == reportStatus.ADVANCED_QA && selectedYear == currentYear ? 'aqua' : 'white'">
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.ADVANCED_QA && selectedYear == currentYear">
 	                           <strong class="mr-2">Advanced QA</strong>
     	                       <fa-icon icon="filter"
                                     title="Show Advanced QA reports"
@@ -198,7 +198,7 @@
                               style="background-color: #209c98; font-size: 100%;">
                               {{approvedCount}}
                            </span>
-                           <span [style.background-color]="selectedReportStatus == reportStatus.APPROVED && selectedYear == currentYear ? 'aqua' : 'white'">
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.APPROVED && selectedYear == currentYear">
 	                           <strong class="mr-2">Approved</strong>
 	                           <fa-icon icon="filter"
                                     title="Show Approved reports"
