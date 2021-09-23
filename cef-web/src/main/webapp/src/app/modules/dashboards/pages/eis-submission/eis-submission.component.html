@@ -230,16 +230,17 @@
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.notStarted > 0 ? 'all' : 'none'"
                      [title]="stats.notStarted + ' reports in not started status'"
-                     (click)="onFilterNotStarted()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.NotStarted && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
+                     (click)="onFilterNotStarted()">
 
                      <span class="badge badge-pill badge-danger text-larger mr-3"
                            style="background-color: #ff1a1a; font-size: 100%;"
                            [textContent]="stats.notStarted"></span>
-                     <strong class="mr-2">Not Started</strong>
-                     <fa-icon icon="filter"
-                              title="Filter reports for Not Started"
-                              *ngIf="stats.notStarted > 0"></fa-icon>
+                     <span [class.selected-filter-highlight]="cboFilterStatus.value == eisSubmissionStatus.NotStarted && cboFilterYear.value == this.currentYear">
+	                     <strong class="mr-2">Not Started</strong>
+	                     <fa-icon icon="filter"
+	                              title="Filter reports for Not Started"
+	                              *ngIf="stats.notStarted > 0"></fa-icon>
+                     </span>
                   </a>
                </div>
 
@@ -248,16 +249,17 @@
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.qaFacility > 0 ? 'all' : 'none'"
                      [title]="stats.qaFacility + ' reports QA facility status'"
-                     (click)="onFilterQaFacility()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.QaFacility && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
+                     (click)="onFilterQaFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.qaFacility"></span>
-                     <strong class="mr-2">QA Facility</strong>
-                     <fa-icon icon="filter"
-                              title="Filter reports for QA Facility"
-                              *ngIf="stats.qaFacility > 0"></fa-icon>
+                     <span [class.selected-filter-highlight]="cboFilterStatus.value == eisSubmissionStatus.QaFacility && cboFilterYear.value == this.currentYear">
+	                     <strong class="mr-2">QA Facility</strong>
+	                     <fa-icon icon="filter"
+	                              title="Filter reports for QA Facility"
+	                              *ngIf="stats.qaFacility > 0"></fa-icon>
+	                 </span>
                   </a>
                </div>
 
@@ -266,16 +268,17 @@
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.prodFacility > 0 ? 'all' : 'none'"
                      [title]="stats.prodFacility + ' reports Prod facility status'"
-                     (click)="onFilterProdFacility()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.ProdFacility && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
+                     (click)="onFilterProdFacility()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.prodFacility"></span>
-                     <strong class="mr-2">Prod Facility</strong>
-                     <fa-icon icon="filter"
-                              title="Filter reports for Prod Facility"
-                              *ngIf="stats.prodFacility > 0"></fa-icon>
+                     <span [class.selected-filter-highlight]="cboFilterStatus.value == eisSubmissionStatus.ProdFacility && cboFilterYear.value == this.currentYear">
+	                     <strong class="mr-2">Prod Facility</strong>
+	                     <fa-icon icon="filter"
+	                              title="Filter reports for Prod Facility"
+	                              *ngIf="stats.prodFacility > 0"></fa-icon>
+	                 </span>
                   </a>
                </div>
 
@@ -284,16 +287,17 @@
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.qaEmissions > 0 ? 'all' : 'none'"
                      [title]="stats.qaEmissions + ' reports QA Emissions status'"
-                     (click)="onFilterQaEmissions()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.QaEmissions && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
+                     (click)="onFilterQaEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.qaEmissions"></span>
-                     <strong class="mr-2">QA Emissions</strong>
-                     <fa-icon icon="filter"
-                              title="Filer reports for QA Emissions"
-                              *ngIf="stats.qaEmissions > 0"></fa-icon>
+                     <span [class.selected-filter-highlight]="cboFilterStatus.value == eisSubmissionStatus.QaEmissions && cboFilterYear.value == this.currentYear">
+	                     <strong class="mr-2">QA Emissions</strong>
+	                     <fa-icon icon="filter"
+	                              title="Filer reports for QA Emissions"
+	                              *ngIf="stats.qaEmissions > 0"></fa-icon>
+                     </span>
                   </a>
                </div>
 
@@ -302,16 +306,17 @@
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.prodEmissions > 0 ? 'all' : 'none'"
                      [title]="stats.prodEmissions + ' reports Prod Emissions status'"
-                     (click)="onFilterProdEmissions()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.ProdEmissions && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
+                     (click)="onFilterProdEmissions()">
 
                      <span class="badge badge-pill badge-warning text-larger mr-3"
                            style="background-color: #ffb90f; font-size: 100%;"
                            [textContent]="stats.prodEmissions"></span>
-                     <strong class="mr-2">Prod Emissions</strong>
-                     <fa-icon icon="filter"
-                              title="Show Prod Emissions"
-                              *ngIf="stats.prodEmissions > 0"></fa-icon>
+                     <span [class.selected-filter-highlight]="cboFilterStatus.value == eisSubmissionStatus.ProdEmissions && cboFilterYear.value == this.currentYear">
+	                     <strong class="mr-2">Prod Emissions</strong>
+	                     <fa-icon icon="filter"
+	                              title="Show Prod Emissions"
+	                              *ngIf="stats.prodEmissions > 0"></fa-icon>
+	                 </span>
                   </a>
                </div>
 
@@ -320,16 +325,17 @@
                      class="text-nowrap text-decoration-none text-body"
                      [style.pointer-events]="stats.complete > 0 ? 'all' : 'none'"
                      [title]="stats.complete + ' reports Complete status'"
-                     (click)="onFilterComplete()"
-                     [style.background-color]="cboFilterStatus.value == eisSubmissionStatus.Complete && cboFilterYear.value == this.currentYear ? 'yellow' : 'white'">
+                     (click)="onFilterComplete()">
 
                      <span class="badge badge-pill badge-success text-larger mr-3"
                            style="background-color: #209c98; font-size: 100%;"
                            [textContent]="stats.complete"></span>
-                     <strong class="mr-2">Complete</strong>
-                     <fa-icon icon="filter"
-                              title="Show Complete"
-                              *ngIf="stats.complete > 0"></fa-icon>
+                     <span [class.selected-filter-highlight]="cboFilterStatus.value == eisSubmissionStatus.Complete && cboFilterYear.value == this.currentYear">
+	                     <strong class="mr-2">Complete</strong>
+	                     <fa-icon icon="filter"
+	                              title="Show Complete"
+	                              *ngIf="stats.complete > 0"></fa-icon>
+                     </span>
                   </a>
                </div>
             </div>
