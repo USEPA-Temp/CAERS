@@ -76,6 +76,10 @@ At the bottom of the document are some helpful tips on how to create new Angular
 
 ## Building CAERS
 - ### Maven build
+    - Create application-dev.yml and application-unit_test.yml files
+        - Copy the application-dev.example.yml file into the /src/main/resources/ directory, name it application-dev.yml, and update configuration settings based on your local environment
+        - Copy the application-unit_test.example.yml file into the /src/test/resources/ directory, name it application-unit_test.yml, and update configuration settings based on your local environment
+        - At a minimum, set the NAAS Username and NAAS Password that are removed from the example properties files
     - Run Maven Install to  build the application
         ```bash
         mvn clean install

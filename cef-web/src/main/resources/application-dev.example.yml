@@ -1,0 +1,81 @@
+#
+# © Copyright 2019 EPA CAERS Project Team
+#
+# This file is part of the Common Air Emissions Reporting System (CAERS).
+#
+# CAERS is free software: you can redistribute it and/or modify it under the 
+# terms of the GNU General Public License as published by the Free Software Foundation, 
+# either version 3 of the License, or (at your option) any later version.
+#
+# CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with CAERS.  If 
+# not, see <https://www.gnu.org/licenses/>.
+#
+server.servlet.session.cookie.secure: false
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/CEF
+    username: cef
+    password: password
+    tomcat:
+      fairQueue: true
+      jmx-enabled: false
+      initialSize: 2
+      maxActive: 5
+      maxIdle: 2
+      testOnBorrow: true
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      validationQuery: select 1
+      validationQueryTimeout: 10
+      maxWait: 30000
+  mail:
+      host: CDXDMAIL01.cloud.epacdx
+      port: 25
+      properties:
+        mail:
+          smtp:
+            auth: false
+cdx:
+  registerEndpointConfiguration:
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterService
+  registerProgramFacilityEndpointConfiguration:
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterProgramFacilityService
+  registerSignEndpointConfiguration:
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/RegisterSignService
+  streamlinedRegistrationEndpointConfiguration:
+    serviceUrl: https://devngn.epacdxnode.net/cdx-register-II/services/StreamlinedRegistrationService
+  naas-token-url: https://naasdev.epacdxnode.net/xml/SecurityToken_v30.wsdl
+  naas-user: _REMOVED_
+  naas-password: _REMOVED_
+  naas-ip: 127.0.0.1
+  cdx-base-url: https://dev.epacdx.net
+  submission-history-url: https://dev.epacdx.net/SilentHandoff?URL=https://devngn.epacdxnode.net/cromerr-review/action/submitter/details/details/
+  allowed-origins:
+    - https://cdx.epa.gov
+    - https://cdxnodengn.epa.gov
+    - https://test.epacdx.net
+    - https://testngn.epacdxnode.net
+    - https://dev.epacdx.net
+    - https://devngn.epacdxnode.net
+    - https://dev.e-enterprise.gov
+    - https://dev2.e-enterprise.gov
+    - https://test.e-enterprise.gov
+    - https://test2.e-enterprise.gov
+    - https://e-enterprise.gov
+    - https://www2.e-enterprise.gov
+    - http://localhost:8080
+excel-parser:
+  base-url: https://devngn.epacdxnode.net/excel-json-parser/api/v2
+virus-scanner:
+  endpoint: https://tools.epacdxnode.net/xml/validator_v30.wsdl
+network-nodes:
+  eis:
+    serviceUrl: https://testngn.epacdxnode.net/ngn-enws20/services/NetworkNode2Service
+    dataflow: CERS_v2
+scc:
+  sccwebservices-endpoint: https://sor-scc-api.epa.gov/sccwebservices/v1
