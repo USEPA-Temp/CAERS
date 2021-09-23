@@ -260,7 +260,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(emissionsReport.getProgramSystemCode().getCode());
                 
                 // update Master Facility NAICS with Facility Site NAICS if edit NAICs is enabled for certifiers and preparers
-                if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
+                if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
 	                mfNaicsXrefRepo.deleteByMasterFacilityId(mfr.getId());
 	                
 	                for (FacilityNAICSXref fsNaics: fs.getFacilityNAICS()) {
@@ -362,7 +362,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
         EmissionsReport report = this.erRepo.save(newReport);
         
         SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(mfr.getProgramSystemCode().getCode());
-        if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
+        if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
 	        for (FacilitySite fs : report.getFacilitySites()) {
 		        for (MasterFacilityNAICSXref masterFacilityNAICS : mfr.getMasterFacilityNAICS()) {
 		        	FacilityNAICSXref facilityNAICS;

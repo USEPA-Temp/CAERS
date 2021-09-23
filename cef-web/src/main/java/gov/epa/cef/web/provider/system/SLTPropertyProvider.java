@@ -29,8 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Strings;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +60,9 @@ public class SLTPropertyProvider {
     
     public Boolean getBoolean(IPropertyKey propertyKey, String programSystemCode) {
 
-        String strValue = this.retrieve(propertyKey, programSystemCode).getValue();
+    	SLTConfigProperty property = this.retrieve(propertyKey, programSystemCode);
+    	
+    	String strValue = property == null ? null : property.getValue();
 
         return Boolean.valueOf(strValue);
     }
@@ -91,12 +91,11 @@ public class SLTPropertyProvider {
     					.filter(p -> p.getSltPropertyDetails().getName().equals(prop.getName()))
     					.collect(Collectors.toList());
     			
-    			// Create SLT Property for SLT if property does not exist
+    			// Get empty SLT Property for SLT if property does not exist
     			if (sltProperties.isEmpty() || sltPropList.isEmpty()) {
-    				createDefaultSLTProperty(prop.getName(), programSystemCode);
+    				sltProperties.add(ifSLTPropertyDoesNotExist(prop.getName(), programSystemCode));
     			}
     		}
-    		sltProperties = this.sltPropertyRepo.findByProgramSystemCodeCode(programSystemCode);
     	}
         return sltProperties;
     }
@@ -122,26 +121,41 @@ public class SLTPropertyProvider {
         logger.info("Updating system property '{}, {}' = '{}'", name, programSystemCode, value);
 
         SLTConfigProperty property = this.retrieve(propertyKey, programSystemCode);
+        
+        if (property == null) {
+        	return createSLTProperty(name, programSystemCode, value);
+        }
 
         property.setValue(value);
 
         return this.sltPropertyRepo.save(property);
     }
     
-    public SLTConfigProperty createDefaultSLTProperty(String name, String programSystemCode) {
-
-        logger.info("Updating system property '{}, {}'", name, programSystemCode);
+    public SLTConfigProperty createSLTProperty(String name, String programSystemCode, String value) {
+    	
+    	SLTConfigProperty configProperty = new SLTConfigProperty();
+    	SLTProperty prop = propertyRepo.findById(name).orElseThrow(() -> {
+            return new NotExistException("SLTProperty", name);
+        });
+    	ProgramSystemCode psc = programRepo.findById(programSystemCode).orElseThrow(() -> {
+            return new NotExistException("ProgramSystemCode", programSystemCode);
+        });
+    	
+    	configProperty.setSLTProperty(prop);
+        configProperty.setProgramSystemCode(psc);
+    	configProperty.setValue(value);
+    	
+    	return this.sltPropertyRepo.save(configProperty);
+    }
+    
+    public SLTConfigProperty ifSLTPropertyDoesNotExist(String name, String programSystemCode) {
 
         SLTConfigProperty configProperty = new SLTConfigProperty();
         SLTProperty prop = propertyRepo.findById(name).orElseThrow(() -> {
             return new NotExistException("SLTProperty", name);
         });
-        ProgramSystemCode psc = programRepo.findById(programSystemCode).orElseThrow(() -> {
-            return new NotExistException("ProgramSystemCode", programSystemCode);
-        });
         
         configProperty.setSLTProperty(prop);
-        configProperty.setProgramSystemCode(psc);
         
         // Set default value to FALSE when creating boolean property
         if (configProperty.getSltPropertyDetails().getDatatype().equalsIgnoreCase("boolean")) {
@@ -151,7 +165,7 @@ public class SLTPropertyProvider {
         	configProperty.setValue(null);
         }
         
-        return this.sltPropertyRepo.save(configProperty);
+        return configProperty;
     }
 
 }

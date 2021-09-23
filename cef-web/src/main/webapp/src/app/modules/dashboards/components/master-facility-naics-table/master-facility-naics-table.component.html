@@ -21,7 +21,7 @@
                 <th scope="col" sortable="description" (sort)="onSort($event)">NAICS Description</th>
                 <th scope="col" sortable="code" (sort)="onSort($event)">NAICS Code</th>
                 <th scope="col" sortable="naicsCodeType" (sort)="onSort($event)">NAICS Code Type</th>
-                <ng-container *ngIf="!naicsEntryEnabled || user?.isAdmin()">
+                <ng-container *ngIf="naicsEntryEnabled || user?.isAdmin()">
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </ng-container>
@@ -37,7 +37,7 @@
                 <td>{{item.description}}</td>
                 <td>{{item.code}}</td>
                 <td>{{item.naicsCodeType}}</td>
-                <ng-container *ngIf="!naicsEntryEnabled || user?.isAdmin()">
+                <ng-container *ngIf="naicsEntryEnabled || user?.isAdmin()">
                     <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit naics code' + item?.code" [attr.data-cy]="'edit naics code' + item?.code">
                         <fa-icon style="color:#209c98" [icon]="faEdit"></fa-icon>
                         </a></td>
@@ -48,7 +48,7 @@
                         </a></td>
                 </ng-container>
             </tr>
-            <ng-container *ngIf="!naicsEntryEnabled || user?.isAdmin()">
+            <ng-container *ngIf="naicsEntryEnabled || user?.isAdmin()">
                 <tr>
                     <td colspan="4"></td>
                     <td><a routerLink="." (click)="openFacilityNaicsModal()" id="addNaicsBtn"

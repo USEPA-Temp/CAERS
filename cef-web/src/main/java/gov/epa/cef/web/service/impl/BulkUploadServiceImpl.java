@@ -369,7 +369,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 // Map Facility NAICS
                 FacilityNAICSXref facilityNAICS;
                 
-                if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
+                if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
 	                for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
 	                    facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
 	                    if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {

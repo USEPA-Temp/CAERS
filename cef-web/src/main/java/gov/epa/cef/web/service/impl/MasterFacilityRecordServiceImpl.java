@@ -224,7 +224,7 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
         	SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
         	report.getFacilitySites().forEach(fs -> {
             	
-		        if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
+		        if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
 		        	facilityNaicsXrefRepo.deleteByFacilitySiteId(fs.getId());
 		        	
 		        	report.getMasterFacilityRecord().getMasterFacilityNAICS().forEach(masterFacilityNAICS -> {

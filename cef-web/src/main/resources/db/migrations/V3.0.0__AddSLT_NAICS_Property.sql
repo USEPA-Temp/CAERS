@@ -1,6 +1,6 @@
 
 INSERT INTO slt_properties (name, label, description, datatype) values (
-'feature.industry-facility-naics.enabled','Facility NAICS Editing','Enabling allows NEI Certifiers and Preparers to edit their own facility NAICS codes (prevents SLTs from editing).','boolean');
+'feature.industry-facility-naics.enabled','SLT Facility NAICS Editing','Enabling allows SLTs to edit facility NAICS codes (prevents Certifiers and Preparers from editing).','boolean');
 
 CREATE OR REPLACE FUNCTION create_slt_facility_naics() RETURNS void AS $$
 DECLARE
