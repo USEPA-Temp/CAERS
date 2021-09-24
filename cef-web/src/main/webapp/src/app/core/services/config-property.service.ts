@@ -58,4 +58,9 @@ export class ConfigPropertyService {
     return this.http.get<boolean>(url);
   }
 
+  retrieveFacilityNaicsEntryEnabled(slt: string): Observable<boolean> {
+    const url = `${this.baseUrl}/facilityNaics/${slt}/enabled`;
+    return this.http.get<boolean>(url);
+  }
+
 }

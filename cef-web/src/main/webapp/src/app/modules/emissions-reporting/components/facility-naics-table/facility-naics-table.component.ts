@@ -26,6 +26,7 @@ import { FacilityNaicsModalComponent } from '../facility-naics-modal/facility-na
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { NaicsCodeType } from 'src/app/shared/enums/naics-code-type';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 @Component({
   selector: 'app-facility-naics-table',
@@ -40,11 +41,13 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
   faPlus = faPlus;
   faEdit = faEdit;
   naicsCodeType = NaicsCodeType;
+  naicsEntryEnabled: boolean;
 
   constructor(
     private modalService: NgbModal,
     private facilityService: FacilitySiteService,
     private sharedService: SharedService,
+    private propertyService: ConfigPropertyService,
     private route: ActivatedRoute) {
     super();
   }
@@ -58,6 +61,11 @@ export class FacilityNaicsTableComponent extends BaseSortableTable implements On
     this.route.data
       .subscribe((data: { facilitySite: FacilitySite }) => {
         this.facilitySite = data.facilitySite;
+      });
+
+    this.propertyService.retrieveFacilityNaicsEntryEnabled(this.facilitySite.programSystemCode.code)
+      .subscribe(result => {
+        this.naicsEntryEnabled = result;
       });
 
     this.sortTable();

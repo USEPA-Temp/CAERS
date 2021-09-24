@@ -23,6 +23,9 @@ import { MasterFacilityNaicsCode } from 'src/app/shared/models/master-facility-n
 import { MasterFacilityRecordService } from 'src/app/core/services/master-facility-record.service';
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 import { MasterFacilityNaicsModalComponent } from 'src/app/modules/dashboards/components/master-facility-naics-modal/master-facility-naics-modal.component';
+import { User } from 'src/app/shared/models/user';
+import { UserContextService } from 'src/app/core/services/user-context.service';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 @Component({
   selector: 'app-master-facility-naics-table',
@@ -36,15 +39,29 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
   baseUrl: string;
   faPlus = faPlus;
   faEdit = faEdit;
+  naicsEntryEnabled: boolean;
+  user: User;
 
   constructor(
     private modalService: NgbModal,
+    private userContextService: UserContextService,
+    private propertyService: ConfigPropertyService,
     private mfrService: MasterFacilityRecordService) {
     super();
   }
 
   ngOnInit() {
+      this.userContextService.getUser().subscribe( user => {
+            this.user = user;
+        });
+
+      this.propertyService.retrieveFacilityNaicsEntryEnabled(this.facility.programSystemCode.code)
+        .subscribe(result => {
+          this.naicsEntryEnabled = result;
+        });
+
       this.tableData = this.facility.masterFacilityNAICS;
+
   }
 
   sortTable() {

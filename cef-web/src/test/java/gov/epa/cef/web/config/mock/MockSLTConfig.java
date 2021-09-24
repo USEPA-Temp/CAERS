@@ -23,6 +23,7 @@ public class MockSLTConfig implements SLTBaseConfig {
     private String sltEmail;
     private String sltEisUser;
     private String sltEisProgramCode;
+    private Boolean facilityNaicsEnabled;
 
     public String getSltEmail() {
         return sltEmail;
@@ -47,5 +48,13 @@ public class MockSLTConfig implements SLTBaseConfig {
     public void setSltEisProgramCode(String sltEisProgramCode) {
         this.sltEisProgramCode = sltEisProgramCode;
     }
+
+	public Boolean getFacilityNaicsEnabled() {
+		return facilityNaicsEnabled;
+	}
+
+	public void setFacilityNaicsEnabled(Boolean facilityNaicsEnabled) {
+		this.facilityNaicsEnabled = facilityNaicsEnabled;
+	}
 
 }

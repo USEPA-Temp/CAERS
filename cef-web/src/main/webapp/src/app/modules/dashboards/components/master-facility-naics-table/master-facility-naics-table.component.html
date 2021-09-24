@@ -21,8 +21,10 @@
                 <th scope="col" sortable="description" (sort)="onSort($event)">NAICS Description</th>
                 <th scope="col" sortable="code" (sort)="onSort($event)">NAICS Code</th>
                 <th scope="col" sortable="naicsCodeType" (sort)="onSort($event)">NAICS Code Type</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
+                <ng-container *ngIf="naicsEntryEnabled || user?.isAdmin()">
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </ng-container>
             </tr>
         </thead>
         <tbody>
@@ -35,22 +37,26 @@
                 <td>{{item.description}}</td>
                 <td>{{item.code}}</td>
                 <td>{{item.naicsCodeType}}</td>
-                <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit naics code' + item?.code" [attr.data-cy]="'edit naics code' + item?.code">
-                    <fa-icon style="color:#209c98" [icon]="faEdit"></fa-icon>
-                    </a></td>
-                <td><a routerLink="." (click)="openDeleteModal(item.code, item.id, item.masterFacilityRecordId)"
-                        [id]="'deleteNaics' + item?.code"
-                        [attr.aria-label]="'delete' + item?.description + 'NAICS code from master facility record'">
-                        <fa-icon icon="trash-alt"></fa-icon>
-                    </a></td>
+                <ng-container *ngIf="naicsEntryEnabled || user?.isAdmin()">
+                    <td><a routerLink="." (click)="openEditModal(item)" [attr.aria-label]="'edit naics code' + item?.code" [attr.data-cy]="'edit naics code' + item?.code">
+                        <fa-icon style="color:#209c98" [icon]="faEdit"></fa-icon>
+                        </a></td>
+                    <td><a routerLink="." (click)="openDeleteModal(item.code, item.id, item.masterFacilityRecordId)"
+                            [id]="'deleteNaics' + item?.code"
+                            [attr.aria-label]="'delete' + item?.description + 'NAICS code from master facility record'">
+                            <fa-icon icon="trash-alt"></fa-icon>
+                        </a></td>
+                </ng-container>
             </tr>
-            <tr>
-                <td colspan="4"></td>
-                <td><a routerLink="." (click)="openFacilityNaicsModal()" id="addNaicsBtn"
-                        aria-label="add facility NAICS code">
-                        <fa-icon [icon]="faPlus"></fa-icon>
-                    </a></td>
-            </tr>
+            <ng-container *ngIf="naicsEntryEnabled || user?.isAdmin()">
+                <tr>
+                    <td colspan="4"></td>
+                    <td><a routerLink="." (click)="openFacilityNaicsModal()" id="addNaicsBtn"
+                            aria-label="add facility NAICS code">
+                            <fa-icon [icon]="faPlus"></fa-icon>
+                        </a></td>
+                </tr>
+            </ng-container>
 
         </tbody>
     </table>

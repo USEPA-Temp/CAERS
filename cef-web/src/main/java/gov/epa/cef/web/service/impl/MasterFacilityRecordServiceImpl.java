@@ -28,21 +28,26 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
+import gov.epa.cef.web.config.SLTBaseConfig;
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.common.BaseLookupEntity;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
 import gov.epa.cef.web.service.dto.MasterFacilityRecordDto;
 import gov.epa.cef.web.service.dto.MasterFacilityNAICSDto;
+import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
+import gov.epa.cef.web.util.SLTConfigHelper;
 import gov.epa.cef.web.service.MasterFacilityRecordService;
 
 @Service
@@ -68,9 +73,18 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     
     @Autowired
     private MasterFacilityNAICSMapper mfNaicsMapper;
+
+    @Autowired
+    private FacilityNAICSMapper facilityNaicsMapper;
     
     @Autowired
     private MasterFacilityNAICSXrefRepository mfNaicsXrefRepo;
+    
+    @Autowired
+    private FacilityNAICSXrefRepository facilityNaicsXrefRepo;
+    
+    @Autowired
+    private SLTConfigHelper sltConfigHelper;
 
 
     public MasterFacilityRecordDto findById(Long id) {
@@ -150,8 +164,6 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     	return result;
     }
 
-
-
     public MasterFacilityRecordDto create(MasterFacilityRecordDto dto) {
     	MasterFacilityRecord masterFacilityRecord = mapper.fromDto(dto);
         
@@ -174,8 +186,10 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
      */
     public MasterFacilityNAICSDto createMasterFacilityNaics(MasterFacilityNAICSDto dto) {
     	MasterFacilityNAICSXref mfNaics = mfNaicsMapper.fromDto(dto);
-
-    	return mfNaicsMapper.mfrNAICSXrefToMfrNAICSDto(mfNaicsXrefRepo.save(mfNaics));
+    	
+    	MasterFacilityNAICSDto mfNaicsDto = mfNaicsMapper.mfrNAICSXrefToMfrNAICSDto(mfNaicsXrefRepo.save(mfNaics));
+    	masterFacilityNaicsToFacilityNaics(mfNaics.getMasterFacilityRecord().getId());
+    	return mfNaicsDto;
     }
     
     /**
@@ -188,7 +202,9 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     	NaicsCode naicsCode = naicsCodeRepo.findById(Integer.parseInt(dto.getCode())).orElse(null);
     	mfNaics.setNaicsCode(naicsCode);
     	
-    	return mfNaicsMapper.mfrNAICSXrefToMfrNAICSDto(mfNaicsXrefRepo.save(mfNaics));
+    	MasterFacilityNAICSDto mfNaicsDto = mfNaicsMapper.mfrNAICSXrefToMfrNAICSDto(mfNaicsXrefRepo.save(mfNaics));
+    	masterFacilityNaicsToFacilityNaics(mfNaics.getMasterFacilityRecord().getId());
+    	return mfNaicsDto;
     }
     
     /**
@@ -196,7 +212,31 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
      * @param mfNaicsId
      */
     public void deleteMasterFacilityNaics(Long mfNaicsId) {
+    	MasterFacilityNAICSXref mfNaics = mfNaicsXrefRepo.findById(mfNaicsId).orElse(null);
     	mfNaicsXrefRepo.deleteById(mfNaicsId);
+    	masterFacilityNaicsToFacilityNaics(mfNaics.getMasterFacilityRecord().getId());
+    }
+    
+    private void masterFacilityNaicsToFacilityNaics(Long mfrId) {
+    	
+    	emissionsReportRepo.findInProgressOrReturnedByMasterFacilityId(mfrId)
+    	.forEach(report -> {
+        	SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+        	report.getFacilitySites().forEach(fs -> {
+            	
+		        if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
+		        	facilityNaicsXrefRepo.deleteByFacilitySiteId(fs.getId());
+		        	
+		        	report.getMasterFacilityRecord().getMasterFacilityNAICS().forEach(masterFacilityNAICS -> {
+		        		FacilityNAICSXref facilityNAICS;
+		        		facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
+		                facilityNAICS.setFacilitySite(fs);
+		                fs.getFacilityNAICS().add(facilityNAICS);
+		            });
+		        }
+		        facilitySiteRepo.save(fs);
+            });
+        });
     }
     
     /**
