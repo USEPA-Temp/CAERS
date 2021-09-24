@@ -63,7 +63,7 @@ public class SLTConfigProperty implements Serializable {
         return sltPropertyDetails;
     }
 
-    public void SLTProperty(SLTProperty sltPropertyDetails) {
+    public void setSLTProperty(SLTProperty sltPropertyDetails) {
         this.sltPropertyDetails = sltPropertyDetails;
     }
 

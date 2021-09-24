@@ -24,4 +24,6 @@ public interface SLTBaseConfig {
 
     public String getSltEisProgramCode();
     
+    public Boolean getFacilityNaicsEnabled();
+    
 }

@@ -21,6 +21,8 @@ import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
+import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.service.dto.MasterFacilityNAICSDto;
 
@@ -43,4 +45,6 @@ public interface MasterFacilityNAICSMapper {
     @Mapping(source = "masterFacilityRecordId", target = "masterFacilityRecord.id")
 	MasterFacilityNAICSXref updateFromDto(MasterFacilityNAICSDto source, @MappingTarget MasterFacilityNAICSXref target);
     
+    @Mapping(target = "id", ignore = true)
+    MasterFacilityNAICSXref toMasterFacilityNaicsXref(FacilityNAICSXref source);
 }
