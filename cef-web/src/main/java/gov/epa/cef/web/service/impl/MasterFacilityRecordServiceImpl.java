@@ -217,7 +217,7 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     	masterFacilityNaicsToFacilityNaics(mfNaics.getMasterFacilityRecord().getId());
     }
     
-    public void masterFacilityNaicsToFacilityNaics(Long mfrId) {
+    private void masterFacilityNaicsToFacilityNaics(Long mfrId) {
     	
     	emissionsReportRepo.findInProgressOrReturnedByMasterFacilityId(mfrId)
     	.forEach(report -> {
