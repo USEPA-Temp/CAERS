@@ -634,6 +634,28 @@ public class FacilitySiteValidatorTest extends BaseValidatorTest {
     }
     
     /**
+     * There should be an error when facility with status of ONRE or ONP
+     */
+    @Test
+    public void facilityOperatingNotReportinOrReportingNonpointFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        FacilitySite testData = createBaseFacilitySite();
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("100");
+        testData.setFacilitySourceTypeCode(sourceType);
+        testData.getOperatingStatusCode().setCode("ONRE");
+        testData.setStatusYear((short) 2019);
+        
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        // error count is 2 due to the warning for not TS or PS and the error for when ONP or ONRE
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.FACILITY_STATUS.value()) && errorMap.get(ValidationField.FACILITY_STATUS.value()).size() == 1);
+    }
+    
+    /**
      * There should be errors when facility source type code has last inventory year < current report year
      */
     @Test
