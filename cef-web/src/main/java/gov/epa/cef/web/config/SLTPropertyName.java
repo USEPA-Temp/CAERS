@@ -22,7 +22,8 @@ public enum SLTPropertyName implements IPropertyKey {
 
     EmailAddress("slt-email"),
     EisUser("slt-eis-user"),
-    EisProgramCode("slt-eis-program-code");
+    EisProgramCode("slt-eis-program-code"),
+	FacilityNaicsEnabled("feature.industry-facility-naics.enabled");
 
     private final String key;
 

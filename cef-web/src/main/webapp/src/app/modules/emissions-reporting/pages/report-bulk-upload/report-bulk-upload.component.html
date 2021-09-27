@@ -40,7 +40,7 @@
                     <label for="file-excel-workbook" class="custom-file-label">Click to browse...</label>
                     <app-validation-message [control]="fileUploadForm.controls.excelFileUpload"></app-validation-message>
                     <div class="validation-message" *ngIf="fileUploadForm.errors?.invalidFileName">
-                        File name is not valid.  Please rename the file to include only letters, numbers, dots, dashes, and spaces.  The file extension can only be 'xls' or 'xlsx'.
+                        File name is not valid.  Please rename the file to include only letters, numbers, dots, dashes, underscores, parentheses, and spaces.  The file extension can only be 'xls' or 'xlsx'.
                     </div>
                 </div>
             </div>

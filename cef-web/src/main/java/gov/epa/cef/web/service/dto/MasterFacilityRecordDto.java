@@ -18,6 +18,7 @@ package gov.epa.cef.web.service.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 
 public class MasterFacilityRecordDto implements Serializable {
 
@@ -46,6 +47,7 @@ public class MasterFacilityRecordDto implements Serializable {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private CodeLookupDto tribalCode;
+    private Set<MasterFacilityNAICSDto> masterFacilityNAICS;
 
     public Long getId() {
         return id;
@@ -231,7 +233,15 @@ public class MasterFacilityRecordDto implements Serializable {
         this.tribalCode = tribalCode;
     }
     
-    public MasterFacilityRecordDto withId(Long id) {
+    public Set<MasterFacilityNAICSDto> getMasterFacilityNAICS() {
+		return masterFacilityNAICS;
+	}
+
+	public void setMasterFacilityNAICS(Set<MasterFacilityNAICSDto> masterFacilityNAICS) {
+		this.masterFacilityNAICS = masterFacilityNAICS;
+	}
+
+	public MasterFacilityRecordDto withId(Long id) {
     	setId(id);
     	return this;
     }

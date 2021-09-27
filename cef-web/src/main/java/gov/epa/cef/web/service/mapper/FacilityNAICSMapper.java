@@ -23,6 +23,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import gov.epa.cef.web.domain.FacilityNAICSXref;
+import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 
 @Mapper(componentModel = "spring", uses = {})
@@ -43,5 +44,7 @@ public interface FacilityNAICSMapper {
 
     @Mapping(source = "facilitySiteId", target = "facilitySite.id")
     FacilityNAICSXref updateFromDto(FacilityNAICSDto source, @MappingTarget FacilityNAICSXref target);
+    
+    FacilityNAICSXref toFacilityNaicsXref(MasterFacilityNAICSXref source);
     
 }

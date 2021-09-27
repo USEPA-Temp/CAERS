@@ -43,6 +43,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import gov.epa.cef.web.client.api.ExcelParserClient;
 import gov.epa.cef.web.client.api.ExcelParserResponse;
+import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
@@ -56,6 +57,7 @@ import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
+import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCodeType;
 import gov.epa.cef.web.domain.OperatingDetail;
@@ -116,9 +118,10 @@ import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
-import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
+import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
+import gov.epa.cef.web.util.SLTConfigHelper;
 import gov.epa.cef.web.util.TempFile;
 
 @Service
@@ -167,9 +170,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     private FacilitySourceTypeCodeRepository facilitySourceTypeRepo;
 
     @Autowired
-    private MasterFacilityRecordMapper mfrMapper;
-
-    @Autowired
     private MasterFacilityRecordRepository mfrRepo;
 
     @Autowired
@@ -204,6 +204,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private UnitTypeCodeRepository unitTypeRepo;
+    
+    @Autowired
+    private FacilityNAICSMapper facilityNaicsMapper;
 
     @Autowired
     private BulkUploadMapper uploadMapper;
@@ -213,6 +216,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     
     @Autowired
     private FacilitySiteRepository facilitySiteRepo;
+    
+    @Autowired
+    private SLTConfigHelper sltConfigHelper;
 
     @Override
     public Function<JsonNode, EmissionsReportBulkUploadDto> parseJsonNode(boolean failUnknownProperties) {
@@ -326,19 +332,20 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             EmissionsReport emissionsReport = mapEmissionsReport(bulkEmissionsReport);
             
+            SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(bulkEmissionsReport.getProgramSystemCode());
+            
             for (FacilitySiteBulkUploadDto bulkFacility : bulkEmissionsReport.getFacilitySites()) {
-            	MasterFacilityRecord mfr = mfrRepo.findByProgramSystemCodeCodeAndAgencyFacilityId(bulkFacility.getProgramSystemCode(), bulkFacility.getAltSiteIdentifier()).orElse(null);
                 FacilitySite facility = mapFacility(bulkFacility);
                 
-                facility.setName(mfr.getName());
-                facility.setFacilitySourceTypeCode(mfr.getFacilitySourceTypeCode());
-                facility.setLongitude(mfr.getLongitude());
-                facility.setLatitude(mfr.getLatitude());
-                facility.setStreetAddress(mfr.getStreetAddress());
-                facility.setCity(mfr.getCity());
-                facility.setStateCode(mfr.getStateCode());
-                facility.setPostalCode(mfr.getPostalCode());
-                facility.setCountyCode(mfr.getCountyCode());
+                facility.setName(emissionsReport.getMasterFacilityRecord().getName());
+                facility.setFacilitySourceTypeCode(emissionsReport.getMasterFacilityRecord().getFacilitySourceTypeCode());
+                facility.setLongitude(emissionsReport.getMasterFacilityRecord().getLongitude());
+                facility.setLatitude(emissionsReport.getMasterFacilityRecord().getLatitude());
+                facility.setStreetAddress(emissionsReport.getMasterFacilityRecord().getStreetAddress());
+                facility.setCity(emissionsReport.getMasterFacilityRecord().getCity());
+                facility.setStateCode(emissionsReport.getMasterFacilityRecord().getStateCode());
+                facility.setPostalCode(emissionsReport.getMasterFacilityRecord().getPostalCode());
+                facility.setCountyCode(emissionsReport.getMasterFacilityRecord().getCountyCode());
 
                 Preconditions.checkArgument(bulkFacility.getId() != null,
                     "FacilitySite ID can not be null.");
@@ -360,10 +367,19 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 }
 
                 // Map Facility NAICS
-                for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
-                    FacilityNAICSXref facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
-
-                    if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {
+                if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
+	                for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
+	                	FacilityNAICSXref facilityNAICS;
+	                    facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
+	                    if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {
+	                        facilityNAICS.setFacilitySite(facility);
+	                        facility.getFacilityNAICS().add(facilityNAICS);
+	                    }
+	                }
+                } else {
+                	for (MasterFacilityNAICSXref masterFacilityNAICS : emissionsReport.getMasterFacilityRecord().getMasterFacilityNAICS()) {
+                		FacilityNAICSXref facilityNAICS;
+                		facilityNAICS = mapMasterFacilityNAICS(masterFacilityNAICS);
                         facilityNAICS.setFacilitySite(facility);
                         facility.getFacilityNAICS().add(facilityNAICS);
                     }
@@ -946,6 +962,20 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (naics != null) {
             facilityNAICS.setNaicsCode((naicsCodeRepo.findById(naics)).orElse(null));
         }
+
+        return facilityNAICS;
+    }
+    
+    /**
+     * Map a MasterFacilityNAICSXref to an FacilityNAICS domain model
+     */
+    private FacilityNAICSXref mapMasterFacilityNAICS(MasterFacilityNAICSXref masterFacilityNAICS) {
+
+        FacilityNAICSXref facilityNAICS = new FacilityNAICSXref();
+
+        facilityNAICS.setNaicsCodeType(masterFacilityNAICS.getNaicsCodeType());
+
+        facilityNAICS.setNaicsCode(masterFacilityNAICS.getNaicsCode());
 
         return facilityNAICS;
     }

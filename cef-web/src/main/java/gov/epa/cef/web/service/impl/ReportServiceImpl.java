@@ -109,8 +109,11 @@ public class ReportServiceImpl implements ReportService {
      * @param reportAction
      * @param comments
      * @param reportAttachment
+     * @param cromerrActivityId
+     * @param cromerrDocumentId
      */
-    public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment) {
+    public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment,
+                                    String cromerrActivityId, String cromerrDocumentId) {
 
     	UserDto appUser = this.userService.getCurrentUser();
         String userId = appUser.getCdxUserId();
@@ -132,6 +135,8 @@ public class ReportServiceImpl implements ReportService {
                 rptActionLog.setEmissionsReport(report);
                 rptActionLog.setReportAction(reportAction);
                 rptActionLog.setComments(comments);
+                rptActionLog.setCromerrActivityId(cromerrActivityId);
+                rptActionLog.setCromerrDocumentId(cromerrDocumentId);
                 
                 if (reportAttachment != null) {
                 	rptActionLog.setReportAttachmentId(reportAttachment.getId());
@@ -164,7 +169,7 @@ public class ReportServiceImpl implements ReportService {
      */
     public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments) {
 
-    	createReportHistory(reportIds, reportAction, comments, null);
+    	createReportHistory(reportIds, reportAction, comments, null, null, null);
     }
     
     /**
@@ -174,7 +179,7 @@ public class ReportServiceImpl implements ReportService {
      */
     public void createReportHistory(List<Long> reportIds, ReportAction reportAction) {
     	
-        createReportHistory(reportIds, reportAction, null, null);
+        createReportHistory(reportIds, reportAction, null, null, null, null);
     }
     
     /**
@@ -185,7 +190,7 @@ public class ReportServiceImpl implements ReportService {
      */
     public void createReportHistory(Long reportId, ReportAction reportAction, String comments, ReportAttachment reportAttachment) {
     	
-    	createReportHistory(Collections.singletonList(reportId), reportAction, comments, reportAttachment);
+    	createReportHistory(Collections.singletonList(reportId), reportAction, comments, reportAttachment, null, null);
     	
     }
     
@@ -197,7 +202,7 @@ public class ReportServiceImpl implements ReportService {
      */
     public void createReportHistory(Long reportId, ReportAction reportAction, String comments) {
 
-        createReportHistory(Collections.singletonList(reportId), reportAction, comments, null);
+        createReportHistory(Collections.singletonList(reportId), reportAction, comments, null, null, null);
     }
 
     /**
@@ -209,7 +214,19 @@ public class ReportServiceImpl implements ReportService {
 
         createReportHistory(Collections.singletonList(reportId), reportAction);
     }
-    
+
+    /**
+     * Create Report History record with CROMERR info
+     * @param reportId
+     * @param reportAction
+     * @param cromerrActivityId
+     * @param cromerrDocumentId
+     */
+    public void createReportHistory(Long reportId, ReportAction reportAction, String cromerrActivityId, String cromerrDocumentId) {
+
+        createReportHistory(Collections.singletonList(reportId), reportAction, null, null, cromerrActivityId, cromerrDocumentId);
+    }
+
     /**
      * Update Report History record to indicate attachment was deleted
      * @param id

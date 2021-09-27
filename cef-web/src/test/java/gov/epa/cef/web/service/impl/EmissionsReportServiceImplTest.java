@@ -30,9 +30,11 @@ import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
+import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
+import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReleasePoint;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ReportingPeriod;
@@ -44,6 +46,7 @@ import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
+import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
 
 import org.junit.Before;
@@ -84,6 +87,9 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     private MasterFacilityRecordMapper mfrMapper;
     
     @Mock
+    private FacilityNAICSMapper facilityNaicsMapper;
+    
+    @Mock
     private ReportService reportService;
     
     @Mock
@@ -107,8 +113,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     private EmissionsReportDto emissionsReportDto;
 
     private List<EmissionsReportDto> emissionsReportDtoList;
-
-    private ApplicationUser applicationUser;
 
     @Before
     public void init(){
@@ -151,6 +155,14 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
         ApplicationUser appUser = new ApplicationUser("fred.flintstone", Collections.emptyList());
         appUser.setClientId("BR");
+        
+        FacilityNAICSXref fxr = new FacilityNAICSXref();
+        NaicsCode naics = new NaicsCode();
+    	naics.setCode(456);
+    	naics.setDescription("Description");
+        fxr.setId(1L);
+        fxr.setNaicsCode(naics);
+        when(facilityNaicsMapper.toFacilityNaicsXref(previousEmissionsReport.getMasterFacilityRecord().getMasterFacilityNAICS().get(0))).thenReturn(fxr);
     }
 
     @Test
@@ -253,12 +265,29 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         mfr.setLatitude(BigDecimal.valueOf(2.5d));
         mfr.setLongitude(BigDecimal.valueOf(2.5d));
         
+        List<MasterFacilityNAICSXref> masterFacilityNAICS = new ArrayList<>();
+        MasterFacilityNAICSXref mfXref = new MasterFacilityNAICSXref();
+        mfXref.setMasterFacilityRecord(mfr);
+        mfXref.setId(1L);
+    	NaicsCode naics = new NaicsCode();
+    	naics.setCode(123);
+    	naics.setDescription("ABCDE");
+    	mfXref.setNaicsCode(naics);
+    	masterFacilityNAICS.add(mfXref);
+    	mfr.setMasterFacilityNAICS(masterFacilityNAICS);
+        
     	EmissionsReport er = new EmissionsReport();
     	er.setEisProgramId("");
     	er.setId(1L);
     	er.setStatus(ReportStatus.APPROVED);
     	er.setValidationStatus(ValidationStatus.PASSED);
     	er.setYear((short) 2018);
+    	
+    	ProgramSystemCode  psc = new ProgramSystemCode();
+    	psc.setCode("GADNR");
+    	
+    	er.setProgramSystemCode(psc);
+    	er.setMasterFacilityRecord(mfr);
 
     	OperatingStatusCode opStatus = new OperatingStatusCode();
     	opStatus.setCode("OP");
@@ -292,9 +321,6 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
     	FacilityNAICSXref xref = new FacilityNAICSXref();
     	xref.setFacilitySite(fs);
     	xref.setId(1L);
-    	NaicsCode naics = new NaicsCode();
-    	naics.setCode(123);
-    	naics.setDescription("ABCDE");
     	xref.setNaicsCode(naics);
     	fs.setFacilityNAICS(facilityNAICS);
 

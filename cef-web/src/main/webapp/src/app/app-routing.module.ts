@@ -18,7 +18,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {FacilityDashboardComponent} from 'src/app/modules/dashboards/pages/facility-dashboard/facility-dashboard.component';
 import {SubmissionReviewDashboardComponent} from 'src/app/modules/dashboards/pages/submission-review-dashboard/submission-review-dashboard.component';
-import {EisSubmissionComponent} from "src/app/modules/dashboards/pages/eis-submission/eis-submission.component";
+import {EisSubmissionComponent} from 'src/app/modules/dashboards/pages/eis-submission/eis-submission.component';
 import {FacilityResolverService} from 'src/app/core/services/facility-resolver.service';
 import {RedirectComponent} from 'src/app/modules/dashboards/pages/redirect/redirect.component';
 import {ErrorComponent} from 'src/app/modules/shared/pages/error/error.component';
@@ -26,14 +26,14 @@ import {BulkUploadComponent} from 'src/app/modules/shared/pages/bulk-upload/bulk
 import {HelpPageComponent} from 'src/app/modules/dashboards/pages/help-page/help-page.component';
 import {AdminPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-properties/admin-properties.component';
 import {AdminAnnouncementPropertiesComponent} from 'src/app/modules/dashboards/pages/admin-announcement-properties/admin-announcement-properties.component';
-import { AdminAuthGuard } from 'src/app/core/guards/admin-auth.guard';
-import { ReviewerAuthGuard } from 'src/app/core/guards/reviewer-auth.guard';
-import {EisTransactionsComponent} from "src/app/modules/dashboards/pages/eis-transactions/eis-transactions.component";
-import { SltPropertiesComponent } from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
-import { AdminUserFeedbackComponent } from './modules/dashboards/pages/admin-user-feedback/admin-user-feedback.component';
-import { MasterFacilityInformationComponent } from 'src/app/modules/dashboards/pages/master-facility-information/master-facility-information.component';
-import { MasterFacilitySearchComponent } from 'src/app/modules/dashboards/pages/master-facility-search/master-facility-search.component';
-import { PendingUserFacilityAssociationsComponent } from 'src/app/modules/dashboards/pages/pending-user-facility-associations/pending-user-facility-associations.component';
+import {AdminAuthGuard} from 'src/app/core/guards/admin-auth.guard';
+import {ReviewerAuthGuard} from 'src/app/core/guards/reviewer-auth.guard';
+import {EisTransactionsComponent} from 'src/app/modules/dashboards/pages/eis-transactions/eis-transactions.component';
+import {SltPropertiesComponent} from 'src/app/modules/dashboards/pages/slt-properties/slt-properties.component';
+import {AdminUserFeedbackComponent} from './modules/dashboards/pages/admin-user-feedback/admin-user-feedback.component';
+import {MasterFacilityInformationComponent} from 'src/app/modules/dashboards/pages/master-facility-information/master-facility-information.component';
+import {MasterFacilitySearchComponent} from 'src/app/modules/dashboards/pages/master-facility-search/master-facility-search.component';
+import {PendingUserFacilityAssociationsComponent} from 'src/app/modules/dashboards/pages/pending-user-facility-associations/pending-user-facility-associations.component';
 
 const routes: Routes = [
   { path: '', component: RedirectComponent, data: { title: 'Redirect Page' } },
@@ -78,6 +78,10 @@ const routes: Routes = [
         path: 'upload',
         component: BulkUploadComponent,
         data: { title: 'Bulk Upload' },
+      }, {
+      path: 'facility',
+      component: MasterFacilityInformationComponent,
+      data: { title: 'Facility Information' },
       }, {
         path: 'userFeedback',
         component: AdminUserFeedbackComponent,

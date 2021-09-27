@@ -20,7 +20,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import gov.epa.cef.web.client.api.ExcelParserClient;
+import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.config.TestCategories;
+import gov.epa.cef.web.config.slt.SLTConfigImpl;
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.CalculationParameterTypeCode;
@@ -40,6 +42,7 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.domain.ValidationStatus;
+import gov.epa.cef.web.provider.system.SLTPropertyProvider;
 import gov.epa.cef.web.repository.AircraftEngineTypeCodeRepository;
 import gov.epa.cef.web.repository.CalculationMaterialCodeRepository;
 import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
@@ -91,6 +94,7 @@ import gov.epa.cef.web.service.mapper.cers._2._0.CersV2FacilitySiteMapper;
 import gov.epa.cef.web.service.mapper.cers._2._0.CersV2FacilitySiteMapperImpl;
 import gov.epa.cef.web.service.mapper.cers._2._0.CersV2ReleasePointMapper;
 import gov.epa.cef.web.service.mapper.cers._2._0.CersV2ReleasePointMapperImpl;
+import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.schema.cer._1._2.CERSDataType;
 import net.exchangenetwork.schema.cer._1._2.ControlApproachDataType;
 import net.exchangenetwork.schema.cer._1._2.EmissionsDataType;
@@ -112,14 +116,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -396,8 +397,18 @@ public class CersXmlServiceImplTest {
 
             return Optional.of(result);
         });
+        
+        SLTBaseConfig sltBaseConfig = new SLTConfigImpl("GADNR",sltPropertyProvider);
+        when(this.sltConfigHelper.getCurrentSLTConfig("GADNR")).thenReturn(sltBaseConfig);
+        
     }
-
+    
+    @Mock
+    SLTPropertyProvider sltPropertyProvider;
+    
+    @Mock
+    SLTConfigHelper sltConfigHelper;
+    
     @Mock
     AircraftEngineTypeCodeRepository aircraftEngineRepo;
 

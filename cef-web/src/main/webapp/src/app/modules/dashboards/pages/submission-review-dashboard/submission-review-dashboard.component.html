@@ -111,12 +111,10 @@
          <div style="flex: 0 0 250px">
             <div class="card">
                <div class="card-header text-center">
-                  <strong>My Notifications</strong>
+                  <strong>{{currentYear}} Report Submission Statuses</strong>
                </div>
                   <div class="card-body">
-                     <div *ngIf="user?.isReviewer()">
-                     <strong>{{currentYear}} Status Report</strong>
-                     <br>  
+                     <div *ngIf="user?.isReviewer() || (user?.isAdmin() && selectedAgency)">
                      <br>
                      <div class="mb-3 align-middle">
                         <a href="javascript:void(0);"
@@ -128,10 +126,12 @@
                               style="background-color: #ff1a1a; font-size: 100%;">
                               {{inProgressCount}}
                            </span>
-                           <strong class="mr-2">In Progress</strong>
-                           <fa-icon icon="filter"
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.IN_PROGRESS && selectedYear == currentYear">
+	                           <strong class="mr-2">In Progress</strong>
+	                           <fa-icon icon="filter"
                                     title="Show In Progress reports"
                                     *ngIf="inProgressCount > 0"></fa-icon>
+                           </span>
                         </a>
                      </div>
                      <div class="mb-3 align-middle">
@@ -144,10 +144,12 @@
                               style="background-color: #ff1a1a; font-size: 100%;">
                               {{returnedCount}}
                            </span>
-                           <strong class="mr-2">Reviewed and Returned</strong>
-                           <fa-icon icon="filter"
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.RETURNED && selectedYear == currentYear">
+	                           <strong class="mr-2">Reviewed and Returned</strong>
+	                           <fa-icon icon="filter"
                                     title="Show Returned reports"
                                     *ngIf="returnedCount > 0"></fa-icon>
+                           </span>
                         </a>
                      </div>
                      <div class="mb-3 align-middle">
@@ -160,10 +162,12 @@
                               style="background-color: #ffb90f; font-size: 100%;">
                               {{submittedCount}}
                            </span>
-                           <strong class="mr-2">Pending Review</strong>
-                           <fa-icon icon="filter"
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.SUBMITTED && selectedYear == currentYear">
+	                           <strong class="mr-2">Pending Review</strong>
+	                           <fa-icon icon="filter"
                                     title="Show Pending Review reports"
                                     *ngIf="submittedCount > 0"></fa-icon>
+                           </span>
                         </a>
                      </div>
                      <div class="mb-3 align-middle">
@@ -176,10 +180,12 @@
                               style="background-color: #ffb90f; font-size: 100%;">
                               {{advancedQACount}}
                            </span>
-                           <strong class="mr-2">Advanced QA</strong>
-                           <fa-icon icon="filter"
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.ADVANCED_QA && selectedYear == currentYear">
+	                           <strong class="mr-2">Advanced QA</strong>
+    	                       <fa-icon icon="filter"
                                     title="Show Advanced QA reports"
                                     *ngIf="advancedQACount > 0"></fa-icon>
+                           </span>
                         </a>
                      </div>
                      <div class="mb-3 align-middle">
@@ -192,10 +198,12 @@
                               style="background-color: #209c98; font-size: 100%;">
                               {{approvedCount}}
                            </span>
-                           <strong class="mr-2">Approved</strong>
-                           <fa-icon icon="filter"
+                           <span [class.selected-filter-highlight]="selectedReportStatus == reportStatus.APPROVED && selectedYear == currentYear">
+	                           <strong class="mr-2">Approved</strong>
+	                           <fa-icon icon="filter"
                                     title="Show Approved reports"
                                     *ngIf="approvedCount > 0"></fa-icon>
+                           </span>
                         </a>
                      </div>
                   </div>

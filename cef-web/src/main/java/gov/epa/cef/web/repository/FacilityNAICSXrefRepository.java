@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
@@ -37,6 +39,11 @@ public interface FacilityNAICSXrefRepository extends CrudRepository<FacilityNAIC
      */
     List<FacilityNAICSXref> findByFacilitySiteId(Long facilitySiteId);
 
+    @Transactional
+    @Modifying
+    @Query("delete from FacilityNAICSXref where id in (select fx.id from FacilityNAICSXref fx join fx.facilitySite fs where fs.id = :id)")
+    void deleteByFacilitySiteId(@Param("id") Long id);
+    
     @Cacheable(value = CacheName.FacilityNAICSMasterIds)
     @Query("select mfr.id from FacilityNAICSXref fn join fn.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where fn.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);

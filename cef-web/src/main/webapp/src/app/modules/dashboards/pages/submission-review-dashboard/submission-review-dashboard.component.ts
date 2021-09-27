@@ -100,6 +100,12 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                     this.filterAndCountSubmissions(submissions);
                 });
             }
+			if (this.user.isAdmin()) {
+                this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, null)
+                .subscribe(submissions => {
+                    this.filterAndCountSubmissions(submissions);
+                });
+            }
 
         });
     }
@@ -114,7 +120,10 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.emissionReportService.beginAdvancedQA(selectedSubmissions)
             .subscribe(() => {
                 this.refreshFacilityReports();
-                this.emitAllSubmissions();
+				this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+                .subscribe(submissions => {
+                    this.filterAndCountSubmissions(submissions);
+                });
             });
         }
     }
@@ -134,7 +143,10 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 this.emissionReportService.acceptReports(selectedSubmissions, comments)
                 .subscribe(() => {
                     this.refreshFacilityReports();
-                    this.emitAllSubmissions();
+					this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+	                .subscribe(submissions => {
+	                    this.filterAndCountSubmissions(submissions);
+	                });
                 });
             }, () => {
                 // needed for dismissing without errors
@@ -158,7 +170,10 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 this.emissionReportService.rejectReports(selectedSubmissions, resp.comments, resp.id)
                 .subscribe(() => {
                     this.refreshFacilityReports();
-                    this.emitAllSubmissions();
+	                this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+	                .subscribe(submissions => {
+	                    this.filterAndCountSubmissions(submissions);
+	                });
                 });
             }, () => {
                 // needed for dismissing without errors
@@ -223,13 +238,9 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.selectedYear = this.selectedAgency.years[0];
         }
         this.refreshFacilityReports();
-    }
-
-    // emits the updated submission list to the notification component
-    emitAllSubmissions(): void {
-        this.submissionsReviewDashboardService.retrieveReviewerSubmissions(this.currentYear, null)
+        this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
         .subscribe(submissions => {
-            this.sharedService.emitSubmissionChange(submissions);
+            this.filterAndCountSubmissions(submissions);
         });
     }
 
@@ -257,7 +268,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
     onFilter(reportStatus: ReportStatus) {
       this.selectedReportStatus = reportStatus;
       this.selectedYear = this.currentYear;
-      this.refreshFacilityReports();
+	  this.onStatusSelected();
     }
 
 

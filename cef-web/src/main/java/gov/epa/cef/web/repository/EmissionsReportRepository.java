@@ -73,8 +73,8 @@ public interface EmissionsReportRepository extends CrudRepository<EmissionsRepor
      * @param status (APPROVED, IN_PROGRESS, etc)
      * @return
      */
-    @Query("select r from EmissionsReport r where r.masterFacilityRecord.id = :masterFacilityId and r.status = gov.epa.cef.web.domain.ReportStatus.IN_PROGRESS")
-    List<EmissionsReport> findInProgressByMasterFacilityId(@NotNull Long masterFacilityId);
+    @Query("select r from EmissionsReport r where r.masterFacilityRecord.id = :masterFacilityId and r.status in (gov.epa.cef.web.domain.ReportStatus.IN_PROGRESS, gov.epa.cef.web.domain.ReportStatus.RETURNED)")
+    List<EmissionsReport> findInProgressOrReturnedByMasterFacilityId(@Param ("masterFacilityId") @NotNull Long masterFacilityId);
 
     /**
      * Find the report for a specified master facility record id for the specified year

@@ -73,6 +73,12 @@ public class ReportHistory extends BaseAuditEntity {
 	@Column(name = "file_deleted")
 	private boolean fileDeleted;
 	
+	@Column(name = "cromerr_activity_id", length = 255)
+    private String cromerrActivityId;
+	
+	@Column(name = "cromerr_document_id", length = 255)
+    private String cromerrDocumentId;
+	
 	public EmissionsReport getEmissionsReport() {
 		return emissionsReport;
 	}
@@ -152,5 +158,21 @@ public class ReportHistory extends BaseAuditEntity {
 	public void setFileDeleted(boolean fileDeleted) {
 		this.fileDeleted = fileDeleted;
 	}
+
+    public String getCromerrActivityId() {
+        return cromerrActivityId;
+    }
+
+    public void setCromerrActivityId(String cromerrActivityId) {
+        this.cromerrActivityId = cromerrActivityId;
+    }
+
+    public String getCromerrDocumentId() {
+        return cromerrDocumentId;
+    }
+
+    public void setCromerrDocumentId(String cromerrDocumentId) {
+        this.cromerrDocumentId = cromerrDocumentId;
+    }
 
 }

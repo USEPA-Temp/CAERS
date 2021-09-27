@@ -19,6 +19,8 @@ import { MasterFacilityRecordService } from 'src/app/core/services/master-facili
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 import { EditMasterFacilityInfoComponent } from 'src/app/modules/dashboards/components/edit-master-facility-info/edit-master-facility-info.component';
 import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { UserContextService } from 'src/app/core/services/user-context.service';
+import { User } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-master-facility-information',
@@ -32,25 +34,54 @@ export class MasterFacilityInformationComponent implements OnInit {
   editInfo = false;
   addFacility = false;
   programSystemCode: BaseCodeLookup;
+  agencyDataValues: BaseCodeLookup[];
+  user: User;
 
   @ViewChild(EditMasterFacilityInfoComponent)
   private masterFacilityRecordComponent: EditMasterFacilityInfoComponent;
 
-  constructor(private mfrService: MasterFacilityRecordService) { }
+  constructor(
+              private userContextService: UserContextService,
+              private mfrService: MasterFacilityRecordService) { }
 
   ngOnInit(): void {
+      this.userContextService.getUser().subscribe( user => {
+          this.user = user;
+      });
+
+      this.mfrService.getProgramSystemCodes()
+      .subscribe(result => {
+        this.agencyDataValues = result.sort((a, b) => (a.code > b.code) ? 1 : -1);
+      });
+
       this.refreshFacilityList();
-      this.mfrService.getUserProgramSystemCode()
-        .subscribe(result =>
-                this.programSystemCode = result
-            );
+      if (this.user.isReviewer()) {
+        this.mfrService.getUserProgramSystemCode()
+          .subscribe(result => {
+                  this.programSystemCode = result;
+          });
+      }
+  }
+
+  onAgencySelected() {
+    this.refreshFacilityList();
   }
 
   refreshFacilityList() {
-    this.mfrService.getMyProgramRecords()
-    .subscribe(result =>
-      this.records = result.sort((a, b) => (a.name > b.name) ? 1 : -1)
-      );
+    if (this.user.isReviewer()) {
+      this.mfrService.getMyProgramRecords()
+      .subscribe(result =>
+        this.records = result.sort((a, b) => (a.name > b.name) ? 1 : -1)
+        );
+    } else if (this.user.isAdmin() && this.programSystemCode) {
+      this.mfrService.getProgramRecords(this.programSystemCode.code)
+      .subscribe(result => {
+        this.records = result.sort((a, b) => (a.name > b.name) ? 1 : -1);
+    });
+    } else {
+      this.records = [];
+      this.selectedFacility = null;
+    }
   }
 
   onFacilitySelected(facility: MasterFacilityRecord) {
