@@ -367,10 +367,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 }
 
                 // Map Facility NAICS
-                FacilityNAICSXref facilityNAICS;
-                
                 if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
 	                for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
+	                	FacilityNAICSXref facilityNAICS;
 	                    facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
 	                    if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {
 	                        facilityNAICS.setFacilitySite(facility);
@@ -379,7 +378,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 	                }
                 } else {
                 	for (MasterFacilityNAICSXref masterFacilityNAICS : emissionsReport.getMasterFacilityRecord().getMasterFacilityNAICS()) {
-                		facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
+                		FacilityNAICSXref facilityNAICS;
+                		facilityNAICS = mapMasterFacilityNAICS(masterFacilityNAICS);
                         facilityNAICS.setFacilitySite(facility);
                         facility.getFacilityNAICS().add(facilityNAICS);
                     }
@@ -962,6 +962,20 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         if (naics != null) {
             facilityNAICS.setNaicsCode((naicsCodeRepo.findById(naics)).orElse(null));
         }
+
+        return facilityNAICS;
+    }
+    
+    /**
+     * Map a MasterFacilityNAICSXref to an FacilityNAICS domain model
+     */
+    private FacilityNAICSXref mapMasterFacilityNAICS(MasterFacilityNAICSXref masterFacilityNAICS) {
+
+        FacilityNAICSXref facilityNAICS = new FacilityNAICSXref();
+
+        facilityNAICS.setNaicsCodeType(masterFacilityNAICS.getNaicsCodeType());
+
+        facilityNAICS.setNaicsCode(masterFacilityNAICS.getNaicsCode());
 
         return facilityNAICS;
     }
