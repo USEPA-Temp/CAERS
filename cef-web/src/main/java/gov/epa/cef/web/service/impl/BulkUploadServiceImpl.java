@@ -367,10 +367,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 }
 
                 // Map Facility NAICS
-                FacilityNAICSXref facilityNAICS;
-                
                 if (Boolean.FALSE.equals(sltConfig.getFacilityNaicsEnabled())) {
 	                for (FacilityNAICSBulkUploadDto bulkFacilityNAICS : bulkEmissionsReport.getFacilityNAICS()) {
+	                	FacilityNAICSXref facilityNAICS;
 	                    facilityNAICS = mapFacilityNAICS(bulkFacilityNAICS);
 	                    if (bulkFacility.getId().equals(bulkFacilityNAICS.getFacilitySiteId())) {
 	                        facilityNAICS.setFacilitySite(facility);
@@ -379,6 +378,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 	                }
                 } else {
                 	for (MasterFacilityNAICSXref masterFacilityNAICS : emissionsReport.getMasterFacilityRecord().getMasterFacilityNAICS()) {
+                		FacilityNAICSXref facilityNAICS;
                 		facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
                         facilityNAICS.setFacilitySite(facility);
                         facility.getFacilityNAICS().add(facilityNAICS);
