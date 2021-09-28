@@ -35,7 +35,7 @@ import { ConfigPropertyService } from 'src/app/core/services/config-property.ser
 export class MasterFacilityNaicsTableComponent extends BaseSortableTable implements OnInit {
   @Input() masterFacilityId: number;
   @Input() facility: MasterFacilityRecord;
-  tableData: MasterFacilityNaicsCode[];
+  @Input() tableData: MasterFacilityNaicsCode[];
   baseUrl: string;
   faPlus = faPlus;
   faEdit = faEdit;
@@ -60,8 +60,6 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
           this.naicsEntryEnabled = result;
         });
 
-      this.tableData = this.facility.masterFacilityNAICS;
-
   }
 
   sortTable() {
@@ -75,7 +73,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
       // update the UI table with the current list of facility NAICS
       this.mfrService.getRecord(mfrId)
         .subscribe(masterFacilityResponse => {
-          this.tableData = masterFacilityResponse.masterFacilityNAICS;
+          this.facility.masterFacilityNAICS = masterFacilityResponse.masterFacilityNAICS;
           this.sortTable();
         });
     });
@@ -103,7 +101,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
       this.mfrService.getRecord(this.facility.id)
         .subscribe(facilityResponse => {
 
-          this.tableData = facilityResponse.masterFacilityNAICS;
+          this.facility.masterFacilityNAICS = facilityResponse.masterFacilityNAICS;
           this.sortTable();
         });
 
@@ -122,7 +120,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
       this.mfrService.getRecord(this.facility.id)
         .subscribe(facilityResponse => {
 
-          this.tableData = facilityResponse.masterFacilityNAICS;
+          this.facility.masterFacilityNAICS = facilityResponse.masterFacilityNAICS;
           this.sortTable();
         });
 

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.config.SLTBaseConfig;
+import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
@@ -219,24 +220,27 @@ public class MasterFacilityRecordServiceImpl implements MasterFacilityRecordServ
     
     private void masterFacilityNaicsToFacilityNaics(Long mfrId) {
     	
-    	emissionsReportRepo.findInProgressOrReturnedByMasterFacilityId(mfrId)
-    	.forEach(report -> {
-        	SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
-        	report.getFacilitySites().forEach(fs -> {
-            	
-		        if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
-		        	facilityNaicsXrefRepo.deleteByFacilitySiteId(fs.getId());
-		        	
-		        	report.getMasterFacilityRecord().getMasterFacilityNAICS().forEach(masterFacilityNAICS -> {
-		        		FacilityNAICSXref facilityNAICS;
-		        		facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
-		                facilityNAICS.setFacilitySite(fs);
-		                fs.getFacilityNAICS().add(facilityNAICS);
-		            });
-		        }
-		        facilitySiteRepo.save(fs);
-            });
-        });
+    	List<EmissionsReport> erList = emissionsReportRepo.findInProgressOrReturnedByMasterFacilityId(mfrId);
+    	
+    	if (!erList.isEmpty()) {
+    		erList.forEach(report -> {
+	        	SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	        	report.getFacilitySites().forEach(fs -> {
+	            	
+			        if (Boolean.TRUE.equals(sltConfig.getFacilityNaicsEnabled())) {
+			        	facilityNaicsXrefRepo.deleteByFacilitySiteId(fs.getId());
+			        	
+			        	report.getMasterFacilityRecord().getMasterFacilityNAICS().forEach(masterFacilityNAICS -> {
+			        		FacilityNAICSXref facilityNAICS;
+			        		facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
+			                facilityNAICS.setFacilitySite(fs);
+			                fs.getFacilityNAICS().add(facilityNAICS);
+			            });
+			        }
+			        facilitySiteRepo.save(fs);
+	            });
+	        });
+    	}
     }
     
     /**
