@@ -73,7 +73,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
       // update the UI table with the current list of facility NAICS
       this.mfrService.getRecord(mfrId)
         .subscribe(masterFacilityResponse => {
-          this.tableData = masterFacilityResponse.masterFacilityNAICS;
+          this.facility.masterFacilityNAICS = masterFacilityResponse.masterFacilityNAICS;
           this.sortTable();
         });
     });
@@ -101,7 +101,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
       this.mfrService.getRecord(this.facility.id)
         .subscribe(facilityResponse => {
 
-          this.tableData = facilityResponse.masterFacilityNAICS;
+          this.facility.masterFacilityNAICS = facilityResponse.masterFacilityNAICS;
           this.sortTable();
         });
 
@@ -120,7 +120,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
       this.mfrService.getRecord(this.facility.id)
         .subscribe(facilityResponse => {
 
-          this.tableData = facilityResponse.masterFacilityNAICS;
+          this.facility.masterFacilityNAICS = facilityResponse.masterFacilityNAICS;
           this.sortTable();
         });
 
