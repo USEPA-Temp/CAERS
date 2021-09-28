@@ -35,7 +35,7 @@ import { ConfigPropertyService } from 'src/app/core/services/config-property.ser
 export class MasterFacilityNaicsTableComponent extends BaseSortableTable implements OnInit {
   @Input() masterFacilityId: number;
   @Input() facility: MasterFacilityRecord;
-  tableData: MasterFacilityNaicsCode[];
+  @Input() tableData: MasterFacilityNaicsCode[];
   baseUrl: string;
   faPlus = faPlus;
   faEdit = faEdit;
@@ -59,8 +59,6 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
         .subscribe(result => {
           this.naicsEntryEnabled = result;
         });
-
-      this.tableData = this.facility.masterFacilityNAICS;
 
   }
 
