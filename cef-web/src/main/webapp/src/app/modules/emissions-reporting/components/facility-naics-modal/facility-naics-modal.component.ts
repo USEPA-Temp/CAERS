@@ -39,6 +39,7 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
   selectedNaicsCode: FacilityNaicsCode;
   naicsCodeType = NaicsCodeType;
   selectedNaicsCodeType = NaicsCodeType.PRIMARY;
+  existingPrimaryCode = false;
   check = true;
   edit: boolean;
 
@@ -61,14 +62,25 @@ export class FacilityNaicsModalComponent extends BaseSortableTable implements On
 
     this.naicsForm.get('selectedNaics').setValidators([Validators.required, legacyItemValidator(this.year, 'NAICS Code', 'code')]);
 
+	this.facilityNaics.forEach(facilityNaics => {
+	  if(facilityNaics.id !== this.selectedNaicsCode?.id) {
+	    if (facilityNaics.naicsCodeType === this.naicsCodeType.PRIMARY) {
+	      this.existingPrimaryCode = true;
+		  this.selectedNaicsCodeType = this.naicsCodeType.SECONDARY;
+	    }
+	  }
+	});
+	
     if (this.selectedNaicsCode) {
       this.naicsForm.get('selectedNaics').setValue(this.selectedNaicsCode);
+	  this.selectedNaicsCodeType = this.selectedNaicsCode.naicsCodeType;
     }
 
     this.lookupService.retrieveCurrentNaicsCodes(this.year)
     .subscribe(result => {
       this.facilityNaicsCode = result;
     });
+
   }
 
   isValid() {
