@@ -18,12 +18,31 @@
 
   <div class="card mb-3">
     <div class="card-header text-center">
-      <span class="pageHeader"><strong>EIS Transaction Information</strong></span>
+      <span class="pageHeader"><strong>SLT Properties</strong></span>
       <div class="float-right">
             <button type="button" class="btn btn-success" (click)="onSubmit()">Update Properties</button>
           </div>
     </div>
     <div class="card-body">
+
+      <div class="row" *ngIf="user?.isAdmin()">
+        <div class="col-8">
+          <div class="d-flex flex-row py-3">
+              <label for="admin-agency-select" class="col-form-label mr-2">
+                <strong>Agency:</strong>
+              </label>
+              <select id="admin-agency-select" style="width: auto"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="programSystemCode" 
+                      (change)="onAgencySelected()" aria-label="select agency">
+                <option value=""></option>
+                <option *ngFor="let opt of agencyDataValues" [ngValue]="opt">{{opt.code}} - {{opt.description}}</option>
+              </select>
+              <hr>
+          </div>
+        </div>
+      </div>
+
 
       <div *ngIf="properties">
         <form [formGroup]="propertyForm">

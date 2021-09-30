@@ -33,8 +33,9 @@ export class SltPropertyService {
     return this.http.get<AppProperty>(url);
   }
 
-  retrieveAll(): Observable<AppProperty[]> {
-    return this.http.get<AppProperty[]>(this.baseUrl);
+  retrieveAll(slt: string): Observable<AppProperty[]> {
+    const url = `${this.baseUrl}/property/${slt}`;
+    return this.http.get<AppProperty[]>(url);
   }
 
   update(prop: AppProperty): Observable<AppProperty> {
@@ -42,8 +43,8 @@ export class SltPropertyService {
     return this.http.put<AppProperty>(url, prop);
   }
 
-  bulkUpdate(props: AppProperty[]): Observable<AppProperty[]> {
-    const url = `${this.baseUrl}`;
+  bulkUpdate(props: AppProperty[], slt: string): Observable<AppProperty[]> {
+    const url = `${this.baseUrl}/${slt}`;
     return this.http.post<AppProperty[]>(url, props);
   }
 }
