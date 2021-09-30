@@ -34,9 +34,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.epa.cef.web.domain.SLTConfigProperty;
+import gov.epa.cef.web.exception.ApplicationErrorCode;
+import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.provider.system.SLTPropertyProvider;
 import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.PropertyDto;
 import gov.epa.cef.web.service.mapper.AppPropertyMapper;
 
@@ -44,6 +47,8 @@ import gov.epa.cef.web.service.mapper.AppPropertyMapper;
 @RequestMapping("/api/slt/property")
 @RolesAllowed(value = {AppRole.ROLE_REVIEWER, AppRole.ROLE_CAERS_ADMIN})
 public class SLTPropertyApi {
+	
+	public static final String REVIEWER = "Reviewer";
 
     @Autowired
     private SLTPropertyProvider propertyProvider;
@@ -53,6 +58,9 @@ public class SLTPropertyApi {
 
     @Autowired
     private AppPropertyMapper mapper;
+    
+    @Autowired
+    private UserService userService;
 
     /**
      * Retrieve a properties
@@ -73,6 +81,10 @@ public class SLTPropertyApi {
      */
     @GetMapping(value = "/property/{slt}")
     public ResponseEntity<List<PropertyDto>> retrieveAllProperties(@NotNull @PathVariable String slt) {
+    	
+    	if (this.userService.getCurrentUser().getRole().equalsIgnoreCase(REVIEWER) && !this.securityService.getCurrentProgramSystemCode().equals(slt)) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Program System Code "+slt+" is not valid for current user.");
+        }
     	
         List<PropertyDto> result = mapper.sltToDtoList(propertyProvider.retrieveAllForProgramSystem(slt));
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -97,6 +109,10 @@ public class SLTPropertyApi {
      */
     @PostMapping(value = "/{slt}")
     public ResponseEntity<List<PropertyDto>> updateProperties(@NotNull @RequestBody List<PropertyDto> dtos, @NotNull @PathVariable String slt) {
+    	
+    	if (this.userService.getCurrentUser().getRole().equalsIgnoreCase(REVIEWER) && !this.securityService.getCurrentProgramSystemCode().equals(slt)) {
+            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Program System Code "+slt+" is not valid for current user.");
+        }
     	
         List<PropertyDto> result = dtos.stream().map(dto -> {
             SLTConfigProperty prop = this.propertyProvider.update(dto, slt, dto.getValue());
