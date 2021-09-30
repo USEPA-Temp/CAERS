@@ -33,7 +33,7 @@
     "core-js": "^2.6.11",
     "ngx-toastr": "11.1.2",
     "rxjs": "^6.5.5",
-    "tslib": "^2.0.0",
+    "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
