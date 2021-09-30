@@ -42,7 +42,7 @@ import gov.epa.cef.web.service.mapper.AppPropertyMapper;
 
 @RestController
 @RequestMapping("/api/slt/property")
-@RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+@RolesAllowed(value = {AppRole.ROLE_REVIEWER, AppRole.ROLE_CAERS_ADMIN})
 public class SLTPropertyApi {
 
     @Autowired
@@ -68,15 +68,13 @@ public class SLTPropertyApi {
     }
 
     /**
-     * Retrieve all properties for the user's state
+     * Retrieve all properties for selected SLT
      * @return
      */
-    @GetMapping
-    public ResponseEntity<List<PropertyDto>> retrieveAllProperties() {
-
-        String userProgramSystem = this.securityService.getCurrentProgramSystemCode();
-
-        List<PropertyDto> result = mapper.sltToDtoList(propertyProvider.retrieveAllForProgramSystem(userProgramSystem));
+    @GetMapping(value = "/property/{slt}")
+    public ResponseEntity<List<PropertyDto>> retrieveAllProperties(@NotNull @PathVariable String slt) {
+    	
+        List<PropertyDto> result = mapper.sltToDtoList(propertyProvider.retrieveAllForProgramSystem(slt));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -97,13 +95,11 @@ public class SLTPropertyApi {
      * Update multiple properties
      * @return
      */
-    @PostMapping
-    public ResponseEntity<List<PropertyDto>> updateProperties(@NotNull @RequestBody List<PropertyDto> dtos) {
-
-        String userProgramSystem = this.securityService.getCurrentProgramSystemCode();
-
+    @PostMapping(value = "/{slt}")
+    public ResponseEntity<List<PropertyDto>> updateProperties(@NotNull @RequestBody List<PropertyDto> dtos, @NotNull @PathVariable String slt) {
+    	
         List<PropertyDto> result = dtos.stream().map(dto -> {
-            SLTConfigProperty prop = this.propertyProvider.update(dto, userProgramSystem, dto.getValue());
+            SLTConfigProperty prop = this.propertyProvider.update(dto, slt, dto.getValue());
             return mapper.sltToDto(prop);
         }).collect(Collectors.toList());
 

@@ -19,6 +19,10 @@ import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { SltPropertyService } from 'src/app/core/services/slt-property.service';
 import { ToastrService } from 'ngx-toastr';
 import { AppProperty } from 'src/app/shared/models/app-property';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { User } from 'src/app/shared/models/user';
+import { LookupService } from 'src/app/core/services/lookup.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 
 @Component({
   selector: 'app-slt-properties',
@@ -28,32 +32,76 @@ import { AppProperty } from 'src/app/shared/models/app-property';
 export class SltPropertiesComponent implements OnInit {
 
   properties: AppProperty[];
+  user: User;
+  agencyDataValues: BaseCodeLookup[];
+  programSystemCode: BaseCodeLookup;
+  slt: string;
 
   propertyForm = this.fb.group({});
 
   constructor(
+      private userContextService: UserContextService,
+	  private lookupService: LookupService,
       private propertyService: SltPropertyService,
       private fb: FormBuilder,
       private toastr: ToastrService) { }
 
   ngOnInit() {
-    this.propertyService.retrieveAll()
-    .subscribe(result => {
-
-      result.sort((a, b) => (a.name > b.name) ? 1 : -1);
-      result.forEach(prop => {
-        if (prop.datatype !== 'boolean') {
-          this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
-            Validators.required
-          ]}));
-        } else {
-          const booleanValue = (prop.value.toLowerCase() === 'true');
-          this.propertyForm.addControl(prop.name, new FormControl(booleanValue));
-        }
+    this.userContextService.getUser()
+    .subscribe( user => {
+          this.user = user;
       });
 
-      this.properties = result;
-    });
+    this.lookupService.retrieveProgramSystemTypeCode()
+    .subscribe(result => {
+        this.agencyDataValues = result.sort((a, b) => (a.code > b.code) ? 1 : -1);
+      });
+
+    if (this.user.isReviewer) {
+      this.slt = this.user.programSystemCode;
+    }
+
+    this.refreshSltPropertyList();
+
+  }
+
+  onAgencySelected() {
+    this.slt = this.programSystemCode ? this.programSystemCode.code : null;
+    this.refreshSltPropertyList();
+  }
+
+
+  refreshSltPropertyList() {
+
+    if (this.slt !== null) {
+      this.propertyService.retrieveAll(this.slt)
+        .subscribe(result => {
+          result.sort((a, b) => (a.name > b.name) ? 1 : -1);
+          result.forEach(prop => {
+			if (Object.keys(this.propertyForm.controls).length === 0) {
+	            if (prop.datatype !== 'boolean') {
+	              this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
+	                Validators.required
+	              ]}));
+	            } else {
+	              const booleanValue = (prop.value.toLowerCase() === 'true');
+	              this.propertyForm.addControl(prop.name, new FormControl(booleanValue));
+	            }
+			} else {
+				if (prop.datatype !== 'boolean') {
+				  this.propertyForm.setControl(prop.name, new FormControl(prop.value, { validators: [
+	                Validators.required
+	              ]}));
+	            } else {
+	              const booleanValue = (prop.value.toLowerCase() === 'true');
+				  this.propertyForm.setControl(prop.name, new FormControl(booleanValue));
+	            }
+			}
+
+          });
+		  this.properties = result;
+        });
+      }
   }
 
   onSubmit() {
@@ -69,7 +117,7 @@ export class SltPropertiesComponent implements OnInit {
         }
       });
 
-      this.propertyService.bulkUpdate(updatedProperties)
+      this.propertyService.bulkUpdate(updatedProperties, this.slt)
       .subscribe(result => {
         this.toastr.success('', 'Properties updated successfully.');
       });
