@@ -60,8 +60,11 @@ cdx:
     - https://cdxnodengn.epa.gov
     - https://test.epacdx.net
     - https://testngn.epacdxnode.net
+    - https://testngn2.epacdxnode.net
     - https://dev.epacdx.net
     - https://devngn.epacdxnode.net
+    - https://devngn2.epacdxnode.net
+    - https://cdxappsdev.epacdx.net
     - https://dev.e-enterprise.gov
     - https://dev2.e-enterprise.gov
     - https://test.e-enterprise.gov
@@ -70,7 +73,7 @@ cdx:
     - https://www2.e-enterprise.gov
     - http://localhost:8080
 excel-parser:
-  base-url: https://devngn.epacdxnode.net/excel-json-parser/api/v2
+  base-url: https://devngn2.epacdxnode.net/excel-json-parser/api/v2
 virus-scanner:
   endpoint: https://tools.epacdxnode.net/xml/validator_v30.wsdl
 network-nodes:

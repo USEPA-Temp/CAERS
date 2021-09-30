@@ -108,31 +108,36 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
 			
         	Short tempStatusYear = dto.getStatusYear();
         	
-        	facilitySite.getEmissionsUnits().forEach(unit -> {
-        		if(!unit.getOperatingStatusCode().getCode().contentEquals("PS")){
-    	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
-    	        	unit.setStatusYear(tempStatusYear);
-    	        	unit.getEmissionsProcesses().forEach(process -> {
-    	        		if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
-            	        	process.setOperatingStatusCode(tempOperatingStatusCode);
-            	        	process.setStatusYear(tempStatusYear);
-    	        		}
-    	        	});
-        		}
-        	});
-        	
-        	facilitySite.getControls().forEach(control -> {
-        		if(!control.getOperatingStatusCode().getCode().contentEquals("PS")){
-        			control.setOperatingStatusCode(tempOperatingStatusCode);
-        		}
-        	});
-        	
-        	facilitySite.getReleasePoints().forEach(releasePoint -> {
-        		if(!releasePoint.getOperatingStatusCode().getCode().contentEquals("PS")){
-    	        	releasePoint.setOperatingStatusCode(tempOperatingStatusCode);
-    	        	releasePoint.setStatusYear(tempStatusYear);
-        		}
-        	});
+        	if(dto.getOperatingStatusCode().getCode().contentEquals(ConstantUtils.STATUS_OPERATING)
+        			|| dto.getOperatingStatusCode().getCode().contentEquals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)
+        			|| dto.getOperatingStatusCode().getCode().contentEquals(ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN)) {
+        		
+	        	facilitySite.getEmissionsUnits().forEach(unit -> {
+	        		if(!unit.getOperatingStatusCode().getCode().contentEquals("PS")){
+	    	        	unit.setOperatingStatusCode(tempOperatingStatusCode);
+	    	        	unit.setStatusYear(tempStatusYear);
+	    	        	unit.getEmissionsProcesses().forEach(process -> {
+	    	        		if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
+	            	        	process.setOperatingStatusCode(tempOperatingStatusCode);
+	            	        	process.setStatusYear(tempStatusYear);
+	    	        		}
+	    	        	});
+	        		}
+	        	});
+	        	
+	        	facilitySite.getControls().forEach(control -> {
+	        		if(!control.getOperatingStatusCode().getCode().contentEquals("PS")){
+	        			control.setOperatingStatusCode(tempOperatingStatusCode);
+	        		}
+	        	});
+	        	
+	        	facilitySite.getReleasePoints().forEach(releasePoint -> {
+	        		if(!releasePoint.getOperatingStatusCode().getCode().contentEquals("PS")){
+	    	        	releasePoint.setOperatingStatusCode(tempOperatingStatusCode);
+	    	        	releasePoint.setStatusYear(tempStatusYear);
+	        		}
+	        	});
+        	}
         }
    
     	facilitySiteMapper.updateFromDto(dto, facilitySite);

@@ -10,13 +10,13 @@
     "submit_to_reviewer": false,
     "dev": {
       "login": "https://dev.epacdx.net/CDX/Login",
-      "handoff": "https://dev.epacdx.net/AppHandoff?AppUrl=https%3A%2F%2Fdevngn.epacdxnode.net%2Fcef-web%2FhandoffLanding&program=CAER&URL_Desc=NEI%20Certifier",
-      "app": "https://devngn.epacdxnode.net/cef-web"
+      "handoff": "https://dev.epacdx.net/AppHandoff?AppUrl=https%3A%2F%2Fdevngn2.epacdxnode.net%2Fcef-web%2FhandoffLanding&program=CAER&URL_Desc=NEI%20Certifier",
+      "app": "https://devngn2.epacdxnode.net/cef-web"
     },
     "test": {
       "login": "https://test.epacdx.net/CDX/Login",
-      "handoff": "https://test.epacdx.net/AppHandoff?AppUrl=https%3A%2F%2Ftestngn.epacdxnode.net%2Fcef-web%2FhandoffLanding&program=CAER&URL_Desc=NEI%20Certifier",
-      "app": "https://testngn.epacdxnode.net/cef-web"
+      "handoff": "https://test.epacdx.net/AppHandoff?AppUrl=https%3A%2F%2Ftestngn2.epacdxnode.net%2Fcef-web%2FhandoffLanding&program=CAER&URL_Desc=NEI%20Certifier",
+      "app": "https://testngn2.epacdxnode.net/cef-web"
     },
     "prod": {
       "login": "https://cdx.epa.gov/CDX/Login",

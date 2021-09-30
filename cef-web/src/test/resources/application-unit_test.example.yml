@@ -60,7 +60,7 @@ zonky.test.database:
   provider: zonky
   initdb.properties.encoding: UTF-8
 excel-parser:
-    base-url: https://devngn.epacdxnode.net/excel-json-parser/api/v1
+    base-url: https://devngn2.epacdxnode.net/excel-json-parser/api/v1
 virus-scanner:
   endpoint: https://tools.epacdxnode.net/xml/validator_v30.wsdl
 network-nodes:

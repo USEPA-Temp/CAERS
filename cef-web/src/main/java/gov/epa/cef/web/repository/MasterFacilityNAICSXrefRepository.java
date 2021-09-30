@@ -41,7 +41,7 @@ public interface MasterFacilityNAICSXrefRepository extends CrudRepository<Master
 
     @Transactional
     @Modifying
-    @Query("delete from MasterFacilityNAICSXref where id = :id")
+    @Query("delete from MasterFacilityNAICSXref where id in (select mfx.id from MasterFacilityNAICSXref mfx join mfx.masterFacilityRecord mfr where mfr.id = :id)")
     void deleteByMasterFacilityId(@Param("id") Long id);
     
     @Cacheable(value = CacheName.MasterFacilityNAICSMasterIds)

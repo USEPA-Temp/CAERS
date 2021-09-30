@@ -20,6 +20,7 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.google.common.base.Strings;
 import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
@@ -52,6 +53,8 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
     private static final String STATUS_OPERATING = "OP";
     private static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
     private static final String STATUS_PERMANENTLY_SHUTDOWN = "PS";
+    private static final String STATUS_OPERATING_REPORTING_NONPOINT = "ONP";
+    private static final String STATUS_OPERATING_NOT_REPORTING = "ONRE";
     private static final String LANDFILL_SOURCE_CODE = "104";
 
     @Override
@@ -419,7 +422,7 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 	        				"control.statusTypeCode.permanentShutdown",
 	        				createControlValidationDetails(c));
 	        	}
-	        }
+	        } 
         }
 
         if (facilitySite.getStatusYear() != null && facilitySite.getFacilitySourceTypeCode() != null) {
@@ -436,6 +439,17 @@ public class FacilitySiteValidator extends BaseValidator<FacilitySite> {
 		        			"facilitysite.reportedEmissions.invalidWarning",
 		        			createValidationDetails(facilitySite));
 	      	}
+        }
+        
+        if (STATUS_OPERATING_REPORTING_NONPOINT.contentEquals(facilitySite.getOperatingStatusCode().getCode())
+        	|| STATUS_OPERATING_NOT_REPORTING.contentEquals(facilitySite.getOperatingStatusCode().getCode())) {
+
+	        	result = false;
+	        	context.addFederalError(
+	        			ValidationField.FACILITY_STATUS.value(),
+	        			"facilitySite.status.invalid",
+	        			createValidationDetails(facilitySite),
+	        			facilitySite.getOperatingStatusCode().getDescription());
         }
 
         return result;
