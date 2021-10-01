@@ -57,7 +57,7 @@ export class SltPropertiesComponent implements OnInit {
         this.agencyDataValues = result.sort((a, b) => (a.code > b.code) ? 1 : -1);
       });
 
-    if (this.user.isReviewer) {
+    if (this.user.isReviewer()) {
       this.slt = this.user.programSystemCode;
     }
 
@@ -73,7 +73,7 @@ export class SltPropertiesComponent implements OnInit {
 
   refreshSltPropertyList() {
 
-    if (this.slt !== null) {
+    if (this.slt) {
       this.propertyService.retrieveAll(this.slt)
         .subscribe(result => {
           result.sort((a, b) => (a.name > b.name) ? 1 : -1);
