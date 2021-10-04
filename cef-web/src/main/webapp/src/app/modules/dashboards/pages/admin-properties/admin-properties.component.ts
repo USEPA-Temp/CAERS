@@ -26,6 +26,9 @@ import { UserFacilityAssociationService } from 'src/app/core/services/user-facil
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import {wholeNumberValidator} from 'src/app/modules/shared/directives/whole-number-validator.directive';
+import { SharedService } from 'src/app/core/services/shared.service';
+
+const Admin_AnnouncementText = 'feature.announcement.text';
 
 @Component({
   selector: 'app-admin-properties',
@@ -51,6 +54,7 @@ export class AdminPropertiesComponent implements OnInit {
       private ufaService: UserFacilityAssociationService,
       private reportService: EmissionsReportingService,
       private facilitySiteService: FacilitySiteService,
+	  private sharedService: SharedService,
       private fb: FormBuilder,
       private modalService: NgbModal,
       private toastr: ToastrService) { }
@@ -191,6 +195,11 @@ export class AdminPropertiesComponent implements OnInit {
 
         this.toastr.success('', 'Properties updated successfully.');
         this.setMigrationFeature();
+		result.forEach(prop => {
+			if (prop.name === Admin_AnnouncementText) {
+				this.sharedService.emitAdminSltBannerChange(prop.value);
+			}
+		});
       });
 
     }

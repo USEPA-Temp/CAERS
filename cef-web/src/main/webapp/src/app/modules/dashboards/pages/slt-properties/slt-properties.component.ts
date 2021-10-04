@@ -23,6 +23,11 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { User } from 'src/app/shared/models/user';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { SharedService } from 'src/app/core/services/shared.service';
+
+const SLT_AnnouncementText = 'slt-feature.announcement.text';
+const BooleanDataType = 'boolean';
+const BooleanTrue = 'true';
 
 @Component({
   selector: 'app-slt-properties',
@@ -44,7 +49,8 @@ export class SltPropertiesComponent implements OnInit {
 	  private lookupService: LookupService,
       private propertyService: SltPropertyService,
       private fb: FormBuilder,
-      private toastr: ToastrService) { }
+      private toastr: ToastrService,
+      private sharedService: SharedService) { }
 
   ngOnInit() {
     this.userContextService.getUser()
@@ -57,7 +63,7 @@ export class SltPropertiesComponent implements OnInit {
         this.agencyDataValues = result.sort((a, b) => (a.code > b.code) ? 1 : -1);
       });
 
-    if (this.user.isReviewer) {
+    if (this.user.isReviewer()) {
       this.slt = this.user.programSystemCode;
     }
 
@@ -73,27 +79,37 @@ export class SltPropertiesComponent implements OnInit {
 
   refreshSltPropertyList() {
 
-    if (this.slt !== null) {
+    if (this.slt) {
       this.propertyService.retrieveAll(this.slt)
         .subscribe(result => {
           result.sort((a, b) => (a.name > b.name) ? 1 : -1);
           result.forEach(prop => {
 			if (Object.keys(this.propertyForm.controls).length === 0) {
-	            if (prop.datatype !== 'boolean') {
-	              this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
-	                Validators.required
-	              ]}));
+	            if (prop.datatype !== BooleanDataType) {
+	
+				  if (prop.name === SLT_AnnouncementText) {
+					this.propertyForm.addControl(prop.name, new FormControl(prop.value));
+				  } else {
+	                this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
+	                  Validators.required
+	                ]}));
+				  }
 	            } else {
-	              const booleanValue = (prop.value.toLowerCase() === 'true');
+	              const booleanValue = (prop.value.toLowerCase() === BooleanTrue);
 	              this.propertyForm.addControl(prop.name, new FormControl(booleanValue));
 	            }
 			} else {
-				if (prop.datatype !== 'boolean') {
-				  this.propertyForm.setControl(prop.name, new FormControl(prop.value, { validators: [
-	                Validators.required
-	              ]}));
+
+				if (prop.datatype !== BooleanDataType) {
+				  if (prop.name === SLT_AnnouncementText) {
+					this.propertyForm.setControl(prop.name, new FormControl(prop.value));
+				  } else {
+				    this.propertyForm.setControl(prop.name, new FormControl(prop.value, { validators: [
+	                  Validators.required
+	                ]}));
+				  }
 	            } else {
-	              const booleanValue = (prop.value.toLowerCase() === 'true');
+	              const booleanValue = (prop.value.toLowerCase() === BooleanTrue);
 				  this.propertyForm.setControl(prop.name, new FormControl(booleanValue));
 	            }
 			}
@@ -119,7 +135,12 @@ export class SltPropertiesComponent implements OnInit {
 
       this.propertyService.bulkUpdate(updatedProperties, this.slt)
       .subscribe(result => {
-        this.toastr.success('', 'Properties updated successfully.');
+		this.toastr.success('', 'Properties updated successfully.');
+		result.forEach(prop => {
+			if (prop.name === SLT_AnnouncementText) {
+				this.sharedService.emitSltBannerChange(prop.value);
+			}
+		});
       });
 
     }

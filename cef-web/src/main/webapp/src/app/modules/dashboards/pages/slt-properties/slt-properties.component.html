@@ -55,7 +55,12 @@
             </div>
             <div class="col-sm-6 col-lg-3">
               <div class="textboxes" *ngIf="prop.datatype !== 'boolean'">
-                <input type="text" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name">
+				<div *ngIf="prop.name === 'slt-feature.announcement.text'">
+	                <textarea maxlength="255" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name"></textarea>
+	            </div>
+				<div *ngIf="prop.name !== 'slt-feature.announcement.text'">
+                	<input type="text" class="form-control" id="{{prop.name + 'Input'}}" [formControlName]="prop.name">
+				</div>
                 <app-validation-message [control]="propertyForm.get([prop.name])"></app-validation-message>
               </div>
               <div class="custom-control custom-switch custom-switch" *ngIf="prop.datatype === 'boolean'">

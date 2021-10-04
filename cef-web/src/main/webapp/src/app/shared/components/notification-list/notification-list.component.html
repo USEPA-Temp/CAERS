@@ -60,5 +60,13 @@
         <strong class="mr-2">Approved</strong>
       </div>
     </div>
+
+	<div *ngIf="currentUser?.isNeiCertifier() || currentUser?.isPreparer()">
+		<div *ngIf="sltAnnouncementEnabled && sltAnnouncementText">
+      		<p class="slt-announcement-header">SLT Announcement:</p>
+			<p style="text-align: justify;"><strong>{{sltAnnouncementText}}</strong></p>
+			<hr style="background-color: #9a0000;">
+  		</div>
+    </div>
   </div>
 </div>

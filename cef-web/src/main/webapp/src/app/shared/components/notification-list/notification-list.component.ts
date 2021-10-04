@@ -20,6 +20,7 @@ import { SubmissionsReviewDashboardService } from 'src/app/core/services/submiss
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { User } from 'src/app/shared/models/user';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
 @Component({
   selector: 'app-notification-list',
@@ -42,14 +43,21 @@ export class NotificationListComponent implements OnInit {
   currentUser: User;
   currentYear: any;
 
+  sltAnnouncementText: string;
+  sltAnnouncementEnabled = false;
+
   constructor(private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
               private sharedService: SharedService,
-              public userContext: UserContextService) {
-      this.currentYear = new Date().getFullYear() - 1;
+              public userContext: UserContextService,
+			  private propertyService: ConfigPropertyService) {
+				
+	  this.currentYear = new Date().getFullYear() - 1;
+	
       this.sharedService.submissionReviewChangeEmitted$
       .subscribe(submissions => {
         this.filterAndCountSubmissions(submissions);
       });
+
       this.userContext.getUser().subscribe(user => {
         this.currentUser = user;
         if (this.currentUser.isReviewer()) {
@@ -58,6 +66,28 @@ export class NotificationListComponent implements OnInit {
             this.filterAndCountSubmissions(submissions);
           });
         }
+
+		if (user.programSystemCode && user.programSystemCode !== 'N/A') {
+			this.propertyService.retrieveSltAnnouncementEnabled(this.currentUser.programSystemCode)
+	        .subscribe(result => {
+	            this.sltAnnouncementEnabled = result;
+	
+	            if (this.sltAnnouncementEnabled) {
+	                this.propertyService.retrieveSltAnnouncementText(this.currentUser.programSystemCode)
+	                .subscribe(text => {
+	                    this.sltAnnouncementText = text.value;
+	                });
+
+					this.sharedService.sltBannerChangeEmitted$.subscribe(sltBanner => {
+						if (sltBanner) {
+							this.sltAnnouncementText = sltBanner;
+						}
+					});
+					
+	            }
+	        });
+		}
+
       });
     }
 
