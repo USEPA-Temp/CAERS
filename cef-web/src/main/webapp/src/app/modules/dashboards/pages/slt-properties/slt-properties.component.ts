@@ -87,7 +87,7 @@ export class SltPropertiesComponent implements OnInit {
 			if (Object.keys(this.propertyForm.controls).length === 0) {
 	            if (prop.datatype !== BooleanDataType) {
 	
-				  if (prop.name === SLT_AnnouncementText) {
+				  if (!prop.required) {
 					this.propertyForm.addControl(prop.name, new FormControl(prop.value));
 				  } else {
 	                this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
@@ -101,7 +101,7 @@ export class SltPropertiesComponent implements OnInit {
 			} else {
 
 				if (prop.datatype !== BooleanDataType) {
-				  if (prop.name === SLT_AnnouncementText) {
+				  if (!prop.required) {
 					this.propertyForm.setControl(prop.name, new FormControl(prop.value));
 				  } else {
 				    this.propertyForm.setControl(prop.name, new FormControl(prop.value, { validators: [

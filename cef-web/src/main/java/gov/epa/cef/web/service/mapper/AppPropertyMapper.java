@@ -38,6 +38,7 @@ public interface AppPropertyMapper {
     @Mapping(source ="sltPropertyDetails.label", target="label")
     @Mapping(source ="sltPropertyDetails.description", target="description")
     @Mapping(source ="sltPropertyDetails.datatype", target="datatype")
+    @Mapping(source ="sltPropertyDetails.required", target="required")
     PropertyDto sltToDto(SLTConfigProperty source);
 
     List<PropertyDto> sltToDtoList(List<SLTConfigProperty> source);

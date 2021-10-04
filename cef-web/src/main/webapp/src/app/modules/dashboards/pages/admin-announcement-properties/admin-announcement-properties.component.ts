@@ -77,7 +77,6 @@ export class AdminAnnouncementPropertiesComponent implements OnInit {
 
       this.propertyService.bulkUpdate(updatedProperties)
       .subscribe(result => {
-        console.log(result);
         this.toastr.success('', 'Properties updated successfully. Changes will appear after a refresh.');
         result.forEach(prop => {
 			if (prop.name === Admin_AnnouncementText) {
