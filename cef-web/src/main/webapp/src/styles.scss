@@ -138,3 +138,6 @@ tr.striped {
 .selected-filter-highlight {
 	background-color: aqua;
 }
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
