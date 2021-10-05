@@ -26,4 +26,8 @@ public interface SLTBaseConfig {
     
     public Boolean getFacilityNaicsEnabled();
     
+    public Boolean getSltFeatureAnnouncementEnabled();
+    
+    public String getSltFeatureAnnouncementText();
+    
 }

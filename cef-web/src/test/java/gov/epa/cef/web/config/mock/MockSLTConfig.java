@@ -24,6 +24,8 @@ public class MockSLTConfig implements SLTBaseConfig {
     private String sltEisUser;
     private String sltEisProgramCode;
     private Boolean facilityNaicsEnabled;
+    private String sltFeatureAnnouncementText;
+    private Boolean sltFeatureAnnouncementEnabled;
 
     public String getSltEmail() {
         return sltEmail;
@@ -55,6 +57,22 @@ public class MockSLTConfig implements SLTBaseConfig {
 
 	public void setFacilityNaicsEnabled(Boolean facilityNaicsEnabled) {
 		this.facilityNaicsEnabled = facilityNaicsEnabled;
+	}
+
+	public Boolean getSltFeatureAnnouncementEnabled() {
+		return sltFeatureAnnouncementEnabled;
+	}
+
+	public void setSltFeatureAnnouncementEnabled(Boolean sltFeatureAnnouncementEnabled) {
+		this.sltFeatureAnnouncementEnabled = sltFeatureAnnouncementEnabled;
+	}
+
+	public String getSltFeatureAnnouncementText() {
+		return sltFeatureAnnouncementText;
+	}
+
+	public void setSltFeatureAnnouncementText(String sltFeatureAnnouncementText) {
+		this.sltFeatureAnnouncementText = sltFeatureAnnouncementText;
 	}
 
 }

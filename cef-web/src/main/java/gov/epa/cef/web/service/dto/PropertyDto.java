@@ -29,6 +29,7 @@ public class PropertyDto implements IPropertyKey, Serializable {
     private String value;
     private String description;
     private String datatype;
+    private Boolean required;
 
 
     public PropertyDto() {};
@@ -79,6 +80,14 @@ public class PropertyDto implements IPropertyKey, Serializable {
 
 	public void setDatatype(String datatype) {
 		this.datatype = datatype;
+	}
+	
+	public Boolean getRequired() {
+		return required;
+	}
+
+	public void setRequired(Boolean required) {
+		this.required = required;
 	}
 
 	public PropertyDto withName(final String name) {

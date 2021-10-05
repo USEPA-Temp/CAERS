@@ -120,6 +120,14 @@ tr.striped {
     padding: 20px;
 }
 
+.slt-announcement-header {
+    color: $white;
+    text-align: center;
+    vertical-align: middle;
+    background: #9a0000;
+    padding: 2% 25% 2% 25%;
+}
+
 .pagination-bottom-bar {
     display: flex;
     flex-direction: row;

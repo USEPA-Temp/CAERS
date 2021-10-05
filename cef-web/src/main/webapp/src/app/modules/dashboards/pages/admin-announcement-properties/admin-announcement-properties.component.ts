@@ -16,9 +16,13 @@
 */
 import { Component, OnInit } from '@angular/core';
 import { AppProperty } from 'src/app/shared/models/app-property';
-import { Validators, FormControl, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AdminPropertyService } from 'src/app/core/services/admin-property.service';
+import { SharedService } from 'src/app/core/services/shared.service';
+
+const Admin_AnnouncementText = 'feature.announcement.text';
+const Admin_AnnouncementEnabled = 'feature.announcement.enabled';
 
 @Component({
   selector: 'app-admin-announcement-properties',
@@ -37,12 +41,13 @@ export class AdminAnnouncementPropertiesComponent implements OnInit {
 
   constructor(
       private propertyService: AdminPropertyService,
+	  private sharedService: SharedService,
       private fb: FormBuilder,
       private toastr: ToastrService) { }
 
   ngOnInit() {
 
-    this.propertyService.retrieve('feature.announcement.enabled')
+    this.propertyService.retrieve(Admin_AnnouncementEnabled)
     .subscribe(result => {
 
       this.propertyForm.get('enabled').reset(result.value === 'true');
@@ -50,7 +55,7 @@ export class AdminAnnouncementPropertiesComponent implements OnInit {
 
     });
 
-    this.propertyService.retrieve('feature.announcement.text')
+    this.propertyService.retrieve(Admin_AnnouncementText)
     .subscribe(result => {
 
       this.propertyForm.get('text').reset(result.value);
@@ -66,15 +71,18 @@ export class AdminAnnouncementPropertiesComponent implements OnInit {
 
       const updatedProperties: AppProperty[] = [];
       updatedProperties.push(Object.assign(new AppProperty(),
-          {name: 'feature.announcement.enabled', value: this.propertyForm.value.enabled}));
+          {name: Admin_AnnouncementEnabled, value: this.propertyForm.value.enabled}));
       updatedProperties.push(Object.assign(new AppProperty(),
-          {name: 'feature.announcement.text', value: this.propertyForm.value.text}));
+          {name: Admin_AnnouncementText, value: this.propertyForm.value.text}));
 
       this.propertyService.bulkUpdate(updatedProperties)
       .subscribe(result => {
-        console.log(result);
         this.toastr.success('', 'Properties updated successfully. Changes will appear after a refresh.');
-        location.reload();
+        result.forEach(prop => {
+			if (prop.name === Admin_AnnouncementText) {
+				this.sharedService.emitAdminSltBannerChange(prop.value);
+			}
+		});
       });
 
     }
