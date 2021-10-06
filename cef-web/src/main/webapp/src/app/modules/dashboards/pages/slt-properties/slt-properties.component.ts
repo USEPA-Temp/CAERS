@@ -23,9 +23,7 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { User } from 'src/app/shared/models/user';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
-import { SharedService } from 'src/app/core/services/shared.service';
 
-const SLT_AnnouncementText = 'slt-feature.announcement.text';
 const BooleanDataType = 'boolean';
 const BooleanTrue = 'true';
 
@@ -49,8 +47,7 @@ export class SltPropertiesComponent implements OnInit {
 	  private lookupService: LookupService,
       private propertyService: SltPropertyService,
       private fb: FormBuilder,
-      private toastr: ToastrService,
-      private sharedService: SharedService) { }
+      private toastr: ToastrService) { }
 
   ngOnInit() {
     this.userContextService.getUser()
@@ -136,11 +133,6 @@ export class SltPropertiesComponent implements OnInit {
       this.propertyService.bulkUpdate(updatedProperties, this.slt)
       .subscribe(result => {
 		this.toastr.success('', 'Properties updated successfully.');
-		result.forEach(prop => {
-			if (prop.name === SLT_AnnouncementText) {
-				this.sharedService.emitSltBannerChange(prop.value);
-			}
-		});
       });
 
     }

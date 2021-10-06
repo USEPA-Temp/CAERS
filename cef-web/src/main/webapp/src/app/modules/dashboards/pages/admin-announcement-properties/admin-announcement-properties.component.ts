@@ -80,7 +80,7 @@ export class AdminAnnouncementPropertiesComponent implements OnInit {
         this.toastr.success('', 'Properties updated successfully. Changes will appear after a refresh.');
         result.forEach(prop => {
 			if (prop.name === Admin_AnnouncementText) {
-				this.sharedService.emitAdminSltBannerChange(prop.value);
+				this.sharedService.emitAdminBannerChange(prop.value);
 			}
 		});
       });

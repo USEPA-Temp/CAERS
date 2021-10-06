@@ -169,7 +169,7 @@ export class AdminPropertiesComponent implements OnInit {
         this.setMigrationFeature();
 		result.forEach(prop => {
 			if (prop.name === Admin_AnnouncementText) {
-				this.sharedService.emitAdminSltBannerChange(prop.value);
+				this.sharedService.emitAdminBannerChange(prop.value);
 			}
 		});
       });
