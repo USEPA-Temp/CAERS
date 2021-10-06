@@ -73,7 +73,7 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
 
   deleteReport(eisProgramId: string, reportId: number, reportYear: number) {
     this.emissionsReportService.delete(reportId).subscribe(() => {
-      this.toastr.success('', 'The ' + reportYear + ' Emissions Report from this Facility (EIS Id ' + eisProgramId + ') has been deleted successfully.');
+      this.toastr.success('', `The ${reportYear} Emissions Report from this Facility (EIS Id ${eisProgramId}) has been deleted successfully.`);
 	  this.refreshSubmissions.emit();
     });
   }

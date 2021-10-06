@@ -194,7 +194,9 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             .subscribe((submissions) => {
                 this.sortSubmissions(submissions);
             });
-        }
+        } else {
+            this.sortSubmissions([]);
+		}
     }
 
     sortSubmissions(submissions: SubmissionUnderReview[]) {
@@ -243,10 +245,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
               this.filterAndCountSubmissions(submissions);
           });
 	    } else {
-		  this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, null)
-          .subscribe(submissions => {
-              this.filterAndCountSubmissions(submissions);
-          });
+          this.filterAndCountSubmissions([]);
 		}
     }
 
