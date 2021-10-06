@@ -194,7 +194,15 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             .subscribe((submissions) => {
                 this.sortSubmissions(submissions);
             });
-        }
+        } else {
+			this.submissionsReviewDashboardService.retrieveSubmissions(
+                this.selectedYear,
+                this.selectedReportStatus,
+                null)
+            .subscribe((submissions) => {
+                this.sortSubmissions(submissions);
+            });
+		}
     }
 
     sortSubmissions(submissions: SubmissionUnderReview[]) {
@@ -237,10 +245,17 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.selectedYear = this.selectedAgency.years[0];
         }
         this.refreshFacilityReports();
-        this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
-        .subscribe(submissions => {
-            this.filterAndCountSubmissions(submissions);
-        });
+		if (this.selectedAgency.programSystemCode) {
+          this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
+          .subscribe(submissions => {
+              this.filterAndCountSubmissions(submissions);
+          });
+	    } else {
+		  this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, null)
+          .subscribe(submissions => {
+              this.filterAndCountSubmissions(submissions);
+          });
+		}
     }
 
     filterAndCountSubmissions(submissions){
@@ -270,5 +285,11 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 	  this.onStatusSelected();
     }
 
-
+	onSubmissionDeleted() {
+		this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
+            .subscribe(submissions => {
+				this.refreshFacilityReports();
+                this.filterAndCountSubmissions(submissions);
+            });
+	}
 }

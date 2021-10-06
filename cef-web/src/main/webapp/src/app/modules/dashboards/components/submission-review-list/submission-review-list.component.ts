@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { SubmissionUnderReview } from 'src/app/shared/models/submission-under-review';
@@ -22,6 +22,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReportSummaryModalComponent } from 'src/app/modules/dashboards/components/report-summary-modal/report-summary-modal.component';
 import { ReportService } from 'src/app/core/services/report.service';
 import { ReportDownloadService } from 'src/app/core/services/report-download.service';
+import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -34,11 +37,15 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
   @Input() tableData: SubmissionUnderReview[];
   @Input() reviewer: boolean;
   @Input() reportStatus: string;
+  @Input() admin: boolean;
+  @Output() refreshSubmissions = new EventEmitter();
 
   constructor(public userContext: UserContextService,
               private modalService: NgbModal,
               private reportService: ReportService,
-              private reportDownloadService: ReportDownloadService) {
+              private reportDownloadService: ReportDownloadService,
+			  private emissionsReportService: EmissionsReportingService,
+      		  private toastr: ToastrService) {
     super();
   }
 
@@ -61,6 +68,24 @@ export class SubmissionReviewListComponent extends BaseSortableTable implements 
         this.reportDownloadService.downloadFile(reportDownloadDto, altFacilityId +'_'+
         year +'_' + 'Emissions_Report' + '_Submission_In_Progress');
       }
+    });
+  }
+
+  deleteReport(eisProgramId: string, reportId: number, reportYear: number) {
+    this.emissionsReportService.delete(reportId).subscribe(() => {
+      this.toastr.success('', 'The ' + reportYear + ' Emissions Report from this Facility (EIS Id ' + eisProgramId + ') has been deleted successfully.');
+	  this.refreshSubmissions.emit();
+    });
+  }
+
+  openDeleteModal(eisProgramId: string, reportId: number, reportYear: number) {
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
+    const modalMessage = `Are you sure you want to delete the ${reportYear} Emissions Report from this Facility 
+      					  (EIS Id ${eisProgramId})? This will also remove any Facility Information, Emission Units, 
+						  Control Devices, and Release Point associated with this report.`;
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.continue.subscribe(() => {
+      this.deleteReport(eisProgramId, reportId, reportYear);
     });
   }
 }

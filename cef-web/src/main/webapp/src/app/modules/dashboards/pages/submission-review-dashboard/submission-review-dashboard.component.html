@@ -73,7 +73,7 @@
                </select>
             </div>
 
-            <app-submission-review-list [reviewer]="user.isReviewer()"
+            <app-submission-review-list [reviewer]="user.isReviewer()" [admin]="user.isAdmin()" (refreshSubmissions)="onSubmissionDeleted()"
                                         [tableData]="submissions" [reportStatus]="statusSelect.value"></app-submission-review-list>
 
             <div class="validation-message p-3" *ngIf="invalidSelection">
