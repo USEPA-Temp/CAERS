@@ -194,15 +194,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             .subscribe((submissions) => {
                 this.sortSubmissions(submissions);
             });
-        } else {
-			this.submissionsReviewDashboardService.retrieveSubmissions(
-                this.selectedYear,
-                this.selectedReportStatus,
-                null)
-            .subscribe((submissions) => {
-                this.sortSubmissions(submissions);
-            });
-		}
+        }
     }
 
     sortSubmissions(submissions: SubmissionUnderReview[]) {
