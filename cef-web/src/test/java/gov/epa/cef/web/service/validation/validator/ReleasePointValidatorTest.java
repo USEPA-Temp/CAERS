@@ -629,7 +629,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseFugitiveReleasePoint();
 
         cefContext = createContext();
-        testData.setFugitiveLength((long) 0);
+        testData.setFugitiveLength(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -638,7 +638,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setFugitiveLength((long) 20000);
+        testData.setFugitiveLength(BigDecimal.valueOf(20000));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -647,13 +647,13 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("TS");
         testData.setOperatingStatusCode(opStatCode);
-        testData.setFugitiveLength((long) 0);
+        testData.setFugitiveLength(BigDecimal.ZERO);
 
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
 
-        testData.setFugitiveLength((long) 20000);
+        testData.setFugitiveLength(BigDecimal.valueOf(20000));
 
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
@@ -667,7 +667,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         ReleasePoint testData = createBaseFugitiveReleasePoint();
 
         cefContext = createContext();
-        testData.setFugitiveWidth((long) 0);
+        testData.setFugitiveWidth(BigDecimal.ZERO);
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -676,7 +676,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
 
         cefContext = createContext();
-        testData.setFugitiveWidth((long) 20000);
+        testData.setFugitiveWidth(BigDecimal.valueOf(20000));
 
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
@@ -686,13 +686,13 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("PS");
         testData.setOperatingStatusCode(opStatCode);
-        testData.setFugitiveWidth((long) 0);
+        testData.setFugitiveWidth(BigDecimal.ZERO);
 
         cefContext = createContext();
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
-        testData.setFugitiveWidth((long) 20000);
+        testData.setFugitiveWidth(BigDecimal.valueOf(20000));
 
         cefContext = createContext();
         assertFalse(this.validator.validate(cefContext, testData));
@@ -1506,8 +1506,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	result.setFugitiveWidthUomCode(distUom);
     	result.setFugitiveHeightUomCode(distUom);
     	result.setFenceLineDistance((long) 1);
-    	result.setFugitiveLength((long) 1);
-    	result.setFugitiveWidth((long) 1);
+    	result.setFugitiveLength(BigDecimal.ONE);
+    	result.setFugitiveWidth(BigDecimal.ONE);
     	result.setFugitiveHeight((long) 1);
     	result.setLatitude(BigDecimal.valueOf(33.949000));
     	result.setLongitude(BigDecimal.valueOf(-84.388000));

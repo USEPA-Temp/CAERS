@@ -72,12 +72,19 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Size(max = 20, message = "Fugitive Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fugitiveHeightUomCode;
 
-    @Pattern(regexp = "^\\d{0,6}$",
-        message = "Fugitive Length is not in expected numeric format: {6} digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^\\d{0,5}(\\.\\d{1,3})?$",
+        message = "Fugitive Length is not in expected numeric format: '{5}.{3}' digits; found '${validatedValue}'.")
     private String fugitiveLength;
-
+    
     @Size(max = 20, message = "Fugitive Length Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'; found '${validatedValue}'.")
     private String fugitiveLengthUomCode;
+    
+    @Pattern(regexp = "^\\d{0,5}(\\.\\d{1,3})?$",
+        message = "Fugitive Width is not in expected numeric format: '{5}.{3}' digits; found '${validatedValue}'.")
+    private String fugitiveWidth;
+
+    @Size(max = 20, message = "Fugitive Width Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
+    private String fugitiveWidthUomCode;
 
     @Pattern(regexp = LatitudePattern,
         message = "Fugitive Line1 Latitude is not in expected numeric format: '+/-{2}.{6}' digits; found '${validatedValue}'.")
@@ -94,13 +101,6 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @Pattern(regexp = LongitudePattern,
         message = "Fugitive Line2 Longitude is not in expected numeric format: '+/-{3}.{6}' digits; found '${validatedValue}'.")
     private String fugitiveLine2Longitude;
-
-    @Pattern(regexp = "^\\d{0,6}$",
-        message = "Fugitive Width is not in expected numeric format: {6} digits; found '${validatedValue}'.")
-    private String fugitiveWidth;
-
-    @Size(max = 20, message = "Fugitive Width Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
-    private String fugitiveWidthUomCode;
 
     @NotNull(message = "Release Point ID is required.")
     private Long id;
@@ -122,28 +122,28 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     private String releasePointIdentifier;
 
     @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
-        message = "Stack Diameter is not in expected numeric format: '{3}.{3}' digits.")
+        message = "Stack Diameter is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
     private String stackDiameter;
 
     @Size(max = 20, message = "Stack Diameter Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackDiameterUomCode;
 
-    @Pattern(regexp = "^\\d{0,5}(\\.\\d{1,3})?$",
-        message = "Stack Height is not in expected numeric format: '{5}.{3}' digits.")
+    @Pattern(regexp = "^\\d{0,4}(\\.\\d)?$",
+        message = "Stack Height is not in expected numeric format: '{4}.{1}' digits; found '${validatedValue}'.")
     private String stackHeight;
 
     @Size(max = 20, message = "Stack Height Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackHeightUomCode;
 
-    @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
-        message = "Stack Width is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
+        message = "Stack Width is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
     private String stackWidth;
 
     @Size(max = 20, message = "Stack Width Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")
     private String stackWidthUomCode;
 
-    @Pattern(regexp = "^\\d{0,3}(\\.\\d)?$",
-        message = "Stack Length is not in expected numeric format: '{3}.{1}' digits; found '${validatedValue}'.")
+    @Pattern(regexp = "^\\d{0,3}(\\.\\d{1,3})?$",
+        message = "Stack Length is not in expected numeric format: '{3}.{3}' digits; found '${validatedValue}'.")
     private String stackLength;
 
     @Size(max = 20, message = "Stack Length Unit of Measure Code can not exceed {max} chars; found '${validatedValue}'.")

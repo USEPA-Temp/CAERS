@@ -118,7 +118,6 @@ import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
-import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 import gov.epa.cef.web.util.SLTConfigHelper;
@@ -205,9 +204,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     @Autowired
     private UnitTypeCodeRepository unitTypeRepo;
     
-    @Autowired
-    private FacilityNAICSMapper facilityNaicsMapper;
-
     @Autowired
     private BulkUploadMapper uploadMapper;
 
@@ -1015,8 +1011,8 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         releasePoint.setLongitude(toBigDecimal(bulkReleasePoint.getLongitude()));
         releasePoint.setComments(bulkReleasePoint.getComments());
         releasePoint.setFugitiveHeight(toLong(bulkReleasePoint.getFugitiveHeight()));
-        releasePoint.setFugitiveWidth(toLong(bulkReleasePoint.getFugitiveWidth()));
-        releasePoint.setFugitiveLength(toLong(bulkReleasePoint.getFugitiveLength()));
+        releasePoint.setFugitiveWidth(toBigDecimal(bulkReleasePoint.getFugitiveWidth()));
+        releasePoint.setFugitiveLength(toBigDecimal(bulkReleasePoint.getFugitiveLength()));
         releasePoint.setFugitiveAngle(toLong(bulkReleasePoint.getFugitiveAngle()));
         releasePoint.setFenceLineDistance(toLong(bulkReleasePoint.getFenceLineDistance()));
 
