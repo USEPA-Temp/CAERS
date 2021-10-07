@@ -35,7 +35,7 @@ export class EditControlPathInfoPanelComponent implements OnInit {
     percentControl: ['', [
       Validators.max(100.0),
       Validators.min(1),
-      Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
+      Validators.pattern('^[0-9]{1,4}([\.][0-9]{1})?$')
     ]],
     description: ['', [Validators.required, Validators.maxLength(200)]],
     }, {validators: [

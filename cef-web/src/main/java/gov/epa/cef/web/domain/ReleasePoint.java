@@ -82,14 +82,14 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "stack_diameter_uom_code", nullable = false)
     private UnitMeasureCode stackDiameterUomCode;
 
-    @Column(name = "stack_width", precision = 4, scale = 1)
+    @Column(name = "stack_width", precision = 6, scale = 3)
     private BigDecimal stackWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_width_uom_code", nullable = false)
     private UnitMeasureCode stackWidthUomCode;
 
-    @Column(name = "stack_length", precision = 4, scale = 1)
+    @Column(name = "stack_length", precision = 6, scale = 3)
     private BigDecimal stackLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -141,15 +141,15 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "fugitive_height_uom_code", nullable = false)
     private UnitMeasureCode fugitiveHeightUomCode;
 
-    @Column(name = "fugitive_width", precision = 6, scale = 0)
-    private Long fugitiveWidth;
+    @Column(name = "fugitive_width", precision = 8, scale = 3)
+    private BigDecimal fugitiveWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_width_uom_code", nullable = false)
     private UnitMeasureCode fugitiveWidthUomCode;
 
-    @Column(name = "fugitive_length", precision = 6, scale = 0)
-    private Long fugitiveLength;
+    @Column(name = "fugitive_length", precision = 8, scale = 3)
+    private BigDecimal fugitiveLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_length_uom_code", nullable = false)
@@ -457,11 +457,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.fugitiveHeightUomCode = fugitiveHeightUomCode;
     }
 
-    public Long getFugitiveWidth() {
+    public BigDecimal getFugitiveWidth() {
         return fugitiveWidth;
     }
 
-    public void setFugitiveWidth(Long fugitiveWidth) {
+    public void setFugitiveWidth(BigDecimal fugitiveWidth) {
         this.fugitiveWidth = fugitiveWidth;
     }
 
@@ -473,11 +473,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.fugitiveWidthUomCode = fugitiveWidthUomCode;
     }
 
-    public Long getFugitiveLength() {
+    public BigDecimal getFugitiveLength() {
         return fugitiveLength;
     }
 
-    public void setFugitiveLength(Long fugitiveLength) {
+    public void setFugitiveLength(BigDecimal fugitiveLength) {
         this.fugitiveLength = fugitiveLength;
     }
 
