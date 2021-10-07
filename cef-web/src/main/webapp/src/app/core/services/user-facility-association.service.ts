@@ -59,6 +59,11 @@ export class UserFacilityAssociationService {
         return this.http.get<UserFacilityAssociation[]>(url);
     }
 
+	getMyProgramSystemCodeAssociations(): Observable<string[]> {
+        const url = `${this.baseUrl}/myPrograms`;
+        return this.http.get<string[]>(url);
+    }
+
     getAssociationDetailsForFacility(facilityId: number): Observable<UserFacilityAssociation[]> {
         const url = `${this.baseUrl}/facility/${facilityId}/details`;
         return this.http.get<UserFacilityAssociation[]>(url);

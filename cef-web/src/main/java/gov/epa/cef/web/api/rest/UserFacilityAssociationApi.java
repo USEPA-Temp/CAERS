@@ -141,6 +141,15 @@ public class UserFacilityAssociationApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    @GetMapping(value = "/myPrograms")
+    public ResponseEntity<List<String>> retrieveProgramSystemCodeAssociationsForCurrentUser() {
+
+        List<String> result =
+            this.ufaService.findProgramSystemCodesByUserRoleId(this.securityService.getCurrentApplicationUser().getUserRoleId());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/migrate")
     @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN})

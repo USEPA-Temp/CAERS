@@ -56,7 +56,10 @@
             <button class="btn btn-primary btn-sm mr-1" 
                   [routerLink]="['/facility', submission.masterFacilityId, 'report', submission.emissionsReportId, 'summary']"
                   [attr.aria-label]="'view' + submission?.year + submission?.facilityName + 'report'">View Report</button>
-            <button class="btn btn-primary btn-sm mt-1" 
+            <button class="btn btn-primary btn-sm mr-1" *ngIf="admin"
+	              (click)="openDeleteModal(submission.eisProgramId, submission.emissionsReportId, submission.year)"
+	              [attr.aria-label]="'delete' + submission?.year + submission?.facilityName + 'report'">Delete</button>
+            <button class="btn btn-primary btn-sm mt-1"
                   (click)="downloadReport(submission.emissionsReportId, submission.facilitySiteId, submission.year, submission.altFacilityId, submission.reportStatus)"
                   [attr.aria-label]="'download' + submission?.year + submission?.facilityName + 'report'">Download Process Emissions Summary</button>
           </td>
