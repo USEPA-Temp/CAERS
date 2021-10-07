@@ -82,7 +82,9 @@ export class NotificationListComponent implements OnInit {
 		            if (result) {
 		                this.propertyService.retrieveSltAnnouncementText(code)
 		                .subscribe(text => {
-							this.announcementMap.set(code, text.value);
+							if (text.value) {
+								this.announcementMap.set(code, text.value);
+							}
 		                });
 		            }
 	
