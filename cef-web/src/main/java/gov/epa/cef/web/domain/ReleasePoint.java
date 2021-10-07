@@ -82,14 +82,14 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "stack_diameter_uom_code", nullable = false)
     private UnitMeasureCode stackDiameterUomCode;
 
-    @Column(name = "stack_width", precision = 4, scale = 3)
+    @Column(name = "stack_width", precision = 6, scale = 3)
     private BigDecimal stackWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_width_uom_code", nullable = false)
     private UnitMeasureCode stackWidthUomCode;
 
-    @Column(name = "stack_length", precision = 4, scale = 3)
+    @Column(name = "stack_length", precision = 6, scale = 3)
     private BigDecimal stackLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -141,14 +141,14 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "fugitive_height_uom_code", nullable = false)
     private UnitMeasureCode fugitiveHeightUomCode;
 
-    @Column(name = "fugitive_width", precision = 6, scale = 3)
+    @Column(name = "fugitive_width", precision = 8, scale = 3)
     private BigDecimal fugitiveWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_width_uom_code", nullable = false)
     private UnitMeasureCode fugitiveWidthUomCode;
 
-    @Column(name = "fugitive_length", precision = 6, scale = 3)
+    @Column(name = "fugitive_length", precision = 8, scale = 3)
     private BigDecimal fugitiveLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
