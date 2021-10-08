@@ -124,7 +124,8 @@ export class SltPropertiesComponent implements OnInit {
 
       const updatedProperties: AppProperty[] = [];
       this.properties.forEach(prop => {
-        if (prop.value !== this.propertyForm.get([prop.name]).value) {
+        if (prop.value !== this.propertyForm.get([prop.name]).value
+			|| !prop.value) {
           prop.value = this.propertyForm.get([prop.name]).value;
           updatedProperties.push(prop);
         }

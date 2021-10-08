@@ -43,12 +43,12 @@ export class HeaderComponent implements OnInit {
             if (this.adminAnnouncementEnabled) {
                 this.propertyService.retrieveAdminAnnouncementText()
                 .subscribe(text => {
-                    this.adminAnnouncementText = text.value;
+                    this.adminAnnouncementText = text.value.trim().length > 0 ? text.value : null;
                 });
 
 				this.sharedService.adminBannerChangeEmitted$.subscribe(adminBanner => {
 					if (adminBanner) {
-						this.adminAnnouncementText = adminBanner;
+						this.adminAnnouncementText = adminBanner.trim().length > 0 ? adminBanner : null;
 					}
 				});
             }
