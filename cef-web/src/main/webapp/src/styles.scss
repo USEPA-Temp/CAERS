@@ -139,5 +139,11 @@ tr.striped {
 	background-color: aqua;
 }
 
+.required-asterisk {
+    color: #d00;
+    font-weight: normal;
+    font-size: 20px;
+}
+
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
