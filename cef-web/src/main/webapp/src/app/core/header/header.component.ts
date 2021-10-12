@@ -16,8 +16,8 @@
 */
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { SharedService } from 'src/app/core/services/shared.service';
 
 @Component( {
     selector: 'app-header',
@@ -26,21 +26,31 @@ import { ConfigPropertyService } from 'src/app/core/services/config-property.ser
 } )
 export class HeaderComponent implements OnInit {
 
-    announcementText: string;
-    announcementEnabled = false;
+    adminAnnouncementText: string;
+    adminAnnouncementEnabled = false;
 
-    constructor(public userContext: UserContextService, private propertyService: ConfigPropertyService) { }
+    constructor(
+		public userContext: UserContextService,
+		private sharedService: SharedService,
+		private propertyService: ConfigPropertyService) { }
 
     ngOnInit() {
-        this.propertyService.retrieveAnnouncementEnabled()
+		
+        this.propertyService.retrieveAdminAnnouncementEnabled()
         .subscribe(result => {
-            this.announcementEnabled = result;
+            this.adminAnnouncementEnabled = result;
 
-            if (this.announcementEnabled) {
-                this.propertyService.retrieveAnnouncementText()
+            if (this.adminAnnouncementEnabled) {
+                this.propertyService.retrieveAdminAnnouncementText()
                 .subscribe(text => {
-                    this.announcementText = text.value;
+                    this.adminAnnouncementText = text.value.trim().length > 0 ? text.value : null;
                 });
+
+				this.sharedService.adminBannerChangeEmitted$.subscribe(adminBanner => {
+					if (adminBanner) {
+						this.adminAnnouncementText = adminBanner.trim().length > 0 ? adminBanner : null;
+					}
+				});
             }
         });
 

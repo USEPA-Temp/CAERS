@@ -24,7 +24,6 @@ import { SubmissionReviewModalComponent } from 'src/app/modules/dashboards/compo
 import {SharedService} from 'src/app/core/services/shared.service';
 import { FileAttachmentModalComponent } from 'src/app/modules/shared/components/file-attachment-modal/file-attachment-modal.component';
 import { ReportStatus } from 'src/app/shared/enums/report-status';
-import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { EmissionsReportAgencyData } from 'src/app/shared/models/emissions-report-agency-data';
 import { User } from 'src/app/shared/models/user';
@@ -85,7 +84,7 @@ export class SubmissionReviewDashboardComponent implements OnInit {
                 if (this.user.isReviewer()) {
                     const userAgency = this.agencyDataValues.find(item => item.programSystemCode.code === this.user.programSystemCode);
                     this.selectedAgency = userAgency;
-                    this.selectedYear = this.selectedAgency.years[0];
+                    this.selectedYear = this.selectedAgency?.years[0];
                     this.refreshFacilityReports();
                 } else if (this.user.isAdmin()) {
 
@@ -195,7 +194,9 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             .subscribe((submissions) => {
                 this.sortSubmissions(submissions);
             });
-        }
+        } else {
+            this.sortSubmissions([]);
+		}
     }
 
     sortSubmissions(submissions: SubmissionUnderReview[]) {
@@ -238,10 +239,14 @@ export class SubmissionReviewDashboardComponent implements OnInit {
             this.selectedYear = this.selectedAgency.years[0];
         }
         this.refreshFacilityReports();
-        this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
-        .subscribe(submissions => {
-            this.filterAndCountSubmissions(submissions);
-        });
+		if (this.selectedAgency.programSystemCode) {
+          this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
+          .subscribe(submissions => {
+              this.filterAndCountSubmissions(submissions);
+          });
+	    } else {
+          this.filterAndCountSubmissions([]);
+		}
     }
 
     filterAndCountSubmissions(submissions){
@@ -271,5 +276,11 @@ export class SubmissionReviewDashboardComponent implements OnInit {
 	  this.onStatusSelected();
     }
 
-
+	onSubmissionDeleted() {
+		this.submissionsReviewDashboardService.retrieveSubmissions(this.currentYear, null, this.selectedAgency.programSystemCode.code)
+            .subscribe(submissions => {
+				this.refreshFacilityReports();
+                this.filterAndCountSubmissions(submissions);
+            });
+	}
 }

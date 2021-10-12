@@ -41,7 +41,8 @@
         <option value="PRIMARY">Primary</option>
         <option value="SECONDARY">Secondary</option>
         <option value="TERTIARY">Tertiary</option>
-      </select> 
+      </select>
+      <span class="validation-message" *ngIf="existingPrimaryCode && selectedNaicsCodeType === naicsCodeType.PRIMARY" >Each facility must have only one NAICS code assigned as primary.</span>
   </div>
 
   <div class="modal-footer">

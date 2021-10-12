@@ -317,7 +317,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
                 // Fugitive Length Range
                 if (releasePoint.getFugitiveLength() != null
-                    && (releasePoint.getFugitiveLength() < 1 || releasePoint.getFugitiveLength() > 10000)) {
+                    && (releasePoint.getFugitiveLength().compareTo(BigDecimal.ONE) == -1 || releasePoint.getFugitiveLength().compareTo(BigDecimal.valueOf(10000)) == 1)) {
 
                     result = false;
                     context.addFederalError(
@@ -328,7 +328,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
                 // Fugitive Width Range
                 if (releasePoint.getFugitiveWidth() != null
-                    && (releasePoint.getFugitiveWidth() < 1 || releasePoint.getFugitiveWidth() > 10000)) {
+                    && (releasePoint.getFugitiveWidth().compareTo(BigDecimal.ONE) == -1 || releasePoint.getFugitiveWidth().compareTo(BigDecimal.valueOf(10000)) == 1)) {
 
                     result = false;
                     context.addFederalError(
@@ -349,11 +349,11 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                 }
 
                 // Fugitive Dimensions must be in FT
-                if (!validateUomFT_long(validatorContext, releasePoint, releasePoint.getFugitiveLength(), releasePoint.getFugitiveLengthUomCode(), "Fugitive Length")) {
+                if (!validateUomFT(validatorContext, releasePoint, releasePoint.getFugitiveLength(), releasePoint.getFugitiveLengthUomCode(), "Fugitive Length")) {
                     result = false;
                 }
 
-                if (!validateUomFT_long(validatorContext, releasePoint, releasePoint.getFugitiveWidth(), releasePoint.getFugitiveWidthUomCode(), "Fugitive Width")) {
+                if (!validateUomFT(validatorContext, releasePoint, releasePoint.getFugitiveWidth(), releasePoint.getFugitiveWidthUomCode(), "Fugitive Width")) {
                     result = false;
                 }
 

@@ -38,12 +38,12 @@ export class ConfigPropertyService {
     return this.http.get<boolean>(url);
   }
 
-  retrieveAnnouncementEnabled(): Observable<boolean> {
+  retrieveAdminAnnouncementEnabled(): Observable<boolean> {
     const url = `${this.baseUrl}/announcement/enabled`;
     return this.http.get<boolean>(url);
   }
 
-  retrieveAnnouncementText(): Observable<AppProperty> {
+  retrieveAdminAnnouncementText(): Observable<AppProperty> {
     const url = `${this.baseUrl}/announcement/text`;
     return this.http.get<AppProperty>(url);
   }
@@ -58,9 +58,20 @@ export class ConfigPropertyService {
     return this.http.get<boolean>(url);
   }
 
+
   retrieveFacilityNaicsEntryEnabled(slt: string): Observable<boolean> {
     const url = `${this.baseUrl}/facilityNaics/${slt}/enabled`;
     return this.http.get<boolean>(url);
+  }
+
+  retrieveSltAnnouncementEnabled(slt: string): Observable<boolean> {
+    const url = `${this.baseUrl}/announcement/${slt}/enabled`;
+    return this.http.get<boolean>(url);
+  }
+
+  retrieveSltAnnouncementText(slt: string): Observable<AppProperty> {
+    const url = `${this.baseUrl}/announcement/${slt}/text`;
+    return this.http.get<AppProperty>(url);
   }
 
 }

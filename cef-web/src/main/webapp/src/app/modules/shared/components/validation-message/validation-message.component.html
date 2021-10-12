@@ -42,8 +42,8 @@
       Value can only be alphabetical characters.
     </div>
 
-    <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{1,3}([\.][0-9]{1})?$'">
-      Maximum precision of one decimal place.
+    <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{1,4}([\.][0-9]{1})?$'">
+      Maximum precision of 1 decimal place.
     </div>
 
     <div *ngIf="control.errors?.pattern.requiredPattern === '^[0-9]{1,3}([\.][0-9]{1,2})?$'">

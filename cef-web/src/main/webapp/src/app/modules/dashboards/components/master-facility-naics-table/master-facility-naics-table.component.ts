@@ -27,6 +27,8 @@ import { User } from 'src/app/shared/models/user';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 
+const CurrentYear = new Date().getFullYear() - 1;
+
 @Component({
   selector: 'app-master-facility-naics-table',
   templateUrl: './master-facility-naics-table.component.html',
@@ -92,7 +94,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
     const modalRef = this.modalService.open(MasterFacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.masterFacilityId = this.facility.id;
     modalRef.componentInstance.facilityNaics = this.tableData;
-    modalRef.componentInstance.year = this.facility.statusYear;
+    modalRef.componentInstance.year = this.facility.statusYear ? this.facility.statusYear : CurrentYear;
     modalRef.componentInstance.selectedNaicsCode = selectedCode;
     modalRef.componentInstance.selectedNaicsCodeType = selectedCode.naicsCodeType;
     modalRef.componentInstance.edit = true;
@@ -114,7 +116,7 @@ export class MasterFacilityNaicsTableComponent extends BaseSortableTable impleme
     const modalRef = this.modalService.open(MasterFacilityNaicsModalComponent, { size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.masterFacilityId = this.facility.id;
     modalRef.componentInstance.facilityNaics = this.tableData;
-    modalRef.componentInstance.year = this.facility.statusYear;
+    modalRef.componentInstance.year = this.facility.statusYear ? this.facility.statusYear : CurrentYear;
 
     modalRef.result.then(() => {
       this.mfrService.getRecord(this.facility.id)

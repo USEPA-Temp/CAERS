@@ -20,4 +20,5 @@ export class AppProperty {
   value: string;
   description: string;
   datatype: string;
+  required: boolean;
 }

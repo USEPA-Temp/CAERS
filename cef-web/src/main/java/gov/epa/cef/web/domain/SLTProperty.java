@@ -50,6 +50,9 @@ public class SLTProperty implements Serializable {
     @Column(name="datatype", nullable = false, length = 20)
     protected String datatype;
     
+    @Column(name="required", nullable = false)
+    protected Boolean required;
+    
     public String getName() {
         return name;
     }
@@ -80,5 +83,13 @@ public class SLTProperty implements Serializable {
 
 	public void setDatatype(String datatype) {
 		this.datatype = datatype;
+	}
+
+	public Boolean getRequired() {
+		return required;
+	}
+
+	public void setRequired(Boolean required) {
+		this.required = required;
 	}
 }

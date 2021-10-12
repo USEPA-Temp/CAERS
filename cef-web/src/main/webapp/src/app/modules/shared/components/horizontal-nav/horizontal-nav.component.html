@@ -43,9 +43,20 @@
               <!-- <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Facility Notifications</a> -->
             </div>
           </li>
-          <li class="nav-item" [routerLinkActive]="'active'">
-            <a class="nav-link" routerLink="admin/properties">Application Properties</a>
+
+          <li class="nav-item" ngbDropdown>
+            <a class="nav-link" ngbDropdownToggle id="appPropertiesDropdown" role="button">
+              Application Properties
+            </a>
+            <div ngbDropdownMenu aria-labelledby="appPropertiesDropdown">
+              <a ngbDropdownItem routerLink="admin/properties" [routerLinkActive]="'active'">Admin Properties</a>
+              <a ngbDropdownItem routerLink="/reviewer/properties" [routerLinkActive]="'active'">SLT Properties</a>
+            </div>
           </li>
+
+
+
+
           <li class="nav-item" [routerLinkActive]="'active'">
             <a class="nav-link" routerLink="admin/facility">Facility Information</a>
           </li>
@@ -111,7 +122,7 @@
                  </div>
               </li>
               <li class="nav-item" [routerLinkActive]="'active'">
-                 <a class="nav-link" routerLink="/reviewer/properties">Agency Administration</a>
+                 <a class="nav-link" routerLink="/reviewer/properties">Application Properties</a>
               </li>
            </ul>
         </div>
