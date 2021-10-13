@@ -20,6 +20,7 @@
             <fa-icon class="mt-2" title="An identifier for the release point, given by the facility."
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="releasePointIdentifier" class="ml-1 col-form-label"><strong>Release Point ID:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('releasePointIdentifier')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input [readonly]="releasePoint" type="text" class="form-control" id="releasePointIdentifier"
@@ -33,6 +34,7 @@
             <fa-icon class="mt-2" title="Code that identifies the operating status of the control measure."
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="releaseStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('operatingStatusCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="releaseStatusCodeSelect"
@@ -57,6 +59,7 @@
             <fa-icon class="mt-2" title="Text description of release point."
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="description" class="ml-1 col-form-label"><strong>Release Point Description:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('description')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <textarea rows="1" class="form-control" id="description" formControlName="description"
@@ -68,6 +71,7 @@
                      title="The year the current operating status came into effect. Required if Control Operating Status Code is anything other than 'OP'- operating. Must be between 1900 - 2050."
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="statusYear" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('statusYear')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="statusYear" formControlName="statusYear" maxlength="4">
@@ -80,6 +84,7 @@
             <fa-icon class="mt-2" title="Code that identifies the type of release point."
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="releaseTypeCodeSelect" class="ml-1 col-form-label"><strong>Release Point Type:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('typeCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <select type="text" class="form-control" id="releaseTypeCodeSelect" formControlName="typeCode"

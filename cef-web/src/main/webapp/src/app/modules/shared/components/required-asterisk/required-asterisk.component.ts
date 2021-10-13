@@ -15,7 +15,7 @@
  * not, see <https://www.gnu.org/licenses/>.
 */
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-required-asterisk',
@@ -24,10 +24,18 @@ import { FormControl } from '@angular/forms';
 })
 export class RequiredAsteriskComponent implements OnInit {
   @Input() control: FormControl;
+  required = false;
 
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.control);
+	if (this.control.validator) {
+      const validator = this.control.validator({} as AbstractControl);
+      if (validator && validator.required) {
+        this.required = true;
+      }
+  	}
   }
 
 }

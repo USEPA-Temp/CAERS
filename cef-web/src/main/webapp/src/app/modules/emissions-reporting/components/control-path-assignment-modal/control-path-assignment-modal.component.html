@@ -24,6 +24,7 @@
             <div class="col-sm-5">
                 <fa-icon class="mt-2 ml-2" title="The number in the sequence the control or path occupies within a path." [icon]="['fas', 'question-circle']"></fa-icon>
                 <label for="sequenceNumberInput" class="ml-1 col-form-label"><strong>Enter the Sequence Number</strong></label>
+    			<app-required-asterisk [control]="controlPathAssignmentForm.get('sequenceNumber')"></app-required-asterisk>
             </div>
             <div class="col-sm-3">
                 <input maxlength="10" class="mb-1" formControlName="sequenceNumber" id="sequenceNumberInput">
@@ -31,9 +32,10 @@
             </div>
         </div>
         <div class="row pb-1">
-            <div class="col-sm-6">
+            <div class="col-sm-7">
                 <fa-icon class="mt-2 ml-2" title="Is the identifier of either a control or a path that has been assigned to this path." [icon]="['fas', 'question-circle']"></fa-icon>
                 <label for="controlOrControlPath" class="ml-1 col-form-label"><strong>You must select either a Control or a Control Path:</strong></label>
+    			<app-required-asterisk [control]="controlPathAssignmentForm.get('sequenceNumber')"></app-required-asterisk>
             </div>
         </div>
             <div class ="row ml-1">
@@ -73,6 +75,7 @@
             <div class="col-sm-5">
                 <fa-icon class="mt-2 ml-2" title="The percentage of emissions from the previous control or path in the sequence, that is directed to this control or path." [icon]="['fas', 'question-circle']"></fa-icon>
                 <label for="percentInput" class="ml-1 col-form-label"><strong>Enter the Apportionment Percentage</strong></label>
+    			<app-required-asterisk [control]="controlPathAssignmentForm.get('percentApportionment')"></app-required-asterisk>
             </div>
             <div class="col-sm-3">
                 <input type="text" maxlength="5" formControlName="percentApportionment" id="percentInput">
