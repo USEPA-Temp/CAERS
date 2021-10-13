@@ -235,36 +235,38 @@ public class BulkReportValidator {
             	String msg = String.format("Release Point ID '%s' already exists within the facility. Duplicates are not allowed.", releasePoint.getReleasePointIdentifier());
                 violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
             }
-
-            // check to make sure Fugitives don't have Stack info and Stacks don't have Fugitive info
-            if (ConstantUtils.FUGITIVE_RELEASE_POINT_TYPE.contentEquals(releasePoint.getTypeCode())
-                    && (Strings.emptyToNull(releasePoint.getStackDiameter()) != null
-                    || Strings.emptyToNull(releasePoint.getStackDiameterUomCode()) != null
-                    || Strings.emptyToNull(releasePoint.getStackHeight()) != null
-                    || Strings.emptyToNull(releasePoint.getStackHeightUomCode()) != null
-                    || Strings.emptyToNull(releasePoint.getStackLength()) != null
-                    || Strings.emptyToNull(releasePoint.getStackLengthUomCode()) != null
-                    || Strings.emptyToNull(releasePoint.getStackWidth()) != null
-                    || Strings.emptyToNull(releasePoint.getStackWidthUomCode()) != null)) {
-
-                String msg = String.format("The Release Point contains data for both fugitive and stack release point types. Only data for one release point type should be entered.");
-                violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
-
-            } else if (!ConstantUtils.FUGITIVE_RELEASE_POINT_TYPE.contentEquals(releasePoint.getTypeCode())
-                    && (Strings.emptyToNull(releasePoint.getFugitiveAngle()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveHeight()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveHeightUomCode()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveLength()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveLengthUomCode()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveLine1Latitude()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveLine1Longitude()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveLine2Latitude()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveLine2Longitude()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveWidth()) != null
-                    || Strings.emptyToNull(releasePoint.getFugitiveWidthUomCode()) != null)) {
-
-                String msg = String.format("The Release Point contains data for both fugitive and stack release point types. Only data for one release point type should be entered.");
-                violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
+            
+            if (Strings.emptyToNull(releasePoint.getTypeCode()) != null) {
+	            // check to make sure Fugitives don't have Stack info and Stacks don't have Fugitive info
+	            if (ConstantUtils.FUGITIVE_RELEASE_POINT_TYPE.contentEquals(releasePoint.getTypeCode())
+	                    && (Strings.emptyToNull(releasePoint.getStackDiameter()) != null
+	                    || Strings.emptyToNull(releasePoint.getStackDiameterUomCode()) != null
+	                    || Strings.emptyToNull(releasePoint.getStackHeight()) != null
+	                    || Strings.emptyToNull(releasePoint.getStackHeightUomCode()) != null
+	                    || Strings.emptyToNull(releasePoint.getStackLength()) != null
+	                    || Strings.emptyToNull(releasePoint.getStackLengthUomCode()) != null
+	                    || Strings.emptyToNull(releasePoint.getStackWidth()) != null
+	                    || Strings.emptyToNull(releasePoint.getStackWidthUomCode()) != null)) {
+	
+	                String msg = String.format("The Release Point contains data for both fugitive and stack release point types. Only data for one release point type should be entered.");
+	                violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
+	
+	            } else if (!ConstantUtils.FUGITIVE_RELEASE_POINT_TYPE.contentEquals(releasePoint.getTypeCode())
+	                    && (Strings.emptyToNull(releasePoint.getFugitiveAngle()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveHeight()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveHeightUomCode()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveLength()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveLengthUomCode()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveLine1Latitude()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveLine1Longitude()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveLine2Latitude()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveLine2Longitude()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveWidth()) != null
+	                    || Strings.emptyToNull(releasePoint.getFugitiveWidthUomCode()) != null)) {
+	
+	                String msg = String.format("The Release Point contains data for both fugitive and stack release point types. Only data for one release point type should be entered.");
+	                violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
+	            }
             }
     	}
     }
