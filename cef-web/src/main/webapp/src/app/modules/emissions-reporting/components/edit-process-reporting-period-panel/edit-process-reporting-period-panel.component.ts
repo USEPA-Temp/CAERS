@@ -24,9 +24,9 @@ import {UnitMeasureCode} from 'src/app/shared/models/unit-measure-code';
 import {legacyUomValidator} from 'src/app/modules/shared/directives/legacy-uom-validator.directive';
 import {SharedService} from 'src/app/core/services/shared.service';
 import {ToastrService} from 'ngx-toastr';
-import { OperatingStatus } from 'src/app/shared/enums/operating-status';
-import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
-import { CalculationMaterialCode } from 'src/app/shared/models/calculation-material-code';
+import {OperatingStatus} from 'src/app/shared/enums/operating-status';
+import {CalculationMaterialCode} from 'src/app/shared/models/calculation-material-code';
+import {PointSourceSccCode} from 'src/app/shared/models/point-source-scc-code';
 
 @Component({
     selector: 'app-edit-process-reporting-period-panel',
@@ -70,7 +70,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
 
   materialValues: BaseCodeLookup[];
   fuelUseMaterialValues: CalculationMaterialCode[];
-  sccFuelUse: FuelUseSccCode;
+  sccFuelUse: PointSourceSccCode;
   sccFuelUseMaterialValue: BaseCodeLookup;
   parameterTypeValues: BaseCodeLookup[];
   operatingStatusValues: BaseCodeLookup[];
@@ -179,14 +179,11 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
             if (result && result.fuelUseRequired) {
                 this.isFuelUseScc = true;
                 this.reportingPeriodForm.get('fuelUseValue').updateValueAndValidity();
-                this.lookupService.retrieveSccFuelUseMaterial(processScc)
-                    .subscribe(values => {
-                        this.sccFuelUse = values;
-                        this.sccFuelUseMaterialValue = values.calculationMaterialCode;
-                        this.sccFuelUseUomValues = this.fuelUseUomValues.filter(
-                            val => (this.sccFuelUse.fuelUseTypes.split(',')).includes(val.fuelUseType));
-                        this.checkSccFuelMaterialUom();
-                    });
+                this.sccFuelUse = result;
+                this.sccFuelUseMaterialValue = this.sccFuelUse.calculationMaterialCode;
+                this.sccFuelUseUomValues = this.fuelUseUomValues.filter(
+                    val => (this.sccFuelUse.fuelUseTypes.split(',')).includes(val.fuelUseType));
+				this.checkSccFuelMaterialUom();
 
             } else {
                 this.isFuelUseScc = false;

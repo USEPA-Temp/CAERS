@@ -25,6 +25,15 @@ public class PointSourceSccCodeDto implements Serializable {
 	private String code;
 	private Short lastInventoryYear;
 	private Boolean fuelUseRequired;
+	private String sccLevelOne;
+	private String sccLevelTwo;
+	private String sccLevelThree;
+	private String sccLevelFour;
+	private String sector;
+	private String shortName;
+	private String description;
+	private String fuelUseTypes;
+	private CodeLookupDto calculationMaterialCode;
 	
 	public String getCode() {
 		return code;
@@ -48,6 +57,74 @@ public class PointSourceSccCodeDto implements Serializable {
 	  
 	public void setFuelUseRequired(Boolean fuelUseRequired) {
 		this.fuelUseRequired = fuelUseRequired;
+	}
+
+	public String getSccLevelOne() {
+		return sccLevelOne;
+	}
+
+	public void setSccLevelOne(String sccLevelOne) {
+		this.sccLevelOne = sccLevelOne;
+	}
+
+	public String getSccLevelTwo() {
+		return sccLevelTwo;
+	}
+
+	public void setSccLevelTwo(String sccLevelTwo) {
+		this.sccLevelTwo = sccLevelTwo;
+	}
+
+	public String getSccLevelThree() {
+		return sccLevelThree;
+	}
+
+	public void setSccLevelThree(String sccLevelThree) {
+		this.sccLevelThree = sccLevelThree;
+	}
+
+	public String getSccLevelFour() {
+		return sccLevelFour;
+	}
+
+	public void setSccLevelFour(String sccLevelFour) {
+		this.sccLevelFour = sccLevelFour;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+	public String getFuelUseTypes() {
+		return fuelUseTypes;
+	}
+
+	public void setFuelUseTypes(String fuelUseTypes) {
+		this.fuelUseTypes = fuelUseTypes;
+	}
+
+	public CodeLookupDto getCalculationMaterialCode() {
+		return calculationMaterialCode;
+	}
+
+	public void setCalculationMaterialCode(CodeLookupDto calculationMaterialCode) {
+		this.calculationMaterialCode = calculationMaterialCode;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+
+	public String getDescription() {
+		return this.sccLevelOne+" > "+this.sccLevelTwo+" > "+this.sccLevelThree+" > "+this.sccLevelFour;
 	}
 
 }
