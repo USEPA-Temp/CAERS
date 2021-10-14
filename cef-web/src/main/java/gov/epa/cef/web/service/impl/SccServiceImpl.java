@@ -89,11 +89,12 @@ public class SccServiceImpl implements SccService {
 
         List<SccDetailDto> updatedCodes = this.retrievePointSccDetailsSince(lastUpdated);
         List<PointSourceSccCode> codeEntities = updatedCodes.stream().map(dto -> {
-            PointSourceSccCode entity = new PointSourceSccCode();
-        	PointSourceSccCode existingCode = this.pointSourceSccCodeRepo.findById(dto.getCode()).orElse(null) ;
-        	
-        		entity.setCode(dto.getCode());
-        		
+        	PointSourceSccCode entity = this.pointSourceSccCodeRepo.findById(dto.getCode()).orElse(new PointSourceSccCode());
+
+        		if (entity.getCode() == null) {
+        			entity.setCode(dto.getCode());
+        			entity.setFuelUseRequired(false);
+        		}
                 if (dto.getAttributes().containsKey("last inventory year")) {
                     entity.setLastInventoryYear(Short.valueOf(dto.getAttributes().get("last inventory year").getText()));
                 }
@@ -103,8 +104,8 @@ public class SccServiceImpl implements SccService {
                 if (dto.getAttributes().containsKey("scc level two")) {
                     entity.setSccLevelTwo(dto.getAttributes().get("scc level two").getText());
                 }
-                if (dto.getAttributes().containsKey("cc level three")) {
-                    entity.setSccLevelThree(dto.getAttributes().get("cc level three").getText());
+                if (dto.getAttributes().containsKey("scc level three")) {
+                    entity.setSccLevelThree(dto.getAttributes().get("scc level three").getText());
                 }
                 if (dto.getAttributes().containsKey("scc level four")) {
                     entity.setSccLevelFour(dto.getAttributes().get("scc level four").getText());
@@ -115,14 +116,6 @@ public class SccServiceImpl implements SccService {
                 if (dto.getAttributes().containsKey("short name")) {
                     entity.setShortName(dto.getAttributes().get("short name").getText());
                 }
-                
-                if (existingCode == null || existingCode.getCode() == null) {
-                	entity.setFuelUseRequired(false);
-	            } else {
-	            	entity.setFuelUseRequired(existingCode.getFuelUseRequired());
-	        		entity.setFuelUseTypes(existingCode.getFuelUseTypes());
-	        		entity.setCalculationMaterialCode(existingCode.getCalculationMaterialCode());
-	            }
                 
         	return entity;
         }).collect(Collectors.toList());

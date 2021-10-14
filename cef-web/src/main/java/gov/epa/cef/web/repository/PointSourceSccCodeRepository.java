@@ -16,6 +16,8 @@
 */
 package gov.epa.cef.web.repository;
 
+import java.util.List;
+
 import javax.persistence.QueryHint;
 
 import org.springframework.data.domain.Sort;
@@ -35,6 +37,6 @@ public interface PointSourceSccCodeRepository extends CrudRepository<PointSource
 	@Query("select pssc from PointSourceSccCode pssc where pssc.code like %:searchTerm% or pssc.shortName like %:searchTerm% "
 			+ "or pssc.sector like %:searchTerm% or pssc.sccLevelOne like %:searchTerm% or pssc.sccLevelTwo like %:searchTerm% "
 			+ "or pssc.sccLevelThree like %:searchTerm% or pssc.sccLevelFour like %:searchTerm%")
-	Iterable<PointSourceSccCode> findBySearchTerm(@Param("searchTerm") String searchTerm, Sort sort);
+	List<PointSourceSccCode> findBySearchTerm(@Param("searchTerm") String searchTerm, Sort sort);
 	
 }

@@ -114,6 +114,8 @@ public abstract class LookupEntityMapper {
 
     public abstract PointSourceSccCodeDto pointSourceSccCodeToDto(PointSourceSccCode source);
     
+    public abstract List<PointSourceSccCodeDto> pointSourceSccCodeToDtoList(List<PointSourceSccCode> source);
+    
     public abstract EisLatLongToleranceLookupDto EisLatLongToleranceLookupToDto(EisLatLongToleranceLookup source);
 
     public abstract CodeLookupDto facilitySourceTypeCodeToDto(FacilitySourceTypeCode source);
