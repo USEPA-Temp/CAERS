@@ -102,8 +102,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                 this.emissionUnitForm.get('statusYear').setValidators([
                     Validators.min(1900),
                     Validators.max(data.facilitySite.emissionsReport.year),
-                    Validators.pattern('[0-9]*'),
-					Validators.required]);
+                    Validators.pattern('[0-9]*')]);
                 this.emissionUnitService.retrieveForFacility(data.facilitySite.id)
                     .subscribe(emissionUnits => {
                         emissionUnits.forEach(eu => {
