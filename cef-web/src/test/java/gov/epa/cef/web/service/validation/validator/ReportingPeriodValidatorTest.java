@@ -40,14 +40,12 @@ import gov.epa.cef.web.domain.CalculationParameterTypeCode;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
-import gov.epa.cef.web.domain.FuelUseSccCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ReportingPeriodCode;
 import gov.epa.cef.web.domain.UnitMeasureCode;
-import gov.epa.cef.web.repository.FuelUseSccCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
@@ -61,9 +59,6 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 	
 	@Mock
 	private PointSourceSccCodeRepository sccRepo;
-	
-	@Mock
-	private FuelUseSccCodeRepository fuelUseSccCodeRepo;
 	
 	@Before
     public void init(){
@@ -79,16 +74,20 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 		scc2.setFuelUseRequired(false);
 		sccList.add(scc2);
 		
-		FuelUseSccCode fuelScc = new FuelUseSccCode();
+		PointSourceSccCode scc3 = new PointSourceSccCode();
+		scc3.setCode("10300103");
+		scc3.setFuelUseRequired(true);
+		sccList.add(scc3);
+		
 		CalculationMaterialCode cmc = new CalculationMaterialCode();
 		cmc.setCode("100");
 		cmc.setFuelUseMaterial(true);
-		fuelScc.setSccCode(scc2);
-		fuelScc.setCalculationMaterialCode(cmc);
-		fuelScc.setFuelUseTypes("energy,liquid");
+		scc2.setCalculationMaterialCode(cmc);
+		scc2.setFuelUseTypes("energy,liquid");
+		scc3.setCalculationMaterialCode(cmc);
+		scc3.setFuelUseTypes("energy,liquid");
 		
-		when(fuelUseSccCodeRepo.findByScc("10200302")).thenReturn(Optional.of(fuelScc));
-		when(fuelUseSccCodeRepo.findByScc("10200303")).thenReturn(null);
+		when(sccRepo.findById("10300103")).thenReturn(Optional.of(scc3));
     	when(sccRepo.findById("10200302")).thenReturn(Optional.of(scc1));
     	when(sccRepo.findById("10200303")).thenReturn(Optional.of(scc2));
     }
@@ -232,10 +231,11 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 		CefValidatorContext cefContext = createContext();
         ReportingPeriod testData = createBaseReportingPeriod();
         
-        testData.getEmissionsProcess().setSccCode("10200302");
+        testData.getEmissionsProcess().setSccCode("10300103");
         UnitMeasureCode uom = new UnitMeasureCode();
 		uom.setCode("TON");
 		uom.setLegacy(false);
+		uom.setFuelUseType("liquid");
 		CalculationMaterialCode cmc = new CalculationMaterialCode();
 		cmc.setCode("226");
 		testData.setFuelUseUom(uom);
@@ -255,7 +255,7 @@ public class ReportingPeriodValidatorTest extends BaseValidatorTest {
 		CefValidatorContext cefContext = createContext();
         ReportingPeriod testData = createBaseReportingPeriod();
         
-        testData.getEmissionsProcess().setSccCode("10200302");
+        testData.getEmissionsProcess().setSccCode("10300103");
         UnitMeasureCode uom = new UnitMeasureCode();
 		uom.setCode("TON");
 		uom.setLegacy(false);
