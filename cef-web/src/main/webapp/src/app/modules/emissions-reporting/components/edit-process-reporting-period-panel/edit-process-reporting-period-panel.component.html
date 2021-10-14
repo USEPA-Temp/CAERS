@@ -19,6 +19,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="The time period type for which emissions are reported." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpTypeCodeSelect" class="ml-1 col-form-label"><strong>Reporting Period:</strong></label>
+    		<app-required-asterisk [control]="reportingPeriodForm.controls.reportingPeriodTypeCode"></app-required-asterisk>
         </div>
         <div class="col-sm-2">
             <select type="text" class="form-control" id="rpTypeCodeSelect" formControlName="reportingPeriodTypeCode" [compareWith]="formUtils.compareCode">
@@ -30,6 +31,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Code identifying the operating state for the emissions being reported." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpOperatingCodeSelect" class="ml-1 col-form-label"><strong>Operating Type:</strong></label>
+    		<app-required-asterisk [control]="reportingPeriodForm.controls.emissionsOperatingTypeCode"></app-required-asterisk>
         </div>
         <div class="col-sm-2">
             <select type="text" class="form-control" id="rpOperatingCodeSelect" formControlName="emissionsOperatingTypeCode" [compareWith]="formUtils.compareCode">
@@ -40,7 +42,8 @@
         </div>
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Code indicating whether the material measured is an input to the process, an output of the process or a static count (not a throughput)." [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="rpParamSelect" style="font-size:98%" class="ml-1 col-form-label"><strong>Throughput Parameter:</strong></label>
+            <label for="rpParamSelect" style="font-size:93%" class="ml-1 col-form-label"><strong>Throughput Parameter:</strong></label>
+    		<app-required-asterisk [control]="reportingPeriodForm.controls.calculationParameterTypeCode"></app-required-asterisk>
         </div>
         <div class="col-sm-2">
             <select type="text" class="form-control" id="rpParamSelect" formControlName="calculationParameterTypeCode" [compareWith]="formUtils.compareCode">
@@ -55,6 +58,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Code for material or fuel processed." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpMaterialSelect" class="ml-1 col-form-label"><strong>Throughput Material:</strong></label>
+    		<app-required-asterisk [control]="reportingPeriodForm.controls.calculationMaterialCode"></app-required-asterisk>
         </div>
         <div class="col-sm-2">
             <select type="text" class="form-control" id="rpMaterialSelect" formControlName="calculationMaterialCode" [compareWith]="formUtils.compareCode">
@@ -66,6 +70,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Activity or throughput of the process for a given time period." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpValueInput" class="ml-1 col-form-label"><strong>Throughput Value:</strong></label>
+    		<app-required-asterisk [control]="reportingPeriodForm.controls.calculationParameterValue"></app-required-asterisk>
         </div>
         <div class="col-sm-2">
             <input type="text" class="form-control" id="rpValueInput" formControlName="calculationParameterValue" >
@@ -74,6 +79,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Code for the unit of measure for calculation parameter value." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="rpUomSelect" class="ml-1 col-form-label"><strong>Throughput UoM:</strong></label>
+    		<app-required-asterisk [control]="reportingPeriodForm.controls.calculationParameterUom"></app-required-asterisk>
         </div>
         <div class="col-sm-2">
             <select type="text" class="form-control" id="rpUomSelect" formControlName="calculationParameterUom" [compareWith]="formUtils.compareCode">

@@ -19,6 +19,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="The ID your facility holds for your State, Local, or Tribal Authority you report to." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="altSiteIdentifierInput" class="ml-1 col-form-label"><strong>Agency Facility ID:</strong></label>
+            <app-required-asterisk [control]="facilitySiteForm.get('altSiteIdentifier')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="30" id="altSiteIdentifierInput" formControlName="altSiteIdentifier" [value]="facilitySiteForm.value.altSiteIdentifier" readonly>
@@ -26,6 +27,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="Code that identifies the operating status of the facility site." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="facilityStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
+            <app-required-asterisk [control]="facilitySiteForm.get('operatingStatusCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="facilityStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
@@ -46,7 +48,8 @@
         </div>
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="The year the current operating status came into effect. Required if facility site operating status is other than operating. Must be changed when the status changes. Must be between 1900 - 2050" [icon]="['fas', 'question-circle']"></fa-icon>
-            <label for="statusYearInput" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
+            <label for="statusYearInput" style="font-size:97%" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
+            <app-required-asterisk [control]="facilitySiteForm.get('statusYear')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="4" id="statusYearInput" formControlName="statusYear">
@@ -159,6 +162,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="mailingStreetAddressInput" style="font-size:97%" class="ml-1 col-form-label"><strong>Mailing Street Address:</strong></label>
+            <app-required-asterisk [control]="facilitySiteForm.get('mailingStreetAddress')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="100" class="form-control" id="mailingStreetAddressInput" formControlName="mailingStreetAddress">
@@ -167,6 +171,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="mailingPostalCodeInput" class="ml-1 col-form-label"><strong>ZIP code:</strong></label>
+            <app-required-asterisk [control]="facilitySiteForm.get('mailingPostalCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="10" id="mailingPostalCodeInput" formControlName="mailingPostalCode">
@@ -181,6 +186,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="mailingCityInput" class="ml-1 col-form-label"><strong>City:</strong></label>
+            <app-required-asterisk [control]="facilitySiteForm.get('mailingCity')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="60" class="form-control" id="mailingCityInput" formControlName="mailingCity">
@@ -192,6 +198,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="mailingStateCodeSelect" class="ml-1 col-form-label"><strong>State:</strong></label>
+            <app-required-asterisk [control]="facilitySiteForm.get('mailingStateCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" id="mailingStateCodeSelect" formControlName="mailingStateCode" [compareWith]="formUtils.compareCode">

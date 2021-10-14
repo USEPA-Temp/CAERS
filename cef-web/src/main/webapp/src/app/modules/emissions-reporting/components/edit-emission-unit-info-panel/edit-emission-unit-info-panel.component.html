@@ -20,6 +20,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="An identifier for the unit in the facility, given by the facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitIdentifierInput" class="ml-1 col-form-label"><strong>Unit ID:</strong></label>
+            <app-required-asterisk [control]="emissionUnitForm.get('unitIdentifier')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input [readonly]="emissionUnit" type="text" class="form-control" maxlength="20" id="unitIdentifierInput" formControlName="unitIdentifier">
@@ -31,6 +32,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the emissions unit." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
+            <app-required-asterisk [control]="emissionUnitForm.get('operatingStatusCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="unitStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
@@ -51,6 +53,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the type of emissions unit activity." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitTypeCodeSelect" class="ml-1 col-form-label"><strong>Unit Type Code:</strong></label>
+            <app-required-asterisk [control]="emissionUnitForm.get('unitTypeCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <select type="text" class="form-control" id="unitTypeCodeSelect" formControlName="unitTypeCode" [compareWith]="formUtils.compareCode">
@@ -62,6 +65,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The year the current operating status came into effect. Required if Operating Status Code is anything other than operating. Must be between 1900-2050." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitStatusYearInput" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
+            <app-required-asterisk [control]="emissionUnitForm.get('statusYear')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" maxlength="4" id="unitStatusYearInput" formControlName="statusYear">
@@ -76,6 +80,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Text description of the emissions unit." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="descriptionInput" class="ml-1 col-form-label"><strong>Unit Description:</strong></label>
+            <app-required-asterisk [control]="emissionUnitForm.get('description')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" maxlength="100" id="descriptionInput" formControlName="description">
@@ -87,6 +92,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The measure of the size of the unit based on the maximum continuous throughput capacity of the unit." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitDesignCapacityInput" class="ml-1 col-form-label"><strong>Unit Design Capacity:</strong></label>
+            <app-required-asterisk [control]="emissionUnitForm.get('designCapacity')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" maxlength="20" id="unitDesignCapacityInput" formControlName="designCapacity">
@@ -95,6 +101,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Unit of measure for the design capacity of the emissions unit. Required if reporting Design Capacity." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="unitOfMeasureCodeSelect" class="ml-1 col-form-label"><strong>Unit Design Capacity UoM:</strong></label>
+            <app-required-asterisk [control]="emissionUnitForm.get('unitOfMeasureCode')"></app-required-asterisk>
         </div>
          <div class="col-sm-3">
             <select type="text" class="form-control" id="unitOfMeasureCodeSelect" formControlName="unitOfMeasureCode" [compareWith]="formUtils.compareCode">
