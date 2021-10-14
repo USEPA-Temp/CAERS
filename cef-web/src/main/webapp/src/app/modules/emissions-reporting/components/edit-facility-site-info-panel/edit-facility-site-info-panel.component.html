@@ -41,7 +41,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="The name of your facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="facilityNameInput" class="ml-1 col-form-label"><strong>Facility Name:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.get('name')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="80" id="facilityNameInput" formControlName="name" readonly>
@@ -62,7 +61,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="In reference to the location of the facility, the measure of the angular distance east or west from the prime meridian. Because the physical area a facility occupies extends over one latitudinal point, the latitude and longitude reported represent the location of the mid-point of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="longitudeInput" class="ml-1 col-form-label"><strong>Longitude:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.get('longitude')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="11" id="longitudeInput" formControlName="longitude" readonly>
@@ -71,7 +69,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="In reference to the location of the facility on the surface of the Earth, the measure of the angular distance  north or south from the equator.  Because the physical area a facility occupies extends over one latitudinal point, the latitude and longitude reported represent the location of the mid-point of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="latitudeInput" class="ml-1 col-form-label"><strong>Latitude:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.get('latitude')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" maxlength="10" id="latitudeInput" formControlName="latitude" readonly>
@@ -97,7 +94,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" title="The location of the facility, which may be different from a mailing address or a headquarters office." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="streetAddressInput" class="ml-1 col-form-label"><strong>Facility Address:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.get('streetAddress')"></app-required-asterisk>
         </div>
         <div class="col-sm-10">
             <input type="text" class="form-control"  maxlength="100" id="streetAddressInput" formControlName="streetAddress" readonly>
@@ -109,7 +105,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="cityInput" class="ml-1 col-form-label"><strong>City:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.get('city')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="60" class="form-control" id="cityInput" formControlName="city" readonly>
@@ -118,7 +113,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="stateCodeSelect" class="ml-1 col-form-label"><strong>State:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.controls.stateCode"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" id="stateCodeSelect" formControlName="stateCode" [compareWith]="formUtils.compareCode" [attr.disabled]="true">
@@ -132,7 +126,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="postalCodeInput" class="ml-1 col-form-label"><strong>ZIP code:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.get('postalCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" maxlength="10" class="form-control" id="postalCodeInput" formControlName="postalCode" readonly>
@@ -141,7 +134,6 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="countySelect" class="ml-1 col-form-label"><strong>County:</strong></label>
-            <app-required-asterisk [control]="facilitySiteForm.get('countyCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <select class="form-control" id="countySelect" formControlName="countyCode" [compareWith]="formUtils.compareCode" [attr.disabled]="true">

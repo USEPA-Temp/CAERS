@@ -166,6 +166,7 @@
                      title="The velocity of an exit gas stream. If it is a stack release point then either Exit Gas Velocity Measure or Exit Gas Flow Rate is required. Must be between 0.001 ft/s and 1000 ft/s."
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="exitGasVelocity" class="ml-1 col-form-label"><strong>Exit Gas Velocity Measure:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('exitGasVelocity')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="exitGasVelocity" formControlName="exitGasVelocity"
@@ -212,6 +213,7 @@
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="exitGasFlowRate" class="ml-1 col-form-label"><strong>Exit Gas Flow Rate
                 Measure:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('exitGasFlowRate')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="exitGasFlowRate" formControlName="exitGasFlowRate"
@@ -257,6 +259,7 @@
                      [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="exitGasTemperature" class="ml-1 col-form-label"><strong>Exit Gas Temperature
                 Measure:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('exitGasTemperature')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <div class="input-group">
@@ -280,6 +283,7 @@
                          title="The unit of measure for the stack gas flow rate value. Required if Release Point Exit Gas Flow Rate Measure is reported."
                          [icon]="['fas', 'question-circle']"></fa-icon>
                 <label for="stackHeight" class="ml-1 col-form-label"><strong>Stack Height Measure:</strong></label>
+    		<app-required-asterisk [control]="releasePointForm.get('stackHeight')"></app-required-asterisk>
             </div>
             <div class="col-sm-3">
                 <div class="input-group">

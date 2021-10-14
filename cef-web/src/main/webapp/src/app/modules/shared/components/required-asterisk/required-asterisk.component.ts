@@ -25,17 +25,12 @@ import { FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/
 export class RequiredAsteriskComponent implements OnInit {
   @Input() control: FormControl;
   required = false;
+  validators = Validators;
 
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.control);
-	if (this.control.validator) {
-      const validator = this.control.validator({} as AbstractControl);
-      if (validator && validator.required) {
-        this.required = true;
-      }
-  	}
+    
   }
 
 }

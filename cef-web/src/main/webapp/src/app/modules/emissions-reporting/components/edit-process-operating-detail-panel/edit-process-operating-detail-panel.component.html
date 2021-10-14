@@ -19,6 +19,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The average number of days per week that the emissions process is active within the reporting period. Not to exceed 7." [icon]="['fas', 'question-circle']"></fa-icon>        
             <label for="odDaysPerWeekInput" class="ml-1 col-form-label"><strong>Avg. Days per Week:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.avgDaysPerWeek"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odDaysPerWeekInput" formControlName="avgDaysPerWeek" required>
@@ -27,6 +28,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Actual number of hours the process is active or operating during for the reporting period. Not to exceed 8760 in a year, (8,784 in a leap year)." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="odHoursPerPeriodInput" class="ml-1 col-form-label"><strong>Hours per Period:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.actualHoursPerPeriod"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odHoursPerPeriodInput" formControlName="actualHoursPerPeriod">
@@ -38,6 +40,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The average number of hours per day that the emissions process is active within the reporting period. Not to exceed 24." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="odHoursPerDayInput" class="ml-1 col-form-label"><strong>Avg. Hours per Day:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.avgHoursPerDay"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odHoursPerDayInput" formControlName="avgHoursPerDay">
@@ -46,6 +49,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The average number of weeks that the emissions process is active within the reporting period. Not to exceed 52 in a year." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="odWeeksPerPeriodInput" class="ml-1 col-form-label"><strong>Avg. Weeks per Year:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.avgWeeksPerPeriod"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odWeeksPerPeriodInput" formControlName="avgWeeksPerPeriod">
@@ -56,6 +60,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The percentage of the annual activity that occurred during the Summer months (June, July, August). Percentages for all seasons must add up to 100%. You should not report more percent of annual activity than is feasible to happen in that season. E.g. 100% of the activity of a full year should not be reported to one season only." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="odPercentSummerInput" class="ml-1 col-form-label"><strong>Summer Operating Percent:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.percentSummer"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odPercentSummerInput" formControlName="percentSummer">
@@ -64,6 +69,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The percentage of the annual activity that occurred during the Winter months (December, January, February). Percentages for all seasons must add up to 100%. You should not report more percent of annual activity than is feasible to happen in that season. E.g. 100% of the activity of a full year should not be reported to one season only." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="odPercentWinterInput" class="ml-1 col-form-label"><strong>Winter Operating Percent:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.percentWinter"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odPercentWinterInput" formControlName="percentWinter">
@@ -74,6 +80,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The percentage of the annual activity that occurred during the Spring months (March, April, May). Percentages for all seasons must add up to 100%. You should not report more percent of annual activity than is feasible to happen in that season. E.g. 100% of the activity of a full year should not be reported to one season only." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="odPercentSpringInput" class="ml-1 col-form-label"><strong>Spring Operating Percent:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.percentSpring"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odPercentSpringInput" formControlName="percentSpring">
@@ -82,6 +89,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The percentage of the annual activity that occurred during the Fall months (September, October, November). Percentages for all seasons must add up to 100%. You should not report more percent of annual activity than is feasible to happen in that season. E.g. 100% of the activity of a full year should not be reported to one season only." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="odPercentFallInput" class="ml-1 col-form-label"><strong>Fall Operating Percent:</strong></label>
+            <app-required-asterisk [control]="operatingDetailsForm.controls.percentFall"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="odPercentFallInput" formControlName="percentFall">

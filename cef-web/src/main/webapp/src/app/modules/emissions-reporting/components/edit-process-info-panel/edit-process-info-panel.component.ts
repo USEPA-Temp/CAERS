@@ -117,7 +117,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         this.processForm.get('statusYear').setValidators([
                     Validators.min(1900),
                     Validators.max(this.emissionsReportYear),
-                    Validators.pattern('[0-9]*')]);
+                    Validators.pattern('[0-9]*'),
+					Validators.required]);
 
         // SCC codes associated with Aircraft Engine Type Codes
         this.aircraftEngineSCC = [
