@@ -67,9 +67,7 @@ export class AdminPropertiesComponent implements OnInit {
       result.forEach(prop => {
         if (prop.datatype !== 'boolean') {
 	
-          if (prop.name === 'task.scc-update.last-ran') {
-            this.propertyForm.addControl(prop.name, new FormControl({value: prop.value, disabled: true}));
-          } else if (!prop.required) {
+          if (!prop.required) {
             this.propertyForm.addControl(prop.name, new FormControl(prop.value));
           } else {
             this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [Validators.required]}));
