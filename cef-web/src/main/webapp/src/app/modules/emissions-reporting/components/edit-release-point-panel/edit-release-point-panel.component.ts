@@ -794,8 +794,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             }
             if (this.releasePointForm.get('operatingStatusCode').value
                 && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-                return Validators.required(formControl);
-            }
+				formControl.addValidators(Validators.required);
+            } else {
+				if (formControl.hasValidator(Validators.required)) {
+					formControl.removeValidators(Validators.required);
+				}
+			}
             return null;
         });
     }

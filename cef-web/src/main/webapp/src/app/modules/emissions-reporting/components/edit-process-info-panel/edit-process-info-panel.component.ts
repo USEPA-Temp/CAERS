@@ -117,7 +117,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         this.processForm.get('statusYear').setValidators([
                     Validators.min(1900),
                     Validators.max(this.emissionsReportYear),
-                    Validators.pattern('[0-9]*')]);
+                    Validators.pattern('[0-9]*'),
+					Validators.required]);
 
         // SCC codes associated with Aircraft Engine Type Codes
         this.aircraftEngineSCC = [
@@ -407,8 +408,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
 
             if (this.processForm.get('operatingStatusCode').value
                 && this.processForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-                return Validators.required(formControl);
-            }
+                formControl.addValidators(Validators.required);
+            } else {
+				if (formControl.hasValidator(Validators.required)) {
+					formControl.removeValidators(Validators.required);
+				}
+			}
             return null;
         });
     }
