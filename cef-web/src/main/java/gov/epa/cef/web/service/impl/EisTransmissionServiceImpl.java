@@ -50,7 +50,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -141,7 +143,23 @@ public class EisTransmissionServiceImpl {
 
     public List<EisTransactionHistoryDto> retrieveTransactionHistory(String programSystemCode) {
 
-        return mapper.historyToDtoList(this.transactionHistoryRepo.findByProgramSystemCodeCode(programSystemCode));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+
+        // pull attachments and less than 7 days old separately because query wouldn't work combined
+        List<EisTransactionHistory> entities = this.transactionHistoryRepo.findByProgramSystemCodeBeforeDate(programSystemCode, calendar.getTime());
+        entities.addAll(this.transactionHistoryRepo.findByProgramSystemCodeWithAttachment(programSystemCode));
+
+        return mapper.historyToDtoList(entities.stream().distinct().collect(Collectors.toList()));
+
+    }
+
+    public void deleteFromTransactionHistory(List<Long> ids) {
+
+        Iterable<EisTransactionHistory> entities = this.transactionHistoryRepo.findAllById(ids);
+
+        this.transactionHistoryRepo.deleteAll(entities);
     }
 
     public EisDataListDto submitReports(EisHeaderDto eisHeader) {

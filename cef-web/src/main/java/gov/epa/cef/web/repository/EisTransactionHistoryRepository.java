@@ -16,8 +16,10 @@
 */
 package gov.epa.cef.web.repository;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import gov.epa.cef.web.domain.EisTransactionHistory;
@@ -25,4 +27,10 @@ import gov.epa.cef.web.domain.EisTransactionHistory;
 public interface EisTransactionHistoryRepository extends CrudRepository<EisTransactionHistory, Long> {
 
     List<EisTransactionHistory> findByProgramSystemCodeCode(String programSystemCode);
+
+    @Query("select h from EisTransactionHistory h where h.programSystemCode.code = :programSystemCode and h.attachment.id <> null")
+    List<EisTransactionHistory> findByProgramSystemCodeWithAttachment(String programSystemCode);
+
+    @Query("select h from EisTransactionHistory h where h.programSystemCode.code = :programSystemCode and h.createdDate > :date")
+    List<EisTransactionHistory> findByProgramSystemCodeBeforeDate(String programSystemCode, Date date);
 }

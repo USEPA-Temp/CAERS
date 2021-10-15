@@ -200,7 +200,13 @@ public class EisApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
+    @PostMapping(value = "/history/delete")
+    public void deleteFromTransactionHistory(@NotNull @RequestBody List<Long> reportIds) {
+
+        this.eisTransmissionService.deleteFromTransactionHistory(reportIds);
+    }
+
     @GetMapping(value = "/history/attachment/{id}")
     public ResponseEntity<StreamingResponseBody> downloadAttachment(
             @NotNull @PathVariable Long id) {
