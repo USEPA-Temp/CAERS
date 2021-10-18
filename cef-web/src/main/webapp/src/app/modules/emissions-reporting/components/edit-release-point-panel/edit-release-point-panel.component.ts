@@ -118,27 +118,44 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         ]],
         fugitiveHeightUomCode: [null],
         fugitiveWidth: ['', [
-            wholeNumberValidator(),
             Validators.min(1),
             Validators.max(10000),
+			Validators.pattern(this.numberPattern83)
         ]],
         fugitiveWidthUomCode: [null],
-        stackWidth: [null, [
-            Validators.min(.1),
-            Validators.max(100),
-        ]],
-        stackWidthUomCode: [null],
         fugitiveLength: ['', [
-            wholeNumberValidator(),
             Validators.min(1),
             Validators.max(10000),
+			Validators.pattern(this.numberPattern83)
         ]],
         fugitiveLengthUomCode: [null],
+		stackWidth: [null, [
+            Validators.min(.1),
+            Validators.max(100),
+			Validators.pattern(this.numberPattern83)
+        ]],
+        stackWidthUomCode: [null],
         stackLength: [null, [
             Validators.min(.1),
             Validators.max(100),
+			Validators.pattern(this.numberPattern83)
         ]],
         stackLengthUomCode: [null],
+		stackHeight: ['', [
+            Validators.min(1),
+            Validators.max(1300),
+            Validators.pattern('^[0-9]{1,4}([\.][0-9]{1})?$'),
+            this.requiredIfOperating()
+        ]],
+		stackHeightUomCode: [null, [
+            this.requiredIfOperating()
+        ]],
+        stackDiameter: [null, [
+            Validators.min(0.001),
+            Validators.max(300),
+            Validators.pattern(this.numberPattern83),
+        ]],
+        stackDiameterUomCode: [null, []],
         fugitiveAngle: ['', [
             Validators.max(89),
             Validators.min(0),
@@ -148,21 +165,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         fugitiveLine1Longitude: [],
         fugitiveLine2Latitude: [],
         fugitiveLine2Longitude: [],
-        stackHeight: ['', [
-            Validators.min(1),
-            Validators.max(1300),
-            Validators.pattern(this.numberPattern83),
-            this.requiredIfOperating()
-        ]],
-        stackHeightUomCode: [null, [
-            this.requiredIfOperating()
-        ]],
-        stackDiameter: [null, [
-            Validators.min(0.001),
-            Validators.max(300),
-            Validators.pattern(this.numberPattern83),
-        ]],
-        stackDiameterUomCode: [null, []],
         exitGasTemperature: ['', [
             Validators.min(-30),
             Validators.max(4000),
@@ -792,8 +794,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             }
             if (this.releasePointForm.get('operatingStatusCode').value
                 && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-                return Validators.required(formControl);
-            }
+				formControl.addValidators(Validators.required);
+            } else {
+				if (formControl.hasValidator(Validators.required)) {
+					formControl.removeValidators(Validators.required);
+				}
+			}
             return null;
         });
     }

@@ -20,6 +20,8 @@ import { SubmissionsReviewDashboardService } from 'src/app/core/services/submiss
 import { SharedService } from 'src/app/core/services/shared.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { User } from 'src/app/shared/models/user';
+import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
+import { UserFacilityAssociationService } from 'src/app/core/services/user-facility-association.service';
 
 @Component({
   selector: 'app-notification-list',
@@ -42,14 +44,22 @@ export class NotificationListComponent implements OnInit {
   currentUser: User;
   currentYear: any;
 
+  programSystemCodes: string[];
+  announcementMap = new Map<string, string>();
+
   constructor(private submissionsReviewDashboardService: SubmissionsReviewDashboardService,
               private sharedService: SharedService,
-              public userContext: UserContextService) {
-      this.currentYear = new Date().getFullYear() - 1;
+              public userContext: UserContextService,
+			  private propertyService: ConfigPropertyService,
+			  private ufaService: UserFacilityAssociationService) {
+
+	  this.currentYear = new Date().getFullYear() - 1;
+	
       this.sharedService.submissionReviewChangeEmitted$
       .subscribe(submissions => {
         this.filterAndCountSubmissions(submissions);
       });
+
       this.userContext.getUser().subscribe(user => {
         this.currentUser = user;
         if (this.currentUser.isReviewer()) {
@@ -59,12 +69,35 @@ export class NotificationListComponent implements OnInit {
           });
         }
       });
-    }
+
+	  this.ufaService.getMyProgramSystemCodeAssociations()
+		.subscribe(programSystemCodes => {
+			this.programSystemCodes = programSystemCodes;
+			
+		  if (this.programSystemCodes.length > 0) {
+			this.programSystemCodes.forEach(code => {
+				this.propertyService.retrieveSltAnnouncementEnabled(code)
+		        .subscribe(result => {
+	
+		            if (result) {
+		                this.propertyService.retrieveSltAnnouncementText(code)
+		                .subscribe(text => {
+							if (text.value && text.value.trim().length > 0) {
+								this.announcementMap.set(code, text.value);
+							}
+		                });
+		            }
+	
+		        });
+			});
+	    }
+ 	  })
+  }
 
   ngOnInit() {
   }
 
-  filterAndCountSubmissions(submissions){
+  filterAndCountSubmissions(submissions) {
       this.approvedCount = this.advancedQACount = this.submittedCount = this.inProgressCount = this.returnedCount = 0;
       submissions.forEach(submission => {
         if (submission.reportStatus === 'APPROVED') {

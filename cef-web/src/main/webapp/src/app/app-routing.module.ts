@@ -141,7 +141,7 @@ const routes: Routes = [
 
 @NgModule({
   // useHash is required for spring and inheritanceStrategy allows children to reference data from parents
-  imports: [ RouterModule.forRoot(routes, {useHash: true, paramsInheritanceStrategy: 'always'}) ],
+  imports: [ RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: 'always', relativeLinkResolution: 'legacy' }) ],
   exports: [ RouterModule ]
 })
 

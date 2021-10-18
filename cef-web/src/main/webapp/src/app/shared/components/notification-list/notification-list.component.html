@@ -60,5 +60,13 @@
         <strong class="mr-2">Approved</strong>
       </div>
     </div>
+
+	<div *ngIf="currentUser?.isNeiCertifier() || currentUser?.isPreparer()">
+		<div *ngFor="let item of announcementMap | keyvalue">
+      		<p class="slt-announcement-header">{{item.key}} Announcement:</p>
+			<p style="text-align: justify;"><strong>{{item.value}}</strong></p>
+			<hr style="background-color: #9a0000;">
+  		</div>
+    </div>
   </div>
 </div>

@@ -22,7 +22,6 @@ import {Process} from 'src/app/shared/models/process';
 import {FormUtilsService} from 'src/app/core/services/form-utils.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SccSearchModalComponent} from 'src/app/modules/emissions-reporting/components/scc-search-modal/scc-search-modal.component';
-import {SccCode} from 'src/app/shared/models/scc-code';
 import {AircraftEngineTypeCode} from 'src/app/shared/models/aircraft-engine-type-code';
 import {FacilitySite} from 'src/app/shared/models/facility-site';
 import {ActivatedRoute} from '@angular/router';
@@ -31,6 +30,7 @@ import {EmissionUnit} from 'src/app/shared/models/emission-unit';
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
 import {SharedService} from 'src/app/core/services/shared.service';
 import {VariableValidationType} from 'src/app/shared/enums/variable-validation-type';
+import {PointSourceSccCode} from 'src/app/shared/models/point-source-scc-code';
 
 @Component({
     selector: 'app-edit-process-info-panel',
@@ -117,7 +117,8 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         this.processForm.get('statusYear').setValidators([
                     Validators.min(1900),
                     Validators.max(this.emissionsReportYear),
-                    Validators.pattern('[0-9]*')]);
+                    Validators.pattern('[0-9]*'),
+					Validators.required]);
 
         // SCC codes associated with Aircraft Engine Type Codes
         this.aircraftEngineSCC = [
@@ -182,7 +183,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         });
 
         // update form when modal closes successfully
-        modalRef.result.then((modalScc: SccCode) => {
+        modalRef.result.then((modalScc: PointSourceSccCode) => {
             if (modalScc) {
                 this.processForm.get('sccCode').setValue(modalScc.code);
                 this.processForm.get('sccDescription').setValue(modalScc.description);
@@ -407,8 +408,12 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
 
             if (this.processForm.get('operatingStatusCode').value
                 && this.processForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-                return Validators.required(formControl);
-            }
+                formControl.addValidators(Validators.required);
+            } else {
+				if (formControl.hasValidator(Validators.required)) {
+					formControl.removeValidators(Validators.required);
+				}
+			}
             return null;
         });
     }

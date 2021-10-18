@@ -50,4 +50,12 @@ public class SLTConfigImpl implements SLTBaseConfig {
     public Boolean getFacilityNaicsEnabled() {
     	 return this.propertyProvider.getBoolean(SLTPropertyName.FacilityNaicsEnabled, programSystemCode);
     }
+    
+    public Boolean getSltFeatureAnnouncementEnabled() {
+   	 	 return this.propertyProvider.getBoolean(SLTPropertyName.SLTFeatureAnnouncementEnabled, programSystemCode);
+    }
+    
+    public String getSltFeatureAnnouncementText() {
+        return this.propertyProvider.getString(SLTPropertyName.SLTFeatureAnnouncementText, programSystemCode);
+    }
 }

@@ -14,20 +14,23 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-package gov.epa.cef.web.config;
+import { Component, OnInit, Input } from '@angular/core';
+import { FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
-public interface SLTBaseConfig {
+@Component({
+  selector: 'app-required-asterisk',
+  templateUrl: './required-asterisk.component.html',
+  styleUrls: ['./required-asterisk.component.scss']
+})
+export class RequiredAsteriskComponent implements OnInit {
+  @Input() control: FormControl;
+  required = false;
+  validators = Validators;
 
-    public String getSltEmail();
+  constructor() { }
 
-    public String getSltEisUser();
+  ngOnInit(): void {
+    
+  }
 
-    public String getSltEisProgramCode();
-    
-    public Boolean getFacilityNaicsEnabled();
-    
-    public Boolean getSltFeatureAnnouncementEnabled();
-    
-    public String getSltFeatureAnnouncementText();
-    
 }

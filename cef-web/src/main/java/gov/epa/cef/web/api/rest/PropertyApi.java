@@ -126,5 +126,27 @@ public class PropertyApi {
         Boolean result = sltPropertyProvider.getBoolean(SLTPropertyName.FacilityNaicsEnabled, slt);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    /**
+     * Retrieve announcement enabled property
+     * @return
+     */
+    @GetMapping(value = "/announcement/{slt}/enabled")
+    @ResponseBody
+    public ResponseEntity<Boolean> retrieveSltAnnouncementEnabled(@NotNull @PathVariable String slt) {
+        Boolean result = sltPropertyProvider.getBoolean(SLTPropertyName.SLTFeatureAnnouncementEnabled, slt);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve announcement text property
+     * @return
+     */
+    @GetMapping(value = "/announcement/{slt}/text")
+    @ResponseBody
+    public ResponseEntity<PropertyDto> retrieveSltAnnouncementText(@NotNull @PathVariable String slt) {
+        String result = sltPropertyProvider.getString(SLTPropertyName.SLTFeatureAnnouncementText, slt);
+        return new ResponseEntity<>(new PropertyDto().withValue(result), HttpStatus.OK);
+    }
 
 }

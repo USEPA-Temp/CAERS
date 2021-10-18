@@ -89,12 +89,35 @@ public class SccServiceImpl implements SccService {
 
         List<SccDetailDto> updatedCodes = this.retrievePointSccDetailsSince(lastUpdated);
         List<PointSourceSccCode> codeEntities = updatedCodes.stream().map(dto -> {
-            PointSourceSccCode entity = new PointSourceSccCode();
-            entity.setCode(dto.getCode());
-            if (dto.getAttributes().containsKey("last inventory year")) {
-                entity.setLastInventoryYear(Short.valueOf(dto.getAttributes().get("last inventory year").getText()));
-            }
-            return entity;
+        	PointSourceSccCode entity = this.pointSourceSccCodeRepo.findById(dto.getCode()).orElse(new PointSourceSccCode());
+
+        		if (entity.getCode() == null) {
+        			entity.setCode(dto.getCode());
+        			entity.setFuelUseRequired(false);
+        		}
+                if (dto.getAttributes().containsKey("last inventory year")) {
+                    entity.setLastInventoryYear(Short.valueOf(dto.getAttributes().get("last inventory year").getText()));
+                }
+                if (dto.getAttributes().containsKey("scc level one")) {
+                    entity.setSccLevelOne(dto.getAttributes().get("scc level one").getText());
+                }
+                if (dto.getAttributes().containsKey("scc level two")) {
+                    entity.setSccLevelTwo(dto.getAttributes().get("scc level two").getText());
+                }
+                if (dto.getAttributes().containsKey("scc level three")) {
+                    entity.setSccLevelThree(dto.getAttributes().get("scc level three").getText());
+                }
+                if (dto.getAttributes().containsKey("scc level four")) {
+                    entity.setSccLevelFour(dto.getAttributes().get("scc level four").getText());
+                }
+                if (dto.getAttributes().containsKey("sector")) {
+                    entity.setSector(dto.getAttributes().get("sector").getText());
+                }
+                if (dto.getAttributes().containsKey("short name")) {
+                    entity.setShortName(dto.getAttributes().get("short name").getText());
+                }
+                
+        	return entity;
         }).collect(Collectors.toList());
 
         return this.pointSourceSccCodeRepo.saveAll(codeEntities);

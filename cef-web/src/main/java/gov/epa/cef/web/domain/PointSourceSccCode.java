@@ -19,7 +19,10 @@ package gov.epa.cef.web.domain;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -47,6 +50,32 @@ public class PointSourceSccCode implements java.io.Serializable {
   
   @Column(name = "fuel_use_required", nullable = false)
   private Boolean fuelUseRequired;
+  
+  @Column(name = "scc_level_one")
+  private String sccLevelOne;
+  
+  @Column(name = "scc_level_two")
+  private String sccLevelTwo;
+  
+  @Column(name = "scc_level_three")
+  private String sccLevelThree;
+  
+  @Column(name = "scc_level_four")
+  private String sccLevelFour;
+  
+  @Column(name = "sector")
+  private String sector;
+  
+  @Column(name = "short_name")
+  private String shortName;
+  
+  @Column(name = "fuel_use_types")
+  private String fuelUseTypes;
+  
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "calculation_material_code")
+  private CalculationMaterialCode calculationMaterialCode;
+	
 
   // Property accessors
 
@@ -72,6 +101,70 @@ public class PointSourceSccCode implements java.io.Serializable {
   
   public void setFuelUseRequired(Boolean fuelUseRequired) {
 	  this.fuelUseRequired = fuelUseRequired;
+  }
+
+  public String getSccLevelOne() {
+      return sccLevelOne;
+  }
+
+  public void setSccLevelOne(String sccLevelOne) {
+	  this.sccLevelOne = sccLevelOne;
+  }
+
+  public String getSccLevelTwo() {
+	  return sccLevelTwo;
+  }
+
+  public void setSccLevelTwo(String sccLevelTwo) {
+	  this.sccLevelTwo = sccLevelTwo;
+  }
+
+  public String getSccLevelThree() {
+	  return sccLevelThree;
+  }
+
+  public void setSccLevelThree(String sccLevelThree) {
+	  this.sccLevelThree = sccLevelThree;
+  }
+
+  public String getSccLevelFour() {
+	  return sccLevelFour;
+  }
+
+  public void setSccLevelFour(String sccLevelFour) {
+	  this.sccLevelFour = sccLevelFour;
+  }
+
+  public String getSector() {
+	  return sector;
+  }
+
+  public void setSector(String sector) {
+	  this.sector = sector;
+  }
+
+  public String getFuelUseTypes() {
+	  return fuelUseTypes;
+  }
+
+  public void setFuelUseTypes(String fuelUseTypes) {
+	  this.fuelUseTypes = fuelUseTypes;
+  }
+
+  public CalculationMaterialCode getCalculationMaterialCode() {
+	  return calculationMaterialCode;
+  }
+
+  public void setCalculationMaterialCode(CalculationMaterialCode calculationMaterialCode) {
+	  this.calculationMaterialCode = calculationMaterialCode;
+  }
+
+  public String getShortName() {
+	  return shortName;
+  }
+
+  public void setShortName(String shortName) {
+	  this.shortName = shortName;
   }
 
 }

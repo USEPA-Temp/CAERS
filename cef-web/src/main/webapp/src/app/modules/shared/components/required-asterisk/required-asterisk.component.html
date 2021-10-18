@@ -1,4 +1,4 @@
-/*
+<!--
  * © Copyright 2019 EPA CAERS Project Team
  *
  * This file is part of the Common Air Emissions Reporting System (CAERS).
@@ -13,21 +13,5 @@
  *
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
-*/
-package gov.epa.cef.web.config;
-
-public interface SLTBaseConfig {
-
-    public String getSltEmail();
-
-    public String getSltEisUser();
-
-    public String getSltEisProgramCode();
-    
-    public Boolean getFacilityNaicsEnabled();
-    
-    public Boolean getSltFeatureAnnouncementEnabled();
-    
-    public String getSltFeatureAnnouncementText();
-    
-}
+-->
+<span class="required-asterisk" *ngIf="control?.hasValidator(validators.required) && control?.enabled">*</span>

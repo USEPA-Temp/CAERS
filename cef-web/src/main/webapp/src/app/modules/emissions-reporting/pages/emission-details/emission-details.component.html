@@ -156,6 +156,7 @@
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Name, Code, and CAS ID of the pollutant." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="pollutantSelect" class="ml-1 col-form-label"><strong>Pollutant:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.pollutant"></app-required-asterisk>
                         </div>
                         <div class="col-sm-3">
                             <input (ngModelChange)="onChange($event)" [attr.aria-multiline]="null" id="pollutantSelect" type="text" class="form-control" formControlName="pollutant" [ngbTypeahead]="searchPollutants" [editable]="false" [inputFormatter]="pollutantFormatter" [resultFormatter]="pollutantFormatter"/>
@@ -190,6 +191,7 @@
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Code that defines the method used to calculate emissions." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionsCalcMethodCodeSelect" class="ml-1 col-form-label"><strong>Calculation Method:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.emissionsCalcMethodCode"></app-required-asterisk>
                         </div>
                         <div class="col-sm-9">
                             <select type="text" class="form-control" id="emissionsCalcMethodCodeSelect" formControlName="emissionsCalcMethodCode" [compareWith]="formUtils.compareCode">
@@ -213,6 +215,7 @@
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Numerical value or formula for the emission calculation." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionFactorInput" class="ml-1 col-form-label"><strong>Emission Factor:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.emissionsFactor"></app-required-asterisk>
                         </div>
                         <div class="col-sm-3" *ngIf="!emissionForm.get('formulaIndicator').value">
                             <input type="number" class="form-control" id="emissionFactorInput" formControlName="emissionsFactor" [readonly]="epaEmissionFactor">
@@ -228,6 +231,7 @@
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Explanation for emission factor." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionsFactorTextInput" style="font-size:95%" class="ml-1 col-form-label"><strong>Emission Factor Description:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.emissionsFactorText"></app-required-asterisk>
                         </div>
                         <div class="col-sm-3">
                             <textarea class="form-control" id="emissionsFactorTextInput" aria-required="true" formControlName="emissionsFactorText" [readonly]="epaEmissionFactor"></textarea>
@@ -262,6 +266,7 @@
                             <div class="col-sm-3">
                                 <fa-icon *ngIf="editable" class="mt-2" title="Units of measure of the emission factor numerator." [icon]="['fas', 'question-circle']"></fa-icon>
                                 <label for="emissionsNumeratorSelect" class="ml-1 col-form-label"><strong>Emission Factor Numerator UoM:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.emissionsNumeratorUom"></app-required-asterisk>
                             </div>
                             <div class="col-sm-3">
                                 <select type="text" class="form-control" id="emissionsNumeratorSelect" formControlName="emissionsNumeratorUom" [compareWith]="formUtils.compareCode">
@@ -278,6 +283,7 @@
                             <div class="col-sm-3">
                                 <fa-icon *ngIf="editable" class="mt-2" title="Units of measure of the emission factor denominator." [icon]="['fas', 'question-circle']"></fa-icon>
                                 <label for="emissionsDenominatorSelect" class="ml-1 col-form-label"><strong>Emission Factor Denominator UoM:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.emissionsDenominatorUom"></app-required-asterisk>
                             </div>
                             <div class="col-sm-3">
                                 <select type="text" class="form-control" id="emissionsDenominatorSelect" formControlName="emissionsDenominatorUom" [compareWith]="formUtils.compareCode">
@@ -312,6 +318,7 @@
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Total calculated or estimated amount of the pollutant. Reported as a float with a maximum of 4 significant figures." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="totalEmissionsInput" class="ml-1 col-form-label"><strong>Total Emissions:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.totalEmissions"></app-required-asterisk>
                         </div>
                         <div class="col-sm-3">
                             <input type="number" class="form-control" id="totalEmissionsInput" formControlName="totalEmissions" [readOnly]="!getTotalManualEntry().value && !getCalcMethodCodeValue()?.totalDirectEntry">
@@ -337,6 +344,7 @@
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" title="Unit of measure for reported emissions." [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionsUomCodeSelect" class="ml-1 col-form-label"><strong>Emissions UoM:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.emissionsUomCode"></app-required-asterisk>
                         </div>
                         <div class="col-sm-3">
                             <select type="text" class="form-control" id="emissionsUomCodeSelect" formControlName="emissionsUomCode" [compareWith]="formUtils.compareCode">
@@ -368,6 +376,7 @@
                         <div class="col-sm-3">
                             <fa-icon *ngIf="editable" class="mt-2" style="visibility: hidden" [icon]="['fas', 'question-circle']"></fa-icon>
                             <label for="emissionCalcCommentInput" class="ml-1 col-form-label"><strong>Description of Calculation:</strong></label>
+    						<app-required-asterisk [control]="emissionForm.controls.calculationComment"></app-required-asterisk>
                         </div>
                         <div class="col-sm-9">
                             <textarea rows="3" class="form-control" maxlength="4000" id="emissionCalcCommentInput" formControlName="calculationComment"></textarea>

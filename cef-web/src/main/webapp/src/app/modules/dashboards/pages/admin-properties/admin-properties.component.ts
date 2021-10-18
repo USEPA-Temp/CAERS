@@ -26,6 +26,9 @@ import { UserFacilityAssociationService } from 'src/app/core/services/user-facil
 import { EmissionsReportingService } from 'src/app/core/services/emissions-reporting.service';
 import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
 import {wholeNumberValidator} from 'src/app/modules/shared/directives/whole-number-validator.directive';
+import { SharedService } from 'src/app/core/services/shared.service';
+
+const Admin_AnnouncementText = 'feature.announcement.text';
 
 @Component({
   selector: 'app-admin-properties',
@@ -51,6 +54,7 @@ export class AdminPropertiesComponent implements OnInit {
       private ufaService: UserFacilityAssociationService,
       private reportService: EmissionsReportingService,
       private facilitySiteService: FacilitySiteService,
+	  private sharedService: SharedService,
       private fb: FormBuilder,
       private modalService: NgbModal,
       private toastr: ToastrService) { }
@@ -62,10 +66,9 @@ export class AdminPropertiesComponent implements OnInit {
       result.sort((a, b) => (a.name > b.name) ? 1 : -1);
       result.forEach(prop => {
         if (prop.datatype !== 'boolean') {
-          if (prop.name === 'feature.announcement.text') {
+	
+          if (!prop.required) {
             this.propertyForm.addControl(prop.name, new FormControl(prop.value));
-          } else if (prop.name === 'task.scc-update.last-ran') {
-            this.propertyForm.addControl(prop.name, new FormControl({value: prop.value, disabled: true}));
           } else {
             this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [Validators.required]}));
           }
@@ -144,35 +147,6 @@ export class AdminPropertiesComponent implements OnInit {
     });
   }
 
-  deleteReportModal() {
-    const reportId = this.deleteReportForm.get('deleteReportId').value;
-
-    if (!this.deleteReportForm.valid) {
-
-      this.deleteReportForm.markAllAsTouched();
-    } else {
-
-      this.facilitySiteService.retrieveForReport(reportId).subscribe(reportResp => {
-        if (reportResp) {
-          const modalHtmlMessage = `Are you sure you want to permanently delete this ${reportResp.emissionsReport.year} report from CAERS?` +
-          '\n <ul><li>' + `SLT: ${reportResp.programSystemCode.code}`
-          + '</li><li>' + `Facility: ${reportResp.name}`
-          + '</li><li>' + `Facility ID: ${reportResp.altSiteIdentifier}`
-          + '</li><li>' + `EIS ID: ${reportResp.emissionsReport.eisProgramId}`
-          + '</li></ul>';
-          const modalRef = this.modalService.open(ConfirmationDialogComponent);
-          this.deleteReportInfo = `${reportResp.name} ${reportResp.emissionsReport.year} Emissions Report for ${reportResp.programSystemCode.code}`;
-          modalRef.componentInstance.htmlMessage = modalHtmlMessage;
-          modalRef.componentInstance.continue.subscribe(() => {
-            this.deleteReport(reportId);
-          });
-        } else {
-          this.toastr.error('', 'Facility Report with Report ID ' + reportId + ' does not exist.');
-        }
-      });
-    }
-  }
-
   onSubmit() {
     if (!this.propertyForm.valid) {
       this.propertyForm.markAllAsTouched();
@@ -191,17 +165,14 @@ export class AdminPropertiesComponent implements OnInit {
 
         this.toastr.success('', 'Properties updated successfully.');
         this.setMigrationFeature();
+		result.forEach(prop => {
+			if (prop.name === Admin_AnnouncementText) {
+				this.sharedService.emitAdminBannerChange(prop.value);
+			}
+		});
       });
 
     }
-  }
-
-  deleteReport(reportId: number) {
-    this.reportService.delete(reportId).subscribe(() => {
-      this.toastr.success('', 'The ' + this.deleteReportInfo + ' has been deleted successfully.');
-      this.deleteReportInfo = null;
-      this.deleteReportForm.get('deleteReportId').reset();
-    });
   }
 
 }

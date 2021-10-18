@@ -17,11 +17,10 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ExternalSccService } from 'src/app/core/services/external-scc.service';
 import { FormControl, Validators } from '@angular/forms';
-import { SccCode } from 'src/app/shared/models/scc-code';
-import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { LookupService } from 'src/app/core/services/lookup.service';
+import { PointSourceSccCode } from 'src/app/shared/models/point-source-scc-code';
 
 @Component({
   selector: 'app-scc-search-modal',
@@ -29,14 +28,14 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./scc-search-modal.component.scss']
 })
 export class SccSearchModalComponent extends BaseSortableTable implements OnInit {
-  tableData: SccCode[];
+  tableData: PointSourceSccCode[];
   searchControl = new FormControl('', Validators.required);
   hasSearched = false;
   searchError = false;
 
   sccSearchUrl = environment.sccSearchUrl;
 
-  constructor(private sccService: ExternalSccService, public activeModal: NgbActiveModal) {
+  constructor(public activeModal: NgbActiveModal, private lookupService: LookupService) {
     super();
   }
 
@@ -47,10 +46,7 @@ export class SccSearchModalComponent extends BaseSortableTable implements OnInit
      if (!this.searchControl.valid) {
       this.searchControl.markAsTouched();
     } else {
-      this.sccService.basicSearch(this.searchControl.value)
-      .pipe(
-        map((items: SccCode[]) => items.map(item => new SccCode(item)))
-      )
+      this.lookupService.basicSccSearch(this.searchControl.value)
       .subscribe(result => {
 
         this.tableData = result;
@@ -68,7 +64,7 @@ export class SccSearchModalComponent extends BaseSortableTable implements OnInit
     this.activeModal.dismiss();
   }
 
-  onSubmit(selectedCode: SccCode) {
+  onSubmit(selectedCode: PointSourceSccCode) {
     this.activeModal.close(selectedCode);
   }
 

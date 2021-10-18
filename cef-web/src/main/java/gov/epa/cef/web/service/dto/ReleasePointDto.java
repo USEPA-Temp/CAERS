@@ -54,9 +54,9 @@ public class ReleasePointDto implements Serializable {
     private CodeLookupDto fenceLineUomCode;
     private Long fugitiveHeight;
     private CodeLookupDto fugitiveHeightUomCode;
-    private Long fugitiveWidth;
+    private BigDecimal fugitiveWidth;
     private CodeLookupDto fugitiveWidthUomCode;
-    private Long fugitiveLength;
+    private BigDecimal fugitiveLength;
     private CodeLookupDto fugitiveLengthUomCode;
     private Long fugitiveAngle;
 
@@ -292,11 +292,11 @@ public class ReleasePointDto implements Serializable {
         this.fugitiveHeightUomCode = fugitiveHeightUomCode;
     }
 
-    public Long getFugitiveWidth() {
+    public BigDecimal getFugitiveWidth() {
         return fugitiveWidth;
     }
 
-    public void setFugitiveWidth(Long fugitiveWidth) {
+    public void setFugitiveWidth(BigDecimal fugitiveWidth) {
         this.fugitiveWidth = fugitiveWidth;
     }
 
@@ -308,11 +308,11 @@ public class ReleasePointDto implements Serializable {
         this.fugitiveWidthUomCode = fugitiveWidthUomCode;
     }
 
-    public Long getFugitiveLength() {
+    public BigDecimal getFugitiveLength() {
         return fugitiveLength;
     }
 
-    public void setFugitiveLength(Long fugitiveLength) {
+    public void setFugitiveLength(BigDecimal fugitiveLength) {
         this.fugitiveLength = fugitiveLength;
     }
 

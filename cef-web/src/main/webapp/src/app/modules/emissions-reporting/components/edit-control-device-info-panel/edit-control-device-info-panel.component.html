@@ -20,6 +20,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The identifier of the control, given by the facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlIdentifierInput" class="ml-1 col-form-label" ><strong>Control ID:</strong></label>
+            <app-required-asterisk [control]="controlDeviceForm.get('identifier')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input [readonly]="control" type="text" class="form-control" maxlength="20" id="controlIdentifierInput" formControlName="identifier">
@@ -31,6 +32,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
+            <app-required-asterisk [control]="controlDeviceForm.get('operatingStatusCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <select type="text" class="form-control" id="controlStatusCodeSelect" (ngModelChange)="onChange($event)" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
@@ -51,6 +53,7 @@
         <div class="col-sm-3">
             <fa-icon class="ml-2 mt-2" title="Code that describes the control measure." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlMeasureCodeSelect" class="ml-1 col-form-label"><strong>Control Measure:</strong></label>
+            <app-required-asterisk [control]="controlDeviceForm.get('controlMeasureCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <select type="text" class="form-control" id="controlMeasureCodeSelect" formControlName="controlMeasureCode" [compareWith]="formUtils.compareCode">
@@ -62,6 +65,7 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="The year the current operating status came into effect. Required if Control Device Status Code is anything other than operating. Must be between 1900-2050." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="controlStatusYearInput" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
+            <app-required-asterisk [control]="controlDeviceForm.get('statusYear')"></app-required-asterisk>
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" id="controlStatusYearInput" formControlName="statusYear" maxlength="4">
@@ -73,6 +77,8 @@
         <div class="col-sm-3">
             <fa-icon class="mt-2 ml-2" title="Description of the Control Measure" [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="descriptionInput" class="ml-1 col-form-label"><strong>Control Description:</strong></label>
+            <app-required-asterisk [control]="controlDeviceForm.get('description')"></app-required-asterisk>
+            
         </div>
         <div class="col-sm-9">
             <textarea rows="3" class="mb-2 form-control" maxlength="200" id="descriptionInput" formControlName="description"></textarea>
