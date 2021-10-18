@@ -162,6 +162,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
         }
         this.emissionUnitForm.controls.statusYear.markAsTouched();
         this.emissionUnitForm.controls.description.updateValueAndValidity();
+		// has to happen twice to catch potentially newly added validators
+		// namely when adding or removing the required validator
+        this.emissionUnitForm.controls.description.updateValueAndValidity();
     }
 
     // Design capacity should be entered if type code is 100, 120, 140, 160, or 180.
@@ -272,7 +275,7 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
             if (this.emissionUnitForm.get('operatingStatusCode').value
                 && this.emissionUnitForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-				formControl.addValidators(Validators.required);
+					formControl.addValidators(Validators.required);
             } else {
 				if (formControl.hasValidator(Validators.required)) {
 					formControl.removeValidators(Validators.required);
