@@ -173,6 +173,10 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
         }
         this.processForm.controls.description.updateValueAndValidity();
         this.processForm.controls.sccDescription.updateValueAndValidity();
+		// has to happen twice to catch potentially newly added validators
+		// namely when adding or removing the required validator
+        this.processForm.controls.description.updateValueAndValidity();
+        this.processForm.controls.sccDescription.updateValueAndValidity();
     }
 
     openSccSearchModal() {
@@ -408,7 +412,7 @@ export class EditProcessInfoPanelComponent implements OnInit, OnChanges, AfterCo
 
             if (this.processForm.get('operatingStatusCode').value
                 && this.processForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-                formControl.addValidators(Validators.required);
+				formControl.addValidators(Validators.required);
             } else {
 				if (formControl.hasValidator(Validators.required)) {
 					formControl.removeValidators(Validators.required);
