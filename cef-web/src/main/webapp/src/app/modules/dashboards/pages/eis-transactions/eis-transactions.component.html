@@ -21,10 +21,42 @@
       <strong>EIS Transaction Information</strong>
     </div>
     <div class="card-body">
+      <div class="form-inline">
+
+      <label for="id-filter-status" class="col-form-label mr-2">
+         <strong>Submission Status:</strong>
+      </label>
+      <select id="id-filter-status"
+              class="mr-3 form-control form-control-sm"
+              style="width: 150px"
+              [formControl]="statusFilter">
+         <option value=""></option>
+         <option *ngFor="let item of (availableStatuses | sortBy:'':'asc')"
+                 [value]="item">{{ item }}</option>
+      </select>
+
+      <label for="id-filter-text" class="col-form-label mr-2">
+         <strong>Filter Table:</strong>
+      </label>
+      <div class="input-group">
+         <input id="id-filter-text" type="text" placeholder="Search"
+                class="form-control form-control-sm"
+                [formControl]="txtFilter"/>
+         <div class="input-group-append">
+            <button type="button"
+                    class="btn btn-sm btn-outline-secondary"
+                    title="Clear filter"
+                    (click)="onClearFilterClick()">
+               <fa-icon icon="times"></fa-icon>
+            </button>
+         </div>
+      </div>
+   </div>
       <div class="mh-100 overflow-auto" *ngIf="tableData">
         <table class="table table-sm table-striped table-bordered">
           <thead class="thead-cef-medium">
             <tr>
+              <th scope="col">Select</th>
               <th scope="col" sortable="createdDate" (sort)="onSort($event)">Date</th>
               <th scope="col" sortable="transactionId" (sort)="onSort($event)">Transaction ID</th>
               <th scope="col" sortable="eisSubmissionStatus" (sort)="onSort($event)">Transaction Type</th>
@@ -34,6 +66,12 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of tableItems">
+              <td class="text-center">
+                <input type="checkbox"
+                       [attr.aria-label]="item.transactionId"
+                       class="form-check-inline mr-0"
+                       [(ngModel)]="item.checked" />
+              </td>
               <td>
                 {{item.createdDate | date:'short'}}
               </td>
@@ -81,6 +119,15 @@
           </tbody>
         </table>
         <ngb-pagination [(page)]="controller.page" [pageSize]="controller.pageSize" [collectionSize]="controller.total$ | async" [maxSize]="5" [rotate]="true"></ngb-pagination>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <div class="col text-right">
+            <button type="button" class="btn btn-success" (click)="openTransactionDeleteModal()" [disabled]="!selectedTransactions()?.length">
+               Delete transactions
+            </button>
+        </div>
       </div>
     </div>
   </div>
