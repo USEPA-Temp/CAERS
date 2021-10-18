@@ -331,6 +331,9 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         }
         this.releasePointForm.controls.statusYear.markAsTouched();
         this.releasePointForm.controls.description.updateValueAndValidity();
+		// has to happen twice to catch potentially newly added validators
+		// namely when adding or removing the required validator
+        this.releasePointForm.controls.description.updateValueAndValidity();
         this.setFormValidation();
     }
 
