@@ -170,6 +170,8 @@ export class EisSubmissionComponent extends BaseSortableTable implements OnInit 
 
          this.retrieveData();
       });
+
+      this.controller.paginate = true;
    }
 
    retrieveDataStats(onComplete?: () => void) {
