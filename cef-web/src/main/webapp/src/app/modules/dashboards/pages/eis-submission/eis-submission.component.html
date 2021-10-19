@@ -175,6 +175,7 @@
                      </tr>
                      </tbody>
                   </table>
+                  <ngb-pagination [(page)]="controller.page" [pageSize]="controller.pageSize" [collectionSize]="controller.total$ | async" [maxSize]="5" [rotate]="true"></ngb-pagination>
                </div>
                <div class="validation-message" *ngIf="invalidSelection">
                   <span>A submission, Submission Type, and Data Category must be selected.</span>

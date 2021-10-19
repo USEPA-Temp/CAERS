@@ -127,7 +127,7 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
   }
 
   openDeleteModal(id: number, fileName: string) {
-    const modalMessage = `Are you sure you want to delete the attachment ${fileName} from this record?`;
+    const modalMessage = `Are you sure you want to delete the attachment ${fileName} from this record? This will also delete the transaction if it is more than 7 days old.`;
     const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
