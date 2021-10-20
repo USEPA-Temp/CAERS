@@ -21,11 +21,13 @@ import gov.epa.cef.web.domain.AttachmentMIMEType;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.ReportAttachment;
 import gov.epa.cef.web.domain.ReportHistory;
+import gov.epa.cef.web.domain.SLTConfigProperty;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.exception.ReportAttachmentValidationException;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
+import gov.epa.cef.web.repository.SLTConfigRepository;
 import gov.epa.cef.web.service.ReportAttachmentService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
@@ -48,7 +50,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
@@ -64,6 +68,9 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
     
     @Autowired
     private ReportHistoryRepository reportHistoryRepo;
+    
+    @Autowired
+    private SLTConfigRepository sltConfigRepo;
 
     @Autowired
     private ReportSummaryMapper reportSummaryMapper;
@@ -156,13 +163,40 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
 	            }
 	         }
 	        
-	        if (!acceptedType) {
-	        	String msg = String.format("The file extension '%s' is not in an accepted file format.",
-	        			(fileName.substring(fileName.indexOf('.'), fileName.length())));
+        if (!acceptedType) {
+        	String msg = String.format("The file extension '%s' is not in an accepted file format.",
+        			(fileName.substring(fileName.indexOf('.'), fileName.length())));
 
-	        	throw new ReportAttachmentValidationException(
-	                    Collections.singletonList(WorksheetError.createSystemError(msg)));
+        	throw new ReportAttachmentValidationException(
+                    Collections.singletonList(WorksheetError.createSystemError(msg)));
+        }
+        
+        boolean acceptedTypeSlt = false;
+	    String programSystemCode = this.userService.getCurrentUser().getProgramSystemCode();
+	    String fileType = AttachmentMIMEType.fromLabel(metadata.getFileType()).code().toLowerCase();
+	    List<SLTConfigProperty> permittedUploadTypes = sltConfigRepo.getPermittedReportUploadTypes(programSystemCode);
+	    ArrayList<String> permittedUploadTypeExtensions = new ArrayList<String>();
+	    
+	    // for each type in upload types, add to list, check list
+	    for (SLTConfigProperty uploadType : permittedUploadTypes) {
+	    	String uploadTypeName = uploadType.getSltPropertyDetails().getName();
+	    	// index + 1 to remove the period when comparing extensions
+	    	String uploadTypeExtension = uploadTypeName.substring(uploadTypeName.indexOf('.') + 1, uploadTypeName.length());
+	    	permittedUploadTypeExtensions.add(uploadTypeExtension);
+	    	if (fileType.equals(uploadTypeExtension)) {
+	    		acceptedTypeSlt = true;
 	        }
+         }
+	    
+	    if (!acceptedTypeSlt) {
+	    	final String joinedPermittedUploadTypes = String.join(", ", permittedUploadTypeExtensions);
+        	String msg = String.format("The file extension '%s' is not an accepted file format for your agency. The following file extensions are acceptable for use: %s",
+        			(fileName.substring(fileName.indexOf('.'), fileName.length())),
+        			 joinedPermittedUploadTypes);
+
+        	throw new ReportAttachmentValidationException(
+                    Collections.singletonList(WorksheetError.createSystemError(msg)));
+        }
 		 
 		ReportAttachment result = reportAttachmentsRepo.save(attachment);
 		

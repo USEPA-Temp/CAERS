@@ -123,7 +123,19 @@ export class SltPropertiesComponent implements OnInit {
     } else {
 
       const updatedProperties: AppProperty[] = [];
+
+	  const reportAttachment: string = "report-attachment-upload";
+	  var oneAttachmentUploadEnabled: boolean = false;
+
       this.properties.forEach(prop => {
+		//if name like report attachment, check status
+		if (prop.name.includes(reportAttachment)) {
+			if ((this.propertyForm.get([prop.name]).value === true )) {
+				console.log(prop.name + "  -  " + this.propertyForm.get([prop.name]).value);
+				oneAttachmentUploadEnabled = true;
+			}
+		}
+		
         if (prop.value !== this.propertyForm.get([prop.name]).value
 			|| !prop.value) {
           prop.value = this.propertyForm.get([prop.name]).value;
@@ -131,11 +143,14 @@ export class SltPropertiesComponent implements OnInit {
         }
       });
 
-      this.propertyService.bulkUpdate(updatedProperties, this.slt)
-      .subscribe(result => {
-		this.toastr.success('', 'Properties updated successfully.');
-      });
-
+	  if (oneAttachmentUploadEnabled) {
+	    this.propertyService.bulkUpdate(updatedProperties, this.slt)
+	    .subscribe(result => {
+		  this.toastr.success('', 'Properties updated successfully.');
+	    });
+	  } else {
+		this.toastr.error('', 'At least one report attachment upload type must be enabled.');
+	  }
     }
   }
 
