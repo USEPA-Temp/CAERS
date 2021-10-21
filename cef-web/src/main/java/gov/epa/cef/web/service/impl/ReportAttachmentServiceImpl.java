@@ -28,6 +28,7 @@ import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.SLTConfigRepository;
+import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.ReportAttachmentService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
@@ -93,6 +94,9 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
     @Autowired
     private UserService userService;
     
+    @Autowired
+    private EmissionsReportService emissionsReportService;
+    
     /***
      * Return attachment for the chosen attachment id
      * @param id
@@ -136,7 +140,7 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
     	
     	ReportAttachment attachment = reportAttachmentMapper.fromDto(metadata);
     	attachment.getEmissionsReport().setId(metadata.getReportId());
-
+    	
 		 try {
 		
 			 attachment.setAttachment(file.createBlob());
@@ -172,7 +176,7 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
         }
         
         boolean acceptedTypeSlt = false;
-	    String programSystemCode = this.userService.getCurrentUser().getProgramSystemCode();
+    	String programSystemCode = emissionsReportService.findById(metadata.getReportId()).getProgramSystemCode().getCode();
 	    String fileType = AttachmentMIMEType.fromLabel(metadata.getFileType()).code().toLowerCase();
 	    List<SLTConfigProperty> permittedUploadTypes = sltConfigRepo.getPermittedReportUploadTypes(programSystemCode);
 	    ArrayList<String> permittedUploadTypeExtensions = new ArrayList<String>();

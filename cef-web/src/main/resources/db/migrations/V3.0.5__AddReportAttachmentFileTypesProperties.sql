@@ -1,5 +1,5 @@
 
-INSERT INTO public.slt_properties(
+INSERT INTO slt_properties(
 	name, label, description, datatype, required)
 	VALUES ('report-attachment-upload.csv', 'Allow CSV Report Attachment Uploads', 'Enabling allows report attachments to be uploaded in CSV format', 'boolean', true),
 		   ('report-attachment-upload.xls', 'Allow XLS Report Attachment Uploads', 'Enabling allows report attachments to be uploaded in XLS format', 'boolean', true),

@@ -131,7 +131,6 @@ export class SltPropertiesComponent implements OnInit {
 		//if name like report attachment, check status
 		if (prop.name.includes(reportAttachment)) {
 			if ((this.propertyForm.get([prop.name]).value === true )) {
-				console.log(prop.name + "  -  " + this.propertyForm.get([prop.name]).value);
 				oneAttachmentUploadEnabled = true;
 			}
 		}
