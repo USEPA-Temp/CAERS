@@ -150,7 +150,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         stackDiameterUomCode: [null, []],
 		fugitiveHeight: ['', [
             wholeNumberValidator(),
-            Validators.min(0),
+            Validators.min(1),
             Validators.max(500),
 			this.requiredFugitiveIfOperating()
         ]],
@@ -414,7 +414,6 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 	}
 	
 	setFugitiveFormValidation() {
-		console.log(this.releasePointForm.controls.typeCode.value.description)
 		this.releasePointForm.controls.stackHeight.disable();
         this.releasePointForm.controls.stackDiameter.disable();
         this.releasePointForm.controls.stackWidth.disable();
@@ -432,10 +431,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
 		this.releasePointForm.controls.fugitiveWidthUomCode.enable();
         this.releasePointForm.controls.fugitiveHeightUomCode.enable();
-		this.releasePointForm.controls.fugitiveLengthUomCode.enable();
 		this.releasePointForm.controls.fugitiveWidth.enable();
         this.releasePointForm.controls.fugitiveHeight.enable();
-		this.releasePointForm.controls.fugitiveLength.enable();
 
 		if (this.releasePointForm.controls.typeCode.value.description === this.releasePointType.FUGITIVE_2D_TYPE) {
 			this.releasePointForm.controls.fugitiveMidPt2Latitude.enable();
@@ -449,6 +446,15 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         	this.releasePointForm.controls.fugitiveMidPt2Longitude.disable();
 			this.releasePointForm.controls.latitude.updateValueAndValidity();
         	this.releasePointForm.controls.longitude.updateValueAndValidity();
+		}
+		
+		if (this.releasePointForm.controls.typeCode.value.description === this.releasePointType.FUGITIVE_AREA_TYPE) {
+			this.releasePointForm.controls.fugitiveLength.enable();
+			this.releasePointForm.controls.fugitiveLengthUomCode.enable();
+		} else {
+			this.releasePointForm.controls.fugitiveLength.reset();
+			this.releasePointForm.controls.fugitiveLength.disable();
+			this.releasePointForm.controls.fugitiveLengthUomCode.disable();
 		}
 	}
 

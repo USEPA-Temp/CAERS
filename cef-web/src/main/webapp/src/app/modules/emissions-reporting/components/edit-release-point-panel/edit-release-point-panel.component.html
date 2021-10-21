@@ -444,14 +444,14 @@
         </div>
 
         <div class="row pb-3">
-            <div class="col-sm-3" *ngIf="releasePointForm.get('typeCode').value.description !== releasePointType.FUGITIVE_2D_TYPE">
+            <div class="col-sm-3" *ngIf="releasePointForm.get('typeCode').value.description === releasePointType.FUGITIVE_AREA_TYPE">
                 <fa-icon class="mt-2"
                          title="The fugitive length (measured in feet) of the release in the North-South direction as if the angle is zero degrees. Should be between 1 and 10,000."
                          [icon]="['fas', 'question-circle']"></fa-icon>
                 <label for="fugitiveLength" class="ml-1 col-form-label"><strong>Fugitive Length
                     Measure:</strong></label>
             </div>
-            <div class="col-sm-3" *ngIf="releasePointForm.get('typeCode').value.description !== releasePointType.FUGITIVE_2D_TYPE">
+            <div class="col-sm-3" *ngIf="releasePointForm.get('typeCode').value.description === releasePointType.FUGITIVE_AREA_TYPE">
                 <div class="input-group">
                     <input type="text" class="form-control" id="fugitiveLength" formControlName="fugitiveLength"
                            maxlength="8">
