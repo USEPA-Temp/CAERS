@@ -34,9 +34,9 @@ public interface PointSourceSccCodeRepository extends CrudRepository<PointSource
 		@QueryHint(name = "org.hibernate.cacheable", value = "true")})
 	Iterable<PointSourceSccCode> findAll(Sort sort);
 	
-	@Query("select pssc from PointSourceSccCode pssc where pssc.code like %:searchTerm% or pssc.shortName like %:searchTerm% "
-			+ "or pssc.sector like %:searchTerm% or pssc.sccLevelOne like %:searchTerm% or pssc.sccLevelTwo like %:searchTerm% "
-			+ "or pssc.sccLevelThree like %:searchTerm% or pssc.sccLevelFour like %:searchTerm%")
+	@Query("select pssc from PointSourceSccCode pssc where lower(pssc.code) like %:searchTerm% or lower(pssc.shortName) like %:searchTerm% "
+			+ "or lower(pssc.sector) like %:searchTerm% or lower(pssc.sccLevelOne) like %:searchTerm% or lower(pssc.sccLevelTwo) like %:searchTerm% "
+			+ "or lower(pssc.sccLevelThree) like %:searchTerm% or lower(pssc.sccLevelFour) like %:searchTerm%")
 	List<PointSourceSccCode> findBySearchTerm(@Param("searchTerm") String searchTerm, Sort sort);
 	
 }

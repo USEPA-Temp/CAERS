@@ -248,10 +248,10 @@ INSERT INTO EMISSIONS_UNIT (id, facility_site_id, unit_identifier, description, 
 --RELEASE POINTS
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
     stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, 
-    fugitive_line_1_latitude, fugitive_line_1_longitude, fugitive_line_2_latitude, fugitive_line_2_longitude, latitude, longitude, 
+    fugitive_mid_pt2_latitude, fugitive_mid_pt2_longitude, latitude, longitude, 
     created_by, created_date, last_modified_by, last_modified_date, comments) 
     VALUES ('9999991', '9999991', 'Smokestack 1', '1', 'A big smokestack', 40, 'M', 7, 'M', 20, 'FT/MIN', 75, 25, 'YD3/HR', 'OP', '1985', 
-        '32.7490', '83.3880', '34.7490', '85.3880', '33.7490', '84.3880', 
+        '34.7490', '85.3880', '33.7490', '84.3880', 
         'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, 'Sample Comments for Smokestack 1');
 INSERT INTO RELEASE_POINT (id, facility_site_id, release_point_identifier, type_code, description, stack_height, stack_height_uom_code, stack_diameter, 
     stack_diameter_uom_code, exit_gas_velocity, exit_gas_velocity_uom_code, exit_gas_temperature, exit_gas_flow_rate, exit_gas_flow_uom_code, status_code, status_year, latitude, longitude, 

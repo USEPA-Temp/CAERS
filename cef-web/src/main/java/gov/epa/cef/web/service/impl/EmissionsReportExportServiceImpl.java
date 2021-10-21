@@ -488,8 +488,6 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
             setCellNumberValue(row.getCell(9), dto.getStatusYear());
             setCellNumberValue(row.getCell(10), dto.getLatitude());
             setCellNumberValue(row.getCell(11), dto.getLongitude());
-            setCellNumberValue(row.getCell(12), dto.getFugitiveLine1Latitude());
-            setCellNumberValue(row.getCell(13), dto.getFugitiveLine1Longitude());
             setCellNumberValue(row.getCell(14), dto.getFugitiveLine2Latitude());
             setCellNumberValue(row.getCell(15), dto.getFugitiveLine2Longitude());
             setCellNumberValue(row.getCell(16), dto.getStackHeight());

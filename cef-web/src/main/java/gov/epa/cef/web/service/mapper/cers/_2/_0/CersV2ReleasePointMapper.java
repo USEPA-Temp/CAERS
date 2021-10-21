@@ -84,6 +84,8 @@ public interface CersV2ReleasePointMapper {
 
     @Mapping(source="latitude", target="latitudeMeasure")
     @Mapping(source="longitude", target="longitudeMeasure")
+    @Mapping(source="fugitiveMidPt2Latitude", target="midPoint2LatitudeMeasure")
+    @Mapping(source="fugitiveMidPt2Longitude", target="midPoint2LongitudeMeasure")
     GeographicCoordinatesDataType coordinatesFromReleasePoint(ReleasePoint source);
 
     @BeanMapping(ignoreByDefault = true)

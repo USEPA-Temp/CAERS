@@ -38,10 +38,8 @@ export class ReleasePoint {
   exitGasFlowRate: number;
   exitGasFlowUomCode: BaseCodeLookup;
   statusYear: number;
-  fugitiveLine1Latitude: number;
-  fugitiveLine1Longitude: number;
-  fugitiveLine2Latitude: number;
-  fugitiveLine2Longitude: number;
+  fugitiveMidPt2Latitude: number;
+  fugitiveMidPt2Longitude: number;
   latitude: number;
   longitude: number;
   comments: string;

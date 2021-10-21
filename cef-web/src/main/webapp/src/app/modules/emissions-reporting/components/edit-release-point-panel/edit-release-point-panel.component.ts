@@ -31,6 +31,7 @@ import {InventoryYearCodeLookup} from 'src/app/shared/models/inventory-year-code
 import {legacyItemValidator} from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import {OperatingStatus} from 'src/app/shared/enums/operating-status';
 import {VariableValidationType} from 'src/app/shared/enums/variable-validation-type';
+import {ReleasePointType} from 'src/app/shared/enums/release-point-type';
 
 @Component({
     selector: 'app-edit-release-point-panel',
@@ -44,11 +45,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     readonly numberPattern83 = '^[0-9]{0,5}([\.][0-9]{1,3})?$';
     // numbers with length of 16 precision of 8
     readonly numberPattern168 = '^[0-9]{0,8}([\.][0-9]{0,8})?([eE]{1}[-+]?[0-9]+)?$';
+	readonly DEFAULT_TOLERANCE = 0.003;
 
     @Input() releasePoint: ReleasePoint;
     @Input() year: number;
     releasePointIdentifiers: string[] = [];
-    readonly fugitiveType = 'Fugitive';
     readonly circleAreaFormula: string = '(Pi * (Stack Diameter /2) ^ 2) for a circular stack';
     readonly rectangleAreaFormula: string = '(Stack Length * Stack Width) for a rectangular stack';
     readonly circularDimension: string = 'Stack Diameter is';
@@ -73,6 +74,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     tolerance: number;
     stackVelocityFormula: string;
     stackVelocityDimensions: string;
+	releasePointType = ReleasePointType;
 
     releasePointForm = this.fb.group({
         releasePointIdentifier: ['', [
@@ -94,11 +96,13 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
             Validators.min(-90),
             Validators.max(90),
+			this.requiredFugitiveIfOperating()
         ]],
         longitude: [null, [
             Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
             Validators.min(-180),
             Validators.max(180),
+			this.requiredFugitiveIfOperating()
         ]],
         fenceLineDistance: ['', [
             Validators.min(0),
@@ -111,24 +115,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         exitGasVelocityUomCode: [null],
         exitGasFlowRate: [null, Validators.pattern(this.numberPattern168)],
         exitGasFlowUomCode: [null],
-        fugitiveHeight: ['', [
-            wholeNumberValidator(),
-            Validators.min(0),
-            Validators.max(500),
+		exitGasTemperature: ['', [
+            Validators.min(-30),
+            Validators.max(4000),
+            Validators.pattern('^\-?[0-9]+$'),
+            this.requiredIfOperating()
         ]],
-        fugitiveHeightUomCode: [null],
-        fugitiveWidth: ['', [
-            Validators.min(1),
-            Validators.max(10000),
-			Validators.pattern(this.numberPattern83)
-        ]],
-        fugitiveWidthUomCode: [null],
-        fugitiveLength: ['', [
-            Validators.min(1),
-            Validators.max(10000),
-			Validators.pattern(this.numberPattern83)
-        ]],
-        fugitiveLengthUomCode: [null],
 		stackWidth: [null, [
             Validators.min(.1),
             Validators.max(100),
@@ -156,32 +148,52 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             Validators.pattern(this.numberPattern83),
         ]],
         stackDiameterUomCode: [null, []],
+		fugitiveHeight: ['', [
+            wholeNumberValidator(),
+            Validators.min(0),
+            Validators.max(500),
+			this.requiredFugitiveIfOperating()
+        ]],
+        fugitiveHeightUomCode: [null],
+        fugitiveWidth: ['', [
+            Validators.min(1),
+            Validators.max(10000),
+			Validators.pattern(this.numberPattern83),
+			this.requiredFugitiveIfOperating()
+        ]],
+        fugitiveWidthUomCode: [null],
+        fugitiveLength: ['', [
+            Validators.min(1),
+            Validators.max(10000),
+			Validators.pattern(this.numberPattern83)
+        ]],
+        fugitiveLengthUomCode: [null],
         fugitiveAngle: ['', [
             Validators.max(89),
             Validators.min(0),
             wholeNumberValidator()
         ]],
-        fugitiveLine1Latitude: [],
-        fugitiveLine1Longitude: [],
-        fugitiveLine2Latitude: [],
-        fugitiveLine2Longitude: [],
-        exitGasTemperature: ['', [
-            Validators.min(-30),
-            Validators.max(4000),
-            Validators.pattern('^\-?[0-9]+$'),
-            this.requiredIfOperating()
-        ]]
+        fugitiveMidPt2Latitude: [null, [
+			Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
+            Validators.min(-90),
+            Validators.max(90),
+			this.requiredFugitiveIfOperating()
+		]],
+        fugitiveMidPt2Longitude: [null, [
+			Validators.pattern('^-?[0-9]{1,3}([\.][0-9]{1,6})?$'),
+            Validators.min(-180),
+            Validators.max(180),
+			this.requiredFugitiveIfOperating()
+		]]
     }, {
         validators: [
             this.exitFlowConsistencyCheck(),
             this.stackDiameterCheck(),
             this.exitVelocityCheck(),
-            this.coordinateToleranceCheck(),
             this.facilitySiteStatusCheck(),
             this.exitGasFlowUomCheck(),
             this.exitGasVelocityUomCheck(),
             this.releasePointIdentifierCheck(),
-            this.latLongRequiredCheck(),
             this.stackDiameterOrStackWidthAndLength(),
         ]
     });
@@ -227,6 +239,17 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
                 this.flowUomValues = result.filter(val => String(val.code).startsWith('ACF'));
                 this.velocityUomValues = result.filter(val => String(val.code).startsWith('FP'));
             });
+		
+		this.lookupService.retrieveLatLongTolerance(this.eisProgramId)
+            .subscribe(result => {
+                this.coordinateTolerance = result;
+
+                    if (this.coordinateTolerance) {
+                        this.tolerance = this.coordinateTolerance.coordinateTolerance;
+                    } else {
+                        this.tolerance = this.DEFAULT_TOLERANCE;
+                    }
+			});
 
         this.route.data
             .subscribe((data: { facilitySite: FacilitySite }) => {
@@ -336,76 +359,104 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 
     isReleasePointFugitiveType() {
         if (this.releasePointForm.controls.typeCode.value !== null) {
-            this.releaseType = this.releasePointForm.get('typeCode').value.description;
-            if (this.releaseType === this.fugitiveType) {
-                return true;
-            }
-            return false;
+            this.releaseType = this.releasePointForm.controls.typeCode.value.category;
+            //return this.releaseType === this.releasePointType.FUGITIVE ? true: false;
         }
     }
 
     // reset form fields and set validation based on release point type
     setFormValidation() {
         this.isReleasePointFugitiveType();
+		this.setupListeners();
         this.setGasFlowRangeValidation();
         this.setGasVelocityRangeValidation();
         this.uomRequiredCheck();
 
         if (this.releasePointForm.get('operatingStatusCode').value
             && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-            this.releasePointForm.get('typeCode').setValidators([Validators.required,
+            this.releasePointForm.controls.typeCode.setValidators([Validators.required,
                 legacyItemValidator(this.year, 'Release Point Type Code', 'description')]);
             this.releasePointForm.controls.typeCode.markAsTouched();
         } else {
-            this.releasePointForm.get('typeCode').setValidators([Validators.required]);
+            this.releasePointForm.controls.typeCode.setValidators([Validators.required]);
         }
         this.releasePointForm.controls.typeCode.updateValueAndValidity();
 
-        if (this.releaseType === this.fugitiveType) {
-            this.releasePointForm.controls.fugitiveLengthUomCode.enable();
-            this.releasePointForm.controls.fugitiveWidthUomCode.enable();
-            this.releasePointForm.controls.fugitiveHeightUomCode.enable();
-            this.releasePointForm.controls.stackHeight.disable();
-            this.releasePointForm.controls.stackDiameter.disable();
-            this.releasePointForm.controls.stackWidth.disable();
-            this.releasePointForm.controls.stackWidthUomCode.disable();
-            this.releasePointForm.controls.stackLength.disable();
-            this.releasePointForm.controls.stackLengthUomCode.disable();
-            this.releasePointForm.controls.exitGasTemperature.disable();
-            this.releasePointForm.controls.stackHeightUomCode.disable();
-            this.releasePointForm.controls.stackDiameterUomCode.disable();
-            this.releasePointForm.controls.stackHeight.reset();
-            this.releasePointForm.controls.stackDiameter.reset();
-            this.releasePointForm.controls.stackWidth.reset();
-            this.releasePointForm.controls.stackLength.reset();
-            this.releasePointForm.controls.exitGasTemperature.reset();
+        if (this.releaseType === this.releasePointType.FUGITIVE) {
+            this.setFugitiveFormValidation();
         } else {
-            this.releasePointForm.controls.fugitiveLengthUomCode.disable();
-            this.releasePointForm.controls.fugitiveWidthUomCode.disable();
-            this.releasePointForm.controls.fugitiveHeightUomCode.disable();
-            this.releasePointForm.controls.stackHeight.enable();
-            this.releasePointForm.controls.stackDiameter.enable();
-            this.releasePointForm.controls.exitGasTemperature.enable();
-            this.releasePointForm.controls.stackHeightUomCode.enable();
-            this.releasePointForm.controls.stackDiameterUomCode.enable();
-            this.releasePointForm.controls.stackWidth.enable();
-            this.releasePointForm.controls.stackLength.enable();
-            this.releasePointForm.controls.fugitiveLine1Latitude.reset();
-            this.releasePointForm.controls.fugitiveLine2Latitude.reset();
-            this.releasePointForm.controls.fugitiveLine1Longitude.reset();
-            this.releasePointForm.controls.fugitiveLine2Longitude.reset();
-            this.releasePointForm.controls.fugitiveLength.reset();
-            this.releasePointForm.controls.fugitiveWidth.reset();
-            this.releasePointForm.controls.fugitiveHeight.reset();
-            this.releasePointForm.controls.fugitiveAngle.reset();
+            this.setStackFormValidation();
         }
     }
+	
+	setStackFormValidation() {
+		this.releasePointForm.controls.stackHeight.enable();
+        this.releasePointForm.controls.stackDiameter.enable();
+        this.releasePointForm.controls.exitGasTemperature.enable();
+        this.releasePointForm.controls.stackHeightUomCode.enable();
+        this.releasePointForm.controls.stackDiameterUomCode.enable();
+        this.releasePointForm.controls.stackWidth.enable();
+        this.releasePointForm.controls.stackLength.enable();
+
+		this.releasePointForm.controls.fugitiveLengthUomCode.disable();
+        this.releasePointForm.controls.fugitiveWidthUomCode.disable();
+        this.releasePointForm.controls.fugitiveHeightUomCode.disable();
+		this.releasePointForm.controls.fugitiveMidPt2Latitude.disable();
+        this.releasePointForm.controls.fugitiveMidPt2Longitude.disable();
+		this.releasePointForm.controls.fugitiveWidth.disable();
+        this.releasePointForm.controls.fugitiveHeight.disable();
+        this.releasePointForm.controls.fugitiveMidPt2Latitude.reset();
+        this.releasePointForm.controls.fugitiveMidPt2Longitude.reset();
+        this.releasePointForm.controls.fugitiveLength.reset();
+        this.releasePointForm.controls.fugitiveWidth.reset();
+        this.releasePointForm.controls.fugitiveHeight.reset();
+        this.releasePointForm.controls.fugitiveAngle.reset();
+	}
+	
+	setFugitiveFormValidation() {
+		console.log(this.releasePointForm.controls.typeCode.value.description)
+		this.releasePointForm.controls.stackHeight.disable();
+        this.releasePointForm.controls.stackDiameter.disable();
+        this.releasePointForm.controls.stackWidth.disable();
+        this.releasePointForm.controls.stackWidthUomCode.disable();
+        this.releasePointForm.controls.stackLength.disable();
+        this.releasePointForm.controls.stackLengthUomCode.disable();
+        this.releasePointForm.controls.exitGasTemperature.disable();
+        this.releasePointForm.controls.stackHeightUomCode.disable();
+        this.releasePointForm.controls.stackDiameterUomCode.disable();
+        this.releasePointForm.controls.stackHeight.reset();
+        this.releasePointForm.controls.stackDiameter.reset();
+        this.releasePointForm.controls.stackWidth.reset();
+        this.releasePointForm.controls.stackLength.reset();
+        this.releasePointForm.controls.exitGasTemperature.reset();
+
+		this.releasePointForm.controls.fugitiveWidthUomCode.enable();
+        this.releasePointForm.controls.fugitiveHeightUomCode.enable();
+		this.releasePointForm.controls.fugitiveLengthUomCode.enable();
+		this.releasePointForm.controls.fugitiveWidth.enable();
+        this.releasePointForm.controls.fugitiveHeight.enable();
+		this.releasePointForm.controls.fugitiveLength.enable();
+
+		if (this.releasePointForm.controls.typeCode.value.description === this.releasePointType.FUGITIVE_2D_TYPE) {
+			this.releasePointForm.controls.fugitiveMidPt2Latitude.enable();
+        	this.releasePointForm.controls.fugitiveMidPt2Longitude.enable();
+			this.releasePointForm.controls.latitude.updateValueAndValidity();
+        	this.releasePointForm.controls.longitude.updateValueAndValidity();
+		} else {
+			this.releasePointForm.controls.fugitiveMidPt2Latitude.reset();
+        	this.releasePointForm.controls.fugitiveMidPt2Longitude.reset();
+			this.releasePointForm.controls.fugitiveMidPt2Latitude.disable();
+        	this.releasePointForm.controls.fugitiveMidPt2Longitude.disable();
+			this.releasePointForm.controls.latitude.updateValueAndValidity();
+        	this.releasePointForm.controls.longitude.updateValueAndValidity();
+		}
+	}
 
     // QA Check - exit gas flow rate range
     setGasFlowRangeValidation() {
         this.isReleasePointFugitiveType();
 
-        if (this.releaseType === this.fugitiveType) {
+        if (this.releaseType === this.releasePointType.FUGITIVE) {
             this.releasePointForm.controls.exitGasFlowRate.setValidators([
                 Validators.min(0), Validators.max(200000), Validators.pattern(this.numberPattern168)]);
 
@@ -435,7 +486,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     setGasVelocityRangeValidation() {
         this.isReleasePointFugitiveType();
 
-        if (this.releaseType === this.fugitiveType) {
+        if (this.releaseType === this.releasePointType.FUGITIVE) {
             this.releasePointForm.controls.exitGasVelocity.setValidators([
                 Validators.min(0), Validators.max(400), Validators.pattern(this.numberPattern83)]);
 
@@ -511,22 +562,37 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     }
 
     // sets lat and long to required if one of the optional fields has a value
-    latLongRequiredCheck(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            if (control.get('latitude').value && !control.get('longitude').value) {
-                control.get('longitude').markAsTouched();
-                control.get('longitude').setErrors({requiredCoordinate: true});
-            } else if (control.get('longitude').value && !control.get('latitude').value) {
-                control.get('latitude').markAsTouched();
-                control.get('latitude').setErrors({requiredCoordinate: true});
-            } else if (!control.get('latitude').value && !control.get('longitude').value) {
-                control.get('latitude').setErrors(null);
-                control.get('longitude').setErrors(null);
+    bothLatLongRequiredCheck() {
+		if (this.releasePointForm.controls.typeCode.value?.description === this.releasePointType.FUGITIVE_AREA_TYPE
+		|| this.releasePointForm.controls.typeCode.value?.category === this.releasePointType.STACK
+		|| !this.releasePointForm.get('operatingStatusCode').value?.code.includes(OperatingStatus.OPERATING)) {
+            if (this.releasePointForm.get('latitude').value && !this.releasePointForm.get('longitude').value) {
+                this.releasePointForm.get('longitude').markAsTouched();
+                this.releasePointForm.get('longitude').setErrors({requiredCoordinate: true});
+            } else if (this.releasePointForm.get('longitude').value && !this.releasePointForm.get('latitude').value) {
+                this.releasePointForm.get('latitude').markAsTouched();
+                this.releasePointForm.get('latitude').setErrors({requiredCoordinate: true});
             }
-            return null;
-        };
-    }
+			
+			if (this.releasePointForm.get('fugitiveMidPt2Latitude').value && !this.releasePointForm.get('fugitiveMidPt2Longitude').value) {
+				this.releasePointForm.get('fugitiveMidPt2Longitude').markAsTouched();
+                this.releasePointForm.get('fugitiveMidPt2Longitude').setErrors({requiredCoordinate2: true});
+            } else if (this.releasePointForm.get('fugitiveMidPt2Longitude').value && !this.releasePointForm.get('fugitiveMidPt2Latitude').value) {
+				this.releasePointForm.get('fugitiveMidPt2Latitude').markAsTouched();
+                this.releasePointForm.get('fugitiveMidPt2Latitude').setErrors({requiredCoordinate2: true});
+            }
 
+			if (!this.releasePointForm.get('latitude').value && !this.releasePointForm.get('longitude').value) {
+                this.releasePointForm.get('latitude').setErrors(null);
+                this.releasePointForm.get('longitude').setErrors(null);
+            }
+
+			if (!this.releasePointForm.get('fugitiveMidPt2Latitude').value && !this.releasePointForm.get('fugitiveMidPt2Longitude').value) {
+				this.releasePointForm.get('fugitiveMidPt2Latitude').setErrors(null);
+                this.releasePointForm.get('fugitiveMidPt2Longitude').setErrors(null);
+            }
+		}
+	}
 
     // QA Check - exit gas flow rate and uom must be submitted together
     exitGasFlowUomCheck(): ValidatorFn {
@@ -557,7 +623,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     // QA Check - Calculated exit gas velocity range
     exitVelocityCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
-            if (this.releaseType !== this.fugitiveType) {
+            if (this.releaseType === this.releasePointType.STACK) {
                 const flowRate = control.get('exitGasFlowRate'); // acfs/acfm
                 const velocity = control.get('exitGasVelocity'); // fps/fps
                 const diameter = control.get('stackDiameter'); // ft
@@ -601,7 +667,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             const diameter = control.get('stackDiameter'); // ft
             const height = control.get('stackHeight'); // ft
 
-            if (this.releaseType !== this.fugitiveType) {
+            if (this.releaseType === this.releasePointType.STACK) {
                 if ((diameter !== null && height !== null) && (diameter.value > 0 && height.value > 0)) {
                     if (Number(height.value) <= Number(diameter.value)) {
                         this.diameterCheckHeightWarning = 'Warning: Release point Stack Diameter Measure should be less than the release point Stack Height Measure.';
@@ -620,7 +686,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             const length = control.get('stackLength');
             const width = control.get('stackWidth');
 
-            if (this.releaseType && this.releaseType !== this.fugitiveType && this.releasePointForm.get('operatingStatusCode').value
+            if (this.releaseType && this.releaseType === ReleasePointType.STACK && this.releasePointForm.get('operatingStatusCode').value
                 && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
                 if ((diameter !== null && !diameter.value) && (!length?.value || !width?.value)) {
                     this.diameterOrLengthAndWidthMessage = 'Stack Diameter or Length/Width must be entered when Release Point Type is a stack.';
@@ -639,7 +705,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
     // QA Check - Exit gas flow input must be within +/-5% of computed flow
     exitFlowConsistencyCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
-            if (this.releaseType !== this.fugitiveType) {
+            if (this.releaseType === this.releasePointType.STACK) {
                 const diameter: number = control.get('stackDiameter')?.value; // ft
                 const length: number = control.get('stackLength')?.value; // ft
                 const width: number = control.get('stackWidth')?.value; // ft
@@ -698,53 +764,59 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         };
     }
 
-    // QA Check - check if coordinate is within facility coordinate tolerance
-    coordinateToleranceCheck(): ValidatorFn {
-        return (control: FormGroup): ValidationErrors | null => {
-            const DEFAULT_TOLERANCE = 0.003;
-            const rpLong = control.get('longitude');
-            const rpLat = control.get('latitude');
-            let longLowerLimit;
-            let longUpperLimit;
-            let latLowerLimit;
-            let latUpperLimit;
+	// QA Check - check if coordinate is within facility coordinate tolerance
+	coordinateToleranceChecks() {
+		if (this.calcLongitudeRange(this.releasePointForm.get('longitude').value)) {
+			this.releasePointForm.get('longitude').markAsTouched();
+            this.releasePointForm.get('longitude').setErrors({invalidLongitude: true});
+		}
+		
+		if (this.calcLatitudeRange(this.releasePointForm.get('latitude').value)) {
+			this.releasePointForm.get('latitude').markAsTouched();
+            this.releasePointForm.get('latitude').setErrors({invalidLatitude: true});
+		}
+		
+		if (this.calcLongitudeRange(this.releasePointForm.get('fugitiveMidPt2Longitude').value)) {
+			this.releasePointForm.get('fugitiveMidPt2Longitude').markAsTouched();
+            this.releasePointForm.get('fugitiveMidPt2Longitude').setErrors({invalidLongitude: true});
+		}
+		
+		if (this.calcLatitudeRange(this.releasePointForm.get('fugitiveMidPt2Latitude').value)) {
+			this.releasePointForm.get('fugitiveMidPt2Latitude').markAsTouched();
+            this.releasePointForm.get('fugitiveMidPt2Latitude').setErrors({invalidLatitude: true});
+		}
+	}
+	
+	calcLongitudeRange(coordinate:number) {
+		let longLowerLimit:number;
+        let longUpperLimit:number;
 
-            this.lookupService.retrieveLatLongTolerance(this.eisProgramId)
-                .subscribe(result => {
-                    this.coordinateTolerance = result;
+		if (coordinate) {
+            longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance) * 1000000) / 1000000);
+            longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance) * 1000000) / 1000000);
 
-                    setTimeout(() => {
-                        if (this.coordinateTolerance) {
-                            this.tolerance = this.coordinateTolerance.coordinateTolerance;
-                        } else {
-                            this.tolerance = DEFAULT_TOLERANCE;
-                        }
+            if (((coordinate > longUpperLimit) || (coordinate < longLowerLimit))) {
+				return true;
+            }
+			return false;
+        }
+	}
+	
+	calcLatitudeRange(coordinate:number) {
+        let latLowerLimit:number;
+        let latUpperLimit:number;
 
-                        if (rpLong !== null && rpLong.value !== null && rpLong.value !== '') {
-                            longUpperLimit = (Math.round((this.facilitySite.longitude + this.tolerance) * 1000000) / 1000000);
-                            longLowerLimit = (Math.round((this.facilitySite.longitude - this.tolerance) * 1000000) / 1000000);
+		if (coordinate) {
+            latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance) * 1000000) / 1000000);
+            latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance) * 1000000) / 1000000);
 
-                            if (((rpLong.value > longUpperLimit) || (rpLong.value < longLowerLimit))) {
-                                control.get('longitude').markAsTouched();
-                                control.get('longitude').setErrors({invalidLongitude: true});
-                            }
-                        }
-
-                        if (rpLat !== null && rpLat.value !== null && rpLat.value !== '') {
-                            latUpperLimit = (Math.round((this.facilitySite.latitude + this.tolerance) * 1000000) / 1000000);
-                            latLowerLimit = (Math.round((this.facilitySite.latitude - this.tolerance) * 1000000) / 1000000);
-
-                            if (((rpLat.value > latUpperLimit) || (rpLat.value < latLowerLimit))) {
-                                control.get('latitude').markAsTouched();
-                                control.get('latitude').setErrors({invalidLatitude: true});
-                            }
-                        }
-                    }, 1000);
-                });
-            return null;
-        };
-    }
-
+            if (((coordinate > latUpperLimit) || (coordinate < latLowerLimit))) {
+                return true;
+            }
+			return false;
+        }
+	}
+	
     // QA Check - operating status check vs facility site operating status
     facilitySiteStatusCheck(): ValidatorFn {
         return (control: FormGroup): ValidationErrors | null => {
@@ -787,7 +859,7 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         };
     }
 
-    requiredIfOperating() {
+	requiredIfOperating() {
         return (formControl => {
             if (!formControl.parent) {
                 return null;
@@ -795,6 +867,20 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             if (this.releasePointForm.get('operatingStatusCode').value
                 && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
                 return Validators.required(formControl);
+            }
+            return null;
+        });
+    }
+
+    requiredFugitiveIfOperating() {
+        return (formControl => {
+            if (!formControl.parent) {
+                return null;
+            }
+            if (this.releasePointForm.get('operatingStatusCode').value
+                && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)
+				&& this.releasePointForm.controls.typeCode.value?.description !== this.releasePointType.FUGITIVE_AREA_TYPE) {
+				return Validators.required(formControl);
             }
             return null;
         });
@@ -811,5 +897,33 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             return null;
         };
     }
+
+	setupListeners() {
+		
+		this.releasePointForm.get('latitude').valueChanges
+	    .subscribe(value => {
+			this.bothLatLongRequiredCheck();
+			this.coordinateToleranceChecks();
+	    });
+		
+		this.releasePointForm.get('longitude').valueChanges
+	    .subscribe(value => {
+			this.bothLatLongRequiredCheck();
+			this.coordinateToleranceChecks();
+	    });
+
+		this.releasePointForm.get('fugitiveMidPt2Latitude').valueChanges
+	    .subscribe(value => {
+			this.bothLatLongRequiredCheck();
+			this.coordinateToleranceChecks();
+	    });
+		
+		this.releasePointForm.get('fugitiveMidPt2Longitude').valueChanges
+	    .subscribe(value => {
+			this.bothLatLongRequiredCheck();
+			this.coordinateToleranceChecks();
+	    });
+
+	}
 
 }
