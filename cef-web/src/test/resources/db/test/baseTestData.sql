@@ -779,3 +779,10 @@ INSERT INTO EMISSION (id, reporting_period_id, pollutant_code, total_emissions, 
     calculated_emissions_tons)
     VALUES ('9999815', '9999810', '7440382', '366.12', 'LB', NULL, '', 
         NULL, NULL, '3', 'THOMAS.FESPERMAN', current_timestamp, 'THOMAS.FESPERMAN', current_timestamp, '', '0.183');
+        
+INSERT INTO SLT_CONFIG (name, value, program_system_code)
+	VALUES ('report-attachment-upload.txt', 'true', 'GADNR');
+	
+UPDATE SLT_CONFIG
+	SET value = 'false'
+	WHERE name = 'report-attachment-upload.csv' AND program_system_code = 'GADNR';

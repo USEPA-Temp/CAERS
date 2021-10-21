@@ -43,4 +43,6 @@ public interface SLTConfigRepository extends CrudRepository<SLTConfigProperty, L
 
     List<SLTConfigProperty> findByProgramSystemCodeCode(String programSystemCode);
 
+    @Query("select scp from SLTConfigProperty scp join scp.sltPropertyDetails p where scp.programSystemCode.code = :programSystemCode and p.name like '%report-attachment-upload.%' and scp.value = 'true'")
+    List<SLTConfigProperty> getPermittedReportUploadTypes(@Param("programSystemCode") String programSystemCode);
 }

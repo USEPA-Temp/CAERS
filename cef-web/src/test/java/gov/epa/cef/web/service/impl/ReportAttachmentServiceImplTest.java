@@ -22,6 +22,8 @@ import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.ProgramSystemCode;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
+import gov.epa.cef.web.exception.FacilityAccessException;
+import gov.epa.cef.web.exception.ReportAttachmentValidationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.dto.ReportAttachmentDto;
 import gov.epa.cef.web.util.TempFile;
@@ -110,6 +112,31 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
 
         assertEquals(1, reportAttachments.size());
 
+    }
+    
+    @Test(expected = ReportAttachmentValidationException.class)
+    public void saveReportAttachmentInvalidTypeTest() throws Exception {
+    	
+    	EmissionsReport report = createHydratedEmissionsReport();
+    	report = reportRepo.save(report);
+    	
+    	String text ="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+        
+        MockMultipartFile file = new MockMultipartFile("file", "test.csv", "text/csv", text.getBytes());
+        
+        TempFile temp = TempFile.from(file.getInputStream(), file.getOriginalFilename());
+        
+        ReportAttachmentDto dto = new ReportAttachmentDto();
+        dto.setId(1L);
+        dto.setReportId(report.getId());
+        dto.setFileName(file.getOriginalFilename());
+        dto.setFileType(file.getContentType());
+        
+        String comments = "Test...";
+    	
+        assertNotNull(dto);
+        
+        this.rptAttachmentSvc.saveAttachment(temp, dto);
     }
 
     private EmissionsReport createHydratedEmissionsReport() {
