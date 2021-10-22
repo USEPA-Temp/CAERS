@@ -279,7 +279,7 @@ public class BulkReportValidator {
                 		&& (Strings.emptyToNull(releasePoint.getFugitiveLength()) != null
         				|| Strings.emptyToNull(releasePoint.getFugitiveLengthUomCode()) != null)) {
                 	
-                	String msg = String.format("The Release Point contains data for Fugitive Length. Data is not valid for release point type Fugitive 2-D - source area.");
+                	String msg = String.format("The Release Point contains data for Fugitive Length. Data is only valid for release point type Fugitive Area.");
                     violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
                 }
             }
