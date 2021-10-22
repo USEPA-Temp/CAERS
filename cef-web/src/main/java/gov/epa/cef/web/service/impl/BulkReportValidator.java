@@ -238,7 +238,7 @@ public class BulkReportValidator {
             
             if (Strings.emptyToNull(releasePoint.getTypeCode()) != null) {
 	            // check to make sure Fugitives don't have Stack info and Stacks don't have Fugitive info
-	            if (ConstantUtils.FUGITIVE_RELEASE_POINT_TYPE.contentEquals(releasePoint.getTypeCode())
+            	if (ConstantUtils.FUGITIVE_RELEASE_POINT_TYPES.contains(releasePoint.getTypeCode())
 	                    && (Strings.emptyToNull(releasePoint.getStackDiameter()) != null
 	                    || Strings.emptyToNull(releasePoint.getStackDiameterUomCode()) != null
 	                    || Strings.emptyToNull(releasePoint.getStackHeight()) != null
@@ -251,14 +251,12 @@ public class BulkReportValidator {
 	                String msg = String.format("The Release Point contains data for both fugitive and stack release point types. Only data for one release point type should be entered.");
 	                violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
 	
-	            } else if (!ConstantUtils.FUGITIVE_RELEASE_POINT_TYPE.contentEquals(releasePoint.getTypeCode())
+            	} else if (!ConstantUtils.FUGITIVE_RELEASE_POINT_TYPES.contains(releasePoint.getTypeCode())
 	                    && (Strings.emptyToNull(releasePoint.getFugitiveAngle()) != null
 	                    || Strings.emptyToNull(releasePoint.getFugitiveHeight()) != null
 	                    || Strings.emptyToNull(releasePoint.getFugitiveHeightUomCode()) != null
 	                    || Strings.emptyToNull(releasePoint.getFugitiveLength()) != null
 	                    || Strings.emptyToNull(releasePoint.getFugitiveLengthUomCode()) != null
-	                    || Strings.emptyToNull(releasePoint.getFugitiveLine1Latitude()) != null
-	                    || Strings.emptyToNull(releasePoint.getFugitiveLine1Longitude()) != null
 	                    || Strings.emptyToNull(releasePoint.getFugitiveLine2Latitude()) != null
 	                    || Strings.emptyToNull(releasePoint.getFugitiveLine2Longitude()) != null
 	                    || Strings.emptyToNull(releasePoint.getFugitiveWidth()) != null
@@ -267,6 +265,23 @@ public class BulkReportValidator {
 	                String msg = String.format("The Release Point contains data for both fugitive and stack release point types. Only data for one release point type should be entered.");
 	                violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
 	            }
+            	
+            	if (!ConstantUtils.FUGITIVE_RELEASE_PT_2D_TYPE.equals(releasePoint.getTypeCode())
+                		&& (Strings.emptyToNull(releasePoint.getFugitiveLine2Latitude()) != null
+                        || Strings.emptyToNull(releasePoint.getFugitiveLine2Longitude()) != null)) {
+                	
+                	String msg = String.format("The Release Point contains data for Mid Point 2 Latitude and Mid Point 2 Longitude. Data is only valid for release point type Fugitive 2-D - source area.");
+                    violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
+                }
+            	
+            	if ((ConstantUtils.FUGITIVE_RELEASE_PT_2D_TYPE.equals(releasePoint.getTypeCode())
+            			|| ConstantUtils.FUGITIVE_RELEASE_PT_3D_TYPE.equals(releasePoint.getTypeCode()))
+                		&& (Strings.emptyToNull(releasePoint.getFugitiveLength()) != null
+        				|| Strings.emptyToNull(releasePoint.getFugitiveLengthUomCode()) != null)) {
+                	
+                	String msg = String.format("The Release Point contains data for Fugitive Length. Data is only valid for release point type Fugitive Area.");
+                    violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
+                }
             }
     	}
     }

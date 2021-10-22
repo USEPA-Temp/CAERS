@@ -14,14 +14,10 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
-
-export class InventoryYearCodeLookup implements BaseCodeLookup {
-  code: string;
-  description: string;
-  shortName: string;
-  lastInventoryYear: number;
-  mapTo: string;
-  category: string;
-
+export enum ReleasePointType {
+	STACK = 'Stack',
+	FUGITIVE = 'Fugitive',
+	FUGITIVE_3D_TYPE = 'Fugitive 3-D – source area',
+	FUGITIVE_2D_TYPE = 'Fugitive 2-D – source area',
+	FUGITIVE_AREA_TYPE = 'Fugitive Area',
 }

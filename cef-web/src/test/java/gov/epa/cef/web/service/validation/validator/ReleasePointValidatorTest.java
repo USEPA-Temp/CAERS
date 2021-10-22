@@ -235,6 +235,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasFlowRate(BigDecimal.valueOf(200000.1));
 
@@ -271,6 +273,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasFlowRate(BigDecimal.valueOf(200000.1));
 
@@ -350,6 +354,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(BigDecimal.valueOf(1500.1));
 
@@ -387,6 +393,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(BigDecimal.valueOf(1500.1));
 
@@ -416,6 +424,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("6");
+        releasePointTypeCode.setCategory("Stack");
+        releasePointTypeCode.setDescription("Downward Facing Vent");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(null);
         testData.setStackDiameter(null);
@@ -1434,6 +1444,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("2");
+        releasePointTypeCode.setCategory("Stack");
+        releasePointTypeCode.setDescription("Vertical");
 
         UnitMeasureCode flowUom = new UnitMeasureCode();
         flowUom.setCode("ACFS");
@@ -1461,10 +1473,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         result.setLatitude(BigDecimal.valueOf(33.949000));
         result.setLongitude(BigDecimal.valueOf(-84.388000));
         result.setFacilitySite(facility);
-        result.setFugitiveLine1Latitude(BigDecimal.valueOf(33.949000));
-        result.setFugitiveLine1Longitude(BigDecimal.valueOf(-84.388000));
-        result.setFugitiveLine2Latitude(BigDecimal.valueOf(33.949000));
-        result.setFugitiveLine2Longitude(BigDecimal.valueOf(-84.388000));
+        result.setFugitiveMidPt2Latitude(BigDecimal.valueOf(33.949000));
+        result.setFugitiveMidPt2Longitude(BigDecimal.valueOf(-84.388000));
         result.setStatusYear((short) 2000);
         result.setOperatingStatusCode(opStatCode);
         result.setId(1L);
@@ -1494,6 +1504,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     	ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
     	releasePointTypeCode.setCode("1");
+    	releasePointTypeCode.setCategory("Fugitive");
+    	releasePointTypeCode.setDescription("Fugitive Area");
 
     	UnitMeasureCode distUom = new UnitMeasureCode();
     	distUom.setCode("FT");
@@ -1512,10 +1524,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	result.setLatitude(BigDecimal.valueOf(33.949000));
     	result.setLongitude(BigDecimal.valueOf(-84.388000));
     	result.setFacilitySite(facility);
-    	result.setFugitiveLine1Latitude(BigDecimal.valueOf(33.949000));
-    	result.setFugitiveLine1Longitude(BigDecimal.valueOf(-84.388000));
-    	result.setFugitiveLine2Latitude(BigDecimal.valueOf(33.949000));
-    	result.setFugitiveLine2Longitude(BigDecimal.valueOf(-84.388000));
+    	result.setFugitiveMidPt2Latitude(BigDecimal.valueOf(33.949000));
+    	result.setFugitiveMidPt2Longitude(BigDecimal.valueOf(-84.388000));
     	result.setStatusYear((short) 2000);
     	result.setOperatingStatusCode(opStatCode);
 

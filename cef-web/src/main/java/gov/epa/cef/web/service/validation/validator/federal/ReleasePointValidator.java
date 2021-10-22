@@ -55,7 +55,6 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     @Autowired
     private ReleasePointRepository rpRepo;
 
-    private static final String FUGITIVE_RELEASE_POINT_CODE = "1";
     private static final BigDecimal DEFAULT_TOLERANCE = BigDecimal.valueOf(0.003).setScale(6, RoundingMode.DOWN);
     private static final String VELOCITY_UOM_FPS = "FPS";
     private static final String VELOCITY_UOM_FPM = "FPM";
@@ -81,7 +80,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
         if (ConstantUtils.STATUS_OPERATING.contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
 
             // STACK RELEASE POINT CHECKS
-            if (!releasePoint.getTypeCode().getCode().equals(FUGITIVE_RELEASE_POINT_CODE)) {
+            if (!ConstantUtils.FUGITIVE_RELEASE_POINT_CATEGORY.equals(releasePoint.getTypeCode().getCategory())) {
 
                 if (releasePoint.getExitGasTemperature() == null) {
 
@@ -302,7 +301,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             }
 
             // FUGITIVE RELEASE POINT CHECKS
-            if (releasePoint.getTypeCode().getCode().equals(FUGITIVE_RELEASE_POINT_CODE)) {
+            if (ConstantUtils.FUGITIVE_RELEASE_POINT_CATEGORY.equals(releasePoint.getTypeCode().getCategory())) {
 
                 // Fugitive Height Range
                 if (releasePoint.getFugitiveHeight() != null
@@ -386,7 +385,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
             // Exit Gas Flow Rate Ranges
             if (releasePoint.getExitGasFlowUomCode() != null && releasePoint.getExitGasFlowRate() != null) {
-                if (FUGITIVE_RELEASE_POINT_CODE.contentEquals(releasePoint.getTypeCode().getCode())) {
+                if (ConstantUtils.FUGITIVE_RELEASE_POINT_CATEGORY.equals(releasePoint.getTypeCode().getCategory())) {
                     if (FLOW_RATE_UOM_ACFS.contentEquals(releasePoint.getExitGasFlowUomCode().getCode()) &&
                         (releasePoint.getExitGasFlowRate().compareTo(BigDecimal.ZERO) == -1 || releasePoint.getExitGasFlowRate().compareTo(BigDecimal.valueOf(200000)) == 1)) {
 
@@ -428,7 +427,7 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
             // Exit Gas Velocity Ranges
             if (releasePoint.getExitGasVelocityUomCode() != null && releasePoint.getExitGasVelocity() != null) {
-                if (FUGITIVE_RELEASE_POINT_CODE.contentEquals(releasePoint.getTypeCode().getCode())) {
+                if (ConstantUtils.FUGITIVE_RELEASE_POINT_CATEGORY.equals(releasePoint.getTypeCode().getCategory())) {
                     if (VELOCITY_UOM_FPS.contentEquals(releasePoint.getExitGasVelocityUomCode().getCode()) &&
                         (releasePoint.getExitGasVelocity().compareTo(BigDecimal.ZERO) == -1 || releasePoint.getExitGasVelocity().compareTo(BigDecimal.valueOf(400)) == 1)) {
 

@@ -43,10 +43,8 @@ public class ReleasePointDto implements Serializable {
     private BigDecimal exitGasFlowRate;
     private CodeLookupDto exitGasFlowUomCode;
     private Short statusYear;
-    private BigDecimal fugitiveLine1Latitude;
-    private BigDecimal fugitiveLine1Longitude;
-    private BigDecimal fugitiveLine2Latitude;
-    private BigDecimal fugitiveLine2Longitude;
+    private BigDecimal fugitiveMidPt2Latitude;
+    private BigDecimal fugitiveMidPt2Longitude;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String comments;
@@ -204,37 +202,21 @@ public class ReleasePointDto implements Serializable {
         this.statusYear = statusYear;
     }
 
-    public BigDecimal getFugitiveLine1Latitude() {
-        return fugitiveLine1Latitude;
-    }
+    public BigDecimal getFugitiveMidPt2Latitude() {
+		return fugitiveMidPt2Latitude;
+	}
 
-    public void setFugitiveLine1Latitude(BigDecimal fugitiveLine1Latitude) {
-        this.fugitiveLine1Latitude = fugitiveLine1Latitude;
-    }
+	public void setFugitiveMidPt2Latitude(BigDecimal fugitiveMidPt2Latitude) {
+		this.fugitiveMidPt2Latitude = fugitiveMidPt2Latitude;
+	}
 
-    public BigDecimal getFugitiveLine1Longitude() {
-        return fugitiveLine1Longitude;
-    }
+	public BigDecimal getFugitiveMidPt2Longitude() {
+		return fugitiveMidPt2Longitude;
+	}
 
-    public void setFugitiveLine1Longitude(BigDecimal fugitiveLine1Longitude) {
-        this.fugitiveLine1Longitude = fugitiveLine1Longitude;
-    }
-
-    public BigDecimal getFugitiveLine2Latitude() {
-        return fugitiveLine2Latitude;
-    }
-
-    public void setFugitiveLine2Latitude(BigDecimal fugitiveLine2Latitude) {
-        this.fugitiveLine2Latitude = fugitiveLine2Latitude;
-    }
-
-    public BigDecimal getFugitiveLine2Longitude() {
-        return fugitiveLine2Longitude;
-    }
-
-    public void setFugitiveLine2Longitude(BigDecimal fugitiveLine2Longitude) {
-        this.fugitiveLine2Longitude = fugitiveLine2Longitude;
-    }
+	public void setFugitiveMidPt2Longitude(BigDecimal fugitiveMidPt2Longitude) {
+		this.fugitiveMidPt2Longitude = fugitiveMidPt2Longitude;
+	}
 
     public BigDecimal getLatitude() {
         return latitude;

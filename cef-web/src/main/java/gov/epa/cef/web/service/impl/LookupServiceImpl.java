@@ -685,7 +685,7 @@ public class LookupServiceImpl implements LookupService {
     
     public List<PointSourceSccCodeDto> retrieveSearchSccCodes(String searchTerm) {
     	
-    	List<PointSourceSccCode> entities = pointSourceSccCodeRepo.findBySearchTerm(searchTerm, Sort.by(Direction.ASC, "code"));
+    	List<PointSourceSccCode> entities = pointSourceSccCodeRepo.findBySearchTerm(searchTerm.toLowerCase(), Sort.by(Direction.ASC, "code"));
     	List<PointSourceSccCodeDto> result = lookupMapper.pointSourceSccCodeToDtoList(entities);
         
         return result;

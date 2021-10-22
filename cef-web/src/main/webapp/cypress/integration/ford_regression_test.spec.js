@@ -128,6 +128,23 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#modalConfirmBtn').click();
     });
 
+	it('Add Facility NAICS', function() {
+      cy.get('#addNaicsBtn').click();
+      cy.get('#facilityNAICS').clear();
+      cy.get('.d-block').click();
+      cy.get('#facilityNAICS').clear();
+      cy.get('#facilityNAICS').wait(1000).type('auto');
+      cy.wait(3000).get('#ngb-typeahead-1-2 > ngb-highlight').click();
+      cy.get('#cbo-code-type').select('SECONDARY');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
+	it('Edit Facility NAICS', function() {
+      cy.wait(500).get('[data-cy="edit naics code336111"]').click();
+      cy.get('#cbo-code-type').select('PRIMARY');
+      cy.get('.modal-footer > .btn-success').click();
+    });
+
     it('Create Facility Contact', function() {
       cy.get('.pb-3 > .btn').wait(500).click();
       cy.get('#type').select('13: Object');
@@ -316,7 +333,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').wait(1000).type('nox');
-      cy.get('#ngb-typeahead-2-2 > ngb-highlight > .ngb-highlight').click();
+      cy.get('#ngb-typeahead-4-2 > ngb-highlight > .ngb-highlight').click();
       cy.get('#emissionsCalcMethodCodeSelect').select('19: Object');
       cy.get('#openEfSearchBtn').click();
       cy.get('#selectEf5').check();
@@ -335,7 +352,7 @@ describe('FORD TESTING SUITE', () => {
       cy.wait(500).get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').wait(1000).type('voc');
-      cy.get('#ngb-typeahead-3-0').click();
+      cy.get('#ngb-typeahead-5-0').click();
       cy.get('#emissionsCalcMethodCodeSelect').select('1: Object');
       cy.get('#totalEmissionsInput').clear();
       cy.get('#totalEmissionsInput').type('12');
@@ -350,7 +367,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddEmissionBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').wait(1000).type('co');
-      cy.get('#ngb-typeahead-4-4').click();
+      cy.get('#ngb-typeahead-6-4').click();
       cy.get('#emissionsCalcMethodCodeSelect').select('10: Object');
       cy.get('#emissionFactorInput').clear();
       cy.get('#emissionFactorInput').type('10');
@@ -396,22 +413,33 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#releasePointIdentifier').type('CypressFugitive');
       cy.get('#releaseStatusCodeSelect').select('1: Object');
       cy.get('#description').clear();
-      cy.get('#description').type("Cypress Fugitive Desc");
+      cy.get('#description').type("Cypress Fugitive Area Desc");
       cy.get('#statusYear').clear();
       cy.get('#statusYear').type('2020');
-      cy.get('#releaseTypeCodeSelect').select('2: Object');
+      cy.get('#releaseTypeCodeSelect').select('4: Object');
       cy.get('#latitude').clear();
       cy.get('#latitude').type('33.65332');
       cy.get('#longitude').clear();
       cy.get('#longitude').type('-84.4012');
+      cy.get('#fugitiveLength').clear();
+      cy.get('#fugitiveLength').type('10.0');
       cy.get('.btn-success').click();
 
       cy.get('[data-cy="release pointCypressFugitive"]').click();
       cy.get('#editReleasePointBtn').click();
+	  cy.get('#releaseTypeCodeSelect').select('2: Object');
       cy.get('#description').clear();
-      cy.get('#description').type("Cypress Fugitive Description Edit");
+      cy.get('#description').type("Edit: Cypress Fugitive 2-D Description");
       cy.get('#longitude').clear();
       cy.get('#longitude').type('-84.4011');
+      cy.get('#fugitiveMidPt2Latitude').clear();
+	  cy.get('#fugitiveMidPt2Latitude').type('33.65232');
+      cy.get('#fugitiveMidPt2Longitude').clear();
+      cy.get('#fugitiveMidPt2Longitude').type('-84.4001');
+      cy.get('#fugitiveHeight').clear();
+      cy.get('#fugitiveHeight').type('10');
+      cy.get('#fugitiveWidth').clear();
+      cy.get('#fugitiveWidth').type('25.0');
       cy.get('.btn-success').click();
       cy.wait(3000);
     });
@@ -449,7 +477,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddControlPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').wait(1000).type('nox');
-      cy.get('#ngb-typeahead-5-2 > ngb-highlight').wait(500).click();
+      cy.get('#ngb-typeahead-7-2 > ngb-highlight').wait(500).click();
       cy.get('#percentReductionSelect').clear();
       cy.get('#percentReductionSelect').type('80');
       cy.get('.modal-footer > .btn-success').click();
@@ -493,7 +521,7 @@ describe('FORD TESTING SUITE', () => {
       cy.get('#tblAddControlPathPollutantBtn > .ng-fa-icon > .svg-inline--fa').click();
       cy.get('#pollutantSelect').clear();
       cy.get('#pollutantSelect').wait(1000).type('nox');
-      cy.wait(500).get('#ngb-typeahead-7-2 > ngb-highlight').click();
+      cy.wait(500).get('#ngb-typeahead-9-2 > ngb-highlight').click();
       cy.get('#percentReductionSelect').clear();
       cy.get('#percentReductionSelect').type('25');
       cy.get('.modal-footer > .btn-success').click();
