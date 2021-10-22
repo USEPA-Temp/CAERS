@@ -1003,12 +1003,10 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         releasePoint.setExitGasTemperature(toShort(bulkReleasePoint.getExitGasTemperature()));
         releasePoint.setExitGasFlowRate(toBigDecimal(bulkReleasePoint.getExitGasFlowRate()));
         releasePoint.setStatusYear(toShort(bulkReleasePoint.getStatusYear()));
-        releasePoint.setFugitiveLine1Latitude(toBigDecimal(bulkReleasePoint.getFugitiveLine1Latitude()));
-        releasePoint.setFugitiveLine1Longitude(toBigDecimal(bulkReleasePoint.getFugitiveLine1Longitude()));
-        releasePoint.setFugitiveLine2Latitude(toBigDecimal(bulkReleasePoint.getFugitiveLine2Latitude()));
-        releasePoint.setFugitiveLine2Longitude(toBigDecimal(bulkReleasePoint.getFugitiveLine2Longitude()));
         releasePoint.setLatitude(toBigDecimal(bulkReleasePoint.getLatitude()));
         releasePoint.setLongitude(toBigDecimal(bulkReleasePoint.getLongitude()));
+        releasePoint.setFugitiveMidPt2Latitude(toBigDecimal(bulkReleasePoint.getFugitiveLine2Latitude()));
+        releasePoint.setFugitiveMidPt2Longitude(toBigDecimal(bulkReleasePoint.getFugitiveLine2Longitude()));
         releasePoint.setComments(bulkReleasePoint.getComments());
         releasePoint.setFugitiveHeight(toLong(bulkReleasePoint.getFugitiveHeight()));
         releasePoint.setFugitiveWidth(toBigDecimal(bulkReleasePoint.getFugitiveWidth()));

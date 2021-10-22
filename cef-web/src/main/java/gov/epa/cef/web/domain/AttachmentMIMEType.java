@@ -37,4 +37,13 @@ public enum AttachmentMIMEType {
     public String label() {
         return this.label;
     }
+    
+    public static AttachmentMIMEType fromLabel(String label) {
+        for (AttachmentMIMEType amt : AttachmentMIMEType.values()) {
+            if (amt.label.equalsIgnoreCase(label)) {
+                return amt;
+            }
+        }
+        return null;
+    }
 }

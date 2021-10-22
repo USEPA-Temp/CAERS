@@ -182,6 +182,8 @@ public interface BulkUploadMapper {
     @Mapping(source="fugitiveWidthUomCode.code", target="fugitiveWidthUomCode")
     @Mapping(source="fugitiveLengthUomCode.code", target="fugitiveLengthUomCode")
     @Mapping(source="fenceLineUomCode.code", target="fenceLineUomCode")
+    @Mapping(source="fugitiveMidPt2Latitude", target="fugitiveLine2Latitude")
+    @Mapping(source="fugitiveMidPt2Longitude", target="fugitiveLine2Longitude")
     ReleasePointBulkUploadDto releasePointToDto(ReleasePoint source);
 
     List<ReleasePointBulkUploadDto> releasePointToDtoList(List<ReleasePoint> source);

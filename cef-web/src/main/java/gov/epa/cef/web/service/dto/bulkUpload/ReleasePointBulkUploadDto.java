@@ -87,19 +87,11 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     private String fugitiveWidthUomCode;
 
     @Pattern(regexp = LatitudePattern,
-        message = "Fugitive Line1 Latitude is not in expected numeric format: '+/-{2}.{6}' digits; found '${validatedValue}'.")
-    private String fugitiveLine1Latitude;
-
-    @Pattern(regexp = LongitudePattern,
-        message = "Fugitive Line1 Longitude is not in expected numeric format: '+/-{3}.{6}' digits; found '${validatedValue}'.")
-    private String fugitiveLine1Longitude;
-
-    @Pattern(regexp = LatitudePattern,
-        message = "Fugitive Line2 Latitude is not in expected numeric format:'+/-{2}.{6}' digits; found '${validatedValue}'.")
+        message = "Fugitive Mid Point 2 Latitude is not in expected numeric format:'+/-{2}.{6}' digits; found '${validatedValue}'.")
     private String fugitiveLine2Latitude;
 
     @Pattern(regexp = LongitudePattern,
-        message = "Fugitive Line2 Longitude is not in expected numeric format: '+/-{3}.{6}' digits; found '${validatedValue}'.")
+        message = "Fugitive Mid Point 2 Longitude is not in expected numeric format: '+/-{3}.{6}' digits; found '${validatedValue}'.")
     private String fugitiveLine2Longitude;
 
     @NotNull(message = "Release Point ID is required.")
@@ -313,45 +305,21 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveLengthUomCode = fugitiveLengthUomCode;
     }
 
-    public String getFugitiveLine1Latitude() {
-
-        return fugitiveLine1Latitude;
-    }
-
-    public void setFugitiveLine1Latitude(String fugitiveLine1Latitude) {
-
-        this.fugitiveLine1Latitude = fugitiveLine1Latitude;
-    }
-
-    public String getFugitiveLine1Longitude() {
-
-        return fugitiveLine1Longitude;
-    }
-
-    public void setFugitiveLine1Longitude(String fugitiveLine1Longitude) {
-
-        this.fugitiveLine1Longitude = fugitiveLine1Longitude;
-    }
-
     public String getFugitiveLine2Latitude() {
+		return fugitiveLine2Latitude;
+	}
 
-        return fugitiveLine2Latitude;
-    }
+	public void setFugitiveLine2Latitude(String fugitiveLine2Latitude) {
+		this.fugitiveLine2Latitude = fugitiveLine2Latitude;
+	}
 
-    public void setFugitiveLine2Latitude(String fugitiveLine2Latitude) {
+	public String getFugitiveLine2Longitude() {
+		return fugitiveLine2Longitude;
+	}
 
-        this.fugitiveLine2Latitude = fugitiveLine2Latitude;
-    }
-
-    public String getFugitiveLine2Longitude() {
-
-        return fugitiveLine2Longitude;
-    }
-
-    public void setFugitiveLine2Longitude(String fugitiveLine2Longitude) {
-
-        this.fugitiveLine2Longitude = fugitiveLine2Longitude;
-    }
+	public void setFugitiveLine2Longitude(String fugitiveLine2Longitude) {
+		this.fugitiveLine2Longitude = fugitiveLine2Longitude;
+	}
 
     public String getFugitiveWidth() {
 
