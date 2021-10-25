@@ -178,6 +178,8 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
         boolean acceptedTypeSlt = false;
     	String programSystemCode = emissionsReportService.findById(metadata.getReportId()).getProgramSystemCode().getCode();
 	    String fileType = AttachmentMIMEType.fromLabel(metadata.getFileType()).code().toLowerCase();
+	    String fileExtensionString = fileName.substring(fileName.indexOf('.') + 1, fileName.length());
+	    final String csv = "csv";
 	    List<SLTConfigProperty> permittedUploadTypes = sltConfigRepo.getPermittedReportUploadTypes(programSystemCode);
 	    ArrayList<String> permittedUploadTypeExtensions = new ArrayList<String>();
 	    
@@ -187,7 +189,8 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
 	    	// index + 1 to remove the period when comparing extensions
 	    	String uploadTypeExtension = uploadTypeName.substring(uploadTypeName.indexOf('.') + 1, uploadTypeName.length());
 	    	permittedUploadTypeExtensions.add(uploadTypeExtension);
-	    	if (fileType.equals(uploadTypeExtension)) {
+	    	// statement after OR in place for handling CSV files - txt csv and xlsx csv are interpreted as different but need to be treated the same
+	    	if (fileType.equals(uploadTypeExtension) || (permittedUploadTypeExtensions.contains(fileExtensionString) && fileExtensionString.equals(csv))) {
 	    		acceptedTypeSlt = true;
 	        }
          }
