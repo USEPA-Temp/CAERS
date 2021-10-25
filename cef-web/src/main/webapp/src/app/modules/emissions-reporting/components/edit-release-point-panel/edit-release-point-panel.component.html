@@ -224,9 +224,7 @@
 
     <div class="row">
         <div class="col-sm-6 col-md-10">
-            <div class="validation-message"
-                 *ngIf="releasePointForm.get('latitude').errors?.requiredCoordinate || releasePointForm.get('longitude').errors?.requiredCoordinate
-						|| releasePointForm.get('fugitiveMidPt2Latitude').errors?.requiredCoordinate2 || releasePointForm.get('fugitiveMidPt2Longitude').errors?.requiredCoordinate2">
+			<div class="validation-message" *ngIf="releasePointForm.errors?.requiredCoordinate">
                 Latitude and Longitude must both, or neither, contain values in order to save.
             </div>
         </div>

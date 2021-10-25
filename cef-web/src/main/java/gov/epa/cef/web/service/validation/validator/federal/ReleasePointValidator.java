@@ -65,6 +65,8 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
     private static final String LENGTH_WIDTH_FORMULA = "(Stack Length * Stack Width) for rectangular stacks";
     private static final String STACK_DIAMETER = "Stack Diameter is";
     private static final String STACK_LENGTH_WIDTH = "Stack Length/Stack Width are";
+    private static final String LONGITUDE_2_2D = "Mid Point 2 Longitude";
+    private static final String LATITUDE_2_2D = "Mid Point 2 Latitude";
 
     @Override
     public boolean validate(ValidatorContext validatorContext, ReleasePoint releasePoint) {
@@ -73,6 +75,30 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
         CefValidatorContext context = getCefValidatorContext(validatorContext);
 
+        BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
+        BigDecimal facilitySiteLong = releasePoint.getFacilitySite().getLongitude();
+        
+        String latLabel;
+        String longLabel;
+        
+        switch (releasePoint.getTypeCode().getCode()) {
+        case ConstantUtils.FUGITIVE_RELEASE_PT_AREA_TYPE:
+        	latLabel = "SW Corner Latitude";
+        	longLabel = "SW Corner Longitude";
+        	break;
+        case ConstantUtils.FUGITIVE_RELEASE_PT_2D_TYPE:
+        	latLabel = "Mid Point 1 Longitude";
+        	longLabel = "Mid Point 1 Longitude";
+        	break;
+        case ConstantUtils.FUGITIVE_RELEASE_PT_3D_TYPE:
+        	latLabel = "Center Latitude";
+        	longLabel = "Center Longitude";
+        	break;
+        default:
+        	latLabel = "Latitude";
+        	longLabel = "Longitude";
+        }
+        
         // Disable most validations for non-operating release points
         //Only run the following checks is the Release Point status is operating. Otherwise, these checks are moot b/c
         //the data will not be sent to EIS and the user shouldn't have to go back and update them. Only id, status,
@@ -305,13 +331,78 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
 
                 // Fugitive Height Range
                 if (releasePoint.getFugitiveHeight() != null
-                    && (releasePoint.getFugitiveHeight() < 0 || releasePoint.getFugitiveHeight() > 500)) {
+                    && (releasePoint.getFugitiveHeight() < 1 || releasePoint.getFugitiveHeight() > 500)) {
 
                     result = false;
                     context.addFederalError(
                         ValidationField.RP_FUGITIVE.value(),
                         "releasePoint.fugitive.heightRange",
                         createValidationDetails(releasePoint));
+                }
+                
+                if ((ConstantUtils.FUGITIVE_RELEASE_PT_2D_TYPE.equals(releasePoint.getTypeCode().getCode())
+    				|| ConstantUtils.FUGITIVE_RELEASE_PT_3D_TYPE.equals(releasePoint.getTypeCode().getCode()))) {
+                	
+        			if (releasePoint.getFugitiveHeight() == null) {
+        				result = false;
+	                    context.addFederalError(
+	                        ValidationField.RP_FUGITIVE.value(),
+	                        "releasePoint.fugitive.height.required",
+	                        createValidationDetails(releasePoint),
+	                    	releasePoint.getTypeCode().getDescription());
+        			}
+        			
+        			if (releasePoint.getFugitiveWidth() == null) {
+        				result = false;
+	                    context.addFederalError(
+	                        ValidationField.RP_FUGITIVE.value(),
+	                        "releasePoint.fugitive.width.required",
+	                        createValidationDetails(releasePoint),
+	                    	releasePoint.getTypeCode().getDescription());
+        			}
+        			
+        			if (releasePoint.getLatitude() == null ) {
+                		result = false;
+	                    context.addFederalError(
+	                        ValidationField.RP_FUGITIVE.value(),
+	                        "releasePoint.fugitive.latitude.required",
+	                        createValidationDetails(releasePoint),
+	                        latLabel,
+	                    	releasePoint.getTypeCode().getDescription());
+                	}
+                	
+                	if (releasePoint.getLongitude() == null ) {
+                		result = false;
+	                    context.addFederalError(
+	                        ValidationField.RP_FUGITIVE.value(),
+	                        "releasePoint.fugitive.longitude.required",
+	                        createValidationDetails(releasePoint),
+	                        longLabel,
+	                    	releasePoint.getTypeCode().getDescription());
+                	}
+                }
+                
+                if (ConstantUtils.FUGITIVE_RELEASE_PT_2D_TYPE.equals(releasePoint.getTypeCode().getCode())) {
+
+                	if (releasePoint.getFugitiveMidPt2Latitude() == null ) {
+                		result = false;
+	                    context.addFederalError(
+	                        ValidationField.RP_FUGITIVE.value(),
+	                        "releasePoint.fugitive.latitude.required",
+	                        createValidationDetails(releasePoint),
+	                        LATITUDE_2_2D,
+	                    	releasePoint.getTypeCode().getDescription());
+                	}
+                	
+                	if (releasePoint.getFugitiveMidPt2Longitude() == null ) {
+                		result = false;
+	                    context.addFederalError(
+	                        ValidationField.RP_FUGITIVE.value(),
+	                        "releasePoint.fugitive.longitude.required",
+	                        createValidationDetails(releasePoint),
+	                        LONGITUDE_2_2D,
+	                    	releasePoint.getTypeCode().getDescription());
+                	}
                 }
 
                 // Fugitive Length Range
@@ -514,19 +605,40 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                 context.addFederalWarning(
                     ValidationField.RP_COORDINATE.value(),
                     "releasePoint.coordinate.warning",
-                    createValidationDetails(releasePoint));
+                    createValidationDetails(releasePoint),
+                    latLabel,
+                    longLabel);
+            }
+            
+            if ((releasePoint.getFugitiveMidPt2Latitude() != null && releasePoint.getFugitiveMidPt2Longitude() == null)
+                || (releasePoint.getFugitiveMidPt2Latitude() == null && releasePoint.getFugitiveMidPt2Longitude() != null)) {
+                	
+                result = false;
+                context.addFederalWarning(
+                    ValidationField.RP_COORDINATE.value(),
+                    "releasePoint.coordinate.warning",
+                    createValidationDetails(releasePoint),
+                    LATITUDE_2_2D,
+                    LONGITUDE_2_2D);
             }
 
             // Latitude/Longitude Tolerance Check
             if (releasePoint.getLatitude() != null && releasePoint.getLongitude() != null) {
-                BigDecimal facilitySiteLat = releasePoint.getFacilitySite().getLatitude();
-                BigDecimal facilitySiteLong = releasePoint.getFacilitySite().getLongitude();
-
-                if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLatitude(), facilitySiteLat, "latitude", "latitude")) {
+                if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLatitude(), facilitySiteLat, latLabel, "latitude")) {
                     result = false;
                 }
 
-                if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLongitude(), facilitySiteLong, "longitude", "longitude")) {
+                if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getLongitude(), facilitySiteLong, longLabel, "longitude")) {
+                    result = false;
+                }
+            }
+            
+            if (releasePoint.getFugitiveMidPt2Latitude() != null && releasePoint.getFugitiveMidPt2Longitude() != null) {
+                if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveMidPt2Latitude(), facilitySiteLat, LATITUDE_2_2D, "latitude")) {
+                    result = false;
+                }
+                
+                if (!validateCoordinateTolerance(validatorContext, releasePoint, releasePoint.getFugitiveMidPt2Longitude(), facilitySiteLong, LONGITUDE_2_2D, "longitude")) {
                     result = false;
                 }
             }
@@ -678,14 +790,12 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
             releasePointCoordinate = rpCoordinate.setScale(6, RoundingMode.HALF_UP);
         }
 
-        if (Strings.emptyToNull(facilityEisId) == null || latLongToleranceRepo.findById(facilityEisId).orElse(null) == null) {
-            maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
-            minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
-        } else {
-            facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.HALF_UP);
-            maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
-            minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
+        if (Strings.emptyToNull(facilityEisId) != null && latLongToleranceRepo.findById(facilityEisId).orElse(null) != null) {
+        	facilityTolerance = latLongToleranceRepo.findById(facilityEisId).orElse(null).getCoordinateTolerance().setScale(6, RoundingMode.HALF_UP);
         }
+            
+    	maxRange = facilityCoordinate.add(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
+        minRange = facilityCoordinate.subtract(facilityTolerance).setScale(6, RoundingMode.HALF_UP);
 
         if (releasePointCoordinate == null || (releasePointCoordinate.compareTo(maxRange) == 1) || (releasePointCoordinate.compareTo(minRange) == -1)) {
 
