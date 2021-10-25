@@ -270,7 +270,7 @@ public class BulkReportValidator {
                 		&& (Strings.emptyToNull(releasePoint.getFugitiveLine2Latitude()) != null
                         || Strings.emptyToNull(releasePoint.getFugitiveLine2Longitude()) != null)) {
                 	
-                	String msg = String.format("The Release Point contains data for Mid Point 2 Latitude and Mid Point 2 Longitude. Data is only valid for release point type Fugitive 2-D - source area.");
+                	String msg = String.format("The Release Point contains data for Mid Point 2 Latitude and/or Mid Point 2 Longitude. Midpoint 2 coordinates are only valid for Fugitive 2-D release point types.");
                     violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
                 }
             	
@@ -279,7 +279,7 @@ public class BulkReportValidator {
                 		&& (Strings.emptyToNull(releasePoint.getFugitiveLength()) != null
         				|| Strings.emptyToNull(releasePoint.getFugitiveLengthUomCode()) != null)) {
                 	
-                	String msg = String.format("The Release Point contains data for Fugitive Length. Data is only valid for release point type Fugitive Area.");
+                	String msg = String.format("The Release Point contains data for Fugitive Length. Fugitive Length is only valid for Fugitive Area release point types.");
                     violations.add(new WorksheetError(releasePoint.getSheetName(), releasePoint.getRow(), msg));
                 }
             }
