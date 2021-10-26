@@ -178,7 +178,7 @@
             <input type="text" class="form-control" id="longitude" formControlName="longitude" maxlength="11">
             <app-validation-message [control]="releasePointForm.get('longitude')"></app-validation-message>
             <div class="validation-message" *ngIf="releasePointForm.get('longitude').errors?.invalidLongitude">
-                Release Point longitude must within the {{tolerance}} tolerance range of Facility longitude
+                Release Point longitude must be within the {{tolerance}} tolerance range of Facility longitude
                 coordinate {{facilitySite.longitude}}.
             </div>
         </div>
@@ -196,7 +196,7 @@
             <input type="text" class="form-control" id="fugitiveMidPt2Latitude" formControlName="fugitiveMidPt2Latitude" maxlength="10">
             <app-validation-message [control]="releasePointForm.get('fugitiveMidPt2Latitude')"></app-validation-message>
             <div class="validation-message" *ngIf="releasePointForm.get('fugitiveMidPt2Latitude').errors?.invalidLatitude">
-                Release Point latitude must within the {{tolerance}} tolerance range of Facility latitude
+                Release Point latitude must be within the {{tolerance}} tolerance range of Facility latitude
                 coordinate {{facilitySite.latitude}}.
             </div>
         </div>
@@ -410,10 +410,7 @@
                          title="Fugitive Only. The fugitive release height above terrain of fugitive emissions. Should be between 0 and 500."
                          [icon]="['fas', 'question-circle']"></fa-icon>
                 <label for="fugitiveHeight" class="ml-1 col-form-label"><strong>Fugitive Height Measure:</strong></label>
-				<app-required-asterisk [control]="releasePointForm.get('fugitiveHeight')"
-						*ngIf="(releasePointForm.get('typeCode').value.description === releasePointType.FUGITIVE_2D_TYPE)
-						 || (releasePointForm.get('typeCode').value.description === releasePointType.FUGITIVE_3D_TYPE)">
-				</app-required-asterisk>
+				<app-required-asterisk [control]="releasePointForm.get('fugitiveHeight')"></app-required-asterisk>
             </div>
             <div class="col-sm-3">
                 <div class="input-group">
@@ -466,10 +463,7 @@
                          [icon]="['fas', 'question-circle']">
                 </fa-icon>
                 <label for="fugitiveWidth" class="ml-1 col-form-label"><strong>Fugitive Width Measure:</strong></label>
-				<app-required-asterisk [control]="releasePointForm.get('fugitiveWidth')"
-						*ngIf="releasePointForm.get('typeCode').value.description === releasePointType.FUGITIVE_2D_TYPE
-						|| releasePointForm.get('typeCode').value.description === releasePointType.FUGITIVE_3D_TYPE">
-				</app-required-asterisk>
+				<app-required-asterisk [control]="releasePointForm.get('fugitiveWidth')"></app-required-asterisk>
             </div>
             <div class="col-sm-3">
                 <div class="input-group">
