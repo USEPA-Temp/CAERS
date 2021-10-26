@@ -380,9 +380,13 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         } else {
             this.setStackFormValidation();
         }
+		if (this.releasePoint) {
+			this.releasePointForm.markAllAsTouched();
+		}
     }
 	
 	setStackFormValidation() {
+		this.releasePointForm.markAsUntouched()
 		this.releasePointForm.controls.stackHeight.enable();
         this.releasePointForm.controls.stackDiameter.enable();
         this.releasePointForm.controls.exitGasTemperature.enable();
@@ -390,6 +394,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.stackDiameterUomCode.enable();
         this.releasePointForm.controls.stackWidth.enable();
         this.releasePointForm.controls.stackLength.enable();
+		this.releasePointForm.controls.latitude.enable();
+        this.releasePointForm.controls.longitude.enable();
 
 		this.releasePointForm.controls.fugitiveLengthUomCode.disable();
         this.releasePointForm.controls.fugitiveWidthUomCode.disable();
@@ -404,9 +410,12 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.fugitiveWidth.reset();
         this.releasePointForm.controls.fugitiveHeight.reset();
         this.releasePointForm.controls.fugitiveAngle.reset();
+		this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
+    	this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
 	}
 	
 	setFugitiveFormValidation() {
+		this.releasePointForm.markAsUntouched()
 		this.releasePointForm.controls.stackHeight.disable();
         this.releasePointForm.controls.stackDiameter.disable();
         this.releasePointForm.controls.stackWidth.disable();
@@ -426,10 +435,14 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.fugitiveHeightUomCode.enable();
 		this.releasePointForm.controls.fugitiveWidth.enable();
         this.releasePointForm.controls.fugitiveHeight.enable();
+		this.releasePointForm.controls.fugitiveWidth.updateValueAndValidity();
+        this.releasePointForm.controls.fugitiveHeight.updateValueAndValidity();
 
 		if (this.releasePointForm.controls.typeCode.value.description === this.releasePointType.FUGITIVE_2D_TYPE) {
 			this.releasePointForm.controls.fugitiveMidPt2Latitude.enable();
         	this.releasePointForm.controls.fugitiveMidPt2Longitude.enable();
+			this.releasePointForm.controls.latitude.enable();
+        	this.releasePointForm.controls.longitude.enable();
 			this.releasePointForm.controls.latitude.updateValueAndValidity();
         	this.releasePointForm.controls.longitude.updateValueAndValidity();
 		} else {
@@ -448,7 +461,11 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
 			this.releasePointForm.controls.fugitiveLength.reset();
 			this.releasePointForm.controls.fugitiveLength.disable();
 			this.releasePointForm.controls.fugitiveLengthUomCode.disable();
+			this.releasePointForm.controls.fugitiveMidPt2Latitude.updateValueAndValidity();
+        	this.releasePointForm.controls.fugitiveMidPt2Longitude.updateValueAndValidity();
 		}
+		this.releasePointForm.controls.latitude.updateValueAndValidity();
+    	this.releasePointForm.controls.longitude.updateValueAndValidity();
 	}
 
     // QA Check - exit gas flow rate range
@@ -884,12 +901,16 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
             if (!formControl.parent) {
                 return null;
             }
-            if (this.releasePointForm.get('operatingStatusCode').value
+            if (this.releasePointForm.get('operatingStatusCode').value && this.releasePointForm.controls.typeCode.value
                 && this.releasePointForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)
-				&& this.releasePointForm.controls.typeCode.value?.description !== this.releasePointType.FUGITIVE_AREA_TYPE
-				&& this.releasePointForm.controls.typeCode.value?.category !== this.releasePointType.STACK) {
-				return Validators.required(formControl);
-            }
+				&& this.releasePointForm.controls.typeCode.value.description !== this.releasePointType.FUGITIVE_AREA_TYPE
+				&& this.releasePointForm.controls.typeCode.value.category !== this.releasePointType.STACK) {
+				return formControl.addValidators(Validators.required);
+            } else {
+				if (formControl.hasValidator(Validators.required)) {
+					formControl.removeValidators(Validators.required);
+				}
+			}
             return null;
         });
     }
