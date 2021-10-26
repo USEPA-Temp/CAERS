@@ -412,6 +412,8 @@ export class EditReleasePointPanelComponent implements OnInit, OnChanges {
         this.releasePointForm.controls.fugitiveAngle.reset();
 		this.releasePointForm.controls.exitGasFlowRate.updateValueAndValidity();
     	this.releasePointForm.controls.exitGasVelocity.updateValueAndValidity();
+		this.releasePointForm.controls.latitude.updateValueAndValidity();
+    	this.releasePointForm.controls.longitude.updateValueAndValidity();
 	}
 	
 	setFugitiveFormValidation() {
