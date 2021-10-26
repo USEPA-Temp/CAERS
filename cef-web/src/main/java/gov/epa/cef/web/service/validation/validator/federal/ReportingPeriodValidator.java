@@ -17,10 +17,8 @@
 package gov.epa.cef.web.service.validation.validator.federal;
 
 import gov.epa.cef.web.domain.Emission;
-import gov.epa.cef.web.domain.FuelUseSccCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
 import gov.epa.cef.web.domain.ReportingPeriod;
-import gov.epa.cef.web.repository.FuelUseSccCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
@@ -52,9 +50,6 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
     private static final String PM25FIL = "PM25-FIL";
     private static final String PM25PRI = "PM25-PRI";
     private static final String PMCON = "PM-CON";
-    
-    @Autowired
-	private FuelUseSccCodeRepository fuelUseSccCodeRepo;
     
     @Autowired
 	private PointSourceSccCodeRepository sccRepo;
@@ -272,13 +267,11 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 	        // if SCC requires fuel use, check fuel material for selected SCC
 	        if (period.getEmissionsProcess().getSccCode() != null) {
 	        	PointSourceSccCode scc = sccRepo.findById(period.getEmissionsProcess().getSccCode()).orElse(null);
-	        
+
 		        if (scc != null && scc.getFuelUseRequired()) {
-		        	FuelUseSccCode fuelSccMaterial = fuelUseSccCodeRepo.findByScc(scc.getCode()).orElse(null);
-		        	
-		        	if (fuelSccMaterial != null) {
-			        	if (period.getFuelUseMaterialCode() != null && !fuelSccMaterial.getCalculationMaterialCode().getCode().contentEquals(period.getFuelUseMaterialCode().getCode())) {
-			        		
+		        	if (scc.getCalculationMaterialCode() != null) {
+			        	if (period.getFuelUseMaterialCode() != null && !scc.getCalculationMaterialCode().getCode().contentEquals(period.getFuelUseMaterialCode().getCode())) {
+
 			                valid = false;
 			                context.addFederalError(
 			                        ValidationField.PERIOD_SCC_FUEL_MATERIAL.value(),
@@ -287,11 +280,11 @@ public class ReportingPeriodValidator extends BaseValidator<ReportingPeriod> {
 			                        period.getFuelUseMaterialCode().getDescription(),
 			                        scc.getCode());
 			            }
-				        
+			        	
 				        // if SCC requires fuel use, check fuel uom for selected fuel material
-				        String[] fuelState = fuelSccMaterial.getFuelUseTypes().split(",");
-				        
-				        if (period.getFuelUseUom() != null && period.getFuelUseUom().getFuelUseType() != null && !Arrays.asList(fuelState).contains(period.getFuelUseUom().getFuelUseType())) {
+				        String[] fuelState = scc.getFuelUseTypes().split(",");
+
+				        if (period.getFuelUseUom() != null && (period.getFuelUseUom().getFuelUseType() == null || !Arrays.asList(fuelState).contains(period.getFuelUseUom().getFuelUseType()))) {
 				        	
 			                valid = false;
 			                context.addFederalError(

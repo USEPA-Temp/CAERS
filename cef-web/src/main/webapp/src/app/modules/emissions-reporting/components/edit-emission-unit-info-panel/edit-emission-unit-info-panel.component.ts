@@ -102,7 +102,8 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                 this.emissionUnitForm.get('statusYear').setValidators([
                     Validators.min(1900),
                     Validators.max(data.facilitySite.emissionsReport.year),
-                    Validators.pattern('[0-9]*')]);
+                    Validators.pattern('[0-9]*'),
+					Validators.required]);
                 this.emissionUnitService.retrieveForFacility(data.facilitySite.id)
                     .subscribe(emissionUnits => {
                         emissionUnits.forEach(eu => {
@@ -160,6 +161,9 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
                 ' this unit will also be updated, unless they are already Permanently Shutdown.');
         }
         this.emissionUnitForm.controls.statusYear.markAsTouched();
+        this.emissionUnitForm.controls.description.updateValueAndValidity();
+		// has to happen twice to catch potentially newly added validators
+		// namely when adding or removing the required validator
         this.emissionUnitForm.controls.description.updateValueAndValidity();
     }
 
@@ -271,8 +275,12 @@ export class EditEmissionUnitInfoPanelComponent implements OnInit, OnChanges {
 
             if (this.emissionUnitForm.get('operatingStatusCode').value
                 && this.emissionUnitForm.get('operatingStatusCode').value.code.includes(OperatingStatus.OPERATING)) {
-                return Validators.required(formControl);
-            }
+					formControl.addValidators(Validators.required);
+            } else {
+				if (formControl.hasValidator(Validators.required)) {
+					formControl.removeValidators(Validators.required);
+				}
+			}
             return null;
         });
     }

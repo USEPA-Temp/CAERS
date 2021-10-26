@@ -56,6 +56,7 @@ import {LegacyItemValidatorDirective} from './directives/legacy-item-validator.d
 import {EisTransactionAttachmentModalComponent} from './components/eis-transaction-attachment-modal/eis-transaction-attachment-modal.component';
 import { CommentModalComponent } from './components/comment-modal/comment-modal.component';
 import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-nav.component';
+import { RequiredAsteriskComponent } from './components/required-asterisk/required-asterisk.component';
 
 @NgModule({
     declarations: [
@@ -81,7 +82,8 @@ import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-n
         LegacyItemValidatorDirective,
         EisTransactionAttachmentModalComponent,
         CommentModalComponent,
-        HorizontalNavComponent
+        HorizontalNavComponent,
+        RequiredAsteriskComponent
     ],
     exports: [
         FacilityInfoComponent,
@@ -97,7 +99,8 @@ import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-n
         ReportAttachmentTableComponent,
         ValidationMessageComponent,
         StripPeriodEndingPipe,
-        HorizontalNavComponent
+        HorizontalNavComponent,
+		RequiredAsteriskComponent
     ],
     imports: [
         CommonModule,

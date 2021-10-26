@@ -27,6 +27,7 @@ import {ControlPathService} from 'src/app/core/services/control-path.service';
 import {EditReleasePointPanelComponent} from '../../components/edit-release-point-panel/edit-release-point-panel.component';
 import {UserContextService} from 'src/app/core/services/user-context.service';
 import {UtilityService} from 'src/app/core/services/utility.service';
+import { ReleasePointType } from 'src/app/shared/enums/release-point-type';
 
 @Component({
     selector: 'app-release-point-details',
@@ -39,6 +40,7 @@ export class ReleasePointDetailsComponent implements OnInit {
     controlPaths: ControlPath[];
     parentComponentType = 'releasePointAppt';
     facilitySite: FacilitySite;
+	rpType = ReleasePointType;
 
     fugitive = false;
     readOnlyMode = true;
@@ -64,7 +66,7 @@ export class ReleasePointDetailsComponent implements OnInit {
                     .subscribe(point => {
                         this.releasePoint = point;
 
-                        if (this.releasePoint.typeCode.description === 'Fugitive') {
+                        if (this.releasePoint.typeCode.category === this.rpType.FUGITIVE) {
                             this.fugitive = true;
                         }
 
@@ -104,7 +106,7 @@ export class ReleasePointDetailsComponent implements OnInit {
     }
 
     releasePointType = (): string => {
-        return this.fugitive ? 'Fugitive' : 'Stack'
+        return this.fugitive ? this.rpType.FUGITIVE : this.rpType.STACK
     };
 
     isDiameter = (): boolean => {
@@ -156,7 +158,7 @@ export class ReleasePointDetailsComponent implements OnInit {
             this.releasePointService.update(updatedReleasePoint)
                 .subscribe(result => {
 
-                    if (updatedReleasePoint.typeCode.description === 'Fugitive') {
+                    if (updatedReleasePoint.typeCode.category === this.rpType.FUGITIVE) {
                         this.fugitive = true;
                     } else {
                         this.fugitive = false;

@@ -25,6 +25,12 @@ public class SccDetailDto implements Serializable {
 
     private String uid;
     private String code;
+    private String sccLevelOne;
+    private String sccLevelTwo;
+    private String sccLevelThree;
+    private String sccLevelFour;
+    private String sector;
+    private String shortName;
     private String lastUpdated;
     private Map<String, SccAttributeDto> attributes;
 
@@ -44,7 +50,55 @@ public class SccDetailDto implements Serializable {
         this.code = code;
     }
 
-    public String getLastUpdated() {
+	public String getSccLevelOne() {
+		return sccLevelOne;
+	}
+
+	public void setSccLevelOne(String sccLevelOne) {
+		this.sccLevelOne = sccLevelOne;
+	}
+
+	public String getSccLevelTwo() {
+		return sccLevelTwo;
+	}
+
+	public void setSccLevelTwo(String sccLevelTwo) {
+		this.sccLevelTwo = sccLevelTwo;
+	}
+
+	public String getSccLevelThree() {
+		return sccLevelThree;
+	}
+
+	public void setSccLevelThree(String sccLevelThree) {
+		this.sccLevelThree = sccLevelThree;
+	}
+
+	public String getSccLevelFour() {
+		return sccLevelFour;
+	}
+
+	public void setSccLevelFour(String sccLevelFour) {
+		this.sccLevelFour = sccLevelFour;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+
+	public String getLastUpdated() {
         return lastUpdated;
     }
 
@@ -63,7 +117,10 @@ public class SccDetailDto implements Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("SccDetailDto [uid=").append(uid).append(", code=").append(code).append(", lastUpdated=")
+        builder.append("SccDetailDto [uid=").append(uid).append(", code=").append(code)
+        		.append(", sccLevelOne=").append(sccLevelOne).append(", sccLevelTwo=").append(sccLevelTwo)
+        		.append(", sccLevelThree=").append(sccLevelThree).append(", sccLevelFour=").append(sccLevelFour)
+        		.append(", sector=").append(sector).append(", shortName=").append(shortName).append(", lastUpdated=")
                 .append(lastUpdated).append(", attributes=").append(attributes).append("]");
         return builder.toString();
     }

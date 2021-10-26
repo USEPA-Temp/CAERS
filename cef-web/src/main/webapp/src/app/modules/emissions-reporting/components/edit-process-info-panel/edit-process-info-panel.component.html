@@ -26,6 +26,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="An identifier for the process in the facility, given by the facility." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processIdentifierInput" class="ml-1 col-form-label"><strong>Process ID:</strong></label>
+    		<app-required-asterisk [control]="processForm.get('emissionsProcessIdentifier')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input [readonly]="process?.id" type="text" class="form-control" id="processIdentifierInput" formControlName="emissionsProcessIdentifier" maxlength="20">
@@ -34,6 +35,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="Code that identifies the operating status of the emissions process." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processStatusCodeSelect" class="ml-1 col-form-label"><strong>Operating Status:</strong></label>
+    		<app-required-asterisk [control]="processForm.get('operatingStatusCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <select type="text" class="form-control" (ngModelChange)="onChange($event)" id="processStatusCodeSelect" formControlName="operatingStatusCode" [compareWith]="formUtils.compareCode">
@@ -67,6 +69,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="A text description of the emissions process." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processDescriptionInput" class="ml-1 col-form-label"><strong>Process Description:</strong></label>
+    		<app-required-asterisk [control]="processForm.get('description')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" id="processDescriptionInput" formControlName="description">
@@ -75,6 +78,7 @@
         <div class="col-sm-2" style="padding-right: 0;">
             <fa-icon class="mt-2 ml-2" title="The year in which the process operating status became applicable. Required if process Operating Status Code is anything other than operating. Must be between 1900-2050." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processStatusYearInput" class="ml-1 col-form-label"><strong>Operating Status Year:</strong></label>
+    		<app-required-asterisk [control]="processForm.get('statusYear')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" id="processStatusYearInput" formControlName="statusYear">
@@ -89,6 +93,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="EPA Source Classification Code that identifies an emissions process. It should be an SCC from the 'point source' data category." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="processSccInput" class="ml-1 col-form-label"><strong>SCC:</strong></label>
+    		<app-required-asterisk [control]="processForm.get('sccCode')"></app-required-asterisk>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" id="processSccInput" formControlName="sccCode" (change)="checkAircraftSCC()" readonly>
@@ -119,6 +124,7 @@
         <div class="col-sm-2">
             <fa-icon class="mt-2 ml-2" title="SCC Level 1-4 Descriptions." [icon]="['fas', 'question-circle']"></fa-icon>
             <label for="sccDescriptionInput" class="ml-1 col-form-label"><strong>SCC Description:</strong></label>
+    		<app-required-asterisk [control]="processForm.get('sccDescription')"></app-required-asterisk>
         </div>
         <div class="col-sm-10">
             <textarea rows="3" class="form-control" id="sccDescriptionInput" formControlName="sccDescription" readonly></textarea>

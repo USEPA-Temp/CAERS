@@ -1,3 +1,5 @@
+import { BaseCodeLookup } from "./base-code-lookup";
+
 /*
  * © Copyright 2019 EPA CAERS Project Team
  *
@@ -19,4 +21,14 @@ export class PointSourceSccCode {
     code: string;
     lastInventoryYear: number;
     fuelUseRequired: boolean;
+	fuelUseTypes: string;
+    calculationMaterialCode: BaseCodeLookup;
+	sector: string;
+	sccLevelOne: string;
+	sccLevelTwo: string;
+	sccLevelThree: string;
+	sccLevelFour: string;
+	shortName: string;
+	description: string;
+	
 }

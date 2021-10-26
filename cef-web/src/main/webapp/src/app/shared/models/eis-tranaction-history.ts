@@ -26,4 +26,6 @@ export class EisTranactionHistory {
     transactionId: string;
     submitterName: string;
     attachment: EisTransactionAttachment;
+
+    checked: boolean;
 }

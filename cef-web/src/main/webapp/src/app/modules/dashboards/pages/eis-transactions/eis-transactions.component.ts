@@ -25,6 +25,8 @@ import { EisTransactionAttachment } from 'src/app/shared/models/eis-transaction-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EisTransactionAttachmentModalComponent } from 'src/app/modules/shared/components/eis-transaction-attachment-modal/eis-transaction-attachment-modal.component';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { FormControl } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-eis-transactions',
@@ -33,10 +35,17 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 })
 export class EisTransactionsComponent extends BaseSortableTable implements OnInit {
 
+  txtFilter = new FormControl('');
+  statusFilter = new FormControl('');
+
   tableData: EisTranactionHistory[];
+
+  matchFunction: (item: any, searchTerm: any) => boolean = this.matches;
 
   page = 1;
   pageSize = 25;
+
+  availableStatuses = [EisSubmissionStatus.ProdFacility, EisSubmissionStatus.ProdEmissions, EisSubmissionStatus.QaFacility, EisSubmissionStatus.QaEmissions];
 
   constructor(private eisDataService: EisDataService,
               private fileDownloadService: FileDownloadService,
@@ -44,6 +53,14 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
               private toastr: ToastrService) {
 
     super();
+
+    this.txtFilter.valueChanges.subscribe((text) => {
+      this.controller.searchTerm = {text, status: this.statusFilter.value};
+    });
+
+    this.statusFilter.valueChanges.subscribe((text) => {
+      this.controller.searchTerm = {text: this.txtFilter.value, status: text};
+    });
   }
 
   ngOnInit() {
@@ -110,7 +127,7 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
   }
 
   openDeleteModal(id: number, fileName: string) {
-    const modalMessage = `Are you sure you want to delete the attachment ${fileName} from this record?`;
+    const modalMessage = `Are you sure you want to delete the attachment ${fileName} from this record? This will also delete the transaction if it is more than 7 days old.`;
     const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: 'sm' });
     modalRef.componentInstance.message = modalMessage;
     modalRef.componentInstance.continue.subscribe(() => {
@@ -123,6 +140,52 @@ export class EisTransactionsComponent extends BaseSortableTable implements OnIni
 
       this.refreshHistory();
     });
+  }
+
+  selectedTransactions() {
+    return this.tableData?.filter(i => i.checked);
+  }
+
+  openTransactionDeleteModal() {
+    const modalMessage = `Are you sure you want to delete the following transactions? All related attachments will also be deleted.`;
+    let messageList = '<ul>';
+    for (const transaction of this.selectedTransactions()) {
+      messageList += `<li>${transaction.transactionId}</li>`;
+    }
+    messageList += '</ul>';
+    const modalRef = this.modalService.open(ConfirmationDialogComponent);
+    modalRef.componentInstance.message = modalMessage;
+    modalRef.componentInstance.htmlMessage = messageList;
+    modalRef.componentInstance.continue.subscribe(() => {
+      this.deleteTransactions();
+    });
+  }
+
+  deleteTransactions() {
+    const selectedTransactionIds = this.selectedTransactions().map(item => item.id);
+    this.eisDataService.deleteFromTransactionHistory(selectedTransactionIds)
+    .subscribe(() => {
+
+      this.refreshHistory();
+      this.toastr.success('', 'Transactions were successfully deleted.');
+    });
+  }
+
+  onClearFilterClick() {
+    this.txtFilter.setValue(null);
+  }
+
+  matches(item: EisTranactionHistory, searchTerm: {text: string, status: string}): boolean {
+
+    if (searchTerm.status && searchTerm.status !== item.eisSubmissionStatus) {
+
+      return false;
+    }
+
+    const term = searchTerm.text ? searchTerm.text.toLowerCase() : '';
+    return item.transactionId?.toLowerCase().includes(term)
+        || item.submitterName?.toLowerCase().includes(term)
+        || formatDate(item.createdDate?.toString(), 'short', 'en-US').toLowerCase().includes(term);
   }
 
 }

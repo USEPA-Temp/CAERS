@@ -16,11 +16,15 @@
 */
 package gov.epa.cef.web.repository;
 
+import java.util.List;
+
 import javax.persistence.QueryHint;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.domain.PointSourceSccCode;
 
@@ -29,4 +33,10 @@ public interface PointSourceSccCodeRepository extends CrudRepository<PointSource
 	@QueryHints({
 		@QueryHint(name = "org.hibernate.cacheable", value = "true")})
 	Iterable<PointSourceSccCode> findAll(Sort sort);
+	
+	@Query("select pssc from PointSourceSccCode pssc where lower(pssc.code) like %:searchTerm% or lower(pssc.shortName) like %:searchTerm% "
+			+ "or lower(pssc.sector) like %:searchTerm% or lower(pssc.sccLevelOne) like %:searchTerm% or lower(pssc.sccLevelTwo) like %:searchTerm% "
+			+ "or lower(pssc.sccLevelThree) like %:searchTerm% or lower(pssc.sccLevelFour) like %:searchTerm%")
+	List<PointSourceSccCode> findBySearchTerm(@Param("searchTerm") String searchTerm, Sort sort);
+	
 }

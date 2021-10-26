@@ -97,6 +97,11 @@ export class EisDataService {
       return result;
    }
 
+  deleteFromTransactionHistory(ids: number[]): Observable<{}> {
+    const url = `${this.baseUrl}/history/delete`;
+    return this.http.post(url, ids);
+  }
+
    downloadAttachment(attachmentId: number, ): Observable<any> {
     const url = `${this.baseUrl}/history/attachment/${attachmentId}`;
     return this.http.get(url, { responseType: 'blob' });

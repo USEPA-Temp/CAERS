@@ -27,6 +27,7 @@ public class CodeLookupDto implements Serializable {
     protected String shortName;
     protected Integer lastInventoryYear;
     protected String mapTo;
+    protected String category;
 
     public String getCode() {
         return code;
@@ -67,5 +68,13 @@ public class CodeLookupDto implements Serializable {
     public void setMapTo(String mapTo) {
         this.mapTo = mapTo;
     }
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 }

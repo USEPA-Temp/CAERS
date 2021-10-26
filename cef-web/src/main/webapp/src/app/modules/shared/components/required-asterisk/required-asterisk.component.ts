@@ -14,18 +14,23 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-package gov.epa.cef.web.repository;
+import { Component, OnInit, Input } from '@angular/core';
+import { FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
-import java.util.Optional;
+@Component({
+  selector: 'app-required-asterisk',
+  templateUrl: './required-asterisk.component.html',
+  styleUrls: ['./required-asterisk.component.scss']
+})
+export class RequiredAsteriskComponent implements OnInit {
+  @Input() control: FormControl;
+  required = false;
+  validators = Validators;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+  constructor() { }
 
-import gov.epa.cef.web.domain.FuelUseSccCode;
+  ngOnInit(): void {
+    
+  }
 
-public interface FuelUseSccCodeRepository extends CrudRepository<FuelUseSccCode, Long>{
-	
-	@Query("select f from FuelUseSccCode f where f.sccCode.code = :code")
-	Optional<FuelUseSccCode> findByScc(@Param("code") String code);
 }

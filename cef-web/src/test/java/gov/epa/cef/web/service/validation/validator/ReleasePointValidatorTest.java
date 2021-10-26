@@ -235,6 +235,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasFlowRate(BigDecimal.valueOf(200000.1));
 
@@ -271,6 +273,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         cefContext = createContext();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasFlowRate(BigDecimal.valueOf(200000.1));
 
@@ -350,6 +354,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(BigDecimal.valueOf(1500.1));
 
@@ -387,6 +393,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("1");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive Area");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(BigDecimal.valueOf(1500.1));
 
@@ -416,6 +424,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("6");
+        releasePointTypeCode.setCategory("Stack");
+        releasePointTypeCode.setDescription("Downward Facing Vent");
         testData.setTypeCode(releasePointTypeCode);
         testData.setExitGasVelocity(null);
         testData.setStackDiameter(null);
@@ -583,7 +593,60 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertFalse(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
     }
+    
+    @Test
+    public void fugitiveHeightRequiredPassTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("9");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive 2-D – source area");
+        UnitMeasureCode uomFT = new UnitMeasureCode();
+        uomFT.setCode("FT");
+        
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setFugitiveMidPt2Latitude(BigDecimal.valueOf(33.949));
+        testData.setFugitiveMidPt2Longitude(BigDecimal.valueOf(-84.388000));
+        testData.setFugitiveHeight((long)10);
+        testData.setFugitiveHeightUomCode(uomFT);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
 
+    @Test
+    public void fugitiveHeightRequiredFailTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+        
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("9");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive 2-D – source area");
+        UnitMeasureCode uomFT = new UnitMeasureCode();
+        uomFT.setCode("FT");
+        
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setFugitiveMidPt2Latitude(BigDecimal.valueOf(33.949));
+        testData.setFugitiveMidPt2Longitude(BigDecimal.valueOf(-84.388000));
+        testData.setFugitiveHeight(null);
+        testData.setFugitiveHeightUomCode(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
+    }
+    
     @Test
     public void fugitiveHeightRangeFailTest() {
 
@@ -658,6 +721,59 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         cefContext = createContext();
         assertTrue(this.validator.validate(cefContext, testData));
         assertNull(cefContext.result.getErrors());
+    }
+    
+    @Test
+    public void fugitiveWidthRequiredPassTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("9");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive 2-D – source area");
+        UnitMeasureCode uomFT = new UnitMeasureCode();
+        uomFT.setCode("FT");
+        
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setFugitiveMidPt2Latitude(BigDecimal.valueOf(33.949));
+        testData.setFugitiveMidPt2Longitude(BigDecimal.valueOf(-84.388000));
+        testData.setFugitiveWidth(BigDecimal.valueOf(20));
+        testData.setFugitiveWidthUomCode(uomFT);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+    }
+    
+    @Test
+    public void fugitiveWidthRequiredFailTest() {
+    	
+    	CefValidatorContext cefContext = createContext();
+        ReleasePoint testData = createBaseFugitiveReleasePoint();
+        
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+        releasePointTypeCode.setCode("9");
+        releasePointTypeCode.setCategory("Fugitive");
+        releasePointTypeCode.setDescription("Fugitive 2-D – source area");
+        UnitMeasureCode uomFT = new UnitMeasureCode();
+        uomFT.setCode("FT");
+        
+        testData.setTypeCode(releasePointTypeCode);
+        testData.setFugitiveMidPt2Latitude(BigDecimal.valueOf(33.949));
+        testData.setFugitiveMidPt2Longitude(BigDecimal.valueOf(-84.388000));
+        testData.setFugitiveWidth(null);
+        testData.setFugitiveWidthUomCode(null);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_FUGITIVE.value()) && errorMap.get(ValidationField.RP_FUGITIVE.value()).size() == 1);
     }
 
     @Test
@@ -986,7 +1102,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     public void coordinateToleranceFailTest() {
 
         CefValidatorContext cefContext = createContext();
-        ReleasePoint testData = createBaseFugitiveReleasePoint();
+        ReleasePoint testData = createBaseReleasePoint();
 
         cefContext = createContext();
         testData.setLatitude(BigDecimal.valueOf(32.959000));
@@ -998,6 +1114,7 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
 
         cefContext = createContext();
+        testData = createBaseFugitiveReleasePoint();
         testData.setLongitude(BigDecimal.valueOf(-84.888000));
         testData.setLatitude(BigDecimal.valueOf(33.951000));
 
@@ -1005,14 +1122,28 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         cefContext = createContext();
-        testData = createBaseReleasePoint();
+        testData = createBaseFugitiveReleasePoint();
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+    	releasePointTypeCode.setCode("9");
+    	releasePointTypeCode.setCategory("Fugitive");
+    	releasePointTypeCode.setDescription("Fugitive 2-D – source area");
+    	UnitMeasureCode uomFT = new UnitMeasureCode();
+        uomFT.setCode("FT");
+        
+    	testData.setTypeCode(releasePointTypeCode);
         testData.setLongitude(BigDecimal.valueOf(-84.888000));
+        testData.setFugitiveMidPt2Latitude(BigDecimal.valueOf(33.959));
+        testData.setFugitiveMidPt2Longitude(BigDecimal.valueOf(-84.388000));
+        testData.setFugitiveHeight((long)5);
+        testData.setFugitiveHeightUomCode(uomFT);
+        testData.setFugitiveWidth(BigDecimal.valueOf(20));
+        testData.setFugitiveWidthUomCode(uomFT);
 
         assertFalse(this.validator.validate(cefContext, testData));
-        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
-
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+        
         errorMap = mapErrors(cefContext.result.getErrors());
-        assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
+        assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 2);
 
         //Verify QA Checks are NOT run when RP is NOT Operating
         testData = createBaseFugitiveReleasePoint();
@@ -1305,6 +1436,19 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         assertTrue(this.validator.validate(cefContext, testData));
         assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        testData = createBaseFugitiveReleasePoint();
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+    	releasePointTypeCode.setCode("9");
+    	releasePointTypeCode.setCategory("Fugitive");
+    	releasePointTypeCode.setDescription("Fugitive 2-D – source area");
+        testData.setLatitude(null);
+        testData.setLongitude(null);
+        testData.setFugitiveMidPt2Latitude(null);
+        testData.setFugitiveMidPt2Longitude(null);
+
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
     }
 
     @Test
@@ -1320,6 +1464,22 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 1);
 
+        cefContext = createContext();
+        testData = createBaseFugitiveReleasePoint();
+        ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
+    	releasePointTypeCode.setCode("9");
+    	releasePointTypeCode.setCategory("Fugitive");
+    	releasePointTypeCode.setDescription("Fugitive 2-D – source area");
+        testData.setLatitude(null);
+        testData.setFugitiveMidPt2Latitude(BigDecimal.valueOf(30.388000));
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 2);
+
+        errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.RP_COORDINATE.value()) && errorMap.get(ValidationField.RP_COORDINATE.value()).size() == 2);
+
+        
         //Verify QA Checks are NOT run when RP is NOT Operating
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("TS");
@@ -1434,6 +1594,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
         ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
         releasePointTypeCode.setCode("2");
+        releasePointTypeCode.setCategory("Stack");
+        releasePointTypeCode.setDescription("Vertical");
 
         UnitMeasureCode flowUom = new UnitMeasureCode();
         flowUom.setCode("ACFS");
@@ -1461,10 +1623,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
         result.setLatitude(BigDecimal.valueOf(33.949000));
         result.setLongitude(BigDecimal.valueOf(-84.388000));
         result.setFacilitySite(facility);
-        result.setFugitiveLine1Latitude(BigDecimal.valueOf(33.949000));
-        result.setFugitiveLine1Longitude(BigDecimal.valueOf(-84.388000));
-        result.setFugitiveLine2Latitude(BigDecimal.valueOf(33.949000));
-        result.setFugitiveLine2Longitude(BigDecimal.valueOf(-84.388000));
         result.setStatusYear((short) 2000);
         result.setOperatingStatusCode(opStatCode);
         result.setId(1L);
@@ -1494,6 +1652,8 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
 
     	ReleasePointTypeCode releasePointTypeCode = new ReleasePointTypeCode();
     	releasePointTypeCode.setCode("1");
+    	releasePointTypeCode.setCategory("Fugitive");
+    	releasePointTypeCode.setDescription("Fugitive Area");
 
     	UnitMeasureCode distUom = new UnitMeasureCode();
     	distUom.setCode("FT");
@@ -1512,10 +1672,6 @@ public class ReleasePointValidatorTest extends BaseValidatorTest {
     	result.setLatitude(BigDecimal.valueOf(33.949000));
     	result.setLongitude(BigDecimal.valueOf(-84.388000));
     	result.setFacilitySite(facility);
-    	result.setFugitiveLine1Latitude(BigDecimal.valueOf(33.949000));
-    	result.setFugitiveLine1Longitude(BigDecimal.valueOf(-84.388000));
-    	result.setFugitiveLine2Latitude(BigDecimal.valueOf(33.949000));
-    	result.setFugitiveLine2Longitude(BigDecimal.valueOf(-84.388000));
     	result.setStatusYear((short) 2000);
     	result.setOperatingStatusCode(opStatCode);
 

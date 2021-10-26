@@ -89,7 +89,8 @@
               <input type="text" class="form-control" id="prefix" formControlName="prefix" [value]="contactForm.value.contact?.prefix" maxlength="15">
               <app-validation-message [control]="contactForm.controls.prefix"></app-validation-message>
             </div>
-            <label for="type" class="col-sm-4 col-lg-2 col-form-label"><strong>Contact Type:</strong></label>
+            <label for="type" class="col-sm-4 col-lg-2 col-form-label"><strong>Contact Type:</strong>
+            <app-required-asterisk [control]="contactForm.controls.type"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-4">
               <select type="text" class="form-control" id="type" formControlName="type" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
@@ -100,12 +101,14 @@
           </div>
 
           <div class="row pb-2">
-            <label for="firstName" class="col-sm-4 col-lg-2 col-form-label"><strong>First Name:</strong></label>
+            <label for="firstName" class="col-sm-4 col-lg-2 col-form-label"><strong>First Name:</strong>
+            <app-required-asterisk [control]="contactForm.controls.firstName"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-4">
               <input type="text" class="form-control" id="firstName" formControlName="firstName" [value]="contactForm.value.contact?.firstName" maxlength="20">
               <app-validation-message [control]="contactForm.controls.firstName"></app-validation-message>
             </div>
-            <label for="lastName" class="col-sm-4 col-lg-2 col-form-label"><strong>Last Name:</strong></label>
+            <label for="lastName" class="col-sm-4 col-lg-2 col-form-label"><strong>Last Name:</strong>
+            <app-required-asterisk [control]="contactForm.controls.lastName"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-4">
               <input type="text" class="form-control" id="lastName" formControlName="lastName" [value]="contactForm.value.contact?.lastName" maxlength="20">
               <app-validation-message [control]="contactForm.controls.lastName"></app-validation-message>
@@ -113,7 +116,8 @@
           </div>
 
           <div class="row pb-2">
-            <label for="phone" class="col-sm-4 col-lg-2 col-form-label"><strong>Phone Number:</strong></label>
+            <label for="phone" class="col-sm-4 col-lg-2 col-form-label"><strong>Phone Number:</strong>
+            <app-required-asterisk [control]="contactForm.controls.phone"></app-required-asterisk></label>
               <div class="col-sm-8 col-lg-4">
                 <input type="text" class="form-control" id="phone" formControlName="phone" [value]="contactForm.value.contact?.phone" maxlength="10">
                 <app-validation-message [control]="contactForm.controls.phone"></app-validation-message>
@@ -126,7 +130,8 @@
           </div>
 
           <div class="row pb-5">
-            <label for="email" class="col-sm-4 col-lg-2 col-form-label"><strong>Email Address:</strong></label>
+            <label for="email" class="col-sm-4 col-lg-2 col-form-label"><strong>Email Address:</strong>
+            <app-required-asterisk [control]="contactForm.controls.email"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-4">
               <input type="text" class="form-control" id="email" formControlName="email" [value]="contactForm.value.contact?.email" maxlength="255">
               <app-validation-message [control]="contactForm.controls.email"></app-validation-message>
@@ -134,7 +139,8 @@
           </div>
 
           <div class="row pb-2">
-            <label for="streetAddress" class="col-sm-4 col-lg-2 col-form-label"><strong>Contact Street Address:</strong></label>
+            <label for="streetAddress" class="col-sm-4 col-lg-2 col-form-label"><strong>Contact Street Address:</strong>
+            <app-required-asterisk [control]="contactForm.controls.streetAddress"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-10">
               <input type="text" class="form-control" id="streetAddress" formControlName="streetAddress" [value]="contactForm.value.contact?.streetAddress" maxlength="100">
               <app-validation-message [control]="contactForm.controls.streetAddress"></app-validation-message>
@@ -142,12 +148,14 @@
           </div>
 
           <div class="row pb-2">
-            <label for="city" class="col-sm-4 col-lg-2 col-form-label"><strong>City:</strong></label>
+            <label for="city" class="col-sm-4 col-lg-2 col-form-label"><strong>City:</strong>
+            <app-required-asterisk [control]="contactForm.controls.city"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-4">
               <input type="text" class="form-control" id="city" formControlName="city" [value]="contactForm.value.contact?.city" maxlength="60">
               <app-validation-message [control]="contactForm.controls.city"></app-validation-message>
             </div>
-            <label for="stateCode" class="col-sm-4 col-lg-2 col-form-label"><strong>State:</strong></label>
+            <label for="stateCode" class="col-sm-4 col-lg-2 col-form-label"><strong>State:</strong>
+            <app-required-asterisk [control]="contactForm.controls.stateCode"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-2">
               <select type="text" class="form-control" id="stateCode" formControlName="stateCode" [compareWith]="formUtils.compareCode">
                 <option [ngValue]="null"></option>
@@ -166,7 +174,8 @@
               </select>
               <app-validation-message [control]="contactForm.get('countyCode')"></app-validation-message>
             </div>
-            <label for="postalCode" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong></label>
+            <label for="postalCode" class="col-sm-4 col-lg-2 col-form-label"><strong>ZIP code:</strong>
+            <app-required-asterisk [control]="contactForm.controls.postalCode"></app-required-asterisk></label>
             <div class="col-sm-8 col-lg-2">
               <input type="text" class="form-control" id="postalCode" formControlName="postalCode" [value]="contactForm.value.contact?.postalCode" maxlength="10">
               <app-validation-message [control]="contactForm.controls.postalCode"></app-validation-message>

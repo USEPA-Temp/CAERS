@@ -25,6 +25,7 @@
   <div class="modal-body">
     <fa-icon class="mt-2 ml-2 mr-1" title="North American Industry Classification System code. The NAICS codes are U.S. Department of Commerce's codes for categorizing businesses by products or services. See: https://www.census.gov/eos/www/naics/." [icon]="['fas', 'question-circle']"></fa-icon>
     Select NAICS Code: 
+    <app-required-asterisk [control]="naicsForm.get('selectedNaics')"></app-required-asterisk>
     <input [attr.aria-multiline]="null" id="facilityNAICS" type="text" class="form-control" formControlName="selectedNaics" aria-label="search NAICS"
     [ngbTypeahead]="searchNAICS" [inputFormatter]="naicsFormatter" [editable]="false" [resultFormatter]="naicsFormatter"/>
     <app-validation-message [control]="naicsForm.get('selectedNaics')"></app-validation-message>
@@ -35,6 +36,7 @@
     <div>
       <fa-icon class="mt-2 ml-2 mr-1" title="The 6 digit NAICS Code that represents the largest amount of economic activity of the facility." [icon]="['fas', 'question-circle']"></fa-icon>
       Is this the Primary NAICS for facility?
+      <app-required-asterisk [control]="naicsForm.get('selectedNaics')"></app-required-asterisk>
       <select id="cbo-code-type" style="width: 150px"
               class="form-control form-control-sm mr-3"
               [(ngModel)]="selectedNaicsCodeType"

@@ -38,6 +38,9 @@ public class ReleasePointTypeCode extends BaseLookupEntity {
     @Column(name = "last_inventory_year")
     private Integer lastInventoryYear;
     
+    @Column(name = "category", length = 20)
+    private String category;
+    
     public Integer getLastInventoryYear() {
         return lastInventoryYear;
     }
@@ -45,5 +48,13 @@ public class ReleasePointTypeCode extends BaseLookupEntity {
     public void setLastInventoryYear(Integer lastInventoryYear) {
         this.lastInventoryYear = lastInventoryYear;
     }
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 }

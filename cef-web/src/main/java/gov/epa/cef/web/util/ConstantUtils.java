@@ -16,6 +16,10 @@
 */
 package gov.epa.cef.web.util;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class ConstantUtils {
 	
 	//OPERATING STATUSES
@@ -24,7 +28,11 @@ public class ConstantUtils {
 	public static final String STATUS_TEMPORARILY_SHUTDOWN = "TS";
 	
 	// RELEASE POINT TYPE CODES
-	public static final String FUGITIVE_RELEASE_POINT_TYPE = "1";
+	public static final String FUGITIVE_RELEASE_POINT_CATEGORY = "Fugitive";
+	public static final String FUGITIVE_RELEASE_PT_AREA_TYPE = "1";
+	public static final String FUGITIVE_RELEASE_PT_2D_TYPE = "9";
+	public static final String FUGITIVE_RELEASE_PT_3D_TYPE = "7";
+	public static final List<String> FUGITIVE_RELEASE_POINT_TYPES = Collections.unmodifiableList(Arrays.asList("1","7","9"));
 	
 	//EIS TRANSMISSION TYPES
 	public static final String EIS_TRANSMISSION_FACILITY_INVENTORY = "FacilityInventory";

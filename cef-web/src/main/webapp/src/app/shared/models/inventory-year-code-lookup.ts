@@ -22,4 +22,6 @@ export class InventoryYearCodeLookup implements BaseCodeLookup {
   shortName: string;
   lastInventoryYear: number;
   mapTo: string;
+  category: string;
+
 }

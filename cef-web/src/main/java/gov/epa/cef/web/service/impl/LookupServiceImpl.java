@@ -38,7 +38,6 @@ import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
-import gov.epa.cef.web.domain.FuelUseSccCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
@@ -62,7 +61,6 @@ import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
 import gov.epa.cef.web.repository.FipsCountyRepository;
 import gov.epa.cef.web.repository.FipsStateCodeRepository;
-import gov.epa.cef.web.repository.FuelUseSccCodeRepository;
 import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PointSourceSccCodeRepository;
@@ -82,7 +80,6 @@ import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
-import gov.epa.cef.web.service.dto.FuelUseSccCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
@@ -158,9 +155,6 @@ public class LookupServiceImpl implements LookupService {
     
     @Autowired
     private FacilitySourceTypeCodeRepository facilitySourceTypeCodeRepo;
-    
-    @Autowired
-    private FuelUseSccCodeRepository fuelUseSccCodeRepo;
     
     // TODO: switch to using LookupRepositories, not currently done due to tests
 
@@ -689,11 +683,12 @@ public class LookupServiceImpl implements LookupService {
         return result;
     }
     
-    public FuelUseSccCodeDto retrieveFuelUseMaterialCodesByScc(String code) {
-    	FuelUseSccCode entity= fuelUseSccCodeRepo
-            .findByScc(code)
-			.orElseThrow(() -> new NotExistException("FuelUseSccCode", code));
-        return lookupMapper.fuelUseSccCodeToDto(entity);
+    public List<PointSourceSccCodeDto> retrieveSearchSccCodes(String searchTerm) {
+    	
+    	List<PointSourceSccCode> entities = pointSourceSccCodeRepo.findBySearchTerm(searchTerm.toLowerCase(), Sort.by(Direction.ASC, "code"));
+    	List<PointSourceSccCodeDto> result = lookupMapper.pointSourceSccCodeToDtoList(entities);
+        
+        return result;
     }
     
 }
