@@ -18,10 +18,7 @@ package gov.epa.cef.web.service;
 
 import java.io.OutputStream;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import gov.epa.cef.web.service.dto.AttachmentDto;
-import gov.epa.cef.web.service.dto.CommunicationDto;
 import gov.epa.cef.web.util.TempFile;
 
 public interface AttachmentService {
